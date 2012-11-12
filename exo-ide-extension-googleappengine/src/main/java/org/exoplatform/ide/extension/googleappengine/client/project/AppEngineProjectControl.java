@@ -22,6 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -35,7 +37,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * 
  */
 public class AppEngineProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, ActiveProjectChangedHandler
 {
    private static final String ID = "Project/PaaS/Google App Engine";
 
@@ -61,6 +63,7 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    {
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -84,4 +87,14 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
       setVisible(isAppEngine);
       setEnabled(isAppEngine);
    }
+
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+   {
+      boolean isAppEngine =
+         event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject());
+      setVisible(isAppEngine);
+      setEnabled(isAppEngine);
+   }
+
 }

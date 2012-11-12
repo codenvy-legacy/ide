@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.appfog.client.control;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -34,7 +36,7 @@ import org.exoplatform.ide.extension.appfog.client.create.CreateApplicationEvent
  * @version $Id: $
  */
 public class CreateApplicationControl extends AbstractAppfogControl implements ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, ActiveProjectChangedHandler
 {
 
    private static final String ID = AppfogExtension.LOCALIZATION_CONSTANT.createAppControlId();
@@ -60,6 +62,7 @@ public class CreateApplicationControl extends AbstractAppfogControl implements P
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       setVisible(true);
    }
 
@@ -77,6 +80,12 @@ public class CreateApplicationControl extends AbstractAppfogControl implements P
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      setEnabled(event.getProject() != null && AppfogExtension.canBeDeployedToAF(event.getProject()));
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       setEnabled(event.getProject() != null && AppfogExtension.canBeDeployedToAF(event.getProject()));
    }

@@ -38,6 +38,8 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -72,7 +74,7 @@ import java.util.Map;
  *
  */
 public class EditConfigurationPresenter implements ProjectOpenedHandler, ProjectClosedHandler, VfsChangedHandler,
-   EditConfigurationHandler, ViewClosedHandler
+   EditConfigurationHandler, ViewClosedHandler, ActiveProjectChangedHandler
 {
 
    interface Display extends IsView
@@ -146,6 +148,7 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -646,6 +649,12 @@ public class EditConfigurationPresenter implements ProjectOpenedHandler, Project
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      this.openedProject = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       this.openedProject = event.getProject();
    }

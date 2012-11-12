@@ -23,6 +23,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -38,7 +40,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * 
  */
 public class HerokuControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   FolderRefreshedHandler
+   FolderRefreshedHandler, ActiveProjectChangedHandler
 {
    /**
     * Control ID.
@@ -73,6 +75,7 @@ public class HerokuControl extends SimpleControl implements IDEControl, ProjectC
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -80,6 +83,14 @@ public class HerokuControl extends SimpleControl implements IDEControl, ProjectC
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      boolean isHerokuProject = isHeroku(event.getProject());
+      setVisible(isHerokuProject);
+      setEnabled(isHerokuProject);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       boolean isHerokuProject = isHeroku(event.getProject());
       setVisible(isHerokuProject);
