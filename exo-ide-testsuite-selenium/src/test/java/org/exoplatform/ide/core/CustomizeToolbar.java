@@ -370,7 +370,7 @@ public class CustomizeToolbar extends AbstractTestModule
             "New Data Object", "New Package", "New Java Class", "New JSP File", "New Ruby File", "New PHP File",
             "New Python File", "New YAML File", "Create File From Template...", "Project / New", "Create Project...",
             "Import a Sample Project...", "Import from GitHub...", "Project", "Open...", "Close", "Properties...",
-            "Open Resource...", "Clean", "Configure Classpath...", "Build", "Project / PaaS", "CloudBees",
+            "Open Resource...",  "Configure Classpath...", "Build", "Project / PaaS", "CloudBees",
             "CloudFoundry", "Heroku", "OpenShift", "Google App Engine", "Edit", "Cut Item(s)", "Copy Item(s)",
             "Paste Item(s)", "Undo Typing", "Redo Typing", "Format", "Organize Imports", "Add Block Comment",
             "Remove Block Comment", "Find-Replace...", "Show / Hide Line Numbers", "Delete Current Line",
@@ -395,6 +395,7 @@ public class CustomizeToolbar extends AbstractTestModule
             "Show Keyboard Shortcuts...", "Show Available Dependencies...", "Welcome");
       for (String chkName : defaultSet)
       {
+         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+chkName.toString());
          assertTrue(getSet.contains(chkName.toString()));
       }
    }

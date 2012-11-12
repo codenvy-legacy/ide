@@ -40,7 +40,7 @@ import java.util.zip.ZipInputStream;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 /**
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class Utils

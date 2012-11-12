@@ -842,16 +842,18 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    @Override
-   public boolean hasUndoChanges()
-   {
-      return false;
-   }
-
+   public native boolean hasUndoChanges()
+   /*-{
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
+      return editor._.commands.undo.state != $wnd.CKEDITOR.TRISTATE_DISABLED;
+   }-*/;
+   
    @Override
-   public boolean hasRedoChanges()
-   {
-      return false;
-   }
+   public native boolean hasRedoChanges()
+   /*-{
+      var editor = this.@org.exoplatform.ide.editor.ckeditor.CKEditor::editorObject;      
+      return editor._.commands.redo.state != $wnd.CKEDITOR.TRISTATE_DISABLED;
+   }-*/;
 
    @Override
    public int getCursorRow()

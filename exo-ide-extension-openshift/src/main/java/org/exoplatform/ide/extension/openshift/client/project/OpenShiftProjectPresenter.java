@@ -32,6 +32,8 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -62,7 +64,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * 
  */
 public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler, ApplicationDeletedHandler
+   ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler, ApplicationDeletedHandler, ActiveProjectChangedHandler
 {
 
    interface Display extends IsView
@@ -96,6 +98,7 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
       IDE.addHandler(ManageOpenShiftProjectEvent.TYPE, this);
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -181,6 +184,12 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       openedProject = event.getProject();
    }

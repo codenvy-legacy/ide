@@ -107,6 +107,7 @@ public class HotkeysInFCKEditorTest extends BaseTest
       IDE.EDITOR.waitTabPresent(1);
       IDE.CK_EDITOR.clickDesignButton(0);
       IDE.CK_EDITOR.waitToolsCkEditor(1);
+      IDE.CK_EDITOR.waitIsTextPresent("Hello, world!", 1 );
       IDE.CK_EDITOR.deleteFileContentInCKEditor(1);
       IDE.CK_EDITOR.getTextFromCKEditor(1);
       assertEquals("", IDE.CK_EDITOR.getTextFromCKEditor(1));
@@ -137,6 +138,7 @@ public class HotkeysInFCKEditorTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.CK_EDITOR.clickDesignButton(1);
       IDE.CK_EDITOR.waitToolsCkEditor(2);
+      IDE.CK_EDITOR.waitIsTextPresent("Hello, world!", 2);
       IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "a");
       IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "c");
       IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "v");

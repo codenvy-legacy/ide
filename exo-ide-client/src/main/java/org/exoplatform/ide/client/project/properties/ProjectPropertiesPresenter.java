@@ -34,6 +34,8 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -60,7 +62,7 @@ import java.util.List;
  */
 
 public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler, ProjectOpenedHandler,
-   ProjectClosedHandler, ViewClosedHandler
+   ProjectClosedHandler, ViewClosedHandler, ActiveProjectChangedHandler
 {
 
    public interface Display extends IsView
@@ -102,6 +104,7 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    @Override
@@ -296,6 +299,12 @@ public class ProjectPropertiesPresenter implements ShowProjectPropertiesHandler,
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      currentProject = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       currentProject = event.getProject();
    }

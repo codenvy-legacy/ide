@@ -513,7 +513,7 @@
    </component>
 
    <component>
-      <type>org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider</type>
+      <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
    </component>
 
 </configuration>

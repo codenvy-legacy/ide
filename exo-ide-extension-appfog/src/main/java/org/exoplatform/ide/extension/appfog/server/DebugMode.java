@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.appfog.server;
 /**
  * Debug mode for starting application under debugging.
  *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 public class DebugMode

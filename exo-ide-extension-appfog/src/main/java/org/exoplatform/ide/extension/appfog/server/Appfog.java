@@ -93,25 +93,15 @@ import static org.exoplatform.ide.commons.ZipUtils.zipDir;
  */
 public class Appfog
 {
-   public static final class Credential
+   static final class Credential
    {
-      private String target;
-      private String token;
+      String target;
+      String token;
 
       Credential(String target, String token)
       {
          this.target = target;
          this.token = token;
-      }
-
-      public String getTarget()
-      {
-         return target;
-      }
-
-      public String getToken()
-      {
-         return token;
       }
    }
 
@@ -139,16 +129,10 @@ public class Appfog
 
    private static final Log LOG = ExoLogger.getLogger(Appfog.class);
 
-   //   private Cloudfoundry cf;
    private BaseAppfogAuthenticator authenticator;
 
    public Appfog(BaseAppfogAuthenticator authenticator) throws IOException, VirtualFileSystemException
    {
-//      BaseCloudfoundryAuthenticator cfAuthenticator =
-//         new SimpleAuthenticator(authenticator.getTarget(), authenticator.getUsername(), authenticator.getPassword());
-//      cf = new Cloudfoundry(cfAuthenticator);
-
-      //Need also for some local methods
       this.authenticator = authenticator;
 
       // Create a trust manager that does not validate certificate chains
@@ -181,26 +165,22 @@ public class Appfog
 
    public void setTarget(String server) throws VirtualFileSystemException, IOException
    {
-//      cf.setTarget(server);
       authenticator.writeTarget(server);
    }
 
    public String getTarget() throws VirtualFileSystemException, IOException
    {
-//      return cf.getTarget();
       return authenticator.getTarget();
    }
 
    public Collection<String> getTargets() throws AppfogException, VirtualFileSystemException, IOException
    {
-//      return cf.getTargets();
       return authenticator.readCredentials().getTargets();
    }
 
    public void login(String server, String email, String password)
       throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
    {
-//      cf.login(server, email, password);
       if (server == null)
       {
          server = authenticator.getTarget();
@@ -210,20 +190,17 @@ public class Appfog
 
    public void login() throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
    {
-//      cf.login();
       authenticator.login();
    }
 
    public void logout(String server) throws AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.logout(server);
       authenticator.logout(server);
    }
 
    public SystemInfo systemInfo(String server)
       throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
    {
-//      return cf.systemInfo(server);
       return systemInfo(getCredential(server == null || server.isEmpty() ? authenticator.getTarget() : server));
    }
 
@@ -268,7 +245,7 @@ public class Appfog
       throws AppfogException, IOException, ParsingResponseException
    {
       return fromJson(
-         getJson(credential.getTarget() + "/apps/" + app, credential.getToken(), 200),
+         getJson(credential.target + "/apps/" + app, credential.token, 200),
          AppfogApplication.class,
          null
       );
@@ -331,19 +308,7 @@ public class Appfog
       SystemResources usage = systemInfo.getUsage();
 
       checkApplicationNumberLimit(limits, usage);
-
-      try
-      {
-         checkApplicationName(credential, app);
-      }
-      catch (AppfogException e)
-      {
-         if (!"Not Found".equals(e.getMessage()))
-         {
-            throw e;
-         }
-         //"Not Found" - means that it's all good, application doesn't exist, continue creating.
-      }
+      checkApplicationName(credential, app);
 
       AppfogApplication appInfo;
       java.io.File path = null;
@@ -359,7 +324,7 @@ public class Appfog
             }
             else
             {
-               path = downloadFile(null, "vmc_" + app, ".war", url);
+               path = downloadFile(null, "af_" + app, ".war", url);
                cleanup = true; // remove only downloaded file.
             }
          }
@@ -432,9 +397,9 @@ public class Appfog
             infraType.getInfra()
          );
 
-         String json = postJson(credential.getTarget() + "/apps", credential.getToken(), toJson(payload), 302);
+         String json = postJson(credential.target + "/apps", credential.token, toJson(payload), 302);
          CreateResponse resp = fromJson(json, CreateResponse.class, null);
-         appInfo = fromJson(doRequest(resp.getRedirect(), "GET", credential.getToken(), null, null, 200),
+         appInfo = fromJson(doRequest(resp.getRedirect(), "GET", credential.token, null, null, 200),
             AppfogApplication.class, null);
 
          uploadApplication(credential, app, vfs, projectId, path);
@@ -442,7 +407,7 @@ public class Appfog
          if (vfs != null && projectId != null)
          {
             writeApplicationName(vfs, projectId, app);
-            writeServerName(vfs, projectId, credential.getTarget());
+            writeServerName(vfs, projectId, credential.target);
             writeInfraName(vfs, projectId, infraType.getInfra().getName());
          }
 
@@ -512,7 +477,7 @@ public class Appfog
       {
          appInfo.setState("STARTED"); // Update application state.
          appInfo.setDebug(debug);
-         putJson(credential.getTarget() + "/apps/" + name, credential.getToken(), toJson(appInfo), 200);
+         putJson(credential.target + "/apps/" + name, credential.token, toJson(appInfo), 200);
          // Check is application started.
          final int attempts = 30;
          final int sleepTime = 2000;
@@ -553,7 +518,6 @@ public class Appfog
                                String projectId)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.stopApplication(server, app, vfs, projectId);
       stopApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, true);
    }
@@ -580,13 +544,6 @@ public class Appfog
                                                String projectId)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.stopApplication(server, app, vfs, projectId);
-//
-//      Cloudfoundry.Credential credential = cf.getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server);
-//      String application = app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app;
-//      String debug = debugMode == null ? null : debugMode.getMode();
-//
-//      return startApplication(credential, application, debug, false);
       return restartApplication(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app,
          debugMode == null ? null : debugMode.getMode());
@@ -606,7 +563,6 @@ public class Appfog
                                  URL war)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.updateApplication(server, app, vfs, projectId, war);
       if ((vfs == null || projectId == null) && war == null)
       {
          throw new IllegalArgumentException("Project directory or location to WAR file required. ");
@@ -634,7 +590,7 @@ public class Appfog
             }
             else
             {
-               path = downloadFile(null, "vmc_" + app, ".war", url);
+               path = downloadFile(null, "af_" + app, ".war", url);
                cleanup = true;
             }
             uploadApplication(credential, app, vfs, projectId, path);
@@ -679,8 +635,8 @@ public class Appfog
       throws AppfogException, IOException
    {
       return doRequest(
-         credential.getTarget() + "/apps/" + app + "/instances/" + instance + "/files/" + URLEncoder.encode(path, "UTF-8"),
-         "GET", credential.getToken(),
+         credential.target + "/apps/" + app + "/instances/" + instance + "/files/" + URLEncoder.encode(path, "UTF-8"),
+         "GET", credential.token,
          null,
          null,
          200
@@ -740,7 +696,6 @@ public class Appfog
                       String url)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.mapUrl(server, app, vfs, projectId, url);
       if (url == null)
       {
          throw new IllegalArgumentException("URL for mapping required. ");
@@ -789,7 +744,6 @@ public class Appfog
                         String url)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.unmapUrl(server, app, vfs, projectId, url);
       if (url == null)
       {
          throw new IllegalArgumentException("URL for unmapping required. ");
@@ -802,7 +756,6 @@ public class Appfog
       AppfogException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
-      // Cloud foundry server send URL without schema.
       if (url.startsWith("http://"))
       {
          url = url.substring(7);
@@ -825,7 +778,6 @@ public class Appfog
                    int memory)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.mem(server, app, vfs, projectId, memory);
       if (memory < 0)
       {
          throw new IllegalArgumentException("Memory reservation for application may not be negative. ");
@@ -866,7 +818,6 @@ public class Appfog
                                           String projectId)
       throws ParsingResponseException, AppfogException, IOException, VirtualFileSystemException
    {
-//      return cf.applicationInstances(server, app, vfs, projectId);
       return applicationInstances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app);
    }
@@ -897,7 +848,6 @@ public class Appfog
                          String expression)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.instances(server, app, vfs, projectId, expression);
       instances(getCredential(server == null || server.isEmpty() ? detectServer(vfs, projectId) : server),
          app == null || app.isEmpty() ? detectApplicationName(vfs, projectId, true) : app, expression, false);
    }
@@ -955,7 +905,7 @@ public class Appfog
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
       AppfogApplication appInfo = applicationInfo(credential, app);
-      deleteJson(credential.getTarget() + "/apps/" + app, credential.getToken(), 200);
+      deleteJson(credential.target + "/apps/" + app, credential.token, 200);
       if (vfs != null && projectId != null)
       {
          writeApplicationName(vfs, projectId, null);
@@ -969,7 +919,7 @@ public class Appfog
          {
             for (String service : services)
             {
-               deleteService(credential.getTarget(), service);
+               deleteService(credential.target, service);
             }
          }
       }
@@ -1033,7 +983,7 @@ public class Appfog
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
       Credential credential = getCredential(server == null || server.isEmpty() ? getTarget() : server);
-      return fromJson(getJson(credential.getTarget() + "/apps", credential.getToken(), 200), AppfogApplication[].class, null);
+      return fromJson(getJson(credential.target + "/apps", credential.token, 200), AppfogApplication[].class, null);
    }
 
    public AppfogServices services(String server) throws AppfogException, ParsingResponseException, VirtualFileSystemException, IOException
@@ -1045,13 +995,13 @@ public class Appfog
    private AppfogSystemService[] systemServices(Credential credential) throws IOException, ParsingResponseException,
       AppfogException
    {
-      return parseSystemServices(getJson(credential.getTarget() + "/info/services", credential.getToken(), 200));
+      return parseSystemServices(getJson(credential.target + "/info/services", credential.token, 200));
    }
 
    private AppfogProvisionedService[] provisionedServices(Credential credential) throws IOException,
       ParsingResponseException, AppfogException
    {
-      return fromJson(getJson(credential.getTarget() + "/services", credential.getToken(), 200), AppfogProvisionedService[].class, null);
+      return fromJson(getJson(credential.target + "/services", credential.token, 200), AppfogProvisionedService[].class, null);
    }
 
    private static AppfogSystemService[] parseSystemServices(String json) throws ParsingResponseException
@@ -1128,14 +1078,14 @@ public class Appfog
       }
 
       AppfogCreateService req = new AppfogCreateService(name, target.getType(), service, target.getVersion(), infraType.getInfra());
-      postJson(credential.getTarget() + "/services", credential.getToken(), toJson(req), 200);
+      postJson(credential.target + "/services", credential.token, toJson(req), 200);
 
       // Be sure service available.
       AppfogProvisionedService res = findService(credential, name);
 
       if (app != null)
       {
-         bindService(credential.getTarget(), name, app, null, null);
+         bindService(credential.target, name, app, null, null);
       }
 
       return res;
@@ -1157,7 +1107,6 @@ public class Appfog
    public void deleteService(String server, String name)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.deleteService(server, name);
       if (name == null || name.isEmpty())
       {
          throw new IllegalArgumentException("Service name required. ");
@@ -1179,7 +1128,6 @@ public class Appfog
                            String projectId)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.bindService(server, name, app, vfs, projectId);
       if (name == null || name.isEmpty())
       {
          throw new IllegalArgumentException("Service name required. ");
@@ -1223,7 +1171,6 @@ public class Appfog
                              String projectId)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.unbindService(server, name, app, vfs, projectId);
       if (name == null || name.isEmpty())
       {
          throw new IllegalArgumentException("Service name required. ");
@@ -1256,7 +1203,6 @@ public class Appfog
                               String val)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.environmentAdd(server, app, vfs, projectId, key, val);
       if (key == null || key.isEmpty())
       {
          throw new IllegalArgumentException("Key-value pair required. ");
@@ -1300,7 +1246,6 @@ public class Appfog
                                  String key)
       throws ParsingResponseException, AppfogException, VirtualFileSystemException, IOException
    {
-//      cf.environmentDelete(server, app, vfs, projectId, key);
       if (key == null || key.isEmpty())
       {
          throw new IllegalArgumentException("Key required. ");
@@ -1356,13 +1301,7 @@ public class Appfog
          {
             throw new IllegalArgumentException("Application name required. ");
          }
-         String name = detectApplicationName(vfs, projectId, false);
-//         if (!(name == null || name.isEmpty()))
-//         {
-//            // Working directory may not be used for more then one application.
-//            throw new AppfogException(400, "Working directory already contains Appfog application. ",
-//               "text/plain");
-//         }
+
          if (server == null || server.isEmpty())
          {
             throw new IllegalArgumentException("Location of Appfog server required. ");
@@ -1374,19 +1313,7 @@ public class Appfog
          SystemResources usage = systemInfo.getUsage();
 
          checkApplicationNumberLimit(limits, usage);
-
-         try
-         {
-            checkApplicationName(credential, app);
-         }
-         catch (AppfogException e)
-         {
-            if (!"Not Found".equals(e.getMessage()))
-            {
-               throw e;
-            }
-            //"Not Found" - means that it's all good, application doesn't exist, continue creating.
-         }
+         checkApplicationName(credential, app);
 
          Framework cfg = null;
          if (frameworkName != null)
@@ -1431,7 +1358,7 @@ public class Appfog
    private InfraDetail[] getInfras(Credential credential)
       throws AppfogException, ParsingResponseException, IOException
    {
-      return fromJson(getJson(credential.getTarget() + "/info/infras", credential.getToken(), 200), InfraDetail[].class, null);
+      return fromJson(getJson(credential.target + "/info/infras", credential.token, 200), InfraDetail[].class, null);
    }
 
    //-----------------------------------------------------------------------------
@@ -1472,7 +1399,7 @@ public class Appfog
       if (failIfCannotDetect && (app == null || app.isEmpty()))
       {
          throw new RuntimeException(
-            "Not a Appfog application. Please select root folder of Cloud Foundry project. ");
+            "Not a Appfog application. Please select root folder of Appfog project. ");
       }
       return app;
    }
@@ -1514,13 +1441,11 @@ public class Appfog
       }
       catch (AppfogException e)
       {
-         // If application does not exists then expected code is 301.
-         // NOTE this is not HTTP status but status of Cloudfoundry action.
-         if (301 != e.getExitCode())
+         if (!"Not Found".equals(e.getMessage()))
          {
             throw e;
          }
-         // 301 - Good, application name is not used yet.
+         //"Not Found" - means that it's all good, application doesn't exist, continue creating.
       }
    }
 
@@ -1784,7 +1709,7 @@ public class Appfog
       java.io.File uploadDir = null;
       try
       {
-         uploadDir = createTempDirectory(null, "vmc_" + app);
+         uploadDir = createTempDirectory(null, "af_" + app);
 
          if (path != null)
          {

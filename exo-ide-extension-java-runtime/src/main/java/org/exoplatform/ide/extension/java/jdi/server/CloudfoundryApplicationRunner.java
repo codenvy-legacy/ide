@@ -58,7 +58,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -97,7 +96,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
    private final Map<String, Application> applications;
    private final ScheduledExecutorService applicationTerminator;
-   private final java.io.File appEngineSdk;
 
    /** Component for sending messages to client over WebSocket connection. */
    private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
@@ -136,28 +134,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       this.applications = new ConcurrentHashMap<String, Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
       this.applicationTerminator.scheduleAtFixedRate(new TerminateApplicationTask(), 1, 1, TimeUnit.MINUTES);
-
-      java.io.File lib = null;
-      try
-      {
-         Class cl = Thread.currentThread().getContextClassLoader()
-            .loadClass("com.google.appengine.tools.development.DevAppServerMain");
-         URL cs = cl.getProtectionDomain().getCodeSource().getLocation();
-         lib = new java.io.File(URI.create(cs.toString()));
-         while (!(lib == null || "lib".equals(lib.getName())))
-         {
-            lib = lib.getParentFile();
-         }
-      }
-      catch (ClassNotFoundException ignored)
-      {
-      }
-
-      appEngineSdk = lib == null ? null : lib.getParentFile();
-      if (appEngineSdk == null)
-      {
-         LOG.error("***** Google appengine Java SDK not found *****");
-      }
    }
 
    @Override
@@ -260,10 +236,10 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    }
 
    private ApplicationInstance doDebugApplication(Cloudfoundry cloudfoundry,
-                                                       String name,
-                                                       java.io.File path,
-                                                       DebugMode debugMode,
-                                                       Map<String, String> params) throws ApplicationRunnerException
+                                                  String name,
+                                                  java.io.File path,
+                                                  DebugMode debugMode,
+                                                  Map<String, String> params) throws ApplicationRunnerException
    {
       try
       {
@@ -451,53 +427,16 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                      String name,
                                                      java.io.File path,
                                                      DebugMode debug,
-                                                     Map<String,String> params)
+                                                     Map<String, String> params)
       throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException
    {
       if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == determineApplicationType(path))
       {
-         if (appEngineSdk == null)
-         {
-            throw new RuntimeException("Unable run or debug appengine project. Google appengine Java SDK not found. ");
-         }
-
-         final java.io.File appengineApplication = createTempDirectory("gae-app-");
-         try
-         {
-            // copy sdk
-            final java.io.File sdk = new java.io.File(appengineApplication, "appengine-java-sdk");
-            if (!sdk.mkdir())
-            {
-               throw new IOException("Unable create directory " + sdk.getAbsolutePath());
-            }
-            copy(appEngineSdk, sdk, null);
-
-            // unzip content of war file
-            final java.io.File app = new java.io.File(appengineApplication, "application");
-            if (!app.mkdir())
-            {
-               throw new IOException("Unable create directory " + app.getAbsolutePath());
-            }
-            unzip(path, app);
-
-            final String command = "java -ea -cp appengine-java-sdk/lib/appengine-tools-api.jar "
-               + "-javaagent:appengine-java-sdk/lib/agent/appengine-agent.jar $JAVA_OPTS "
-               + "com.google.appengine.tools.development.DevAppServerMain --port=$VCAP_APP_PORT --address=0.0.0.0 --disable_update_check "
-               + "application";
-
-            return cloudfoundry.createApplication(target, name, "standalone", null, 1, 256, false, "java", command, debug,
-               null, null, appengineApplication.toURI().toURL(), params);
-         }
-         finally
-         {
-            deleteRecursive(appengineApplication);
-         }
+         return cloudfoundry.createApplication(target, name, "java_gae", null, 1, 256, false, "java", null, debug, null,
+            null, path.toURI().toURL(), params);
       }
-      else
-      {
-         return cloudfoundry.createApplication(target, name, "spring", null, 1, 256, false, "java", null, debug, null, null,
-            path.toURI().toURL(), params);
-      }
+      return cloudfoundry.createApplication(target, name, "spring", null, 1, 256, false, "java", null, debug, null,
+         null, path.toURI().toURL(), params);
    }
 
    @Override
@@ -739,7 +678,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             zipIn.close();
             out.close();
          }
-         conn.getResponseCode();
+         int responseCode = conn.getResponseCode();
+         if ((responseCode / 100) != 2)
+         {
+            throw new IOException("Update application failed. ");
+         }
       }
       finally
       {

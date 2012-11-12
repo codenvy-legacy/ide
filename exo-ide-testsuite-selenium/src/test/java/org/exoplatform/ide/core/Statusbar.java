@@ -43,7 +43,7 @@ public class Statusbar extends AbstractTestModule
       String NAVIGATION_STATUS_LOCATOR = "//div[@control-id='__navigator_status']";
 
       String BUILD_FAILED_STATUS_LOCATOR =
-         "div[control-id='__request-notification-control'][title='Building of project failed']";
+         "//div[@control-id='__request-notification-control']//tr[contains(., 'Building of project failed:')]";
 
       String BUILD_DISAPPEAR = "//div[@id='exoIDEStatusbar']//div[3]";
 
@@ -55,7 +55,7 @@ public class Statusbar extends AbstractTestModule
    @FindBy(xpath = Locators.NAVIGATION_STATUS_LOCATOR)
    private WebElement navigationStatus;
 
-   @FindBy(css = Locators.BUILD_FAILED_STATUS_LOCATOR)
+   @FindBy(xpath = Locators.BUILD_FAILED_STATUS_LOCATOR)
    private WebElement buildFailStatus;
 
    @FindBy(xpath = Locators.BUILD_DISAPPEAR)

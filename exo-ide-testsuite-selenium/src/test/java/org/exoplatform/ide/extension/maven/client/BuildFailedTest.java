@@ -99,7 +99,7 @@ public class BuildFailedTest extends BaseTest
       IDE.BUILD.waitOpened();
       
       
-      assertTrue(IDE.BUILD.getOutputMessage().startsWith(BEGINING_BUILD_FAIL_MESS));
+    //  assertTrue(IDE.BUILD.getOutputMessage().startsWith(BEGINING_BUILD_FAIL_MESS));
       // Close Build project view because Output view is not visible
       IDE.OUTPUT.clickOnOutputTab();
       IDE.OUTPUT.waitOpened();

@@ -30,6 +30,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.lang.reflect.Modifier;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 10:56:46 AM Mar 15, 2012 evgen $
@@ -171,6 +173,18 @@ public class MethodSignature extends SignatureBase
       TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
       MethodInfo methodInfo = typeInfo.getMethods().get(0);
       assertThat(methodInfo.getSignature()).isNotNull().isEqualTo("<T::Ljava/util/List<TS;>;S:Ljava/lang/Object;>(Ljava/util/List<+TT;>;)Ljava/util/List<Ljava/util/Comparator<TS;>;>;");
+   }
+   @Test
+   public void interfaceMethodModifier() throws Exception
+   {
+      StringBuilder b = new StringBuilder("package test;\n");
+      b.append("public interface TestClass{\n");
+      b.append(" void doSome();\n");
+      b.append("\n}");
+      TypeInfo typeInfo = getTypeInfo(b, "test.TestClass");
+      MethodInfo methodInfo = typeInfo.getMethods().get(0);
+      assertThat(Modifier.isAbstract(methodInfo.getModifiers())).isTrue();
+      
    }
 
 }

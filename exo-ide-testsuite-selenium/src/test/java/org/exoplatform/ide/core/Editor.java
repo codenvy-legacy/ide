@@ -70,7 +70,7 @@ public class Editor extends AbstractTestModule
 
       String DESIGN_BUTTON_XPATH = "//div[@title='Design']//div[text()='Design']";
 
-      String SOURCE_BUTTON_ID = "SourceButtonID";
+      String SOURCE_BUTTON = "//div[text()='Source']";
 
       String TAB_TITLE = "//table[@class='tabTitleTable' and contains(., '%s')]";
 
@@ -854,7 +854,7 @@ public class Editor extends AbstractTestModule
     */
    public void clickSourceButton() throws Exception
    {
-      editor.findElement(By.id(Locators.SOURCE_BUTTON_ID)).click();
+      editor.findElement(By.xpath(Locators.SOURCE_BUTTON)).click();
    }
 
    /**

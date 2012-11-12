@@ -24,6 +24,10 @@ import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 import org.exoplatform.ide.client.framework.discovery.RestServicesList;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
+import org.exoplatform.ide.vfs.client.Item;
+import org.exoplatform.ide.vfs.client.ItemNode;
+import org.exoplatform.ide.vfs.client.Link;
+import org.exoplatform.ide.vfs.client.Property;
 import org.exoplatform.ide.vfs.shared.LockToken;
 
 /**
@@ -62,4 +66,14 @@ public interface IDEAutoBeanFactory extends AutoBeanFactory
     * @return an {@link AutoBean} of type {@link UserInfo}
     */
    AutoBean<GoogleContact> googleContact();
+   
+   AutoBean<ItemNode> itemNode();
+   
+   AutoBean<Item> item();
+   
+   AutoBean<Link> link();
+   
+   AutoBean<Property> property();
+   
+   
 }

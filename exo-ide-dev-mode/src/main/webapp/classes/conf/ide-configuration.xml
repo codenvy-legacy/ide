@@ -522,7 +522,7 @@
 -->
 
    <component>
-      <type>org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator</type>
+      <type>org.exoplatform.ide.security.oauth.ExoGoogleOAuthAuthenticator</type>
       <init-params>
          <value-param>
             <name>type</name>
@@ -543,11 +543,11 @@
       </init-params>
    </component>
    <component>
-      <type>org.exoplatform.ide.security.oauth.GitHubOAuthAuthenticator</type>
+      <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
    </component>
 
    <component>
-      <type>org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider</type>
+      <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
    </component>
 
 </configuration>

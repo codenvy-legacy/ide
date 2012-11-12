@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.googleappengine.client.deploy;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -36,7 +38,7 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExten
  * 
  */
 public class DeployApplicationControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler
+   ProjectClosedHandler, ActiveProjectChangedHandler
 {
    private static final String ID = "PaaS/Google App Engine/Deploy";
 
@@ -61,6 +63,7 @@ public class DeployApplicationControl extends SimpleControl implements IDEContro
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
 
       setVisible(true);
       setEnabled(false);
@@ -80,6 +83,13 @@ public class DeployApplicationControl extends SimpleControl implements IDEContro
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
+      setEnabled(enabled);
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       boolean enabled = GoogleAppEngineExtension.isAppEngineProject(event.getProject());
       setEnabled(enabled);

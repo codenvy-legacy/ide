@@ -18,15 +18,35 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.json.client.JSONParser;
+
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+
+import com.google.web.bindery.autobean.shared.AutoBean;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -58,12 +78,14 @@ import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -84,6 +106,7 @@ import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
+import org.exoplatform.ide.vfs.client.ItemNode;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
@@ -106,23 +129,13 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
 import org.exoplatform.ide.vfs.shared.Property;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -156,11 +169,15 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private String itemToSelect;
 
+   private HashMap<String, ProjectModel> map = new HashMap<String, ProjectModel>();
+
    private List<Folder> foldersToRefresh = new ArrayList<Folder>();
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private ProjectModel openedProject;
+
+   private ProjectModel currentProject;
 
    private FileModel editorActiveFile;
 
@@ -497,7 +514,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          {
             ItemContext contect = (ItemContext)i;
             contect.setParent(new FolderModel(folder));
-            contect.setProject(openedProject);
+            contect.setProject(map.get(i.getId()) != null ? map.get(i.getId()) : openedProject);
          }
       }
 
@@ -556,7 +573,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          return;
       }
-
       display.selectItem(event.getItemId());
    }
 
@@ -694,9 +710,26 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
+      if (event.getSelectedItems().size() == 1)
+      {
+         Item item = event.getSelectedItems().get(0);
+         if (item.getItemType().equals(ItemType.PROJECT))
+         {
+            currentProject = (ProjectModel)item;
+         }
+         else
+         {
+            currentProject = map.get(item.getId());
+         }
+        IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
+      }
    }
 
    private String lastNavigatorId = null;
+
+   protected ProjectModel projectTree;
+
+   protected ItemNode tree;
 
    @Override
    public void onViewActivated(ViewActivatedEvent event)
@@ -727,7 +760,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       display.selectItem(openedProject.getId());
       selectedItems = display.getSelectedItems();
 
-      IDE.fireEvent(new ProjectOpenedEvent(openedProject));
 
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
@@ -735,7 +767,42 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       // Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
       foldersToRefresh.add(openedProject);
-      refreshNextFolder();
+      if (openedProject.getProjectType().equals(ProjectType.MultiModule.value()))
+      {
+         try
+         {
+            AutoBean<ItemNode> autoBean = org.exoplatform.ide.client.IDE.AUTO_BEAN_FACTORY.itemNode();
+            AutoBeanUnmarshaller<ItemNode> unmarshaller = new AutoBeanUnmarshaller<ItemNode>(autoBean);
+            //            ProjectModel project = new ProjectModel();
+            VirtualFileSystem.getInstance().getProjectTree(openedProject.getId(),
+               new AsyncRequestCallback<ItemNode>(unmarshaller)
+               {
+                  @Override
+                  protected void onSuccess(ItemNode result)
+                  {
+                     parseProjectTree(openedProject, result);
+                     IDE.fireEvent(new ProjectOpenedEvent(openedProject));
+                     refreshNextFolder();
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(exception,
+                        "Service is not deployed.<br>Parent folder not found."));
+                  }
+               });
+         }
+         catch (RequestException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+      }
+      else {
+         IDE.fireEvent(new ProjectOpenedEvent(openedProject));
+         refreshNextFolder();
+      }
    }
 
    @Override
@@ -763,6 +830,8 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
       {
          loadProject();
       }
+
+     
    }
 
    @Override
@@ -882,10 +951,10 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          return;
       }
 
-//      if (!display.asView().isViewVisible())
-//      {
-//         display.asView().activate();
-//      }
+      //      if (!display.asView().isViewVisible())
+      //      {
+      //         display.asView().activate();
+      //      }
 
       if (display.selectItem(editorActiveFile.getId()))
       {
@@ -1253,4 +1322,33 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
+
+   /**
+    * @param result
+    */
+   private void parseProjectTree(ProjectModel model, ItemNode result)
+   {
+      ProjectModel curentProject = model;
+      List<ItemNode> children = result.getChildren();
+      for (ItemNode itemNode : children)
+      {
+         if (itemNode.getItem().getItemType().equals(ItemType.PROJECT))
+         {
+            //TODO need fix it ASAP
+            String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(itemNode.getItem())).getPayload();
+            ProjectModel model2 = new ProjectModel(JSONParser.parseStrict(data).isObject());
+            openedProject.getModules().add(model2);
+            parseProjectTree(model2, itemNode);
+         }
+         else
+         {
+            map.put(itemNode.getItem().getId(), curentProject);
+            if (itemNode.getItem().getItemType().equals(ItemType.FOLDER))
+            {
+               parseProjectTree(curentProject, itemNode);
+            }
+         }
+      }
+   }
+
 }

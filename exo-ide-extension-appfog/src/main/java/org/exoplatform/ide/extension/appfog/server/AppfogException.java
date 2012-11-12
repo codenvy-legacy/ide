@@ -19,28 +19,28 @@
 package org.exoplatform.ide.extension.appfog.server;
 
 /**
- * If Cloudfoundry server return unexpected or error status for request.
+ * If Appfog server return unexpected or error status for request.
  *
- * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
 @SuppressWarnings("serial")
 public class AppfogException extends Exception
 {
-   /** HTTP status of response from Cloudfoundry server. */
+   /** HTTP status of response from Appfog server. */
    private final int responseStatus;
 
-   /** Content type of response from Cloudfoundry server. */
+   /** Content type of response from Appfog server. */
    private final String contentType;
 
-   /** Exit code of command execution at Cloudfoundry server. May be -1 if cannot get exit code from Cloudfoundry
+   /** Exit code of command execution at Appfog server. May be -1 if cannot get exit code from Appfog
     * response. */
    private final int exitCode;
 
    /**
-    * @param responseStatus HTTP status of response from Cloudfoundry server
+    * @param responseStatus HTTP status of response from Appfog server
     * @param message text message
-    * @param contentType content type of response from Cloudfoundry server
+    * @param contentType content type of response from Appfog server
     */
    public AppfogException(int responseStatus, String message, String contentType)
    {

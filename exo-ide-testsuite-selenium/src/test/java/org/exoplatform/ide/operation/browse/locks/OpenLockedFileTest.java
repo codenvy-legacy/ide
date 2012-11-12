@@ -60,7 +60,6 @@ public class OpenLockedFileTest extends BaseTest
       {
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
          VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
-
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/"
             + FILE_NAME);
       }
@@ -84,7 +83,7 @@ public class OpenLockedFileTest extends BaseTest
    @Test
    public void testOpenLockedFile() throws Exception
    {
-      //step 1 open and lock file. Check state of the file
+     // step 1 open and lock file. Check state of the file
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
@@ -107,7 +106,6 @@ public class OpenLockedFileTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.LOCK_FILE.isLockCommandNotActive();
       IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
-      IDE.LOCK_FILE.waitDisabledLockIconInEditMenu();
       IDE.MENU.clickOnLockLayer();
       IDE.LOCK_FILE.isLockIconOnTabView(1);
       assertTrue(IDE.LOCK_FILE.isLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME));

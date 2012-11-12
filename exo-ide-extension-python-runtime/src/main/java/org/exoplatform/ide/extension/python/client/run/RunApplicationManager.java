@@ -33,6 +33,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
+import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -58,7 +60,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * 
  */
 public class RunApplicationManager implements RunApplicationHandler, StopApplicationHandler, VfsChangedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler
+   ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
 {
    private ProjectModel currentProject;
 
@@ -79,6 +81,7 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -123,6 +126,12 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
     */
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      this.currentProject = event.getProject();
+   }
+   
+   @Override
+   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
       this.currentProject = event.getProject();
    }
