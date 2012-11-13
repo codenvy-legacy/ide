@@ -50,7 +50,7 @@ import com.google.gwt.user.client.ui.Widget;
  * @version $
  */
 
-public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorerDisplay
+public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisplay
 {
 
    public static final String ID = "ideTinyProjectExplorerView";
@@ -67,7 +67,7 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
 
    private static TinyProjectExplorerViewUiBinder uiBinder = GWT.create(TinyProjectExplorerViewUiBinder.class);
 
-   interface TinyProjectExplorerViewUiBinder extends UiBinder<Widget, TinyProjectExplorerView>
+   interface TinyProjectExplorerViewUiBinder extends UiBinder<Widget, ProjectExplorerView>
    {
    }
 
@@ -85,7 +85,7 @@ public class TinyProjectExplorerView extends ViewImpl implements ProjectExplorer
 
    private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.projectExplorerViewTitle();
 
-   public TinyProjectExplorerView()
+   public ProjectExplorerView()
    {
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
