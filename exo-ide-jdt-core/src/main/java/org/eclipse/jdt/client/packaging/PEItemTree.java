@@ -525,6 +525,32 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    
    public void goToItem(List<Object> itemList)
    {
+//      for (Object o : itemList)
+//      {
+//         if (o instanceof ProjectItem)
+//         {
+//            System.out.println("project item > " + ((ProjectItem)o).getProject().getName());
+//         }
+//         else if (o instanceof ResourceDirectoryItem)
+//         {
+//            System.out.println("resource directory > " + ((ResourceDirectoryItem)o).getName());
+//         }
+//         else if (o instanceof PackageItem)
+//         {
+//            System.out.println("package > " + ((PackageItem)o).getPackageName());
+//         }
+//         else if (o instanceof FolderModel)
+//         {
+//            System.out.println("folder > " + ((FolderModel)o).getName());
+//         }
+//         else if (o instanceof FileModel)
+//         {
+//            System.out.println("file > " + ((FileModel)o).getName());
+//         }
+//         
+//      }
+//      System.out.println("---------------------");
+      
       TreeItem treeItem = null;
       for (int i = 0; i < itemList.size(); i++)
       {

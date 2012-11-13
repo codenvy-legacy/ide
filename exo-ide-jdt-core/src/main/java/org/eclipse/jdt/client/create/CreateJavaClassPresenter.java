@@ -595,7 +595,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          @Override
          public void execute()
          {
-            System.out.println("class parent folder > " + classParentFolder.getPath());
             IDE.fireEvent(new RefreshBrowserEvent(classParentFolder, event.getFile()));
          }
       });

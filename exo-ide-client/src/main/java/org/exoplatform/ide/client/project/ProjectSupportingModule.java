@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
 import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
 import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
-import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerPresenter;
+import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
@@ -62,7 +62,7 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       new CreateProjectPresenter();
       new ShowProjectsPresenter();
 
-      new TinyProjectExplorerPresenter();
+      new ProjectExplorerPresenter();
 
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
       IDE.getInstance().addControl(new CloseProjectControl());
