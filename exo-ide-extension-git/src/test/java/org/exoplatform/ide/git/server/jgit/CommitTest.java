@@ -42,6 +42,7 @@ public class CommitTest extends BaseTest
 {
    public void testCommit() throws Exception
    {
+      Repository repository = getDefaultRepository();
       // Add file.
       addFile(getDefaultRepository().getWorkTree(), "file1", "file1");
 
@@ -55,8 +56,27 @@ public class CommitTest extends BaseTest
 
       assertEquals("add file1", revision.getMessage());
       assertEquals(revCommit.getId().getName(), revision.getId());
-      assertEquals("andrey", revision.getCommitter().getName());
-      assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
+
+      String configName = repository.getConfig().getString("user", null, "name");
+      String configEmail = repository.getConfig().getString("user", null, "email");
+
+      if (configName != null)
+      {
+         assertEquals(configName, revision.getCommitter().getName());
+      }
+      else
+      {
+         assertEquals("andrey", revision.getCommitter().getName());
+      }
+
+      if (configEmail != null)
+      {
+         assertEquals(configEmail, revision.getCommitter().getEmail());
+      }
+      else
+      {
+         assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
+      }
    }
 
    public void testCommitAll() throws Exception
@@ -73,7 +93,7 @@ public class CommitTest extends BaseTest
       FileOutputStream fileStream = new FileOutputStream(file);
       fileStream.write("updated".getBytes());
       fileStream.close();
-      
+
       // Remove.
       delete(new File(repository.getWorkTree(), "README.txt"));
 
@@ -84,8 +104,27 @@ public class CommitTest extends BaseTest
 
       assertEquals("update file2", revision.getMessage());
       assertEquals(revCommit.getId().getName(), revision.getId());
-      assertEquals("andrey", revision.getCommitter().getName());
-      assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
+
+      String configName = repository.getConfig().getString("user", null, "name");
+      String configEmail = repository.getConfig().getString("user", null, "email");
+
+      if (configName != null)
+      {
+         assertEquals(configName, revision.getCommitter().getName());
+      }
+      else
+      {
+         assertEquals("andrey", revision.getCommitter().getName());
+      }
+
+      if (configEmail != null)
+      {
+         assertEquals(configEmail, revision.getCommitter().getEmail());
+      }
+      else
+      {
+         assertEquals("andrey@mail.com", revision.getCommitter().getEmail());
+      }
 
       checkNoFilesInCache(repository, "README.txt");
 
