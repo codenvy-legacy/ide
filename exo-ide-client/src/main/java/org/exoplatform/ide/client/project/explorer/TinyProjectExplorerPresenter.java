@@ -721,7 +721,14 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          {
             currentProject = map.get(item.getId());
          }
-        IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
+        if (currentProject != null)
+        {
+           IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
+        }
+        else
+        {
+           IDE.fireEvent(new ActiveProjectChangedEvent(openedProject));
+        }
       }
    }
 

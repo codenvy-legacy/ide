@@ -136,7 +136,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
       statusHandler.requestInProgress(project.getId());
       try
       {
-         BuilderClientService.getInstance().buildAndPublish(project.getId(), 
+         BuilderClientService.getInstance().buildAndPublish(project.getId(),
             VirtualFileSystem.getInstance().getInfo().getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
@@ -318,7 +318,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
          showLog();
       }
 
-//      IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
+      //      IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
 
    /**
