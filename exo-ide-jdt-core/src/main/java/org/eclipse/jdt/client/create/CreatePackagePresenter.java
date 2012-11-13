@@ -45,6 +45,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -183,6 +187,18 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
             validate(event.getValue());
          }
       });
+      
+      ((HasKeyPressHandlers)display.getPackageNameField()).addKeyPressHandler(new KeyPressHandler()
+      {
+         @Override
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+            {
+               doCreate();
+            }            
+         }
+      });
 
       display.setOkButtonEnabled(false);
       
@@ -260,6 +276,11 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
     */
    protected void doCreate()
    {
+      if (display.getPackageNameField().getValue() == null || display.getPackageNameField().getValue().isEmpty())
+      {
+         return;
+      }
+      
       FolderModel rdf = null;
       
       String selectedItemPath = selectedItem.getPath();

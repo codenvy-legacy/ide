@@ -63,6 +63,10 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerManager;
@@ -221,6 +225,19 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          }
       });
       
+      ((HasKeyPressHandlers)display.classNameField()).addKeyPressHandler(new KeyPressHandler()
+      {
+         @Override
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+            {
+               doCreate();
+            }            
+         }
+      });
+      
+      
       List<String> types = new ArrayList<String>();
       for (JavaTypes t : JavaTypes.values())
       {
@@ -341,6 +358,11 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
     */
    private void doCreate()
    {
+      if (display.classNameField().getValue() == null || display.classNameField().getValue().isEmpty())
+      {
+         return;
+      }
+      
       try
       {
          switch (JavaTypes.valueOf(display.classTypeField().getValue().toUpperCase()))
