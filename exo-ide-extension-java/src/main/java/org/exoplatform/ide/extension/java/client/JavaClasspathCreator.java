@@ -136,8 +136,8 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
       statusHandler.requestInProgress(project.getId());
       try
       {
-         BuilderClientService.getInstance().buildAndPublish(project.getId(),
-            VirtualFileSystem.getInstance().getInfo().getId(), false,
+         BuilderClientService.getInstance().buildAndPublish(project.getId(), 
+            VirtualFileSystem.getInstance().getInfo().getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
