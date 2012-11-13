@@ -179,6 +179,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
     */
    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
 
+   private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
+
    private class NoneTarget extends PaaS
    {
       public NoneTarget()
@@ -336,15 +338,15 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
     */
    private void updateNavigationButtonsState()
    {
-      boolean enabled =
+      boolean firstStepIsOK =
          display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
             && selectedProjectType != null;
       boolean noneDeploy = (selectedTarget == null || selectedTarget instanceof NoneTarget);
 
       if (isChooseTemplateStep)
       {
-         display.enableFinishButton(enabled && noneDeploy && selectedTemplate != null);
-         display.enableNextButton(enabled && !noneDeploy && selectedTemplate != null);
+         display.enableFinishButton(firstStepIsOK && noneDeploy && selectedTemplate != null);
+         display.enableNextButton(firstStepIsOK && !noneDeploy && selectedTemplate != null);
       }
       else if (isDeployStep)
       {
@@ -352,9 +354,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       }
       else
       {
-         boolean hasTemplatesToChoose = availableProjectTemplates != null && availableProjectTemplates.size() > 1;
-         display.enableFinishButton(enabled && noneDeploy && !hasTemplatesToChoose);
-         display.enableNextButton(enabled && (!noneDeploy || hasTemplatesToChoose));
+         boolean hasTemplatesToChoose = availableProjectTemplates != null && availableProjectTemplates.size() > 0;
+         display.enableFinishButton(false);
+         display.enableNextButton(firstStepIsOK && hasTemplatesToChoose);
       }
    }
 
@@ -451,6 +453,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    {
       List<PaaS> list = new ArrayList<PaaS>();
       list.addAll(targetsList);
+      Collections.sort(list, PAAS_COMPARATOR);
       list.add(noneTarget);
       display.setTargets(list);
 
@@ -487,15 +490,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       if (isDeployStep)
       {
          isDeployStep = false;
-         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1
-            && !selectedTarget.isProvidesTemplate())
-         {
-            goToTemplatesStep();
-         }
-         else
-         {
-            goToProjectStep();
-         }
+         goToTemplatesStep();
       }
       else if (isChooseTemplateStep)
       {
@@ -516,15 +511,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          goToDeployStep();
       }
       else
+      // create project step
       {
-         if (availableProjectTemplates != null && availableProjectTemplates.size() > 1
-            && !selectedTarget.isProvidesTemplate())
+         goToTemplatesStep();
+         if (!availableProjectTemplates.contains(selectedTemplate))
          {
-            goToTemplatesStep();
-         }
-         else
-         {
-            goToDeployStep();
+            selectedTemplate = null;
          }
       }
       updateNavigationButtonsState();
@@ -838,16 +830,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
     */
    private void updateJRebelPanelVisibility()
    {
-      if (isChooseTemplateStep
-         || (isDeployStep && availableProjectTemplates != null && availableProjectTemplates.size() == 1))
-      {
-         if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
-         {
-            display.setJRebelPanelVisibility(true);
-            return;
-         }
-      }
-      display.setJRebelPanelVisibility(false);
+      boolean visible =
+         (isChooseTemplateStep && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING));
+      display.setJRebelPanelVisibility(visible);
    }
 
 }
