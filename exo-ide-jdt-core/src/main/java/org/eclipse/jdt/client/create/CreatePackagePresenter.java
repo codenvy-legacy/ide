@@ -18,22 +18,14 @@
  */
 package org.eclipse.jdt.client.create;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasText;
-import com.google.gwt.user.client.ui.HasValue;
-
 import org.eclipse.jdt.client.core.JavaConventions;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.event.CreatePackageEvent;
 import org.eclipse.jdt.client.event.CreatePackageHandler;
 import org.eclipse.jdt.client.event.PackageCreatedEvent;
+import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
+import org.eclipse.jdt.client.packaging.model.ProjectItem;
+import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -46,11 +38,23 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasText;
+import com.google.gwt.user.client.ui.HasValue;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -59,11 +63,13 @@ import org.exoplatform.ide.vfs.shared.Item;
  */
 public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedHandler, CreatePackageHandler
 {
+
    interface Display extends IsView
    {
-      String ID = "ideCreatePackageView";
 
       HasValue<String> getPackageNameField();
+      
+      void focusInPackageNameField();
 
       HasClickHandlers getOkButton();
 
@@ -80,23 +86,20 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
 
    private VirtualFileSystem vfs;
 
-   private IDE ide;
-
    private Display display;
 
-   private FolderModel parentFolder;
+   private Item selectedItem;
 
    /**
     * @param eventBus
     * @param vfs
     * @param ide
     */
-   public CreatePackagePresenter(HandlerManager eventBus, VirtualFileSystem vfs, IDE ide)
+   public CreatePackagePresenter(HandlerManager eventBus, VirtualFileSystem vfs)
    {
       super();
       this.eventBus = eventBus;
       this.vfs = vfs;
-      this.ide = ide;
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
       eventBus.addHandler(CreatePackageEvent.TYPE, this);
@@ -108,19 +111,14 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (!event.getSelectedItems().isEmpty())
+      if (event.getSelectedItems().isEmpty())
       {
-         Item item = event.getSelectedItems().get(0);
-         if (item instanceof FolderModel)
-            parentFolder = (FolderModel)item;
-         else
-            if(item instanceof ProjectModel)
-               parentFolder = new FolderModel((Folder)item);
-            else
-            parentFolder = ((FileModel)item).getParent();
+         selectedItem = null;
       }
       else
-         parentFolder = null;
+      {
+         selectedItem = event.getSelectedItems().get(0);
+      }
    }
 
    /**
@@ -129,7 +127,7 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
-      if (event.getView().getId().equals(Display.ID))
+      if (event.getView() instanceof Display)
       {
          display = null;
       }
@@ -141,14 +139,17 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
    @Override
    public void onCreatePackage(CreatePackageEvent event)
    {
-      if (parentFolder == null)
+      if (selectedItem == null)
+      {
          return;
+      }
 
       if (display == null)
       {
          display = GWT.create(Display.class);
       }
-      ide.openView(display.asView());
+      
+      IDE.getInstance().openView(display.asView());
       bind();
 
    }
@@ -160,11 +161,10 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
-            ide.closeView(Display.ID);
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -187,8 +187,59 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
             validate(event.getValue());
          }
       });
+      
+      ((HasKeyPressHandlers)display.getPackageNameField()).addKeyPressHandler(new KeyPressHandler()
+      {
+         @Override
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+            {
+               doCreate();
+            }            
+         }
+      });
 
       display.setOkButtonEnabled(false);
+      
+      showSelectedPackageName();
+      display.focusInPackageNameField();
+   }
+   
+   private void showSelectedPackageName()
+   {
+      if (selectedItem == null)
+      {
+         return;
+      }
+      
+      FolderModel resourceDirectoryFolder = null;
+      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+      if (projectItem != null)
+      {
+         for (ResourceDirectoryItem resourceDirectory : projectItem.getResourceDirectories())
+         {
+            if (selectedItem.getPath().startsWith(resourceDirectory.getFolder().getPath()))
+            {
+               resourceDirectoryFolder = resourceDirectory.getFolder();
+               break;
+            }
+         }
+      }            
+      
+      if (resourceDirectoryFolder == null)
+      {
+         return;
+      }
+      
+      String packageName = selectedItem.getPath().substring(resourceDirectoryFolder.getPath().length());
+      packageName = packageName.replaceAll("/", "\\.");
+      if (packageName.startsWith("."))
+      {
+         packageName = packageName.substring(1);
+      }
+      
+      display.getPackageNameField().setValue(packageName);
    }
 
    /**
@@ -225,21 +276,52 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
     */
    protected void doCreate()
    {
-      final String pac = display.getPackageNameField().getValue();
-      String pack = pac.replaceAll("\\.", "/");
-      FolderModel newFolder = new FolderModel(pack, parentFolder);
+      if (display.getPackageNameField().getValue() == null || display.getPackageNameField().getValue().isEmpty())
+      {
+         return;
+      }
+      
+      FolderModel rdf = null;
+      
+      String selectedItemPath = selectedItem.getPath();
+      
+      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+      if (projectItem != null)
+      {
+         for (ResourceDirectoryItem resourceDirectory : projectItem.getResourceDirectories())
+         {
+            if (selectedItemPath.startsWith(resourceDirectory.getFolder().getPath()))
+            {
+               rdf = resourceDirectory.getFolder();
+               break;
+            }
+         }
+      }      
+      
+      if (rdf == null)
+      {
+         return;
+      }
+      
+      
+      String p = display.getPackageNameField().getValue();
+      p = p.replaceAll("\\.", "/");
+      
+      final FolderModel resourceDirectoryFolder = rdf;
+      final String packageName = p;
+      
+      final FolderModel newFolder = new FolderModel(packageName, resourceDirectoryFolder);
+      
       try
       {
-         vfs.createFolder(parentFolder, new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
+         vfs.createFolder(resourceDirectoryFolder, new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
          {
-
             @Override
             protected void onSuccess(FolderModel result)
             {
-
-               ide.closeView(Display.ID);
-               eventBus.fireEvent(new RefreshBrowserEvent(parentFolder));
-               eventBus.fireEvent(new PackageCreatedEvent(pac, parentFolder));
+               IDE.getInstance().closeView(display.asView().getId());
+               eventBus.fireEvent(new RefreshBrowserEvent(resourceDirectoryFolder, newFolder));
+               eventBus.fireEvent(new PackageCreatedEvent(packageName, resourceDirectoryFolder));
             }
 
             @Override
