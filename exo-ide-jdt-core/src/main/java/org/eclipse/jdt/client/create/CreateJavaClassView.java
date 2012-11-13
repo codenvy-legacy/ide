@@ -167,4 +167,11 @@ public class CreateJavaClassView extends ViewImpl implements Display
       packageField.setValueMap(packages.toArray(new String[packages.size()]), packages.iterator().next());
    }
 
+   @Override
+   public void focusInClassNameField()
+   {
+      classNameField.selectAll();
+      classNameField.focus();
+   }
+
 }

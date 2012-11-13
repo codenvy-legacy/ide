@@ -98,6 +98,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
       HasValue<String> classNameField();
       
+      void focusInClassNameField();
+      
       HasValue<String> classTypeField();
       
       void setClassTypes(Collection<String> types);
@@ -142,8 +144,10 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    private ProjectModel project;
 
    private FolderModel parentFolder;
-
-   private final IDE ide;
+   
+   private Item selectedItem;
+   
+   FolderModel classParentFolder;
 
    private final VirtualFileSystem vfs;
 
@@ -152,12 +156,11 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    /**
     * @param eventBus
     */
-   public CreateJavaClassPresenter(HandlerManager eventBus, VirtualFileSystem vfs, IDE ide)
+   public CreateJavaClassPresenter(HandlerManager eventBus, VirtualFileSystem vfs)
    {
       super();
       this.eventBus = eventBus;
       this.vfs = vfs;
-      this.ide = ide;
       eventBus.addHandler(CreateJavaClassEvent.TYPE, this);
       eventBus.addHandler(ViewClosedEvent.TYPE, this);
       eventBus.addHandler(ProjectOpenedEvent.TYPE, this);
@@ -177,7 +180,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          display = GWT.create(Display.class);
       }
       
-      ide.openView(display.asView());
+      IDE.getInstance().openView(display.asView());
       bindDisplay();
    }
 
@@ -191,7 +194,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          @Override
          public void onClick(ClickEvent event)
          {
-            ide.closeView(display.asView().getId());
+            IDE.getInstance().closeView(display.asView().getId());
          }
       });
 
@@ -247,14 +250,11 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          {
             sourceFolders.add(resourceDirectory.getName());
          }
-         display.setSourceFolders(sourceFolders);
-         
-         List<String> packages = getPackagesInSourceFolder(sourceFolders.get(0));
-         if (packages.size() > 0)
-         {
-            display.setPackages(packages);            
-         }
-      }      
+         display.setSourceFolders(sourceFolders);         
+      }
+      
+      showCurrentPackage();
+      display.focusInClassNameField();
    }
    
    private List<String> getPackagesInSourceFolder(String sourceFolder)
@@ -288,6 +288,52 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       }
       
       return packages;
+   }
+   
+   private void showCurrentPackage()
+   {
+      if (selectedItem == null)
+      {
+         return;
+      }
+      
+      ResourceDirectoryItem resourceDirectory = null;
+      
+      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+      if (projectItem != null)
+      {
+         for (ResourceDirectoryItem rd : projectItem.getResourceDirectories())
+         {
+            if (selectedItem.getPath().startsWith(rd.getFolder().getPath()))
+            {
+               resourceDirectory = rd;
+               break;
+            }
+         }
+      }
+      
+      if (resourceDirectory != null)
+      {
+         display.sourceFolderField().setValue(resourceDirectory.getName());
+      }
+      
+      List<String> packages = getPackagesInSourceFolder(display.sourceFolderField().getValue());
+      if (packages.size() > 0)
+      {
+         display.setPackages(packages);            
+      }
+      
+      if (resourceDirectory != null)
+      {
+         String packageName = parentFolder.getPath().substring(resourceDirectory.getFolder().getPath().length());
+         packageName = packageName.replaceAll("/", "\\.");
+         if (packageName.startsWith("."))
+         {
+            packageName = packageName.substring(1);
+         }
+         
+         display.packageField().setValue(packageName);
+      }
    }
 
    /**
@@ -398,8 +444,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
                @Override
                protected void onSuccess(ItemWrapper result)
                {
-                  FolderModel classParentFolder = (FolderModel)result.getItem();
-                  FileModel newFile = new FileModel(fileName + ".java", MimeType.APPLICATION_JAVA, fileContent, parentFolder);
+                  classParentFolder = (FolderModel)result.getItem();
+                  FileModel newFile = new FileModel(fileName + ".java", MimeType.APPLICATION_JAVA, fileContent, classParentFolder);
                   try
                   {
                      vfs.createFile(classParentFolder, new AsyncRequestCallback<FileModel>(new FileUnmarshaller(newFile))
@@ -407,7 +453,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
                         @Override
                         protected void onSuccess(FileModel result)
                         {
-                           ide.closeView(display.asView().getId());
+                           IDE.getInstance().closeView(display.asView().getId());
                            result.setProject(project);
                            fileOpenedHandler = eventBus.addHandler(EditorActiveFileChangedEvent.TYPE, CreateJavaClassPresenter.this);
                            eventBus.fireEvent(new OpenFileEvent(result));
@@ -477,6 +523,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    {
       if (!event.getSelectedItems().isEmpty())
       {
+         selectedItem = event.getSelectedItems().get(0);
+         
          Item item = event.getSelectedItems().get(0);
          if (item instanceof FolderModel)
             parentFolder = (FolderModel)item;
@@ -487,7 +535,9 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
             parentFolder = ((FileModel)item).getParent();
       }
       else
+      {
          parentFolder = null;
+      }
    }
 
    /**
@@ -523,7 +573,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          @Override
          public void execute()
          {
-            IDE.fireEvent(new RefreshBrowserEvent(parentFolder, event.getFile()));
+            System.out.println("class parent folder > " + classParentFolder.getPath());
+            IDE.fireEvent(new RefreshBrowserEvent(classParentFolder, event.getFile()));
          }
       });
    }
