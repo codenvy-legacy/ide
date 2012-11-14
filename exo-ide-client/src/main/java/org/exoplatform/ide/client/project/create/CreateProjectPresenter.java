@@ -319,6 +319,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       isChooseTemplateStep = false;
       getProjectTemplates();
       setTargets(IDE.getInstance().getPaaSes());
+      updateNavigationButtonsState();
    }
 
    /**
@@ -354,9 +355,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       }
       else
       {
-         boolean hasTemplatesToChoose = availableProjectTemplates != null && availableProjectTemplates.size() > 0;
          display.enableFinishButton(false);
-         display.enableNextButton(firstStepIsOK && hasTemplatesToChoose);
+         display.enableNextButton(true);
       }
    }
 
