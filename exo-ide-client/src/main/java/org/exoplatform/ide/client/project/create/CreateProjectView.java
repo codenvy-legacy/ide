@@ -319,7 +319,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             {
                type = "Java Spring";
             }
-            else if (projectType == ProjectType.RUBY)
+            else if (projectType == ProjectType.RUBY_ON_RAILS)
             {
                type = "Ruby on Rails";
             }

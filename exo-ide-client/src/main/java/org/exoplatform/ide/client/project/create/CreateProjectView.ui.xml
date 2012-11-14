@@ -91,8 +91,12 @@
       	margin-top: 10px;
       }
 
-      .marginLeft {
+      .marginLeft4 {
       	margin-left: 4px;
+      }
+
+      .marginLeft10 {
+      	margin-left: 10px;
       }
 
       .marginBottom {
@@ -161,8 +165,8 @@
                      </g:FlowPanel>
                   </g:FlowPanel>
                </g:center>
-               <g:south size="60">
-	               <g:DockLayoutPanel ui:field="jRebelPanel" styleName="{style.panelMarginTop}">
+               <g:south size="50">
+	               <g:DockLayoutPanel ui:field="jRebelPanel" addStyleNames="{style.panelMarginTop} {style.marginLeft10}">
 	                  <g:west size="71">
 	                     <g:Image resource="{resource.jrebel}" styleName="{style.marginTop3}"></g:Image>
 	                  </g:west>
@@ -173,9 +177,9 @@
 	                        <g:Image title="{templateLocale.whatIsJRebel}" resource="{resource.question}" addStyleNames="{style.questionImage} {style.marginTop0}"></g:Image>
 	                     </g:FlowPanel>
 	                  </g:center>
-	                  <g:south size="30">
+	                  <g:south size="20">
                          <g:FlowPanel>
-                            <f:Label value="{templateLocale.zeroturnaround}" height="36px" addStyleNames="{style.marginLeft}"></f:Label>
+                            <f:Label value="{templateLocale.zeroturnaround}" height="26px" addStyleNames="{style.marginLeft4}"></f:Label>
                          </g:FlowPanel>
 	                  </g:south>
 	               </g:DockLayoutPanel>
