@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.model.Settings;
@@ -45,7 +46,6 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -65,8 +65,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
 {
 
    public static final int SCHEDULE_START = 100;
-
-   private RestoreOpenedFilesPhase instance;
 
    private ApplicationSettings applicationSettings;
 
@@ -102,8 +100,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
       this.initialOpenedFiles = initialOpenedFiles;
       this.initialActiveFile = initialActiveFile;
 
-      instance = this;
-
       // TODO eventBus.fireEvent(new EnableStandartErrorsHandlingEvent(false));
 
       IDE.addHandler(ExceptionThrownEvent.TYPE, this);
@@ -126,56 +122,71 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
    protected void execute()
    {
       //String openedProjectId = applicationSettings.getValueAsString(Settings.OPENED_PROJECT);
-      String openedProjectId = initialOpenedProject;
+      String projectId = initialOpenedProject;
 
-      if (openedProjectId == null || openedProjectId.isEmpty())
+      if (projectId == null || projectId.isEmpty())
       {
-         lazyRestoreOpenedFiles();
+         //lazyRestoreOpenedFiles();
+         loadComplete();
+         return;
       }
-      else
-      {
-         try
-         {
-            final ProjectModel project = new ProjectModel();
-            project.setId(openedProjectId);
+      
+      findProjectById(projectId);
+   }
 
-            VirtualFileSystem.getInstance().getItemById(openedProjectId,
-               new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project)))
+   private void findProjectById(String projectId)
+   {
+      try
+      {
+         final ProjectModel project = new ProjectModel();
+         project.setId(projectId);
+
+         VirtualFileSystem.getInstance().getItemById(projectId,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project)))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
                {
-                  @Override
-                  protected void onSuccess(ItemWrapper result)
+                  final ProjectModel project = (ProjectModel)result.getItem();
+                  
+                  if (ProjectType.MultiModule.value().equals(project.getProjectType()))
                   {
-                     final Item item = result.getItem();
-                     IDE.addHandler(ProjectOpenedEvent.TYPE, instance);
-                     Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                     loadComplete();
+                     return;
+                  }
+                  
+                  IDE.addHandler(ProjectOpenedEvent.TYPE, RestoreOpenedFilesPhase.this);
+                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                  {
+                     @Override
+                     public void execute()
                      {
-                        @Override
-                        public void execute()
-                        {
-                           IDE.fireEvent(new OpenProjectEvent((ProjectModel)item));
-                        }
-                     });
-                  }
+                        IDE.fireEvent(new OpenProjectEvent(project));
+                     }
+                  });
+               }
 
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                  }
-               });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  loadComplete();
+               }
+            });
 
-         }
-         catch (Exception e)
-         {
-         }
       }
-
+      catch (Exception e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+         loadComplete();
+      }      
    }
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      IDE.removeHandler(ProjectOpenedEvent.TYPE, instance);
-
+      IDE.removeHandler(ProjectOpenedEvent.TYPE, RestoreOpenedFilesPhase.this);
+      
       restoredProject = event.getProject();
 
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
@@ -356,6 +367,11 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
          }         
       }
       
+      loadComplete();      
+   }
+   
+   private void loadComplete()
+   {
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
@@ -364,6 +380,6 @@ public class RestoreOpenedFilesPhase implements ExceptionThrownHandler, EditorAc
             IDE.fireEvent(new IDELoadCompleteEvent());
          }
       });      
-   }   
+   }
 
 }

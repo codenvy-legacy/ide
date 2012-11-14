@@ -29,6 +29,8 @@ import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.control.Docking;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -54,6 +56,8 @@ import org.exoplatform.ide.vfs.shared.Item;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -67,7 +71,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
  * 
  */
 public class PackageExplorerPresenter implements ShowPackageExplorerHandler, ViewOpenedHandler, ViewClosedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler
+   ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler, EditorActiveFileChangedHandler
 {
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = "Service is not deployed.<br>Parent folder not found.";
@@ -90,6 +94,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    
    private static PackageExplorerPresenter instance;
    
+   private boolean linkWithEditor = false;
+   
    public static PackageExplorerPresenter getInstance()
    {
       return instance;
@@ -111,6 +117,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
+      
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
    }
    
    public ProjectItem getProjectItem()
@@ -179,50 +187,57 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                @Override
                public void execute()
                {
-                  Object selectedObject = display.getSelectedObject();
-                  if (selectedObject instanceof ProjectItem)
-                  {
-                     selectedItem = ((ProjectItem)selectedObject).getProject();
-                  }
-                  else if (selectedObject instanceof ResourceDirectoryItem)
-                  {
-                     selectedItem = ((ResourceDirectoryItem)selectedObject).getFolder();
-                  }
-                  else if (selectedObject instanceof PackageItem)
-                  {
-                     selectedItem = ((PackageItem)selectedObject).getPackageFolder();
-                  }
-                  else if (selectedObject instanceof FolderModel)
-                  {
-                     selectedItem = (FolderModel)selectedObject;
-                  }
-                  else if (selectedObject instanceof FileModel)
-                  {
-                     selectedItem = (FileModel)selectedObject;
-                  }
-                  else
-                  {
-                     selectedItem = null;
-                  }
-
-                  List<Item> selectedItems = new ArrayList<Item>();
-                  if (selectedItem != null)
-                  {
-                     selectedItems.add(selectedItem);
-                  }
-                  IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
-                  
-//                  if (selectedItem != null)
-//                  {
-//                     List<Item> selectedItems = new ArrayList<Item>();
-//                     selectedItems.add(selectedItem);
-//                     IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
-//                  }
+                  treeItemSelected();
                }
             });
          }
       });
+      
+      display.getLinkWithEditorButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            linkWithEditorButtonClicked();
+         }
+      });
+   }
+   
+   private void treeItemSelected()
+   {
+      Object selectedObject = display.getSelectedObject();
+      if (selectedObject instanceof ProjectItem)
+      {
+         selectedItem = ((ProjectItem)selectedObject).getProject();
+      }
+      else if (selectedObject instanceof ResourceDirectoryItem)
+      {
+         selectedItem = ((ResourceDirectoryItem)selectedObject).getFolder();
+      }
+      else if (selectedObject instanceof PackageItem)
+      {
+         selectedItem = ((PackageItem)selectedObject).getPackageFolder();
+      }
+      else if (selectedObject instanceof FolderModel)
+      {
+         selectedItem = (FolderModel)selectedObject;
+      }
+      else if (selectedObject instanceof FileModel)
+      {
+         selectedItem = (FileModel)selectedObject;
+      }
+      else
+      {
+         selectedItem = null;
+      }
 
+      List<Item> selectedItems = new ArrayList<Item>();
+      if (selectedItem != null)
+      {
+         selectedItems.add(selectedItem);
+      }
+      
+      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));      
    }
 
    @Override
@@ -352,9 +367,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             {
                itemToSelect = openedProject;
             }
-
-            List<Object> itemList = treeParser.getItemList(itemToSelect);
-            display.goToItem(itemList);
+            
+            goToItem(itemToSelect, true);
          }
       });
    }
@@ -403,6 +417,48 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       }
 
       //System.out.println(">> select item " + event.getItemId());
+   }
+   
+   /**
+    * Handle click on "Link with Editor" button.
+    */
+   private void linkWithEditorButtonClicked()
+   {
+      linkWithEditor = !linkWithEditor;
+      display.setLinkWithEditorButtonSelected(linkWithEditor);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      if (display == null || !linkWithEditor)
+      {
+         return;
+      }
+      
+      goToItem(event.getFile(), false);
+   }
+   
+   /**
+    * Navigate to item in the project tree.
+    * 
+    * @param item item to navigate
+    * @param collapseBranches is need to collapse tree branches
+    */
+   private void goToItem(final Item item, final boolean collapseBranches)
+   {
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            List<Object> itemList = treeParser.getItemList(item);
+            display.goToItem(itemList, collapseBranches);            
+         }
+      });      
    }
 
 }

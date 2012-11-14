@@ -47,7 +47,7 @@ public interface PackageExplorerDisplay extends IsView
 
    Object getSelectedObject();
 
-   void goToItem(List<Object> itemList);
+   void goToItem(List<Object> itemList, boolean collapseBranches);
 
    /*
     * Link with Editor

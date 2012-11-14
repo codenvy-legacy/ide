@@ -104,9 +104,9 @@ public class PackageExplorerView extends ViewImpl implements PackageExplorerDisp
     * @see org.eclipse.jdt.client.packaging.PackageExplorerPresenter.Display#goToItem(java.util.List)
     */
    @Override
-   public void goToItem(List<Object> itemList)
+   public void goToItem(List<Object> itemList, boolean collapseBranches)
    {
-      treeGrid.goToItem(itemList);
+      treeGrid.goToItem(itemList, collapseBranches);
    }
 
    /**
