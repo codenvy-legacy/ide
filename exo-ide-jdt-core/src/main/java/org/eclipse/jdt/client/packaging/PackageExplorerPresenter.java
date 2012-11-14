@@ -70,9 +70,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler
 {
 
-//   private static final String RECEIVE_CHILDREN_ERROR_MSG =
-//            org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.workspaceReceiveChildrenError();
-
    private static final String RECEIVE_CHILDREN_ERROR_MSG = "Service is not deployed.<br>Parent folder not found.";
    
    private static final String MESSAGE_LOAD_PROJECT = "Loading project structure...";
@@ -405,7 +402,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          return;
       }
 
-      System.out.println(">> select item " + event.getItemId());
+      //System.out.println(">> select item " + event.getItemId());
    }
 
 }

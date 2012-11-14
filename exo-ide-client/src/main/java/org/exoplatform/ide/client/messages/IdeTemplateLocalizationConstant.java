@@ -115,8 +115,14 @@ public interface IdeTemplateLocalizationConstant extends Messages
    @Key("chooseTechnology")
    String chooseTechnology();
 
+   @Key("chooseTechnologyTooltip")
+   String chooseTechnologyTooltip();
+
    @Key("choosePaas")
    String choosePaaS();
+
+   @Key("choosePaasTooltip")
+   String choosePaaSTooltip();
 
    @Key("noTechnologyTitle")
    String noTechnologyTitle();

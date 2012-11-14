@@ -30,11 +30,11 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerView;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -127,8 +127,7 @@ public class CloseProjectControl extends SimpleControl implements IDEControl, Pr
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      projectExplorerSelected = event.getView().getId().equals(TinyProjectExplorerView.ID);
-      
+      projectExplorerSelected = event.getView() instanceof ProjectExplorerDisplay;
    }
 
 }

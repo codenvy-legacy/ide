@@ -213,7 +213,7 @@
       <when-type-is class="org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display" />
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.explorer.TinyProjectExplorerView">
+   <replace-with class="org.exoplatform.ide.client.project.explorer.ProjectExplorerView">
       <when-type-is class="org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay" />
    </replace-with>
 

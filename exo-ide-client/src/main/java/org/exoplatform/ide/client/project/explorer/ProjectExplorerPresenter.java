@@ -145,7 +145,7 @@ import java.util.Map;
  * 
  */
 
-public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
+public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
    ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
@@ -165,8 +165,6 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private ProjectExplorerDisplay display;
 
-   // private boolean viewOpened = false;
-
    private String itemToSelect;
 
    private HashMap<String, ProjectModel> map = new HashMap<String, ProjectModel>();
@@ -185,7 +183,7 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
 
    private boolean ideLoadComplete = false;
 
-   public TinyProjectExplorerPresenter()
+   public ProjectExplorerPresenter()
    {
       IDE.getInstance().addControl(new OpenProjectControl());
 
@@ -721,7 +719,14 @@ public class TinyProjectExplorerPresenter implements RefreshBrowserHandler, Sele
          {
             currentProject = map.get(item.getId());
          }
-        IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
+        if (currentProject != null)
+        {
+           IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
+        }
+        else
+        {
+           IDE.fireEvent(new ActiveProjectChangedEvent(openedProject));
+        }
       }
    }
 

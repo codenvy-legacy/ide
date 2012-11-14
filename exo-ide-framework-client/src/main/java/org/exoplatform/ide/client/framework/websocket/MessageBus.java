@@ -18,68 +18,42 @@
  */
 package org.exoplatform.ide.client.framework.websocket;
 
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageHandler;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketCallResultMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketMessage.Type;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketPublishMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketSubscribeMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketWelcomeMessage;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage.Type;
+import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
+import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.pubsub.WSEventHandler;
+import org.exoplatform.ide.client.framework.websocket.pubsub.WSPublishMessage;
+import org.exoplatform.ide.client.framework.websocket.pubsub.WSSubscribeMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.Pair;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulResponseMessage;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
 
 /**
- * {@link MessageBus} provides two asynchronous messaging patterns: RPC and
- * list-based PubSub. Class maintains lists of channels and subscribers and
- * notifying each one individually a message received. Also used to publishing
- * messages to channel and to calling remote methods.
+ * {@link MessageBus} provides list-based PubSub asynchronous messaging pattern.
+ * Class maintains lists of channels/subscribers and notifying each one
+ * individually a message received. Also used to publishing messages to the channel.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: MessageBus.java Jul 30, 2012 9:24:42 AM azatsarynnyy $
  *
  */
-public class MessageBus implements WebSocketMessageHandler
+public class MessageBus implements WSMessageReceivedHandler
 {
    /** Enumeration describing the WebSocket event types. */
    public enum Channels {
-      /** Channel for the messages containing status of the Maven build job. */
-      MAVEN_BUILD_STATUS("maven:buildStatus"),
-
-      /** Channel for the messages containing status of the Jenkins build job. */
-      JENKINS_BUILD_STATUS("jenkins:buildStatus"),
-
-      /** Channel for the messages containing started application instance. */
-      APP_STARTED("debugger:appStarted"),
-
-      /** Channel for the messages containing started application instance for debugging. */
-      DEBUGGER_STARTED("debugger:debugAppStarted"),
-
-      /** Channel for the messages containing debugger event. */
-      DEBUGGER_EVENT("debugger:event"),
-
       /** Channel for the messages containing the debugger event. */
-      DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps"),
-
-      /** Channel for the messages indicating the Git repository has been initialized. */
-      GIT_REPO_INITIALIZED("git:repoInitialized"),
-
-      /** Channel for the messages indicating the Git repository has been cloned. */
-      GIT_REPO_CLONED("git:repoCloned"),
-
-      /** Channel for the messages indicating Heroku application has been created. */
-      HEROKU_APP_CREATED("heroku:appCreated");
+      DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps");
 
       private final String eventTypeValue;
 
@@ -98,72 +72,81 @@ public class MessageBus implements WebSocketMessageHandler
    /**
     * Map of the channel to the subscribers.
     */
-   private Map<String, Set<WebSocketEventHandler>> channelToSubscribersMap =
-      new HashMap<String, Set<WebSocketEventHandler>>();
+   private Map<String, Set<WSEventHandler>> channelToSubscribersMap = new HashMap<String, Set<WSEventHandler>>();
 
    /**
-    * Map of the call identifier to the {@link WebSocketRPCResultCallback}.
+    * Map of the call identifier to the {@link RESTfulRequestCallback}.
     */
-   private Map<String, WebSocketRPCResultCallback> callbackMap = new HashMap<String, WebSocketRPCResultCallback>();
+   private Map<String, RESTfulRequestCallback<?>> callbackMap = new HashMap<String, RESTfulRequestCallback<?>>();
 
    /**
     * Receive and process WebSocket messages.
     * 
-    * @see org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageHandler
-    *       #onWebSocketMessage(org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageEvent)
+    * @see org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler
+    *       #onWSMessageReceived(org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent)
     */
    @Override
-   public void onWebSocketMessage(WebSocketMessageEvent event)
+   public void onWSMessageReceived(WSMessageReceivedEvent event)
    {
       String eventMessage = event.getMessage();
-      if (eventMessage == null)
+      if (eventMessage == null || eventMessage.isEmpty())
       {
          return;
       }
+      // Temporary commented, while PubSub not used.
+//      JSONObject jsonObject = JSONParser.parseStrict(eventMessage).isObject();
+//      if (jsonObject == null)
+//      {
+//         return;
+//      }
+//
+//      String messageType = null;
+//      if (!jsonObject.containsKey("type"))
+//      {
+//         return;
+//      }
+//      messageType = jsonObject.get("type").isString().stringValue();
+//
+//      if (Type.EVENT.name().equals(messageType))
+//      {
+//         WSEventMessage message =
+//            AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WSEventMessage.class, eventMessage).as();
+//         if (channelToSubscribersMap.containsKey(message.getChannel()))
+//         {
+//            // copy the Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will be invoke
+//            Set<WSEventHandler> subscribersSet =
+//               new HashSet<WSEventHandler>(channelToSubscribersMap.get(message.getChannel()));
+//            for (WSEventHandler webSocketEventHandler : subscribersSet)
+//            {
+//               webSocketEventHandler.onWebSocketEvent(message);
+//            }
+//         }
+//      }
+//      else if (Type.CALL_RESULT.name().equals(messageType))
+//      {
+         RESTfulResponseMessage message =
+            AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, RESTfulResponseMessage.class, eventMessage).as();
 
-      JSONObject jsonObject = JSONParser.parseStrict(eventMessage).isObject();
-      if (jsonObject == null)
-      {
-         return;
-      }
-      String messageType = null;
-      if (!jsonObject.containsKey("type"))
-      {
-         return;
-      }
-      messageType = jsonObject.get("type").isString().stringValue();
-
-      if (Type.WELCOME.name().equals(messageType))
-      {
-         WebSocketWelcomeMessage message =
-            AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketWelcomeMessage.class, eventMessage).as();
-         WebSocket.getInstance().getSession().setId(message.getSessionId());
-      }
-      else if (Type.EVENT.name().equals(messageType))
-      {
-         WebSocketEventMessage message =
-            AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketEventMessage.class, eventMessage).as();
-         if (channelToSubscribersMap.containsKey(message.getChannel()))
+         if (message == null)
          {
-            // copy the Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will be invoke
-            Set<WebSocketEventHandler> subscribersSet =
-               new HashSet<WebSocketEventHandler>(channelToSubscribersMap.get(message.getChannel()));
-            for (WebSocketEventHandler webSocketEventHandler : subscribersSet)
+            return;
+         }
+
+         // ignore the confirmation message
+         for (Pair header : message.getHeaders())
+         {
+            if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/"))
             {
-               webSocketEventHandler.onWebSocketEvent(message);
+               return;
             }
          }
-      }
-      else if (Type.CALL_RESULT.name().equals(messageType))
-      {
-         WebSocketCallResultMessage message =
-            AutoBeanCodex.decode(WebSocket.AUTO_BEAN_FACTORY, WebSocketCallResultMessage.class, eventMessage).as();
-         WebSocketRPCResultCallback callback = callbackMap.remove(message.getCallId());
+
+         RESTfulRequestCallback<?> callback = callbackMap.remove(message.getUuid());
          if (callback != null)
          {
-            callback.onResult(message);
+            callback.onResponseReceived(message);
          }
-      }
+//      }
    }
 
    /**
@@ -177,12 +160,12 @@ public class MessageBus implements WebSocketMessageHandler
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a subscription was successful or not.
     * 
-    * @param channel channel identifier
-    * @param webSocketEventHandler the {@link WebSocketEventHandler} to fire
+    * @param channel {@link Channels} identifier
+    * @param webSocketEventHandler the {@link WSEventHandler} to fire
     *                   when receiving an event on the subscribed channel
     * @throws WebSocketException if an error has occurred while sending data
     */
-   public void subscribe(Channels channel, WebSocketEventHandler webSocketEventHandler) throws WebSocketException
+   public void subscribe(Channels channel, WSEventHandler webSocketEventHandler) throws WebSocketException
    {
       subscribe(channel.toString(), webSocketEventHandler);
    }
@@ -199,33 +182,33 @@ public class MessageBus implements WebSocketMessageHandler
     * feedback whether a subscription was successful or not.
     * 
     * @param channel channel identifier
-    * @param webSocketEventHandler the {@link WebSocketEventHandler} to fire
+    * @param webSocketEventHandler the {@link WSEventHandler} to fire
     *                   when receiving an event on the subscribed channel
     * @throws WebSocketException if an error has occurred while sending data
     */
-   public void subscribe(String channel, WebSocketEventHandler webSocketEventHandler) throws WebSocketException
+   public void subscribe(String channel, WSEventHandler webSocketEventHandler) throws WebSocketException
    {
       if (webSocketEventHandler == null)
       {
          throw new NullPointerException("Subscriber must not be null");
       }
 
-      Set<WebSocketEventHandler> subscribersSet = channelToSubscribersMap.get(channel);
+      Set<WSEventHandler> subscribersSet = channelToSubscribersMap.get(channel);
       if (subscribersSet != null)
       {
          subscribersSet.add(webSocketEventHandler);
          return;
       }
 
-      subscribersSet = new HashSet<WebSocketEventHandler>();
+      subscribersSet = new HashSet<WSEventHandler>();
       subscribersSet.add(webSocketEventHandler);
       channelToSubscribersMap.put(channel, subscribersSet);
 
-      WebSocketSubscribeMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage().as();
+      WSSubscribeMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage().as();
       message.setType(Type.SUBSCRIBE);
       message.setChannel(channel);
 
-      AutoBean<WebSocketSubscribeMessage> webSocketSubscribeMessageBean =
+      AutoBean<WSSubscribeMessage> webSocketSubscribeMessageBean =
          WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage(message);
       WebSocket.getInstance().send(AutoBeanCodex.encode(webSocketSubscribeMessageBean).getPayload());
    }
@@ -238,10 +221,10 @@ public class MessageBus implements WebSocketMessageHandler
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a unsubscription was successful or not.
     * 
-    * @param channel channel identifier
-    * @param webSocketEventHandler the {@link WebSocketEventHandler} for which to remove the subscription
+    * @param channel {@link Channels} identifier
+    * @param webSocketEventHandler the {@link WSEventHandler} for which to remove the subscription
     */
-   public void unsubscribe(Channels channel, WebSocketEventHandler webSocketEventHandler)
+   public void unsubscribe(Channels channel, WSEventHandler webSocketEventHandler)
    {
       unsubscribe(channel.toString(), webSocketEventHandler);
    }
@@ -255,11 +238,11 @@ public class MessageBus implements WebSocketMessageHandler
     * feedback whether a unsubscription was successful or not.
     * 
     * @param channel channel identifier
-    * @param webSocketEventHandler the {@link WebSocketEventHandler} for which to remove the subscription
+    * @param webSocketEventHandler the {@link WSEventHandler} for which to remove the subscription
     */
-   public void unsubscribe(String channel, WebSocketEventHandler webSocketEventHandler)
+   public void unsubscribe(String channel, WSEventHandler webSocketEventHandler)
    {
-      Set<WebSocketEventHandler> subscribersSet = channelToSubscribersMap.get(channel);
+      Set<WSEventHandler> subscribersSet = channelToSubscribersMap.get(channel);
       if (subscribersSet == null)
       {
          return;
@@ -268,11 +251,11 @@ public class MessageBus implements WebSocketMessageHandler
       if (subscribersSet.remove(webSocketEventHandler) && subscribersSet.isEmpty())
       {
          channelToSubscribersMap.remove(channel);
-         WebSocketSubscribeMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage().as();
+         WSSubscribeMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage().as();
          message.setType(Type.UNSUBSCRIBE);
          message.setChannel(channel);
 
-         AutoBean<WebSocketSubscribeMessage> webSocketUnsubscribeMessageBean =
+         AutoBean<WSSubscribeMessage> webSocketUnsubscribeMessageBean =
             WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage(message);
          try
          {
@@ -280,38 +263,15 @@ public class MessageBus implements WebSocketMessageHandler
          }
          catch (WebSocketException e)
          {
-            // do nothing
+            webSocketEventHandler.onError(e);
          }
       }
    }
 
    /**
-    * Calls remote procedure.
-    * 
-    * @param procId remote procedure identifier
-    * @param data data which will be sent
-    * @param callback handler which will be called when a reply from the server is received
-    * @throws WebSocketException throws if an error has occurred while sending data
-    */
-   public void call(String procId, String data, WebSocketRPCResultCallback callback) throws WebSocketException
-   {
-      WebSocketCallMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketCallMessage().as();
-      message.setType(WebSocketMessage.Type.CALL);
-      message.setCallId(generateCallId());
-      message.setProcId(procId);
-      message.setPayload(data);
-
-      callbackMap.put(message.getCallId(), callback);
-
-      AutoBean<WebSocketCallMessage> webSocketCallMessageBean =
-         WebSocket.AUTO_BEAN_FACTORY.webSocketCallMessage(message);
-      WebSocket.getInstance().send(AutoBeanCodex.encode(webSocketCallMessageBean).getPayload());
-   }
-
-   /**
     * Publishes a message in a particular channel.
     * 
-    * @param channel channel identifier
+    * @param channel {@link Channels} identifier
     * @param data the text data to be published to the channel
     * @throws WebSocketException throws if an error has occurred while publishing data
     */
@@ -329,37 +289,30 @@ public class MessageBus implements WebSocketMessageHandler
     */
    public void publish(String channel, String data) throws WebSocketException
    {
-      WebSocketPublishMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketPublishMessage().as();
+      WSPublishMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketPublishMessage().as();
       message.setType(WebSocketMessage.Type.PUBLISH);
       message.setChannel(channel);
       message.setPayload(data);
 
-      AutoBean<WebSocketPublishMessage> webSocketPublishMessageBean =
-         WebSocket.AUTO_BEAN_FACTORY.webSocketPublishMessage();
+      AutoBean<WSPublishMessage> webSocketPublishMessageBean = WebSocket.AUTO_BEAN_FACTORY.webSocketPublishMessage();
       WebSocket.getInstance().send(AutoBeanCodex.encode(webSocketPublishMessageBean).getPayload());
    }
 
    /**
-    * Returns randomly generated identifier.
+    * Sends serialized {@link RESTfulRequestMessage}.
     * 
-    * @return a randomly generated <tt>CallId</tt>.
+    * @param message data which will be sent
+    * @param callback handler which will be called when a reply from the server is received
+    * @param uuid message UUID
+    * @throws WebSocketException throws if an error has occurred while sending data
     */
-   private String generateCallId()
+   public void send(String message, RESTfulRequestCallback<?> callback, String uuid) throws WebSocketException
    {
-      Random rand = new Random();
-      String id = "";
-
-      for (int i = 0; i < 12; i++)
+      if (callback != null)
       {
-         int r = rand.nextInt(62);
-         if (r > 35)
-            id += (char)(r + 61);
-         else if (r > 9)
-            id += (char)(r + 55);
-         else
-            id += r;
+         callbackMap.put(uuid, callback);
       }
-
-      return id;
+      WebSocket.getInstance().send(message);
    }
+
 }

@@ -285,13 +285,17 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       int buttonNum = 0;
       for (int rowNum = 0; rowNum < rowCount; rowNum++)
       {
-         if (buttonNum == projectTypeList.size())
-            break;
-
          for (int colNum = 0; colNum < columnCount; colNum++)
          {
-            if (buttonNum == projectTypeList.size())
-               break;
+            // add empty DockPanels because the spacing between the buttons should be the same on all lines
+            if (buttonNum >= projectTypeList.size())
+            {
+               DockPanel dock = new DockPanel();
+               dock.setSpacing(4);
+               dock.add(getNewButtonLabel(null), DockPanel.SOUTH);
+               projectTypesGrid.setWidget(rowNum, colNum, dock);
+               continue;
+            }
 
             DockPanel dock = new DockPanel();
             dock.setSpacing(4);
@@ -301,8 +305,8 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             Image image = new Image(ProjectResolver.getLargeImageForProject(projectType));
             ToggleButton projectTypeButton = getNewButton(image, null);
 
-            // TODO
             String type = projectType.value();
+            // TODO
             if (projectType == ProjectType.JSP)
             {
                type = "Java Web Application (WAR)";
@@ -310,6 +314,14 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             else if (projectType == ProjectType.JAR)
             {
                type = "Java Library (JAR)";
+            }
+            else if (projectType == ProjectType.SPRING)
+            {
+               type = "Java Spring";
+            }
+            else if (projectType == ProjectType.RUBY_ON_RAILS)
+            {
+               type = "Ruby on Rails";
             }
 
             dock.add(projectTypeButton, DockPanel.NORTH);
@@ -337,13 +349,17 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       int buttonNum = 0;
       for (int rowNum = 0; rowNum < rowCount; rowNum++)
       {
-         if (buttonNum == targetList.size())
-            break;
-
          for (int colNum = 0; colNum < columnCount; colNum++)
          {
-            if (buttonNum == targetList.size())
-               break;
+            // add empty DockPanels because the spacing between the buttons should be the same on all lines
+            if (buttonNum >= targetList.size())
+            {
+               DockPanel dock = new DockPanel();
+               dock.setSpacing(4);
+               dock.add(getNewButtonLabel(null), DockPanel.SOUTH);
+               targetGrid.setWidget(rowNum, colNum, dock);
+               continue;
+            }
 
             DockPanel dock = new DockPanel();
             dock.setSpacing(4);
@@ -529,7 +545,11 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
     */
    private HTML getNewButtonLabel(String label)
    {
-      HTML titleLabel = new HTML(label);
+      HTML titleLabel = new HTML();
+      if (label != null)
+      {
+         titleLabel.setHTML(label);
+      }
       titleLabel.setWidth("70px");
       titleLabel.setHeight("46px");
       titleLabel.getElement().getStyle().setProperty("fontFamily", "Verdana, Bitstream Vera Sans, sans-serif");

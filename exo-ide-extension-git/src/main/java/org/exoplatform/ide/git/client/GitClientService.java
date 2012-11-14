@@ -220,11 +220,10 @@ public abstract class GitClientService
     * @param projectid project's id (root of GIT repository)
     * @param projectName
     * @param bare to create bare repository or not
-    * @param useWebSocket if <code>true</code> then result must be published over WebSocket connection
     * @param callback callback
     */
    public abstract void init(String vfsId, String projectid, String projectName, boolean bare,
-      boolean useWebSocket, AsyncRequestCallback<String> callback) throws RequestException;
+      AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
     * Pull(fetch and merge) changes from remote repository to local one.
@@ -269,12 +268,11 @@ public abstract class GitClientService
     * @param project project (root of GIT repository)
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
-    * @param useWebSocket if <code>true</code> then result must be published over WebSocket connection
     * @param callback callback
     * @throws RequestException
     */
    public abstract void cloneRepository(String vfsId, FolderModel project, String remoteUri, String remoteName,
-      boolean useWebSocket, AsyncRequestCallback<RepoInfo> callback) throws RequestException;
+      AsyncRequestCallback<RepoInfo> callback) throws RequestException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
@@ -398,9 +396,8 @@ public abstract class GitClientService
     */
    public abstract void getGitReadOnlyUrl(String vfsId, String projectid, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
-   
-   
+
    public abstract void getCommiters(String vfsId, String projectid, AsyncRequestCallback<Commiters> callback)
-            throws RequestException;
+      throws RequestException;
 
 }

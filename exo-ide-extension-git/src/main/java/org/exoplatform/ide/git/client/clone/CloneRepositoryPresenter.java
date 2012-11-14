@@ -29,18 +29,12 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -129,10 +123,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    private Display display;
 
    private static final String DEFAULT_REPO_NAME = "origin";
-
-   private FolderModel PROJECT_ROOT_FOLDER;
-
-   private RequestStatusHandler statusHandler;
 
    /**
     * @param eventBus
@@ -239,7 +229,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(FolderModel result)
                {
-                  PROJECT_ROOT_FOLDER = result;
                   cloneRepository(remoteUri, remoteName, result, projectType);
                }
 
@@ -273,51 +262,28 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
       try
       {
-         boolean useWebSocketForCallback = false;
-         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
-         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
-         {
-            useWebSocketForCallback = true;
-            statusHandler = new CloneRequestStatusHandler(PROJECT_ROOT_FOLDER.getName(), remoteUri);
-            statusHandler.requestInProgress(PROJECT_ROOT_FOLDER.getId());
-            ws.messageBus().subscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
-         }
-         final boolean useWebSocket = useWebSocketForCallback;
-
-         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName, useWebSocket,
+         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName,
             new AsyncRequestCallback<RepoInfo>(unmarshaller)
             {
 
                @Override
                protected void onSuccess(final RepoInfo result)
                {
-                  if (!useWebSocket)
-                  {
-                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                     convertFolderToProject(folder, projectType);
-                     //TODO: not good, comment temporary need found other way 
-                     // for inviting collaborators
-                     // showInvitation(result.getRemoteUri());
-                  }
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+                  convertFolderToProject(folder, projectType);
+                  //TODO: not good, comment temporary need found other way 
+                  // for inviting collaborators
+                  // showInvitation(result.getRemoteUri());
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
                   handleError(exception);
-                  if (useWebSocket)
-                  {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_CLONED, repoClonedHandler);
-                     statusHandler.requestError(PROJECT_ROOT_FOLDER.getId(), exception);
-                  }
                }
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }
@@ -431,32 +397,4 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       return true;
    }
 
-   /**
-    * Performs actions after the Git-repository was cloned.
-    */
-   private WebSocketEventHandler repoClonedHandler = new WebSocketEventHandler()
-   {
-      @Override
-      public void onMessage(WebSocketEventMessage event)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
-
-         statusHandler.requestFinished(PROJECT_ROOT_FOLDER.getId());
-
-         IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-         convertFolderToProject(PROJECT_ROOT_FOLDER, display.getProjectType().getValue());
-         //TODO: not good, comment temporary need found other way 
-         // for inviting collaborators
-         // showInvitation(result.getRemoteUri());
-      }
-
-      @Override
-      public void onError(Exception exception)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_CLONED, this);
-
-         statusHandler.requestError(PROJECT_ROOT_FOLDER.getId(), exception);
-         handleError(exception);
-      }
-   };
 }

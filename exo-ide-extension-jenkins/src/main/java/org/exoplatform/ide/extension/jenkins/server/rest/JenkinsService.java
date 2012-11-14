@@ -92,8 +92,7 @@ public class JenkinsService
    public void build( //
       @QueryParam("name") String jobName, //
       @QueryParam("projectid") String projectId, //
-      @QueryParam("vfsid") String vfsId, //
-      @QueryParam("usewebsocket") boolean useWebSocket) throws IOException, JenkinsException, VirtualFileSystemException
+      @QueryParam("vfsid") String vfsId) throws IOException, JenkinsException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = null;
       if (vfsId != null)
@@ -102,11 +101,6 @@ public class JenkinsService
       }
 
       jenkins.build(jobName, vfs, projectId);
-      if (useWebSocket)
-      {
-         // start checking job status asynchronously
-         jenkins.startCheckingJobStatus(jobName, vfs, projectId);
-      }
    }
 
    @Path("job/status")

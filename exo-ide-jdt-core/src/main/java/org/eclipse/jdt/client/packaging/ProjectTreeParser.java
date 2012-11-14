@@ -504,19 +504,25 @@ public class ProjectTreeParser
             return;
          }
          
-         if (itemToNavigate.getPath().startsWith(packageItem.getPackageFolder().getPath() + "/") &&
-                  itemToNavigate instanceof FileModel)
+         if (itemToNavigate instanceof FileModel)
          {
-            navigateItems.add(packageItem);
-            for (FileModel file : packageItem.getFiles())
+            String itemFolderPath = itemToNavigate.getPath();
+            itemFolderPath = itemFolderPath.substring(0, itemFolderPath.lastIndexOf("/") + 1);
+            
+            if (itemFolderPath.equals(packageItem.getPackageFolder().getPath() + "/"))
             {
-               if (itemToNavigate.getPath().equals(file.getPath()))
+               navigateItems.add(packageItem);
+               for (FileModel file : packageItem.getFiles())
                {
-                  navigateItems.add(file);
-                  return;
+                  if (itemToNavigate.getPath().equals(file.getPath()))
+                  {
+                     navigateItems.add(file);
+                     return;
+                  }
                }
+               
             }
-            return;
+            
          }
       }
       

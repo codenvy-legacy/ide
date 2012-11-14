@@ -40,14 +40,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
- * {@link MessageBroker} provides two asynchronous messaging patterns: RPC and
- * list-based PubSub. For the PubSub model, the {@link MessageBroker} looks
- * up clients registered under the session identifier and then passes the message
- * to them. For the RPC mechanism, client calls the remote method and
- * {@link MessageBroker} sends the result of call to the client after executing
- * of the called method.
- * Also {@link MessageBroker} implements a queue of messages that were sent with errors.
- * This messages must be resent on the next client connect.
+ * {@link MessageBroker} provides list-based PubSub asynchronous messaging pattern.
+ * The {@link MessageBroker} looks up clients registered under the session identifier
+ * and then passes the message to them.
+ * {@link MessageBroker} implements a queue of messages that were sent with errors.
+ * This messages must be resent on the next client connection.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: MessageBroker.java Jun 20, 2012 5:10:29 PM azatsarynnyy $
@@ -57,32 +54,8 @@ public class MessageBroker
 {
    /** Enumeration describing the WebSocket event types. */
    public enum Channels {
-      /** Channel for the messages containing status of the Maven build job. */
-      MAVEN_BUILD_STATUS("maven:buildStatus"),
-
-      /** Channel for the messages containing status of the Jenkins build job. */
-      JENKINS_BUILD_STATUS("jenkins:buildStatus"),
-
-      /** Channel for the messages containing started application instance. */
-      APP_STARTED("debugger:appStarted"),
-
-      /** Channel for the messages containing started application instance for debugging. */
-      DEBUGGER_STARTED("debugger:debugAppStarted"),
-
-      /** Channel for the messages containing debugger event. */
-      DEBUGGER_EVENT("debugger:event"),
-
       /** Channel for the messages containing the debugger event. */
-      DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps"),
-
-      /** Channel for the messages indicating the Git repository has been initialized. */
-      GIT_REPO_INITIALIZED("git:repoInitialized"),
-
-      /** Channel for the messages indicating the Git repository has been cloned. */
-      GIT_REPO_CLONED("git:repoCloned"),
-
-      /** Channel for the messages indicating Heroku application has been created. */
-      HEROKU_APP_CREATED("heroku:appCreated");
+      DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps");
 
       private final String eventTypeValue;
 
@@ -170,11 +143,6 @@ public class MessageBroker
       {
          WebSocketPublishMessage webSocketMessage = new WebSocketPublishMessage(message);
          publish(webSocketMessage.getChannel(), webSocketMessage.getPayload(), null, sessionId);
-      }
-      else if (Type.CALL.name().equals(messageType))
-      {
-         WebSocketCallMessage webSocketMessage = new WebSocketCallMessage(message);
-         call(sessionId, webSocketMessage.getCallId(), webSocketMessage.getPayload());
       }
    }
 
@@ -323,21 +291,6 @@ public class MessageBroker
             send(subscriber, new WebSocketEventMessage(channel, message, exception));
          }
       }
-   }
-
-   /**
-    * Process the remote procedure call and send result to the caller.
-    * 
-    * @param sessionId WebSocket session identifier
-    * @param callId unique identifier of this call
-    * @param data text data which received with RPC
-    */
-   private void call(String sessionId, String callId, String data)
-   {
-      // TODO
-      // process call of remote method
-      // send result of call to the client
-      //send(sessionId, new WebSocketCallResultMessage(callId, "\"" + result + "\""));
    }
 
    /**

@@ -46,17 +46,25 @@ public class CreateJavaClassView extends ViewImpl implements Display
 
    private static CreateJavaViewUiBinder uiBinder = GWT.create(CreateJavaViewUiBinder.class);
 
+   private static final String ID = "ideCreateJavaClass";
+
+   @UiField
+   SelectItem sourceFolderField;
+
+   @UiField
+   SelectItem packageField;
+
+   @UiField
+   TextInput classNameField;
+
+   @UiField
+   SelectItem classTypeField;
+
    @UiField
    ImageButton createButton;
 
    @UiField
    ImageButton cancelButton;
-
-   @UiField
-   TextInput nameInput;
-
-   @UiField
-   SelectItem typeSelect;
 
    interface CreateJavaViewUiBinder extends UiBinder<Widget, CreateJavaClassView>
    {
@@ -64,61 +72,106 @@ public class CreateJavaClassView extends ViewImpl implements Display
 
    public CreateJavaClassView()
    {
-      super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createJavaClassTitle(), null, 400, 140, false);
+      super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createJavaClassTitle(), null, 460, 230, false);
       add(uiBinder.createAndBindUi(this));
+      setCloseOnEscape(true);
    }
 
    /**
-    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#getCancelButton()
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#cancelButton()
     */
    @Override
-   public HasClickHandlers getCancelButton()
+   public HasClickHandlers cancelButton()
    {
       return cancelButton;
    }
 
    /**
-    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#getCreateButton()
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#createButton()
     */
    @Override
-   public HasClickHandlers getCreateButton()
+   public HasClickHandlers createButton()
    {
       return createButton;
    }
 
    /**
-    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#getNameField()
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#classNameField()
     */
    @Override
-   public HasValue<String> getNameField()
+   public HasValue<String> classNameField()
    {
-      return nameInput;
+      return classNameField;
    }
 
    /**
-    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#getTypeSelect()
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#classTypeField()
     */
    @Override
-   public HasValue<String> getTypeSelect()
+   public HasValue<String> classTypeField()
    {
-      return typeSelect;
+      return classTypeField;
    }
 
    /**
-    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#setTypes(java.util.Collection)
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#setClassTypes(java.util.Collection)
     */
    @Override
-   public void setTypes(Collection<String> types)
+   public void setClassTypes(Collection<String> types)
    {
-      typeSelect.setValueMap(types.toArray(new String[types.size()]), types.iterator().next());
+      classTypeField.setValueMap(types.toArray(new String[types.size()]), types.iterator().next());
    }
 
    /**
-    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#setCreateButtonEnabled(boolean)
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#enableCreateButton(boolean)
     */
    @Override
-   public void setCreateButtonEnabled(boolean enabled)
+   public void enableCreateButton(boolean enabled)
    {
       createButton.setEnabled(enabled);
    }
+
+   /**
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#sourceFolderField()
+    */
+   @Override
+   public HasValue<String> sourceFolderField()
+   {
+      return sourceFolderField;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#packageField()
+    */
+   @Override
+   public HasValue<String> packageField()
+   {
+      return packageField;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#setSourceFolders(java.util.Collection)
+    */
+   @Override
+   public void setSourceFolders(Collection<String> sourceFolders)
+   {
+      sourceFolderField.setValueMap(sourceFolders.toArray(new String[sourceFolders.size()]), sourceFolders.iterator().next());
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.create.CreateJavaClassPresenter.Display#setPackages(java.util.Collection)
+    */
+   @Override
+   public void setPackages(Collection<String> packages)
+   {
+      packageField.setValueMap(packages.toArray(new String[packages.size()]), packages.iterator().next());
+   }
+
+   @Override
+   public void focusInClassNameField()
+   {
+      classNameField.selectAll();
+      classNameField.focus();
+   }
+
 }

@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-websocket</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: WebSocket</name>
+   <name>eXo IDE :: WebSocket to REST</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
@@ -18,6 +18,10 @@
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-websockets</artifactId>
       </dependency>
       <dependency>
          <groupId>org.apache.tomcat</groupId>

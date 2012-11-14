@@ -28,9 +28,9 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.project.explorer.TinyProjectExplorerView;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -130,6 +130,7 @@ public class ShowProjectsControl extends SimpleControl implements IDEControl, Vf
    @Override
    public void onViewActivated(ViewActivatedEvent event)
    {
-      projectExplorerSelected = event.getView().getId().equals(TinyProjectExplorerView.ID);
+      projectExplorerSelected = event.getView() instanceof ProjectExplorerDisplay;
    }
+   
 }

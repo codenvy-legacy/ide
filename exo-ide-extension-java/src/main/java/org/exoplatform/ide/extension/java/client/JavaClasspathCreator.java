@@ -137,7 +137,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
       try
       {
          BuilderClientService.getInstance().buildAndPublish(project.getId(),
-            VirtualFileSystem.getInstance().getInfo().getId(), false,
+            VirtualFileSystem.getInstance().getInfo().getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -318,7 +318,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
          showLog();
       }
 
-//      IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
+      //      IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
 
    /**

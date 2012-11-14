@@ -52,15 +52,9 @@ public class DebuggerService
    @Path("connect")
    @Produces(MediaType.APPLICATION_JSON)
    public DebuggerInfo create(@QueryParam("host") String host,
-                              @QueryParam("port") int port,
-                              @QueryParam("usewebsocket") boolean useWebSocket) throws DebuggerException
+                              @QueryParam("port") int port) throws DebuggerException
    {
       Debugger d = Debugger.newInstance(host, port);
-      if (useWebSocket)
-      {
-         // start checking for debugger events asynchronously
-         d.startCheckingEvents(d.id);
-      }
       return new DebuggerInfoImpl(d.getHost(), d.getPort(), d.id, d.getVmName(), d.getVmVersion());
    }
 

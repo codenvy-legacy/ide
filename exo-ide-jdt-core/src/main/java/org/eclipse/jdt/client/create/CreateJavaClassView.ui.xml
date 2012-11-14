@@ -26,30 +26,51 @@
 	
 	<ui:with field='tex' type='org.exoplatform.ide.editor.java.client.JavaConstants'/>
 	
-	<ui:style>
-	</ui:style>
-	
    <f:Border borderColor="transparent" margin="5">
    	<f:layer left="0px" top="0px" bottom="0px" right="0px">
    		<g:LayoutPanel width="" height="">
-   			<g:layer left="10px" width="58px" top="18px" height="14px">
+
+   			<g:layer left="15px" width="90px" top="18px" height="14px">
+   				<g:Label text="{tex.createJCLabelSource}"/>
+   			</g:layer>
+   			<g:layer left="110px" top="11px" height="27px" right="18px">
+   				<f:SelectItem ui:field="sourceFolderField" width="100%" height="100%"/>
+   			</g:layer>
+
+
+			<!-- top + 32 -->
+   			<g:layer left="15px" width="90px" top="50px" height="14px">
+   				<g:Label text="{tex.createJCLabelPackage}"/>
+   			</g:layer>
+   			<!-- top + -->
+   			<g:layer left="110px" top="43px" height="27px" right="18px">
+   				<f:SelectItem ui:field="packageField" width="100%" height="100%"/>
+   			</g:layer>
+
+			<!-- top + 32 + 15 = 47 -->
+   			<g:layer left="15px" width="90px" top="97px" height="14px">
    				<g:Label text="{tex.createJCLabelName}"/>
    			</g:layer>
-   			<g:layer left="74px" top="11px" height="27px" right="18px">
-   				<f:TextInput ui:field="nameInput" width="100%" height="100%"/>
+   			<g:layer left="110px" top="90px" height="27px" right="18px">
+   				<f:TextInput ui:field="classNameField" width="100%" height="100%"/>
    			</g:layer>
-   			<g:layer left="10px" width="58px" top="50px" height="14px">
+			
+			<!-- top + 32 -->
+   			<g:layer left="15px" width="90px" top="129px" height="14px">
    				<g:Label text="{tex.createJavaType}"/>
    			</g:layer>
-   			<g:layer width="90px" top="89px" height="22px" right="128px">
-   				<f:ImageButton ui:field="cancelButton"  text="{tex.createJCButtonCancel}"/>
+   			<g:layer left="110px" top="122px" height="27px" right="18px">
+   				<f:SelectItem ui:field="classTypeField" width="100%" height="100%"/>
    			</g:layer>
-   			<g:layer width="90px" top="89px" height="22px" right="20px">
-   				<f:ImageButton ui:field="createButton"  text="{tex.createJCButtonCreate}"/>
+   			
+   			<!-- top + 32 + 15 = 47 -->
+   			<g:layer left="110px" top="169px" width="90px" height="22px">
+   				<f:ImageButton ui:field="createButton" imageName="ok" text="{tex.createJCButtonCreate}"/>
    			</g:layer>
-   			<g:layer left="74px" top="44px" height="27px" right="18px">
-   				<f:SelectItem ui:field="typeSelect" width="100%" height="100%"/>
+   			<g:layer right="110px" top="169px" width="90px" height="22px">
+   				<f:ImageButton ui:field="cancelButton" imageName="cancel" text="{tex.createJCButtonCancel}"/>
    			</g:layer>
+   			
    		</g:LayoutPanel>
    	</f:layer>
    </f:Border>

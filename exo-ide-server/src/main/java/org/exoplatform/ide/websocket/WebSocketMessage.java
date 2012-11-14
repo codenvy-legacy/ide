@@ -28,14 +28,11 @@ package org.exoplatform.ide.websocket;
 public class WebSocketMessage
 {
    /**
-    * Enum defines the standard WebSocket message types for interaction between client and server.
+    * Enumeration of the standard WebSocket message types for interaction between client and server.
     */
    public enum Type {
-      WELCOME, //
       PUBLISH, //
       EVENT, //
-      CALL, //
-      CALL_RESULT, //
       SUBSCRIBE, //
       UNSUBSCRIBE;
    }

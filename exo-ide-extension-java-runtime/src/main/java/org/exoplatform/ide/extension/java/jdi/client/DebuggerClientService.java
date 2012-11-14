@@ -51,7 +51,7 @@ public class DebuggerClientService
 {
 
    private static String BASE_URL;
-   
+
    private static DebuggerClientService instance;
 
    private final String restContext;
@@ -68,10 +68,9 @@ public class DebuggerClientService
       return instance;
    }
 
-   public void create(String host, int port, boolean useWebSocket, AsyncRequestCallback<DebuggerInfo> callback)
-      throws RequestException
+   public void create(String host, int port, AsyncRequestCallback<DebuggerInfo> callback) throws RequestException
    {
-      String params = "host=" + host + "&port=" + port + "&usewebsocket=" + useWebSocket;
+      String params = "host=" + host + "&port=" + port;
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/connect?" + params).loader(new EmptyLoader()).send(callback);
    }
 
@@ -171,12 +170,11 @@ public class DebuggerClientService
          .header(HTTPHeader.ACCEPT, MimeType.TEXT_PLAIN).header(HTTPHeader.CONTENTTYPE, MimeType.TEXT_PLAIN)
          .loader(new EmptyLoader()).send(callback);
    }
-   
-   
-//   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
-//   {
-//      final String requestUrl = restContext + "/ide/maven/check_download_url?url=" + url;
-//      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
-//   }
+
+   //   public void checkArtifactUrl(String url, AsyncRequestCallback<Object> callback) throws RequestException
+   //   {
+   //      final String requestUrl = restContext + "/ide/maven/check_download_url?url=" + url;
+   //      AsyncRequest.build(RequestBuilder.GET, requestUrl).loader(new EmptyLoader()).send(callback);
+   //   }
 
 }

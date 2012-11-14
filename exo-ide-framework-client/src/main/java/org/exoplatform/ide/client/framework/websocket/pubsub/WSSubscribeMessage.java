@@ -16,19 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.pubsub;
 
-
-import com.google.web.bindery.autobean.shared.Splittable;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 
 /**
- * Interface represents the WebSocket event message.
+ * Interface represents the WebSocket subscribe message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketEventMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @version $Id: WSSubscribeMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
  *
  */
-public interface WebSocketEventMessage extends WebSocketMessage
+public interface WSSubscribeMessage extends WebSocketMessage
 {
    /**
     * Returns a channel for publishing message.
@@ -43,32 +42,4 @@ public interface WebSocketEventMessage extends WebSocketMessage
     * @param channel channel identifier
     */
    void setChannel(String channel);
-
-   /**
-    * Returns a payload.
-    * 
-    * @return payload
-    */
-   Splittable getPayload();
-
-   /**
-    * Sets a payload.
-    * 
-    * @param payload payload
-    */
-   void setPayload(Splittable payload);
-
-   /**
-    * Returns an exception describing failure.
-    * 
-    * @return an exception describing failure. This will be <code>null</code> if the operation succeeded.
-    */
-   WebSocketEventMessageException getException();
-
-   /**
-    * Sets an exception describing failure.
-    * 
-    * @param exception an exception
-    */
-   void setException(WebSocketEventMessageException exception);
 }

@@ -16,42 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 /**
- * Interface represents an exception describing failure.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketEventMessageException.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
  *
  */
-public interface WebSocketEventMessageException extends WebSocketMessage
+public interface Pair
 {
-   /**
-    * Returns an exception name.
-    * 
-    * @return name of the exception
-    */
    String getName();
 
-   /**
-    * Sets an exception name.
-    * 
-    * @param name name of the exception
-    */
    void setName(String name);
 
-   /**
-    * Returns a detail message that represents an exception.
-    * 
-    * @return error message
-    */
-   String getMessage();
+   String getValue();
 
-   /**
-    * Sets a detail message that represents an exception.
-    * 
-    * @param message error message
-    */
-   void setMessage(String message);
+   void setValue(String value);
 }

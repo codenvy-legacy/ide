@@ -18,24 +18,18 @@
  */
 package org.exoplatform.ide.extension.jenkins.server;
 
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
-
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.websocket.MessageBroker;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
@@ -48,11 +42,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -142,21 +132,6 @@ public abstract class JenkinsClient
    private String jobTemplate;
 
    private Templates transfomRules;
-
-   /**
-    * Component for sending messages to client over WebSocket connection.
-    */
-   private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
-      .getComponentInstanceOfType(MessageBroker.class);
-
-   private Timer checkEventsTimer = new Timer();
-
-   /**
-    * Map contains the timer tasks for checking the Jenkins jobs status and sending job status over WebSocket connection.
-    */
-   private Map<String, TimerTask> checkStatusTaskMap = new HashMap<String, TimerTask>();
-
-   private static final int CHECKING_STATUS_PERIOD = 2000;
 
    public JenkinsClient(String baseURL)
    {
@@ -682,13 +657,6 @@ public abstract class JenkinsClient
       if (vfs != null && projectId != null)
       {
          writeJenkinsJobName(vfs, projectId, null);
-
-         // cancel checking status of the appropriate job
-         TimerTask task = checkStatusTaskMap.get(projectId);
-         if (task != null)
-         {
-            task.cancel();
-         }
       }
    }
 
@@ -764,76 +732,4 @@ public abstract class JenkinsClient
       return job;
    }
 
-   /**
-    * Periodically checks the status of previously launched job and sends
-    * the status to WebSocket connection when build job will be finished.
-    * 
-    * @param jobName
-    *    identifier of the Jenkins job need to check status
-    * @param vfs
-    *    virtual file system
-    * @param projectId
-    *    identifier of the project need to check
-    */
-   public void startCheckingJobStatus(final String jobName, final VirtualFileSystem vfs, final String projectId)
-   {
-      TimerTask task = new TimerTask()
-      {
-         /**
-          * Previous status of the Jenkins job.
-          */
-         private Status previousStatus;
-
-         @Override
-         public void run()
-         {
-            JobStatus jobStatus = null;
-            try
-            {
-               jobStatus = jobStatus(jobName, vfs, projectId);
-               if (jobStatus.getStatus() != previousStatus)
-               {
-                  publishWebSocketMessage(toJson(jobStatus), null);
-                  previousStatus = jobStatus.getStatus();
-               }
-
-               if (jobStatus.getStatus() == JobStatusBean.Status.END)
-               {
-                  cancel();
-               }
-            }
-            catch (IOException e)
-            {
-               cancel();
-               publishWebSocketMessage(null, e);
-            }
-            catch (JenkinsException e)
-            {
-               cancel();
-               publishWebSocketMessage(null, e);
-            }
-            catch (VirtualFileSystemException e)
-            {
-               cancel();
-               publishWebSocketMessage(null, e);
-            }
-         }
-      };
-
-      checkStatusTaskMap.put(projectId, task);
-      checkEventsTimer.schedule(task, 0, CHECKING_STATUS_PERIOD);
-   }
-
-   /**
-    * Publishes the message over WebSocket connection.
-    * 
-    * @param data
-    *    the data to be sent to the client
-    * @param e
-    *    an exception to be sent to the client
-    */
-   private void publishWebSocketMessage(String data, Exception e)
-   {
-      messageBroker.publish(MessageBroker.Channels.JENKINS_BUILD_STATUS.toString(), data, e, null);
-   }
 }

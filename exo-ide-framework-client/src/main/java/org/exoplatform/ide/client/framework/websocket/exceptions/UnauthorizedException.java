@@ -16,31 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.exceptions;
+
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulResponseMessage;
 
 /**
- * The WELCOME message is send from the server to a client,
- * when the connection has successfully been established.
- * The WELCOME message is the only message that contains
- * the session identifier for the client.
+ * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketWelcomeMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: UnauthorizedException.java Nov 9, 2012 5:09:29 PM azatsarynnyy $
  *
  */
-public interface WebSocketWelcomeMessage extends WebSocketMessage
+@SuppressWarnings("serial")
+public class UnauthorizedException extends Exception
 {
-   /**
-    * REturns a WebSocket session identifier.
-    * 
-    * @return WebSocket session identifier
-    */
-   String getSessionId();
+   private RESTfulResponseMessage response;
 
-   /**
-    * Sets a WebSocket session identifier.
-    * 
-    * @param sessionId WebSocket session identifier
-    */
-   void setSessionId(String sessionId);
+   public UnauthorizedException(RESTfulResponseMessage response)
+   {
+      this.response = response;
+   }
+
+   public int getHTTPStatus()
+   {
+      return response.getResponseCode();
+   }
 }

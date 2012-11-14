@@ -58,25 +58,22 @@ public abstract class BuilderClientService
     * 
     * @param projectId identifier of the project we want to send for build
     * @param vfsId identifier of the virtual file system
-    * @param useWebSocket if <code>true</code> then result must be published over WebSocket connection
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void build(String projectId, String vfsId, boolean useWebSocket, AsyncRequestCallback<StringBuilder> callback)
+   public abstract void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
-   
+
    /**
     * Start new build and publish.
     * 
     * @param projectId identifier of project we want to send for build
     * @param vfsId identifier of virtual file system
-    * @param useWebSocket if <code>true</code> then result must be published over WebSocket connection
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void buildAndPublish(String projectId, String vfsId, boolean useWebSocket, AsyncRequestCallback<StringBuilder> callback)
+   public abstract void buildAndPublish(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
-
 
    /**
     * Cancel previously launched build.
@@ -104,7 +101,7 @@ public abstract class BuilderClientService
     * @throws RequestException
     */
    public abstract void log(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
-   
+
    /**
     * Get build result.
     * 
@@ -113,7 +110,6 @@ public abstract class BuilderClientService
     * @throws RequestException
     */
    public abstract void result(String buildid, AsyncRequestCallback<StringBuilder> callback) throws RequestException;
-   
 
    /**
     * Check is URL for download artifact is valid.

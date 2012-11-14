@@ -16,23 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.events;
+package org.exoplatform.ide.client.framework.websocket.pubsub;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketMessage;
 
 /**
- * Handler for {@link WebSocketMessageEvent} event.
+ * Interface represents the WebSocket publish message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketErrorHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @version $Id: WSPublishMessage.java Jul 31, 2012 5:14:28 PM azatsarynnyy $
+ *
  */
-public interface WebSocketMessageHandler extends EventHandler
+public interface WSPublishMessage extends WebSocketMessage
 {
    /**
-    * Perform actions, when message has received.
+    * Returns a channel for publishing message.
     * 
-    * @param event
+    * @return channel identifier
     */
-   void onWebSocketMessage(WebSocketMessageEvent event);
+   String getChannel();
+
+   /**
+    * Sets a channel for publishing message.
+    * 
+    * @param channel channel identifier
+    */
+   void setChannel(String channel);
+
+   /**
+    * Returns payload.
+    * 
+    * @return payload
+    */
+   String getPayload();
+
+   /**
+    * Sets a payload.
+    * 
+    * @param payload payload
+    */
+   void setPayload(String payload);
 }

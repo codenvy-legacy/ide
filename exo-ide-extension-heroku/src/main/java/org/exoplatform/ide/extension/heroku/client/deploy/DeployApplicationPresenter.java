@@ -20,16 +20,12 @@ package org.exoplatform.ide.extension.heroku.client.deploy;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
@@ -43,23 +39,15 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocketEventHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.WebSocketEventMessage;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant;
-import org.exoplatform.ide.extension.heroku.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.heroku.client.login.LoginEvent;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.init.InitRequestStatusHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
@@ -97,10 +85,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    private DeployResultHandler deployResultHandler;
 
    private String projectName;
-
-   private RequestStatusHandler gitInitStatusHandler;
-
-   private CreateRequestHandler appCreateRequestHandler;
 
    public DeployApplicationPresenter()
    {
@@ -156,19 +140,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       JobManager.get().showJobSeparated();
       try
       {
-         boolean useWebSocketForCallback = false;
-         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
-         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
-         {
-            useWebSocketForCallback = true;
-            appCreateRequestHandler = new CreateRequestHandler();
-            appCreateRequestHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.HEROKU_APP_CREATED, appCreatedHandler);
-         }
-         final boolean useWebSocket = useWebSocketForCallback;
-
          HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
-            useWebSocket, new HerokuAsyncRequestCallback(this)
+            new HerokuAsyncRequestCallback(this)
             {
 
                @Override
@@ -188,10 +161,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             });
       }
       catch (RequestException e)
-      {
-         deployResultHandler.onDeployFinished(false);
-      }
-      catch (WebSocketException e)
       {
          deployResultHandler.onDeployFinished(false);
       }
@@ -226,48 +195,25 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       JobManager.get().showJobSeparated();
       try
       {
-         boolean useWebSocketForCallback = false;
-         final WebSocket ws = null;//WebSocket.getInstance(); TODO: temporary disable web-sockets
-         if (ws != null && ws.getReadyState() == WebSocket.ReadyState.OPEN)
-         {
-            useWebSocketForCallback = true;
-            gitInitStatusHandler = new InitRequestStatusHandler(project.getName());
-            gitInitStatusHandler.requestInProgress(project.getId());
-            ws.messageBus().subscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
-         }
-         final boolean useWebSocket = useWebSocketForCallback;
-
-         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false, useWebSocket,
+         GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
             new AsyncRequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)
                {
-                  if (!useWebSocket)
-                  {
-                     createApplication();
-                  }
+                  createApplication();
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
                   handleGitError(exception);
-                  if (useWebSocket)
-                  {
-                     ws.messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, repoInitializedHandler);
-                     gitInitStatusHandler.requestError(project.getId(), exception);
-                  }
                }
             });
       }
       catch (RequestException e)
       {
          handleGitError(e);
-      }
-      catch (WebSocketException e)
-      {
-         e.printStackTrace();
       }
    }
 
@@ -401,102 +347,5 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       String errorMessage =
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
       IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-   }
-
-   /**
-    * Performs actions after the Git-repository was initialized.
-    */
-   private WebSocketEventHandler repoInitializedHandler = new WebSocketEventHandler()
-   {
-      @Override
-      public void onMessage(WebSocketEventMessage event)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
-
-         gitInitStatusHandler.requestFinished(project.getId());
-         createApplication();
-      }
-
-      @Override
-      public void onError(Exception exception)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.GIT_REPO_INITIALIZED, this);
-
-         gitInitStatusHandler.requestError(project.getId(), exception);
-         handleGitError(exception);
-      }
-   };
-
-   /**
-    * Performs actions after the application was created.
-    */
-   private WebSocketEventHandler appCreatedHandler = new WebSocketEventHandler()
-   {
-      @Override
-      public void onMessage(WebSocketEventMessage event)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, this);
-
-         List<Property> properties = parseApplicationProperties(event.getPayload().getPayload());
-         if (properties != null)
-         {
-            IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
-            IDE.fireEvent(new RefreshBrowserEvent(project));
-            deployResultHandler.onDeployFinished(true);
-         }
-      }
-
-      @Override
-      public void onError(Exception exception)
-      {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.HEROKU_APP_CREATED, this);
-
-         if (exception.getMessage() != null && !exception.getMessage().isEmpty())
-         {
-            if (exception.getMessage().contains("Authentication required"))
-            {
-               IDE.addHandler(LoggedInEvent.TYPE, DeployApplicationPresenter.this);
-               IDE.fireEvent(new LoginEvent());
-               return;
-            }
-
-            IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
-         }
-      }
-   };
-
-   /**
-    * Deserializes data in JSON format to List that contain application properties.
-    * 
-    * @param jsonData data in JSON format
-    */
-   private List<Property> parseApplicationProperties(String jsonData)
-   {
-      if (jsonData == null || jsonData.isEmpty())
-      {
-         return null;
-      }
-
-      JSONValue json = JSONParser.parseStrict(jsonData);
-      if (json == null)
-      {
-         return null;
-      }
-      JSONObject jsonObject = json.isObject();
-      if (jsonObject == null)
-      {
-         return null;
-      }
-
-      List<Property> properties = new ArrayList<Property>();
-      for (String key : jsonObject.keySet())
-      {
-         if (jsonObject.get(key).isString() != null)
-         {
-            String value = jsonObject.get(key).isString().stringValue();
-            properties.add(new Property(key, value));
-         }
-      }
-      return properties;
    }
 }

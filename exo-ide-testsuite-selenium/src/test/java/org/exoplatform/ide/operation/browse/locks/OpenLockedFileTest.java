@@ -59,8 +59,7 @@ public class OpenLockedFileTest extends BaseTest
       try
       {
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-        int mkcol = VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
-        System.err.println("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{" + mkcol);
+         VirtualFileSystemUtils.mkcol(WS_URL + PROJECT + "/" + FOLDER_NAME);
          VirtualFileSystemUtils.put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/"
             + FILE_NAME);
       }
@@ -69,47 +68,47 @@ public class OpenLockedFileTest extends BaseTest
       }
    }
 
-//   @After
-//   public void tearDown()
-//   {
-//      try
-//      {
-//         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-//      }
-//      catch (IOException e)
-//      {
-//      }
-//   }
+   @After
+   public void tearDown()
+   {
+      try
+      {
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+      }
+      catch (IOException e)
+      {
+      }
+   }
 
    @Test
    public void testOpenLockedFile() throws Exception
    {
-      //step 1 open and lock file. Check state of the file
+     // step 1 open and lock file. Check state of the file
       IDE.PROJECT.EXPLORER.waitOpened();
-//      IDE.PROJECT.OPEN.openProject(PROJECT);
-//      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
-//      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
-//      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-//
-//      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-//      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-//
-//      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-//      IDE.LOADER.waitClosed();
-//      IDE.LOCK_FILE.isUnLockCommandActive();
-//
-//      //step 2 delete lock Cookies and check states buttons and files after delete
-//      deleteLockTokensCookies();
-//      driver.navigate().refresh();
-//      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
-//      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
-//      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-//      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-//      IDE.LOCK_FILE.isLockCommandNotActive();
-//      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
-//      IDE.MENU.clickOnLockLayer();
-//      IDE.LOCK_FILE.isLockIconOnTabView(1);
-//      assertTrue(IDE.LOCK_FILE.isLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME));
+      IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.LOADER.waitClosed();
+      IDE.LOCK_FILE.isUnLockCommandActive();
+
+      //step 2 delete lock Cookies and check states buttons and files after delete
+      deleteLockTokensCookies();
+      driver.navigate().refresh();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.LOCK_FILE.isLockCommandNotActive();
+      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
+      IDE.MENU.clickOnLockLayer();
+      IDE.LOCK_FILE.isLockIconOnTabView(1);
+      assertTrue(IDE.LOCK_FILE.isLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME));
    }
 
    private void deleteLockTokensCookies()

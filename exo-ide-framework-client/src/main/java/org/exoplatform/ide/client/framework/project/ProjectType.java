@@ -40,7 +40,7 @@ public enum ProjectType {
    EXO("eXo"), //
    UNDEFINED("Undefined"), //
    AWS("Amazon Web Services"),//
-   MultiModule("MultiModule");
+   MultiModule("Maven Multi-module");
 
    /**
     * Project's type name.

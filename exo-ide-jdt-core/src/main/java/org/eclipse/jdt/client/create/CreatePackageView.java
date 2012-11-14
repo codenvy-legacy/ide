@@ -41,6 +41,8 @@ import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
  */
 public class CreatePackageView extends ViewImpl implements Display
 {
+   
+   private static final String ID = "ideCreatePackageView";
 
    private static CreatePackageViewUiBinder uiBinder = GWT.create(CreatePackageViewUiBinder.class);
 
@@ -65,7 +67,7 @@ public class CreatePackageView extends ViewImpl implements Display
 
    public CreatePackageView()
    {
-      super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createPackageTitle(), null, 340, 130, false);
+      super(ID, ViewType.MODAL, JavaEditorExtension.MESSAGES.createPackageTitle(), null, 400, 128, false);
       add(uiBinder.createAndBindUi(this));
    }
 
@@ -121,6 +123,13 @@ public class CreatePackageView extends ViewImpl implements Display
    public HasText getWarningLabel()
    {
       return warningLabel;
+   }
+
+   @Override
+   public void focusInPackageNameField()
+   {
+      packageField.selectAll();
+      packageField.focus();
    }
 
 }

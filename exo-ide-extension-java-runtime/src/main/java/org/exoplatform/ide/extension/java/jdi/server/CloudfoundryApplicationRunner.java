@@ -18,6 +18,19 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+import static org.exoplatform.ide.commons.FileUtils.copy;
+import static org.exoplatform.ide.commons.FileUtils.countFileHash;
+import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
+import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
+import static org.exoplatform.ide.commons.FileUtils.downloadFile;
+import static org.exoplatform.ide.commons.FileUtils.list;
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
+import static org.exoplatform.ide.commons.NameGenerator.generate;
+import static org.exoplatform.ide.commons.ZipUtils.listEntries;
+import static org.exoplatform.ide.commons.ZipUtils.unzip;
+import static org.exoplatform.ide.commons.ZipUtils.zipDir;
+
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ParsingResponseException;
@@ -31,6 +44,7 @@ import org.exoplatform.ide.extension.java.jdi.server.model.ApplicationInstanceIm
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.websocket.MessageBroker;
+import org.exoplatform.ide.websocket.MessageBroker.Channels;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.picocontainer.Startable;
@@ -58,12 +72,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
-import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.*;
 
 /**
  * ApplicationRunner for deploy Java applications at Cloud Foundry PaaS.
@@ -438,8 +446,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       if (application != null)
       {
          application.expirationTime += time;
+         return;
       }
-      throw new ApplicationRunnerException("Unable stop application. Application '" + name + "' not found. ");
+      throw new ApplicationRunnerException("Unable to prolong expiration time of application. Application '" + name + "' not found. ");
    }
 
    /**
@@ -785,6 +794,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     */
    private void publishWebSocketMessage(String data, Exception e)
    {
-      messageBroker.publish(MessageBroker.Channels.DEBUGGER_EXPIRE_SOON_APPS.toString(), data, e, null);
+      messageBroker.publish(Channels.DEBUGGER_EXPIRE_SOON_APPS, data, e, null);
    }
 }

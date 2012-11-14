@@ -21,18 +21,21 @@ package org.exoplatform.ide.client.framework.websocket;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
+import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorHandler;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageEvent;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestBuilder;
 
 /**
  * Class represents a WebSocket connection. Each connection is identified by it's session identifier.
@@ -93,16 +96,13 @@ public class WebSocket
    private String url;
 
    /**
-    * The WebSocket session.
-    */
-   private WebSocketSession session;
-
-   /**
     * {@link MessageBus} for this {@link WebSocket} instance.
     */
    private MessageBus messageBus = new MessageBus();
 
    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
+
+   private static final int HEARTBEAT_PERIOD = 30 * 1000;
 
    /**
     * Counter of connection attempts.
@@ -110,14 +110,12 @@ public class WebSocket
    private static int connectionAttemptsCounter;
 
    /**
-    * Creates a new WebSocket instance and connects to the remote socket location.
+    * Creates a new {@link WebSocket} instance and connects to the remote socket location.
     */
    protected WebSocket()
    {
       instance = this;
-      session = new WebSocketSession();
-      String sessionId = session.getId();
-      url = "ws://" + Window.Location.getHost() + "/websocket/?sessionId=" + (sessionId == null ? "" : sessionId);
+      url = "ws://" + Window.Location.getHost() + "/websocket";
       socket = WebSocketImpl.create(url);
       init();
    }
@@ -127,7 +125,7 @@ public class WebSocket
     */
    private void init()
    {
-      IDE.addHandler(WebSocketMessageEvent.TYPE, messageBus);
+      IDE.addHandler(WSMessageReceivedEvent.TYPE, messageBus);
 
       socket.setOnOpenHandler(new WebSocketOpenedHandler()
       {
@@ -136,7 +134,7 @@ public class WebSocket
          {
             connectionAttemptsCounter = 0;
             IDE.fireEvent(event);
-            heartbeatTimer.scheduleRepeating(30 * 1000);
+            heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
          }
       });
 
@@ -157,6 +155,15 @@ public class WebSocket
          }
       });
 
+      socket.setOnMessageHandler(new WSMessageReceivedHandler()
+      {
+         @Override
+         public void onWSMessageReceived(WSMessageReceivedEvent event)
+         {
+            IDE.fireEvent(event);
+         }
+      });
+
       socket.setOnErrorHandler(new WebSocketErrorHandler()
       {
          @Override
@@ -166,20 +173,11 @@ public class WebSocket
             close();
          }
       });
-
-      socket.setOnMessageHandler(new WebSocketMessageHandler()
-      {
-         @Override
-         public void onWebSocketMessage(WebSocketMessageEvent event)
-         {
-            IDE.fireEvent(event);
-         }
-      });
    }
 
    /**
     * Returns the instance of the {@link WebSocket} or <code>null</code>
-    * if WebSocket not supported in the current web-browser.
+    * if WebSocket is not supported in the current browser.
     * 
     * @return instance of {@link WebSocket} or <code>null</code> if WebSocket not supported
     */
@@ -222,21 +220,16 @@ public class WebSocket
    };
 
    /**
-    * Timer for sending heartbeat pings to prevent closing an idle WebSocket connection.
+    * Timer for sending heartbeat pings, mainly to prevent closing an idle WebSocket connection.
     */
    private Timer heartbeatTimer = new Timer()
    {
       @Override
       public void run()
       {
-         try
-         {
-            send("PING");
-         }
-         catch (WebSocketException e)
-         {
-            // nothing to do
-         }
+         //send("PING");
+         RESTfulRequestBuilder.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
+            .send(null);
       }
    };
 
@@ -297,26 +290,6 @@ public class WebSocket
    public String getUrl()
    {
       return url;
-   }
-
-   /**
-    * Sets the session.
-    * 
-    * @param session new session
-    */
-   public void setSession(WebSocketSession session)
-   {
-      this.session = session;
-   }
-
-   /**
-    * Returns the WebSocket session.
-    * 
-    * @return the session identifier of this WebSocket connection
-    */
-   public WebSocketSession getSession()
-   {
-      return session;
    }
 
    /**
@@ -469,16 +442,16 @@ public class WebSocket
       }-*/;
 
       /**
-       * Sets the {@link WebSocketMessageHandler} to be notified when
+       * Sets the {@link WSMessageReceivedHandler} to be notified when
        * client receives data from the WebSocket server.
        * 
        * @param handler WebSocket message handler
        */
-      public final native void setOnMessageHandler(WebSocketMessageHandler handler)
+      public final native void setOnMessageHandler(WSMessageReceivedHandler handler)
       /*-{
          this.onmessage = $entry(function(event) {
-            var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageEvent::new(Ljava/lang/String;)(event.data);
-            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketMessageHandler::onWebSocketMessage(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketMessageEvent;)(webSocketMessageEventInstance);
+            var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent::new(Ljava/lang/String;)(event.data);
+            handler.@org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler::onWSMessageReceived(Lorg/exoplatform/ide/client/framework/websocket/events/WSMessageReceivedEvent;)(webSocketMessageEventInstance);
          });
       }-*/;
    }

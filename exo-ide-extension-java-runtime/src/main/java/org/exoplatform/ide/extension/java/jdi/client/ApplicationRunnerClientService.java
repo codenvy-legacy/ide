@@ -28,8 +28,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestBuilder;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
@@ -40,6 +42,8 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
  */
 public class ApplicationRunnerClientService
 {
+   public static final String PROLONG = "/ide/java/runner/prolong";
+
    private static String BASE_URL;
 
    private static ApplicationRunnerClientService instance;
@@ -58,16 +62,10 @@ public class ApplicationRunnerClientService
       return instance;
    }
 
-   public void runApplication(String project, String war, boolean useWebSocket, boolean useJRebel,
+   public void runApplication(String project, String war, boolean useJRebel,
       AsyncRequestCallback<ApplicationInstance> callback) throws RequestException
    {
-      RequestStatusHandler statusHandler = null;
-      if (!useWebSocket)
-      {
-         statusHandler = new RunningAppStatusHandler(project);
-      }
-
-      String requestUrl = BASE_URL + "/run?war=" + war + "&usewebsocket=" + useWebSocket;
+      String requestUrl = BASE_URL + "/run?war=" + war;
 
       String data = "";
       if (useJRebel)
@@ -79,20 +77,15 @@ public class ApplicationRunnerClientService
 
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.POST, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
+         .requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
 
    }
 
-   public void debugApplication(String project, String war, boolean useWebSocket, boolean useJRebel,
+   public void debugApplication(String project, String war, boolean useJRebel,
       AsyncRequestCallback<ApplicationInstance> callback) throws RequestException
    {
-      RequestStatusHandler statusHandler = null;
-      if (!useWebSocket)
-      {
-         statusHandler = new RunningAppStatusHandler(project);
-      }
-
       String data = "";
       if (useJRebel)
       {
@@ -101,10 +94,11 @@ public class ApplicationRunnerClientService
          data = jsonObject.toString();
       }
 
-      String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false" + "&usewebsocket=" + useWebSocket;
+      String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
       Loader loader = new GWTLoader();
       loader.setMessage("Starting.... ");
-      AsyncRequest.build(RequestBuilder.POST, requestUrl, !useWebSocket).requestStatusHandler(statusHandler)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
+         .requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
 
    }
@@ -121,13 +115,13 @@ public class ApplicationRunnerClientService
       AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
    }
 
-   public void prolongExpirationTime(String name, long time, AsyncRequestCallback<Object> callback)
-      throws RequestException
+   public void prolongExpirationTime(String name, long time, RESTfulRequestCallback<Object> callback)
+      throws WebSocketException
    {
-      String url = BASE_URL + "/prolong";
+      String url = restContext + PROLONG;
       StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
 
-      AsyncRequest.build(RequestBuilder.GET, url + params.toString()).send(callback);
+      RESTfulRequestBuilder.build(RequestBuilder.GET, url + params).send(callback);
    }
 
    public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback)
