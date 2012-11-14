@@ -52,7 +52,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class UpdateServlet extends HttpServlet
 {
-   private File jrebelDir;
+   protected File jrebelDir;
 
    @Override
    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
@@ -69,10 +69,10 @@ public class UpdateServlet extends HttpServlet
             unzip(req.getInputStream(), tmpDir);
             File classes = new File(jrebelDir, "/classpath/classes");
             copy(new File(tmpDir, "WEB-INF/classes"), classes, ANY_FILTER);
-            deleteFiles(classes, req.getHeaders("x-exo-classes-delete"));
+            deleteFiles(classes, req.getHeaders("x-exo-ide-classes-delete"));
             File lib = new File(jrebelDir, "/classpath/lib");
             copy(new File(tmpDir, "WEB-INF/lib"), lib, ANY_FILTER);
-            deleteFiles(lib, req.getHeaders("x-exo-classes-lib-delete"));
+            deleteFiles(lib, req.getHeaders("x-exo-ide-lib-delete"));
             File web = new File(jrebelDir, "web");
             copy(tmpDir, web, new FilenameFilter()
             {
@@ -84,7 +84,7 @@ public class UpdateServlet extends HttpServlet
                      || dir.getAbsolutePath().endsWith("META-INF/maven"));
                }
             });
-            deleteFiles(web, req.getHeaders("x-exo-classes-web-delete"));
+            deleteFiles(web, req.getHeaders("x-exo-ide-web-delete"));
          }
          finally
          {
@@ -211,17 +211,25 @@ public class UpdateServlet extends HttpServlet
    public void init(ServletConfig config) throws ServletException
    {
       super.init(config);
-      File app = new File(config.getServletContext().getRealPath("/"));
-      while (!(app == null || "tomcat".equals(app.getName()) || "app".equals(app.getName())))
+      doInit();
+   }
+
+   /**
+    * Try to find directory with name 'jrebel'. Directory should exist in some level higher  than context root of this
+    * servlet, e.g.
+    * <p/>
+    * <b>servlet context</b>&nbsp;&nbsp;-&nbsp;<i>some_path</i>/tomcat/webapps/my_app<br/>
+    * <b>jrebel directory</b>&nbsp;-&nbsp;<i>some_path</i>/tomcat/jrebel
+    */
+   protected void doInit()
+   {
+      File app = new File(getServletConfig().getServletContext().getRealPath("/"));
+      for (File parent = app.getParentFile(); parent != null && this.jrebelDir == null; parent = parent.getParentFile())
       {
-         app = app.getParentFile();
-      }
-      if (app != null)
-      {
-         File jrebelDir = new File(app.getParentFile(), "jrebel");
-         if (jrebelDir.exists())
+         File tmp = new File(parent, "jrebel");
+         if (tmp.exists())
          {
-            this.jrebelDir = jrebelDir;
+            this.jrebelDir = tmp;
          }
       }
    }
