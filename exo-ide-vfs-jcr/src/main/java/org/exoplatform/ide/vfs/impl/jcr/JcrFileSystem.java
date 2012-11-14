@@ -61,6 +61,9 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 import org.exoplatform.services.jcr.core.ExtendedSession;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -138,6 +141,8 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    static final Set<String> SKIPPED_QUERY_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:path", "jcr:score"));
+   
+   private static final Log LOG_JREBEL_PROP = ExoLogger.getLogger("JRebel");
 
    protected final Repository repository;
    protected final String workspaceName;
@@ -1260,6 +1265,13 @@ public class JcrFileSystem implements VirtualFileSystem
             String[] addMixinTypes = null;
             for (Property property : properties)
             {
+               //TODO : need send user id to the JRebel according license agreement.
+               //This is temporary solution
+               if ("jrebel".equals(property.getName()) && property.getValue() != null && Boolean.parseBoolean(property.getValue().get(0)))
+               {
+                  LOG_JREBEL_PROP.error(ConversationState.getCurrent().getIdentity().getUserId());                  
+               }
+                  
                if ("vfs:mimeType".equals(property.getName()))
                {
                   List<String> value = property.getValue();
