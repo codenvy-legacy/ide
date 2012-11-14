@@ -50,8 +50,8 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.pubsub.WSEventHandler;
 import org.exoplatform.ide.client.framework.websocket.pubsub.WSEventMessage;
@@ -897,6 +897,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       doRunDebugger(result);
       IDE.fireEvent(new AppStartedEvent(result));
       runningApp = result;
+
+      try
+      {
+         WebSocket.getInstance().messageBus().subscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, expireAppsHandler);
+      }
+      catch (WebSocketException e)
+      {
+         // do nothing
+      }
    }
 
    private String getAppUrlsAsString(ApplicationInstance application)
@@ -979,7 +988,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    {
       project = event.getProject();
    }
-   
+
    @Override
    public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
@@ -1122,6 +1131,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       return false;
    }
 
+   /**
+    * Handler for processing message.
+    */
    private WSEventHandler expireAppsHandler = new WSEventHandler()
    {
       @Override

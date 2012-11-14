@@ -89,8 +89,8 @@ public class HerokuExtension extends Extension implements InitializeServicesHand
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku56()), new Image(
-            HerokuClientBundle.INSTANCE.heroku56Disabled()), Arrays.asList(ProjectType.RUBY_ON_RAILS),
+         new PaaS("Heroku", "Heroku", new Image(HerokuClientBundle.INSTANCE.heroku48()), new Image(
+            HerokuClientBundle.INSTANCE.heroku48Disabled()), Arrays.asList(ProjectType.RUBY_ON_RAILS),
             new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);

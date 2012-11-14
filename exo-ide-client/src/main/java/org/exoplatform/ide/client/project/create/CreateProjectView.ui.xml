@@ -6,6 +6,59 @@
    <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    <ui:with field="templateLocale" type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant"></ui:with>
    <ui:style>
+      @external gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled, gwt-ToggleButton-down, gwt-ToggleButton-down-hovering, gwt-ToggleButton-down-disabled, gwt-ToggleButton-down, gwt-ToggleButton-down-hovering, gwt-ToggleButton-down-disabled;
+
+      .gwt-ToggleButton-up {
+        border: 1px solid #BCBCBC;
+        cursor: pointer;
+        cursor: hand;
+      }
+
+      .gwt-ToggleButton-up-hovering {
+        border: 1px solid;
+        border-color: #B6CCE8;
+        cursor: pointer;
+        cursor: hand;
+      }
+
+      .gwt-ToggleButton-up-disabled {
+        border: 1px solid #ccc;
+        cursor: default;
+        opacity: .5;
+        zoom: 1;
+        opacity: 0.4;
+      }
+
+      .gwt-ToggleButton-down,
+      .gwt-ToggleButton-down-hovering,
+      .gwt-ToggleButton-down-disabled {
+        padding: 4px 4px 2px 6px;
+      }
+
+      .gwt-ToggleButton-down {
+        background-position: 0 -513px;
+        border: 1px solid #bcbcbc;
+        cursor: pointer;
+        cursor: hand;
+      }
+
+      .gwt-ToggleButton-down-hovering {
+        background-position: 0 -513px;
+        border: 1px solid;
+        border-color: #B6CCE8;
+        cursor: pointer;
+        cursor: hand;
+      }
+
+      .gwt-ToggleButton-down-disabled {
+        background-position: 0 -513px;
+        border: 1px solid #ccc;
+        cursor: default;
+        opacity: .5;
+        zoom: 1;
+        opacity: 0.4;
+      }
+
       .topLabel {
       	font-size: 12px;
       	font-family: Verdana, Bitstream Vera Sans, sans-serif;
@@ -42,6 +95,10 @@
 
       .floatLeft {
       	float: left;
+      }
+
+      .clearLeft {
+      	clear: left;
       }
       
       .rightAlign {
@@ -135,12 +192,12 @@
                <g:FlowPanel addStyleNames="{style.line}">
                   <g:Label text="{templateLocale.chooseTechnology}" addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
                   <g:Image title="{templateLocale.chooseTechnologyTooltip}" resource="{resource.question}" addStyleNames="{style.questionImage}"></g:Image>
-                  <g:Grid ui:field="projectTypesGrid" />
+                  <g:Grid ui:field="projectTypesGrid" addStyleNames="{style.clearLeft}" />
                </g:FlowPanel>
                <g:FlowPanel addStyleNames="{style.line}">
                   <g:Label text="{templateLocale.choosePaaS}" addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
                   <g:Image title="{templateLocale.choosePaaSTooltip}" resource="{resource.question}" addStyleNames="{style.questionImage}"></g:Image>
-                  <g:Grid ui:field="targetGrid" />
+                  <g:Grid ui:field="targetGrid" addStyleNames="{style.clearLeft}" />
                </g:FlowPanel>
             </g:FlowPanel>
             <g:DockLayoutPanel width="100%" height="100%">
@@ -200,4 +257,4 @@
          </g:FlowPanel>
       </f:layer>
    </f:Border>
-</ui:UiBinder> 
+</ui:UiBinder>

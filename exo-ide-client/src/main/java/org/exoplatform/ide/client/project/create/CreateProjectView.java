@@ -531,7 +531,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       {
          button.getUpDisabledFace().setImage(disabledImage);
       }
-      button.setSize("56px", "56px");
+      button.setSize("48px", "48px");
       button.getElement().getStyle().setPropertyPx("borderRadius", 10);
       button.getElement().getStyle().setPropertyPx("outline", 0);
       return button;

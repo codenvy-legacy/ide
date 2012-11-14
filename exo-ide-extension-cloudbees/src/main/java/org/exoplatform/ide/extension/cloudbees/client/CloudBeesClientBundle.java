@@ -66,11 +66,11 @@ public interface CloudBeesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees_Disabled.png")
    ImageResource cloudBeesDisabled();
 
-   @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees_56.png")
-   ImageResource cloudBees56();
+   @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees_48.png")
+   ImageResource cloudBees48();
 
-   @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees_56_Disabled.png")
-   ImageResource cloudBees56Disabled();
+   @Source("org/exoplatform/ide/extension/cloudbees/images/cloudbees_48_Disabled.png")
+   ImageResource cloudBees48Disabled();
 
    @Source("org/exoplatform/ide/extension/cloudbees/images/initializeApp.png")
    ImageResource initializeApp();

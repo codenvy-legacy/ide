@@ -48,8 +48,8 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/jsp.png")
    ImageResource jspProject();
 
-   @Source("org/exoplatform/ide/client/bundled-images/projects/jsp56x56.png")
-   ImageResource jspProject56();
+   @Source("org/exoplatform/ide/client/bundled-images/projects/jsp48x48.png")
+   ImageResource jspProject48();
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/gae_java.png")
    ImageResource gaeJavaProject();
@@ -60,8 +60,8 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/python.png")
    ImageResource pythonProject();
 
-   @Source("org/exoplatform/ide/client/bundled-images/projects/python56x56.png")
-   ImageResource pythonProject56();
+   @Source("org/exoplatform/ide/client/bundled-images/projects/python48x48.png")
+   ImageResource pythonProject48();
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/django.png")
    ImageResource djangoProject();
@@ -69,14 +69,14 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/ror.png")
    ImageResource rubyProject();
 
-   @Source("org/exoplatform/ide/client/bundled-images/projects/ror56x56.png")
-   ImageResource rubyProject56();
+   @Source("org/exoplatform/ide/client/bundled-images/projects/ror48x48.png")
+   ImageResource rubyProject48();
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/spring.png")
    ImageResource springProject();
 
-   @Source("org/exoplatform/ide/client/bundled-images/projects/spring56x56.png")
-   ImageResource springProject56();
+   @Source("org/exoplatform/ide/client/bundled-images/projects/spring48x48.png")
+   ImageResource springProject48();
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/groovy-project.png")
    ImageResource groovyProject();
@@ -87,14 +87,14 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/php.png")
    ImageResource phpProject();
 
-   @Source("org/exoplatform/ide/client/bundled-images/projects/php56x56.png")
-   ImageResource phpProject56();
+   @Source("org/exoplatform/ide/client/bundled-images/projects/php48x48.png")
+   ImageResource phpProject48();
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/js.png")
    ImageResource jsProject();
 
-   @Source("org/exoplatform/ide/client/bundled-images/projects/js56x56.png")
-   ImageResource jsProject56();
+   @Source("org/exoplatform/ide/client/bundled-images/projects/js48x48.png")
+   ImageResource jsProject48();
 
    @Source("org/exoplatform/ide/client/bundled-images/projects/default-project.png")
    ImageResource defaultProject();
@@ -102,8 +102,11 @@ public interface IconImageBundle extends ClientBundle
    @Source("org/exoplatform/ide/client/bundled-images/projects/aws.png")
    ImageResource awsProject();
 
-   @Source("org/exoplatform/ide/client/bundled-images/projects/jar56x56.png")
-   ImageResource jarProject56();
+   @Source("org/exoplatform/ide/client/bundled-images/projects/jar48x48.png")
+   ImageResource jarProject48();
+
+   @Source("org/exoplatform/ide/client/bundled-images/projects/multi-module48x48.png")
+   ImageResource multiModule48();
 
    /* Languages */
    @Source("org/exoplatform/ide/client/bundled-images/projects/java_type.png")
