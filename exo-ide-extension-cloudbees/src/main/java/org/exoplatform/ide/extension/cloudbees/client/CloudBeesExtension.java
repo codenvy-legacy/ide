@@ -80,8 +80,8 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees56()), new Image(
-            CloudBeesClientBundle.INSTANCE.cloudBees56Disabled()), Arrays.asList(ProjectType.JSP),
+         new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees48()), new Image(
+            CloudBeesClientBundle.INSTANCE.cloudBees48Disabled()), Arrays.asList(ProjectType.JSP),
             new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);

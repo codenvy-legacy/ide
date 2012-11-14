@@ -19,7 +19,6 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.copy;
 import static org.exoplatform.ide.commons.FileUtils.countFileHash;
 import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
 import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
@@ -31,7 +30,6 @@ import static org.exoplatform.ide.commons.ZipUtils.listEntries;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
 
-import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
@@ -94,16 +92,16 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
    private final CloudfoundryPool cfServers;
 
+   /** Component for sending messages to client over WebSocket connection. */
+   private final MessageBroker wsMessageBroker;
+
    private final Map<String, Application> applications;
    private final ScheduledExecutorService applicationTerminator;
 
-   /** Component for sending messages to client over WebSocket connection. */
-   private static final MessageBroker messageBroker = (MessageBroker)ExoContainerContext.getCurrentContainer()
-      .getComponentInstanceOfType(MessageBroker.class);
 
-   public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, InitParams initParams)
+   public CloudfoundryApplicationRunner(CloudfoundryPool cfServers, MessageBroker wsMessageBroker, InitParams initParams)
    {
-      this(cfServers, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")));
+      this(cfServers, wsMessageBroker, parseApplicationLifeTime(readValueParam(initParams, "cloudfoundry-application-lifetime")));
    }
 
    private static int parseApplicationLifeTime(String str)
@@ -121,7 +119,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       return DEFAULT_APPLICATION_LIFETIME;
    }
 
-   protected CloudfoundryApplicationRunner(CloudfoundryPool cfServers, int applicationLifetime)
+   protected CloudfoundryApplicationRunner(CloudfoundryPool cfServers, MessageBroker wsMessageBroker, int applicationLifetime)
    {
       if (applicationLifetime < 1)
       {
@@ -130,6 +128,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       this.applicationLifetime = applicationLifetime;
       this.applicationLifetimeMillis = applicationLifetime * 60 * 1000;
       this.cfServers = cfServers;
+      this.wsMessageBroker = wsMessageBroker;
 
       this.applications = new ConcurrentHashMap<String, Application>();
       this.applicationTerminator = Executors.newSingleThreadScheduledExecutor();
@@ -794,6 +793,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     */
    private void publishWebSocketMessage(String data, Exception e)
    {
-      messageBroker.publish(Channels.DEBUGGER_EXPIRE_SOON_APPS, data, e, null);
+      wsMessageBroker.publish(Channels.DEBUGGER_EXPIRE_SOON_APPS, data, e, null);
    }
 }

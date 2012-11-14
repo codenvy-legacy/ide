@@ -108,9 +108,9 @@ public interface OpenShiftClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_Disabled.png")
    ImageResource openShiftControlDisabled();
 
-   @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_56.png")
-   ImageResource openShiftControl56();
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_48.png")
+   ImageResource openShiftControl48();
 
-   @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_56_Disabled.png")
-   ImageResource openShiftControl56Disabled();
+   @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_48_Disabled.png")
+   ImageResource openShiftControl48Disabled();
 }

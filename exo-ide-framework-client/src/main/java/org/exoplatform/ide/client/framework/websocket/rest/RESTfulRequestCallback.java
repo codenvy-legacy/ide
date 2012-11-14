@@ -91,7 +91,7 @@ public abstract class RESTfulRequestCallback<T>
    }
 
    /**
-    * Must be called when response was received.
+    * Perform actions when {@link RESTfulResponseMessage} was received.
     * 
     * @param response received {@link RESTfulResponseMessage}
     */

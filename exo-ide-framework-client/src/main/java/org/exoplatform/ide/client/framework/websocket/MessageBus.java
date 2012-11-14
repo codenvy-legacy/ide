@@ -50,9 +50,9 @@ import java.util.Set;
  */
 public class MessageBus implements WSMessageReceivedHandler
 {
-   /** Enumeration describing the WebSocket event types. */
+   /** Enumeration describes the WebSocket event types. */
    public enum Channels {
-      /** Channel for the messages containing the debugger event. */
+      /** Channel for the messages containing the application names which may be stopped soon. */
       DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps");
 
       private final String eventTypeValue;
@@ -167,27 +167,6 @@ public class MessageBus implements WSMessageReceivedHandler
     */
    public void subscribe(Channels channel, WSEventHandler webSocketEventHandler) throws WebSocketException
    {
-      subscribe(channel.toString(), webSocketEventHandler);
-   }
-
-   /**
-    * Registers a new subscriber which will receive messages on a particular channel.
-    * Upon the first subscribe to a channel, a message is sent to the server to
-    * subscribe the client for that channel. Subsequent subscribes for a channel
-    * already previously subscribed to do not trigger a send of another message
-    * to the server because the client has already a subscription, and merely registers
-    * (client side) the additional handler to be fired for events received on the respective channel.
-    * 
-    * <p><strong>Note:</strong> the method runs asynchronously and does not provide
-    * feedback whether a subscription was successful or not.
-    * 
-    * @param channel channel identifier
-    * @param webSocketEventHandler the {@link WSEventHandler} to fire
-    *                   when receiving an event on the subscribed channel
-    * @throws WebSocketException if an error has occurred while sending data
-    */
-   public void subscribe(String channel, WSEventHandler webSocketEventHandler) throws WebSocketException
-   {
       if (webSocketEventHandler == null)
       {
          throw new NullPointerException("Subscriber must not be null");
@@ -202,11 +181,11 @@ public class MessageBus implements WSMessageReceivedHandler
 
       subscribersSet = new HashSet<WSEventHandler>();
       subscribersSet.add(webSocketEventHandler);
-      channelToSubscribersMap.put(channel, subscribersSet);
+      channelToSubscribersMap.put(channel.toString(), subscribersSet);
 
       WSSubscribeMessage message = WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage().as();
       message.setType(Type.SUBSCRIBE);
-      message.setChannel(channel);
+      message.setChannel(channel.toString());
 
       AutoBean<WSSubscribeMessage> webSocketSubscribeMessageBean =
          WebSocket.AUTO_BEAN_FACTORY.webSocketSubscribeMessage(message);

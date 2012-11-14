@@ -92,8 +92,8 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    public void initialize()
    {
       IDE.getInstance().registerPaaS(
-         new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry56()),
-            new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry56Disabled()), Arrays.asList(ProjectType.JSP,
+         new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
+            new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()), Arrays.asList(ProjectType.JSP,
                ProjectType.RUBY_ON_RAILS, ProjectType.SPRING), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);

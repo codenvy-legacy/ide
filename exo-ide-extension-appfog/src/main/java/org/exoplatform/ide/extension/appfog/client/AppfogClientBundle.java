@@ -99,11 +99,11 @@ public interface AppfogClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/appfog/images/appfog_Disabled.png")
    ImageResource appfogDisabled();
 
-   @Source("org/exoplatform/ide/extension/appfog/images/appfog_56.png")
-   ImageResource appfog56();
+   @Source("org/exoplatform/ide/extension/appfog/images/appfog_48.png")
+   ImageResource appfog48();
 
-   @Source("org/exoplatform/ide/extension/appfog/images/appfog_56_Disabled.png")
-   ImageResource appfog56Disabled();
+   @Source("org/exoplatform/ide/extension/appfog/images/appfog_48_Disabled.png")
+   ImageResource appfog48Disabled();
 
    @Source("org/exoplatform/ide/extension/appfog/images/initializeApp.png")
    ImageResource createApp();

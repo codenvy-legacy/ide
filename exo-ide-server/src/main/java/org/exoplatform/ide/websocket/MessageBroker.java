@@ -52,9 +52,9 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class MessageBroker
 {
-   /** Enumeration describing the WebSocket event types. */
+   /** Enumeration describes the WebSocket event types. */
    public enum Channels {
-      /** Channel for the messages containing the debugger event. */
+      /** Channel for the messages containing the application names which may be stopped soon. */
       DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps");
 
       private final String eventTypeValue;

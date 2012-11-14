@@ -102,11 +102,11 @@ public interface CloudFoundryClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/cloudfoundry_Disabled.png")
    ImageResource cloudFoundryDisabled();
 
-   @Source("org/exoplatform/ide/extension/cloudfoundry/images/cloudfoundry_56.png")
-   ImageResource cloudFoundry56();
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/cloudfoundry_48.png")
+   ImageResource cloudFoundry48();
 
-   @Source("org/exoplatform/ide/extension/cloudfoundry/images/cloudfoundry_56_Disabled.png")
-   ImageResource cloudFoundry56Disabled();
+   @Source("org/exoplatform/ide/extension/cloudfoundry/images/cloudfoundry_48_Disabled.png")
+   ImageResource cloudFoundry48Disabled();
 
    @Source("org/exoplatform/ide/extension/cloudfoundry/images/initializeApp.png")
    ImageResource createApp();

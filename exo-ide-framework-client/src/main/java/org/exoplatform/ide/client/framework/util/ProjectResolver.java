@@ -136,13 +136,14 @@ public class ProjectResolver
          projectImages.put(ProjectType.DJANGO, IconImageBundle.INSTANCE.djangoProject());
          projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
 
-         projectLargeImages.put(ProjectType.JAR, IconImageBundle.INSTANCE.jarProject56());
-         projectLargeImages.put(ProjectType.JSP, IconImageBundle.INSTANCE.jspProject56());
-         projectLargeImages.put(ProjectType.SPRING, IconImageBundle.INSTANCE.springProject56());
-         projectLargeImages.put(ProjectType.JAVASCRIPT, IconImageBundle.INSTANCE.jsProject56());
-         projectLargeImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject56());
-         projectLargeImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject56());
-         projectLargeImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject56());
+         projectLargeImages.put(ProjectType.JAR, IconImageBundle.INSTANCE.jarProject48());
+         projectLargeImages.put(ProjectType.JSP, IconImageBundle.INSTANCE.jspProject48());
+         projectLargeImages.put(ProjectType.SPRING, IconImageBundle.INSTANCE.springProject48());
+         projectLargeImages.put(ProjectType.JAVASCRIPT, IconImageBundle.INSTANCE.jsProject48());
+         projectLargeImages.put(ProjectType.RUBY_ON_RAILS, IconImageBundle.INSTANCE.rubyProject48());
+         projectLargeImages.put(ProjectType.PYTHON, IconImageBundle.INSTANCE.pythonProject48());
+         projectLargeImages.put(ProjectType.PHP, IconImageBundle.INSTANCE.phpProject48());
+         projectLargeImages.put(ProjectType.MultiModule, IconImageBundle.INSTANCE.multiModule48());
       }
 
       projectTypes.put(Language.JAVA,
