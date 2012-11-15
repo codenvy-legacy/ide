@@ -38,6 +38,9 @@ public interface PartStackUIResources extends ClientBundle
       @ClassName("ide-PartStack-Tabs")
       String idePartStackTabs();
 
+      @ClassName("CloseButton")
+      String idePartStackTabCloseButton();
+
       @ClassName("ide-PartStack-Tab-selected")
       String idePartStackTabSelected();
 

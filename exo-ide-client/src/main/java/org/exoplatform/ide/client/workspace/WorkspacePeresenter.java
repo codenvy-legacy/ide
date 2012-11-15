@@ -26,6 +26,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
+import org.exoplatform.ide.client.ImageBundle;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
@@ -93,8 +94,7 @@ public class WorkspacePeresenter implements Presenter
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
-      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-      JavaExtension javaExtension, ExtensionsPage extensionsPage, OutlinePartPresenter outlinePresenter)
+      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent, JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle, OutlinePartPresenter outlinePresenter)
 
    {
       super();
@@ -112,7 +112,8 @@ public class WorkspacePeresenter implements Presenter
 
       EditorActiveExpression editorActiveExpression = new EditorActiveExpression();
       expressionManager.registerExpression(editorActiveExpression);
-
+      
+      
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
       menuPresenter.addMenuItem("File/New/new Project", null);
@@ -120,7 +121,7 @@ public class WorkspacePeresenter implements Presenter
       // CREATE DYNAMIC MENU CONTENT
       menuPresenter.addMenuItem("File/Create Demo Content", null, new CreadDemoContentCommand(resourceManager), null,
          noProjectOpenedExpression);
-
+      
       menuPresenter.addMenuItem("Edit", null, null, editorActiveExpression, null);
       menuPresenter.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
 
@@ -134,7 +135,7 @@ public class WorkspacePeresenter implements Presenter
       //XXX DEMO
 
       partAgent.addPart(extensionsPage, PartStackType.EDITING);
-      partAgent.addPart(new WelcomePage(), PartStackType.EDITING);
+      partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
       partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
@@ -166,24 +167,24 @@ public class WorkspacePeresenter implements Presenter
          {
             if (event.getOperationType() == FileOperation.OPEN)
             {
-               //               // Set up the callback object.
-               //               AsyncCallback<File> callback = new AsyncCallback<File>()
-               //               {
-               //                  @Override
-               //                  public void onFailure(Throwable caught)
-               //                  {
-               //                     GWT.log("error" + caught);
-               //                  }
-               //
-               //                  @Override
-               //                  public void onSuccess(File file)
-               //                  {
-               //                     openFile(file);
-               //                  }
-               //               };
-               //
-               //               Project project = event.getFile().getProject();
-               //               project.getContent(event.getFile(), callback);
+//               // Set up the callback object.
+//               AsyncCallback<File> callback = new AsyncCallback<File>()
+//               {
+//                  @Override
+//                  public void onFailure(Throwable caught)
+//                  {
+//                     GWT.log("error" + caught);
+//                  }
+//
+//                  @Override
+//                  public void onSuccess(File file)
+//                  {
+//                     openFile(file);
+//                  }
+//               };
+//
+//               Project project = event.getFile().getProject();
+//               project.getContent(event.getFile(), callback);
                editorAgent.openEditor(event.getFile());
 
                //fileSystemService.getFileContent(event.getFileName(), callback);

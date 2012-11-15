@@ -16,14 +16,14 @@
  */
 package org.exoplatform.ide.client.welcome;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
 
+import org.exoplatform.ide.client.ImageBundle;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 
 /**
@@ -37,12 +37,15 @@ public class WelcomePage extends AbstractPartPresenter
    private static WelcomePageUiBinder uiBinder = GWT.create(WelcomePageUiBinder.class);
    private Element element;
 
+   private ImageBundle imageBundle;
+
    interface WelcomePageUiBinder extends UiBinder<Element, WelcomePage>
    {
    }
 
-   public WelcomePage()
+   public WelcomePage(ImageBundle imageBundle)
    {
+      this.imageBundle = imageBundle;
       element = uiBinder.createAndBindUi(this);
    }
 
@@ -73,8 +76,7 @@ public class WelcomePage extends AbstractPartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return imageBundle.welcomePageIcon();
    }
 
    /**
@@ -83,8 +85,7 @@ public class WelcomePage extends AbstractPartPresenter
    @Override
    public String getTitleToolTip()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return "This is Welcome page, it shows general information about Project Development.";
    }
 
 }

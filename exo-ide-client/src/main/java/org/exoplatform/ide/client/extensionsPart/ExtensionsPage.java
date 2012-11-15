@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.client.ExtensionManager;
+import org.exoplatform.ide.client.ImageBundle;
 import org.exoplatform.ide.extension.DependencyDescription;
 import org.exoplatform.ide.extension.ExtensionDescription;
 import org.exoplatform.ide.json.JsonArray;
@@ -40,10 +41,13 @@ public class ExtensionsPage implements PartPresenter
 
    private final ExtensionManager manager;
 
+   private ImageBundle imageBundle;
+
    @Inject
-   public ExtensionsPage(ExtensionManager manager)
+   public ExtensionsPage(ExtensionManager manager, ImageBundle imageBundle)
    {
       this.manager = manager;
+      this.imageBundle = imageBundle;
    }
 
    /**
@@ -128,8 +132,7 @@ public class ExtensionsPage implements PartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return imageBundle.extentionPageIcon();
    }
 
    /**
@@ -138,8 +141,7 @@ public class ExtensionsPage implements PartPresenter
    @Override
    public String getTitleToolTip()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return "This page helps you to manage extensions.";
    }
 
    /**

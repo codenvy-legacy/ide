@@ -17,12 +17,12 @@
 package org.exoplatform.ide.client.projectExplorer;
 
 import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.client.ImageBundle;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
@@ -61,12 +61,14 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
 
    EventBus eventBus;
 
+   ImageBundle imageBundle;
 
    @Inject
-   public ProjectExplorerPresenter(Display display,EventBus eventBus)
+   public ProjectExplorerPresenter(Display display, EventBus eventBus, ImageBundle imageBundle)
    {
       this.display = display;
       this.eventBus = eventBus;
+      this.imageBundle = imageBundle;
       bind();
    }
 
@@ -167,8 +169,7 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return imageBundle.projectPageIcon();
    }
 
    /**
@@ -177,8 +178,8 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
    @Override
    public String getTitleToolTip()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return "This page helps you to do basic operation with your projects. Following features are currently available:"
+         + "\n\t- view project's tree" + "\n\t- select and open project's file";
    }
 
 }
