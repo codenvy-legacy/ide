@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.websocket.exceptions.ServerException
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WSEventHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
  */
-public abstract class WSEventHandler<T>
+public abstract class SubscriptionHandler<T>
 {
 // http code 207 is "Multi-Status"
    // IE misinterpreting HTTP status code 204 as 1223 (http://www.mail-archive.com/jquery-en@googlegroups.com/msg13093.html)
@@ -53,7 +53,7 @@ public abstract class WSEventHandler<T>
     */
    private final T payload;
 
-   public WSEventHandler()
+   public SubscriptionHandler()
    {
       this(null);
    }
@@ -65,7 +65,7 @@ public abstract class WSEventHandler<T>
     * 
     * @param unmarshaller {@link Unmarshallable}
     */
-   public WSEventHandler(Unmarshallable<T> unmarshaller)
+   public SubscriptionHandler(Unmarshallable<T> unmarshaller)
    {
       this.successCodes = DEFAULT_SUCCESS_CODES;
 

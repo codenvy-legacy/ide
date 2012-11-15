@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEven
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBuilder;
-import org.exoplatform.ide.client.framework.websocket.messages.WSEventHandler;
+import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 
 /**
  * Class represents a WebSocket connection. Each connection is identified by it's session identifier.
@@ -305,10 +305,10 @@ public class WebSocket
     * feedback whether a subscription was successful or not.
     * 
     * @param channel {@link Channels} identifier
-    * @param handler the {@link WSEventHandler} to fire
+    * @param handler the {@link SubscriptionHandler} to fire
     *                   when receiving an event on the subscribed channel
     */
-   public void subscribe(Channels channel, WSEventHandler<?> handler)
+   public void subscribe(Channels channel, SubscriptionHandler<?> handler)
    {
       messageBus.subscribe(channel, handler);
    }
@@ -322,9 +322,9 @@ public class WebSocket
     * feedback whether a unsubscription was successful or not.
     * 
     * @param channel {@link Channels} identifier
-    * @param handler the {@link WSEventHandler} for which to remove the subscription
+    * @param handler the {@link SubscriptionHandler} for which to remove the subscription
     */
-   public void unsubscribe(Channels channel, WSEventHandler<?> handler)
+   public void unsubscribe(Channels channel, SubscriptionHandler<?> handler)
    {
       messageBus.unsubscribe(channel, handler);
    }

@@ -29,7 +29,6 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.websocket.MessageBroker;
 
 import java.io.File;
 import java.io.IOException;

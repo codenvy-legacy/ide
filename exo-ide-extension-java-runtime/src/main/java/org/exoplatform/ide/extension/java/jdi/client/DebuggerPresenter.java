@@ -54,7 +54,7 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
-import org.exoplatform.ide.client.framework.websocket.messages.WSEventHandler;
+import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
@@ -1126,7 +1126,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    /**
     * Handler for processing list of applications which will be stopped soon.
     */
-   private WSEventHandler<List<String>> expireAppsHandler = new WSEventHandler<List<String>>(
+   private SubscriptionHandler<List<String>> expireAppsHandler = new SubscriptionHandler<List<String>>(
       new StringListUnmarshaller(new ArrayList<String>()))
    {
       @Override
