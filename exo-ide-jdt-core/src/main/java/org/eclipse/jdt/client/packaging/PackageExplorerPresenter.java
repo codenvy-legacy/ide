@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.packaging;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jdt.client.packaging.ProjectTreeParser.ParsingCompleteListener;
 import org.eclipse.jdt.client.packaging.model.PackageItem;
@@ -31,6 +32,11 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorChangeActiveFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -71,7 +77,8 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
  * 
  */
 public class PackageExplorerPresenter implements ShowPackageExplorerHandler, ViewOpenedHandler, ViewClosedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler, EditorActiveFileChangedHandler
+   ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler, EditorActiveFileChangedHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler
 {
 
    private static final String RECEIVE_CHILDREN_ERROR_MSG = "Service is not deployed.<br>Parent folder not found.";
@@ -96,6 +103,10 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    
    private boolean linkWithEditor = false;
    
+   private FileModel editorActiveFile;
+   
+   private Map<String, FileModel> openedFiles;
+   
    public static PackageExplorerPresenter getInstance()
    {
       return instance;
@@ -119,6 +130,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       IDE.addHandler(SelectItemEvent.TYPE, this);
       
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
    }
    
    public ProjectItem getProjectItem()
@@ -234,10 +247,36 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       List<Item> selectedItems = new ArrayList<Item>();
       if (selectedItem != null)
       {
-         selectedItems.add(selectedItem);
+         selectedItems.add(selectedItem);         
       }
       
-      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));      
+      changeActiveFile(selectedItem);
+      
+      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
+   }
+
+   /**
+    * Switch Editor to selected file.
+    * 
+    * @param item
+    */
+   private void changeActiveFile(final Item item)
+   {
+      if (!linkWithEditor ||
+               item == null ||
+               !(item instanceof FileModel) || 
+               !openedFiles.containsKey(item.getId()) ||
+               editorActiveFile.getId().equals(item.getId()))
+         return;
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)item));
+         }
+      });      
    }
 
    @Override
@@ -426,6 +465,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       linkWithEditor = !linkWithEditor;
       display.setLinkWithEditorButtonSelected(linkWithEditor);
+      
+      if (linkWithEditor && editorActiveFile != null)
+      {
+         goToItem(editorActiveFile, false);
+      }
    }
 
    /**
@@ -434,11 +478,13 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (display == null || !linkWithEditor)
+      editorActiveFile = event.getFile();
+      
+      if (display == null || !linkWithEditor || editorActiveFile == null)
       {
          return;
       }
-      
+
       goToItem(event.getFile(), false);
    }
    
@@ -455,10 +501,32 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          @Override
          public void execute()
          {
+            if (!collapseBranches)
+            {
+               Object selectedObject = display.getSelectedObject();
+               if (selectedObject instanceof FileModel && item instanceof FileModel &&
+                        ((FileModel)selectedObject).getId().equals(((FileModel)item).getId()))
+               {
+                  return;
+               }               
+            }
+            
             List<Object> itemList = treeParser.getItemList(item);
             display.goToItem(itemList, collapseBranches);            
          }
       });      
+   }
+
+   @Override
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   @Override
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
    }
 
 }

@@ -40,7 +40,6 @@ import org.exoplatform.ide.vfs.shared.Item;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
@@ -597,21 +596,26 @@ public class ProjectTreeParser
    }
 
    public List<Object> getItemList(Item itemToNavigate)
-   {
+   {      
       List<Object> navigateItems = new ArrayList<Object>();
+      if (itemToNavigate == null)
+      {
+         return navigateItems;
+      }      
+
       if (itemToNavigate.getPath().equals(project.getPath()))
       {
          navigateItems.add(projectItem);
          return navigateItems;
       }
-      
+
       navigateItems.add(projectItem);
 
       if (searchItemInResourceFolders(navigateItems, itemToNavigate))
       {
          return navigateItems;
       }
-      
+
       List<Item> items = new ArrayList<Item>();
       items.addAll(projectItem.getFolders());
       items.addAll(projectItem.getFiles());
