@@ -278,7 +278,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    {
       Window.addCloseHandler(new CloseHandler<Window>()
       {
-
          @Override
          public void onClose(CloseEvent<Window> event)
          {
@@ -291,7 +290,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
    {
       Window.addWindowClosingHandler(new Window.ClosingHandler()
       {
-
          @Override
          public void onWindowClosing(Window.ClosingEvent event)
          {

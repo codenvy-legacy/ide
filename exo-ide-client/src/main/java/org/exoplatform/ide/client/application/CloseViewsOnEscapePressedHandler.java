@@ -55,8 +55,16 @@ public class CloseViewsOnEscapePressedHandler implements ViewActivatedHandler
       @Override
       public void onPreviewNativeEvent(NativePreviewEvent event)
       {
-         if (event.getNativeEvent().getType() == null)
+         try
          {
+            if (event.getNativeEvent().getType() == null)
+            {
+               return;
+            }            
+         }
+         catch (Exception e)
+         {
+            System.out.println("Undefined exception. " + e.getMessage());
             return;
          }
          
