@@ -30,8 +30,8 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestBuilder;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBuilder;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
@@ -118,10 +118,8 @@ public class ApplicationRunnerClientService
    public void prolongExpirationTime(String name, long time, RESTfulRequestCallback<Object> callback)
       throws WebSocketException
    {
-      String url = restContext + PROLONG;
       StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
-
-      RESTfulRequestBuilder.build(RequestBuilder.GET, url + params).send(callback);
+      RESTfulRequestBuilder.build(RequestBuilder.GET, PROLONG + params).send(callback);
    }
 
    public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback)

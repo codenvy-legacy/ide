@@ -22,47 +22,47 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
+
+import java.util.List;
+
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: StringArrayUnmarshaller.java Oct 19, 2012 9:24:42 AM azatsarynnyy $
+ * @version $Id: StringListUnmarshaller.java Oct 19, 2012 9:24:42 AM azatsarynnyy $
  *
  */
-public class StringArrayUnmarshaller
+public class StringListUnmarshaller implements Unmarshallable<List<String>>
 {
-   /**
-    * The string to unmarshal JSON data.
-    */
-   private String payload;
+   private List<String> appList;
 
-   /**
-    * @param payload the string to unmarshal JSON data
-    */
-   public StringArrayUnmarshaller(String payload)
+   public StringListUnmarshaller(List<String> list)
    {
-      this.payload = payload;
+      this.appList = list;
    }
 
    /**
-    * Unmarshal JSON data from the specified payload and return the resulting array.
-    * 
-    * @return resulting array
+    * @see org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage)
     */
-   public String[] unmarshal()
+   public void unmarshal(RESTfulResponseMessage response)
    {
-      JSONArray jsonArray = JSONParser.parseStrict(payload).isArray();
+      JSONArray jsonArray = JSONParser.parseStrict(response.getBody()).isArray();
       if (jsonArray == null)
       {
-         return new String[0];
+         return;
       }
 
-      String[] apps = new String[jsonArray.size()];
       for (int i = 0; i < jsonArray.size(); i++)
       {
          JSONString appName = jsonArray.get(i).isString();
-         apps[i] = appName.stringValue();
+         appList.add(appName.stringValue());
       }
+   }
 
-      return apps;
+   @Override
+   public List<String> getPayload()
+   {
+      return appList;
    }
 
 }

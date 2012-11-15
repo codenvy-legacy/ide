@@ -53,9 +53,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.pubsub.WSEventHandler;
-import org.exoplatform.ide.client.framework.websocket.pubsub.WSEventMessage;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.messages.WSEventHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
@@ -136,7 +135,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private ProjectModel project;
 
-   private long DEFAULT_PROLONG_TIME = 10 * 60 * 1000; // 10 minutes
+   private static long DEFAULT_PROLONG_TIME = 10 * 60 * 1000; // 10 minutes
 
    private static final String JREBEL = "jrebel";
 
@@ -898,14 +897,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       IDE.fireEvent(new AppStartedEvent(result));
       runningApp = result;
 
-      try
-      {
-         WebSocket.getInstance().messageBus().subscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, expireAppsHandler);
-      }
-      catch (WebSocketException e)
-      {
-         // do nothing
-      }
+      WebSocket.getInstance().subscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, expireAppsHandler);
    }
 
    private String getAppUrlsAsString(ApplicationInstance application)
@@ -1079,7 +1071,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    /**
-    * Prolong the expiration time of the application.
+    * Prolong expiration time of the application.
     */
    private void prolongExpirationTime()
    {
@@ -1132,14 +1124,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    /**
-    * Handler for processing message.
+    * Handler for processing list of applications which will be stopped soon.
     */
-   private WSEventHandler expireAppsHandler = new WSEventHandler()
+   private WSEventHandler<List<String>> expireAppsHandler = new WSEventHandler<List<String>>(
+      new StringListUnmarshaller(new ArrayList<String>()))
    {
       @Override
-      public void onMessage(WSEventMessage message)
+      public void onSuccess(List<String> apps)
       {
-         String[] apps = new StringArrayUnmarshaller(message.getPayload().getPayload()).unmarshal();
          for (String appName : apps)
          {
             if (runningApp.getName().equals(appName))
@@ -1157,8 +1149,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                         }
                         else
                         {
-                           WebSocket.getInstance().messageBus()
-                              .unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, expireAppsHandler);
+                           WebSocket.getInstance().unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, expireAppsHandler);
                         }
                      }
                   });
@@ -1168,9 +1159,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
 
       @Override
-      public void onError(Exception exception)
+      public void onFailure(Throwable exception)
       {
-         WebSocket.getInstance().messageBus().unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, this);
+         WebSocket.getInstance().unsubscribe(Channels.DEBUGGER_EXPIRE_SOON_APPS, this);
       }
    };
 
