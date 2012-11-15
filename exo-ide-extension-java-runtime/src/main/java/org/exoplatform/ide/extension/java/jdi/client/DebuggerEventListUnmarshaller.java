@@ -44,13 +44,13 @@ import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 public class DebuggerEventListUnmarshaller implements Unmarshallable<DebuggerEventList>
 {
 
-   private DebuggerEventList evens;
+   private DebuggerEventList events;
 
    public DebuggerEventListUnmarshaller(DebuggerEventList events)
    {
-      this.evens = events;
-      if (this.evens.getEvents() == null )
-         this.evens.setEvents(new ArrayList<DebuggerEvent>());
+      this.events = events;
+      if (this.events.getEvents() == null )
+         this.events.setEvents(new ArrayList<DebuggerEvent>());
    }
 
    /**
@@ -79,14 +79,14 @@ public class DebuggerEventListUnmarshaller implements Unmarshallable<DebuggerEve
                   AutoBean<BreakPointEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.breakPoinEvent();
                   Splittable data = StringQuoter.split(je.toString());
                   AutoBeanCodex.decodeInto(data, bean);
-                  evens.getEvents().add(bean.as());
+                  events.getEvents().add(bean.as());
                }
                else if (type == DebuggerEvent.STEP)
                {
                   AutoBean<StepEvent> bean = DebuggerExtension.AUTO_BEAN_FACTORY.stepEvent();
                   Splittable data = StringQuoter.split(je.toString());
                   AutoBeanCodex.decodeInto(data, bean);
-                  evens.getEvents().add(bean.as());
+                  events.getEvents().add(bean.as());
                }
             }
          }
@@ -99,7 +99,7 @@ public class DebuggerEventListUnmarshaller implements Unmarshallable<DebuggerEve
    @Override
    public DebuggerEventList getPayload()
    {
-      return evens;
+      return events;
    }
 
 }

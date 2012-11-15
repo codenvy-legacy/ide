@@ -65,7 +65,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    private static final String CREATE_TITLE = IDE.TEMPLATE_CONSTANT.createProjectFromTemplateTitle();
 
-   private static final int HEIGHT = 475;
+   private static final int HEIGHT = 460;
 
    private static final int WIDTH = 705;
 

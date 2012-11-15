@@ -224,7 +224,7 @@
                </g:center>
                <g:south size="50">
 	               <g:DockLayoutPanel ui:field="jRebelPanel" addStyleNames="{style.panelMarginTop} {style.marginLeft10}">
-	                  <g:west size="71">
+	                  <g:west size="85">
 	                     <g:Image resource="{resource.jrebel}" styleName="{style.marginTop3}"></g:Image>
 	                  </g:west>
 	                  <g:center>

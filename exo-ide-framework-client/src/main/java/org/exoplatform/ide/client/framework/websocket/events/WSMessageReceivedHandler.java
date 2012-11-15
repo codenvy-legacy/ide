@@ -32,7 +32,7 @@ public interface WSMessageReceivedHandler extends EventHandler
    /**
     * Perform actions, when a WebSocket message was received.
     * 
-    * @param event
+    * @param event {@link WSMessageReceivedEvent}
     */
    void onWSMessageReceived(WSMessageReceivedEvent event);
 }

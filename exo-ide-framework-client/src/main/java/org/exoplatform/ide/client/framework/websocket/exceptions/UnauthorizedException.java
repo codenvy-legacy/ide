@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.websocket.exceptions;
 
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
 
 /**
  * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.

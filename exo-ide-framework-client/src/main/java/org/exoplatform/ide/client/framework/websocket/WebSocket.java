@@ -26,6 +26,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
@@ -35,7 +36,8 @@ import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorHandl
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequestBuilder;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBuilder;
+import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 
 /**
  * Class represents a WebSocket connection. Each connection is identified by it's session identifier.
@@ -227,7 +229,6 @@ public class WebSocket
       @Override
       public void run()
       {
-         //send("PING");
          RESTfulRequestBuilder.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
             .send(null);
       }
@@ -293,12 +294,48 @@ public class WebSocket
    }
 
    /**
+    * Registers a new subscriber which will receive messages on a particular channel.
+    * Upon the first subscribe to a channel, a message is sent to the server to
+    * subscribe the client for that channel. Subsequent subscribes for a channel
+    * already previously subscribed to do not trigger a send of another message
+    * to the server because the client has already a subscription, and merely registers
+    * (client side) the additional handler to be fired for events received on the respective channel.
+    * 
+    * <p><strong>Note:</strong> the method runs asynchronously and does not provide
+    * feedback whether a subscription was successful or not.
+    * 
+    * @param channel {@link Channels} identifier
+    * @param handler the {@link SubscriptionHandler} to fire
+    *                   when receiving an event on the subscribed channel
+    */
+   public void subscribe(Channels channel, SubscriptionHandler<?> handler)
+   {
+      messageBus.subscribe(channel, handler);
+   }
+
+   /**
+    * Unregisters existing subscriber to receive messages on a particular channel.
+    * If it's the last unsubscribe to a channel, a message is sent to the server to
+    * unsubscribe the client for that channel.
+    * 
+    * <p><strong>Note:</strong> the method runs asynchronously and does not provide
+    * feedback whether a unsubscription was successful or not.
+    * 
+    * @param channel {@link Channels} identifier
+    * @param handler the {@link SubscriptionHandler} for which to remove the subscription
+    */
+   public void unsubscribe(Channels channel, SubscriptionHandler<?> handler)
+   {
+      messageBus.unsubscribe(channel, handler);
+   }
+
+   /**
     * Transmits data to the server over the WebSocket connection.
     * 
     * @param data the data to be sent to the server
     * @throws WebSocketException throws if an error has occurred while sending data
     */
-   public void send(String data) throws WebSocketException
+   void send(String data) throws WebSocketException
    {
       if (getReadyState() != ReadyState.OPEN)
       {

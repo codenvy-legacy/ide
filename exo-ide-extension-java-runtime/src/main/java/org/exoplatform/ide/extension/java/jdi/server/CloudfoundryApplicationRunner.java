@@ -30,6 +30,10 @@ import static org.exoplatform.ide.commons.ZipUtils.listEntries;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
 
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.MessageConversionException;
+import org.everrest.websockets.message.Pair;
+import org.everrest.websockets.message.RESTfulOutputMessage;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
@@ -748,7 +752,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
          if (!expireSoon.isEmpty())
          {
-            publishWebSocketMessage(toJson(expireSoon), null);
+            publishWebSocketMessage(expireSoon);
          }
       }
    }
@@ -778,16 +782,30 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    }
 
    /**
-    * Publishes the message over WebSocket connection.
+    * Publish the message over WebSocket connection.
     *
     * @param data
     *    the data to be sent to the client
-    * @param e
-    *    an exception to be sent to the client
     */
-   private void publishWebSocketMessage(String data, Exception e)
+   private void publishWebSocketMessage(Object data)
    {
-      // temporary disabled
-      //wsMessageBroker.publish(Channels.DEBUGGER_EXPIRE_SOON_APPS, data, e, null);
+      RESTfulOutputMessage message = new RESTfulOutputMessage();
+      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
+                                    new Pair("x-everrest-websocket-channel", "debugger:expireSoonApps")});
+      message.setResponseCode(200);
+      message.setBody(toJson(data));
+      try
+      {
+         WSConnectionContext.sendMessage("debugger:expireSoonApps", message);
+      }
+      catch (MessageConversionException e)
+      {
+         LOG.error("Failed to send message over WebSocket.", e);
+      }
+      catch (IOException e)
+      {
+         LOG.error("Failed to send message over WebSocket.", e);
+      }
    }
+
 }

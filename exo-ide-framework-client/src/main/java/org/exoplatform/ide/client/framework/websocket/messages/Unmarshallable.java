@@ -18,7 +18,7 @@
  *
  */
 
-package org.exoplatform.ide.client.framework.websocket.rest;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 
