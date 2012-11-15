@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.rest;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 import com.google.gwt.http.client.RequestBuilder.Method;
 import com.google.web.bindery.autobean.shared.AutoBean;

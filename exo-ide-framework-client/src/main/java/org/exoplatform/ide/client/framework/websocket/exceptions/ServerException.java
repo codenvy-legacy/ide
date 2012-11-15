@@ -20,7 +20,7 @@
 
 package org.exoplatform.ide.client.framework.websocket.exceptions;
 
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
 
 /**
  * Thrown when there was an any exception was received from the server.

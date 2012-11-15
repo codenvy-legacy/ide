@@ -31,7 +31,7 @@ import org.exoplatform.ide.vfs.client.Property;
 import org.exoplatform.ide.vfs.shared.LockToken;
 
 /**
- * The interface for the {@link AutoBean} generator.
+ * The interface for the {@link AutoBean} generating.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: IDEAutoBeanFactory.java Mar 27, 2012 9:57:25 AM azatsarynnyy $

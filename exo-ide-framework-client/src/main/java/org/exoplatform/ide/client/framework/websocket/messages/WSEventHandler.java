@@ -16,29 +16,24 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.rest;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.ide.client.framework.websocket.exceptions.ServerException;
-import org.exoplatform.ide.client.framework.websocket.exceptions.UnauthorizedException;
 
 /**
- * Callback to receive a {@link RESTfulResponseMessage}.
+ * Class that implements this interface will receive all
+ * messages published to the channels to which class subscribed,
+ * and all subscribers to a channel will receive the same messages.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RESTfulRequestCallback.java Nov 12, 2012 10:13:13 AM azatsarynnyy $
- *
- * @param <T>
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: WSEventHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
  */
-public abstract class RESTfulRequestCallback<T>
+public abstract class WSEventHandler<T>
 {
-
-   // http code 207 is "Multi-Status"
+// http code 207 is "Multi-Status"
    // IE misinterpreting HTTP status code 204 as 1223 (http://www.mail-archive.com/jquery-en@googlegroups.com/msg13093.html)
    private static final int[] DEFAULT_SUCCESS_CODES = {Response.SC_OK, Response.SC_CREATED, Response.SC_NO_CONTENT,
       207, 1223};
@@ -58,12 +53,7 @@ public abstract class RESTfulRequestCallback<T>
     */
    private final T payload;
 
-   /**
-    * Loader to show while request is calling.
-    */
-   private AsyncRequestLoader loader;
-
-   public RESTfulRequestCallback()
+   public WSEventHandler()
    {
       this(null);
    }
@@ -75,7 +65,7 @@ public abstract class RESTfulRequestCallback<T>
     * 
     * @param unmarshaller {@link Unmarshallable}
     */
-   public RESTfulRequestCallback(Unmarshallable<T> unmarshaller)
+   public WSEventHandler(Unmarshallable<T> unmarshaller)
    {
       this.successCodes = DEFAULT_SUCCESS_CODES;
 
@@ -97,17 +87,6 @@ public abstract class RESTfulRequestCallback<T>
     */
    public void onResponseReceived(RESTfulResponseMessage response)
    {
-      if (loader != null)
-      {
-         loader.hide();
-      }
-
-      if (response.getResponseCode() == HTTPStatus.UNAUTHORIZED)
-      {
-         onFailure(new UnauthorizedException(response));
-         return;
-      }
-
       if (isSuccessful(response))
       {
          try
@@ -142,11 +121,6 @@ public abstract class RESTfulRequestCallback<T>
          successCodes = DEFAULT_SUCCESS_CODES;
       }
 
-      for (Pair header : response.getHeaders())
-         if (HTTPHeader.JAXRS_BODY_PROVIDED.equals(header.getName())
-            && "Authentication-required".equals(header.getValue()))
-            return false;
-
       for (int code : successCodes)
          if (response.getResponseCode() == code)
             return true;
@@ -165,16 +139,6 @@ public abstract class RESTfulRequestCallback<T>
    }
 
    /**
-    * Sets the loader to show while request is calling.
-    * 
-    * @param loader loader to show while request is calling
-    */
-   public final void setLoader(AsyncRequestLoader loader)
-   {
-      this.loader = loader;
-   }
-
-   /**
     * Invokes if response is successfully received and
     * response status code is in set of success codes.
     * 
@@ -188,5 +152,4 @@ public abstract class RESTfulRequestCallback<T>
     * @param exception caused failure
     */
    protected abstract void onFailure(Throwable exception);
-
 }

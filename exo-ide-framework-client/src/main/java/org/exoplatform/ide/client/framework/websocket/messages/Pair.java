@@ -16,41 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
-
-import com.google.web.bindery.autobean.shared.AutoBean.PropertyName;
+package org.exoplatform.ide.client.framework.websocket.messages;
 
 /**
- * Interface represents the WebSocket message.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketMessage.java Jul 13, 2012 5:14:28 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
  *
  */
-public interface WebSocketMessage
+public interface Pair
 {
-   /**
-    * Enum of the WebSocket message types.
-    */
-   public enum Type {
-      PUBLISH, //
-      EVENT, //
-      SUBSCRIBE, //
-      UNSUBSCRIBE;
-   }
+   String getName();
 
-   /**
-    * Returns a message type.
-    * 
-    * @return message type
-    */
-   @PropertyName("type")
-   Type getType();
+   void setName(String name);
 
-   /**
-    * Sets the message type.
-    * 
-    * @param type message type
-    */
-   void setType(Type type);
+   String getValue();
+
+   void setValue(String value);
 }
