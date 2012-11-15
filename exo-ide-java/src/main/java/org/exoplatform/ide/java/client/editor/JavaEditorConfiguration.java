@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.java.client.editor;
 
+import org.exoplatform.ide.java.client.editor.outline.OutlineModelUpdater;
+import org.exoplatform.ide.outline.OutlineModel;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
@@ -47,6 +49,10 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
 
    private JavaCodeAssistProcessor codeAssistProcessor;
 
+   private JavaReconcilerStrategy reconcilerStrategy;
+
+   private OutlineModel outlineModel;
+
    /**
     * @param manager
     * @param activrProjectId 
@@ -55,6 +61,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    {
       super();
       this.manager = manager;
+      outlineModel = new OutlineModel();
    }
 
    /**
@@ -76,8 +83,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
    {
       BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
       ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
-      reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, new JavaReconcilerStrategy(javaEditor,
-         getOrCreateCodeAssistProcessor()));
+      reconciler.addReconcilingStrategy(Document.DEFAULT_CONTENT_TYPE, reconcilerStrategy);
       return reconciler;
    }
 
@@ -86,6 +92,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
     */
    public void setEditor(JavaEditor javaEditor)
    {
+      reconcilerStrategy = new JavaReconcilerStrategy(javaEditor);
       this.javaEditor = javaEditor;
    }
 
@@ -95,7 +102,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
       {
          codeAssistProcessor = new JavaCodeAssistProcessor(
          //TODO configure doc context
-            "rest/ide/code-assistant/java/class-doc?fqn=");
+            "rest/ide/code-assistant/java/class-doc?fqn=", reconcilerStrategy);
       }
       return codeAssistProcessor;
    }
@@ -110,13 +117,19 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
       impl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
       return impl;
    }
-   
+
    /**
     * {@inheritDoc}
     */
    @Override
    public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartDisplay display)
    {
-      return new JavaCorrectionAssistant(javaEditor);
+      return new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
+   }
+
+   public OutlineModel getOutlineModel()
+   {
+      new OutlineModelUpdater(outlineModel, reconcilerStrategy);
+      return outlineModel;
    }
 }

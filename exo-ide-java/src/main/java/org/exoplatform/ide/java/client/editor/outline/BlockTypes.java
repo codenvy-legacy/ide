@@ -16,33 +16,36 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client.core;
-
-import com.googlecode.gwt.test.GwtTestWithMockito;
+package org.exoplatform.ide.java.client.editor.outline;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
+ * @version $Id:
+ *
  */
-public abstract class BaseTest extends GwtTestWithMockito
-{
+public enum BlockTypes {
+   PACKAGE("Package"), //
+   IMPORTS("Imports"), //
+   IMPORT("Import"), //
+   CLASS("Class"), //
+   INTERFACE("Interface"), // 
+   ENUM("Enum"), //
+   ANNOTATION("Annotation"), //
+   FIELD("Field"), //
+   METHOD("Method");
 
-   /**
-    * 
-    */
-   public BaseTest()
+   private String type;
+
+   BlockTypes(String type)
    {
-      super();
+      this.type = type;
    }
 
    /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
+    * @return the type
     */
-   @Override
-   public String getModuleName()
+   public String getType()
    {
-      return "org.exoplatform.ide.java.Java";
+      return type;
    }
-
 }

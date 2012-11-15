@@ -1145,6 +1145,17 @@ public class SelectionModel implements Buffer.MouseDragListener
          Log.error(getClass(), e);
       }
    }
+   
+   /**
+    * Selects and reveals the specified range in this text editor.
+    *
+    * @param offset the offset of the selection
+    * @param length the length of the selection
+    */
+   void selectAndReveal(int offset, int length)
+   {
+      //TODO 
+   }
 
    public void setCursorPosition(int offset)
    {

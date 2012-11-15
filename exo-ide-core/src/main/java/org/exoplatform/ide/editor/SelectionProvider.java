@@ -23,6 +23,7 @@ package org.exoplatform.ide.editor;
  * @version $Id:
  *
  */
+//TODO extract to this methods form org.exoplatform.ide.texteditor.selection.SelectionModel
 public interface SelectionProvider
 {
 

@@ -41,6 +41,7 @@ import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.outline.OutlinePartPresenter;
 import org.exoplatform.ide.part.PartAgentPresenter;
 import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.presenter.Presenter;
@@ -73,6 +74,8 @@ public class WorkspacePeresenter implements Presenter
       HasWidgets getLeftPanel();
 
       HasWidgets getMenuPanel();
+
+      HasWidgets getRightPanel();
    }
 
    Display display;
@@ -90,7 +93,8 @@ public class WorkspacePeresenter implements Presenter
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
-      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent, JavaExtension javaExtension, ExtensionsPage extensionsPage)
+      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
+      JavaExtension javaExtension, ExtensionsPage extensionsPage, OutlinePartPresenter outlinePresenter)
 
    {
       super();
@@ -108,8 +112,7 @@ public class WorkspacePeresenter implements Presenter
 
       EditorActiveExpression editorActiveExpression = new EditorActiveExpression();
       expressionManager.registerExpression(editorActiveExpression);
-      
-      
+
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
       menuPresenter.addMenuItem("File/New/new Project", null);
@@ -117,7 +120,7 @@ public class WorkspacePeresenter implements Presenter
       // CREATE DYNAMIC MENU CONTENT
       menuPresenter.addMenuItem("File/Create Demo Content", null, new CreadDemoContentCommand(resourceManager), null,
          noProjectOpenedExpression);
-      
+
       menuPresenter.addMenuItem("Edit", null, null, editorActiveExpression, null);
       menuPresenter.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
 
@@ -133,6 +136,7 @@ public class WorkspacePeresenter implements Presenter
       partAgent.addPart(extensionsPage, PartStackType.EDITING);
       partAgent.addPart(new WelcomePage(), PartStackType.EDITING);
       partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
+      partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
 
    /**
@@ -147,6 +151,7 @@ public class WorkspacePeresenter implements Presenter
 
       partAgent.go(PartStackType.NAVIGATION, display.getLeftPanel());
       partAgent.go(PartStackType.EDITING, display.getCenterPanel());
+      partAgent.go(PartStackType.TOOLING, display.getRightPanel());
 
       container.add(display.asWidget());
    }
@@ -161,24 +166,24 @@ public class WorkspacePeresenter implements Presenter
          {
             if (event.getOperationType() == FileOperation.OPEN)
             {
-//               // Set up the callback object.
-//               AsyncCallback<File> callback = new AsyncCallback<File>()
-//               {
-//                  @Override
-//                  public void onFailure(Throwable caught)
-//                  {
-//                     GWT.log("error" + caught);
-//                  }
-//
-//                  @Override
-//                  public void onSuccess(File file)
-//                  {
-//                     openFile(file);
-//                  }
-//               };
-//
-//               Project project = event.getFile().getProject();
-//               project.getContent(event.getFile(), callback);
+               //               // Set up the callback object.
+               //               AsyncCallback<File> callback = new AsyncCallback<File>()
+               //               {
+               //                  @Override
+               //                  public void onFailure(Throwable caught)
+               //                  {
+               //                     GWT.log("error" + caught);
+               //                  }
+               //
+               //                  @Override
+               //                  public void onSuccess(File file)
+               //                  {
+               //                     openFile(file);
+               //                  }
+               //               };
+               //
+               //               Project project = event.getFile().getProject();
+               //               project.getContent(event.getFile(), callback);
                editorAgent.openEditor(event.getFile());
 
                //fileSystemService.getFileContent(event.getFileName(), callback);
@@ -305,22 +310,21 @@ public class WorkspacePeresenter implements Presenter
                                  GWT.log("Error creating demo folder" + caught);
                               }
                            });
-                        project.createFile(result, "styles.css", ".test{\n\n}",
-                           "text/css", new AsyncCallback<File>()
-                           {
-                           
+                        project.createFile(result, "styles.css", ".test{\n\n}", "text/css", new AsyncCallback<File>()
+                        {
+
                            @Override
                            public void onSuccess(File result)
                            {
                               // ok
                            }
-                           
+
                            @Override
                            public void onFailure(Throwable caught)
                            {
                               Log.error(getClass(), caught);
                            }
-                           });
+                        });
 
                      }
 

@@ -33,4 +33,59 @@ public interface JavaCss extends CssResource
 
    @ClassName("exo-codeassistant-counter")
    String counter();
+
+   @ClassName("outline-root")
+   String outlineRoot();
+
+   @ClassName("outline-icon")
+   String outlineIcon();
+
+   @ClassName("outline-label")
+   String outlineLabel();
+
+   @ClassName("imports")
+   String imports();
+
+   @ClassName("importItem")
+   String importItem();
+
+   @ClassName("classItem")
+   String classItem();
+
+   @ClassName("interfaceItem")
+   String interfaceItem();
+
+   @ClassName("enumItem")
+   String enumItem();
+
+   @ClassName("annotationItem")
+   String annotationItem();
+   
+   @ClassName("publicMethod")
+   String publicMethod();
+   
+   @ClassName("protectedMethod")
+   String protectedMethod();
+   
+   @ClassName("privateMethod")
+   String privateMethod();
+   
+   @ClassName("defaultMethod")
+   String defaultMethod();
+   
+   @ClassName("publicField")
+   String publicField();
+   
+   @ClassName("protectedField")
+   String protectedField();
+   
+   @ClassName("privateField")
+   String privateField();
+   
+   @ClassName("defaultField")
+   String defaultField();
+   
+   @ClassName("packageItem")
+   String packageItem();
+
 }

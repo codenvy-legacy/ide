@@ -16,33 +16,62 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client.core;
+package org.exoplatform.ide.outline;
 
-import com.googlecode.gwt.test.GwtTestWithMockito;
+import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+
+import org.exoplatform.ide.outline.OutlinePartPresenter.Display;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
+ * @version $Id:
+ *
  */
-public abstract class BaseTest extends GwtTestWithMockito
+public class OutlinePartView implements Display
 {
 
-   /**
-    * 
-    */
-   public BaseTest()
+   private SimplePanel container;
+
+   private Label noOutline;
+
+   @Inject
+   public OutlinePartView()
    {
-      super();
+      //TODO extract message constant
+      noOutline = new Label("An outline is not available.");
+      container = new SimplePanel();
    }
 
    /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
+    * {@inheritDoc}
     */
    @Override
-   public String getModuleName()
+   public Widget asWidget()
    {
-      return "org.exoplatform.ide.java.Java";
+      return container;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void showNoOutline()
+   {
+      container.clear();
+      container.add(noOutline);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public HasWidgets getContainer()
+   {
+      return container;
    }
 
 }

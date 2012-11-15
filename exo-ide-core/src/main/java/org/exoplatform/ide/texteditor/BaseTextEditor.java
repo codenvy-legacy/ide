@@ -19,7 +19,6 @@
 package org.exoplatform.ide.texteditor;
 
 import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,6 +33,7 @@ import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.outline.OutlinePresenter;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
@@ -57,18 +57,18 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    protected final DocumentProvider documentProvider;
 
    protected EditorInput input;
-   
+
    protected boolean dirtyState;
 
    private final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
-   
+
    private final TextListener textListener = new TextListener()
    {
-      
+
       @Override
       public void onTextChange(TextChange textChange)
       {
-         if(!dirtyState)
+         if (!dirtyState)
          {
             dirtyState = true;
             firePropertyChange(EditorPartPresenter.PROP_TITLE);
@@ -78,7 +78,7 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    };
 
    protected TextEditorConfiguration configuration;
-   
+
    /**
     * @param documentProvider 
     * 
@@ -99,6 +99,7 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    public void init(final EditorInput input) throws EditorInitException
    {
       editor.configure(configuration);
+      this.input = input;
       documentProvider.getDocument(input, new DocumentCallback()
       {
 
@@ -110,7 +111,6 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
             firePropertyChange(PROP_INPUT);
          }
       });
-      this.input = input;
    }
 
    /**
@@ -191,16 +191,6 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
       return null;
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#selectAndReveal(int, int)
-    */
-   @Override
-   public void selectAndReveal(int offset, int length)
-   {
-      // TODO Auto-generated method stub
-
-   }
-
    protected Widget getWidget()
    {
       HTML h = new HTML();
@@ -214,12 +204,12 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    @Override
    public String getTitle()
    {
-      if(isDirty())
+      if (isDirty())
       {
          return "*" + input.getName();
       }
       else
-      return input.getName();
+         return input.getName();
    }
 
    /**
@@ -288,6 +278,15 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    public EditorInput getEditorInput()
    {
       return input;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public OutlinePresenter getOutline()
+   {
+      return null;
    }
 
 }

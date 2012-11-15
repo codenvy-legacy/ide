@@ -32,6 +32,7 @@ import org.exoplatform.ide.java.client.core.IType;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.core.Signature;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.java.client.editor.AstProvider.AstListener;
 import org.exoplatform.ide.java.client.internal.codeassist.CompletionEngine;
 import org.exoplatform.ide.java.client.internal.compiler.env.INameEnvironment;
 import org.exoplatform.ide.resources.model.File;
@@ -73,6 +74,21 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor
       }
    };
 
+   class InternalAstListener implements AstListener
+   {
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void onCompilationUnitChanged(CompilationUnit cUnit)
+      {
+         currentFile = astProvider.getFile();
+         nameEnvironment = astProvider.getNameEnvironment();
+         unit = cUnit;
+      }
+      
+   }
    private String docContext;
 
    private CompilationUnit unit;
@@ -84,13 +100,17 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor
    private TemplateCompletionProposalComputer templateCompletionProposalComputer =
       new TemplateCompletionProposalComputer();
 
+   private final AstProvider astProvider;
+
    /**
     * @param projectId
     * @param docContext
     */
-   public JavaCodeAssistProcessor(String docContext)
+   public JavaCodeAssistProcessor(String docContext, AstProvider astProvider)
    {
       this.docContext = docContext;
+      this.astProvider = astProvider;
+      astProvider.addAstListener(new InternalAstListener());
    }
 
    /**
@@ -220,21 +240,6 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor
    public String getErrorMessage()
    {
       return null;
-   }
-
-   void setCompilationUnit(CompilationUnit unit)
-   {
-      this.unit = unit;
-   }
-
-   void setNameEnviroment(INameEnvironment environment)
-   {
-      this.nameEnvironment = environment;
-   }
-
-   void setFile(File file)
-   {
-      currentFile = file;
    }
 
 }

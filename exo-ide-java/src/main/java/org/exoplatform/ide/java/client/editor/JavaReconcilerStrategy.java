@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.java.client.editor;
 
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
+import com.google.gwt.core.client.Scheduler;
+
 import com.google.gwt.core.shared.GWT;
 
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
@@ -38,6 +42,9 @@ import org.exoplatform.ide.text.Region;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.texteditor.api.reconciler.DirtyRegion;
 import org.exoplatform.ide.texteditor.api.reconciler.ReconcilingStrategy;
+import org.exoplatform.ide.util.ListenerManager;
+import org.exoplatform.ide.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.util.ListenerRegistrar.Remover;
 import org.exoplatform.ide.util.loging.Log;
 
 /**
@@ -45,7 +52,7 @@ import org.exoplatform.ide.util.loging.Log;
  * @version $Id:
  *
  */
-public class JavaReconcilerStrategy implements ReconcilingStrategy
+public class JavaReconcilerStrategy implements ReconcilingStrategy, AstProvider
 {
 
    private Document document;
@@ -56,7 +63,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
 
    private File file;
 
-   private final JavaCodeAssistProcessor processor;
+   private ListenerManager<AstListener> astListeners;
 
    private static JavaReconcilerStrategy instance;
 
@@ -70,11 +77,11 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
     * @param editor 
     * 
     */
-   public JavaReconcilerStrategy(TextEditorPartPresenter editor, JavaCodeAssistProcessor processor)
+   public JavaReconcilerStrategy(TextEditorPartPresenter editor)
    {
       this.editor = editor;
-      this.processor = processor;
       instance = this;
+      astListeners = ListenerManager.create();
    }
 
    /**
@@ -88,8 +95,6 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
       nameEnvironment =
          new NameEnvironment(file.getProject().getId(), GWT.<JavaAutoBeanFactory> create(JavaAutoBeanFactory.class),
             "/rest");
-      processor.setFile(file);
-      processor.setNameEnviroment(nameEnvironment);
       TypeInfoStorage.get().setPackages(file.getProject().getId(), JsonCollections.createStringSet());
    }
 
@@ -126,7 +131,7 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
          parser.setNameEnvironment(nameEnvironment);
          ASTNode ast = parser.createAST();
          CompilationUnit unit = (CompilationUnit)ast;
-         processor.setCompilationUnit(unit);
+         sheduleAstChanged(unit);
          IProblem[] problems = unit.getProblems();
          for (IProblem p : problems)
          {
@@ -150,6 +155,28 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
          if (problemRequestor != null)
             problemRequestor.endReporting();
       }
+   }
+   
+
+   private void sheduleAstChanged(final CompilationUnit unit)
+   {
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         
+         @Override
+         public void execute()
+         {
+            astListeners.dispatch(new Dispatcher<AstProvider.AstListener>()
+            {
+
+               @Override
+               public void dispatch(AstListener listener)
+               {
+                  listener.onCompilationUnitChanged(unit);
+               }
+            });
+         }
+      });
    }
 
    /**
@@ -175,6 +202,11 @@ public class JavaReconcilerStrategy implements ReconcilingStrategy
    public INameEnvironment getNameEnvironment()
    {
       return nameEnvironment;
+   }
+
+   public Remover addAstListener(AstListener listener)
+   {
+      return astListeners.add(listener);
    }
 
 }

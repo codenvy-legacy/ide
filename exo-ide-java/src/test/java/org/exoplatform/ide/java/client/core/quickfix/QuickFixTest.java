@@ -25,6 +25,7 @@ import org.exoplatform.ide.java.client.core.compiler.IProblem;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.java.client.editor.AstProvider;
 import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.text.correction.AssistContext;
 import org.exoplatform.ide.java.client.internal.text.correction.ICommandAccess;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.junit.Assert;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +54,8 @@ import java.util.List;
 public abstract class QuickFixTest extends GwtTestWithMockito
 {
 
+   @Mock
+   protected AstProvider astProvider;
    
    /**
     * @see com.googlecode.gwt.test.GwtModuleRunnerAdapter#getModuleName()

@@ -54,10 +54,10 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
    /**
     * @param textEditor
     */
-   public JavaCorrectionAssistant(TextEditorPartPresenter textEditor)
+   public JavaCorrectionAssistant(TextEditorPartPresenter textEditor, AstProvider astProvider)
    {
       this.textEditor = textEditor;
-      JavaCorrectionProcessor processor = new JavaCorrectionProcessor(this);
+      JavaCorrectionProcessor processor = new JavaCorrectionProcessor(this, astProvider);
       setQuickAssistProcessor(processor);
    }
 

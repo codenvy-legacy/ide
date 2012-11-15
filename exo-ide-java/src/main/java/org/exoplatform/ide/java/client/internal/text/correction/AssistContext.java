@@ -104,6 +104,20 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
    //	}
 
    /**
+    * @param textDisplay
+    * @param document
+    * @param documentOffset
+    * @param length
+    * @param cu
+    */
+   public AssistContext(TextEditorPartDisplay textDisplay, Document document, int documentOffset, int length,
+      CompilationUnit cu)
+   {
+      this(textDisplay, document, documentOffset, length);
+      fASTRoot = cu;
+   }
+
+   /**
     * Returns the length.
     * @return int
     */

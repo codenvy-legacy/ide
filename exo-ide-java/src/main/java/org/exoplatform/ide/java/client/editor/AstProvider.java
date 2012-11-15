@@ -16,33 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client.core;
+package org.exoplatform.ide.java.client.editor;
 
-import com.googlecode.gwt.test.GwtTestWithMockito;
+import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.java.client.internal.compiler.env.INameEnvironment;
+import org.exoplatform.ide.resources.model.File;
+import org.exoplatform.ide.util.ListenerRegistrar.Remover;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
- * 
+ * @version $Id:
+ *
  */
-public abstract class BaseTest extends GwtTestWithMockito
+public interface AstProvider
 {
-
-   /**
-    * 
-    */
-   public BaseTest()
+   public interface AstListener
    {
-      super();
+      void onCompilationUnitChanged(CompilationUnit cUnit);
    }
 
-   /**
-    * @see com.google.gwt.junit.client.GWTTestCase#getModuleName()
-    */
-   @Override
-   public String getModuleName()
-   {
-      return "org.exoplatform.ide.java.Java";
-   }
-
+   Remover addAstListener(AstListener listener);
+   
+   INameEnvironment getNameEnvironment();
+   
+   File getFile();
 }

@@ -47,9 +47,9 @@ public class AdvancedQuickAssistTest extends QuickFixTest
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_CHAR, JavaCore.SPACE);
       options.put(DefaultCodeFormatterConstants.FORMATTER_TAB_SIZE, "4");
 
-      new JavaCorrectionProcessor(new JavaCorrectionAssistant(null));
+      new JavaCorrectionProcessor(new JavaCorrectionAssistant(null, astProvider), astProvider);
       new JavaExtension();
-      new JavaReconcilerStrategy(null, null);
+      new JavaReconcilerStrategy(null);
       GwtReflectionUtils.setPrivateFieldValue(JavaReconcilerStrategy.get(), "nameEnvironment", new FileSystem(
          new String[]{System.getProperty("java.home") + "/lib/rt.jar"}, null, "UTF-8"));
       JavaExtension.get().getOptions().putAll(options);

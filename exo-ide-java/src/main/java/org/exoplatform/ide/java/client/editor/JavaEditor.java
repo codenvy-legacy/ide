@@ -20,6 +20,11 @@ package org.exoplatform.ide.java.client.editor;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.DocumentProvider;
+import org.exoplatform.ide.java.client.JavaClientBundle;
+import org.exoplatform.ide.java.client.editor.outline.JavaNodeRenderer;
+import org.exoplatform.ide.outline.OutlineImpl;
+import org.exoplatform.ide.outline.OutlineModel;
+import org.exoplatform.ide.outline.OutlinePresenter;
 import org.exoplatform.ide.texteditor.BaseTextEditor;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 
@@ -31,6 +36,10 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
 public class JavaEditor extends BaseTextEditor
 {
 
+   private final Resources resources;
+
+   private OutlineImpl outline;
+
    /**
     * @param resources
     * @param userActivityManager
@@ -41,7 +50,27 @@ public class JavaEditor extends BaseTextEditor
       JavaEditorConfiguration configuration)
    {
       super(resources, userActivityManager, documentProvider, configuration);
+      this.resources = resources;
       configuration.setEditor(this);
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public OutlinePresenter getOutline()
+   {
+      if (configuration instanceof JavaEditorConfiguration)
+      {
+         if (outline == null)
+         {
+            JavaEditorConfiguration conf = (JavaEditorConfiguration)configuration;
+            OutlineModel outlineModel = conf.getOutlineModel();
+            outline =
+               new OutlineImpl(resources, outlineModel, new JavaNodeRenderer(JavaClientBundle.INSTANCE), editor, this);
+         }
+         return outline;
+      }
+      return super.getOutline();
+   }
 }

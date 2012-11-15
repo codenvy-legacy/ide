@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor;
 
+import org.exoplatform.ide.outline.OutlinePresenter;
+
 
 /**
  * Interface to a text editor. This interface defines functional extensions to
@@ -70,12 +72,10 @@ public interface TextEditorPartPresenter extends EditorPartPresenter
     * @return the selection provider
     */
    SelectionProvider getSelectionProvider();
-
+   
    /**
-    * Selects and reveals the specified range in this text editor.
-    *
-    * @param offset the offset of the selection
-    * @param length the length of the selection
+    * Return Outline presenter. If editor not support Outline return <code>null</code>
+    * @return
     */
-   void selectAndReveal(int offset, int length);
+   OutlinePresenter getOutline();
 }

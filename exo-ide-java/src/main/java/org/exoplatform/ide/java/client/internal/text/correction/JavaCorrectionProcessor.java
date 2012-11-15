@@ -24,6 +24,9 @@ import org.exoplatform.ide.java.client.codeassistant.CompletionProposalComparato
 import org.exoplatform.ide.java.client.codeassistant.api.IProblemLocation;
 import org.exoplatform.ide.java.client.codeassistant.api.JavaCompletionProposal;
 import org.exoplatform.ide.java.client.core.JavaCore;
+import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.java.client.editor.AstProvider;
+import org.exoplatform.ide.java.client.editor.AstProvider.AstListener;
 import org.exoplatform.ide.java.client.editor.JavaAnnotation;
 import org.exoplatform.ide.java.client.editor.JavaCorrectionAssistant;
 import org.exoplatform.ide.java.client.quickassist.api.InvocationContext;
@@ -60,10 +63,12 @@ public class JavaCorrectionProcessor implements org.exoplatform.ide.texteditor.a
 
    private String fErrorMessage;
 
+   private CompilationUnit cu;
+
    /**
     * 
     */
-   public JavaCorrectionProcessor(JavaCorrectionAssistant assistant)
+   public JavaCorrectionProcessor(JavaCorrectionAssistant assistant, AstProvider astProvider)
    {
       this.assistant = assistant;
       if (fixProcessor == null)
@@ -72,6 +77,15 @@ public class JavaCorrectionProcessor implements org.exoplatform.ide.texteditor.a
          assistProcessors =
             new QuickAssistProcessor[]{new QuickAssistProcessorImpl(), new AdvancedQuickAssistProcessor()};
       }
+      astProvider.addAstListener(new AstListener()
+      {
+
+         @Override
+         public void onCompilationUnitChanged(CompilationUnit cUnit)
+         {
+            cu = cUnit;
+         }
+      });
    }
 
    /*
@@ -87,10 +101,11 @@ public class JavaCorrectionProcessor implements org.exoplatform.ide.texteditor.a
       AnnotationModel model = part.getDocumentProvider().getAnnotationModel(part.getEditorInput());
 
       AssistContext context = null;
-      //      if (cu != null) {
-      int length = textDisplay != null ? textDisplay.getSelection().getSelectedRange().length : 0;
-      context = new AssistContext(textDisplay, textDisplay.getDocument(), documentOffset, length);
-      //      }
+      if (cu != null)
+      {
+         int length = textDisplay != null ? textDisplay.getSelection().getSelectedRange().length : 0;
+         context = new AssistContext(textDisplay, textDisplay.getDocument(), documentOffset, length, cu);
+      }
 
       Annotation[] annotations = assistant.getAnnotationsAtOffset();
 
@@ -248,11 +263,11 @@ public class JavaCorrectionProcessor implements org.exoplatform.ide.texteditor.a
          int problemId = javaAnnotation.getId();
          if (problemId != -1)
          {
-//            CompilationUnit cu = javaAnnotation.getCompilationUnit();
+            //            CompilationUnit cu = javaAnnotation.getCompilationUnit();
             return fixProcessor.hasCorrections(problemId);
-//            if (cu != null)
-//            {
-//            }
+            //            if (cu != null)
+            //            {
+            //            }
          }
       }
       return false;
