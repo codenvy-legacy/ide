@@ -86,9 +86,17 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
          @Override
          public void onPreviewNativeEvent(NativePreviewEvent event)
          {
-            if(event.getTypeInt() != Event.ONKEYDOWN)
-               return;
-            onKeyDown(Event.as(event.getNativeEvent()));
+            try
+            {
+               if(event.getTypeInt() != Event.ONKEYDOWN)
+                  return;
+               onKeyDown(Event.as(event.getNativeEvent()));               
+            }
+            catch (Exception e)
+            {
+               System.out.println("> Unhandled exception > " + e.getMessage());
+               e.printStackTrace();
+            }
          }
       });
       

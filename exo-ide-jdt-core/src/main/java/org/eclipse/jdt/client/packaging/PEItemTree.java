@@ -111,8 +111,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
    private TreeItem openTreeNode(Object value, boolean open, boolean clearChildren)
    {
-      // TODO use clearChildren to clear or only refresh node children
-      
       TreeItem treeItem = null;
       if (value instanceof ProjectItem)
       {
@@ -131,7 +129,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             rootTreeItem = tree.getItem(0);
          }
 
-         addProjectItems((ProjectItem)value, rootTreeItem);
+         addProjectItems((ProjectItem)value, rootTreeItem, clearChildren);
          if (open)
          {
             rootTreeItem.setState(open);
@@ -141,19 +139,19 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       }
       else if (value instanceof ResourceDirectoryItem)
       {
-         treeItem = addResourceDirectoryItems((ResourceDirectoryItem)value);
+         treeItem = addResourceDirectoryItems((ResourceDirectoryItem)value, clearChildren);
       }
       else if (value instanceof DependencyListItem)
       {
-         treeItem = addDependencyListItems((DependencyListItem)value);
+         treeItem = addDependencyListItems((DependencyListItem)value, clearChildren);
       }
       else if (value instanceof PackageItem)
       {
-         treeItem = addPackageItems((PackageItem)value);
+         treeItem = addPackageItems((PackageItem)value, clearChildren);
       }
       else if (value instanceof FolderModel)
       {
-         treeItem = addFolderItems((FolderModel)value);
+         treeItem = addFolderItems((FolderModel)value, clearChildren);
       }
 
       if (treeItem != null && open)
@@ -164,42 +162,89 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return treeItem;
    }
 
-   private void addProjectItems(ProjectItem projectItem, TreeItem rootTreeItem)
+   private boolean childExist(TreeItem treeItem, Object childUserObject)
    {
-      rootTreeItem.removeItems();
+      for (int i = 0; i < treeItem.getChildCount(); i++)
+      {
+         TreeItem childItem = treeItem.getChild(i);
+         
+         if (childUserObject instanceof String &&
+                  childItem.getUserObject() instanceof String &&
+                  childUserObject.equals(childItem.getUserObject()))
+         {
+            return true;
+         }
+         
+         if (childItem.getUserObject() == childUserObject)
+         {
+            return true;
+         }
+      }
+      
+      return false;
+   }
+   
+   private void addProjectItems(ProjectItem projectItem, TreeItem rootTreeItem, boolean clearChildren)
+   {
+      if (clearChildren)
+         rootTreeItem.removeItems();
 
+      /*
+       * Add Resource Directories
+       */
       for (ResourceDirectoryItem resDir : projectItem.getResourceDirectories())
       {
+         if (!clearChildren && childExist(rootTreeItem, resDir))
+            continue;
+         
          TreeItem item = createTreeNode(resDir);
          rootTreeItem.addItem(item);
          item.addItem("");
       }
 
+      /*
+       * Add Dependency List
+       */
       for (DependencyListItem dependencyListItem : projectItem.getDependencies())
       {
+         if (!clearChildren && childExist(rootTreeItem, dependencyListItem))
+            continue;
+         
          TreeItem item = createTreeNode(dependencyListItem);
          rootTreeItem.addItem(item);
          item.addItem("");
       }
 
+      /*
+       * Add folders
+       */
       for (FolderModel folder : projectItem.getFolders())
       {
          if (DirectoryFilter.get().matchWithPattern(folder.getName()))
          {
             continue;
          }
+         
+         if (!clearChildren && childExist(rootTreeItem, folder))
+            continue;
 
          TreeItem item = createTreeNode(folder);
          rootTreeItem.addItem(item);
          item.addItem("");
       }
 
+      /*
+       * Add files
+       */
       for (FileModel file : projectItem.getFiles())
       {
          if (DirectoryFilter.get().matchWithPattern(file.getName()))
          {
             continue;
          }
+         
+         if (!clearChildren && childExist(rootTreeItem, file))
+            continue;
 
          TreeItem item = createTreeNode(file);
          rootTreeItem.addItem(item);
@@ -249,17 +294,21 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return null;
    }
 
-   private TreeItem addResourceDirectoryItems(ResourceDirectoryItem resourceDirectoryItem)
+   private TreeItem addResourceDirectoryItems(ResourceDirectoryItem resourceDirectoryItem, boolean clearChildren)
    {
       TreeItem resourceDirectoryTreeItem = getResourceDirectoryTreeItem(resourceDirectoryItem.getName());
       if (resourceDirectoryTreeItem != null)
       {
-         // clear all children
-         resourceDirectoryTreeItem.removeItems();
+         // clear all children if necessary
+         if (clearChildren)
+            resourceDirectoryTreeItem.removeItems();
 
          // add resource directory items here
          for (PackageItem pkg : resourceDirectoryItem.getPackages())
          {
+            if (!clearChildren && childExist(resourceDirectoryTreeItem, pkg))
+               continue;
+            
             TreeItem newItem = createTreeNode(pkg);
             resourceDirectoryTreeItem.addItem(newItem);
             if (pkg.getFiles().size() > 0)
@@ -274,6 +323,9 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             {
                continue;
             }
+            
+            if (!clearChildren && childExist(resourceDirectoryTreeItem, file))
+               continue;
 
             TreeItem newItem = createTreeNode(file);
             resourceDirectoryTreeItem.addItem(newItem);
@@ -283,13 +335,14 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return resourceDirectoryTreeItem;
    }
 
-   private TreeItem addPackageItems(PackageItem packageItem)
+   private TreeItem addPackageItems(PackageItem packageItem, boolean clearChildren)
    {
       TreeItem packageTreeItem = getPackageTreeItem(packageItem.getResourceDirectory(), packageItem.getPackageName());
       if (packageTreeItem != null)
       {
-         // clear children
-         packageTreeItem.removeItems();
+         // clear children if necessary
+         if (clearChildren)
+            packageTreeItem.removeItems();
 
          // add files
          for (FileModel file : packageItem.getFiles())
@@ -298,6 +351,9 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             {
                continue;
             }
+            
+            if (!clearChildren && childExist(packageTreeItem, file))
+               continue;
 
             TreeItem fileItem = createTreeNode(file);
             packageTreeItem.addItem(fileItem);
@@ -309,7 +365,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return null;
    }
 
-   private TreeItem addDependencyListItems(DependencyListItem dependencyListItem)
+   private TreeItem addDependencyListItems(DependencyListItem dependencyListItem, boolean clearChildren)
    {
       TreeItem rootItem = tree.getItem(0);
       for (int i = 0; i < rootItem.getChildCount(); i++)
@@ -317,10 +373,14 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          TreeItem treeItem = rootItem.getChild(i);
          if (treeItem.getUserObject() instanceof DependencyListItem)
          {
-            treeItem.removeItems();
+            if (clearChildren)
+               treeItem.removeItems();
 
             for (String dependency : dependencyListItem.getDependencies())
             {
+               if (!clearChildren && childExist(treeItem, dependency))
+                  continue;
+               
                TreeIcon icon = new TreeIcon(JdtClientBundle.INSTANCE.jarReference());
                Widget itemWidget = createItemWidget(icon, dependency);
                TreeItem node = new TreeItem(itemWidget);
@@ -377,7 +437,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return treeItem;
    }
 
-   private TreeItem addFolderItems(FolderModel folder)
+   private TreeItem addFolderItems(FolderModel folder, boolean clearChildren)
    {
       String folderPath = folder.getPath();
       if (folderPath.startsWith("/"))
@@ -391,7 +451,10 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          return null;
       }
 
-      folderTreeItem.removeItems();
+      // remove children if necessary
+      if (clearChildren)
+         folderTreeItem.removeItems();
+      
       for (Item item : folder.getChildren().getItems())
       {
          if (DirectoryFilter.get().matchWithPattern(item.getName()))
@@ -399,6 +462,9 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             continue;
          }
 
+         if (!clearChildren && childExist(folderTreeItem, item))
+            continue;
+         
          TreeItem ti = createTreeNode(item);
          folderTreeItem.addItem(ti);
          if (item instanceof FolderModel)
@@ -557,7 +623,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    public void goToItem(List<Object> itemList, boolean collapseBranches)
    {
 //      dumpItemList(itemList);
-
+      
       TreeItem treeItem = null;
       for (int i = 0; i < itemList.size(); i++)
       {
