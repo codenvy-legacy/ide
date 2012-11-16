@@ -93,12 +93,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
    public void onLogin(LoginEvent event)
    {
       String authUrl = Utils.getAuthorizationContext()//
-         + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
+         + "/ide/oauth/authenticate?oauth_provider=google"//
          + "&scope=https://www.googleapis.com/auth/appengine.admin"//
          + "&redirect_after_login="//
          + Utils.getAuthorizationPageURL();
       JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);
       authWindow.loginWithOAuth();
+      IDE.fireEvent(new SetLoggedUserStateEvent(true));
    }
 
    private void doLogin()
