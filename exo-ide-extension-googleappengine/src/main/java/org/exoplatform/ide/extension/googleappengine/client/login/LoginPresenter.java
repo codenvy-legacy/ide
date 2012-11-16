@@ -27,6 +27,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.JsPopUpOAuthWindow;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -95,6 +96,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       String authUrl = Utils.getAuthorizationContext()//
          + "/ide/oauth/authenticate?oauth_provider=google"//
          + "&scope=https://www.googleapis.com/auth/appengine.admin"//
+         + "&userId=" + IDE.userId
          + "&redirect_after_login="//
          + Utils.getAuthorizationPageURL();
       JsPopUpOAuthWindow authWindow = new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 450, 500);

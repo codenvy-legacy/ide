@@ -99,7 +99,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                {
                   applicationConfiguration = result.getIdeConfiguration();
                   applicationSettings = result.getSettings();
-
+                  IDE.userId = result.getUserInfo().getName(); 
                   if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0)
                   {
                      controls.initControls(result.getUserInfo().getRoles());
