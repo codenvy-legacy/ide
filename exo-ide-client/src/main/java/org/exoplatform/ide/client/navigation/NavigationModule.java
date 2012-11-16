@@ -125,7 +125,7 @@ public class NavigationModule implements InitializeServicesHandler
 
       new GoToFolderCommandHandler();
 
-      new GetItemURLPresenter();
+//      new GetItemURLPresenter();
 
       IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR);
 
