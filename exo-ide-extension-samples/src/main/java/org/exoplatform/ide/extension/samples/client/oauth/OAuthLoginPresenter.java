@@ -75,7 +75,8 @@ public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
          {
             String authUrl = Utils.getAuthorizationContext()//
                + "/ide/oauth/authenticate?oauth_provider=github&mode=federated_login"//
-               + "&scope=user&scope=repo&redirect_after_login="//
+               + "&scope=user" + "&userId=" + IDE.userId +
+               "&scope=repo&redirect_after_login="//
                + Utils.getAuthorizationPageURL();
             JsPopUpOAuthWindow authWindow =
                new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
