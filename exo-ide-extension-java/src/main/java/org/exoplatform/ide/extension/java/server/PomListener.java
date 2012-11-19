@@ -89,8 +89,16 @@ public class PomListener implements Startable
          final Item parent = vfs.getItem(item.getParentId(), PropertyFilter.ALL_FILTER);
          if (parent.getItemType().equals(ItemType.PROJECT))
          {
+            
             if (((Project)parent).getProjectType().equals("Maven Multi-module"))
                return;
+//            Item parent2 = vfs.getItem(parent.getParentId(), PropertyFilter.ALL_FILTER);
+//            if (parent2.getItemType().equals(ItemType.PROJECT))
+//            {
+//               if (((Project)parent2).getProjectType().equals("Maven Multi-module"))
+//                  return;
+//            }
+//            
          }
          //         TODO if project create from zip archive, pom.xml file created before parent folder become project, so remove check for now 
          //                  if (!Project.PROJECT_MIME_TYPE.equals(parent.getMimeType()))
