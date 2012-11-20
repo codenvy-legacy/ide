@@ -10,24 +10,10 @@
    <version>1.2.0-M14-SNAPSHOT</version>
    <name>eXo IDE :: Extension :: Appfog</name>
    <dependencies>
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-cloudfoundry</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-server</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>javax.ws.rs</groupId>
-         <artifactId>jsr311-api</artifactId>
-      </dependency>
-
-      <dependency>
-         <groupId>javax.inject</groupId>
-         <artifactId>javax.inject</artifactId>
       </dependency>
 
       <dependency>
@@ -44,25 +30,49 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-commons</artifactId>
       </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+      
+      <dependency>
+      	<groupId>org.exoplatform.kernel</groupId>
+      	<artifactId>exo.kernel.commons</artifactId>
+      </dependency>
+      
+      <dependency>
+      	<groupId>org.exoplatform.kernel</groupId>
+      	<artifactId>exo.kernel.container</artifactId>
+      </dependency>
+      
+      <dependency>
+      	<groupId>org.exoplatform.core</groupId>
+      	<artifactId>exo.core.component.security.core</artifactId>
+      </dependency>
 
+      <dependency>
+         <groupId>javax.ws.rs</groupId>
+         <artifactId>jsr311-api</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>javax.inject</groupId>
+         <artifactId>javax.inject</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
 
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-user</artifactId>
-      </dependency>
-
-
-
-       <dependency>
-         <groupId>org.json</groupId>
-         <artifactId>json</artifactId>
-         <version>1.5</version>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
@@ -82,29 +92,10 @@
          <scope>provided</scope>
       </dependency>
 
-       <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-dev</artifactId>
-         <scope>provided</scope>
-      </dependency>
-
       <dependency>
          <groupId>org.everrest</groupId>
          <artifactId>everrest-core</artifactId>
       </dependency>
-
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-integration-exo</artifactId>
-         <scope>test</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>org.everrest</groupId>
-         <artifactId>everrest-test</artifactId>
-         <scope>test</scope>
-      </dependency>
-
    </dependencies>
 
    <build>

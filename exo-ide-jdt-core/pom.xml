@@ -47,17 +47,22 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+      
+       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-collabeditor</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-java</artifactId>
       </dependency>
       
-      <dependency>
+     <!--  <dependency>
          <groupId>aopalliance</groupId>
          <artifactId>aopalliance</artifactId>
          <version>1.0</version>
-      </dependency>
+      </dependency> -->
 
       <dependency>
          <groupId>com.google.gwt.inject</groupId>

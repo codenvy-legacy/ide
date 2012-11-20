@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M13-SNAPSHOT</version>
+      <version>1.2.0-M14-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-dev-mode</artifactId>
@@ -217,12 +217,6 @@
          <artifactId>gin</artifactId>
          <version>1.5.0</version>
          <scope>compile</scope>
-      </dependency>
-
-      <dependency>
-         <groupId>org.codehaus.plexus</groupId>
-         <artifactId>plexus-utils</artifactId>
-         <version>2.0.5</version>
       </dependency>
 
       <dependency>

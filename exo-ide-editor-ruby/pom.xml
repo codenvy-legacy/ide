@@ -32,20 +32,20 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
       </dependency>
-      <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-commons</artifactId>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
+      
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <version>4.7</version>
-         <scope>test</scope>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
    </dependencies>
 

@@ -84,11 +84,6 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.core</groupId>
-            <artifactId>exo.core.component.document</artifactId>
-            <version>${org.exoplatform.core.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.core</groupId>
             <artifactId>exo.core.component.organization.api</artifactId>
             <version>${org.exoplatform.core.version}</version>
          </dependency>
@@ -230,24 +225,7 @@
             <version>${project.version}</version>
          </dependency>
 
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-ckeditor</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-codemirror</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-editor-codemirror2</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-          <dependency>
+        <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-collabeditor</artifactId>
             <version>${project.version}</version>
@@ -611,6 +589,14 @@
             <artifactId>commons-io</artifactId>
             <version>${commons-io.version}</version>
          </dependency>
+         
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.2</version>
+      </dependency>
+         
+         
          <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
@@ -651,19 +637,6 @@
             <artifactId>jcr.packaging.module</artifactId>
             <version>${org.exoplatform.jcr.version}</version>
          </dependency>
-
-         <dependency>
-            <groupId>org.jboss.cache</groupId>
-            <artifactId>jbosscache-core</artifactId>
-            <version>3.2.6.GA</version>
-            <exclusions>
-               <exclusion>
-                  <groupId>jgroups</groupId>
-                  <artifactId>jgroups</artifactId>
-               </exclusion>
-            </exclusions>
-         </dependency>
-
          <dependency>
             <groupId>quartz</groupId>
             <artifactId>quartz</artifactId>
@@ -806,8 +779,6 @@
 		  <exclude>**/ckeditor/**/*.css</exclude>
                   <exclude>**/ckeditor/**/*.html</exclude>
                   <exclude>**/ckeditor/**/*.js</exclude>
-                 
-                  <exclude>exo-ide-editor-codemirror2/src/main/resources/org/exoplatform/ide/editor/public/codemirror2/mode/xml/index.html</exclude>
 		  
 		  <exclude>exo-ide-editor-ruby/src/main/resources/org/exoplatform/ide/editor/ruby/client/hello.rb</exclude>
                   
@@ -876,11 +847,6 @@
 
       <module>exo-ide-editor-api</module>
       <module>exo-ide-collabeditor</module>
-      <!--
-      <module>exo-ide-editor-ckeditor</module>
-      <module>exo-ide-editor-codemirror</module>
-      -->
-      <module>exo-ide-editor-codemirror2</module>
 
       <module>exo-ide-editor</module>
       <module>exo-ide-editor-javascript</module>
@@ -890,7 +856,6 @@
       <module>exo-ide-editor-groovy</module>
       <module>exo-ide-editor-gtmpl</module>
       <module>exo-ide-editor-chromattic</module>
-      <!-- module>exo-ide-editor-netvibes</module IDE-1663 -->
       <module>exo-ide-editor-java</module>
       <module>exo-ide-editor-jsp</module>
       <module>exo-ide-editor-ruby</module>
@@ -898,7 +863,6 @@
       <module>exo-ide-editor-xml</module>
       <module>exo-ide-editor-python</module>
       <module>exo-ide-editor-yaml</module>
-      
 
       <module>exo-ide-jdt-core</module>
 
@@ -908,7 +872,6 @@
       <module>exo-ide-extension-java</module>
       <module>exo-ide-extension-java-runtime</module>
       <module>exo-ide-extension-python-runtime</module>
-      <!--module>exo-ide-extension-netvibes</module IDE-1663 -->
       <module>exo-ide-extension-chromattic</module>
       <module>exo-ide-extension-git</module>
       <module>exo-ide-extension-ssh</module>
@@ -938,7 +901,6 @@
       <module>exo-ide-packaging-shell-war</module>
       <module>exo-ide-packaging-websocket-war</module>
 
-      <!--module>exo-ide-packaging-gadget-war</module -->
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>
       <module>exo-ide-packaging-standalone-tomcat</module>

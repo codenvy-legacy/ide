@@ -96,8 +96,9 @@ public class OAuthLoginView extends ViewImpl
          public void onClick(ClickEvent event)
          {
             String authUrl = Utils.getAuthorizationContext()//
-               + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
+               + "/ide/oauth/authenticate?oauth_provider=google"//
                + "&scope=https://www.googleapis.com/auth/appengine.admin"//
+               + "&userId=" + IDE.userId //
                + "&redirect_after_login="//
                + Utils.getAuthorizationPageURL();
             JsPopUpOAuthWindow authWindow =

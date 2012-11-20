@@ -15,6 +15,7 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -28,8 +29,18 @@
       </dependency>
       
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+      
+      <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
 
       <dependency>
@@ -40,6 +51,11 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-java</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-xml</artifactId>
       </dependency>
       
       <dependency>

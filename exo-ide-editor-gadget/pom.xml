@@ -19,19 +19,14 @@
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-commons</artifactId>
+         <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-api</artifactId>
       </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-framework-client</artifactId>
-      </dependency>
-
+      
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
@@ -39,7 +34,17 @@
       
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-xml</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-html</artifactId>
+      </dependency>
+
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
 
    </dependencies>

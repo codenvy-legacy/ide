@@ -37,12 +37,12 @@
       </dependency>
       <!-- CLIENT SIDE END -->
 
-      <dependency>
+      <!--dependency>
          <groupId>org.easymock</groupId>
          <artifactId>easymock</artifactId>
          <version>3.0</version>
          <scope>test</scope>
-      </dependency>
+      </dependency-->
       <dependency>
          <groupId>org.exoplatform.log-reader</groupId>
          <artifactId>log-reader-service</artifactId>

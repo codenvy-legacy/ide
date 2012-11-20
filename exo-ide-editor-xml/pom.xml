@@ -15,19 +15,9 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
       </dependency>
       
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-servlet</artifactId>
-      </dependency>
-      
-      <dependency>
-         <groupId>com.google.gwt</groupId>
-         <artifactId>gwt-dev</artifactId>
-         <scope>test</scope>
-      </dependency>
-
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor-api</artifactId>
@@ -37,11 +27,6 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-editor</artifactId>
       </dependency>
-      
-      <dependency>
-         <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-commons</artifactId>
-      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -49,11 +34,15 @@
       </dependency>
       
       <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-commons</artifactId>
       </dependency>
-
+      
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
+      </dependency>
+      
    </dependencies>
    <build>
       <resources>

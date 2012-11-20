@@ -28,54 +28,6 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.core</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>org.exoplatform.tool</groupId>
-               <artifactId>exo.tool.framework.junit</artifactId>
-            </exclusion>
-            <exclusion>
-               <artifactId>sjsxp</artifactId>
-               <groupId>com.sun.xml.stream</groupId>
-            </exclusion>
-            <exclusion>
-               <artifactId>xstream</artifactId>
-               <groupId>xstream</groupId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.ext</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>org.exoplatform.tool</groupId>
-               <artifactId>exo.tool.framework.junit</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.core</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.commons</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.frameworks.json</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.ws</groupId>
-               <artifactId>exo.ws.rest.ext</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>com.experlog</groupId>
-               <artifactId>xapool</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
          <groupId>org.exoplatform.core</groupId>
          <artifactId>exo.core.component.security.core</artifactId>
          <exclusions>
@@ -84,10 +36,6 @@
                <artifactId>servlet-api</artifactId>
             </exclusion>
          </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.core</groupId>
-         <artifactId>exo.core.component.script.groovy</artifactId>
       </dependency>
       <dependency>
          <groupId>org.everrest</groupId>
@@ -148,13 +96,6 @@
          <groupId>javax.jcr</groupId>
          <artifactId>jcr</artifactId>
       </dependency>
-      <!--
-      <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      -->
 
       <dependency>
          <groupId>com.google.gwt</groupId>
@@ -183,16 +124,6 @@
          <artifactId>exo-ide-editor-api</artifactId>
          <scope>provided</scope>
       </dependency>
-
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor</artifactId>
-         <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-server</artifactId>
-       </dependency>
    </dependencies>
    <build>
 

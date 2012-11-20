@@ -23,12 +23,24 @@
 			<artifactId>exo-ide-editor-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
+		
+		 <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-collabeditor</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-editor-java</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		 <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+         <scope>provided</scope>
+      </dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
@@ -59,24 +71,6 @@
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>javax.validation</groupId>
-			<artifactId>validation-api</artifactId>
-			<version>1.0.0.GA</version>
-			<classifier>sources</classifier>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20070829</version>
 		</dependency>
 		<!-- End client-side dependencies -->
 		<dependency>
@@ -131,18 +125,6 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-commons</artifactId>
       </dependency>
-		<dependency>
-			<groupId>com.googlecode.gwt-test-utils</groupId>
-			<artifactId>gwt-test-utils</artifactId>
-			<version>0.38</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<version>1.8.5</version>
-			<scope>test</scope>
-		</dependency>
 	</dependencies>
 
 	<build>

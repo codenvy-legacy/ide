@@ -15,11 +15,12 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-commons</artifactId>
+         <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
 
       <dependency>
