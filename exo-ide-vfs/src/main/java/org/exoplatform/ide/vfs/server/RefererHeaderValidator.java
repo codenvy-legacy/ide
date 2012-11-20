@@ -35,7 +35,7 @@ public final class RefererHeaderValidator implements RequestValidator
    {
       String requestURL = request.getScheme() + "://" + request.getServerName();
       int port = request.getServerPort();
-      if (port != 80)
+      if (port != 80 && port != 443)
       {
          requestURL += (":" + port);
       }
