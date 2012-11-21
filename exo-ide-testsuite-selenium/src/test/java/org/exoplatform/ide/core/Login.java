@@ -44,6 +44,8 @@ public class Login extends AbstractTestModule
 
    private static final String LOGIN_STANDALONE = "loginButton";
 
+   private static final String IDE_LOGOUT = "//td[@class='exo-popupMenuTitleField' and text()='Logout']";
+
    @FindBy(name = USERNAME)
    private WebElement name;
 
@@ -56,6 +58,7 @@ public class Login extends AbstractTestModule
    @FindBy(id = LOGIN_STANDALONE)
    private WebElement loginButton;
 
+   @FindBy(xpath = IDE_LOGOUT)
    private WebElement logoutButton;
 
    @FindBy(linkText = "IDE")
@@ -63,11 +66,8 @@ public class Login extends AbstractTestModule
 
    public void logout()
    {
-      if (!logoutButton.isDisplayed())
-      {
-         openCloudIdeAdditionMenu();
-      }
-
+      openCloudIdeAdditionMenu();
+      waitLogoutIDEMenu();
       logoutButton.click();
    }
 
@@ -121,6 +121,25 @@ public class Login extends AbstractTestModule
             {
                input.findElement(By.name(USERNAME));
                return true;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   public void waitLogoutIDEMenu()
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return loginButton != null && logoutButton.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
