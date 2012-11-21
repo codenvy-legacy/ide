@@ -28,7 +28,7 @@ import com.google.gwt.event.shared.GwtEvent;
 public class StopAppEvent extends GwtEvent<StopAppHandler>
 {
 
-     public static final GwtEvent.Type<StopAppHandler> TYPE = new GwtEvent.Type<StopAppHandler>();
+   public static final GwtEvent.Type<StopAppHandler> TYPE = new GwtEvent.Type<StopAppHandler>();
 
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<StopAppHandler> getAssociatedType()

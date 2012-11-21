@@ -46,4 +46,9 @@ public class ServerException extends Exception
          return null;
       return response.getBody();
    }
+
+   public int getHTTPStatus()
+   {
+      return response.getResponseCode();
+   }
 }

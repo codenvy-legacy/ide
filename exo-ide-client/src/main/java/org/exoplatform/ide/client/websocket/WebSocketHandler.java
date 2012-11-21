@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 
 /**
- * Handler that opens WebSocket connection on start IDE and close WebSocket on close IDE.
+ * Handler that opens WebSocket connection when IDE loaded and close WebSocket on close IDE.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocketHandler.java Jun 19, 2012 12:33:42 PM azatsarynnyy $
@@ -47,8 +47,11 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      // invoke WebSocket.getInstance() to prepare WebSocket connection on start IDE
-      WebSocket.getInstance();
+      WebSocket ws = WebSocket.getInstance();
+      if (ws != null)
+      {
+         ws.connect();
+      }
    }
 
    /**

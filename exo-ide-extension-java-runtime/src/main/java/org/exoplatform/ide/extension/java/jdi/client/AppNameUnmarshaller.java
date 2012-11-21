@@ -18,27 +18,21 @@
  */
 package org.exoplatform.ide.extension.java.jdi.client;
 
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONParser;
-import com.google.gwt.json.client.JSONString;
-
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
 
-import java.util.List;
-
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: StringListUnmarshaller.java Oct 19, 2012 9:24:42 AM azatsarynnyy $
+ * @version $Id: AppNameUnmarshaller.java Oct 19, 2012 9:24:42 AM azatsarynnyy $
  *
  */
-public class StringListUnmarshaller implements Unmarshallable<List<String>>
+public class AppNameUnmarshaller implements Unmarshallable<StringBuilder>
 {
-   private List<String> appList;
+   private StringBuilder appName;
 
-   public StringListUnmarshaller(List<String> list)
+   public AppNameUnmarshaller(StringBuilder string)
    {
-      this.appList = list;
+      this.appName = string;
    }
 
    /**
@@ -46,23 +40,13 @@ public class StringListUnmarshaller implements Unmarshallable<List<String>>
     */
    public void unmarshal(RESTfulResponseMessage response)
    {
-      JSONArray jsonArray = JSONParser.parseStrict(response.getBody()).isArray();
-      if (jsonArray == null)
-      {
-         return;
-      }
-
-      for (int i = 0; i < jsonArray.size(); i++)
-      {
-         JSONString appName = jsonArray.get(i).isString();
-         appList.add(appName.stringValue());
-      }
+      appName.delete(0, appName.length());
+      appName.append(response.getBody());
    }
 
    @Override
-   public List<String> getPayload()
+   public StringBuilder getPayload()
    {
-      return appList;
+      return appName;
    }
-
 }

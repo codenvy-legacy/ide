@@ -38,9 +38,10 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * {@link MessageBus} provides list-based PubSub asynchronous messaging pattern.
- * Class maintains lists of channels/subscribers and notifying each one
- * individually a message received. Also used to publishing messages to the channel.
+ * {@link MessageBus} provides two asynchronous messaging patterns: RPC and
+ * list-based PubSub. Class maintains lists of channels and subscribers and
+ * notifying each one individually a message received. Also used to publishing
+ * messages to channel and to calling remote methods.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: MessageBus.java Jul 30, 2012 9:24:42 AM azatsarynnyy $
@@ -48,29 +49,11 @@ import java.util.Set;
  */
 public class MessageBus implements WSMessageReceivedHandler
 {
-   /** Enumeration describes the WebSocket event types. */
-   public enum Channels {
-      /** Channel for the messages containing the application names which may be stopped soon. */
-      DEBUGGER_EXPIRE_SOON_APPS("debugger:expireSoonApps");
-
-      private final String eventTypeValue;
-
-      private Channels(String value)
-      {
-         this.eventTypeValue = value;
-      }
-
-      @Override
-      public String toString()
-      {
-         return eventTypeValue;
-      }
-   }
-
    /**
     * Map of the channel to the subscribers.
     */
-   private Map<String, Set<SubscriptionHandler<?>>> channelToSubscribersMap = new HashMap<String, Set<SubscriptionHandler<?>>>();
+   private Map<String, Set<SubscriptionHandler<?>>> channelToSubscribersMap =
+      new HashMap<String, Set<SubscriptionHandler<?>>>();
 
    /**
     * Map of the call identifier to the {@link RESTfulRequestCallback}.
@@ -97,32 +80,21 @@ public class MessageBus implements WSMessageReceivedHandler
          return;
       }
 
-      String messageType = getMessageType(message);
-
-      if ("subscribed-message".equals(messageType))
+      // temporary ignore the confirmation message
+      for (Pair header : message.getHeaders())
       {
-         for (Pair header : message.getHeaders())
+         if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/"))
          {
-            if ("x-everrest-websocket-channel".equals(header.getName())
-               && channelToSubscribersMap.containsKey(header.getValue()))
-            {
-               // TODO find way to avoid copying of set
-               // Copy a Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will invoked while iterating
-               Set<SubscriptionHandler<?>> subscribersSet =
-                  new HashSet<SubscriptionHandler<?>>(channelToSubscribersMap.get(header.getValue()));
-               for (SubscriptionHandler<?> handler : subscribersSet)
-               {
-                  handler.onResponseReceived(message);
-               }
-            }
+            return;
          }
-         return;
       }
 
-      // ignore the confirmation message
-      for (Pair header : message.getHeaders())
-         if (HTTPHeader.LOCATION.equals(header.getName()) && header.getValue().contains("async/"))
-            return;
+      String messageType = getMessageType(message);
+      if ("subscribed-message".equals(messageType))
+      {
+         processSubscribedMessage(message);
+         return;
+      }
 
       RESTfulRequestCallback<?> callback = callbackMap.remove(message.getUuid());
       if (callback != null)
@@ -140,18 +112,18 @@ public class MessageBus implements WSMessageReceivedHandler
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a subscription was successful or not.
     * 
-    * @param channel {@link Channels} identifier
+    * @param channelID channel identifier
     * @param handler the {@link SubscriptionHandler} to fire
     *                   when receiving an event on the subscribed channel
     */
-   void subscribe(Channels channel, SubscriptionHandler<?> handler)
+   void subscribe(String channelID, SubscriptionHandler<?> handler)
    {
       if (handler == null)
       {
          throw new NullPointerException("Handler may not be null");
       }
 
-      Set<SubscriptionHandler<?>> subscribersSet = channelToSubscribersMap.get(channel.toString());
+      Set<SubscriptionHandler<?>> subscribersSet = channelToSubscribersMap.get(channelID);
       if (subscribersSet != null)
       {
          subscribersSet.add(handler);
@@ -160,10 +132,10 @@ public class MessageBus implements WSMessageReceivedHandler
 
       subscribersSet = new HashSet<SubscriptionHandler<?>>();
       subscribersSet.add(handler);
-      channelToSubscribersMap.put(channel.toString(), subscribersSet);
+      channelToSubscribersMap.put(channelID, subscribersSet);
       RESTfulRequestBuilder.build(RequestBuilder.GET, null)
-         .header("x-everrest-websocket-message-type", "subscribe-channel")
-         .data("{\"channel\":\"" + channel.toString() + "\"}").send(null);
+         .header("x-everrest-websocket-message-type", "subscribe-channel").data("{\"channel\":\"" + channelID + "\"}")
+         .send(null);
    }
 
    /**
@@ -174,17 +146,17 @@ public class MessageBus implements WSMessageReceivedHandler
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a unsubscription was successful or not.
     * 
-    * @param channel {@link Channels} identifier
+    * @param channelID channel identifier
     * @param handler the {@link SubscriptionHandler} for which to remove the subscription
     */
-   void unsubscribe(Channels channel, SubscriptionHandler<?> handler)
+   void unsubscribe(String channelID, SubscriptionHandler<?> handler)
    {
       if (handler == null)
       {
          throw new NullPointerException("Handler may not be null");
       }
 
-      Set<SubscriptionHandler<?>> subscribersSet = channelToSubscribersMap.get(channel.toString());
+      Set<SubscriptionHandler<?>> subscribersSet = channelToSubscribersMap.get(channelID);
       if (subscribersSet == null)
       {
          return;
@@ -192,21 +164,21 @@ public class MessageBus implements WSMessageReceivedHandler
 
       if (subscribersSet.remove(handler) && subscribersSet.isEmpty())
       {
-         channelToSubscribersMap.remove(channel.toString());
+         channelToSubscribersMap.remove(channelID);
          RESTfulRequestBuilder.build(RequestBuilder.GET, null)
             .header("x-everrest-websocket-message-type", "unsubscribe-channel")
-            .data("{\"channel\":\"" + channel.toString() + "\"}").send(null);
+            .data("{\"channel\":\"" + channelID + "\"}").send(null);
       }
    }
 
    /**
     * Publishes a message in a particular channel.
     * 
-    * @param channel {@link Channels} identifier
+    * @param channelID channel identifier
     * @param data the text data to be published to the channel
     * @throws WebSocketException throws if an error has occurred while publishing data
     */
-   public void publish(Channels channel, String data) throws WebSocketException
+   public void publish(String channelID, String data) throws WebSocketException
    {
       // TODO
    }
@@ -240,13 +212,33 @@ public class MessageBus implements WSMessageReceivedHandler
       {
          if ("x-everrest-websocket-message-type".equals(header.getName()))
          {
-            if ("subscribed-message".equals(header.getValue()))
-            {
-               return header.getValue();
-            }
+            return header.getValue();
          }
       }
       return null;
+   }
+
+   /**
+    * Process the message that received by subscription.
+    * 
+    * @param message {@link RESTfulResponseMessage}
+    */
+   private void processSubscribedMessage(RESTfulResponseMessage message)
+   {
+      for (Pair header : message.getHeaders())
+      {
+         if ("x-everrest-websocket-channel".equals(header.getName())
+            && channelToSubscribersMap.containsKey(header.getValue()))
+         {
+            // TODO find way to avoid copying of set
+            // Copy a Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will invoked while iterating
+            Set<SubscriptionHandler<?>> subscribersSet = new HashSet<SubscriptionHandler<?>>(channelToSubscribersMap.get(header.getValue()));
+            for (SubscriptionHandler<?> handler : subscribersSet)
+            {
+               handler.onResponseReceived(message);
+            }
+         }
+      }
    }
 
 }

@@ -26,7 +26,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
@@ -109,17 +108,25 @@ public class WebSocket
    /**
     * Counter of connection attempts.
     */
-   private static int connectionAttemptsCounter;
+   private static int reconnectionAttemptsCounter;
 
    /**
-    * Creates a new {@link WebSocket} instance and connects to the remote socket location.
+    * Period (in milliseconds) to reconnect after connection is closed.
+    */
+   private final static int RECONNECTION_PERIOD = 5000;
+
+   /**
+    * Max. number of attempts to reconnect.
+    */
+   private final static int MAX_RECONNECTION_ATTEMPTS = 10;
+
+   /**
+    * Creates a new {@link WebSocket} instance.
     */
    protected WebSocket()
    {
       instance = this;
       url = "ws://" + Window.Location.getHost() + "/websocket";
-      socket = WebSocketImpl.create(url);
-      init();
    }
 
    /**
@@ -134,8 +141,12 @@ public class WebSocket
          @Override
          public void onWebSocketOpened(WebSocketOpenedEvent event)
          {
-            connectionAttemptsCounter = 0;
             IDE.fireEvent(event);
+            if (reconnectionAttemptsCounter > 0)
+            {
+               reconnectWebSocketTimer.cancel();
+            }
+            reconnectionAttemptsCounter = 0;
             heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
          }
       });
@@ -145,14 +156,12 @@ public class WebSocket
          @Override
          public void onWebSocketClosed(WebSocketClosedEvent event)
          {
-            instance = null;
             socket = null;
-
             IDE.fireEvent(event);
 
-            if (!event.wasClean() && connectionAttemptsCounter < 5)
+            if (!event.wasClean())
             {
-               reconnectWebSocketTimer.schedule(5000);
+               reconnectWebSocketTimer.scheduleRepeating(RECONNECTION_PERIOD);
             }
          }
       });
@@ -178,24 +187,37 @@ public class WebSocket
    }
 
    /**
-    * Returns the instance of the {@link WebSocket} or <code>null</code>
-    * if WebSocket is not supported in the current browser.
+    * Returns the instance of the {@link WebSocket}.
     * 
-    * @return instance of {@link WebSocket} or <code>null</code> if WebSocket not supported
+    * @return instance of {@link WebSocket}
     */
    public static WebSocket getInstance()
    {
-      if (!isSupported())
-      {
-         return null;
-      }
-
       if (instance == null)
       {
          instance = new WebSocket();
       }
-
       return instance;
+   }
+
+   /**
+    * Connects to the remote socket location.
+    */
+   public void connect()
+   {
+      socket = WebSocketImpl.create(url);
+      init();
+   }
+
+   /**
+    * Terminates the WebSocket connection and mark it as closed by user.
+    */
+   public void close()
+   {
+      if (getReadyState() == ReadyState.OPEN)
+      {
+         socket.close();
+      }
    }
 
    /**
@@ -216,8 +238,13 @@ public class WebSocket
       @Override
       public void run()
       {
-         connectionAttemptsCounter++;
-         getInstance();
+         if (reconnectionAttemptsCounter >= MAX_RECONNECTION_ATTEMPTS)
+         {
+            cancel();
+            return;
+         }
+         reconnectionAttemptsCounter++;
+         connect();
       }
    };
 
@@ -273,17 +300,6 @@ public class WebSocket
    }
 
    /**
-    * Terminates the WebSocket connection and mark it as closed by user.
-    */
-   public void close()
-   {
-      if (getReadyState() == ReadyState.OPEN)
-      {
-         socket.close();
-      }
-   }
-
-   /**
     * Returns the URL of the WebSocket server.
     * 
     * @return url WebSocket server's URL
@@ -304,13 +320,13 @@ public class WebSocket
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a subscription was successful or not.
     * 
-    * @param channel {@link Channels} identifier
+    * @param channelID channel identifier
     * @param handler the {@link SubscriptionHandler} to fire
     *                   when receiving an event on the subscribed channel
     */
-   public void subscribe(Channels channel, SubscriptionHandler<?> handler)
+   public void subscribe(String channelID, SubscriptionHandler<?> handler)
    {
-      messageBus.subscribe(channel, handler);
+      messageBus.subscribe(channelID, handler);
    }
 
    /**
@@ -321,12 +337,12 @@ public class WebSocket
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a unsubscription was successful or not.
     * 
-    * @param channel {@link Channels} identifier
+    * @param channelID channel identifier
     * @param handler the {@link SubscriptionHandler} for which to remove the subscription
     */
-   public void unsubscribe(Channels channel, SubscriptionHandler<?> handler)
+   public void unsubscribe(String channelID, SubscriptionHandler<?> handler)
    {
-      messageBus.unsubscribe(channel, handler);
+      messageBus.unsubscribe(channelID, handler);
    }
 
    /**

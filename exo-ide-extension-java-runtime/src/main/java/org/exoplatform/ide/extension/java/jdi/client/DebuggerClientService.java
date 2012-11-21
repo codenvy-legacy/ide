@@ -49,7 +49,6 @@ import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
  */
 public class DebuggerClientService
 {
-
    private static String BASE_URL;
 
    private static DebuggerClientService instance;
@@ -68,7 +67,7 @@ public class DebuggerClientService
       return instance;
    }
 
-   public void create(String host, int port, AsyncRequestCallback<DebuggerInfo> callback) throws RequestException
+   public void connect(String host, int port, AsyncRequestCallback<DebuggerInfo> callback) throws RequestException
    {
       String params = "host=" + host + "&port=" + port;
       AsyncRequest.build(RequestBuilder.GET, BASE_URL + "/connect?" + params).loader(new EmptyLoader()).send(callback);

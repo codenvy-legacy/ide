@@ -115,6 +115,14 @@ public class ApplicationRunnerClientService
       AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
    }
 
+   /**
+    * Prolong expiration time of the application.
+    * 
+    * @param name application name
+    * @param time time on which need to prolong expiration time of the application
+    * @param callback {@link RESTfulRequestCallback}
+    * @throws WebSocketException
+    */
    public void prolongExpirationTime(String name, long time, RESTfulRequestCallback<Object> callback)
       throws WebSocketException
    {
@@ -122,6 +130,14 @@ public class ApplicationRunnerClientService
       RESTfulRequestBuilder.build(RequestBuilder.GET, PROLONG + params).send(callback);
    }
 
+   /**
+    * Update already deployed Java web application.
+    * 
+    * @param name application name
+    * @param war location of .war file. It may be local or remote location. File from this location will be used for update.
+    * @param callback {@link AsyncRequestCallback}
+    * @throws RequestException
+    */
    public void updateApplication(String name, String war, AsyncRequestCallback<Object> callback)
       throws RequestException
    {
