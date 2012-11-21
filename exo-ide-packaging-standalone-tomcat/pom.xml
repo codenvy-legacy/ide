@@ -4,13 +4,12 @@
    in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
    See the GNU Lesser General Public License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF site: http://www.fsf.org. -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M13-SNAPSHOT</version>
+      <version>1.2.0-M14-SNAPSHOT</version>
    </parent>
 
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
@@ -855,87 +854,57 @@
                   <configuration>
                      <tasks>
                         <copy todir="${project.build.directory}/tomcat-ide">
-                           <fileset dir="${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/"/>
+                           <fileset dir="${exo.projects.directory.dependencies}/apache-tomcat-${tomcat.version}/" />
                         </copy>
                         <copy todir="${project.build.directory}/tomcat-ide" overwrite="true">
-                           <fileset dir="${basedir}/src/main/resources/tomcat"/>
+                           <fileset dir="${basedir}/src/main/resources/tomcat" />
                         </copy>
-                        <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh"/>
-                        <move file="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j-${org.slf4j.version}.jar"
-                              tofile="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j.jar"/>
-                        <move
-                           file="${project.build.directory}/tomcat-ide/lib/logback-core-${ch.qos.logback.version}.jar"
-                           tofile="${project.build.directory}/tomcat-ide/lib/logback-core.jar"/>
-                        <move
-                           file="${project.build.directory}/tomcat-ide/lib/logback-classic-${ch.qos.logback.version}.jar"
-                           tofile="${project.build.directory}/tomcat-ide/lib/logback-classic.jar"/>
-                        <move file="${project.build.directory}/tomcat-ide/lib/slf4j-api-${org.slf4j.version}.jar"
-                              tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar"/>
-                        <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar"
-                              tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" overwrite="true"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true"/>
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war"
-                              tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-websocket-war-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/websocket.war" overwrite="true"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war"
-                           overwrite="true"/>
-                        <copy
-                           file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war"
-                           tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true"/>
-                        <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
-                               dest="${project.build.directory}/tomcat-ide"/>
-                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
-                               dest="${project.build.directory}/tomcat-ide">
+                        <chmod dir="${project.build.directory}/tomcat-ide/bin" perm="+x" includes="**/*.sh" />
+                        <move file="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/log4j-over-slf4j.jar" />
+                        <move file="${project.build.directory}/tomcat-ide/lib/logback-core-${ch.qos.logback.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/logback-core.jar" />
+                        <move file="${project.build.directory}/tomcat-ide/lib/logback-classic-${ch.qos.logback.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/logback-classic.jar" />
+                        <move file="${project.build.directory}/tomcat-ide/lib/slf4j-api-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar" />
+                        <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-rest-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/rest.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-git-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/git.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-websocket-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/websocket.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />
+                        <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
+                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
                            <patternset>
-                              <exclude name="**/bin/**"/>
-                              <exclude name="**/demos/**"/>
-                              <exclude name="**/src/**"/>
-                              <exclude name="**/docs/javadoc/**"/>
-                              <exclude name="**/docs/remoteapi/**"/>
-                              <exclude name="**/docs/testing/**"/>
-                              <exclude name="**/docs/tools/**"/>
-                              <exclude name="**/docs/javadoc/**"/>
-                              <exclude name="**/ABOUT"/>
-                              <exclude name="**/COPYING"/>
-                              <exclude name="**/README"/>
-                              <exclude name="**/README.ORM"/>
-                              <exclude name="**/RELEASE_NOTES"/>
-                              <exclude name="**/RELEASE_NOTES.ORM"/>
+                              <exclude name="**/bin/**" />
+                              <exclude name="**/demos/**" />
+                              <exclude name="**/src/**" />
+                              <exclude name="**/docs/javadoc/**" />
+                              <exclude name="**/docs/remoteapi/**" />
+                              <exclude name="**/docs/testing/**" />
+                              <exclude name="**/docs/tools/**" />
+                              <exclude name="**/docs/javadoc/**" />
+                              <exclude name="**/ABOUT" />
+                              <exclude name="**/COPYING" />
+                              <exclude name="**/README" />
+                              <exclude name="**/README.ORM" />
+                              <exclude name="**/RELEASE_NOTES" />
+                              <exclude name="**/RELEASE_NOTES.ORM" />
                            </patternset>
                         </unzip>
-                        <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}"
-                              tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk"/>
-                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"
-                               dest="${project.build.directory}/tomcat-ide">
+                        <move file="${project.build.directory}/tomcat-ide/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/tomcat-ide/appengine-java-sdk" />
+                        <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${project.build.directory}/tomcat-ide">
                            <patternset>
-                              <exclude name="**/demos/**"/>
-                              <exclude name="**/new_project_template/**"/>
-                              <exclude name="**/BUGS"/>
-                              <exclude name="**/LICENSE"/>
-                              <exclude name="**/README"/>
-                              <exclude name="**/RELEASE_NOTES"/>
+                              <exclude name="**/demos/**" />
+                              <exclude name="**/new_project_template/**" />
+                              <exclude name="**/BUGS" />
+                              <exclude name="**/LICENSE" />
+                              <exclude name="**/README" />
+                              <exclude name="**/RELEASE_NOTES" />
                            </patternset>
                         </unzip>
-                        <move file="${project.build.directory}/tomcat-ide/google_appengine"
-                              tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk"/>
+                        <move file="${project.build.directory}/tomcat-ide/google_appengine" tofile="${project.build.directory}/tomcat-ide/appengine-python-sdk" />
 
                      </tasks>
                   </configuration>
@@ -1008,17 +977,9 @@
                         <phase>compile</phase>
                         <configuration>
                            <tasks>
-                              <unwar
-                                 src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war"
-                                 dest="${project.build.directory}/packager-conf/unwar"/>
-                              <copy
-                                 file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/exo-jcr-config-mysql.xml"
-                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml"
-                                 overwrite="true"/>
-                              <copy
-                                 file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/cf-configuration-mysql.xml"
-                                 tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml"
-                                 overwrite="true"/>
+                              <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/unwar" />
+                              <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/exo-jcr-config-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/exo-jcr-config.xml" overwrite="true" />
+                              <copy file="${basedir}/src/main/resources/ide-war-mysql/WEB-INF/classes/conf/cf-configuration-mysql.xml" tofile="${project.build.directory}/packager-conf/unwar/WEB-INF/classes/conf/cf-configuration.xml" overwrite="true" />
                            </tasks>
                         </configuration>
                         <goals>

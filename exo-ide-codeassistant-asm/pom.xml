@@ -15,7 +15,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M13-SNAPSHOT</version>
+      <version>1.2.0-M14-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-codeassistant-asm</artifactId>
    <packaging>jar</packaging>
@@ -26,12 +26,6 @@
          <groupId>asm</groupId>
          <artifactId>asm-all</artifactId>
          <version>3.3.1</version>
-      </dependency>
-      <dependency>
-         <groupId>ch.qos.logback</groupId>
-         <artifactId>logback-classic</artifactId>
-         <version>0.9.20</version>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

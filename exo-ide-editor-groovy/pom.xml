@@ -4,7 +4,7 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M13-SNAPSHOT</version>
+      <version>1.2.0-M14-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-groovy</artifactId>
@@ -28,8 +28,23 @@
       </dependency>
 
       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-editor-java</artifactId>
+      </dependency>
+      
+       <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
+      
+      <dependency>
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.gwt</groupId>
+         <artifactId>exo-gwtframework-ui</artifactId>
       </dependency>
 
       <dependency>
@@ -37,10 +52,6 @@
          <artifactId>exo-ide-framework-client</artifactId>
       </dependency>
 
-      <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-editor-java</artifactId>
-      </dependency>
 
    </dependencies>
    <build>

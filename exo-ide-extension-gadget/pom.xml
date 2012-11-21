@@ -4,14 +4,14 @@
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M13-SNAPSHOT</version>
+      <version>1.2.0-M14-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-gadget</artifactId>
    <packaging>jar</packaging>
    <name>eXo IDE :: Extension :: Gadget</name>
    <dependencies>
-      <dependency>
+       <dependency>
          <groupId>org.apache.shindig</groupId>
          <artifactId>shindig-common</artifactId>
          <version>${shindig.version}</version>
@@ -39,103 +39,6 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-features</artifactId>
-         <version>${shindig.version}</version>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-gadgets</artifactId>
-         <version>${shindig.version}</version>
-         <exclusions>
-            <exclusion>
-               <groupId>nu.validator.htmlparser</groupId>
-               <artifactId>htmlparser</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.apache.tomcat</groupId>
-               <artifactId>el-api</artifactId>
-            </exclusion>
-             <exclusion>
-               <groupId>org.apache.tomcat</groupId>
-               <artifactId>jasper-el</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.apache.shindig</groupId>
-         <artifactId>shindig-social-api</artifactId>
-         <version>${shindig.version}</version>
-         <scope>runtime</scope>
-         <exclusions>
-            <exclusion>
-               <groupId>commons-betwixt</groupId>
-               <artifactId>commons-betwixt</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>net.sf.ezmorph</groupId>
-               <artifactId>ezmorph</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.apache.geronimo.specs</groupId>
-               <artifactId>geronimo-stax-api_1.0_spec</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>xpp3</groupId>
-               <artifactId>xpp3_min</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <dependency>
-         <groupId>org.exoplatform.jcr</groupId>
-         <artifactId>exo.jcr.component.core</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>javax.xml.stream</groupId>
-               <artifactId>stax-api</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>stax</groupId>
-               <artifactId>stax-api</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.codehaus.woodstox</groupId>
-              <artifactId>wstx-asl</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>xstream</groupId>
-              <artifactId>xstream</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.quartz-scheduler</groupId>
-              <artifactId>quartz</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.ow2.jotm</groupId>
-              <artifactId>jotm-core</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>com.sun.xml.stream</groupId>
-              <artifactId>sjsxp</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>javax.servlet</groupId>
-               <artifactId>servlet-api</artifactId>
-            </exclusion>
-         </exclusions>
-      </dependency>
-      <!--dependency>
-         <groupId>org.exoplatform.ws</groupId>
-         <artifactId>exo.ws.rest.core</artifactId>
-         <exclusions>
-           <exclusion>
-               <groupId>javax.xml.stream</groupId>
-               <artifactId>stax-api</artifactId>
-           </exclusion>
-         </exclusions>
-      </dependency-->
-      <dependency>
          <groupId>org.exoplatform.kernel</groupId>
          <artifactId>exo.kernel.commons</artifactId>
       </dependency>
@@ -150,34 +53,8 @@
          </exclusions>
       </dependency>
       <dependency>
-         <groupId>commons-io</groupId>
-         <artifactId>commons-io</artifactId>
-         <version>1.4</version>
-      </dependency>
-      <dependency>
-         <groupId>javax.jcr</groupId>
-         <artifactId>jcr</artifactId>
-         <version>1.0</version>
-      </dependency>
-      <dependency>
-         <groupId>org.json</groupId>
-         <artifactId>json</artifactId>
-         <version>20070829</version>
-      </dependency>
-      <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
-         <version>1.0</version>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-api</artifactId>
-         <scope>runtime</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-log4j12</artifactId>
-         <scope>test</scope>
       </dependency>
 
       <!-- Client side dependencies -->
@@ -191,6 +68,11 @@
          <groupId>org.exoplatform.gwt</groupId>
          <artifactId>exo-gwtframework-commons</artifactId>
          <scope>provided</scope>
+      </dependency>
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
       </dependency>
 
       <dependency>

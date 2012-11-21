@@ -4,7 +4,7 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-M13-SNAPSHOT</version>
+      <version>1.2.0-M14-SNAPSHOT</version>
    </parent>
 
    <artifactId>exo-ide-codeassistant-storage</artifactId>
@@ -48,11 +48,6 @@
          <groupId>javax.servlet</groupId>
          <artifactId>servlet-api</artifactId>
          <scope>provided</scope>
-      </dependency>
-      <dependency>
-         <groupId>junit</groupId>
-         <artifactId>junit</artifactId>
-         <scope>test</scope>
       </dependency>
       <dependency>
          <groupId>org.slf4j</groupId>
