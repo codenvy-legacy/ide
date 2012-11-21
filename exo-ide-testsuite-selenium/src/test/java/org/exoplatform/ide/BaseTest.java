@@ -102,7 +102,9 @@ public abstract class BaseTest
 
    protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
-   protected static String LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");
+   protected static String LOGIN_URL = "https://" + IDE_HOST + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
+   
+   protected static String STANDALONE_LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");;
 
    public static final String REST_CONTEXT = IDE_SETTINGS.getString("ide.rest.context");
 
@@ -110,7 +112,6 @@ public abstract class BaseTest
 
    public static final String WEBDAV_CONTEXT = IDE_SETTINGS.getString("ide.webdav.context");
 
-   //this two variables add after change in URL IDE
    public static String REST_CONTEXT_IDE = IDE_SETTINGS.getString("ide.rest.contenxt.ide");
 
    public static String ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
@@ -120,7 +121,7 @@ public abstract class BaseTest
 
    public static String ENTRY_POINT_URL = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
 
-   //for restore default hotkeys values in IDE
+   //for restore default values in IDE
    public final static String PRODUCTION_SERVICE_PREFIX = "production/ide-home/users/" + USER_NAME
       + "/settings/userSettings";
 
@@ -189,6 +190,7 @@ public abstract class BaseTest
             break;
          default :
             driver = new FirefoxDriver();
+            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
       }
 
       selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
@@ -203,25 +205,7 @@ public abstract class BaseTest
          }
          driver.get(APPLICATION_URL);
          waitIdeLoginPage();
-
-         if (isRunIdeUnderPortal())
-         {
-            loginInPortal();
-            selenium().open(APPLICATION_URL);
-            selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-            Thread.sleep(TestConstants.IDE_LOAD_PERIOD);
-
-            if (selenium().isElementPresent("//div[@id='eXo-IDE-container']"))
-            {
-               selenium().selectFrame("//div[@id='eXo-IDE-container']//iframe");
-            }
-            else
-            {
-               selenium().selectFrame("relative=top");
-            }
-         }
-
-         else if (isRunIdeAsStandalone())
+         if (isRunIdeAsStandalone())
          {
             IDE.LOGIN.waitStandaloneLogin();
             IDE.LOGIN.standaloneLogin(USER_NAME, USER_PASSWORD);
@@ -255,16 +239,6 @@ public abstract class BaseTest
    {
       selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url") + "')]", "1,1");
       selenium().waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
-   }
-
-   private void loginInPortal() throws Exception
-   {
-      selenium().open(REGISTER_IN_PORTAL);
-      Thread.sleep(TestConstants.SLEEP);
-      selenium().type("//input[@name='username']", USER_NAME);
-      selenium().type("//input[@name='password']", USER_PASSWORD);
-      selenium().click("//div[@id='UIPortalLoginFormAction']");
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
    }
 
    @AfterClass
@@ -579,7 +553,7 @@ public abstract class BaseTest
    public void waitIdeLoginPage() throws Exception
    {
 
-      if (SELENIUM_PORT.equals("8080"))
+      if (IDE_SETTINGS.getString("ide.port").equals("8080"))
       {
          IDE.LOGIN.waitStandaloneLoginPage();
       }
@@ -593,7 +567,7 @@ public abstract class BaseTest
    @AfterClass
    public static void killFireFox()
    {
-    
+
       if (IDE.POPUP.isAlertPresent())
       {
          IDE.POPUP.acceptAlert();
@@ -614,21 +588,21 @@ public abstract class BaseTest
       return false;
    }
 
-   protected static boolean isRunIdeAsTenant()
+   protected boolean isRunIdeAsTenant()
    {
-      return !isRunIdeAsStandalone()&&!isRunIdeAsShell();
-   }
-   
-   protected static boolean isRunIdeAsStandalone()
-   {
-      return IDE_SETTINGS.getString("ide.host").contains("localhost");
+      return !isRunIdeAsStandalone() && !isRunIdeAsShell();
    }
 
-   protected static boolean isRunIdeAsShell()
+   protected boolean isRunIdeAsStandalone()
    {
-      return Boolean.valueOf(IDE_SETTINGS.getString("ide.run.in.shell"));
+      return IDE_HOST.contains("localhost");
    }
- 
+
+   protected boolean isRunIdeAsShell()
+   {
+      return APPLICATION_URL.contains("IDE/Shell");
+   }
+
    protected boolean isRunTestUnderWindowsOS()
    {
       return selenium().getEval("/Win/.test(navigator.platform)").equals("true");

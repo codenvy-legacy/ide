@@ -20,6 +20,8 @@ package org.exoplatform.ide;
 
 import static org.junit.Assert.fail;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.commons.httpclient.Credentials;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.UsernamePasswordCredentials;
@@ -38,9 +40,14 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
@@ -53,8 +60,14 @@ public class Utils
 
    public static HttpURLConnection getConnection(URL url) throws IOException
    {
-      login();
-
+      if (BaseTest.IDE_HOST.contains("localhost"))
+      {
+         standaloneLogin();
+      }
+      else
+      {
+         login();
+      }
       HttpURLConnection connection = (HttpURLConnection)url.openConnection();
       connection.setRequestProperty("Referer", url.toString());
       connection.setAllowUserInteraction(false);
@@ -199,17 +212,22 @@ public class Utils
 
    }
 
-   private static void login() throws IOException
+   //login for standalone
+   /**
+    * login on standalone bundle
+    * @throws IOException
+    */
+   private static void standaloneLogin() throws IOException
    {
       if (CookieHandler.getDefault() == null)
          CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
 
-      if (isLogged())
+      if (isStandaloneLogged())
          return;
       HttpURLConnection http = null;
       try
       {
-         http = (HttpURLConnection)new URL(BaseTest.LOGIN_URL).openConnection();
+         http = (HttpURLConnection)new URL(BaseTest.STANDALONE_LOGIN_URL).openConnection();
          http.setRequestMethod("POST");
          http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
          http.setDoOutput(true);
@@ -230,7 +248,11 @@ public class Utils
       }
    }
 
-   private static boolean isLogged()
+   /**
+    * check user login or nut on standalone
+    * @return
+    */
+   private static boolean isStandaloneLogged()
    {
       HttpURLConnection http = null;
       BufferedReader reader = null;
@@ -269,6 +291,271 @@ public class Utils
          if (http != null)
          {
             http.disconnect();
+         }
+      }
+      return false;
+   }
+
+   // login for bundles cloud-ide with https (cloudtest, cloudtest2, staging and production servers)
+   // workaround: we make 5 attempts to login, until we become authorized on the server 
+   /**
+    * login for test servers, production server and staging 
+    */
+   private static void login()// throws IOException
+   {
+      CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
+      if (isLogged())
+         return;
+      HttpsURLConnection https1 = null;
+      HttpsURLConnection https2 = null;
+      HttpsURLConnection https3 = null;
+      HttpURLConnection http4 = null;
+      HttpURLConnection https5 = null;
+      HttpURLConnection https6 = null;
+      HttpURLConnection http = null;
+
+      try
+      {
+         String lOGIN_URL =
+            BaseTest.LOGIN_URL + "cloud/ide.jsp?username=" + BaseTest.USER_NAME + "&password=" + BaseTest.USER_PASSWORD;
+         System.err.println(lOGIN_URL);
+         https1 = (HttpsURLConnection)new URL(lOGIN_URL).openConnection();
+         https1.setRequestMethod("GET");
+         https1.setAllowUserInteraction(false);
+         https1.setInstanceFollowRedirects(true);
+         Map<String, List<String>> headerFields = https1.getHeaderFields();
+         Set<String> keySet = headerFields.keySet();
+
+         for (String key : keySet)
+         {
+            List<String> vals = headerFields.get(key);
+            for (String string : vals)
+            {
+               System.out.println("               " + key + " :: " + string);
+            }
+         }
+         System.err.println("     >>>>>>         " + https1.getResponseCode());
+         System.err.println("-----------------------------------------------------");
+
+         if (https1.getResponseCode() == 302)
+         {
+            String rediString = https1.getHeaderField("Location");
+            System.out.println("Now go to https1 : " + rediString);
+            http = (HttpURLConnection)new URL(rediString).openConnection();
+         }
+
+         http.setRequestMethod("GET");
+         http.setAllowUserInteraction(false);
+         http.setInstanceFollowRedirects(true);
+         headerFields = http.getHeaderFields();
+         keySet = headerFields.keySet();
+         for (String key : keySet)
+         {
+            List<String> vals = headerFields.get(key);
+            for (String string : vals)
+            {
+               System.out.println("               " + key + " :: " + string);
+            }
+         }
+
+         System.err.println("-----------------------------------------------------");
+         if (http.getResponseCode() == 302)
+         {
+            String rediString = http.getHeaderField("Location");
+            System.out.println("Now go to http: " + rediString);
+            https2 = (HttpsURLConnection)new URL(rediString).openConnection();
+         }
+         //------------------------------------------------3         
+         https2.setRequestMethod("GET");
+         https2.setAllowUserInteraction(false);
+         https2.setInstanceFollowRedirects(true);
+         headerFields = https2.getHeaderFields();
+         keySet = headerFields.keySet();
+         for (String key : keySet)
+         {
+            List<String> vals = headerFields.get(key);
+            for (String string : vals)
+            {
+               System.out.println("               " + key + " :: " + string);
+            }
+         }
+         if (http.getResponseCode() == 302)
+         {
+            String rediString = http.getHeaderField("Location");
+            System.out.println("Now go to https2: " + rediString);
+            https3 = (HttpsURLConnection)new URL(rediString).openConnection();
+         }
+
+         //--------------------------------------------4        
+         https3.setRequestMethod("GET");
+         https3.setAllowUserInteraction(false);
+         https3.setInstanceFollowRedirects(true);
+         headerFields = https3.getHeaderFields();
+         keySet = headerFields.keySet();
+         for (String key : keySet)
+         {
+            List<String> vals = headerFields.get(key);
+            for (String string : vals)
+            {
+               System.out.println("               " + key + " :: " + string);
+            }
+         }
+         if (https3.getResponseCode() == 302)
+         {
+            String rediString = https3.getHeaderField("Location");
+            System.out.println("Now go to https3: " + rediString);
+            http4 = (HttpURLConnection)new URL(rediString).openConnection();
+         }
+
+         //-----------------------------------------------
+         http4.setRequestMethod("GET");
+         http4.setAllowUserInteraction(false);
+         http4.setInstanceFollowRedirects(true);
+         headerFields = http4.getHeaderFields();
+         keySet = headerFields.keySet();
+         for (String key : keySet)
+         {
+            List<String> vals = headerFields.get(key);
+            for (String string : vals)
+            {
+               System.out.println("               " + key + " :: " + string);
+            }
+         }
+         if (http4.getResponseCode() == 302)
+         {
+            String rediString = http4.getHeaderField("Location");
+            System.out.println("Now go to https4: " + rediString);
+            https5 = (HttpURLConnection)new URL(rediString).openConnection();
+         }
+
+         //-----------------------------------------------
+         https5.setRequestMethod("GET");
+         https5.setAllowUserInteraction(false);
+         https5.setInstanceFollowRedirects(true);
+         headerFields = https5.getHeaderFields();
+         keySet = headerFields.keySet();
+         for (String key : keySet)
+         {
+            List<String> vals = headerFields.get(key);
+            for (String string : vals)
+            {
+               System.out.println("               " + key + " :: " + string);
+            }
+         }
+         if (https5.getResponseCode() == 302)
+         {
+            String rediString = https5.getHeaderField("Location");
+            System.out.println("Now go to https5: " + rediString);
+            https6 = (HttpURLConnection)new URL(rediString).openConnection();
+         }
+
+         //-----------------------------------------------
+         https6.setRequestMethod("GET");
+         https6.setAllowUserInteraction(false);
+         https6.setInstanceFollowRedirects(true);
+         headerFields = https6.getHeaderFields();
+         keySet = headerFields.keySet();
+         for (String key : keySet)
+         {
+            List<String> vals = headerFields.get(key);
+            for (String string : vals)
+            {
+               System.out.println("               " + key + " :: " + string);
+            }
+         }
+         if (https6.getResponseCode() == 302)
+         {
+            String rediString = https6.getHeaderField("Location");
+            System.out.println("Now go to https6: " + rediString);
+
+         }
+
+      }
+      catch (MalformedURLException e)
+      {
+         e.printStackTrace();
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         System.out.println("++++++++++++++++++++ https1 " + https1.getURL());
+         System.out.println("++++++++++++++++++++ http " + http.getURL());
+         System.out.println("++++++++++++++++++++ https2 " + https2.getURL());
+         System.out.println("++++++++++++++++++++ https3 " + https3.getURL());
+         System.out.println("++++++++++++++++++++ http4 " + http4.getURL());
+         System.out.println("++++++++++++++++++++ https5 " + https5.getURL());
+         System.out.println("++++++++++++++++++++ https6 " + https6.getURL());
+
+         if (https1 != null)
+            https1.disconnect();
+
+         if (http != null)
+            http.disconnect();
+
+         if (https2 != null)
+            https2.disconnect();
+
+         if (https3 != null)
+            https3.disconnect();
+
+         if (http4 != null)
+            http4.disconnect();
+
+         if (https5 != null)
+            https5.disconnect();
+
+         if (https6 != null)
+            https6.disconnect();
+
+      }
+
+   }
+
+   /**
+    * check login user on test servers, production server and staging
+    * @return
+    */
+   private static boolean isLogged()
+   {
+      HttpsURLConnection https = null;
+      BufferedReader reader = null;
+      try
+      {
+         // URL wsURL = new URL(BaseTest.APPLICATION_URL);
+
+         https = (HttpsURLConnection)new URL(BaseTest.LOGIN_URL + "cloud/ide.jsp").openConnection();
+         https.setRequestMethod("GET");
+         InputStream in = https.getInputStream();
+         reader = new BufferedReader(new InputStreamReader(in));
+         StringBuilder sb = new StringBuilder();
+
+         String line = null;
+         while ((line = reader.readLine()) != null)
+         {
+            sb.append(line);
+            sb.append('\n');
+         }
+         if (reader != null)
+         {
+            reader.close();
+         }
+         in.close();
+         return !sb.toString().contains("loginFormId");
+      }
+      catch (MalformedURLException e)
+      {
+      }
+      catch (IOException e)
+      {
+      }
+      finally
+      {
+         if (https != null)
+         {
+            https.disconnect();
          }
       }
       return false;
