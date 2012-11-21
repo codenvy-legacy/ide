@@ -130,25 +130,24 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.WELCOME_PAGE.close();
       IDE.WELCOME_PAGE.waitClose();
 
-      IDE.PROJECT.OPEN.openProject(PROJECT);
+      
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       
       
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
       IDE.CK_EDITOR.waitCkEditorOpened(1);
-      IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
-      checkLockStateButtonsOnUserCredentinal();
+//      IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
+    
       IDE.CK_EDITOR.deleteFileContentInCKEditor(1);
       IDE.CK_EDITOR.typeTextIntoCkEditor(1, "i try is change content");
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "s");
-      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
-      IDE.EDITOR.closeFile(0);
+     // assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
+     //IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "s");
+   //   IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+      IDE.EDITOR.forcedClosureFile(0);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
@@ -172,19 +171,4 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
    }
    
    
-   /**
-    * check enabled ulock icon and button on toolbar and Edit menu
-    * @throws Exception
-    */
-   private void checkLockStateButtonsOnUserCredentinal() throws Exception
-   {
-      IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
-      assertFalse(IDE.LOCK_FILE.isUnLockCommandActive());
-      IDE.MENU.clickOnLockLayer();
-      IDE.LOADER.waitClosed();
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
    }
-   
-
-}

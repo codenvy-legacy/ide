@@ -118,7 +118,7 @@ public class LocksByUserTest extends LockFileAbstract
       IDE.WELCOME_PAGE.waitClose();
 
       // open project as invite user
-      IDE.PROJECT.OPEN.openProject(PROJECT);
+     
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
