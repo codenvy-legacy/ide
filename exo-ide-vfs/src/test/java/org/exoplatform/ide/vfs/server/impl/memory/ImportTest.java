@@ -41,7 +41,7 @@ public class ImportTest extends MemoryFileSystemTest
             IOUtils.toByteArray(Thread.currentThread().getContextClassLoader()
                .getResourceAsStream("exo-ide-client.zip")), null);
       System.out.println("ImportTest :: " + response.getEntity());
-//      assertEquals(204, response.getStatus());
+      assertEquals(204, response.getStatus());
    }
 
 }
