@@ -46,9 +46,17 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Enumeration;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Created by The eXo Platform SAS.
@@ -70,7 +78,7 @@ public class VirtualFileSystemUtils
       try
       {
          URL url = new URL(storageUrl);
-         connection = Utils.getConnection(url);
+         connection = (HttpURLConnection)Utils.getConnection(url);
          String data = Utils.readFileAsString(filePath);
          connection.setRequestMethod(HTTPMethod.PUT);
          connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
@@ -306,7 +314,6 @@ public class VirtualFileSystemUtils
       return importZipProject(name, "src/test/resources/org/exoplatform/ide/project/default-selenium-test.zip");
    }
 
-   
    /**
     * create empty exo-project in IDE
     * @param name
@@ -317,9 +324,7 @@ public class VirtualFileSystemUtils
    {
       return importZipProject(name, "src/test/resources/org/exoplatform/ide/project/exo-project.zip");
    }
-   
-   
-   
+
    public static int createFile(Link link, String name, String mimeType, String content) throws IOException
    {
       if (link == null)
@@ -358,38 +363,48 @@ public class VirtualFileSystemUtils
    * @return map of the Link, related to created project
    * @throws IOException
    */
-      public static Map<String, Link> importZipProject(String projectName, String zipPath) throws IOException
+   public static Map<String, Link> importZipProject(String projectName, String zipPath) throws IOException
+   {
+      HttpURLConnection connection = null;
+      Map<String, Link> folderLiks = createFolder(projectName);
+      try
       {
+         //    System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Create folder in importzip project method");
+         Link href = folderLiks.get(Link.REL_IMPORT);
+         if (href == null)
+            throw new RuntimeException("Folder not created or 'import' relation not found.");
+         URL url = new URL(href.getHref());
+         connection = (HttpURLConnection)Utils.getConnection(url);
+         //  System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Connected URL Getted" + url);
+         connection.setRequestMethod("POST");
+         connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/zip");
+         connection.setDoOutput(true);
+         OutputStream outputStream = connection.getOutputStream();
+         //System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Set do Output and open output stream");
 
-         HttpURLConnection connection = null;
-         try
-         {
-            Map<String, Link> folderLiks = createFolder(projectName);
-            Link href = folderLiks.get(Link.REL_IMPORT);
-            if (href == null)
-               throw new RuntimeException("Folder not created or 'import' relation not found.");
-            URL url = new URL(href.getHref());
-            connection = Utils.getConnection(url);
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/zip");
-            connection.setDoOutput(true);
-            OutputStream outputStream = connection.getOutputStream();
-            File f = new File(zipPath);
-            FileInputStream inputStream = new FileInputStream(f);
-            IOUtils.copy(inputStream, outputStream);
-            inputStream.close();
-            outputStream.close();
-            connection.getResponseCode();
-            return folderLiks;
-         }
-         finally
-         {
-            if (connection != null)
-            {
-               connection.disconnect();
-            }
-         }
+         File f = new File(zipPath);
+         FileInputStream inputStream = new FileInputStream(f);
+         //System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Open File in input stream");
+         IOUtils.copy(inputStream, outputStream);
+         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Transfer data of the project");
+         inputStream.close();
+         outputStream.close();
+         connection.getResponseCode();
+         return folderLiks;
       }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+         return folderLiks;
+      }
+
+      catch (IllegalAccessError e)
+      {
+         e.printStackTrace();
+         return folderLiks;
+      }
+
+   }
 
    /**
     * Create folder in root.
@@ -399,25 +414,29 @@ public class VirtualFileSystemUtils
     * @throws IOException
     */
    @SuppressWarnings("unchecked")
-   private static Map<String, Link> createFolder(String name) throws IOException
+   private static Map<String, Link> createFolder(String name)
    {
-      if (rootLinks == null)
-      {
-         initVFS();
-      }
       HttpURLConnection connection = null;
       try
       {
+         if (rootLinks == null)
+         {
+            initVFS();
+         }
          String href = rootLinks.get(Link.REL_CREATE_FOLDER).getHref();
+         //    System.out.println("createFolder method step 1>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
          href = URLDecoder.decode(href, "UTF-8").replace("[name]", name);
+         //  System.out.println("createFolder method step 2>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
          URL url = new URL(href);
+         // System.out.println("createFolder method step 3>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
          connection = Utils.getConnection(url);
          connection.setRequestMethod("POST");
+         //System.out.println("createFolder method step 4>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
          JsonParser parser = new JsonParser();
          parser.parse(connection.getInputStream());
          connection.getInputStream().close();
          Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
-
+         //System.out.println("End create folder>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
          return (Map<String, Link>)ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(),
             parser.getJsonObject().getElement("links"));
       }
@@ -430,6 +449,10 @@ public class VirtualFileSystemUtils
          e.printStackTrace();
       }
       catch (NoSuchFieldException e)
+      {
+         e.printStackTrace();
+      }
+      catch (Exception e)
       {
          e.printStackTrace();
       }
@@ -485,14 +508,16 @@ public class VirtualFileSystemUtils
          connection = Utils.getConnection(url);
          connection.setRequestMethod("GET");
          JsonParser parser = new JsonParser();
-         System.out.println("VirtualFileSystemUtils.initVFS()" + connection.getResponseCode());
          parser.parse(connection.getInputStream());
+         //   System.out.println("VirtualFileSystemUtils.initVFS()" + connection.getResponseCode());
          connection.getInputStream().close();
          vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfo.class, parser.getJsonObject());
+         // System.out.println("InitVFS():<<<<<<<<<<<<<<<<<<<<<< createObject");
          JsonValue element = parser.getJsonObject().getElement("root").getElement("links");
-
+         // System.out.println("InitVFS():<<<<<<<<<<<<<<<<<<<<<< json Element");
          Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
          rootLinks = ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(), element);
+         //System.out.println("InitVFS():<<<<<<<<<<<<<<<<<<<<<< rootLinks");
       }
       catch (JsonException e)
       {
@@ -500,9 +525,15 @@ public class VirtualFileSystemUtils
       }
       catch (SecurityException e)
       {
+         e.printStackTrace();
       }
       catch (NoSuchFieldException e)
       {
+         e.printStackTrace();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
       }
       finally
       {
