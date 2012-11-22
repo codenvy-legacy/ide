@@ -35,10 +35,7 @@ public class OutlineModel
     */
    public interface OutlineModelListener
    {
-
       public void rootChanged(CodeBlock newRoot);
-
-      void nodeUpdated(CodeBlock node);
 
       void rootUpdated();
    }
@@ -52,11 +49,19 @@ public class OutlineModel
       return root;
    }
 
+   /**
+    * Set Listener 
+    * @param listener
+    */
    public void setListener(OutlineModelListener listener)
    {
       this.listener = listener;
    }
 
+   /**
+    * Set children's for root code block. 
+    * @param nodes new children's 
+    */
    public void setRootChildren(JsonArray<CodeBlock> nodes)
    {
       JsonArray<CodeBlock> rootChildren = root.getChildren();
@@ -68,6 +73,10 @@ public class OutlineModel
       }
    }
 
+   /**
+    * Set new root code block
+    * @param root code block
+    */
    public void updateRoot(CodeBlock root)
    {
       Assert.isNotNull(root);

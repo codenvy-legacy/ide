@@ -25,7 +25,7 @@ import org.exoplatform.ide.json.JsonArray;
  * be a function, a class, an object or just anonymous namespace.
  *
  * Code blocks have start offset relative to the file start, length,
- * type.
+ * type, children block and parent code block.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -33,7 +33,11 @@ import org.exoplatform.ide.json.JsonArray;
 public interface CodeBlock
 {
 
+   /**
+    * Type of root code block.  
+    */
    String ROOT_TYPE = "ROOT_TYPE";
+   
    /**
     * @return the type of this code block
     */

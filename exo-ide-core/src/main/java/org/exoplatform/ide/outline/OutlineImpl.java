@@ -38,6 +38,7 @@ import org.exoplatform.ide.tree.Tree.Listener;
 import org.exoplatform.ide.tree.TreeNodeElement;
 
 /**
+ * Default implementation of {@link OutlinePresenter}
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -105,11 +106,6 @@ public class OutlineImpl implements OutlinePresenter
             display.rootChanged(newRoot);
          }
 
-         @Override
-         public void nodeUpdated(CodeBlock node)
-         {
-            display.renderTree();
-         }
       });
    }
 

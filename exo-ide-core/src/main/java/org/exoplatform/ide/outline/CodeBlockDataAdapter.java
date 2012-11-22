@@ -32,8 +32,9 @@ import java.util.HashMap;
  */
 public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock>
 {
-   
-   private HashMap<CodeBlock, TreeNodeElement<CodeBlock>> renderNodes = new HashMap<CodeBlock, TreeNodeElement<CodeBlock>>();
+
+   private HashMap<CodeBlock, TreeNodeElement<CodeBlock>> renderNodes =
+      new HashMap<CodeBlock, TreeNodeElement<CodeBlock>>();
 
    /**
     * {@inheritDoc}
@@ -106,8 +107,6 @@ public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock>
    @Override
    public void setNodeName(CodeBlock data, String name)
    {
-      // TODO Auto-generated method stub
-      
    }
 
    /**
@@ -125,7 +124,6 @@ public class CodeBlockDataAdapter implements NodeDataAdapter<CodeBlock>
    @Override
    public CodeBlock getDragDropTarget(CodeBlock data)
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
