@@ -53,7 +53,7 @@ public class FilesListGrid extends ListGrid<FileModel> implements HasAllKeyHandl
 {
 
    private static final HashMap<String, String> mimeTypeImages = new HashMap<String, String>();
-
+   
    private String build(String image, String name)
    {
       String html = "<div style=\"height: 16px; padding:0px; margin:0px; line-height:16px;\">";
@@ -107,7 +107,9 @@ public class FilesListGrid extends ListGrid<FileModel> implements HasAllKeyHandl
       nameColumn.setCellStyleNames("default-cursor");
       getCellTable().addColumn(nameColumn);
 
-      getCellTable().setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+      //getCellTable().setKeyboardSelectionPolicy(KeyboardSelectionPolicy.BOUND_TO_SELECTION);
+      getCellTable().setKeyboardSelectionPolicy(KeyboardSelectionPolicy.ENABLED);
+      
       getCellTable().setKeyboardPagingPolicy(KeyboardPagingPolicy.CURRENT_PAGE);
    }
 

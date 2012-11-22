@@ -19,6 +19,7 @@
 package org.exoplatform.ide.client.project.explorer;
 
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.Window;
 
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
@@ -182,6 +183,8 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    private ApplicationSettings applicationSettings;
 
    private boolean ideLoadComplete = false;
+   
+   private List<String> itemsToBeOpened = new ArrayList<String>();   
 
    public ProjectExplorerPresenter()
    {
@@ -956,30 +959,10 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          return;
       }
 
-      //      if (!display.asView().isViewVisible())
-      //      {
-      //         display.asView().activate();
-      //      }
-
       if (display.selectItem(editorActiveFile.getId()))
       {
          return;
       }
-
-      // // If project explorer is not visible then display.selectItem() finds item in tree but does not selects it.
-      // if (display.asView().isViewVisible())
-      // {
-      // if (display.selectItem(editorActiveFile.getId()))
-      // {
-      // return;
-      // }
-      // }
-      // else
-      // {
-      // // First we need activate project explorer because
-      // // code below do not select item in tree.
-      // display.asView().activate();
-      // }
 
       // If we do not find item in tree then try to find item in VFS.
       String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
@@ -1005,8 +988,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       cyclicallyCheckItemsToBeRefreshed();
    }
 
-   private List<String> itemsToBeOpened = new ArrayList<String>();
-
    private void cyclicallyCheckItemsToBeRefreshed()
    {
       if (itemsToBeOpened.size() == 0)
@@ -1021,6 +1002,8 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
 
       String path = itemsToBeOpened.get(0);
+      itemsToBeOpened.remove(0);
+      
       try
       {
          VirtualFileSystem.getInstance().getItemByPath(path,
@@ -1029,7 +1012,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
                @Override
                protected void onSuccess(ItemWrapper result)
                {
-                  itemsToBeOpened.remove(0);
+                  //itemsToBeOpened.remove(0);
 
                   if (result.getItem() instanceof ProjectModel)
                   {
@@ -1050,7 +1033,14 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
                      itemToSelect = result.getItem().getId();
                   }
 
-                  cyclicallyCheckItemsToBeRefreshed();
+                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                  {
+                     @Override
+                     public void execute()
+                     {
+                        cyclicallyCheckItemsToBeRefreshed();
+                     }
+                  });
                }
 
                @Override
