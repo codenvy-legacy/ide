@@ -25,7 +25,7 @@
       <org.exoplatform.kernel.version>2.3.8-CR01</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.8-CR01</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.8-CR01</org.exoplatform.ws.version>
-      <org.exoplatform.vfs.version>1.2.0-M11-SNAPSHOT</org.exoplatform.vfs.version>
+      <org.exoplatform.vfs.version>1.2.0-M12</org.exoplatform.vfs.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->

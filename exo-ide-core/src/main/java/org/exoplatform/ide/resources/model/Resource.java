@@ -47,9 +47,10 @@ public abstract class Resource
    /** Links. */
    protected JsonStringMap<Link> links;
 
-   // item context
+   /** Parent Project */
    protected Project project;
 
+   /** Parent Folder */
    protected Folder parent;
 
    /**
@@ -196,12 +197,7 @@ public abstract class Resource
     */
    public void setParent(Folder parent)
    {
-      if (this.parent != null)
-      {
-         this.parent.removeChild(this);
-      }
       this.parent = parent;
-      parent.addChild(this);
    }
 
    /**

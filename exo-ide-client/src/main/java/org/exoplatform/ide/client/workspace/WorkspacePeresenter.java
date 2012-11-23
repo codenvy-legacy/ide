@@ -17,13 +17,27 @@
 package org.exoplatform.ide.client.workspace;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.PopupPanel;
+import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+import elemental.html.Element;
+import elemental.html.TableCellElement;
+import elemental.html.TableElement;
 
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
 import org.exoplatform.ide.client.event.FileEvent;
@@ -39,6 +53,7 @@ import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.java.client.JavaExtension;
+import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.part.PartAgentPresenter;
@@ -48,6 +63,9 @@ import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Property;
+import org.exoplatform.ide.ui.list.SimpleList;
+import org.exoplatform.ide.ui.list.SimpleList.View;
+import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.loging.Log;
 
 import java.util.Date;
@@ -87,10 +105,13 @@ public class WorkspacePeresenter implements Presenter
 
    private final EditorAgent editorAgent;
 
+   protected final Resources resources;
+
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
-      final ResourceProvider resourceManager, final ExpressionManager expressionManager, PartAgentPresenter partAgent, JavaExtension javaExtension, ExtensionsPage extensionsPage)
+      final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
+      JavaExtension javaExtension, ExtensionsPage extensionsPage, Resources resources)
 
    {
       super();
@@ -100,6 +121,7 @@ public class WorkspacePeresenter implements Presenter
       this.menuPresenter = menuPresenter;
       this.editorAgent = editorAgent;
       this.partAgent = partAgent;
+      this.resources = resources;
 
       // FOR DEMO
       // REGISTRE EXPRESSIONS
@@ -108,16 +130,16 @@ public class WorkspacePeresenter implements Presenter
 
       EditorActiveExpression editorActiveExpression = new EditorActiveExpression();
       expressionManager.registerExpression(editorActiveExpression);
-      
-      
+
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
       menuPresenter.addMenuItem("File/New/new Project", null);
+      menuPresenter.addMenuItem("File/Open Project", new OpenProjectCommand(resourceProvider));
 
       // CREATE DYNAMIC MENU CONTENT
-      menuPresenter.addMenuItem("File/Create Demo Content", null, new CreadDemoContentCommand(resourceManager), null,
+      menuPresenter.addMenuItem("File/Create Demo Content", null, new CreateDemoContentCommand(resourceProvider), null,
          noProjectOpenedExpression);
-      
+
       menuPresenter.addMenuItem("Edit", null, null, editorActiveExpression, null);
       menuPresenter.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
 
@@ -161,24 +183,24 @@ public class WorkspacePeresenter implements Presenter
          {
             if (event.getOperationType() == FileOperation.OPEN)
             {
-//               // Set up the callback object.
-//               AsyncCallback<File> callback = new AsyncCallback<File>()
-//               {
-//                  @Override
-//                  public void onFailure(Throwable caught)
-//                  {
-//                     GWT.log("error" + caught);
-//                  }
-//
-//                  @Override
-//                  public void onSuccess(File file)
-//                  {
-//                     openFile(file);
-//                  }
-//               };
-//
-//               Project project = event.getFile().getProject();
-//               project.getContent(event.getFile(), callback);
+               //               // Set up the callback object.
+               //               AsyncCallback<File> callback = new AsyncCallback<File>()
+               //               {
+               //                  @Override
+               //                  public void onFailure(Throwable caught)
+               //                  {
+               //                     GWT.log("error" + caught);
+               //                  }
+               //
+               //                  @Override
+               //                  public void onSuccess(File file)
+               //                  {
+               //                     openFile(file);
+               //                  }
+               //               };
+               //
+               //               Project project = event.getFile().getProject();
+               //               project.getContent(event.getFile(), callback);
                editorAgent.openEditor(event.getFile());
 
                //fileSystemService.getFileContent(event.getFileName(), callback);
@@ -246,16 +268,15 @@ public class WorkspacePeresenter implements Presenter
    }
 
    // FOR DEMO:
-   private final class CreadDemoContentCommand implements Command
+   private final class CreateDemoContentCommand implements Command
    {
       private final ResourceProvider resourceManager;
 
-      private CreadDemoContentCommand(ResourceProvider resourceManager)
+      private CreateDemoContentCommand(ResourceProvider resourceManager)
       {
          this.resourceManager = resourceManager;
       }
 
-      @SuppressWarnings("rawtypes")
       @Override
       public void execute()
       {
@@ -267,7 +288,7 @@ public class WorkspacePeresenter implements Presenter
                @Override
                public void onSuccess(final Project project)
                {
-                  project.createFolder(project, "Test Folder", new AsyncCallback<Folder>()
+                  project.createFolder(project, "Parent Folder/Test Folder", new AsyncCallback<Folder>()
                   {
 
                      @Override
@@ -305,22 +326,21 @@ public class WorkspacePeresenter implements Presenter
                                  GWT.log("Error creating demo folder" + caught);
                               }
                            });
-                        project.createFile(result, "styles.css", ".test{\n\n}",
-                           "text/css", new AsyncCallback<File>()
-                           {
-                           
+                        project.createFile(result, "styles.css", ".test{\n\n}", "text/css", new AsyncCallback<File>()
+                        {
+
                            @Override
                            public void onSuccess(File result)
                            {
                               // ok
                            }
-                           
+
                            @Override
                            public void onFailure(Throwable caught)
                            {
                               Log.error(getClass(), caught);
                            }
-                           });
+                        });
 
                      }
 
@@ -339,6 +359,157 @@ public class WorkspacePeresenter implements Presenter
                   GWT.log("Error creating demo content" + caught);
                }
             });
+      }
+   }
+
+   /**
+    * Opens new project.
+    * TODO : Extract dialog as framework UI component
+    */
+   private final class OpenProjectCommand implements Command
+   {
+      private final ResourceProvider resourceProvider;
+
+      private SimpleList<String> list;
+
+      private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>()
+      {
+         @Override
+         public void render(Element itemElement, String itemData)
+         {
+            TableCellElement label = Elements.createTDElement();
+            label.setInnerHTML(itemData);
+            itemElement.appendChild(label);
+         }
+
+         @Override
+         public Element createElement()
+         {
+            return Elements.createTRElement();
+         }
+      };
+
+      private SimpleList.ListEventDelegate<String> listDelegate = new SimpleList.ListEventDelegate<String>()
+      {
+         @Override
+         public void onListItemClicked(Element itemElement, String itemData)
+         {
+            Log.info(this.getClass(), "onListItemClicked ", itemElement);
+            list.getSelectionModel().setSelectedItem(itemData);
+         }
+
+         @Override
+         public void onListItemDoubleClicked(Element listItemBase, String itemData)
+         {
+            Log.info(this.getClass(), "onListItemDoubleClicked ", itemData);
+            //                     Assert.isNotNull(delegate);
+            //                     delegate.onSelect(itemData);
+         }
+      };
+
+      /**
+       * 
+       */
+      @Inject
+      public OpenProjectCommand(ResourceProvider resourceProvider)
+      {
+         // TODO : create list wrapper, so it can be used as GWT Widget
+         this.resourceProvider = resourceProvider;
+
+         TableElement tableElement = Elements.createTableElement();
+         tableElement.setAttribute("style", "width: 100%");
+         list =
+            SimpleList.create((View) tableElement, resources.defaultSimpleListCss(), listItemRenderer,
+               listDelegate);
+      }
+
+      /**
+      * {@inheritDoc}
+      */
+      @Override
+      public void execute()
+      {
+
+         resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
+         {
+            @Override
+            public void onSuccess(JsonArray<String> result)
+            {
+               final PopupPanel dialogBox = createDialog(result);
+               dialogBox.center();
+               dialogBox.show();
+            }
+
+            @Override
+            public void onFailure(Throwable caught)
+            {
+               Log.error(OpenProjectCommand.class, "can't list projects", caught);
+            }
+         });
+
+      }
+
+      /**
+       * @return
+       */
+      public PopupPanel createDialog(JsonArray<String> projects)
+      {
+
+         final DialogBox dialogBox = new DialogBox();
+         dialogBox.setText("Open the project");
+
+         ScrollPanel listPanel = new ScrollPanel();
+         listPanel.setSize("100%", "100%");
+         listPanel.getElement().appendChild((Node)list.getView().getElement());
+         dialogBox.setTitle("Select a project");
+         dialogBox.setText("Select a project, please");
+
+         DockLayoutPanel content = new DockLayoutPanel(Unit.PX);
+         content.setSize("300px", "300px");
+         FlowPanel bottomPanel = new FlowPanel();
+         content.addSouth(bottomPanel, 24);
+         content.add(listPanel);
+
+         dialogBox.setWidget(content);
+
+         Button closeButton = new Button("cancel", new ClickHandler()
+         {
+            @Override
+            public void onClick(ClickEvent event)
+            {
+               dialogBox.hide();
+            }
+         });
+         Button okButton = new Button("ok", new ClickHandler()
+         {
+            @Override
+            public void onClick(ClickEvent event)
+            {
+               Log.info(this.getClass(), "onClick = ", list.getSelectionModel().getSelectedItem());
+               if (list.getSelectionModel().getSelectedItem() != null)
+               {
+                  String selectedItem = list.getSelectionModel().getSelectedItem();
+                  resourceProvider.getProject(selectedItem, new AsyncCallback<Project>()
+                  {
+                     @Override
+                     public void onSuccess(Project result)
+                     {
+                        dialogBox.hide();
+                     }
+
+                     @Override
+                     public void onFailure(Throwable caught)
+                     {
+                        Log.error(OpenProjectCommand.class, "can't open projects", caught);
+                     }
+                  });
+               }
+            }
+         });
+         bottomPanel.add(closeButton);
+         bottomPanel.add(okButton);
+         list.render(projects);
+         return dialogBox;
       }
    }
 

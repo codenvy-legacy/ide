@@ -17,7 +17,8 @@
 package org.exoplatform.ide.commons.exception;
 
 /**
- * Created by The eXo Platform SAS.
+ * Created by The eXo Platform SAS. Notifies about unmarshalling error accured.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
 */
@@ -25,9 +26,15 @@ package org.exoplatform.ide.commons.exception;
 public class UnmarshallerException extends Exception
 {
 
-   public UnmarshallerException(String message)
+   /**
+    * Creates an Instance of {@link UnauthorizedException} with message and root cause
+    * 
+    * @param message
+    * @param cause
+    */
+   public UnmarshallerException(String message, Throwable cause)
    {
-      super(message);
+      super(message, cause);
    }
 
 }

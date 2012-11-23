@@ -26,13 +26,11 @@ import org.exoplatform.ide.json.JsonStringSet;
  */
 public class ProjectDescription
 {
-   
+
    public static final String PROPERTY_PRIMARY_NATURE = "nature.primary";
-   
-   
+
    public static final String PROPERTY_MIXIN_NATURES = "nature.mixin";
-   public static final String PROPERTY_SOURCE_FOLDERS = "folders.source";
-   
+
    /** Properties. */
    protected Project project;
 
@@ -48,7 +46,7 @@ public class ProjectDescription
    {
       return (String)project.getPropertyValue(PROPERTY_PRIMARY_NATURE);
    }
-   
+
    /**
     * @return The set of Mixin natures or empty set 
     */
@@ -58,29 +56,18 @@ public class ProjectDescription
    }
 
    /**
-    * @return The set of Project's source folders or empty set.
-    */
-   public JsonStringSet getSourceFolders()
-   {
-      return asStringSet(PROPERTY_SOURCE_FOLDERS);
-   }
-   
-   /**
     * @param property
     * @return
     */
-   private JsonStringSet asStringSet(String propertyName)
+   protected JsonStringSet asStringSet(String propertyName)
    {
       Property property = project.getProperty(propertyName);
       JsonStringSet natures = JsonCollections.createStringSet();
-      if (property!=null)
+      if (property != null)
       {
          natures.addAll(property.getValue());
       }
       return natures;
    }
-   
-   
-   
-   
+
 }

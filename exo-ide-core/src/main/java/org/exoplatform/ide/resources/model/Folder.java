@@ -51,7 +51,7 @@ public class Folder extends Resource
       this.mimeType = mimeType;
    }
 
-   protected Folder(JSONObject itemObject)
+   public Folder(JSONObject itemObject)
    {
       this();
       init(itemObject);
@@ -123,6 +123,25 @@ public class Folder extends Resource
    }
 
    /**
+    * Looks for the Child Resource, without recursive calls.
+    * 
+    * @param id
+    * @return resource or null if not found
+    */
+   public Resource findChildById(String id)
+   {
+      for (int i = 0; i < children.size(); i++)
+      {
+         Resource child = children.get(i);
+         if (child.getId().equals(id))
+         {
+            return child;
+         }
+      }
+      return null;
+   }
+
+   /**
     * Recursively looks for the Resource
     * 
     * @param name
@@ -152,13 +171,15 @@ public class Folder extends Resource
    }
 
    /**
-    * internal add to list
+    * Internal add to list.
+    * Sets proper parent
     * 
     * @param resource
     */
-   void addChild(Resource resource)
+   public void addChild(Resource resource)
    {
       children.add(resource);
+      resource.setParent(this);
    }
 
    /**
@@ -166,7 +187,7 @@ public class Folder extends Resource
     * 
     * @param resource
     */
-   void removeChild(Resource resource)
+   public void removeChild(Resource resource)
    {
       children.remove(resource);
       resource.setParent(null);

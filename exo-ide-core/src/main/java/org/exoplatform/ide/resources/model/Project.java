@@ -24,15 +24,16 @@ import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
+import org.exoplatform.ide.resources.VirtualFileSystemInfo;
 import org.exoplatform.ide.resources.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FileUnmarshaller;
+import org.exoplatform.ide.resources.marshal.FolderTreeUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.resources.marshal.JSONDeserializer;
 import org.exoplatform.ide.resources.marshal.JSONSerializer;
@@ -51,18 +52,18 @@ public class Project extends Folder
 {
    public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
 
-   public static final String TYPE = "project.generic";
+   public static final String TYPE = "project";
 
-   protected ProjectDescription description = new ProjectDescription(this);
+   private ProjectDescription description;
 
    /** Properties. */
    protected JsonArray<Property> properties;
 
-   protected ResourceProvider provider;
-
    private Loader loader;
 
-   private final EventBus eventBus;
+   protected final EventBus eventBus;
+
+   private VirtualFileSystemInfo vfsInfo;
 
    /**
     * Constructor for empty project. Used for serialization only.
@@ -72,6 +73,7 @@ public class Project extends Folder
    public Project(EventBus eventBus)
    {
       super(TYPE, PROJECT_MIME_TYPE);
+      this.description = new ProjectDescription(this);
       this.properties = JsonCollections.<Property> createArray();
       this.eventBus = eventBus;
       // TODO : receive it in some way
@@ -91,6 +93,11 @@ public class Project extends Folder
       links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
       //projectType = (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
       // TODO Unmarshall children 
+   }
+
+   public void setVFSInfo(VirtualFileSystemInfo vfsInfo)
+   {
+      this.vfsInfo = vfsInfo;
    }
 
    public ProjectDescription getDescription()
@@ -211,13 +218,10 @@ public class Project extends Folder
             @Override
             protected void onSuccess(File newFile)
             {
-               // initialize file after unmarshaling
-               File file = newFile;
                // add to the list of items
-               file.setParent(parent);
-               //parent.addChild(file);
+               parent.addChild(newFile);
                // set proper parent project
-               file.setProject(Project.this);
+               newFile.setProject(Project.this);
                eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFile));
                callback.onSuccess(newFile);
             }
@@ -250,7 +254,7 @@ public class Project extends Folder
     * @param callback
     * @throws ResourceException
     */
-   public void createFolder(final Folder parent, String name, final AsyncCallback<Folder> callback)
+   public void createFolder(final Folder parent, final String name, final AsyncCallback<Folder> callback)
    {
       try
       {
@@ -261,17 +265,37 @@ public class Project extends Folder
             new AsyncRequestCallback<Folder>(new FolderUnmarshaller(new Folder()))
             {
                @Override
-               protected void onSuccess(Folder newFolder)
+               protected void onSuccess(final Folder folder)
                {
-                  // initialize file after unmarshaling
-                  Folder folder = newFolder;
-                  // add to the list of items
-                  folder.setParent(parent);
-                  //parent.addChild(folder);
-                  // set proper parent project
-                  folder.setProject(Project.this);
-                  eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
-                  callback.onSuccess(newFolder);
+                  if (name.contains("/"))
+                  {
+                     // refresh tree, cause additional hierarchy folders my have been created
+                     refreshTree(parent, new AsyncCallback<Folder>()
+                     {
+                        @Override
+                        public void onSuccess(Folder result)
+                        {
+                           Folder newFolder = (Folder)result.findResourceById(folder.getId());
+                           eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(newFolder));
+                           callback.onSuccess(newFolder);
+                        }
+
+                        @Override
+                        public void onFailure(Throwable exception)
+                        {
+                           callback.onFailure(exception);
+                        }
+                     });
+                  }
+                  else
+                  {
+                     // add to the list of items
+                     parent.addChild(folder);
+                     // set proper parent project
+                     folder.setProject(Project.this);
+                     eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(folder));
+                     callback.onSuccess(folder);
+                  }
                }
 
                @Override
@@ -286,6 +310,69 @@ public class Project extends Folder
          urlString = URL.encode(urlString);
          loader.setMessage("Creating new folder...");
          AsyncRequest.build(RequestBuilder.POST, urlString).loader(loader).send(internalCallback);
+      }
+      catch (Exception e)
+      {
+         callback.onFailure(e);
+      }
+   }
+
+   /**
+    * Reads or Refreshes full Project Structure tree. This can be a costly operation, since 
+    * 
+    * @param callback
+    */
+   public void refreshTree(final AsyncCallback<Project> callback)
+   {
+      refreshTree(this, new AsyncCallback<Folder>()
+      {
+         @Override
+         public void onSuccess(Folder result)
+         {
+            eventBus.fireEvent(ResourceChangedEvent.createResourceTreeRefreshedEvent(Project.this));
+            callback.onSuccess(Project.this);
+         }
+
+         @Override
+         public void onFailure(Throwable exception)
+         {
+            callback.onFailure(exception);
+         }
+      });
+   }
+
+   /**
+    * If new folder created with relative path, but not the name, i.e. "new_parent/parent/parentC/newFolder", then
+    * need to refresh the tree of the folders, since new folders may have been created by the server-side.
+    * 
+    * @param root
+    * @param newFolderId
+    * @param callback
+    */
+   protected void refreshTree(final Folder root, final AsyncCallback<Folder> callback)
+   {
+      try
+      {
+         // create internal wrapping Request Callback with proper Unmarshaller
+         AsyncRequestCallback<Folder> internalCallback =
+            new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(root, root.getProject()))
+            {
+               @Override
+               protected void onSuccess(Folder refreshedRoot)
+               {
+                  callback.onSuccess(refreshedRoot);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  callback.onFailure(exception);
+               }
+            };
+
+         String url = vfsInfo.getUrlTemplates().get(Link.REL_TREE).getHref();
+         url = URL.decode(url).replace("[id]", root.getId());
+         AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
       }
       catch (Exception e)
       {
@@ -522,7 +609,9 @@ public class Project extends Folder
             protected void onSuccess(Void result)
             {
                // TODO : check consistency
-               source.setParent(destination);
+               source.getParent().removeChild(source);
+               destination.addChild(source);
+
                eventBus.fireEvent(ResourceChangedEvent.createResourceMovedEvent(source));
                callback.onSuccess(source);
             }
@@ -678,7 +767,7 @@ public class Project extends Folder
     * @param resource
     * @throws ResourceException
     */
-   private void checkItemValid(final Resource resource) throws Exception
+   protected void checkItemValid(final Resource resource) throws Exception
    {
       if (resource == null)
       {

@@ -47,6 +47,7 @@ public class StyleInjector
       resources.editorSelectionLineRendererCss().ensureInjected();
       resources.lineNumberRendererCss().ensureInjected();
       resources.treeCss().ensureInjected();
+      resources.defaultSimpleListCss().ensureInjected();
       resources.workspaceEditorBufferCss().ensureInjected();
       resources.workspaceEditorCss().ensureInjected();
       resources.workspaceEditorCursorCss().ensureInjected();

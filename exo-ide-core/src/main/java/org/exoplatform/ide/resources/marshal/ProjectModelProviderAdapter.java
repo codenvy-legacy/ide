@@ -57,14 +57,17 @@ public class ProjectModelProviderAdapter
    {
       // find primary nature
       String primaryNature = null;
-      for (int i = 0; i < props.size(); i++)
+      if (props != null)
       {
-         Property p = props.get(i);
-         if (ProjectDescription.PROPERTY_PRIMARY_NATURE.equals(p.getName()))
+         for (int i = 0; i < props.size(); i++)
          {
-            if ( p.getValue().get(0)!=null)
+            Property p = props.get(i);
+            if (ProjectDescription.PROPERTY_PRIMARY_NATURE.equals(p.getName()))
             {
-               primaryNature = p.getValue().get(0).toString();
+               if (p.getValue().get(0) != null)
+               {
+                  primaryNature = p.getValue().get(0).toString();
+               }
             }
          }
       }

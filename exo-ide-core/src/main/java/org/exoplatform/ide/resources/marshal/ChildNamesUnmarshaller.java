@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+pal * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,59 +19,73 @@
 package org.exoplatform.ide.resources.marshal;
 
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.resources.model.Project;
-import org.exoplatform.ide.resources.model.Property;
+import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.rest.Unmarshallable;
 
 /**
- * Unmarshaller for {@link Project}
  * 
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProviderAdapter>
+public class ChildNamesUnmarshaller implements Unmarshallable<JsonArray<String>>
 {
+   private final JsonArray<String> items;
 
-   private final ProjectModelProviderAdapter modelProviderAdapter;
-
-   // TODO should read whole Project structure
-   public ProjectModelUnmarshaller(ProjectModelProviderAdapter modelProviderAdapter)
+   /**
+    * @param items
+    */
+   public ChildNamesUnmarshaller()
    {
-      this.modelProviderAdapter = modelProviderAdapter;
+      super();
+      this.items = JsonCollections.createArray();
+      this.items.clear();
    }
 
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
-   @SuppressWarnings({"rawtypes", "unchecked"})
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
       try
       {
-         // Read Primary nature of the project
-         JSONObject jsonObject = JSONParser.parseLenient(response.getText()).isObject();
-         JsonArray<Property> properties =
-            JSONDeserializer.PROPERTY_DESERIALIZER.toList(jsonObject.get("properties"));
-         // Create project instance using ModelProvider
-         modelProviderAdapter.init(properties).init(jsonObject);
+         JSONValue jsonValue = JSONParser.parseLenient(response.getText());
+         parseItems(jsonValue.isObject().get("items").isArray());
       }
       catch (Exception exc)
       {
-         String message = "Can't parse item " + response.getText();
+         String message = "Can't parse folder content at <b>" + "id" + "</b>! ";
          throw new UnmarshallerException(message, exc);
       }
-
    }
 
    @Override
-   public ProjectModelProviderAdapter getPayload()
+   public JsonArray<String> getPayload()
    {
-      return this.modelProviderAdapter;
+      return this.items;
+   }
+
+   /**
+    * Parse JSON Array as the list of names
+    * 
+    * @param itemsArray JSON array
+    * @return list of children items
+    */
+   private void parseItems(JSONArray itemsArray)
+   {
+      for (int i = 0; i < itemsArray.size(); i++)
+      {
+         // get Json Object
+         JSONObject object = itemsArray.get(i).isObject();
+         // get name
+         String name = object.get("name").isString().stringValue();
+         items.add(name);
+      }
    }
 
 }

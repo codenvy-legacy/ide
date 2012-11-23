@@ -72,6 +72,14 @@ public interface ResourceProvider extends Component
     */
    public void createProject(String name, JsonArray<Property> properties, AsyncCallback<Project> callback);
 
+   
+   /**
+    * Experimental and to be changed: List all projects stored on vfs
+    * 
+    * @param callback
+    */
+   public void listProjects(AsyncCallback<JsonArray<String>> callback); 
+   
    /**
     * Registers ModelProvider instance for given Primary Project Nature
     * 

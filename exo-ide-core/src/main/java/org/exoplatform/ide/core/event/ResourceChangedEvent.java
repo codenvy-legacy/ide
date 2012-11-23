@@ -31,7 +31,7 @@ public class ResourceChangedEvent extends GwtEvent<ResourceChangedHandler>
    public static Type<ResourceChangedHandler> TYPE = new Type<ResourceChangedHandler>();
 
    public static enum ResourceAction {
-      CREATED, DELETED, RENAMED, MOVED;
+      CREATED, DELETED, TREE_REFRESHED, RENAMED, MOVED;
    }
 
    private final Resource resource;
@@ -51,6 +51,11 @@ public class ResourceChangedEvent extends GwtEvent<ResourceChangedHandler>
    public static ResourceChangedEvent createResourceRenamedEvent(Resource resource)
    {
       return new ResourceChangedEvent(resource, ResourceAction.RENAMED);
+   }
+   
+   public static ResourceChangedEvent createResourceTreeRefreshedEvent(Resource resource)
+   {
+      return new ResourceChangedEvent(resource, ResourceAction.TREE_REFRESHED);
    }
 
    public static ResourceChangedEvent createResourceMovedEvent(Resource resource)

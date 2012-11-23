@@ -65,7 +65,7 @@ public class File extends Resource
       super(itemType);
    }
 
-   protected File(JSONObject itemObject)
+   public File(JSONObject itemObject)
    {
       this();
       init(itemObject);

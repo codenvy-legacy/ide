@@ -55,7 +55,7 @@ public class FileUnmarshaller implements Unmarshallable<File>
       catch (Exception exc)
       {
          String message = "Can't parse item " + response.getText();
-         throw new UnmarshallerException(message);
+         throw new UnmarshallerException(message, exc);
       }
 
    }

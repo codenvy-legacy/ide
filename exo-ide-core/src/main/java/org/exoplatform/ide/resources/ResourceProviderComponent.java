@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ide.resources;
 
-import com.google.inject.name.Named;
-
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
@@ -26,6 +24,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ResourceException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
@@ -39,6 +38,7 @@ import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.json.JsonStringSet;
 import org.exoplatform.ide.loader.Loader;
+import org.exoplatform.ide.resources.marshal.ChildNamesUnmarshaller;
 import org.exoplatform.ide.resources.marshal.JSONSerializer;
 import org.exoplatform.ide.resources.marshal.ProjectModelProviderAdapter;
 import org.exoplatform.ide.resources.marshal.ProjectModelUnmarshaller;
@@ -170,9 +170,27 @@ public class ResourceProviderComponent implements ResourceProvider
             {
                Project project = result.getProject();
                project.setParent(vfsInfo.getRoot());
+               project.setVFSInfo(vfsInfo);
+               vfsInfo.getRoot().addChild(project);
+
                activeProject = project;
-               eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
-               callback.onSuccess(project);
+               // get project structure
+               project.refreshTree(new AsyncCallback<Project>()
+               {
+                  @Override
+                  public void onSuccess(Project project)
+                  {
+                     eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                     callback.onSuccess(project);
+                  }
+
+                  @Override
+                  public void onFailure(Throwable exception)
+                  {
+                     callback.onFailure(exception);
+                  }
+               });
+
             }
 
             @Override
@@ -182,9 +200,45 @@ public class ResourceProviderComponent implements ResourceProvider
             }
          };
 
-      String param = "propertyFilter=*&itemType=" + Project.TYPE;
       try
       {
+         // get Project Item by path
+         String url = vfsInfo.getUrlTemplates().get((Link.REL_ITEM_BY_PATH)).getHref() + "?itemType=" + Project.TYPE;
+         url = URL.decode(url).replace("[path]", name);
+         AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
+      {
+         callback.onFailure(e);
+      }
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public void listProjects(final AsyncCallback<JsonArray<String>> callback)
+   {
+      // internal callback
+      AsyncRequestCallback<JsonArray<String>> internalCallback =
+         new AsyncRequestCallback<JsonArray<String>>(new ChildNamesUnmarshaller())
+         {
+            @Override
+            protected void onSuccess(JsonArray<String> result)
+            {
+               callback.onSuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               callback.onFailure(exception);
+            }
+         };
+
+      try
+      {
+         String param = "propertyFilter=*& itemType=" + Project.TYPE;
          AsyncRequest
             .build(RequestBuilder.GET, vfsInfo.getRoot().getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
             .loader(loader).send(internalCallback);
@@ -193,6 +247,7 @@ public class ResourceProviderComponent implements ResourceProvider
       {
          callback.onFailure(e);
       }
+
    }
 
    /**
@@ -214,10 +269,28 @@ public class ResourceProviderComponent implements ResourceProvider
             {
                Project project = result.getProject();
                project.setParent(rootFolder);
+               rootFolder.addChild(project);
                project.setProject(project);
+               project.setVFSInfo(vfsInfo);
                activeProject = project;
-               eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
-               callback.onSuccess(project);
+
+               // get project structure
+               project.refreshTree(new AsyncCallback<Project>()
+               {
+                  @Override
+                  public void onSuccess(Project project)
+                  {
+                     eventBus.fireEvent(ProjectActionEvent.createProjectOpenedEvent(project));
+                     callback.onSuccess(project);
+                  }
+
+                  @Override
+                  public void onFailure(Throwable exception)
+                  {
+                     callback.onFailure(exception);
+                  }
+               });
+
             }
 
             @Override
