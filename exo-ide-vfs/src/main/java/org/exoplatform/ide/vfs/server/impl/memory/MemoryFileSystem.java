@@ -1133,7 +1133,7 @@ public class MemoryFileSystem implements VirtualFileSystem
             final String name = segments[segments.length - 1];
             if (zipEntry.isDirectory())
             {
-               if (current.getChild(name) != null)
+               if (current.getChild(name) == null)
                {
                   current.addChild(new MemoryFolder(name));
                }

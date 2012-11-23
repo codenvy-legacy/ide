@@ -54,27 +54,7 @@ import javax.jcr.Workspace;
 public class Base
 {
 
-   public static final String WS_NAME = "ws";
-
-   public static final String REPO_NAME = "db1";
-
-   protected static SessionImpl session;
-
-   protected static RepositoryImpl repository;
-
    protected static CredentialsImpl credentials;
-
-   protected static Workspace workspace;
-
-   protected static RepositoryService repositoryService;
-
-   protected static Node root;
-
-   protected PersistentDataManager dataManager;
-
-   protected static ValueFactory valueFactory;
-
-   protected static SessionProviderService sessionProviderService;
 
    protected static StandaloneContainer container;
 
@@ -105,26 +85,12 @@ public class Base
 
       credentials = new CredentialsImpl("root", "exo".toCharArray());
 
-      repositoryService = (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-
-      repository = (RepositoryImpl)repositoryService.getRepository("db1");
-
-      session = (SessionImpl)repository.login(credentials, WS_NAME);
-      workspace = session.getWorkspace();
-      root = session.getRootNode();
-      valueFactory = session.getValueFactory();
-
       binder = (ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class);
       resourceNumber = binder.getSize();
       RequestHandler handler = (RequestHandler)container.getComponentInstanceOfType(RequestHandler.class);
       launcher = new ResourceLauncher(handler);
-      sessionProviderService =
-         (SessionProviderService)container.getComponentInstanceOfType(ThreadLocalSessionProviderService.class);
       ConversationState state = new ConversationState(new Identity("root"));
-      SessionProvider sessionProvider = new SessionProvider(state);
       ConversationState.setCurrent(state);
-      sessionProvider.setCurrentRepository(repository);
-      sessionProviderService.setSessionProvider(null, sessionProvider);
       Set<String> adminRoles = new HashSet<String>();
       adminRoles.add("administrators");
       Set<String> devRoles = new HashSet<String>();

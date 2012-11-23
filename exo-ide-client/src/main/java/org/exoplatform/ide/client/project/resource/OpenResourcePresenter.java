@@ -19,24 +19,15 @@
 
 package org.exoplatform.ide.client.project.resource;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.HasAllKeyHandlers;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Timer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.event.FileOpenedEvent;
 import org.exoplatform.ide.client.framework.event.FileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -51,13 +42,27 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.hotkeys.HotKeyHelper;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.HasAllKeyHandlers;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
 
 /**
  * 
@@ -136,8 +141,11 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
    /**
     * Search Failed message
     */
-   private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.searchFileSearchError();
+   private static final String SEARCH_ERROR_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .searchFileSearchError();
 
+   private static final String OPENING_FILE_MESSAGE = "Opening file...";
+   
    /**
     * {@link Display} instance 
     */
@@ -148,12 +156,12 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
     */
    private ProjectModel project;
 
-   private List<Item> projectItems;
+   private List<FileModel> allFiles = new ArrayList<FileModel>();
 
    private List<FileModel> filteredFiles;
 
    private FileModel fileToOpen;
-   
+
    private FileModel selectedFile;
 
    public OpenResourcePresenter()
@@ -191,7 +199,17 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  projectItems = result;
+                  IDELoader.hide();
+                  
+                  allFiles.clear();
+                  for (Item item : result)
+                  {
+                     if (item instanceof FileModel)
+                     {
+                        allFiles.add((FileModel)item);
+                     }
+                  }
+
                   display = GWT.create(Display.class);
                   bindDisplay();
                   IDE.getInstance().openView(display.asView());
@@ -297,7 +315,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
 
          if (display.getFileNameField().getValue().trim().isEmpty())
          {
-            for (Item item : projectItems)
+            for (Item item : allFiles)
             {
                if (item instanceof FileModel)
                {
@@ -309,7 +327,7 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
          else
          {
             String fileNamePrefix = display.getFileNameField().getValue().trim().toUpperCase();
-            for (Item item : projectItems)
+            for (Item item : allFiles)
             {
                if (item instanceof FileModel && item.getName().toUpperCase().startsWith(fileNamePrefix))
                {
@@ -353,6 +371,10 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
       project = event.getProject();
    }
 
+   private List<String> itemPathList = new ArrayList<String>();
+
+   private List<Item> itemList = new ArrayList<Item>();
+
    private void openSelectedFile()
    {
       List<FileModel> selectedItems = display.getSelectedItems();
@@ -361,10 +383,95 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
          return;
       }
 
-      fileToOpen = selectedItems.get(0);
-      IDE.fireEvent(new OpenFileEvent(fileToOpen));
+      FileModel file = selectedItems.get(0);
+
+      itemPathList.clear();
+      itemList.clear();
+
+      String[] pathParts = file.getPath().split("/");
+      String path = "";
+      for (int i = 1; i < pathParts.length; i++)
+      {
+         path += "/" + pathParts[i];
+         itemPathList.add(path);
+      }
+
+      // Load list of items.
+      IDELoader.show(OPENING_FILE_MESSAGE);
+      loadListOfPathItems();
    }
 
+   private void loadListOfPathItems()
+   {
+      if (itemPathList.size() == 0)
+      {
+         IDELoader.hide();
+         pathItemsLoadComplete();
+         return;
+      }
+
+      String itemPath = itemPathList.remove(0);
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(itemPath,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  itemList.add(result.getItem());
+                  loadListOfPathItems();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDELoader.hide();
+                  //String message = IDE.IDE_LOCALIZATION_MESSAGES.openFileByPathErrorMessage(fileName);
+                  //Dialogs.getInstance().showError(message);
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDELoader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void pathItemsLoadComplete()
+   {
+      if (!(itemList.get(0) instanceof ProjectModel) ||
+               !(itemList.get(itemList.size() - 1) instanceof FileModel))
+      {
+         return;
+      }
+
+      for (int i = itemList.size() - 1; i > 0; i--)
+      {
+         Item item = itemList.get(i);
+         Item prevItem = itemList.get(i - 1);
+         if (item instanceof ItemContext)
+         {
+            ItemContext itemContext = (ItemContext)item;
+            itemContext.setProject(project);
+
+            if (prevItem instanceof FolderModel)
+            {
+               itemContext.setParent((FolderModel)prevItem);
+            }
+            else if (prevItem instanceof ProjectModel)
+            {
+               itemContext.setParent(new FolderModel((ProjectModel)prevItem));
+            }
+         }
+      }
+      
+      fileToOpen = (FileModel)itemList.get(itemList.size() - 1);
+      IDE.fireEvent(new OpenFileEvent(fileToOpen));
+   }
+   
    @Override
    public void onFileOpened(FileOpenedEvent event)
    {
@@ -374,5 +481,6 @@ public class OpenResourcePresenter implements OpenResourceHandler, ViewClosedHan
          IDE.getInstance().closeView(display.asView().getId());
       }
    }
+   
 
 }

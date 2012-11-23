@@ -131,25 +131,6 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
                   .setCodeValidator(groovyCodeValidator));
             }
          });
-      
-//    IDE.getInstance().addEditor(new CodeMirror(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "cmtc",
-//    new CodeMirrorConfiguration()
-//       .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
-//       .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
-//       .setParser(new GroovyParser())
-//       .setCanBeOutlined(true)
-//       .setAutocompleteHelper(new GroovyAutocompleteHelper())
-//       .setCodeAssistant(groovyCodeAssistant)
-//       .setCodeValidator(groovyCodeValidator)
-// ));
-      
-//      IDE.getInstance().addEditor(
-//         new CodeMirrorProducer(MimeType.CHROMATTIC_DATA_OBJECT, "CodeMirror Data Object editor", "cmtc", IMAGES
-//            .chromattic(), true, new CodeMirrorConfiguration()
-//            .setGenericParsers("['parsegroovy.js', 'tokenizegroovy.js']")
-//            .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/groovycolors.css']")
-//            .setParser(new GroovyParser()).setCanBeOutlined(true).setAutocompleteHelper(new GroovyAutocompleteHelper())
-//            .setCodeAssistant(groovyCodeAssistant).setCodeValidator(groovyCodeValidator)));
 
       IDE.getInstance().addOutlineItemCreator(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyOutlineItemCreator());
       IDE.fireEvent(new AddCommentsModifierEvent(MimeType.CHROMATTIC_DATA_OBJECT, new GroovyCommentsModifier()));
@@ -219,6 +200,7 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
       {
          List<Token> classes = new ArrayList<Token>();
          FindClassesUnmarshaller unmarshaller = new FindClassesUnmarshaller(classes);
+         
          service.findClassesByProject(file.getId(), project.getId(),
             new AsyncRequestCallback<List<Token>>(unmarshaller)
             {

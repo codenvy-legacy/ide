@@ -90,13 +90,13 @@ public class HotKeyManager implements EditorHotKeyPressedHandler
             {
                if(event.getTypeInt() != Event.ONKEYDOWN)
                   return;
-               onKeyDown(Event.as(event.getNativeEvent()));               
             }
             catch (Exception e)
             {
-               System.out.println("> Unhandled exception > " + e.getMessage());
-               e.printStackTrace();
+               return;
             }
+            
+            onKeyDown(Event.as(event.getNativeEvent()));            
          }
       });
       
