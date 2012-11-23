@@ -24,6 +24,7 @@ import org.exoplatform.ide.mvp.CompositeView;
 import org.exoplatform.ide.mvp.UiComponent;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.TextStoreMutator;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.texteditor.api.TextInputListener;
 import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
+import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
 import org.exoplatform.ide.texteditor.api.reconciler.Reconciler;
 import org.exoplatform.ide.texteditor.documentparser.DocumentParser;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
@@ -50,6 +52,7 @@ import org.exoplatform.ide.texteditor.input.RootActionExecutor;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator;
 import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsUtils;
 import org.exoplatform.ide.texteditor.parenmatch.ParenMatchHighlighter;
+import org.exoplatform.ide.texteditor.renderer.AnnotationRenderer;
 import org.exoplatform.ide.texteditor.renderer.CurrentLineHighlighter;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
 import org.exoplatform.ide.texteditor.renderer.RenderTimeExecutor;
@@ -71,8 +74,8 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
 import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
- * The presenter for the editor.
- *
+ * The Display for the text editor presenter.
+ * This is default implementation for {@link TextEditorPartDisplay}
  *  This class composes many of the other classes that together form the editor.
  * For example, the area where the text is displayed, the {@link Buffer}, is a
  * nested presenter. Other components are not presenters, such as the input
@@ -82,7 +85,7 @@ import org.exoplatform.ide.util.input.SignalEvent;
  * "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
-public class Editor extends UiComponent<Editor.View> implements TextEditorPartDisplay
+public class TextEditorView extends UiComponent<TextEditorView.View> implements TextEditorPartDisplay
 {
 
    /**
@@ -118,6 +121,8 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       String leftGutterBase();
 
       String lineWarning();
+
+      String lineError();
    }
 
    /**
@@ -266,7 +271,11 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private CodeAssistant codeAssistant;
 
-   public Editor(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
+   private VerticalRuler verticalRuler;
+
+   private QuickAssistAssistant quickAssistAssistant;
+
+   public TextEditorView(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
    {
       this.resources = resources;
       this.userActivityManager = userActivityManager;
@@ -282,6 +291,10 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       setView(view);
 
       focusManager = new FocusManager(buffer, input.getInputElement());
+
+      Gutter leftNotificationGutter =
+         createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutterNotification());
+      verticalRuler = new VerticalRuler(leftNotificationGutter, this);
 
       Gutter leftGutter = createGutter(false, Gutter.Position.LEFT, resources.workspaceEditorCss().leftGutter());
       leftGutterManager = new LeftGutterManager(leftGutter, buffer);
@@ -518,7 +531,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       buffer.handleDocumentChanged(textStore);
       leftGutterManager.handleDocumentChanged(textStore);
 
-      selectionManager = SelectionManager.create(textStore, buffer, focusManager, resources);
+      selectionManager = SelectionManager.create(document, textStore, buffer, focusManager, resources);
 
       SelectionModel selection = selectionManager.getSelectionModel();
       viewport = ViewportModel.create(textStore, selection, buffer);
@@ -614,7 +627,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
       this.isReadOnly = isReadOnly;
 
-      readOnlyListenerManager.dispatch(new Dispatcher<Editor.ReadOnlyListener>()
+      readOnlyListenerManager.dispatch(new Dispatcher<TextEditorView.ReadOnlyListener>()
       {
          @Override
          public void dispatch(ReadOnlyListener listener)
@@ -687,11 +700,11 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       actionExecutor.addDelegate(TextActions.INSTANCE);
       codeAssistant = configuration.getContentAssistant(this);
       Reconciler reconciler = configuration.getReconciler(this);
-      if(reconciler != null)
+      if (reconciler != null)
       {
          reconciler.install(this);
       }
-      
+
       if (codeAssistant != null)
       {
          codeAssistant.install(this);
@@ -704,6 +717,26 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
                if (CommonActions.RUN_CODE_ASSISTANT.equals(actionName))
                {
                   codeAssistant.showPossibleCompletions();
+                  return true;
+               }
+               return false;
+            }
+         });
+      }
+
+      quickAssistAssistant = configuration.getQuickAssistAssistant(this);
+      if (quickAssistAssistant != null)
+      {
+         quickAssistAssistant.install(this);
+         actionExecutor.addDelegate(new ActionExecutor()
+         {
+
+            @Override
+            public boolean execute(String actionName, InputScheme scheme, SignalEvent event)
+            {
+               if (CommonActions.RUN_QUICK_ASSISTANT.equals(actionName))
+               {
+                  quickAssistAssistant.showPossibleQuickAssists();
                   return true;
                }
                return false;
@@ -737,6 +770,10 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
       {
          return true;
       }
+      if (TextEditorOperations.QUICK_ASSIST == operation && quickAssistAssistant != null)
+      {
+         return true;
+      }
       // TODO implement all code in TextEditorOperations
       return false;
    }
@@ -747,13 +784,24 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    @Override
    public void doOperation(int operation)
    {
-      if (TextEditorOperations.CODEASSIST_PROPOSALS == operation)
+      switch (operation)
       {
-         if (codeAssistant != null)
-         {
-            codeAssistant.showPossibleCompletions();
-         }
+         case TextEditorOperations.CODEASSIST_PROPOSALS :
+            if (codeAssistant != null)
+            {
+               codeAssistant.showPossibleCompletions();
+            }
+            break;
+         case TextEditorOperations.QUICK_ASSIST :
+            if (quickAssistAssistant != null)
+            {
+               quickAssistAssistant.showPossibleQuickAssists();
+            }
+            break;
+         default :
+            throw new UnsupportedOperationException("Operation code: " + operation + " is not supported!");
       }
+
       // TODO implement all code in TextEditorOperations
    }
 
@@ -773,6 +821,22 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
    public void removeTextInputListener(TextInputListener listener)
    {
       textInputListenerManager.remove(listener);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDocument(DocumentImpl document, AnnotationModel annotationModel)
+   {
+      setDocument(document);
+      if (annotationModel != null)
+      {
+         annotationModel.connect(document);
+         verticalRuler.setModel(annotationModel);
+         new AnnotationRenderer(this, annotationModel.getAnnotationDecorations()).setMode(annotationModel);
+         //TODO overview ruler
+      }
    }
 
 }

@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ide.part;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -26,6 +24,7 @@ import com.google.gwt.event.dom.client.MouseDownHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -103,9 +102,9 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
    * {@inheritDoc}
    */
    @Override
-   public TabItem addTabButton(Image icon, String title, boolean closable)
+   public TabItem addTabButton(Image icon, String title, String toolTip, boolean closable)
    {
-      TabButton tabItem = new TabButton(title, closable);
+      TabButton tabItem = new TabButton(icon, title, toolTip, closable);
       tabsPanel.add(tabItem);
       tabs.add(tabItem);
       return tabItem;
@@ -210,10 +209,11 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
     * {@inheritDoc}
     */
    @Override
-   public void updateTabItem(int index, ImageResource icon, String title)
+   public void updateTabItem(int index, ImageResource icon, String title, String toolTip)
    {
       TabButton tabButton = tabs.get(index);
       tabButton.tabItemTittle.setText(title);
+      tabButton.setTitle(toolTip);
    }
 
    /**
@@ -228,16 +228,22 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
 
       private InlineLabel tabItemTittle;
 
-      public TabButton(String title, boolean closable)
+      public TabButton(Image icon, String title, String toolTip, boolean closable)
       {
          tabItem = new FlowPanel();
+         tabItem.setTitle(toolTip);
          initWidget(tabItem);
          this.setStyleName(resources.partStackCss().idePartStackTab());
+         if (icon != null)
+         {
+            tabItem.add(icon);
+         }
          tabItemTittle = new InlineLabel(title);
          tabItem.add(tabItemTittle);
          if (closable)
          {
             image = new Image(resources.close());
+            image.setStyleName(resources.partStackCss().idePartStackTabCloseButton());
             tabItem.add(image);
             addHandlers();
          }

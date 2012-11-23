@@ -22,6 +22,7 @@ import com.google.gwt.user.client.Element;
 
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.FocusManager;
@@ -80,6 +81,18 @@ public interface TextEditorPartDisplay
     * @param document
     */
    void setDocument(DocumentImpl document);
+   
+   /**
+    * Sets the given document as this displayr's text model and the
+    * given annotation model as the model for this display's visual
+    * annotations. The presentation is accordingly updated.
+    *
+    * @param document the display's new input document
+    * @param annotationModel the model for the display's visual annotations
+    *
+    * @see #setDocument(Document)
+    */
+   void setDocument(DocumentImpl document, AnnotationModel annotationModel);
 
    /**
     * Returns the text display input document.
@@ -161,7 +174,7 @@ public interface TextEditorPartDisplay
    
    Buffer getBuffer();
 
-   public abstract ListenerRegistrar<TextListener> getTextListenerRegistrar();
+   public ListenerRegistrar<TextListener> getTextListenerRegistrar();
 
 
 }

@@ -11,6 +11,7 @@
 package org.exoplatform.ide.java.client.codeassistant;
 
 import org.exoplatform.ide.java.client.core.CompletionProposal;
+import org.exoplatform.ide.java.client.core.Signature;
 
 /**
  * Proposal info that computes the javadoc lazily when it is queried.
@@ -24,9 +25,9 @@ public final class FieldProposalInfo extends MemberProposalInfo
     * @param project the java project to reference when resolving types
     * @param proposal the proposal to generate information for
     */
-   public FieldProposalInfo(CompletionProposal proposal, String projectId, String docContext)
+   public FieldProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
    {
-      super(proposal, projectId, docContext);
+      super(proposal, projectId, docContext, vfsId);
    }
 
    /**
@@ -37,10 +38,7 @@ public final class FieldProposalInfo extends MemberProposalInfo
    {
       if (fProposal.getDeclarationSignature() == null)
          return null;
-      //TODO      
-      //      return docContext + Signature.toString(new String(fProposal.getDeclarationSignature())) + "%23"
-      //         + new String(fProposal.getName()) + "&projectid=" + projectId + "&vfsid="
-      //         + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=false";
-      return null;
+      return docContext + Signature.toString(new String(fProposal.getDeclarationSignature())) + "%23"
+         + new String(fProposal.getName()) + "&projectid=" + projectId + "&vfsid=" + vfsId + "&isclass=false";
    }
 }

@@ -35,7 +35,7 @@ import org.exoplatform.ide.runtime.Assert;
  * value objects.
  * </p>
  * 
- * @see org.eclipse.Document.text.IDocument
+ * @see Document
  */
 public class Position
 {
@@ -93,8 +93,6 @@ public class Position
 
    /**
     * Marks this position as not deleted.
-    * 
-    * @since 2.0
     */
    public void undelete()
    {
@@ -209,7 +207,6 @@ public class Position
 
    /*
     * @see java.lang.Object#toString()
-    * @since 3.5
     */
    public String toString()
    {

@@ -16,14 +16,13 @@
  */
 package org.exoplatform.ide.part;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -81,7 +80,7 @@ public class PartStackPresenter implements Presenter
       }
 
       /** Add Tab */
-      public TabItem addTabButton(Image icon, String title, boolean closable);
+      public TabItem addTabButton(Image icon, String title, String toolTip, boolean closable);
 
       /** Remove Tab */
       public void removeTabButton(int index);
@@ -99,7 +98,7 @@ public class PartStackPresenter implements Presenter
       public void setFocusRequstHandler(FocusRequstHandler handler);
 
       /** Update Tab */
-      public void updateTabItem(int index, ImageResource icon, String title);
+      public void updateTabItem(int index, ImageResource icon, String title, String toolTip);
    }
    
    private PropertyListener propertyListener = new PropertyListener()
@@ -149,8 +148,7 @@ public class PartStackPresenter implements Presenter
       if(!parts.contains(part))
          throw  new IllegalArgumentException("This part stack not contains: " + part.getTitle());
       int index = parts.indexOf(part);
-      //TODO support tooltip
-      display.updateTabItem(index, part.getTitleImage(), part.getTitle());
+      display.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
    }
 
    /**
@@ -201,7 +199,10 @@ public class PartStackPresenter implements Presenter
       parts.add(part);
       part.addPropertyListener(propertyListener);
       // include close button
-      TabItem tabItem = display.addTabButton(null, part.getTitle(), true);
+      ImageResource titleImage = part.getTitleImage();
+      TabItem tabItem =
+         display.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(),
+            part.getTitleToolTip(), true);
       bindEvents(tabItem, part);
       setActivePart(part);
    }

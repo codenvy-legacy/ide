@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.texteditor.api.reconciler;
 
+import com.google.gwt.user.client.Timer;
+
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.json.JsonStringMap.IterationCallback;
@@ -29,10 +31,10 @@ import org.exoplatform.ide.text.Region;
 import org.exoplatform.ide.text.RegionImpl;
 import org.exoplatform.ide.text.TextUtilities;
 import org.exoplatform.ide.text.TypedRegion;
+import org.exoplatform.ide.text.TypedRegionImpl;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
 import org.exoplatform.ide.texteditor.api.TextInputListener;
 import org.exoplatform.ide.util.executor.BasicIncrementalScheduler;
-import org.exoplatform.ide.util.executor.IncrementalScheduler.Task;
 
 /**
  * Default implementation of {@link Reconciler}
@@ -42,6 +44,8 @@ import org.exoplatform.ide.util.executor.IncrementalScheduler.Task;
  */
 public class ReconcilerImpl implements Reconciler
 {
+
+   private static final int DELAY = 2000;
 
    protected class Listener implements TextInputListener, DocumentListener
    {
@@ -72,22 +76,11 @@ public class ReconcilerImpl implements Reconciler
       public void documentChanged(DocumentEvent event)
       {
          createDirtyRegion(event);
-         scheduler.schedule(task);
+         timer.cancel();
+         timer.schedule(DELAY);
       }
 
    }
-
-   private Task task = new Task()
-   {
-
-      @Override
-      public boolean run(int workAmount)
-      {
-         DirtyRegion region = dirtyRegionQueue.removeNextDirtyRegion();
-         process(region);
-         return dirtyRegionQueue.getSize() > 0;
-      }
-   };
 
    private JsonStringMap<ReconcilingStrategy> strategys;
 
@@ -99,7 +92,18 @@ public class ReconcilerImpl implements Reconciler
 
    private DirtyRegionQueue dirtyRegionQueue;
 
-   private final BasicIncrementalScheduler scheduler;
+   //   //TODO replace with timer
+   private Timer timer = new Timer()
+   {
+
+      @Override
+      public void run()
+      {
+
+         DirtyRegion region = dirtyRegionQueue.removeNextDirtyRegion();
+         process(region);
+      }
+   };
 
    private Document document;
 
@@ -109,7 +113,6 @@ public class ReconcilerImpl implements Reconciler
    public ReconcilerImpl(String partition, BasicIncrementalScheduler scheduler)
    {
       this.partition = partition;
-      this.scheduler = scheduler;
       strategys = JsonCollections.createStringMap();
    }
 
@@ -120,14 +123,15 @@ public class ReconcilerImpl implements Reconciler
    {
       strategys.iterate(new IterationCallback<ReconcilingStrategy>()
       {
-         
+
          @Override
          public void onIteration(String key, ReconcilingStrategy value)
          {
             value.setDocument(document);
          }
       });
-      scheduler.schedule(task);
+      timer.cancel();
+      timer.schedule(DELAY);
    }
 
    /**
@@ -153,10 +157,7 @@ public class ReconcilerImpl implements Reconciler
          textEditor.removeTextInputListener(listener);
          listener = null;
       }
-      if (scheduler != null)
-      {
-         scheduler.cancel();
-      }
+      timer.cancel();
    }
 
    /**
@@ -205,11 +206,11 @@ public class ReconcilerImpl implements Reconciler
       TypedRegion[] regions = null;
       try
       {
-         regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), offset, length, false);
+         regions = TextUtilities.computePartitioning(getDocument(), getDocumentPartitioning(), offset, length, true);
       }
       catch (BadLocationException x)
       {
-         regions = new TypedRegion[0];
+         regions = new TypedRegion[]{new TypedRegionImpl(offset, length, Document.DEFAULT_CONTENT_TYPE)};
       }
       return regions;
    }

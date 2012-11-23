@@ -25,6 +25,7 @@ import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.util.loging.Log;
 
 /**
@@ -35,6 +36,16 @@ import org.exoplatform.ide.util.loging.Log;
  */
 public class ResourceDocumentProvider implements DocumentProvider
 {
+
+   /**
+    * {@inheritDoc}
+    * This implementation return null
+    */
+   @Override
+   public AnnotationModel getAnnotationModel(EditorInput input)
+   {
+      return null;
+   }
 
    /**
     * @see org.exoplatform.ide.editor.DocumentProvider#getDocument(org.exoplatform.ide.editor.EditorInput)

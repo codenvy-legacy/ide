@@ -15,12 +15,11 @@
 package org.exoplatform.ide.texteditor.selection;
 
 import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.FocusManager;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
-
-
 
 /*
  * TODO: split SelectionModel into multiple components owned by
@@ -29,38 +28,44 @@ import org.exoplatform.ide.texteditor.renderer.Renderer;
 /**
  * Manages and owns different components related to text selection.
  */
-public class SelectionManager {
+public class SelectionManager
+{
 
-  public static SelectionManager create(DocumentModel document, Buffer buffer,
-      FocusManager focusManager, Resources resources) {
-    SelectionModel selectionModel = SelectionModel.create(document, buffer);
-    SelectionLineRenderer selectionLineRenderer =
-        new SelectionLineRenderer(selectionModel, focusManager, resources);
+   public static SelectionManager create(Document doc, DocumentModel document, Buffer buffer, FocusManager focusManager,
+      Resources resources)
+   {
+      SelectionModel selectionModel = SelectionModel.create(doc, document, buffer);
+      SelectionLineRenderer selectionLineRenderer = new SelectionLineRenderer(selectionModel, focusManager, resources);
 
-    return new SelectionManager(selectionModel, selectionLineRenderer);
-  }
+      return new SelectionManager(selectionModel, selectionLineRenderer);
+   }
 
-  private Renderer renderer;
-  private final SelectionLineRenderer selectionLineRenderer;
-  private final SelectionModel selectionModel;
+   private Renderer renderer;
 
-  private SelectionManager(SelectionModel selectionModel,
-      SelectionLineRenderer selectionLineRenderer) {
-    this.selectionModel = selectionModel;
-    this.selectionLineRenderer = selectionLineRenderer;
-  }
+   private final SelectionLineRenderer selectionLineRenderer;
 
-  public void initialize(Renderer renderer) {
-    this.renderer = renderer;
-    renderer.addLineRenderer(selectionLineRenderer);
-  }
+   private final SelectionModel selectionModel;
 
-  public void teardown() {
-    renderer.removeLineRenderer(selectionLineRenderer);
-    selectionModel.teardown();
-  }
+   private SelectionManager(SelectionModel selectionModel, SelectionLineRenderer selectionLineRenderer)
+   {
+      this.selectionModel = selectionModel;
+      this.selectionLineRenderer = selectionLineRenderer;
+   }
 
-  public SelectionModel getSelectionModel() {
-    return selectionModel;
-  }
+   public void initialize(Renderer renderer)
+   {
+      this.renderer = renderer;
+      renderer.addLineRenderer(selectionLineRenderer);
+   }
+
+   public void teardown()
+   {
+      renderer.removeLineRenderer(selectionLineRenderer);
+      selectionModel.teardown();
+   }
+
+   public SelectionModel getSelectionModel()
+   {
+      return selectionModel;
+   }
 }

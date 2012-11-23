@@ -25,6 +25,9 @@
                <g:center>
                   <g:SimplePanel ui:field="centerPanel" styleName="{style.position}" />
                </g:center>
+               <g:east size="240">
+                  <g:SimplePanel ui:field="rightPanel" width="100%" height="100%"></g:SimplePanel>
+               </g:east>
             </g:SplitLayoutPanel>
          </g:center>
       </g:DockLayoutPanel>

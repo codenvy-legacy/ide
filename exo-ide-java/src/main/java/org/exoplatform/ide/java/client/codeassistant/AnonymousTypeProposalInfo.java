@@ -11,6 +11,7 @@
 package org.exoplatform.ide.java.client.codeassistant;
 
 import org.exoplatform.ide.java.client.core.CompletionProposal;
+import org.exoplatform.ide.java.client.core.Signature;
 
 /**
  * Proposal info that computes the javadoc lazily when it is queried.
@@ -24,9 +25,9 @@ public final class AnonymousTypeProposalInfo extends MemberProposalInfo
     * @param project the java project to reference when resolving types
     * @param proposal the proposal to generate information for
     */
-   public AnonymousTypeProposalInfo(CompletionProposal proposal, String projectId, String docContext)
+   public AnonymousTypeProposalInfo(CompletionProposal proposal, String projectId, String docContext, String vfsId)
    {
-      super(proposal, projectId, docContext);
+      super(proposal, projectId, docContext, vfsId);
    }
 
    /**
@@ -35,9 +36,7 @@ public final class AnonymousTypeProposalInfo extends MemberProposalInfo
    @Override
    protected String getURL()
    {
-      //TODO
-      return null;
-//      return docContext + Signature.toString(new String(Signature.getTypeErasure(fProposal.getDeclarationKey()))) + "&projectid=" + projectId
-//               + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
+      return docContext + Signature.toString(new String(Signature.getTypeErasure(fProposal.getDeclarationKey())))
+         + "&projectid=" + projectId + "&vfsid=" + vfsId + "&isclass=true";
    }
 }

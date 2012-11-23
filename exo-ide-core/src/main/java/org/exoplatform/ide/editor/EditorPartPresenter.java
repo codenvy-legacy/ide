@@ -67,6 +67,14 @@ public interface EditorPartPresenter extends PartPresenter
    public void init(EditorInput input) throws EditorInitException;
 
    /**
+    * Returns the input for this editor.  If this value changes the part must 
+    * fire a property listener event with <code>PROP_INPUT</code>.
+    *
+    * @return the editor input
+    */
+   public EditorInput getEditorInput();
+   
+   /**
     * Saves the contents of this editor.
     */
    public void doSave();

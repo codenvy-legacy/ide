@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.java.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
@@ -63,6 +64,8 @@ public class JavaExtension
    private ContextTypeRegistry codeTemplateContextTypeRegistry;
 
    private TemplateStore templateStore;
+   
+   private ContentAssistHistory contentAssistHistory;
    /**
     * 
     */
@@ -73,6 +76,7 @@ public class JavaExtension
       FileType javaFile = new FileType(null, "application/java", "java");
       editorRegistry.register(javaFile, javaEditorProvider);
       resourceProvider.registerFileType(javaFile);
+      JavaClientBundle.INSTANCE.css().ensureInjected();
    }
    
    /**
@@ -194,7 +198,17 @@ public class JavaExtension
     */
    public ContentAssistHistory getContentAssistHistory()
    {
-      // TODO Auto-generated method stub
-      return null;
+      if (contentAssistHistory == null)
+      {
+         Preferences preferences = GWT.create(Preferences.class);
+         contentAssistHistory =
+                  //TODO get user name
+            ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + "todo");
+
+         if (contentAssistHistory == null)
+            contentAssistHistory = new ContentAssistHistory();
+      }
+
+      return contentAssistHistory;
    }
 }

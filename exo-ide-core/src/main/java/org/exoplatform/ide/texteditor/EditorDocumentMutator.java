@@ -36,13 +36,13 @@ public class EditorDocumentMutator implements TextStoreMutator
 
    private final ListenerManager<BeforeTextListener> beforeTextListenerManager = ListenerManager.create();
 
-   private final Editor editor;
+   private final TextEditorView editor;
 
    private boolean isMutatingDocument;
 
    private final ListenerManager<TextListener> textListenerManager = ListenerManager.create();
 
-   EditorDocumentMutator(Editor editor)
+   EditorDocumentMutator(TextEditorView editor)
    {
       this.editor = editor;
    }

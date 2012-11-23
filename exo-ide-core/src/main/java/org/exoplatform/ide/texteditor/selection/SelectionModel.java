@@ -22,7 +22,11 @@ import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
 
 import org.exoplatform.ide.runtime.Assert;
+import org.exoplatform.ide.text.BadLocationException;
+import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.TextUtilities;
 import org.exoplatform.ide.text.store.DocumentModel;
+import org.exoplatform.ide.text.store.LineFinder;
 import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineInfo;
@@ -41,6 +45,7 @@ import org.exoplatform.ide.texteditor.linedimensions.LineDimensionsCalculator.Ro
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.util.browser.UserAgent;
+import org.exoplatform.ide.util.loging.Log;
 import org.exoplatform.ide.util.ListenerRegistrar;
 import org.exoplatform.ide.util.StringUtils;
 import org.exoplatform.ide.util.TextUtils;
@@ -217,10 +222,10 @@ public class SelectionModel implements Buffer.MouseDragListener
       }
    }
 
-   public static SelectionModel create(DocumentModel document, Buffer buffer)
+   public static SelectionModel create(Document doc, DocumentModel document, Buffer buffer)
    {
       ListenerRegistrar.RemoverManager removalManager = new ListenerRegistrar.RemoverManager();
-      SelectionModel selection = new SelectionModel(document, buffer, removalManager);
+      SelectionModel selection = new SelectionModel(doc, document, buffer, removalManager);
       removalManager.track(buffer.getMouseDragListenerRegistrar().add(selection));
 
       return selection;
@@ -284,8 +289,12 @@ public class SelectionModel implements Buffer.MouseDragListener
 
    private ViewportModel viewport;
 
-   private SelectionModel(DocumentModel document, Buffer buffer, ListenerRegistrar.RemoverManager removerManager)
+   private final Document doc;
+
+   private SelectionModel(Document doc, DocumentModel document, Buffer buffer,
+      ListenerRegistrar.RemoverManager removerManager)
    {
+      this.doc = doc;
       this.document = document;
       this.buffer = buffer;
       this.removerManager = removerManager;
@@ -1100,5 +1109,66 @@ public class SelectionModel implements Buffer.MouseDragListener
    private Anchor getLaterSelectionAnchor()
    {
       return isCursorAtEndOfSelection() ? cursorAnchor : baseAnchor;
+   }
+
+   public org.exoplatform.ide.text.Position getSelectedRange()
+   {
+      int startOffset = TextUtilities.getOffset(doc, getBaseLineNumber(), getBaseColumn());
+      int endOffset = TextUtilities.getOffset(doc, getCursorLineNumber(), getCursorColumn());
+      if (startOffset > endOffset)
+      {
+         return new org.exoplatform.ide.text.Position(startOffset, startOffset - endOffset);
+      }
+      else
+      {
+         return new org.exoplatform.ide.text.Position(endOffset, endOffset - startOffset);
+      }
+   }
+
+   public void setSelectedRange(int offset, int length)
+   {
+      LineFinder lineFinder = document.getLineFinder();
+      try
+      {
+         int lineNumber = doc.getLineOfOffset(offset);
+         int lineOffset = doc.getLineOffset(lineNumber);
+         LineInfo first = lineFinder.findLine(lineNumber);
+
+         int cursorPos = offset + length;
+         int endineNumber = doc.getLineOfOffset(cursorPos);
+         int endLineOffset = doc.getLineOffset(endineNumber);
+         LineInfo last = lineFinder.findLine(endineNumber);
+         setSelection(first, offset - lineOffset, last, cursorPos - endLineOffset);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
+   }
+   
+   /**
+    * Selects and reveals the specified range in this text editor.
+    *
+    * @param offset the offset of the selection
+    * @param length the length of the selection
+    */
+   void selectAndReveal(int offset, int length)
+   {
+      //TODO 
+   }
+
+   public void setCursorPosition(int offset)
+   {
+      try
+      {
+         int line = doc.getLineOfOffset(offset);
+         LineInfo lineInfo = document.getLineFinder().findLine(line);
+         int lineOffset = doc.getLineOffset(line);
+         setCursorPosition(lineInfo, offset - lineOffset);
+      }
+      catch (BadLocationException e)
+      {
+         Log.error(getClass(), e);
+      }
    }
 }

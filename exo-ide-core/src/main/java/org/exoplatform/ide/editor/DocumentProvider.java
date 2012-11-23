@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor;
 
 import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 
 /**
  *  A document provider maps between domain elements and documents. A document provider has the
@@ -81,12 +82,11 @@ public interface DocumentProvider
     */
    void saveDocumentAs(EditorInput input, Document document, boolean overwrite);
    
-   //TODO
-//   /**
-//    * Returns the annotation model for the given input.
-//    *
-//    * @param input the input, or <code>null</code>
-//    * @return the annotation model, or <code>null</code> if none
-//    */
-//   AnnotationModel getAnnotationModel(EditorInput input);
+   /**
+    * Returns the annotation model for the given input.
+    *
+    * @param input the input, or <code>null</code>
+    * @return the annotation model, or <code>null</code> if none
+    */
+   AnnotationModel getAnnotationModel(EditorInput input);
 }

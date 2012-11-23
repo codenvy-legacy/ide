@@ -20,12 +20,13 @@ package org.exoplatform.ide.java.client.core.quickfix;
 
 import com.googlecode.gwt.test.GwtTestWithMockito;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.codeassistant.api.IProblemLocation;
 import org.exoplatform.ide.java.client.core.compiler.IProblem;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;
+import org.exoplatform.ide.java.client.editor.AstProvider;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.text.correction.AssistContext;
 import org.exoplatform.ide.java.client.internal.text.correction.ICommandAccess;
 import org.exoplatform.ide.java.client.internal.text.correction.JavaCorrectionProcessor;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.junit.Assert;
+import org.mockito.Mock;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,6 +54,8 @@ import java.util.List;
 public abstract class QuickFixTest extends GwtTestWithMockito
 {
 
+   @Mock
+   protected AstProvider astProvider;
    
    /**
     * @see com.googlecode.gwt.test.GwtModuleRunnerAdapter#getModuleName()
@@ -64,7 +68,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito
 
    public static AssistContext getCorrectionContext(Document document, int offset, int length, String name)
    {
-      AssistContext context = new AssistContext(document, offset, length);
+      AssistContext context = new AssistContext(null, document, offset, length);
       context.setASTRoot(getASTRoot(document, name));
       return context;
    }
@@ -286,7 +290,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito
       astParser.setResolveBindings(true);
       astParser.setStatementsRecovery(true);
       astParser.setBindingsRecovery(true);
-      astParser.setNameEnvironment(JavaCodeController.NAME_ENVIRONMENT);
+      astParser.setNameEnvironment(JavaReconcilerStrategy.get().getNameEnvironment());
       astParser.setUnitName(name);
       return (CompilationUnit)astParser.createAST();
    }
@@ -356,7 +360,7 @@ public abstract class QuickFixTest extends GwtTestWithMockito
       int length = curr.getSourceEnd() + 1 - offset;
       if (context == null)
       {
-         context = new AssistContext(cu, offset, length);
+         context = new AssistContext(null, cu, offset, length);
       }
 
       ProblemLocation problem = new ProblemLocation(curr);

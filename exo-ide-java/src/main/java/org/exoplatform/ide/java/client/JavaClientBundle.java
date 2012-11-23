@@ -31,8 +31,8 @@ public interface JavaClientBundle extends ClientBundle
 {
    JavaClientBundle INSTANCE = GWT.create(JavaClientBundle.class);
 
-//   @Source("org/exoplatform/ide/editor/java/client/styles/java.css")
-//   JavaCss css();
+   @Source("org/exoplatform/ide/java/client/styles/java.css")
+   JavaCss css();
 
    @Source("org/exoplatform/ide/java/client/images/annotation.gif")
    ImageResource annotationItem();
@@ -168,4 +168,13 @@ public interface JavaClientBundle extends ClientBundle
    
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/javadoc.gif")
    ImageResource javadoc();
+
+   @Source("org/exoplatform/ide/java/client/images/mark-error.png")
+   ImageResource markError();
+
+   @Source("org/exoplatform/ide/java/client/images/mark-warning.png")
+   ImageResource markWarning();
+
+   @Source("org/exoplatform/ide/java/client/images/taskmrk.gif")
+   ImageResource taskmrk();
 }

@@ -75,7 +75,13 @@
             <li>
                <b>Extensions API : </b>
                Base implementation (CSS Code completion is an extension)
-            </li>            
+            </li>
+            <li>
+               <b>Java Extension : </b>
+               <li>Java code assistant</li>
+               <li>Errors and Wanrnings highlighting</li>
+               <li>Quick Assistant(Ctrl+1) for Java errors and warnings</li>
+            </li>
          </ul>
       </div>
       <div class="{style.botleft}">

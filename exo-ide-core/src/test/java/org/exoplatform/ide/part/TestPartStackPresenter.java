@@ -90,6 +90,7 @@ public class TestPartStackPresenter
    {
       PartStackPresenter.PartStackEventHandler handler = mock(PartStackPresenter.PartStackEventHandler.class);
       stack.setPartStackEventHandler(handler);
+      when(part.getTitleImage()).thenReturn(null);
 
       stack.addPart(part);
 

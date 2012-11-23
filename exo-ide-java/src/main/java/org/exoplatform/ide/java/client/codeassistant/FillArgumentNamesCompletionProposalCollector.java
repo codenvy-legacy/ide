@@ -28,9 +28,9 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
    private final boolean fIsGuessArguments;
 
    public FillArgumentNamesCompletionProposalCollector(CompilationUnit unit, Document document, int invocationOffset,
-      String projectId, String docContext)
+      String projectId, String docContext, String vfsId)
    {
-      super(unit, false, document, invocationOffset, projectId, docContext);
+      super(unit, false, document, invocationOffset, projectId, docContext, vfsId);
       fIsGuessArguments = true;// preferenceStore.getBoolean(PreferenceConstants.CODEASSIST_GUESS_METHOD_ARGUMENTS);
       setRequireExtendedContext(true);
    }
@@ -41,7 +41,7 @@ public final class FillArgumentNamesCompletionProposalCollector extends Completi
    public FillArgumentNamesCompletionProposalCollector(JavaContentAssistInvocationContext invocationContext)
    {
       this(invocationContext.getCompilationUnit(), invocationContext.getDocument(), invocationContext
-         .getInvocationOffset(), invocationContext.getProjectId(), invocationContext.getDocContext());
+         .getInvocationOffset(), invocationContext.getProjectId(), invocationContext.getDocContext(), invocationContext.getVfsId());
       setInvocationContext(invocationContext);
    }
 

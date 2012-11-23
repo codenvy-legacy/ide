@@ -634,4 +634,21 @@ public class TextUtilities
          return -1;
       }
    }
+   
+   /**
+    * @param document
+    * @param offset
+    * @return
+    */
+   public static int getLineLineNumber(Document document, int offset)
+   {
+      try
+      {
+         return document.getLineOfOffset(offset);
+      }
+      catch (BadLocationException e)
+      {
+         return 0;
+      }
+   }
 }

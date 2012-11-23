@@ -23,8 +23,8 @@ import com.google.gwt.resources.client.ClientBundle;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.runtime.Assert;
 import org.exoplatform.ide.text.store.Line;
-import org.exoplatform.ide.texteditor.Editor;
-import org.exoplatform.ide.texteditor.Editor.Css;
+import org.exoplatform.ide.texteditor.TextEditorView;
+import org.exoplatform.ide.texteditor.TextEditorView.Css;
 import org.exoplatform.ide.texteditor.api.parser.Token;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
@@ -60,7 +60,7 @@ public class SyntaxHighlighterRenderer implements LineRenderer
 
    private final Css editorCss;
 
-   SyntaxHighlighterRenderer(SyntaxHighlighter syntaxHighlighter, SelectionModel selection, Editor.Css editorCss)
+   SyntaxHighlighterRenderer(SyntaxHighlighter syntaxHighlighter, SelectionModel selection, TextEditorView.Css editorCss)
    {
       this.syntaxHighlighter = syntaxHighlighter;
       this.selection = selection;

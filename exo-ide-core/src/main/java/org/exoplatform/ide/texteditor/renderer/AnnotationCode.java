@@ -16,42 +16,56 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client;
-
-import org.exoplatform.ide.java.client.internal.compiler.env.INameEnvironment;
-import org.exoplatform.ide.resources.model.File;
+package org.exoplatform.ide.texteditor.renderer;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class JavaCodeController
+class AnnotationCode
 {
 
-   private static JavaCodeController instance; 
-   //TODO remove this
-   public static INameEnvironment NAME_ENVIRONMENT;
-   
-   private File activeFile;
+   private DocumentPosition start;
+
+   private DocumentPosition end;
+
+   private String decoration;
+
    /**
-    * @return
+    * @param start
+    * @param end
+    * @param decoration
     */
-   public static JavaCodeController get()
+   public AnnotationCode(DocumentPosition start, DocumentPosition end, String decoration)
    {
-      if(instance == null)
-      {
-         instance = new JavaCodeController();
-      }
-      return instance;
-   }
-   /**
-    * @return
-    */
-   public File getActiveFile()
-   {
-      return activeFile;
+      super();
+      this.start = start;
+      this.end = end;
+      this.decoration = decoration;
    }
 
-   
+   /**
+    * @return file position where this Annotation starts
+    */
+   public DocumentPosition getStart()
+   {
+      return start;
+   }
+
+   /**
+    * @return file position where this Annotation ends (inclusive)
+    */
+   public DocumentPosition getEnd()
+   {
+      return end;
+   }
+
+   /**
+    * @return the decoration
+    */
+   public String getDecoration()
+   {
+      return decoration;
+   }
 }

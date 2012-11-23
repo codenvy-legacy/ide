@@ -52,6 +52,9 @@ public class WorkspaceView extends Composite implements Display
    @UiField
    SimplePanel topPanel;
    
+   @UiField
+   SimplePanel rightPanel;
+   
    @UiField(provided=true) SplitLayoutPanel splitPanel = new SplitLayoutPanel(4);
 
    /**
@@ -107,6 +110,15 @@ public class WorkspaceView extends Composite implements Display
    public HasWidgets getMenuPanel()
    {
       return topPanel;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public HasWidgets getRightPanel()
+   {
+      return rightPanel;
    }
 
 }

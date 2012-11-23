@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.java.client.core;
 
-import com.googlecode.gwt.test.GwtTest;
+import com.googlecode.gwt.test.GwtTestWithMockito;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 4:00:10 PM 34360 2009-07-22 23:58:59Z evgen $
  * 
  */
-public abstract class BaseTest extends GwtTest
+public abstract class BaseTest extends GwtTestWithMockito
 {
 
    /**

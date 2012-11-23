@@ -19,7 +19,6 @@
 package org.exoplatform.ide.texteditor;
 
 import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,9 +33,11 @@ import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.outline.OutlinePresenter;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
+import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
@@ -48,7 +49,7 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
-public class BaseTextEditor extends AbstractPartPresenter implements TextEditorPartPresenter
+public class TextEditorPresenter extends AbstractPartPresenter implements TextEditorPartPresenter
 {
 
    protected TextEditorPartDisplay editor;
@@ -56,18 +57,18 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    protected final DocumentProvider documentProvider;
 
    protected EditorInput input;
-   
+
    protected boolean dirtyState;
 
    private final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
-   
+
    private final TextListener textListener = new TextListener()
    {
-      
+
       @Override
       public void onTextChange(TextChange textChange)
       {
-         if(!dirtyState)
+         if (!dirtyState)
          {
             dirtyState = true;
             firePropertyChange(EditorPartPresenter.PROP_TITLE);
@@ -76,16 +77,18 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
       }
    };
 
+   protected TextEditorConfiguration configuration;
+
    /**
     * @param documentProvider 
     * 
     */
-   public BaseTextEditor(Resources resources, UserActivityManager userActivityManager,
+   public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager,
       DocumentProvider documentProvider, TextEditorConfiguration configuration)
    {
       this.documentProvider = documentProvider;
-      editor = new Editor(resources, userActivityManager);
-      editor.configure(configuration);
+      this.configuration = configuration;
+      editor = new TextEditorView(resources, userActivityManager);
       editor.getTextListenerRegistrar().add(textListener);
    }
 
@@ -93,19 +96,21 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
     * @see org.exoplatform.ide.editor.EditorPartPresenter#init(org.exoplatform.ide.editor.api.EditorSite, org.exoplatform.ide.editor.EditorInput)
     */
    @Override
-   public void init(EditorInput input) throws EditorInitException
+   public void init(final EditorInput input) throws EditorInitException
    {
+      editor.configure(configuration);
+      this.input = input;
       documentProvider.getDocument(input, new DocumentCallback()
       {
 
          @Override
          public void onDocument(Document document)
          {
-            editor.setDocument((DocumentImpl)document);
+            AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
+            editor.setDocument((DocumentImpl)document, annotationModel);
             firePropertyChange(PROP_INPUT);
          }
       });
-      this.input = input;
    }
 
    /**
@@ -186,16 +191,6 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
       return null;
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#selectAndReveal(int, int)
-    */
-   @Override
-   public void selectAndReveal(int offset, int length)
-   {
-      // TODO Auto-generated method stub
-
-   }
-
    protected Widget getWidget()
    {
       HTML h = new HTML();
@@ -209,12 +204,12 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    @Override
    public String getTitle()
    {
-      if(isDirty())
+      if (isDirty())
       {
          return "*" + input.getName();
       }
       else
-      return input.getName();
+         return input.getName();
    }
 
    /**
@@ -273,6 +268,24 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
    public String getTitleToolTip()
    {
       // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public EditorInput getEditorInput()
+   {
+      return input;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public OutlinePresenter getOutline()
+   {
       return null;
    }
 

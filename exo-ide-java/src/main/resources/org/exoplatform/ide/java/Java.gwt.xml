@@ -5,9 +5,10 @@
    <inherits name="com.google.gwt.http.HTTP" />
    <inherits name="com.google.gwt.i18n.I18N"/>
    <inherits name="com.google.gwt.json.JSON" />
-    <inherits name='org.exoplatform.ide.Core' />
+   <inherits name='org.exoplatform.ide.Core' />
    <inherits name="com.google.gwt.inject.Inject"/>
+   <inherits name='org.exoplatform.gwtframework.commons.Commons' />
+   <inherits name='com.google.web.bindery.autobean.AutoBean'/>
    
-
    <source path="client" />
 </module>

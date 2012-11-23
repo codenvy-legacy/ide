@@ -24,7 +24,6 @@ import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.EditorProvider;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
@@ -46,12 +45,12 @@ public class JavaEditorProvider implements EditorProvider
     * @param documentProvider
     */
    @Inject
-   public JavaEditorProvider(Resources resources, UserActivityManager activityManager, DocumentProvider documentProvider)
+   public JavaEditorProvider(Resources resources, UserActivityManager activityManager)
    {
       super();
       this.resources = resources;
       this.activityManager = activityManager;
-      this.documentProvider = documentProvider;
+      this.documentProvider = new CompilationUnitDocumentProvider(resources.workspaceEditorCss());
    }
 
    /**
@@ -60,8 +59,7 @@ public class JavaEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new BaseTextEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration(
-         activityManager));
+      return new JavaEditor(resources, activityManager, documentProvider, new JavaEditorConfiguration(activityManager));
    }
 
 }

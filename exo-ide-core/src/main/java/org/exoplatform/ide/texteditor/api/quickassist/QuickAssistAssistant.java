@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.texteditor.api.quickassist;
 
+import org.exoplatform.ide.text.annotation.Annotation;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
-
 
 /**
  * An <code>QuickAssistAssistant</code> provides support for quick fixes and quick
@@ -72,17 +72,17 @@ public interface QuickAssistAssistant
     */
    QuickAssistProcessor getQuickAssistProcessor();
 
-//   /** TODO
-//    * Tells whether this assistant has a fix for the given annotation.
-//    * <p>
-//    * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
-//    * <code>true</code> even though there might be no quick fix.
-//    * </p>
-//    *
-//    * @param annotation the annotation
-//    * @return <code>true</code> if the assistant has a fix for the given annotation
-//    */
-//   boolean canFix(Annotation annotation);
+   /**
+    * Tells whether this assistant has a fix for the given annotation.
+    * <p>
+    * <strong>Note:</strong> This test must be fast and optimistic i.e. it is OK to return
+    * <code>true</code> even though there might be no quick fix.
+    * </p>
+    *
+    * @param annotation the annotation
+    * @return <code>true</code> if the assistant has a fix for the given annotation
+    */
+   boolean canFix(Annotation annotation);
 
    /**
     * Tells whether this assistant has assists for the given invocation context.

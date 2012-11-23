@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.internal.corext.codemanipulation;
 
-import org.exoplatform.ide.java.client.JavaCodeController;
 import org.exoplatform.ide.java.client.compiler.batch.CompilationUnit;
 import org.exoplatform.ide.java.client.core.CompletionProposal;
 import org.exoplatform.ide.java.client.core.CompletionRequestor;
@@ -21,6 +20,7 @@ import org.exoplatform.ide.java.client.core.dom.ASTNode;
 import org.exoplatform.ide.java.client.core.dom.Javadoc;
 import org.exoplatform.ide.java.client.core.dom.Name;
 import org.exoplatform.ide.java.client.core.dom.QualifiedName;
+import org.exoplatform.ide.java.client.editor.JavaReconcilerStrategy;
 import org.exoplatform.ide.java.client.internal.codeassist.CompletionEngine;
 import org.exoplatform.ide.java.client.internal.corext.dom.ASTNodes;
 import org.exoplatform.ide.java.client.internal.text.correction.NameMatcher;
@@ -176,7 +176,7 @@ public class SimilarElementsRequestor extends CompletionRequestor
       {
 
          CompletionEngine e =
-            new CompletionEngine(JavaCodeController.NAME_ENVIRONMENT, this, JavaCore.getOptions());
+            new CompletionEngine(JavaReconcilerStrategy.get().getNameEnvironment(), this, JavaCore.getOptions());
          e.complete(new CompilationUnit(document.get().toCharArray(), "", "UTF-8"), pos, 0);
          processKeywords();
          return fResult.toArray(new SimilarElement[fResult.size()]);

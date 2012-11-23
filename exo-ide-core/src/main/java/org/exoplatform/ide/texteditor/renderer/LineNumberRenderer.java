@@ -23,7 +23,7 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.js.JsoIntegerMap;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.texteditor.Buffer;
-import org.exoplatform.ide.texteditor.Editor;
+import org.exoplatform.ide.texteditor.TextEditorView;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
@@ -49,7 +49,7 @@ public class LineNumberRenderer
     *
     * TODO: add new abstraction to avoid editor passing.
     */
-   private final Editor editor;
+   private final TextEditorView editor;
 
    private int previousBottomLineNumber = -1;
 
@@ -77,7 +77,7 @@ public class LineNumberRenderer
       }
    };
 
-   private Editor.ReadOnlyListener readonlyListener = new Editor.ReadOnlyListener()
+   private TextEditorView.ReadOnlyListener readonlyListener = new TextEditorView.ReadOnlyListener()
    {
       @Override
       public void onReadOnlyChanged(boolean isReadOnly)
@@ -127,7 +127,7 @@ public class LineNumberRenderer
    /**
     * Line number CSS.
     */
-   public interface Css extends Editor.EditorSharedCss
+   public interface Css extends TextEditorView.EditorSharedCss
    {
       String lineNumber();
 
@@ -146,7 +146,7 @@ public class LineNumberRenderer
    }
 
    LineNumberRenderer(Buffer buffer, Resources res, Gutter leftGutter, ViewportModel viewport,
-      SelectionModel selection, Editor editor)
+      SelectionModel selection, TextEditorView editor)
    {
       this.buffer = buffer;
       this.leftGutter = leftGutter;

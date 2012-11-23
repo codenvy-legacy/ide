@@ -29,25 +29,32 @@
 	-moz-border-radius: 4px 4px 0 0;
 	-webkit-border-radius: 4px 4px 0 0;
 	border: 1px solid tabBorder;
-	padding: 3px 6px 2px 6px;
+	padding: 3px;
 	cursor: pointer;
 	cursor: hand;
 	position: relative;
 	display: inline-block;
+	height: 15px;
 }
 
 .ide-PartStack .ide-PartStack-Tab span {
 	/* margin between text and image */
 	margin-right: 4px;
+	margin-left: 4px;
 }
 
 .ide-PartStack .ide-PartStack-Tab img {
+	vertical-align: middle;
+}
+
+.ide-PartStack .ide-PartStack-Tab .CloseButton {
 	/* change cursor for close button */
 	cursor: default;
 	opacity: 0.5;
+	vertical-align: top;
 }
 
-.ide-PartStack .ide-PartStack-Tab img:hover { /* hihglight on hover */
+.ide-PartStack .ide-PartStack-Tab .CloseButton:hover { /* hihglight on hover */
 	opacity: 1;
 }
 
@@ -55,7 +62,7 @@
 	/* tab that is currently selected (active) */
 	cursor: default;
 	font-weight: bold;
-	padding: 3px 6px 3px 6px;
+	padding: 3px;
 	border-bottom: 2px solid activeTabBackground;
 	background: activeTabBackground;
 }

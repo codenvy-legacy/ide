@@ -39,6 +39,8 @@ import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.menu.MainMenuView;
+import org.exoplatform.ide.outline.OutlinePartPresenter.Display;
+import org.exoplatform.ide.outline.OutlinePartView;
 import org.exoplatform.ide.part.PartAgentPresenter;
 import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.part.PartStackUIResources;
@@ -84,6 +86,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
       bind(UserActivityManager.class).in(Singleton.class);
+      bind(Display.class).to(OutlinePartView.class).in(Singleton.class);
    }
 
    /**

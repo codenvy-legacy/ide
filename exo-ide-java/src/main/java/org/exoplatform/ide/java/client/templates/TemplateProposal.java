@@ -10,6 +10,8 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.templates;
 
+import com.google.gwt.dom.client.Style.Overflow;
+
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -262,7 +264,7 @@ public class TemplateProposal implements JavaCompletionProposal
          //
          // fSelectedRegion= ui.getSelectedRegion();
          // } else {
-         // fSelectedRegion= new Region(getCaretOffset(templateBuffer) + start, 0);
+          fSelectedRegion= new RegionImpl(getCaretOffset(templateBuffer) + start, 0);
          // }
 
       }
@@ -430,6 +432,8 @@ public class TemplateProposal implements JavaCompletionProposal
          // TODO
          // IndentUtil.indentLines(document, new LineRange(0, document.getNumberOfLines()), null, null);
          Widget w = new SimplePanel();
+         w.setSize("100%", "100%");
+         w.getElement().getStyle().setOverflow(Overflow.AUTO);
          w.getElement().setInnerHTML("<pre>" + document.get() + "</pre>");
          return w;
 

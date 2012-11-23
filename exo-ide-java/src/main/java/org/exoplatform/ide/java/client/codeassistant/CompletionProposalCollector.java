@@ -29,6 +29,7 @@ import org.exoplatform.ide.java.client.internal.compiler.lookup.ReferenceBinding
 import org.exoplatform.ide.java.client.internal.corext.util.CodeFormatterUtil;
 import org.exoplatform.ide.runtime.Assert;
 import org.exoplatform.ide.text.Document;
+import org.exoplatform.ide.util.loging.Log;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -59,8 +60,6 @@ import java.util.Set;
  * <p>
  * Clients may instantiate or subclass.
  * </p>
- * 
- * @since 3.1
  */
 public class CompletionProposalCollector extends CompletionRequestor
 {
@@ -115,8 +114,10 @@ public class CompletionProposalCollector extends CompletionRequestor
 
    private final String projectId;
 
+   private final String vfsId;
+
    public CompletionProposalCollector(CompilationUnit compilationUnit, boolean ignoreAll, Document document,
-      int invocationOffset, String projectId, String docContext)
+      int invocationOffset, String projectId, String docContext, String vfsId)
    {
       super(ignoreAll);
       this.document = document;
@@ -124,6 +125,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       fCompilationUnit = compilationUnit;
       this.projectId = projectId;
       this.docContext = docContext;
+      this.vfsId = vfsId;
 
       fUserReplacementLength = -1;
       if (!ignoreAll)
@@ -176,7 +178,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       if (fInvocationContext == null)
       {
          setInvocationContext(new JavaContentAssistInvocationContext(fCompilationUnit, document, invocationOffset,
-            projectId, docContext));
+            projectId, docContext, vfsId));
          fInvocationContext.setCollector(this);
       }
 
@@ -219,9 +221,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          // all signature processing method may throw IAEs
          // https://bugs.eclipse.org/bugs/show_bug.cgi?id=84657
          // don't abort, but log and show all the valid proposals
-         // TODO
-         //JavaPlugin.log(new Status(IStatus.ERROR, JavaPlugin.getPluginId(), IStatus.OK, "Exception when processing proposal for: " + String.valueOf(proposal.getCompletion()), e)); //$NON-NLS-1$
-         e.printStackTrace(); //NOSONAR
+         Log.error(getClass(), e);
       }
 
       if (DEBUG)
@@ -678,7 +678,7 @@ public class CompletionProposalCollector extends CompletionRequestor
       JavaCompletionProposalImpl javaProposal =
          new AnonymousTypeCompletionProposal(invocationContext, start, length, completion, label,
             String.valueOf(proposal.getDeclarationSignature()), typeBinding, relevance);
-      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal, projectId, docContext));
+      javaProposal.setProposalInfo(new AnonymousTypeProposalInfo(proposal, projectId, docContext, vfsId));
       return javaProposal;
    }
 
@@ -695,7 +695,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          new JavaCompletionProposalImpl(completion, start, length, image, label, relevance, getContext().isInJavadoc(),
             getInvocationContext());
       // if (fJavaProject != null)
-      javaProposal.setProposalInfo(new FieldProposalInfo(proposal, projectId, docContext));
+      javaProposal.setProposalInfo(new FieldProposalInfo(proposal, projectId, docContext, vfsId));
 
       javaProposal.setTriggerCharacters(VAR_TRIGGER);
 
@@ -723,7 +723,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          new JavaFieldWithCastedReceiverCompletionProposal(completion, start, length, image, label, relevance,
             getContext().isInJavadoc(), getInvocationContext(), proposal);
       // if (fJavaProject != null)
-      javaProposal.setProposalInfo(new FieldProposalInfo(proposal, projectId, docContext));
+      javaProposal.setProposalInfo(new FieldProposalInfo(proposal, projectId, docContext, vfsId));
 
       javaProposal.setTriggerCharacters(VAR_TRIGGER);
 
@@ -815,7 +815,7 @@ public class CompletionProposalCollector extends CompletionRequestor
          new OverrideCompletionProposal(name, paramTypes, start, length, label,
             String.valueOf(proposal.getCompletion()), fInvocationContext);
       javaProposal.setImage(getImage(fLabelProvider.createMethodImageDescriptor(proposal)));
-      javaProposal.setProposalInfo(new MethodProposalInfo(proposal, projectId, docContext));
+      javaProposal.setProposalInfo(new MethodProposalInfo(proposal, projectId, docContext, vfsId));
       javaProposal.setRelevance(computeRelevance(proposal));
 
       fSuggestedMethodNames.add(new String(name));

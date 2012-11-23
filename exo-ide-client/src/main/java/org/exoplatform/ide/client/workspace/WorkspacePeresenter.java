@@ -40,6 +40,7 @@ import elemental.html.TableElement;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
+import org.exoplatform.ide.client.ImageBundle;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
@@ -56,6 +57,7 @@ import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.outline.OutlinePartPresenter;
 import org.exoplatform.ide.part.PartAgentPresenter;
 import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.presenter.Presenter;
@@ -91,6 +93,8 @@ public class WorkspacePeresenter implements Presenter
       HasWidgets getLeftPanel();
 
       HasWidgets getMenuPanel();
+
+      HasWidgets getRightPanel();
    }
 
    Display display;
@@ -109,10 +113,10 @@ public class WorkspacePeresenter implements Presenter
 
    @Inject
    protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
-      EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent,
+      EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
       final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-      JavaExtension javaExtension, ExtensionsPage extensionsPage, Resources resources)
-
+      JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
+      OutlinePartPresenter outlinePresenter)
    {
       super();
       this.display = display;
@@ -153,8 +157,9 @@ public class WorkspacePeresenter implements Presenter
       //XXX DEMO
 
       partAgent.addPart(extensionsPage, PartStackType.EDITING);
-      partAgent.addPart(new WelcomePage(), PartStackType.EDITING);
+      partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
       partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
+      partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
 
    /**
@@ -169,6 +174,7 @@ public class WorkspacePeresenter implements Presenter
 
       partAgent.go(PartStackType.NAVIGATION, display.getLeftPanel());
       partAgent.go(PartStackType.EDITING, display.getCenterPanel());
+      partAgent.go(PartStackType.TOOLING, display.getRightPanel());
 
       container.add(display.asWidget());
    }
@@ -418,9 +424,7 @@ public class WorkspacePeresenter implements Presenter
 
          TableElement tableElement = Elements.createTableElement();
          tableElement.setAttribute("style", "width: 100%");
-         list =
-            SimpleList.create((View) tableElement, resources.defaultSimpleListCss(), listItemRenderer,
-               listDelegate);
+         list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
       }
 
       /**

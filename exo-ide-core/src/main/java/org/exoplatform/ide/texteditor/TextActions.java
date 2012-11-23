@@ -56,7 +56,7 @@ public class TextActions extends DefaultActionExecutor
       });
    }
 
-   private void startNewLine(Editor editor)
+   private void startNewLine(TextEditorView editor)
    {
       SelectionModel selection = editor.getSelection();
       selection.deselect();
@@ -67,7 +67,7 @@ public class TextActions extends DefaultActionExecutor
       editor.getEditorDocumentMutator().insertText(line, lineNumber, lastCursorColumn, "\n");
    }
 
-   private void splitLine(Editor editor)
+   private void splitLine(TextEditorView editor)
    {
       // TODO: Add language specific logic (i.e. string splitting).
       SelectionModel selection = editor.getSelection();

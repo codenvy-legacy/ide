@@ -1246,7 +1246,7 @@ public class LocalCorrectionsSubProcessor
          addRemoveProposal(context, rewrite, label, proposals);
 
          AssistContext assistContext =
-            new AssistContext(context.getDocument(), infixExpression.getRightOperand().getStartPosition() - 1, 0);
+            new AssistContext(null, context.getDocument(), infixExpression.getRightOperand().getStartPosition() - 1, 0);
          assistContext.setASTRoot(root);
          AdvancedQuickAssistProcessor.getSplitAndConditionProposals(assistContext, infixExpression, proposals);
          AdvancedQuickAssistProcessor.getSplitOrConditionProposals(assistContext, infixExpression, proposals);

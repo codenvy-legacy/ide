@@ -24,7 +24,7 @@ import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.EditorProvider;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
+import org.exoplatform.ide.texteditor.TextEditorPresenter;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 
@@ -60,7 +60,7 @@ public class DefaultEditorProvider implements EditorProvider
    @Override
    public EditorPartPresenter getEditor()
    {
-      return new BaseTextEditor(resources, activityManager, documentProvider, configuration);
+      return new TextEditorPresenter(resources, activityManager, documentProvider, configuration);
    }
 
 }
