@@ -154,6 +154,7 @@
             </executions>
             <!-- Plugin configuration. There are many available options, see gwt-maven-plugin documentation at codehaus.org -->
             <configuration>
+            <logLevel>INFO</logLevel>
             <extraJvmArgs>-Xss512m -Xmx4024m -XX:MaxPermSize=1024m</extraJvmArgs>
                <runTarget>IDE.html</runTarget>
                <hostedWebapp>${webappDirectory}</hostedWebapp>

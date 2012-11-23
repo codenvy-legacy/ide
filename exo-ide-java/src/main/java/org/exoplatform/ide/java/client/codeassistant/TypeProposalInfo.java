@@ -15,7 +15,6 @@ import org.exoplatform.ide.java.client.core.CompletionProposal;
 import org.exoplatform.ide.java.client.core.IJavaElement;
 import org.exoplatform.ide.java.client.core.Signature;
 import org.exoplatform.ide.java.client.internal.corext.util.SignatureUtil;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
 /**
  * Proposal info that computes the javadoc lazily when it is queried.

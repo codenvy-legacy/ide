@@ -29,6 +29,10 @@ import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * <p>
+ * It monitors the text viewer and keeps a history of the changes applied to the
+ * viewer. The undo manager groups those changes into user interactions which on
+ * an undo request are rolled back in one atomic change.</p>
+ * <p>
  * It registers with the connected text viewer as text input listener, and obtains
  * its undo manager from the current document.  It also monitors mouse and keyboard
  * activities in order to partition the stream of text changes into undo-able

@@ -58,6 +58,7 @@
                <artifactId>javassist</artifactId>
             </exclusion>
          </exclusions>
+         <scope>runtime</scope>
       </dependency>
             
       <dependency>
