@@ -25,7 +25,7 @@ import org.exoplatform.ide.java.client.editor.outline.JavaNodeRenderer;
 import org.exoplatform.ide.outline.OutlineImpl;
 import org.exoplatform.ide.outline.OutlineModel;
 import org.exoplatform.ide.outline.OutlinePresenter;
-import org.exoplatform.ide.texteditor.BaseTextEditor;
+import org.exoplatform.ide.texteditor.TextEditorPresenter;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 
 /**
@@ -33,7 +33,7 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
-public class JavaEditor extends BaseTextEditor
+public class JavaEditor extends TextEditorPresenter
 {
 
    private final Resources resources;

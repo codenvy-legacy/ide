@@ -28,7 +28,7 @@ import org.exoplatform.ide.text.store.anchor.AnchorManager;
 import org.exoplatform.ide.text.store.anchor.AnchorType;
 import org.exoplatform.ide.text.store.util.LineUtils;
 import org.exoplatform.ide.texteditor.Buffer;
-import org.exoplatform.ide.texteditor.Editor;
+import org.exoplatform.ide.texteditor.TextEditorView;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.ViewportModel.Edge;
 import org.exoplatform.ide.texteditor.renderer.Renderer.LineLifecycleListener;
@@ -59,7 +59,7 @@ public class ViewportRenderer
     */
    private class AnimationController
    {
-      private final Editor.View editorView;
+      private final TextEditorView.View editorView;
 
       private boolean isAnimating = false;
 
@@ -80,7 +80,7 @@ public class ViewportRenderer
          }
       };
 
-      AnimationController(Editor.View editorView)
+      AnimationController(TextEditorView.View editorView)
       {
          this.editorView = editorView;
       }
@@ -107,7 +107,7 @@ public class ViewportRenderer
          {
             isAnimating = true;
          }
-         animationFinishedTimer.schedule(Editor.ANIMATION_DURATION);
+         animationFinishedTimer.schedule(TextEditorView.ANIMATION_DURATION);
       }
    }
 
@@ -164,7 +164,7 @@ public class ViewportRenderer
     */
    private Anchor viewportOldTopAnchor;
 
-   ViewportRenderer(DocumentModel document, Buffer buffer, ViewportModel viewport, Editor.View editorView,
+   ViewportRenderer(DocumentModel document, Buffer buffer, ViewportModel viewport, TextEditorView.View editorView,
       ListenerManager<LineLifecycleListener> lineLifecycleListenerManager)
    {
       this.document = document;

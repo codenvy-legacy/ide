@@ -49,7 +49,7 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
-public class BaseTextEditor extends AbstractPartPresenter implements TextEditorPartPresenter
+public class TextEditorPresenter extends AbstractPartPresenter implements TextEditorPartPresenter
 {
 
    protected TextEditorPartDisplay editor;
@@ -83,12 +83,12 @@ public class BaseTextEditor extends AbstractPartPresenter implements TextEditorP
     * @param documentProvider 
     * 
     */
-   public BaseTextEditor(Resources resources, UserActivityManager userActivityManager,
+   public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager,
       DocumentProvider documentProvider, TextEditorConfiguration configuration)
    {
       this.documentProvider = documentProvider;
       this.configuration = configuration;
-      editor = new Editor(resources, userActivityManager);
+      editor = new TextEditorView(resources, userActivityManager);
       editor.getTextListenerRegistrar().add(textListener);
    }
 

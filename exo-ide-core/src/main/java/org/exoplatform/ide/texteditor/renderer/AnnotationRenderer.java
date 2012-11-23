@@ -30,7 +30,7 @@ import org.exoplatform.ide.text.annotation.AnnotationModelEvent;
 import org.exoplatform.ide.text.annotation.AnnotationModelListener;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.LineFinder;
-import org.exoplatform.ide.texteditor.Editor;
+import org.exoplatform.ide.texteditor.TextEditorView;
 import org.exoplatform.ide.util.loging.Log;
 
 import java.util.Iterator;
@@ -43,7 +43,7 @@ import java.util.Iterator;
 public class AnnotationRenderer implements AnnotationModelListener
 {
 
-   private Editor editor;
+   private TextEditorView editor;
 
    private AnnotationModel annotationModel;
 
@@ -54,7 +54,7 @@ public class AnnotationRenderer implements AnnotationModelListener
    /**
     * @param editor
     */
-   public AnnotationRenderer(Editor editor, JsonStringMap<String> decorations)
+   public AnnotationRenderer(TextEditorView editor, JsonStringMap<String> decorations)
    {
       super();
       this.editor = editor;

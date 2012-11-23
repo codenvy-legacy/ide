@@ -17,7 +17,7 @@ package org.exoplatform.ide.texteditor.input;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.text.store.LineInfo;
-import org.exoplatform.ide.texteditor.Editor;
+import org.exoplatform.ide.texteditor.TextEditorView;
 import org.exoplatform.ide.texteditor.Spacer;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.texteditor.selection.SelectionModel.MoveAction;
@@ -457,7 +457,7 @@ public class DefaultScheme extends InputScheme
             @Override
             public boolean event(InputScheme scheme, SignalEvent event)
             {
-               final Editor editor = scheme.getInputController().getEditor();
+               final TextEditorView editor = scheme.getInputController().getEditor();
                spacers.add(editor.getBuffer().addSpacer(
                   new LineInfo(editor.getSelection().getCursorLine(), editor.getSelection().getCursorLineNumber()),
                   new Random().nextInt(500) + 1));
@@ -470,7 +470,7 @@ public class DefaultScheme extends InputScheme
             @Override
             public boolean event(InputScheme scheme, SignalEvent event)
             {
-               final Editor editor = scheme.getInputController().getEditor();
+               final TextEditorView editor = scheme.getInputController().getEditor();
                spacerFinder.setValue(editor.getSelection().getCursorLineNumber());
                int spacerIndex = spacers.findInsertionIndex(spacerFinder, false);
                if (spacerIndex >= 0)
@@ -487,7 +487,7 @@ public class DefaultScheme extends InputScheme
             @Override
             public boolean event(InputScheme scheme, SignalEvent event)
             {
-               final Editor editor = scheme.getInputController().getEditor();
+               final TextEditorView editor = scheme.getInputController().getEditor();
                spacerFinder.setValue(editor.getSelection().getCursorLineNumber());
                int spacerIndex = spacers.findInsertionIndex(spacerFinder, false);
                if (spacerIndex >= 0)
@@ -506,7 +506,7 @@ public class DefaultScheme extends InputScheme
             @Override
             public boolean event(InputScheme scheme, SignalEvent event)
             {
-               final Editor editor = scheme.getInputController().getEditor();
+               final TextEditorView editor = scheme.getInputController().getEditor();
                editor.setAnimationEnabled(true);
                return true;
             }
@@ -517,7 +517,7 @@ public class DefaultScheme extends InputScheme
             @Override
             public boolean event(InputScheme scheme, SignalEvent event)
             {
-               final Editor editor = scheme.getInputController().getEditor();
+               final TextEditorView editor = scheme.getInputController().getEditor();
                editor.setAnimationEnabled(false);
                return true;
             }

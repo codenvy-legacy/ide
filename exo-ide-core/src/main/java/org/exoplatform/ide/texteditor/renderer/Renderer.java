@@ -18,7 +18,7 @@ import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.texteditor.Buffer;
-import org.exoplatform.ide.texteditor.Editor;
+import org.exoplatform.ide.texteditor.TextEditorView;
 import org.exoplatform.ide.texteditor.FocusManager;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
@@ -40,7 +40,7 @@ public class Renderer
 {
 
    public static Renderer create(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-      SelectionModel selection, FocusManager focusManager, Editor editor, Resources res,
+      SelectionModel selection, FocusManager focusManager, TextEditorView editor, Resources res,
       RenderTimeExecutor renderTimeExecutor)
    {
       return new Renderer(document, viewport, buffer, leftGutter, selection, focusManager, editor, res,
@@ -93,7 +93,7 @@ public class Renderer
    private final RenderTimeExecutor renderTimeExecutor;
 
    private Renderer(DocumentModel document, ViewportModel viewport, Buffer buffer, Gutter leftGutter,
-      SelectionModel selection, FocusManager focusManager, Editor editor, Resources res,
+      SelectionModel selection, FocusManager focusManager, TextEditorView editor, Resources res,
       RenderTimeExecutor renderTimeExecutor)
    {
       this.viewport = viewport;

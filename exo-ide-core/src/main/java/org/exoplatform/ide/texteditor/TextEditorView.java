@@ -74,8 +74,8 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
 import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
- * The presenter for the editor.
- *
+ * The Display for the text editor presenter.
+ * This is default implementation for {@link TextEditorPartDisplay}
  *  This class composes many of the other classes that together form the editor.
  * For example, the area where the text is displayed, the {@link Buffer}, is a
  * nested presenter. Other components are not presenters, such as the input
@@ -85,7 +85,7 @@ import org.exoplatform.ide.util.input.SignalEvent;
  * "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
-public class Editor extends UiComponent<Editor.View> implements TextEditorPartDisplay
+public class TextEditorView extends UiComponent<TextEditorView.View> implements TextEditorPartDisplay
 {
 
    /**
@@ -275,7 +275,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
    private QuickAssistAssistant quickAssistAssistant;
 
-   public Editor(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
+   public TextEditorView(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
    {
       this.resources = resources;
       this.userActivityManager = userActivityManager;
@@ -627,7 +627,7 @@ public class Editor extends UiComponent<Editor.View> implements TextEditorPartDi
 
       this.isReadOnly = isReadOnly;
 
-      readOnlyListenerManager.dispatch(new Dispatcher<Editor.ReadOnlyListener>()
+      readOnlyListenerManager.dispatch(new Dispatcher<TextEditorView.ReadOnlyListener>()
       {
          @Override
          public void dispatch(ReadOnlyListener listener)
