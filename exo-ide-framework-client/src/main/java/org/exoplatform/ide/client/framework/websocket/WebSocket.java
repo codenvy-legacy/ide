@@ -249,7 +249,7 @@ public class WebSocket
    };
 
    /**
-    * Timer for sending heartbeat pings, mainly to prevent closing an idle WebSocket connection.
+    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
     */
    private Timer heartbeatTimer = new Timer()
    {

@@ -39,7 +39,7 @@ public class RunningAppStatusHandler extends RequestStatusHandlerBase
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestInProgress(java.lang.String)
+    * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestInProgress(java.lang.String)
     */
    @Override
    public void requestInProgress(String id)
@@ -50,7 +50,7 @@ public class RunningAppStatusHandler extends RequestStatusHandlerBase
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestFinished(java.lang.String)
+    * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestFinished(java.lang.String)
     */
    @Override
    public void requestFinished(String id)

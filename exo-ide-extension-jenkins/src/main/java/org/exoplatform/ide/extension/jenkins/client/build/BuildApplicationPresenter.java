@@ -39,6 +39,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
 import org.exoplatform.ide.extension.jenkins.client.JobResult;
@@ -473,11 +477,24 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
-    * Initialize Git repository.
+    * Initialize of the Git-repository by sending request over WebSocket or HTTP.
     * 
     * @param path working directory of the repository
     */
    private void initRepository(final ProjectModel project)
+   {
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         initRepositoryWS(project);
+      else
+         initRepositoryREST(project);
+   }
+
+   /**
+    * Initialize Git repository (sends request over HTTP).
+    * 
+    * @param path working directory of the repository
+    */
+   private void initRepositoryREST(final ProjectModel project)
    {
       try
       {
@@ -487,9 +504,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
                @Override
                protected void onSuccess(String result)
                {
-                  showBuildMessage(GitExtension.MESSAGES.initSuccess());
-                  IDE.fireEvent(new RefreshBrowserEvent());
-                  createJob();
+                  onInitSuccess();
                }
 
                @Override
@@ -503,6 +518,47 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       {
          handleError(e);
       }
+   }
+
+   /**
+    * Initialize Git repository (sends request over WebSocket).
+    * 
+    * @param path working directory of the repository
+    */
+   private void initRepositoryWS(final ProjectModel project)
+   {
+      try
+      {
+         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
+            new RESTfulRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  onInitSuccess();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e);
+      }
+   }
+
+   /**
+    * Performs actions when initialization of Git-repository successfully completed.
+    */
+   private void onInitSuccess()
+   {
+      showBuildMessage(GitExtension.MESSAGES.initSuccess());
+      IDE.fireEvent(new RefreshBrowserEvent());
+      createJob();
    }
 
    private void handleError(Throwable e)

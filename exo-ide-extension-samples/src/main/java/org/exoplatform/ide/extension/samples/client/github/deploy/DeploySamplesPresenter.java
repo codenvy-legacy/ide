@@ -46,6 +46,10 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -340,6 +344,9 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
    }
 
+   /**
+    * Clone of the repository by sending request over WebSocket or HTTP.
+    */
    private void cloneFolder(ProjectData repo, final FolderModel folder)
    {
       String remoteUri = repo.getRepositoryUrl();
@@ -347,10 +354,21 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       {
          remoteUri += ".git";
       }
+      JobManager.get().showJobSeparated();
 
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         cloneFolderWS(repo, folder, remoteUri);
+      else
+         cloneFolderREST(repo, folder, remoteUri);
+   }
+
+   /**
+    * Get the necessary parameters values and call the clone repository method (over HTTP).
+    */
+   private void cloneFolderREST(ProjectData repo, final FolderModel folder, String remoteUri)
+   {
       try
       {
-         JobManager.get().showJobSeparated();
          GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
             new AsyncRequestCallback<RepoInfo>()
             {
@@ -368,6 +386,35 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
             });
       }
       catch (RequestException e)
+      {
+         handleError(e);
+      }
+   }
+
+   /**
+    * Get the necessary parameters values and call the clone repository method (over WebSocket).
+    */
+   private void cloneFolderWS(ProjectData repo, final FolderModel folder, String remoteUri)
+   {
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
+            new RESTfulRequestCallback<RepoInfo>()
+            {
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onRepositoryCloned();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
       {
          handleError(e);
       }

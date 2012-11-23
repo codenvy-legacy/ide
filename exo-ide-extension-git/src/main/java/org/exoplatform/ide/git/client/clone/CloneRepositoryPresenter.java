@@ -35,11 +35,16 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
@@ -225,7 +230,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          VirtualFileSystem.getInstance().createFolder(vfs.getRoot(),
             new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder))
             {
-
                @Override
                protected void onSuccess(FolderModel result)
                {
@@ -239,7 +243,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.cloneFailed();
                   IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-
                }
             });
       }
@@ -254,26 +257,31 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    }
 
    /**
-    * Get the necessary parameters values and call the clone repository method.
+    * Clone of the repository by sending request over WebSocket or HTTP.
     */
    private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder, final String projectType)
    {
-      RepoInfo repoInfo = new RepoInfo();
-      RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         cloneRepositoryWS(remoteUri, remoteName, folder, projectType);
+      else
+         cloneRepositoryREST(remoteUri, remoteName, folder, projectType);
+   }
+
+   /**
+    * Get the necessary parameters values and call the clone repository method (over HTTP).
+    */
+   private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder,
+      final String projectType)
+   {
       try
       {
          GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName,
-            new AsyncRequestCallback<RepoInfo>(unmarshaller)
+            new AsyncRequestCallback<RepoInfo>(new RepoInfoUnmarshaller(new RepoInfo()))
             {
-
                @Override
-               protected void onSuccess(final RepoInfo result)
+               protected void onSuccess(RepoInfo result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  convertFolderToProject(folder, projectType);
-                  //TODO: not good, comment temporary need found other way 
-                  // for inviting collaborators
-                  // showInvitation(result.getRemoteUri());
+                  onCloneSuccess(folder, projectType);
                }
 
                @Override
@@ -290,6 +298,58 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       IDE.getInstance().closeView(display.asView().getId());
    }
 
+   /**
+    * Get the necessary parameters values and clone repository (over WebSocket).
+    * 
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param folder folder (root of GIT repository)
+    * @param projectType type of project which will be created from cloned repository
+    */
+   private void cloneRepositoryWS(String remoteUri, String remoteName, final FolderModel folder,
+      final String projectType)
+   {
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
+            new RESTfulRequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
+            {
+
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onCloneSuccess(folder, projectType);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e);
+      }
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Perform actions when repository was successfully cloned.
+    * 
+    * @param folder {@link FolderModel} to clone
+    * @param projectType type of the project which will be created
+    */
+   private void onCloneSuccess(FolderModel folder, String projectType)
+   {
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+      convertFolderToProject(folder, projectType);
+      //TODO: not good, comment temporary need found other way 
+      // for inviting collaborators
+      // showInvitation(result.getRemoteUri());
+   }
+
    private void handleError(Throwable e)
    {
       String errorMessage =
@@ -298,7 +358,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    }
 
    /**
-    * Convert folder to project after cloning
+    * Convert folder to project after cloning.
+    * 
     * @param folder
     * @param projectType
     */
