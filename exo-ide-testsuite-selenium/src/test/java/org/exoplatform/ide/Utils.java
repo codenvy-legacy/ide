@@ -58,7 +58,7 @@ public class Utils
 {
    public static final String COMMAND = "/ide/groovy/";
 
-   public static HttpURLConnection getConnection(URL url) throws IOException
+   public static HttpsURLConnection getConnection(URL url) throws IOException
    {
       if (BaseTest.IDE_HOST.contains("localhost"))
       {
@@ -68,7 +68,7 @@ public class Utils
       {
          login();
       }
-      HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+      HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
       connection.setRequestProperty("Referer", url.toString());
       connection.setAllowUserInteraction(false);
       return connection;
@@ -306,24 +306,17 @@ public class Utils
       CookieHandler.setDefault(new CookieManager(null, CookiePolicy.ACCEPT_ALL));
       if (isLogged())
          return;
-      HttpsURLConnection https1 = null;
-      HttpsURLConnection https2 = null;
-      HttpsURLConnection https3 = null;
-      HttpURLConnection http4 = null;
-      HttpURLConnection https5 = null;
-      HttpURLConnection https6 = null;
-      HttpURLConnection http = null;
-
+      HttpsURLConnection https = null;
       try
       {
          String lOGIN_URL =
             BaseTest.LOGIN_URL + "cloud/ide.jsp?username=" + BaseTest.USER_NAME + "&password=" + BaseTest.USER_PASSWORD;
          System.err.println(lOGIN_URL);
-         https1 = (HttpsURLConnection)new URL(lOGIN_URL).openConnection();
-         https1.setRequestMethod("GET");
-         https1.setAllowUserInteraction(false);
-         https1.setInstanceFollowRedirects(true);
-         Map<String, List<String>> headerFields = https1.getHeaderFields();
+         https = (HttpsURLConnection)new URL(lOGIN_URL).openConnection();
+         https.setRequestMethod("GET");
+         https.setAllowUserInteraction(false);
+         https.setInstanceFollowRedirects(true);
+         Map<String, List<String>> headerFields = https.getHeaderFields();
          Set<String> keySet = headerFields.keySet();
 
          for (String key : keySet)
@@ -334,142 +327,8 @@ public class Utils
                System.out.println("               " + key + " :: " + string);
             }
          }
-         System.err.println("     >>>>>>         " + https1.getResponseCode());
+         System.err.println("     >>>>>>         " + https.getResponseCode());
          System.err.println("-----------------------------------------------------");
-
-         if (https1.getResponseCode() == 302)
-         {
-            String rediString = https1.getHeaderField("Location");
-            System.out.println("Now go to https1 : " + rediString);
-            http = (HttpURLConnection)new URL(rediString).openConnection();
-         }
-
-         http.setRequestMethod("GET");
-         http.setAllowUserInteraction(false);
-         http.setInstanceFollowRedirects(true);
-         headerFields = http.getHeaderFields();
-         keySet = headerFields.keySet();
-         for (String key : keySet)
-         {
-            List<String> vals = headerFields.get(key);
-            for (String string : vals)
-            {
-               System.out.println("               " + key + " :: " + string);
-            }
-         }
-
-         System.err.println("-----------------------------------------------------");
-         if (http.getResponseCode() == 302)
-         {
-            String rediString = http.getHeaderField("Location");
-            System.out.println("Now go to http: " + rediString);
-            https2 = (HttpsURLConnection)new URL(rediString).openConnection();
-         }
-         //------------------------------------------------3         
-         https2.setRequestMethod("GET");
-         https2.setAllowUserInteraction(false);
-         https2.setInstanceFollowRedirects(true);
-         headerFields = https2.getHeaderFields();
-         keySet = headerFields.keySet();
-         for (String key : keySet)
-         {
-            List<String> vals = headerFields.get(key);
-            for (String string : vals)
-            {
-               System.out.println("               " + key + " :: " + string);
-            }
-         }
-         if (http.getResponseCode() == 302)
-         {
-            String rediString = http.getHeaderField("Location");
-            System.out.println("Now go to https2: " + rediString);
-            https3 = (HttpsURLConnection)new URL(rediString).openConnection();
-         }
-
-         //--------------------------------------------4        
-         https3.setRequestMethod("GET");
-         https3.setAllowUserInteraction(false);
-         https3.setInstanceFollowRedirects(true);
-         headerFields = https3.getHeaderFields();
-         keySet = headerFields.keySet();
-         for (String key : keySet)
-         {
-            List<String> vals = headerFields.get(key);
-            for (String string : vals)
-            {
-               System.out.println("               " + key + " :: " + string);
-            }
-         }
-         if (https3.getResponseCode() == 302)
-         {
-            String rediString = https3.getHeaderField("Location");
-            System.out.println("Now go to https3: " + rediString);
-            http4 = (HttpURLConnection)new URL(rediString).openConnection();
-         }
-
-         //-----------------------------------------------
-         http4.setRequestMethod("GET");
-         http4.setAllowUserInteraction(false);
-         http4.setInstanceFollowRedirects(true);
-         headerFields = http4.getHeaderFields();
-         keySet = headerFields.keySet();
-         for (String key : keySet)
-         {
-            List<String> vals = headerFields.get(key);
-            for (String string : vals)
-            {
-               System.out.println("               " + key + " :: " + string);
-            }
-         }
-         if (http4.getResponseCode() == 302)
-         {
-            String rediString = http4.getHeaderField("Location");
-            System.out.println("Now go to https4: " + rediString);
-            https5 = (HttpURLConnection)new URL(rediString).openConnection();
-         }
-
-         //-----------------------------------------------
-         https5.setRequestMethod("GET");
-         https5.setAllowUserInteraction(false);
-         https5.setInstanceFollowRedirects(true);
-         headerFields = https5.getHeaderFields();
-         keySet = headerFields.keySet();
-         for (String key : keySet)
-         {
-            List<String> vals = headerFields.get(key);
-            for (String string : vals)
-            {
-               System.out.println("               " + key + " :: " + string);
-            }
-         }
-         if (https5.getResponseCode() == 302)
-         {
-            String rediString = https5.getHeaderField("Location");
-            System.out.println("Now go to https5: " + rediString);
-            https6 = (HttpURLConnection)new URL(rediString).openConnection();
-         }
-
-         //-----------------------------------------------
-         https6.setRequestMethod("GET");
-         https6.setAllowUserInteraction(false);
-         https6.setInstanceFollowRedirects(true);
-         headerFields = https6.getHeaderFields();
-         keySet = headerFields.keySet();
-         for (String key : keySet)
-         {
-            List<String> vals = headerFields.get(key);
-            for (String string : vals)
-            {
-               System.out.println("               " + key + " :: " + string);
-            }
-         }
-         if (https6.getResponseCode() == 302)
-         {
-            String rediString = https6.getHeaderField("Location");
-            System.out.println("Now go to https6: " + rediString);
-
-         }
-
       }
       catch (MalformedURLException e)
       {
@@ -481,35 +340,8 @@ public class Utils
       }
       finally
       {
-         System.out.println("++++++++++++++++++++ https1 " + https1.getURL());
-         System.out.println("++++++++++++++++++++ http " + http.getURL());
-         System.out.println("++++++++++++++++++++ https2 " + https2.getURL());
-         System.out.println("++++++++++++++++++++ https3 " + https3.getURL());
-         System.out.println("++++++++++++++++++++ http4 " + http4.getURL());
-         System.out.println("++++++++++++++++++++ https5 " + https5.getURL());
-         System.out.println("++++++++++++++++++++ https6 " + https6.getURL());
-
-         if (https1 != null)
-            https1.disconnect();
-
-         if (http != null)
-            http.disconnect();
-
-         if (https2 != null)
-            https2.disconnect();
-
-         if (https3 != null)
-            https3.disconnect();
-
-         if (http4 != null)
-            http4.disconnect();
-
-         if (https5 != null)
-            https5.disconnect();
-
-         if (https6 != null)
-            https6.disconnect();
-
+         if (https != null)
+            https.disconnect();
       }
 
    }

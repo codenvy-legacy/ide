@@ -74,11 +74,11 @@ public class VirtualFileSystemUtils
    public static int put(String filePath, String mimeType, String contentNodeType, String storageUrl)
       throws IOException
    {
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          URL url = new URL(storageUrl);
-         connection = (HttpURLConnection)Utils.getConnection(url);
+         connection = Utils.getConnection(url);
          String data = Utils.readFileAsString(filePath);
          connection.setRequestMethod(HTTPMethod.PUT);
          connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, mimeType);
@@ -101,7 +101,7 @@ public class VirtualFileSystemUtils
 
    public static int put(byte[] data, String mimeType, String contentNodeType, String storageUrl) throws IOException
    {
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          URL url = new URL(storageUrl);
@@ -127,7 +127,7 @@ public class VirtualFileSystemUtils
 
    public static int put(byte[] data, String storageUrl) throws IOException
    {
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          URL url = new URL(storageUrl);
@@ -182,7 +182,7 @@ public class VirtualFileSystemUtils
    public static int delete(String storageUrl) throws IOException
    {
       int status = -1;
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          URL url = new URL(storageUrl);
@@ -208,7 +208,7 @@ public class VirtualFileSystemUtils
    public static Response get(String storageUrl) throws IOException
    {
       URL url = new URL(storageUrl);
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       int status = -1;
       try
       {
@@ -248,7 +248,7 @@ public class VirtualFileSystemUtils
    public static int mkcol(String storageUrl) throws IOException
    {
       int status = -1;
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          URL url = new URL(storageUrl);
@@ -291,7 +291,7 @@ public class VirtualFileSystemUtils
          throw new IllegalArgumentException("Parameter 'link' can't be null!");
 
       int status = -1;
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          URL url = new URL(link.getHref());
@@ -330,7 +330,7 @@ public class VirtualFileSystemUtils
       if (link == null)
          throw new IllegalArgumentException("Parameter 'link' can't be null!");
       int status = -1;
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          String href = URLDecoder.decode(link.getHref(), "UTF-8");
@@ -365,28 +365,27 @@ public class VirtualFileSystemUtils
    */
    public static Map<String, Link> importZipProject(String projectName, String zipPath) throws IOException
    {
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       Map<String, Link> folderLiks = createFolder(projectName);
       try
       {
-         //    System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Create folder in importzip project method");
+
          Link href = folderLiks.get(Link.REL_IMPORT);
          if (href == null)
             throw new RuntimeException("Folder not created or 'import' relation not found.");
          URL url = new URL(href.getHref());
-         connection = (HttpURLConnection)Utils.getConnection(url);
-         //  System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Connected URL Getted" + url);
+         connection = Utils.getConnection(url);
+
          connection.setRequestMethod("POST");
          connection.setRequestProperty(HTTPHeader.CONTENT_TYPE, "application/zip");
          connection.setDoOutput(true);
          OutputStream outputStream = connection.getOutputStream();
-         //System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Set do Output and open output stream");
 
          File f = new File(zipPath);
          FileInputStream inputStream = new FileInputStream(f);
-         //System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Open File in input stream");
+
          IOUtils.copy(inputStream, outputStream);
-         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<Transfer data of the project");
+
          inputStream.close();
          outputStream.close();
          connection.getResponseCode();
@@ -416,7 +415,7 @@ public class VirtualFileSystemUtils
    @SuppressWarnings("unchecked")
    private static Map<String, Link> createFolder(String name)
    {
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          if (rootLinks == null)
@@ -424,19 +423,19 @@ public class VirtualFileSystemUtils
             initVFS();
          }
          String href = rootLinks.get(Link.REL_CREATE_FOLDER).getHref();
-         //    System.out.println("createFolder method step 1>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
+
          href = URLDecoder.decode(href, "UTF-8").replace("[name]", name);
-         //  System.out.println("createFolder method step 2>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
+
          URL url = new URL(href);
-         // System.out.println("createFolder method step 3>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
+
          connection = Utils.getConnection(url);
          connection.setRequestMethod("POST");
-         //System.out.println("createFolder method step 4>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
+
          JsonParser parser = new JsonParser();
          parser.parse(connection.getInputStream());
          connection.getInputStream().close();
          Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
-         //System.out.println("End create folder>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>:");
+
          return (Map<String, Link>)ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(),
             parser.getJsonObject().getElement("links"));
       }
@@ -468,7 +467,7 @@ public class VirtualFileSystemUtils
 
    public static void createFolder(Link link, String name) throws IOException
    {
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          String href = URLDecoder.decode(link.getHref(), "UTF-8").replace("[name]", name);
@@ -501,7 +500,7 @@ public class VirtualFileSystemUtils
    private static void initVFS() throws IOException
    {
       String uRl = BaseTest.BASE_URL + BaseTest.REST_CONTEXT + "/ide/vfs/dev-monit";
-      HttpURLConnection connection = null;
+      HttpsURLConnection connection = null;
       try
       {
          URL url = new URL(uRl);
@@ -509,15 +508,15 @@ public class VirtualFileSystemUtils
          connection.setRequestMethod("GET");
          JsonParser parser = new JsonParser();
          parser.parse(connection.getInputStream());
-         //   System.out.println("VirtualFileSystemUtils.initVFS()" + connection.getResponseCode());
+
          connection.getInputStream().close();
          vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfo.class, parser.getJsonObject());
-         // System.out.println("InitVFS():<<<<<<<<<<<<<<<<<<<<<< createObject");
+
          JsonValue element = parser.getJsonObject().getElement("root").getElement("links");
-         // System.out.println("InitVFS():<<<<<<<<<<<<<<<<<<<<<< json Element");
+
          Field field = VirtualFileSystemUtils.class.getDeclaredField("rootLinks");
          rootLinks = ObjectBuilder.createObject(Map.class, (ParameterizedType)field.getGenericType(), element);
-         //System.out.println("InitVFS():<<<<<<<<<<<<<<<<<<<<<< rootLinks");
+
       }
       catch (JsonException e)
       {
