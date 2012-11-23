@@ -147,6 +147,7 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
          activeFile = event.getFile();
+
          if (!resolver.isProjectSupported(activeFile.getProject().getProjectType()))
             return;
          NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());

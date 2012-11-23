@@ -185,6 +185,20 @@ public class SearchResult extends AbstractTestModule
       item.click();
       new Actions(driver()).doubleClick(item).build().perform();
    }
+   
+   
+   /**
+    * Open item (make double click) in Search results tree.
+    * 
+    * @param path item's path
+    * @throws Exception
+    */
+   public void expandItem(String path) throws Exception
+   {
+      WebElement item = driver().findElement(By.id(getItemId(path)));
+      item.click();
+      new Actions(driver()).doubleClick(item).build().perform();
+   }
 
    /**
     * Select item in Search results tree.

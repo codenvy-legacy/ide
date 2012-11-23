@@ -46,7 +46,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @version $Id: ${date} ${time}
  * 
  */
-public class GetItemUrlTest extends BaseTest
+public class GetItemUrlTes extends BaseTest
 {
 
    private final String content1 = "<p> Hello!!! </p>";
@@ -57,7 +57,7 @@ public class GetItemUrlTest extends BaseTest
 
    private final String folderName = "myFolder";
 
-   private static final String PROJECT = GetItemUrlTest.class.getSimpleName();
+   private static final String PROJECT = GetItemUrlTes.class.getSimpleName();
 
    @BeforeClass
    public static void setUp()
