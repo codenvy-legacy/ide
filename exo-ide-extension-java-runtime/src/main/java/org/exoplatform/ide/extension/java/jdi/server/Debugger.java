@@ -668,7 +668,7 @@ public class Debugger implements EventsHandler
                )
             ));
          }
-         publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id, false);
+         publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id);
       }
 
       // Left target JVM in suspended state if result of evaluation of expression is boolean value and true
@@ -684,7 +684,7 @@ public class Debugger implements EventsHandler
       {
          events.add(new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
       }
-      publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id, false);
+      publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id);
 
       // Lets target JVM to be in suspend state.
       return false;
@@ -694,7 +694,7 @@ public class Debugger implements EventsHandler
    {
       eventsCollector.stop();
       instances.remove(id);
-      publishWebSocketMessage(null, DISCONNECTED_CHANNEL + id, false);
+      publishWebSocketMessage(null, DISCONNECTED_CHANNEL + id);
       return true;
    }
 
@@ -844,29 +844,16 @@ public class Debugger implements EventsHandler
     *    the data to be sent to the client
     * @param channel
     *    channel name
-    * @param isError
-    *    is this an error message?
     */
-   private static void publishWebSocketMessage(Object data, String channel, boolean isError)
+   private static void publishWebSocketMessage(Object data, String channel)
    {
       RESTfulOutputMessage message = new RESTfulOutputMessage();
       message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
                                     new Pair("x-everrest-websocket-channel", channel)});
-      if (isError)
+      message.setResponseCode(200);
+      if (data != null)
       {
-         message.setResponseCode(500);
-         if (data != null)
-         {
-            message.setBody((String)data);
-         }
-      }
-      else
-      {
-         message.setResponseCode(200);
-         if (data != null)
-         {
-            message.setBody(toJson(data));
-         }
+         message.setBody(toJson(data));
       }
 
       try

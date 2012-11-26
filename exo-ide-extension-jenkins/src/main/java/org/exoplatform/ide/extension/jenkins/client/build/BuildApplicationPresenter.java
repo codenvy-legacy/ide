@@ -39,10 +39,12 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
 import org.exoplatform.ide.extension.jenkins.client.JobResult;
@@ -111,6 +113,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     * Project for build on Jenkins.
     */
    private ProjectModel project;
+
+   private String jobStatusChannel;
 
    /**
     *
@@ -206,7 +210,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       // dummy check that user name is e-mail.
       // Jenkins create git tag on build. Marks user as author of tag.
       String mail = userInfo.getName().contains("@") ? userInfo.getName() : userInfo.getName() + "@exoplatform.local";
-      String uName = userInfo.getName().split("@")[0];// Jenkins don't alow in job name '@' character
+      String uName = userInfo.getName().split("@")[0];// Jenkins don't allows in job name '@' character
       try
       {
          AutoBean<Job> job = JenkinsExtension.AUTO_BEAN_FACTORY.create(Job.class);
@@ -252,11 +256,11 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    }
 
    /**
-    * Start building application
+    * Start building application.
     * 
     * @param jobName name of Jenkins job
     */
-   private void build(String jobName)
+   private void build(final String jobName)
    {
       try
       {
@@ -271,9 +275,17 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
                display.startAnimation();
                display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
-
                prevStatus = null;
-               refreshJobStatusTimer.schedule(delay);
+
+               if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+               {
+                  jobStatusChannel = Channels.JENKINS_JOB_STATUS + jobName;
+                  WebSocket.getInstance().subscribe(jobStatusChannel, jobStatusHandler);
+               }
+               else
+               {
+                  refreshJobStatusTimer.schedule(delay);
+               }
             }
 
             @Override
@@ -441,6 +453,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void onJobFinished(JobStatus status)
    {
+      WebSocket.getInstance().unsubscribe(jobStatusChannel, jobStatusHandler);
       IDE.fireEvent(new ApplicationBuiltEvent(status));
 
       try
@@ -596,5 +609,31 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          closed = true;
       }
    }
+
+   /**
+    * Handler for processing Jenkins job status which is received over WebSocket connection.
+    */
+   private SubscriptionHandler<JobStatus> jobStatusHandler = new SubscriptionHandler<JobStatus>(
+      new org.exoplatform.ide.client.framework.websocket.messages.AutoBeanUnmarshaller<JobStatus>(
+         JenkinsExtension.AUTO_BEAN_FACTORY.create(JobStatus.class)))
+   {
+      @Override
+      protected void onSuccess(JobStatus buildStatus)
+      {
+         updateJobStatus(buildStatus);
+         if (buildStatus.getStatus() == Status.END)
+         {
+            onJobFinished(buildStatus);
+         }
+      }
+
+      @Override
+      protected void onFailure(Throwable exception)
+      {
+         buildInProgress = false;
+         display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
+         IDE.fireEvent(new ExceptionThrownEvent(exception));
+      }
+   };
 
 }

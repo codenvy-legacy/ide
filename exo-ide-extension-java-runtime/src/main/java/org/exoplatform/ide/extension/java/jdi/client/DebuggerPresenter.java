@@ -50,6 +50,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
@@ -139,11 +140,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private static final String JREBEL = "jrebel";
 
-   private static final String DEBUGGER_EVENTS = "debugger:events:";
+   private String debuggerEventsChannel;
 
-   private static final String DEBUGGER_DISCONNECTED = "debugger:disconnected:";
+   private String debuggerDisconnectedChannel;
 
-   private static final String DEBUGGER_EXPIRE_SOON_APP = "debugger:expireSoonApp";
+   private String expireSoonAppChannel;
 
    public interface Display extends IsView
    {
@@ -405,8 +406,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                {
                   if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
                   {
-                     WebSocket.getInstance().unsubscribe(DEBUGGER_EVENTS + debuggerInfo.getId(), debuggerEventsHandler);
-                     WebSocket.getInstance().unsubscribe(DEBUGGER_EXPIRE_SOON_APP, expireSoonAppsHandler);
+                     WebSocket.getInstance().unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
+                     WebSocket.getInstance().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
                   }
                   else
                   {
@@ -478,8 +479,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
          if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
          {
-            WebSocket.getInstance().subscribe(DEBUGGER_EVENTS + debuggerInfo.getId(), debuggerEventsHandler);
-            WebSocket.getInstance().subscribe(DEBUGGER_DISCONNECTED + debuggerInfo.getId(), debuggerDisconnectedHandler);
+            debuggerEventsChannel = Channels.DEBUGGER_EVENTS + debuggerInfo.getId();
+            WebSocket.getInstance().subscribe(debuggerEventsChannel, debuggerEventsHandler);
+            debuggerDisconnectedChannel = Channels.DEBUGGER_DISCONNECTED + debuggerInfo.getId();
+            WebSocket.getInstance().subscribe(debuggerDisconnectedChannel, debuggerDisconnectedHandler);
          }
          else
          {
@@ -928,21 +931,21 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       runningApp = app;
    }
 
-   private void onDebugStarted(ApplicationInstance result)
+   private void onDebugStarted(ApplicationInstance app)
    {
-      String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(result.getName());
+      String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStarted(app.getName());
       msg +=
          "<br>"
-            + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
-               getAppUrlsAsString(result));
+            + DebuggerExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
       IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-      connectDebugger(result);
-      IDE.fireEvent(new AppStartedEvent(result));
-      runningApp = result;
+      connectDebugger(app);
+      IDE.fireEvent(new AppStartedEvent(app));
+      runningApp = app;
 
       if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
       {
-         WebSocket.getInstance().subscribe(DEBUGGER_EXPIRE_SOON_APP, expireSoonAppsHandler);
+         expireSoonAppChannel = Channels.DEBUGGER_EXPIRE_SOON_APP.toString() + runningApp.getName();
+         WebSocket.getInstance().subscribe(expireSoonAppChannel, expireSoonAppsHandler);
       }
    }
 
@@ -1114,7 +1117,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                public void onSuccess(Object result)
                {
-                  WebSocket.getInstance().subscribe(DEBUGGER_EXPIRE_SOON_APP, expireSoonAppsHandler);
+                  WebSocket.getInstance().subscribe(expireSoonAppChannel, expireSoonAppsHandler);
                }
 
                @Override
@@ -1163,37 +1166,32 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    /**
     * Handler for processing received application name which will be stopped soon.
     */
-   private SubscriptionHandler<StringBuilder> expireSoonAppsHandler = new SubscriptionHandler<StringBuilder>(
-      new AppNameUnmarshaller(new StringBuilder()))
+   private SubscriptionHandler<Object> expireSoonAppsHandler = new SubscriptionHandler<Object>()
    {
       @Override
-      public void onSuccess(StringBuilder appName)
+      public void onSuccess(Object result)
       {
-         if (runningApp.getName().equals(appName.toString()))
-         {
-            // unsubscribe to receiving events to avoid receiving messages while user not press any button in appeared dialog
-            WebSocket.getInstance().unsubscribe(DEBUGGER_EXPIRE_SOON_APP, expireSoonAppsHandler);
-            Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeTitle(),
-               DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeQuestion(),
-               new BooleanValueReceivedHandler()
+         // unsubscribe to receiving events to avoid receiving messages while user not press any button in appeared dialog
+         WebSocket.getInstance().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
+         Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeTitle(),
+            DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeQuestion(), new BooleanValueReceivedHandler()
+            {
+               @Override
+               public void booleanValueReceived(Boolean value)
                {
-                  @Override
-                  public void booleanValueReceived(Boolean value)
+                  if (value == true)
                   {
-                     if (value == true)
-                     {
-                        prolongExpirationTime();
-                     }
+                     prolongExpirationTime();
                   }
-               });
-            return;
-         }
+               }
+            });
+         return;
       }
 
       @Override
       public void onFailure(Throwable exception)
       {
-         WebSocket.getInstance().unsubscribe(DEBUGGER_EXPIRE_SOON_APP, this);
+         WebSocket.getInstance().unsubscribe(expireSoonAppChannel, this);
       }
    };
 
@@ -1205,7 +1203,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       protected void onSuccess(Object result)
       {
-         WebSocket.getInstance().unsubscribe(DEBUGGER_DISCONNECTED + debuggerInfo.getId(), this);
+         WebSocket.getInstance().unsubscribe(debuggerDisconnectedChannel, this);
          IDE.getInstance().closeView(display.asView().getId());
          if (runningApp != null)
          {
@@ -1217,7 +1215,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       protected void onFailure(Throwable exception)
       {
-         WebSocket.getInstance().unsubscribe(DEBUGGER_DISCONNECTED + debuggerInfo.getId(), this);
+         WebSocket.getInstance().unsubscribe(debuggerDisconnectedChannel, this);
       }
    };
 
@@ -1236,8 +1234,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       public void onFailure(Throwable exception)
       {
-         WebSocket.getInstance().unsubscribe(DEBUGGER_EVENTS + debuggerInfo.getId(), this);
-         WebSocket.getInstance().unsubscribe(DEBUGGER_EXPIRE_SOON_APP, expireSoonAppsHandler);
+         WebSocket.getInstance().unsubscribe(debuggerEventsChannel, this);
+         WebSocket.getInstance().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
          IDE.getInstance().closeView(display.asView().getId());
          if (runningApp != null)
          {

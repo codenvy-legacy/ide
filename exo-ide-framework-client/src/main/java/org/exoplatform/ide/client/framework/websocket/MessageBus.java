@@ -49,6 +49,37 @@ import java.util.Set;
  */
 public class MessageBus implements WSMessageReceivedHandler
 {
+   /** Enumeration describes the WebSocket event types. */
+   public enum Channels {
+      /** Channel for the messages containing debugger events. */
+      DEBUGGER_EVENTS("debugger:events:"),
+
+      /** Channel for the messages containing the application names which may be stopped soon. */
+      DEBUGGER_EXPIRE_SOON_APP("debugger:expireSoonApp:"),
+
+      /** Channel for the messages containing message which informs about debugger is disconnected. */
+      DEBUGGER_DISCONNECTED("debugger:disconnected:"),
+
+      /** Channel for the messages containing status of the Maven build job. */
+      MAVEN_BUILD_STATUS("maven:buildStatus"),
+
+      /** Channel for the messages containing status of the Jenkins job. */
+      JENKINS_JOB_STATUS("jenkins:buildStatus");
+
+      private final String eventTypeValue;
+
+      private Channels(String value)
+      {
+         this.eventTypeValue = value;
+      }
+
+      @Override
+      public String toString()
+      {
+         return eventTypeValue;
+      }
+   }
+
    /**
     * Map of the channel to the subscribers.
     */
@@ -232,7 +263,8 @@ public class MessageBus implements WSMessageReceivedHandler
          {
             // TODO find way to avoid copying of set
             // Copy a Set to avoid 'CuncurrentModificationException' when 'unsubscribe()' method will invoked while iterating
-            Set<SubscriptionHandler<?>> subscribersSet = new HashSet<SubscriptionHandler<?>>(channelToSubscribersMap.get(header.getValue()));
+            Set<SubscriptionHandler<?>> subscribersSet =
+               new HashSet<SubscriptionHandler<?>>(channelToSubscribersMap.get(header.getValue()));
             for (SubscriptionHandler<?> handler : subscribersSet)
             {
                handler.onResponseReceived(message);

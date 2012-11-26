@@ -24,6 +24,7 @@ import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
 import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
 import static org.exoplatform.ide.commons.FileUtils.downloadFile;
 import static org.exoplatform.ide.commons.FileUtils.list;
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.listEntries;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
@@ -741,7 +742,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             }
             else if (app.isExpiresAfter(EXPIRATION_TIME_LEFT_TO_NOTIFY))
             {
-               publishWebSocketMessage(app.name, "debugger:expireSoonApp");
+               publishWebSocketMessage(null, "debugger:expireSoonApp:" + app.name);
             }
          }
          applications.keySet().removeAll(stopped);
@@ -787,7 +788,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
                                     new Pair("x-everrest-websocket-channel", channelID)});
       message.setResponseCode(200);
-      message.setBody((String)data);
+      if (data != null)
+      {
+         message.setBody(toJson(data));
+      }
+
       try
       {
          WSConnectionContext.sendMessage(channelID, message);
