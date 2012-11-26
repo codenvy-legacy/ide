@@ -61,10 +61,10 @@ public class MessageBus implements WSMessageReceivedHandler
       DEBUGGER_DISCONNECTED("debugger:disconnected:"),
 
       /** Channel for the messages containing status of the Maven build job. */
-      MAVEN_BUILD_STATUS("maven:buildStatus"),
+      MAVEN_BUILD_STATUS("maven:buildStatus:"),
 
       /** Channel for the messages containing status of the Jenkins job. */
-      JENKINS_JOB_STATUS("jenkins:buildStatus");
+      JENKINS_JOB_STATUS("jenkins:jobStatus:");
 
       private final String eventTypeValue;
 

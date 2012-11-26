@@ -144,9 +144,9 @@ public abstract class JenkinsClient
 
    private Timer checkStatusTimer = new Timer();
 
-   private static final long CHECK_STATUS_PERIOD = 1000;
+   private static final long CHECK_JOB_STATUS_PERIOD = 2000;
 
-   private static final String JOB_STATUS_CHANNEL = "jenkins:status:";
+   private static final String JOB_STATUS_CHANNEL = "jenkins:jobStatus:";
 
    private static final Log LOG = ExoLogger.getLogger(JenkinsClient.class);
 
@@ -796,7 +796,7 @@ public abstract class JenkinsClient
             }
          }
       };
-      checkStatusTimer.schedule(task, CHECK_STATUS_PERIOD, CHECK_STATUS_PERIOD);
+      checkStatusTimer.schedule(task, CHECK_JOB_STATUS_PERIOD, CHECK_JOB_STATUS_PERIOD);
    }
 
    /**

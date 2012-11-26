@@ -355,7 +355,7 @@ public class WebSocket
    {
       if (getReadyState() != ReadyState.OPEN)
       {
-         throw new WebSocketException("Failed to send data. WebSocket connection not opened");
+         throw new WebSocketException("Failed to send data. WebSocket connection closed");
       }
 
       try

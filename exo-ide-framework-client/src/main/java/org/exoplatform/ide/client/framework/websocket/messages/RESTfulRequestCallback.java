@@ -111,7 +111,10 @@ public abstract class RESTfulRequestCallback<T>
       if (response.getResponseCode() == HTTPStatus.UNAUTHORIZED)
       {
          UnauthorizedException exception = new UnauthorizedException(response);
-         statusHandler.requestError(response.getUuid(), exception);
+         if (statusHandler != null)
+         {
+            statusHandler.requestError(response.getUuid(), exception);
+         }
          onFailure(exception);
          return;
       }
@@ -124,19 +127,28 @@ public abstract class RESTfulRequestCallback<T>
             {
                unmarshaller.unmarshal(response);
             }
-            statusHandler.requestFinished(response.getUuid());
+            if (statusHandler != null)
+            {
+               statusHandler.requestFinished(response.getUuid());
+            }
             onSuccess(payload);
          }
          catch (UnmarshallerException e)
          {
-            statusHandler.requestError(response.getUuid(), e);
+            if (statusHandler != null)
+            {
+               statusHandler.requestError(response.getUuid(), e);
+            }
             onFailure(e);
          }
       }
       else
       {
          ServerException exception = new ServerException(response);
-         statusHandler.requestError(response.getUuid(), exception);
+         if (statusHandler != null)
+         {
+            statusHandler.requestError(response.getUuid(), exception);
+         }
          onFailure(exception);
       }
    }
