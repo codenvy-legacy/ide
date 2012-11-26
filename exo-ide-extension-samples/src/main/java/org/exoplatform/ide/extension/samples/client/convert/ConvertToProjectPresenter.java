@@ -69,12 +69,12 @@ import java.util.Set;
 
 /**
  * Presenter for converting folders to projects.
- * 
+ *
  * After this operation project must be in the root folder.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 27, 2011 4:26:33 PM anya $
- * 
+ *
  */
 public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewClosedHandler,
    ConfigurationReceivedSuccessfullyHandler, VfsChangedHandler
@@ -83,91 +83,91 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
    {
       /**
        * Get convert button click handler.
-       * 
+       *
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getConvertButton();
 
       /**
        * Get cancel button click handler.
-       * 
+       *
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getCancelButton();
 
       /**
        * Get next button click handler.
-       * 
+       *
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getNextButton();
 
       /**
        * Get back button click handler.
-       * 
+       *
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getBackButton();
 
       /**
        * Change enable state of next button.
-       * 
+       *
        * @param enable if <code>true</code> then enabled
        */
       void enableNextButton(boolean enable);
 
       /**
        * Change enable state of back button.
-       * 
+       *
        * @param enable if <code>true</code> then enabled
        */
       void enableBackButton(boolean enable);
 
       /**
        * Change enable state of convert button.
-       * 
+       *
        * @param enable if <code>true</code> then enabled
        */
       void enableConvertButton(boolean enable);
 
       /**
        * Get project's type field.
-       * 
+       *
        * @return {@link HasValue}
        */
       HasValue<String> getProjectType();
 
       /**
        * Get project's name field.
-       * 
+       *
        * @return {@link HasValue}
        */
       HasValue<String> getProjectName();
 
       /**
        * Set the list of project's types.
-       * 
+       *
        * @param set types of project
        */
       void setProjectType(Set<String> set);
 
       /**
        * Get browser tree item.
-       * 
+       *
        * @return {@link TreeGridItem}
        */
       TreeGridItem<Item> getBrowserTree();
 
       /**
        * Get selected items in the tree.
-       * 
+       *
        * @return {@link List} selected items
        */
       List<Item> getSelectedItems();
 
       /**
        * Select item in browser tree by path.
-       * 
+       *
        * @param itemId item's id
        */
       void selectItem(String itemId);
@@ -212,7 +212,8 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    public ConvertToProjectPresenter()
    {
-      IDE.addHandler(ConvertToProjectEvent.TYPE, this);
+      //Temporary disable it for using this event to automatically preparing imported sources into eXo projects
+      //IDE.addHandler(ConvertToProjectEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
@@ -359,7 +360,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    /**
     * Perform check root folder already contains item with given name.
-    * 
+    *
     * @param item folder to convert
     * @param projectName project's name to set
     */
@@ -398,7 +399,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    /**
     * Change name of the project.
-    * 
+    *
     * @param item folder to rename
     * @param newName new name of the project
     */
@@ -430,7 +431,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    /**
     * Move item to root folder of the VFS.
-    * 
+    *
     * @param item item to move
     */
    protected void move(final Item item)
@@ -470,7 +471,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    /**
     * Convert folder to project.
-    * 
+    *
     * @param item
     */
    protected void convert(final Item item)
@@ -523,7 +524,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    /**
     * Get folder's content on open.
-    * 
+    *
     * @param openedFolder
     */
    private void onFolderOpened(Folder openedFolder)
@@ -533,7 +534,9 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
             : ((FolderModel)openedFolder).getChildren();
 
       if (!children.getItems().isEmpty())
+      {
          return;
+      }
 
       foldersToRefresh = new ArrayList<Folder>();
       foldersToRefresh.add(openedFolder);
@@ -542,7 +545,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    /**
     * Refresh next folder content.
-    * 
+    *
     * @param itemToSelect
     */
    private void refreshNextFolder(final String itemToSelect)
@@ -607,7 +610,7 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
 
    /**
     * Perform actions when folder's content is received.
-    * 
+    *
     * @param folder
     * @param itemToSelect
     */
@@ -640,7 +643,9 @@ public class ConvertToProjectPresenter implements ConvertToProjectHandler, ViewC
       for (Item item : items)
       {
          if (item.getName().startsWith(".") || !(item instanceof FolderModel))
+         {
             itemsToRemove.add(item);
+         }
       }
       items.removeAll(itemsToRemove);
    }

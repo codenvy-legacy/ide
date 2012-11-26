@@ -22,10 +22,10 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to convert folder to project. Implement {@link ConvertToProjectHandler} to handle event.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Oct 27, 2011 3:53:03 PM anya $
- * 
+ *
  */
 public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
 {
@@ -33,6 +33,20 @@ public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
     * Type used to register event.
     */
    public static final GwtEvent.Type<ConvertToProjectHandler> TYPE = new GwtEvent.Type<ConvertToProjectHandler>();
+
+   private String folderId;
+
+   private String vfsId;
+
+   public ConvertToProjectEvent()
+   {
+   }
+
+   public ConvertToProjectEvent(String folderId, String vfsId)
+   {
+      this.folderId = folderId;
+      this.vfsId = vfsId;
+   }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
@@ -52,4 +66,13 @@ public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
       handler.onConvertToProject(this);
    }
 
+   public String getFolderId()
+   {
+      return folderId;
+   }
+
+   public String getVfsId()
+   {
+      return vfsId;
+   }
 }

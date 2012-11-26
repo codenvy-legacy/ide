@@ -23,6 +23,8 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,7 +44,7 @@ public class PomUtils
    /**
     * Parse given stream to <code>Pom</code>.
     * Will be useful for getting information about Maven artifact like groupId, artifactId and version   
-    * 
+    *
     * @param stream
     * @return
     * @throws ParserConfigurationException
@@ -58,12 +60,19 @@ public class PomUtils
       Document doc = builder.parse(stream);
       XPathFactory factory = XPathFactory.newInstance();
       XPath xpath = factory.newXPath();
-      return new Pom(getVersionId(xpath, doc), getGroupId(xpath, doc), getArtifactId(xpath, doc), getPackaging(xpath, doc));
+      return new Pom(
+         getVersionId(xpath, doc),
+         getGroupId(xpath, doc),
+         getArtifactId(xpath, doc),
+         getPackaging(xpath, doc),
+         getModules(xpath, doc),
+         getSourcePath(xpath, doc)
+      );
    }
 
    /**
-    * @param xpath 
-    * @param doc 
+    * @param xpath
+    * @param doc
     * @throws XPathExpressionException
     */
    private static String getGroupId(XPath xpath, Document doc) throws XPathExpressionException
@@ -83,7 +92,7 @@ public class PomUtils
    {
       return xpath.compile("/project/artifactId/text()").evaluate(doc);
    }
-   
+
    /**
     * @throws XPathExpressionException
     */
@@ -112,6 +121,38 @@ public class PomUtils
       return version;
    }
 
+   private static String getSourcePath(XPath xpath, Document doc) throws XPathExpressionException
+   {
+      String sourcePath = xpath.compile("/project/build/sourceDirectory/text()").evaluate(doc);
+      if (sourcePath == null || sourcePath.isEmpty())
+      {
+         sourcePath = "src/main/java";
+      }
+      return sourcePath;
+   }
+
+   /**
+    * @throws XPathExpressionException
+    */
+   private static List<String> getModules(XPath xpath, Document doc) throws XPathExpressionException
+   {
+      String[] rawModules = xpath.compile("/project/modules").evaluate(doc).split("\n");
+
+      List<String> modules = new ArrayList<String>();
+      if (rawModules.length > 0)
+      {
+         for (String module : rawModules)
+         {
+            if (!module.trim().isEmpty())
+            {
+               modules.add(module.trim());
+            }
+         }
+      }
+
+      return modules;
+   }
+
    public static class Pom
    {
       private final String version;
@@ -119,35 +160,44 @@ public class PomUtils
       private final String groupId;
 
       private final String artifactId;
-      
+
       private final String packaging;
+
+      private final List<String> modules;
+
+      private final String sourcePath;
 
       /**
        * @param version
        * @param groupId
        * @param artifactId
        * @param packaging
+       * @param modules
        */
-      public Pom(String version, String groupId, String artifactId, String packaging)
+      public Pom(String version, String groupId, String artifactId, String packaging, List<String> modules, String sourcePath)
       {
          this.version = version;
          this.groupId = groupId;
          this.artifactId = artifactId;
          this.packaging = packaging;
+         this.modules = modules;
+         this.sourcePath = sourcePath;
       }
-      
+
       /**
        * @param version
        * @param groupId
        * @param artifactId
-       * @param packaging
+       * @param modules
        */
-      public Pom(String version, String groupId, String artifactId)
+      public Pom(String version, String groupId, String artifactId, List<String> modules, String sourcePath)
       {
          this.version = version;
          this.groupId = groupId;
          this.artifactId = artifactId;
          this.packaging = "jar";
+         this.modules = modules;
+         this.sourcePath = sourcePath;
       }
 
       /**
@@ -172,6 +222,27 @@ public class PomUtils
       public String getArtifactId()
       {
          return artifactId;
+      }
+
+      /**
+       * @return the modules
+       */
+      public List<String> getModules()
+      {
+         return modules;
+      }
+
+      /**
+       * @return the packaging
+       */
+      public String getPackaging()
+      {
+         return packaging;
+      }
+
+      public String getSourcePath()
+      {
+         return sourcePath;
       }
 
       /**

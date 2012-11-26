@@ -27,12 +27,11 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -43,18 +42,14 @@ import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Property;
 
 /**
  * Presenter for Clone Repository View.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 4:31:12 PM anya $
- * 
+ *
  */
 public class CloneRepositoryPresenter extends GitPresenter implements CloneRepositoryHandler
 {
@@ -62,21 +57,21 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    {
       /**
        * Returns working directory field.
-       * 
+       *
        * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getWorkDirValue();
 
       /**
        * Returns remote URI field.
-       * 
+       *
        * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getRemoteUriValue();
 
       /**
        * Returns remote name field.
-       * 
+       *
        * @return {@link HasValue<{@link String}>}
        */
       HasValue<String> getRemoteNameValue();
@@ -95,21 +90,21 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
 
       /**
        * Returns clone repository button.
-       * 
+       *
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getCloneButton();
 
       /**
        * Returns cancel button.
-       * 
+       *
        * @return {@link HasClickHandlers}
        */
       HasClickHandlers getCancelButton();
 
       /**
        * Changes the state of clone button.
-       * 
+       *
        * @param enable
        */
       void enableCloneButton(boolean enable);
@@ -216,7 +211,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param projectType - type of project
     */
    private void doClone(final String remoteUri, final String remoteName, //
-      final String workDir, final String projectType)
+                        final String workDir, final String projectType)
    {
       FolderModel folder = new FolderModel();
       folder.setName(workDir);
@@ -270,10 +265,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                protected void onSuccess(final RepoInfo result)
                {
                   IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  convertFolderToProject(folder, projectType);
-                  //TODO: not good, comment temporary need found other way 
-                  // for inviting collaborators
-                  // showInvitation(result.getRemoteUri());
+                  IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
                }
 
                @Override
@@ -298,46 +290,10 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    }
 
    /**
-    * Convert folder to project after cloning
-    * @param folder
-    * @param projectType
-    */
-   protected void convertFolderToProject(FolderModel folder, String projectType)
-   {
-      folder.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folder.getProperties().add(new Property("vfs:projectType", projectType));
-      ProjectModel project = new ProjectModel();
-      ItemWrapper item = new ItemWrapper(project);
-      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(folder, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
     * Show dialog window with proposal for invite commiters.
     * In case clone repository from GitHub show Collaborators list (see GitHub REST API http://developer.github.com/v3/repos/collaborators/).
     * Else on server side we get unique list of commiters: name and email.  
-    * 
+    *
     * @param remoteUri
     */
    protected void showInvitation(String remoteUri)
@@ -359,7 +315,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * - https://github.com/user/repo.git
     * - git@github.com:user/repo.git
     * - git://github.com/user/repo.git
-    * 
+    *
     * @param gitUrl
     * @return array of string 
     */
