@@ -169,7 +169,7 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      return imageBundle.projectPageIcon();
+      return imageBundle.projectExplorerIcon();
    }
 
    /**

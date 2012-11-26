@@ -73,14 +73,20 @@
                Code Assistant API (demo with CSS Code Completion)
             </li>
             <li>
+               <b>Editor API : </b>
+               Outline (Demo based on Java Extension)
+            </li>
+            <li>
                <b>Extensions API : </b>
                Base implementation (CSS Code completion is an extension)
             </li>
             <li>
                <b>Java Extension : </b>
-               <li>Java code assistant</li>
-               <li>Errors and Wanrnings highlighting</li>
-               <li>Quick Assistant(Ctrl+1) for Java errors and warnings</li>
+               <ul>
+                  <li>Java code assistant</li>
+                  <li>Errors and Wanrnings highlighting</li>
+                  <li>Quick Assistant(Ctrl+1) for Java errors and warnings</li>
+               </ul>
             </li>
          </ul>
       </div>

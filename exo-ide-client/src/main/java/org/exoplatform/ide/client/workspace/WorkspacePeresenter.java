@@ -138,7 +138,8 @@ public class WorkspacePeresenter implements Presenter
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
       menuPresenter.addMenuItem("File/New/new Project", null);
-      menuPresenter.addMenuItem("File/Open Project", new OpenProjectCommand(resourceProvider));
+      menuPresenter.addMenuItem("File/Open Project", null, new OpenProjectCommand(resourceProvider), null,
+         noProjectOpenedExpression);
 
       // CREATE DYNAMIC MENU CONTENT
       menuPresenter.addMenuItem("File/Create Demo Content", null, new CreateDemoContentCommand(resourceProvider), null,

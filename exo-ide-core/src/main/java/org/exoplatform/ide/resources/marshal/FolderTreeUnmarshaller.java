@@ -88,7 +88,6 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder>
     */
    private void getChildren(JSONValue children, Folder parentFolder, Project parentProject)
    {
-
       JSONArray itemsArray = children.isArray();
 
       for (int i = 0; i < itemsArray.size(); i++)
@@ -137,6 +136,7 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder>
          {
             File file = new File(item);
             parentFolder.addChild(file);
+            file.setProject(parentProject);
          }
          else
          {

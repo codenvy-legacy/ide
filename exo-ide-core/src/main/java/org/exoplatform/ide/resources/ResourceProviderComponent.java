@@ -170,10 +170,11 @@ public class ResourceProviderComponent implements ResourceProvider
             {
                Project project = result.getProject();
                project.setParent(vfsInfo.getRoot());
+               project.setProject(project);
                project.setVFSInfo(vfsInfo);
                vfsInfo.getRoot().addChild(project);
-
                activeProject = project;
+
                // get project structure
                project.refreshTree(new AsyncCallback<Project>()
                {

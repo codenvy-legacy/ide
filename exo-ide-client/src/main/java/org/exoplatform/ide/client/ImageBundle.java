@@ -37,5 +37,8 @@ public interface ImageBundle extends ClientBundle
    ImageResource extentionPageIcon();
 
    @Source("org/exoplatform/ide/client/images/project.png")
-   ImageResource projectPageIcon();
+   ImageResource projectExplorerIcon();
+   
+   @Source("org/exoplatform/ide/client/images/outline.png")
+   ImageResource outlineIcon();
 }

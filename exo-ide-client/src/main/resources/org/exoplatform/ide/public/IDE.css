@@ -10,8 +10,102 @@
 	cursor: row-resize;
 }
 
+.gwt-DialogBox {
+	border: solid 1px #BBB;
+	box-shadow : 0 0 30px -5px;
+}
+
+.gwt-DialogBox .Caption {
+	background: white;
+	padding: 3px;
+	border: none;
+	font-size: medium;
+	text-align: center;
+}
+
+.gwt-DialogBox .dialogContent {
+	
+}
+
+.gwt-DialogBox .dialogMiddleCenter {
+	padding: 3px;
+	background: white;
+}
+
+.gwt-DialogBox .dialogBottomCenter {
+	background: white;
+}
+
+.gwt-DialogBox .dialogMiddleLeft {
+	background: white;
+}
+
+.gwt-DialogBox .dialogMiddleRight {
+	background: white;
+}
+
+.gwt-DialogBox .dialogTopLeftInner {
+	width: 0px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogTopRightInner {
+	width: 0px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogBottomLeftInner {
+	width: 0px;
+	height: 0px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogBottomRightInner {
+	width: 0px;
+	height: 0px;
+	zoom: 1;
+}
+
+.gwt-DialogBox .dialogTopLeft {
+	background: white;
+}
+
+.gwt-DialogBox .dialogTopRight {
+	background: white;
+}
+
+.gwt-DialogBox .dialogBottomLeft {
+	background: white;
+}
+
+.gwt-DialogBox .dialogBottomRight {
+	background: white;
+}
+
+* html .gwt-DialogBox .dialogTopLeftInner {
+	width: 0px;
+	overflow: hidden;
+}
+
+* html .gwt-DialogBox .dialogTopRightInner {
+	width: 0px;
+	overflow: hidden;
+}
+
+* html .gwt-DialogBox .dialogBottomLeftInner {
+	width: 0px;
+	height: 0px;
+	overflow: hidden;
+}
+
+* html .gwt-DialogBox .dialogBottomRightInner {
+	width: 0px;
+	height: 0px;
+	overflow: hidden;
+}
+
 .ide-editor-area {
-	box-shadow: 0px 0px 40px 20px #DDD;
-	-moz-box-shadow: 0px 0px 40px 20px #DDD;
-	-webkit-box-shadow: 0px 0px 40px 20px #DDD;
+	box-shadow: 0px 0px 100px 10px #DDD;
+	-moz-box-shadow: 0px 0px 100px 10px #DDD;
+	-webkit-box-shadow: 0px 0px 100px 10px #DDD;
 }

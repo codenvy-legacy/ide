@@ -38,7 +38,6 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
 
    private final ProjectModelProviderAdapter modelProviderAdapter;
 
-   // TODO should read whole Project structure
    public ProjectModelUnmarshaller(ProjectModelProviderAdapter modelProviderAdapter)
    {
       this.modelProviderAdapter = modelProviderAdapter;
@@ -47,7 +46,6 @@ public class ProjectModelUnmarshaller implements Unmarshallable<ProjectModelProv
    /**
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
-   @SuppressWarnings({"rawtypes", "unchecked"})
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
