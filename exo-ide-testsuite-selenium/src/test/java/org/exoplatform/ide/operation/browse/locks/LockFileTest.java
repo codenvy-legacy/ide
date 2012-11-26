@@ -76,7 +76,8 @@ public class LockFileTest extends LockFileAbstract
    @After
    public void tearDown()
    {
-      deleteCookies();
+      driver.manage().deleteAllCookies();
+
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
@@ -190,7 +191,7 @@ public class LockFileTest extends LockFileAbstract
 
    }
 
-    @Test
+   @Test
    public void testLockFileStaysAfterRefresh() throws Exception
    {
       //step one refresh an open project
@@ -203,7 +204,7 @@ public class LockFileTest extends LockFileAbstract
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + FOLDER_NAME);
-      
+
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
