@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.core;
 
+import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.java.client.templates.api.TemplateBuffer;
 import org.exoplatform.ide.java.client.templates.api.TemplateException;
 import org.exoplatform.ide.java.client.templates.api.TemplateTranslator;

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.java.client;
 
+import com.google.web.bindery.event.shared.EventBus;
+
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 
@@ -28,6 +30,8 @@ import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.editor.JavaEditorProvider;
 import org.exoplatform.ide.java.client.internal.codeassist.impl.AssistOptions;
 import org.exoplatform.ide.java.client.internal.compiler.impl.CompilerOptions;
+import org.exoplatform.ide.java.client.projectmodel.JavaProject;
+import org.exoplatform.ide.java.client.projectmodel.JavaProjectModeProvider;
 import org.exoplatform.ide.java.client.templates.CodeTemplateContextType;
 import org.exoplatform.ide.java.client.templates.ContextTypeRegistry;
 import org.exoplatform.ide.java.client.templates.ElementTypeResolver;
@@ -45,6 +49,7 @@ import org.exoplatform.ide.java.client.templates.TypeResolver;
 import org.exoplatform.ide.java.client.templates.TypeVariableResolver;
 import org.exoplatform.ide.java.client.templates.VarResolver;
 import org.exoplatform.ide.resources.FileType;
+import org.exoplatform.ide.rest.MimeType;
 
 import java.util.HashMap;
 
@@ -70,12 +75,13 @@ public class JavaExtension
     * 
     */
    @Inject
-   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider)
+   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider, EventBus eventBus)
    {
       this();
-      FileType javaFile = new FileType(null, "application/java", "java");
+      FileType javaFile = new FileType(null, MimeType.APPLICATION_JAVA, "java");
       editorRegistry.register(javaFile, javaEditorProvider);
       resourceProvider.registerFileType(javaFile);
+      resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModeProvider(eventBus));
       JavaClientBundle.INSTANCE.css().ensureInjected();
    }
    

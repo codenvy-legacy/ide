@@ -59,11 +59,11 @@ public class Project extends Folder
    /** Properties. */
    protected JsonArray<Property> properties;
 
-   private Loader loader;
+   protected Loader loader;
 
    protected final EventBus eventBus;
 
-   private VirtualFileSystemInfo vfsInfo;
+   protected VirtualFileSystemInfo vfsInfo;
 
    /**
     * Constructor for empty project. Used for serialization only.

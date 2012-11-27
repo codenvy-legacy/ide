@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.core.rewrite;
 
-import org.exoplatform.ide.java.client.core.BaseTest;
+import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTNode;

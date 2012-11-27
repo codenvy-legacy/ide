@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
 
+import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTNode;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;

@@ -20,6 +20,7 @@ package org.exoplatform.ide.java.client.core;
 
 import static org.junit.Assert.fail;
 
+import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.java.client.core.compiler.CharOperation;
 import org.junit.Ignore;
 import org.junit.Test;

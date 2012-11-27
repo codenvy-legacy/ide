@@ -21,7 +21,7 @@ package org.exoplatform.ide.java.client.core.outline;
 import static org.fest.assertions.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-import org.exoplatform.ide.java.client.core.BaseTest;
+import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
 import org.exoplatform.ide.java.client.core.dom.CompilationUnit;

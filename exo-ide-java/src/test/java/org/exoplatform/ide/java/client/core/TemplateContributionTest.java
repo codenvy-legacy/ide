@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.exoplatform.ide.java.client.core;
 
+import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.java.client.templates.CodeTemplateContextType;
 import org.exoplatform.ide.java.client.templates.ContextTypeRegistry;
 import org.exoplatform.ide.java.client.templates.ElementTypeResolver;

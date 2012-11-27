@@ -24,6 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
 
+import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.java.client.core.compiler.IProblem;
 import org.exoplatform.ide.java.client.core.dom.AST;
 import org.exoplatform.ide.java.client.core.dom.ASTParser;
