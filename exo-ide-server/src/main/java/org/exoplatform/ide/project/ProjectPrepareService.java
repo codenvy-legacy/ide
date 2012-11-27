@@ -22,7 +22,6 @@ import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import java.io.File;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -63,6 +62,5 @@ public class ProjectPrepareService
       ProjectPrepare project = new ProjectPrepare(vfs);
 
       project.doPrepare(localPathResolver.resolve(vfs, folderId));
-//      project.prepareProject(vfs, folderId, projectPath.getPath());
    }
 }
