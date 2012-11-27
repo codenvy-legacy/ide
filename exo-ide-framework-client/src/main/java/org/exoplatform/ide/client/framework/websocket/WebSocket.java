@@ -98,6 +98,11 @@ public class WebSocket
    private String url;
 
    /**
+    * Is this a secure connection?
+    */
+   private static boolean isSecureConnection;
+
+   /**
     * {@link MessageBus} for this {@link WebSocket} instance.
     */
    private MessageBus messageBus = new MessageBus();
@@ -127,7 +132,15 @@ public class WebSocket
    protected WebSocket()
    {
       instance = this;
-      url = "ws://" + Window.Location.getHost() + "/websocket";
+      isSecureConnection = Window.Location.getProtocol().equals("https:");
+      if (isSecureConnection)
+      {
+         url = "wss://" + Window.Location.getHost() + "/websocket";
+      }
+      else
+      {
+         url = "ws://" + Window.Location.getHost() + "/websocket";
+      }
    }
 
    /**
@@ -368,6 +381,16 @@ public class WebSocket
       {
          throw new WebSocketException(e.getMessage());
       }
+   }
+
+   /**
+    * Is this a secure connection?
+    * 
+    * @return <code>true</code> if this is a secure connection or <code>false</code> if isn't
+    */
+   public boolean isSecureConnection()
+   {
+      return isSecureConnection;
    }
 
    /**
