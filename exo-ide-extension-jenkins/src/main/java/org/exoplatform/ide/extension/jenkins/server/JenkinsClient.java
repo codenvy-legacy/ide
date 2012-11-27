@@ -756,7 +756,7 @@ public abstract class JenkinsClient
     * the status to WebSocket connection when job status will be changed.
     * 
     * @param jobName
-    *    identifier of the Jenkins job to be checked status
+    *    identifier of the Jenkins job to check status
     * @param vfs
     *    virtual file system id
     * @param projectId
@@ -776,7 +776,7 @@ public abstract class JenkinsClient
                JobStatus jobStatus = jobStatus(jobName, vfs, projectId);
                if (jobStatus.getStatus() != previousStatus)
                {
-                  publishWebSocketMessage(jobStatus, JOB_STATUS_CHANNEL + jobName, false);
+                  publishWebSocketMessage(jobStatus, JOB_STATUS_CHANNEL + jobName, null);
                   previousStatus = jobStatus.getStatus();
                   if (Status.END == jobStatus.getStatus())
                   {
@@ -784,15 +784,10 @@ public abstract class JenkinsClient
                   }
                }
             }
-            catch (JenkinsException e)
-            {
-               cancel();
-               publishWebSocketMessage(e.getMessage(), JOB_STATUS_CHANNEL + jobName, true);
-            }
             catch (Exception e)
             {
                cancel();
-               publishWebSocketMessage(null, JOB_STATUS_CHANNEL + jobName, true);
+               publishWebSocketMessage(null, JOB_STATUS_CHANNEL + jobName, e);
             }
          }
       };
@@ -806,38 +801,43 @@ public abstract class JenkinsClient
     *    the data to be sent to the client
     * @param channel
     *    channel name
-    * @param isError
-    *    is this an error message?
+    * @param e
+    *    exception which has occurred or <code>null</code> if no exception
     */
-   private static void publishWebSocketMessage(Object data, String channel, boolean isError)
+   private static void publishWebSocketMessage(Object data, String channel, Exception e)
    {
       RESTfulOutputMessage message = new RESTfulOutputMessage();
       message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
                                     new Pair("x-everrest-websocket-channel", channel)});
-      if (isError)
+      if (e == null)
       {
-         message.setResponseCode(500);
-         if (data != null)
+         message.setResponseCode(200);
+         if (data instanceof String)
          {
             message.setBody((String)data);
          }
-      }
-      else
-      {
-         message.setResponseCode(200);
-         if (data != null)
+         else if (data != null)
          {
             message.setBody(toJson(data));
          }
+      }
+      else if (e instanceof JenkinsException)
+      {
+         message.setResponseCode(((JenkinsException)e).getResponseStatus());
+         message.setBody(e.getMessage());
+      }
+      else
+      {
+         message.setResponseCode(500);
       }
 
       try
       {
          WSConnectionContext.sendMessage(channel, message);
       }
-      catch (Exception e)
+      catch (Exception ex)
       {
-         LOG.error("Failed to send message over WebSocket.", e);
+         LOG.error("Failed to send message over WebSocket.", ex);
       }
    }
 

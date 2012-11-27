@@ -270,22 +270,11 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
             protected void onSuccess(Object result)
             {
                buildInProgress = true;
-
                showBuildMessage("Building project <b>" + project.getPath() + "</b>");
-
                display.startAnimation();
                display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.grey()), true);
                prevStatus = null;
-
-               if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-               {
-                  jobStatusChannel = Channels.JENKINS_JOB_STATUS + jobName;
-                  WebSocket.getInstance().subscribe(jobStatusChannel, jobStatusHandler);
-               }
-               else
-               {
-                  refreshJobStatusTimer.schedule(delay);
-               }
+               startCheckingStatus(jobName);
             }
 
             @Override
@@ -298,6 +287,24 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Starts checking job status by subscribing on messages over WebSocket or scheduling checking task.
+    * 
+    * @param jobName name of the job to check status
+    */
+   private void startCheckingStatus(String jobName)
+   {
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      {
+         jobStatusChannel = Channels.JENKINS_JOB_STATUS + jobName;
+         WebSocket.getInstance().subscribe(jobStatusChannel, jobStatusHandler);
+      }
+      else
+      {
+         refreshJobStatusTimer.schedule(delay);
       }
    }
 
@@ -630,6 +637,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       protected void onFailure(Throwable exception)
       {
+         WebSocket.getInstance().unsubscribe(jobStatusChannel, this);
          buildInProgress = false;
          display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
          IDE.fireEvent(new ExceptionThrownEvent(exception));

@@ -39,10 +39,10 @@ import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBui
 import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 
 /**
- * Class represents a WebSocket connection. Each connection is identified by it's session identifier.
- * If connection was closed unexpectedly, makes 5 attempts to reconnect connection for every 5 sec.
- * You should normally only use a single instance of this class. You can create an instance using
- * the static {@code getInstance} method.
+ * Class represents a WebSocket connection. If connection was closed unexpectedly,
+ * makes <code>MAX_RECONNECTION_ATTEMPTS</code> attempts to
+ * reconnect connection for every <code>HEARTBEAT_PERIOD</code> ms.
+ * You should normally only use a single instance of this class.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 7, 2012 12:44:55 PM azatsarynnyy $
@@ -118,7 +118,7 @@ public class WebSocket
    /**
     * Max. number of attempts to reconnect.
     */
-   private final static int MAX_RECONNECTION_ATTEMPTS = 10;
+   private final static int MAX_RECONNECTION_ATTEMPTS = 5;
 
    /**
     * Creates a new {@link WebSocket} instance.
