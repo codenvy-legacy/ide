@@ -47,8 +47,11 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      // invoke WebSocket.getInstance() to prepare WebSocket connection on start IDE
-      WebSocket.getInstance();
+      WebSocket ws = WebSocket.getInstance();
+      if (ws != null)
+      {
+         ws.connect();
+      }
    }
 
    /**
