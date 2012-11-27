@@ -103,7 +103,7 @@ public class WebSocket
 
    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
 
-   private static final int HEARTBEAT_PERIOD = 30 * 1000;
+   private static final int HEARTBEAT_PERIOD = 50 * 1000;
 
    /**
     * Counter of connection attempts.
