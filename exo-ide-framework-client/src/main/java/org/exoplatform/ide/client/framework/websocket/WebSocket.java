@@ -26,6 +26,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
@@ -97,12 +98,20 @@ public class WebSocket
    private String url;
 
    /**
+    * Is this a secure connection?
+    */
+   private static boolean isSecureConnection;
+
+   /**
     * {@link MessageBus} for this {@link WebSocket} instance.
     */
    private MessageBus messageBus = new MessageBus();
 
    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
 
+   /**
+    * Period (in milliseconds) to send heartbeat pings.
+    */
    private static final int HEARTBEAT_PERIOD = 50 * 1000;
 
    /**
@@ -125,8 +134,18 @@ public class WebSocket
     */
    protected WebSocket()
    {
+      IDE.fireEvent(new OutputEvent(Window.Location.getProtocol()));
       instance = this;
-      url = "ws://" + Window.Location.getHost() + "/websocket";
+      isSecureConnection = Window.Location.getProtocol().equals("https:");
+      if (isSecureConnection)
+      {
+         url = "wss://" + Window.Location.getHost() + "/websocket";
+      }
+      else
+      {
+         url = "ws://" + Window.Location.getHost() + "/websocket";
+      }
+         
    }
 
    /**
@@ -366,6 +385,16 @@ public class WebSocket
       {
          throw new WebSocketException(e.getMessage());
       }
+   }
+
+   /**
+    * Is this a secure connection?
+    * 
+    * @return <code>true</code> if this is a secure connection or <code>false</code> if isn't
+    */
+   public boolean isSecureConnection()
+   {
+      return isSecureConnection;
    }
 
    /**
