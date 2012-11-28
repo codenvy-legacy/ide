@@ -1172,7 +1172,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       public void onSuccess(Object result)
       {
          // unsubscribe to receiving events to avoid receiving messages while user not press any button in appeared dialog
-         WebSocket.getInstance().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
+         WebSocket.getInstance().unsubscribe(expireSoonAppChannel, this);
          Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeTitle(),
             DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeQuestion(), new BooleanValueReceivedHandler()
             {

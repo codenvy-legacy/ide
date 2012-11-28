@@ -26,7 +26,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
@@ -83,12 +82,12 @@ public class WebSocket
    }
 
    /**
-    * The native WebSocket object.
+    * The native implementation of this WebSocket.
     */
    private WebSocketImpl socket;
 
    /**
-    * WebSocket instance.
+    * This WebSocket instance.
     */
    private static WebSocket instance;
 
@@ -98,7 +97,7 @@ public class WebSocket
    private String url;
 
    /**
-    * Is this a secure connection?
+    * Determines if this connection is secure.
     */
    private static boolean isSecureConnection;
 
@@ -134,7 +133,6 @@ public class WebSocket
     */
    protected WebSocket()
    {
-      IDE.fireEvent(new OutputEvent(Window.Location.getProtocol()));
       instance = this;
       isSecureConnection = Window.Location.getProtocol().equals("https:");
       if (isSecureConnection)
@@ -388,9 +386,10 @@ public class WebSocket
    }
 
    /**
-    * Is this a secure connection?
+    * Determines if this connection is secure.
     * 
-    * @return <code>true</code> if this is a secure connection or <code>false</code> if isn't
+    * @return <code>true</code> if this is a secure connection;
+    *          <code>false</code> otherwise
     */
    public boolean isSecureConnection()
    {

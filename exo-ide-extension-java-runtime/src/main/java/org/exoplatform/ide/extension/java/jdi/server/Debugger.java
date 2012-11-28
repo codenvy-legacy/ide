@@ -851,7 +851,11 @@ public class Debugger implements EventsHandler
       message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
                                     new Pair("x-everrest-websocket-channel", channel)});
       message.setResponseCode(200);
-      if (data != null)
+      if (data instanceof String)
+      {
+         message.setBody((String)data);
+      }
+      else if (data != null)
       {
          message.setBody(toJson(data));
       }

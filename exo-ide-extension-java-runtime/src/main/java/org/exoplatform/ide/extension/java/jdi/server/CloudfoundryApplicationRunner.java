@@ -788,7 +788,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
                                     new Pair("x-everrest-websocket-channel", channelID)});
       message.setResponseCode(200);
-      if (data != null)
+      if (data instanceof String)
+      {
+         message.setBody((String)data);
+      }
+      else if (data != null)
       {
          message.setBody(toJson(data));
       }
