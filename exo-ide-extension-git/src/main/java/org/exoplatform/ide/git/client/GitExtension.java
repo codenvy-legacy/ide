@@ -18,14 +18,22 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.user.client.Random;
+
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.event.StartWithInitParamsEvent;
+import org.exoplatform.ide.client.framework.event.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
+import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
 import org.exoplatform.ide.git.client.commit.CommitPresenter;
 import org.exoplatform.ide.git.client.control.AddFilesControl;
@@ -59,6 +67,11 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Git extension to be added to IDE application.
@@ -67,12 +80,14 @@ import org.exoplatform.ide.git.client.status.StatusCommandHandler;
  * @version $Id: Mar 22, 2011 12:53:29 PM anya $
  * 
  */
-public class GitExtension extends Extension implements InitializeServicesHandler
+public class GitExtension extends Extension implements InitializeServicesHandler, StartWithInitParamsHandler
 {
 
    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
-   
+
    public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
+
+   private CloneRepositoryPresenter cloneRepositoryPresenter;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -81,6 +96,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
 
       // Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl());
@@ -105,7 +121,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControlsFormatter(new GitControlsFormatter());
 
       // Create presenters:
-      new CloneRepositoryPresenter();
+      cloneRepositoryPresenter = new CloneRepositoryPresenter();
       new InitRepositoryPresenter();
       new StatusCommandHandler();
       new AddToIndexPresenter();
@@ -124,7 +140,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new MergePresenter();
 
       new ShowProjectGitReadOnlyUrlPresenter();
-      
+
    }
 
    /**
@@ -134,6 +150,29 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    public void onInitializeServices(InitializeServicesEvent event)
    {
       new GitClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+   }
+
+   @Override
+   public void onStartWithInitParams(StartWithInitParamsEvent event)
+   {
+      // v=codenow1.0&action_type=open_project&storageType=Git&storageURL=git://github.com/eXoIDE/shopping-cart-project.git&projectType=Java
+      Map<String, List<String>> initParam = event.getParameterMap();
+      if (initParam != null && !initParam.isEmpty())
+      {
+         if (!initParam.containsKey("v"))
+            return;
+         if (initParam.get("v").size() != 1 || !initParam.get("v").get(0).equals("codenow1.0"))
+            return;
+         if (!initParam.containsKey("storageURL") || !initParam.containsKey("storageType"))
+            return;
+         List<String> giturls = initParam.get("storageURL");
+         if (giturls != null && !giturls.isEmpty())
+         {
+            String giturl = giturls.get(0);
+            cloneRepositoryPresenter.doClone(giturl, "origin", initParam.get("projectName").get(0) + "-" + Random.nextInt(), ProjectType.JAR.value());
+         }
+      }
+
    }
 
 }

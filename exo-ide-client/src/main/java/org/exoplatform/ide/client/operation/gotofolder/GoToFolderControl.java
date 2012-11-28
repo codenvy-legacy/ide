@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.client.framework.navigation.event.GoToFolderEvent;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
 
 /**
  * Created by The eXo Platform SAS .
@@ -53,7 +53,7 @@ public class GoToFolderControl extends SimpleControl implements IDEControl, Edit
       setTitle(TITLE);
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.goToFolder(), IDEImageBundle.INSTANCE.goToFolderDisabled());
-      setEvent(new GoToFolderEvent());
+      setEvent(new GoToItemEvent());
       setDelimiterBefore(true);
    }
 

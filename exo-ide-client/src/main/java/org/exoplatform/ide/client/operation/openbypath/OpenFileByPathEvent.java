@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.operation.openbypath;
 
+import org.exoplatform.ide.client.framework.event.CursorPosition;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -29,13 +31,13 @@ import com.google.gwt.event.shared.GwtEvent;
 
 public class OpenFileByPathEvent extends GwtEvent<OpenFileByPathHandler>
 {
-
+   
    public static final GwtEvent.Type<OpenFileByPathHandler> TYPE = new GwtEvent.Type<OpenFileByPathHandler>();
 
    public OpenFileByPathEvent()
    {
    }
-
+   
    @Override
    protected void dispatch(OpenFileByPathHandler handler)
    {
@@ -47,5 +49,6 @@ public class OpenFileByPathEvent extends GwtEvent<OpenFileByPathHandler>
    {
       return TYPE;
    }
+   
 
 }

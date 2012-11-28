@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.framework.navigation.event;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * Created by The eXo Platform SAS .
@@ -27,21 +27,9 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  */
 
-public class GoToFolderEvent extends GwtEvent<GoToFolderHandler>
+public interface GoToItemHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<GoToFolderHandler> TYPE = new GwtEvent.Type<GoToFolderHandler>();
-
-   @Override
-   protected void dispatch(GoToFolderHandler handler)
-   {
-      handler.onGoToFolder(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<GoToFolderHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
+   void onGoToFolder(GoToItemEvent event);
 
 }

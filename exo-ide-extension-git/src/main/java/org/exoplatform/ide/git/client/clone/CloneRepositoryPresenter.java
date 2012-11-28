@@ -215,7 +215,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param workDir - name of target folder 
     * @param projectType - type of project
     */
-   private void doClone(final String remoteUri, final String remoteName, //
+   public void doClone(final String remoteUri, final String remoteName, //
       final String workDir, final String projectType)
    {
       FolderModel folder = new FolderModel();
@@ -287,7 +287,10 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       {
          handleError(e);
       }
-      IDE.getInstance().closeView(display.asView().getId());
+      if (display != null)
+      {
+        IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 
    private void handleError(Throwable e)

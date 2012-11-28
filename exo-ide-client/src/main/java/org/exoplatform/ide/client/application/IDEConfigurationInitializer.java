@@ -18,8 +18,17 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.user.client.Timer;
+
+import com.google.gwt.http.client.RequestException;
+
+import com.google.gwt.user.client.Random;
+
+import com.google.gwt.user.client.Window.Location;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -33,8 +42,17 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.discovery.event.IsDiscoverableResultReceivedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.event.CursorPosition;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.event.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -47,8 +65,18 @@ import org.exoplatform.ide.client.model.IDEInitializationConfiguration;
 import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.model.SettingsServiceImpl;
+import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathEvent;
 import org.exoplatform.ide.client.workspace.event.SelectWorkspaceEvent;
 import org.exoplatform.ide.client.workspace.event.SwitchVFSEvent;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -59,7 +87,8 @@ import com.google.gwt.json.client.JSONObject;
  * @version $Id: May 25, 2011 evgen $
  * 
  */
-public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, VfsChangedHandler
+public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, VfsChangedHandler,
+   ProjectOpenedHandler
 {
 
    private IDEConfiguration applicationConfiguration;
@@ -67,14 +96,12 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
    private ControlsRegistration controls;
 
    private ApplicationSettings applicationSettings;
-   
-   
+
    private String initialOpenedProject;
-   
+
    private List<String> initialOpenedFiles;
-   
+
    private String initialActiveFile;
-   
 
    /**
     * @param controls
@@ -84,6 +111,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       super();
       this.controls = controls;
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    public void loadConfiguration()
@@ -99,34 +127,38 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
                {
                   applicationConfiguration = result.getIdeConfiguration();
                   applicationSettings = result.getSettings();
-                  IDE.userId = result.getUserInfo().getName(); 
+                  IDE.userId = result.getUserInfo().getName();
                   if (result.getUserInfo().getRoles() != null && result.getUserInfo().getRoles().size() > 0)
                   {
                      controls.initControls(result.getUserInfo().getRoles());
-                     
+
                      String registryURLParameter = applicationConfiguration.getRegistryURL();
                      if (registryURLParameter == null)
                      {
-                        throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("registryURL"));
+                        throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+                           .confMissingVariable("registryURL"));
                      }
-                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(), IDELoader.get(), applicationConfiguration.getContext());
+                     new SettingsServiceImpl(IDE.eventBus(), registryURLParameter, result.getUserInfo().getName(),
+                        IDELoader.get(), applicationConfiguration.getContext());
                      SettingsService.getInstance().restoreFromCookies(applicationSettings);
-                     
+
                      initialOpenedProject = applicationSettings.getValueAsString("opened-project");
                      initialActiveFile = applicationSettings.getValueAsString("active-file");
 
                      initialOpenedFiles = new ArrayList<String>();
                      List<String> openedFiles = applicationSettings.getValueAsList("opened-files");
-                     if (openedFiles != null) {
+                     if (openedFiles != null)
+                     {
                         initialOpenedFiles.addAll(openedFiles);
                      }
-                     
+
                      IDE.fireEvent(new ConfigurationReceivedSuccessfullyEvent(applicationConfiguration));
 
                      String hiddenFilesParameter = applicationConfiguration.getHiddenFiles();
                      if (hiddenFilesParameter == null)
                      {
-                        throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.confMissingVariable("hiddenFiles"));
+                        throw new Exception(org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+                           .confMissingVariable("hiddenFiles"));
                      }
                      DirectoryFilter.get().setPattern(hiddenFilesParameter);
 
@@ -192,6 +224,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       {
          promptToSelectEntryPoint();
       }
+      Map<String, List<String>> parameterMap = Location.getParameterMap();
+      if (parameterMap != null && !parameterMap.isEmpty())
+      {
+         IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
+      }
       else
       {
          new RestoreOpenedFilesPhase(applicationSettings, initialOpenedProject, initialOpenedFiles, initialActiveFile);
@@ -251,6 +288,141 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       IDE.fireEvent(new SetToolbarItemsEvent("exoIDEToolbar", toolbarItems, controls.getRegisteredControls()));
       IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
          .getRegisteredControls()));
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      final Map<String, List<String>> initParam = Location.getParameterMap();
+      final ProjectModel project = event.getProject();
+      if (initParam != null && !initParam.isEmpty())
+      {
+         IDE.removeHandler(ProjectOpenedEvent.TYPE, this);
+         Timer timer = new Timer()
+         {
+            public void run()
+            {
+               if (!initParam.containsKey("v"))
+                  return;
+               if (initParam.get("v").size() != 1 || !initParam.get("v").get(0).equals("codenow1.0"))
+                  return;
+
+               int curx = 0, cury = 0;
+               if (initParam.containsKey("curx"))
+               {
+                  List<String> list = initParam.get("curx");
+                  if (!list.isEmpty())
+                  {
+                     try
+                     {
+                        curx = Integer.parseInt(list.get(0));
+                     }
+                     catch (NumberFormatException ignore)
+                     {
+                        //Nothing todo
+                     }
+                  }
+               }
+
+               if (initParam.containsKey("cury"))
+               {
+                  List<String> list = initParam.get("cury");
+                  if (!list.isEmpty())
+                  {
+                     try
+                     {
+                        cury = Integer.parseInt(list.get(0));
+                     }
+                     catch (NumberFormatException ignor)
+                     {
+                        //Nothing todo
+                     }
+                  }
+               }
+
+               final CursorPosition cursorPosition = new CursorPosition(cury, curx);
+
+               List<String> openFilePaths = initParam.get("openFilePath");
+               if (openFilePaths != null && !openFilePaths.isEmpty())
+               {
+                  String openFilePath = openFilePaths.get(0);
+                  String filePath = project.getPath() + openFilePath;
+                  try
+                  {
+                     VirtualFileSystem.getInstance().getItemByPath(filePath,
+                        new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
+                        {
+
+                           @Override
+                           protected void onSuccess(ItemWrapper result)
+                           {
+                              result.getItem();
+                              FileModel fileModel = new FileModel((File)result.getItem());
+                              fileModel.setProject(project);
+                              IDE.fireEvent(new GoToItemEvent(fileModel, cursorPosition, true));
+                           }
+
+                           @Override
+                           protected void onFailure(Throwable exception)
+                           {
+                              Dialogs.getInstance().showError(exception.getMessage());
+                           }
+                        });
+                  }
+                  catch (RequestException e)
+                  {
+                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                  }
+
+               }
+            }
+            // Execute the timer to expire 2 seconds in the future
+         };
+         timer.schedule(2000);
+      }
+   }
+
+   /**
+    * Open file and/or go to parent folder.
+    * 
+    * @param item file which must be opened
+    */
+   private void doOpenFile(Item item)
+   {
+      //      if (item.getItemType() == ItemType.FILE)
+      //      {
+      //         // if tab with file content is active
+      //         if (activeFile != null && activeFile.getId().equals(item.getId()))
+      //         {
+      //            IDE.fireEvent(new GoToFolderEvent());
+      //            return;
+      //         }
+      //
+      //         isNeedGoToFolderOnActiveFileChanged = true;
+      //
+      //         IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      IDE.fireEvent(new OpenFileEvent((FileModel)item, new CursorPosition(5, 10)));
+      //      }
+   }
+
+   /**
+    * Retrieves relative path to the file from absolute path.
+    * 
+    * @param absoluteFilePath link to the file
+    * @return relative path to the file
+    */
+   private String retrieveRelativeFilePath(String absoluteFilePath)
+   {
+      String vfsURL = VirtualFileSystem.getInstance().getURL();
+
+      if (!absoluteFilePath.startsWith(vfsURL))
+      {
+         return absoluteFilePath;
+      }
+
+      int index = absoluteFilePath.indexOf('/', vfsURL.length() + 1);
+
+      return absoluteFilePath.substring(index + 1);
    }
 
 }
