@@ -29,7 +29,7 @@ import org.exoplatform.ide.resources.model.Project;
  * @version $Id:
  *
  */
-public class JavaProjectModeProvider implements ModelProvider
+public class JavaProjectModelProvider implements ModelProvider
 {
 
    private final EventBus eventBus;
@@ -37,7 +37,7 @@ public class JavaProjectModeProvider implements ModelProvider
    /**
     * @param eventBus
     */
-   public JavaProjectModeProvider(EventBus eventBus)
+   public JavaProjectModelProvider(EventBus eventBus)
    {
       this.eventBus = eventBus;
    }

@@ -58,4 +58,13 @@ public class SourceFolder extends Folder
    {
       return sourceFolderName;
    }
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getPath()
+   {
+      return parent.getPath() + "/" + getName();
+   }
 }

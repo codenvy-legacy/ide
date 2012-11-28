@@ -42,10 +42,11 @@ public class Package extends Folder
     * 
     * @param itemObject
     */
-   protected Package(JSONObject itemObject)
+   protected Package(JSONObject itemObject, String name)
    {
       this();
       init(itemObject);
+      this.name = name;
    }
 
    /**

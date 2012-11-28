@@ -101,7 +101,7 @@ public abstract class Resource
       }
       else
       {
-         return "/" + name;
+         return name;
       }
    }
 

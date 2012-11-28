@@ -18,23 +18,33 @@
  */
 package org.exoplatform.ide.java.client.projectmodel;
 
+import com.google.web.bindery.event.shared.EventBus;
+
+import com.google.common.collect.Lists;
+
 import com.google.gwt.http.client.Response;
 
 import org.apache.commons.io.IOUtils;
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.java.client.BaseTest;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.resources.model.File;
+import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Resource;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.Spy;
+
 import static org.mockito.Mockito.*;
 import static org.fest.assertions.Assertions.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,8 +57,8 @@ public class ModelUnmarshallerTest extends BaseTest
 
    private static String projectJs;
 
-   @Mock
-   private JavaProject project;
+   @Spy
+   private JavaProject project = new JavaProject(null);
 
    @Mock
    private JavaProjectDesctiprion projectDescription;
@@ -99,12 +109,61 @@ public class ModelUnmarshallerTest extends BaseTest
    @Test
    public void sourceFoldersParse() throws UnmarshallerException
    {
-      JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project);
+      List<Resource> allValues = parseProject();
+      assertThat(allValues).onProperty("name").containsOnly("src/main/java", "src/test/java", "src/main/resources",
+         "src/test/java", "src/test/resources", "src", "pom.xml", ".project");
+   }
+
+   @Test
+   public void packageParse() throws UnmarshallerException
+   {
+      List<Resource> allValues = parseProject();
+      SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
+      ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
+      assertThat(packages).onProperty("name"). //
+         containsOnly("org", // 
+            "org.springframework", //
+            "org.springframework.samples", //
+            "org.springframework.samples.mvc",//
+            "org.springframework.samples.mvc.ajax", //
+            "org.springframework.samples.mvc.ajax.json", //
+            "org.springframework.samples.mvc.ajax.account");
+
+   }
+
+   @Test
+   public void addNotValidFolderNameAsChildrenToPackage() throws UnmarshallerException
+   {
+      List<Resource> allValues = parseProject();
+      SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
+      ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
+      Package pack = (Package)packages.get(5);
+      ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
+      assertThat(childrens).onProperty("name").contains("void");
+   }
+
+   @Test
+   public void addCompilationUnit() throws UnmarshallerException
+   {
+      List<Resource> allValues = parseProject();
+      SourceFolder sourceFolder = (SourceFolder)allValues.get(3);
+      ArrayList<Resource> packages = Lists.newArrayList(sourceFolder.getChildren().asIterable());
+      Package pack = (Package)packages.get(5);
+      ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
+      assertThat(childrens).onProperty("resourceType").containsOnly(File.TYPE, CompilationUnit.TYPE, Folder.TYPE);
+   }
+
+   /**
+    * @return
+    * @throws UnmarshallerException
+    */
+   private List<Resource> parseProject() throws UnmarshallerException
+   {
+      JavaModelUnmarshaller unmarshaller = new JavaModelUnmarshaller(project, project);
       unmarshaller.unmarshal(response);
       ArgumentCaptor<Resource> childrens = ArgumentCaptor.forClass(Resource.class);
       verify(project, times(7)).addChild(childrens.capture());
       List<Resource> allValues = childrens.getAllValues();
-      assertThat(allValues).onProperty("name").containsOnly("src/main/java", "src/test/java", "src/main/resources",
-         "src/test/java", "src/test/resources", "src", "pom.xml", ".project");
+      return allValues;
    }
 }

@@ -16,16 +16,11 @@
  */
 package org.exoplatform.ide.java.client.projectmodel;
 
-import com.google.gwt.json.client.JSONObject;
-
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.resources.marshal.FolderTreeUnmarshaller;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Link;
 import org.exoplatform.ide.resources.model.Project;
@@ -75,7 +70,7 @@ public class JavaProject extends Project
       {
          // create internal wrapping Request Callback with proper Unmarshaller
          AsyncRequestCallback<Folder> internalCallback =
-            new AsyncRequestCallback<Folder>(new FolderTreeUnmarshaller(root, root.getProject()))
+            new AsyncRequestCallback<Folder>(new JavaModelUnmarshaller(root, (JavaProject)root.getProject()))
             {
                @Override
                protected void onSuccess(Folder refreshedRoot)

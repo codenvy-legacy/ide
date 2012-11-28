@@ -54,6 +54,8 @@ import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.java.client.JavaExtension;
+import org.exoplatform.ide.java.client.projectmodel.JavaProject;
+import org.exoplatform.ide.java.client.projectmodel.JavaProjectDesctiprion;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
@@ -64,7 +66,9 @@ import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
+import org.exoplatform.ide.resources.model.ProjectDescription;
 import org.exoplatform.ide.resources.model.Property;
+import org.exoplatform.ide.rest.MimeType;
 import org.exoplatform.ide.ui.list.SimpleList;
 import org.exoplatform.ide.ui.list.SimpleList.View;
 import org.exoplatform.ide.util.dom.Elements;
@@ -288,84 +292,222 @@ public class WorkspacePeresenter implements Presenter
       public void execute()
       {
          // DUMMY CREATE DEMO CONTENT
-         resourceManager.createProject("Test Project " + (new Date().getTime()),
-            JsonCollections.<Property> createArray(), new AsyncCallback<Project>()
+         resourceManager.createProject("Test Project " + (new Date().getTime()), JsonCollections
+            .<Property> createArray(
+               //
+               new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),//
+               new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS, JsonCollections.createArray(
+                  "src/main/java", "src/main/resources", "src/test/java", "src/test/resources"))//
+            ), new AsyncCallback<Project>()
+         {
+
+            @Override
+            public void onSuccess(final Project project)
             {
-
-               @Override
-               public void onSuccess(final Project project)
+               project.createFolder(project, "src", new AsyncCallback<Folder>()
                {
-                  project.createFolder(project, "Parent Folder/Test Folder", new AsyncCallback<Folder>()
+
+                  @Override
+                  public void onFailure(Throwable caught)
                   {
+                     Log.error(getClass(), caught);
+                  }
 
-                     @Override
-                     public void onSuccess(Folder result)
+                  @Override
+                  public void onSuccess(Folder result)
+                  {
+                     project.createFolder(result, "main", new AsyncCallback<Folder>()
                      {
-                        project.createFile(result, "TestFileOnFs.txt", "This is file content of the file from VFS",
-                           "text/text-pain", new AsyncCallback<File>()
-                           {
 
-                              @Override
-                              public void onSuccess(File result)
-                              {
-                                 // ok
-                              }
-
-                              @Override
-                              public void onFailure(Throwable caught)
-                              {
-                                 GWT.log("Error creating demo folder" + caught);
-                              }
-                           });
-                        project.createFile(result, "TestJava.java", "public class TestJava\n{\n\n}",
-                           "application/java", new AsyncCallback<File>()
-                           {
-
-                              @Override
-                              public void onSuccess(File result)
-                              {
-                                 // ok
-                              }
-
-                              @Override
-                              public void onFailure(Throwable caught)
-                              {
-                                 GWT.log("Error creating demo folder" + caught);
-                              }
-                           });
-                        project.createFile(result, "styles.css", ".test{\n\n}", "text/css", new AsyncCallback<File>()
+                        @Override
+                        public void onFailure(Throwable caught)
                         {
+                           Log.error(getClass(), caught);
+                        }
 
-                           @Override
-                           public void onSuccess(File result)
+                        @Override
+                        public void onSuccess(Folder result)
+                        {
+                           project.createFolder(result, "java/org/exoplatform/ide", new AsyncCallback<Folder>()
                            {
-                              // ok
-                           }
 
-                           @Override
-                           public void onFailure(Throwable caught)
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(getClass(), caught);
+                              }
+
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                                 project.createFile(result, "Test.java",
+                                    "package org.exoplatform.ide;\n public class Test\n{\n}",
+                                    MimeType.APPLICATION_JAVA, new AsyncCallback<File>()
+                                    {
+
+                                       @Override
+                                       public void onFailure(Throwable caught)
+                                       {
+                                          Log.error(getClass(), caught);
+                                       }
+
+                                       @Override
+                                       public void onSuccess(File result)
+                                       {
+                                       }
+                                    });
+                                 project.createFolder(result, "void", new AsyncCallback<Folder>()
+                                 {
+
+                                    @Override
+                                    public void onFailure(Throwable caught)
+                                    {
+                                       Log.error(getClass(), caught);
+                                    }
+
+                                    @Override
+                                    public void onSuccess(Folder result)
+                                    {
+                                    }
+                                 });
+                              }
+                           });
+                           project.createFolder(result, "resources/org/exoplatform/ide", new AsyncCallback<Folder>()
                            {
-                              Log.error(getClass(), caught);
-                           }
-                        });
 
-                     }
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(getClass(), caught);
+                              }
 
-                     @Override
-                     public void onFailure(Throwable caught)
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                                 project.createFile(result, "styles.css", ".test{\n\n}", "text/css",
+                                    new AsyncCallback<File>()
+                                    {
+
+                                       @Override
+                                       public void onSuccess(File result)
+                                       {
+                                          // ok
+                                       }
+
+                                       @Override
+                                       public void onFailure(Throwable caught)
+                                       {
+                                          Log.error(getClass(), caught);
+                                       }
+                                    });
+
+                              }
+                           });
+                           
+                           project.createFolder(result, "webapp", new AsyncCallback<Folder>()
+                           {
+
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(getClass(), caught);
+                              }
+
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                              }
+                           });
+                        }
+                     });
+                     project.createFolder(result, "test", new AsyncCallback<Folder>()
                      {
-                        GWT.log("Error creating demo folder" + caught);
-                     }
-                  });
 
-               }
+                        @Override
+                        public void onFailure(Throwable caught)
+                        {
+                           Log.error(getClass(), caught);
+                        }
 
-               @Override
-               public void onFailure(Throwable caught)
-               {
-                  GWT.log("Error creating demo content" + caught);
-               }
-            });
+                        @Override
+                        public void onSuccess(Folder result)
+                        {
+                           project.createFolder(result, "java/org/exoplatform/ide", new AsyncCallback<Folder>()
+                           {
+
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(getClass(), caught);
+                              }
+
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                                 project.createFile(result, "TestClass.java",
+                                    "package org.exoplatform.ide;\n public class TestClass\n{\n}",
+                                    MimeType.APPLICATION_JAVA, new AsyncCallback<File>()
+                                    {
+
+                                       @Override
+                                       public void onFailure(Throwable caught)
+                                       {
+                                       }
+
+                                       @Override
+                                       public void onSuccess(File result)
+                                       {
+                                       }
+                                    });
+                              }
+                           });
+
+                           project.createFolder(result, "resources/org/exoplatform/ide", new AsyncCallback<Folder>()
+                           {
+
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(getClass(), caught);
+                              }
+
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                                 project.createFile(result, "TestFileOnFs.txt",
+                                    "This is file content of the file from VFS", "text/text-pain",
+                                    new AsyncCallback<File>()
+                                    {
+
+                                       @Override
+                                       public void onSuccess(File result)
+                                       {
+                                          // ok
+                                       }
+
+                                       @Override
+                                       public void onFailure(Throwable caught)
+                                       {
+                                          GWT.log("Error creating demo folder" + caught);
+                                       }
+                                    });
+
+                              }
+                           });
+                        }
+                     });
+
+                  }
+               });
+
+            }
+
+            @Override
+            public void onFailure(Throwable caught)
+            {
+               GWT.log("Error creating demo content" + caught);
+            }
+         });
       }
    }
 

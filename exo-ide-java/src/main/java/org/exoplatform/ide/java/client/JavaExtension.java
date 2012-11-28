@@ -31,7 +31,7 @@ import org.exoplatform.ide.java.client.editor.JavaEditorProvider;
 import org.exoplatform.ide.java.client.internal.codeassist.impl.AssistOptions;
 import org.exoplatform.ide.java.client.internal.compiler.impl.CompilerOptions;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
-import org.exoplatform.ide.java.client.projectmodel.JavaProjectModeProvider;
+import org.exoplatform.ide.java.client.projectmodel.JavaProjectModelProvider;
 import org.exoplatform.ide.java.client.templates.CodeTemplateContextType;
 import org.exoplatform.ide.java.client.templates.ContextTypeRegistry;
 import org.exoplatform.ide.java.client.templates.ElementTypeResolver;
@@ -81,7 +81,7 @@ public class JavaExtension
       FileType javaFile = new FileType(null, MimeType.APPLICATION_JAVA, "java");
       editorRegistry.register(javaFile, javaEditorProvider);
       resourceProvider.registerFileType(javaFile);
-      resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModeProvider(eventBus));
+      resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
       JavaClientBundle.INSTANCE.css().ensureInjected();
    }
    

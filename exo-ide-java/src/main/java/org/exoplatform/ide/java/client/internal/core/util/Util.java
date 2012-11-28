@@ -1011,7 +1011,18 @@ public class Util
       return result;
    }
 
-   /*
+   /**
+    * Returns true if the given name ends with one of the known java like extension.
+    * (implementation is not creating extra strings)
+    */
+   public final static boolean isJavaLikeFileName(String name)
+   {
+      if (name == null)
+         return false;
+      return indexOfJavaLikeExtension(name) != -1;
+   }
+
+   /**
     * Returns the index of the Java like extension of the given file name or -1 if it doesn't end with a known Java like
     * extension. Note this is the index of the '.' even if it is not considered part of the extension.
     */
@@ -1543,7 +1554,8 @@ public class Util
             appendClassTypeSignature(string, start, buffer, compact);
             break;
          case Signature.C_TYPE_VARIABLE :
-            int e = org.exoplatform.ide.java.client.internal.compiler.util.Util.scanTypeVariableSignature(string, start);
+            int e =
+               org.exoplatform.ide.java.client.internal.compiler.util.Util.scanTypeVariableSignature(string, start);
             buffer.append(string, start + 1, e - start - 1);
             break;
          case Signature.C_BOOLEAN :
@@ -1822,7 +1834,8 @@ public class Util
             case Signature.C_RESOLVED :
                return appendClassTypeSignatureForAnchor(string, start, buffer);
             case Signature.C_TYPE_VARIABLE :
-               int e = org.exoplatform.ide.java.client.internal.compiler.util.Util.scanTypeVariableSignature(string, start);
+               int e =
+                  org.exoplatform.ide.java.client.internal.compiler.util.Util.scanTypeVariableSignature(string, start);
                buffer.append(string, start + 1, e - start - 1);
                return e;
             case Signature.C_BOOLEAN :

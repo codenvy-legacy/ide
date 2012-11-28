@@ -208,10 +208,10 @@ public class JavaConventions
          return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, "Compilation unit name must not be null", null);
       }
       String message = "Compilation unit name must end with .java, or one of the registered Java-like extensions";
-      //      if (!org.exoplatform.ide.java.client.internal.core.util.Util.isJavaLikeFileName(name))
-      //      {
-      //         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, message, null);
-      //      }
+      if (!org.exoplatform.ide.java.client.internal.core.util.Util.isJavaLikeFileName(name))
+      {
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, message, null);
+      }
       String identifier;
       int index;
       index = name.lastIndexOf('.');

@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.java.client.projectmodel;
 
+import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.json.client.JSONValue;
-
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
-
-import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
+import org.exoplatform.ide.java.client.core.JavaConventions;
+import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringSet;
 import org.exoplatform.ide.json.JsonStringSet.IterationCallback;
@@ -35,9 +35,12 @@ import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.rest.Unmarshallable;
+import org.exoplatform.ide.runtime.IStatus;
+import org.exoplatform.ide.runtime.Status;
 import org.exoplatform.ide.util.loging.Log;
 
 /**
+ *  Recursively traverses the JSON Response to build Java project model
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
@@ -55,18 +58,20 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder>
 
    private static final String PATH = "path";
 
+   private static final String NAME = "name";
+
    private JavaProject project;
 
    private JsonStringSet sourceFolders;
 
    private String projectPath;
 
-   /**
-    * @param project
-    */
-   public JavaModelUnmarshaller(JavaProject project)
+   private Folder root;
+
+   public JavaModelUnmarshaller(Folder root, JavaProject project)
    {
       super();
+      this.root = root;
       this.project = project;
 
       sourceFolders = JsonCollections.createStringSet();
@@ -76,7 +81,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder>
          @Override
          public void onIteration(String key)
          {
-            sourceFolders.add(projectPath + (key.startsWith("/") ? key : "/" +key));
+            sourceFolders.add(projectPath + (key.startsWith("/") ? key : "/" + key));
          }
       });
    }
@@ -90,7 +95,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder>
       try
       {
          JSONObject object = JSONParser.parseLenient(response.getText()).isObject();
-         parseProjectStructure(object.get(CHILDREN), project, project);
+         parseProjectStructure(object.get(CHILDREN), root, root, project);
 
       }
       catch (Exception exc)
@@ -100,7 +105,15 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder>
       }
    }
 
-   private void parseProjectStructure(JSONValue children, Folder parentFolder, Project parentProject)
+   /**
+    * Parse project structure and build Java project model 
+    * @param children the json array to parse
+    * @param parentFolder the folder to add children's that part of java model
+    * @param parentFolderNonModelItems the folder to add children's that not part of java model 
+    * @param project the project for that building java model
+    */
+   private void parseProjectStructure(JSONValue children, Folder parentFolder, Folder parentFolderNonModelItems,
+      Project project)
    {
       JSONArray itemsArray = children.isArray();
       for (int i = 0; i < itemsArray.size(); i++)
@@ -108,7 +121,7 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder>
          JSONObject itemObject = itemsArray.get(i).isObject();
          // Get item 
          JSONObject item = itemObject.get(ITEM).isObject();
-         //         String id = item.get(ID).isString().stringValue();
+         String id = item.get(ID).isString().stringValue();
          //
          String type = null;
          if (item.get(TYPE).isNull() == null)
@@ -125,29 +138,82 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder>
          else if (Folder.TYPE.equalsIgnoreCase(type))
          {
             Folder folder;
-            String path = item.get(PATH).isString().stringValue();
-            if (sourceFolders.contains(path))
+            Resource existingFolder = parentFolder.findChildById(id);
+            if (existingFolder == null)
             {
-               folder = new SourceFolder(item, path.substring(projectPath.length() + 1));
-               parentProject.addChild(folder);
-               folder.setProject(parentProject);
-               sourceFolders.remove(path);
-               addPackages(itemObject.get(CHILDREN), folder, parentProject);
+               existingFolder = project.findChildById(id);
+            }
+            if (existingFolder == null)
+            {
+               existingFolder = parentFolderNonModelItems.findChildById(id);
+            }
+
+            // Make sure found resource is Folder
+            if (existingFolder != null && existingFolder instanceof Folder)
+            {
+               // use existing folder instance as 
+               folder = (Folder)existingFolder;
+               if (folder instanceof Package)
+               {
+                  parseProjectStructure(itemObject.get(CHILDREN), folder.getParent(), folder, project);
+               }
+               else
+               {
+                  parseProjectStructure(itemObject.get(CHILDREN), folder, folder, project);
+               }
             }
             else
             {
-               folder = new Folder(item);
-               parentFolder.addChild(folder);
-               folder.setProject(parentProject);
-               parseProjectStructure(itemObject.get(CHILDREN), folder, parentProject);
+               String path = item.get(PATH).isString().stringValue();
+               //create new source folder
+               if (sourceFolders.contains(path))
+               {
+                  folder = new SourceFolder(item, path.substring(projectPath.length() + 1));
+                  project.addChild(folder);
+                  folder.setProject(project);
+                  sourceFolders.remove(path);
+                  parseProjectStructure(itemObject.get(CHILDREN), folder, folder, project);
+               }
+               //add package or regular folder
+               else
+               {
+                  String packageName = path.substring(parentFolder.getPath().length() + 1).replaceAll("/", ".");
+                  //filter folders with invalid names for java packages
+                  if (parentFolder instanceof SourceFolder && isPackageNameValid(packageName))
+                  {
+                     folder = new Package(item, packageName);
+                     parentFolder.addChild(folder);
+                     folder.setProject(project);
+                     sourceFolders.remove(path);
+                     parseProjectStructure(itemObject.get(CHILDREN), parentFolder, folder, project);
+                  }
+                  else
+                  {
+                     folder = new Folder(item);
+                     parentFolderNonModelItems.addChild(folder);
+                     folder.setProject(project);
+                     parseProjectStructure(itemObject.get(CHILDREN), folder, folder, project);
+                  }
+               }
             }
          }
          // File
          else if (File.TYPE.equalsIgnoreCase(type))
          {
-            File file = new File(item);
-            parentFolder.addChild(file);
-            file.setProject(parentProject);
+            File file;
+            //check if parent of this file is package and file has valid java name, 
+            //then add as compilation unit else as regular file
+            if (parentFolderNonModelItems instanceof Package
+               && isCompilationUnitName(item.get(NAME).isString().stringValue()))
+            {
+               file = new CompilationUnit(item);
+            }
+            else
+            {
+               file = new File(item);
+            }
+            parentFolderNonModelItems.addChild(file);
+            file.setProject(project);
          }
          else
          {
@@ -156,89 +222,35 @@ public class JavaModelUnmarshaller implements Unmarshallable<Folder>
       }
    }
 
-   /**
-    * @param jsonValue
-    * @param folder
-    * @param parentProject
-    */
-   private void addPackages(JSONValue jsonValue, Folder folder, Project parentProject)
+   private boolean isPackageNameValid(String name)
    {
-      // TODO Auto-generated method stub
-      
+      IStatus status =
+         JavaConventions.validatePackageName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+            JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+      switch (status.getSeverity())
+      {
+         case Status.WARNING :
+         case Status.OK :
+            return true;
+         default :
+            return false;
+      }
    }
 
-   //   /**
-   //    * @param children
-   //    * @param parentFolder
-   //    * @param parentProject
-   //    */
-   //   private void getChildren(JSONValue children, Folder parentFolder, Project parentProject)
-   //   {
-   //      JSONArray itemsArray = children.isArray();
-   //
-   //      for (int i = 0; i < itemsArray.size(); i++)
-   //      {
-   //         JSONObject itemObject = itemsArray.get(i).isObject();
-   //         // Get item 
-   //         JSONObject item = itemObject.get(ITEM).isObject();
-   //
-   //         String id = item.get(ID).isString().stringValue();
-   //
-   //         String type = null;
-   //         if (item.get(TYPE).isNull() == null)
-   //         {
-   //            type = item.get(TYPE).isString().stringValue();
-   //         }
-   //
-   //         // Project found in JSON Response
-   //         if (Project.TYPE.equalsIgnoreCase(type))
-   //         {
-   //            Log.error(this.getClass(), "Unsupported operation. Unmarshalling a child projects is not supported");
-   //         }
-   //         // Folder
-   //         else if (Folder.TYPE.equalsIgnoreCase(type))
-   //         {
-   //            Folder folder;
-   //            // find if Folder Object already exists. This is a refresh usecase.
-   //            Resource existingFolder = parentFolder.findChildById(id);
-   //            // Make sure found resource is Folder
-   //            if (existingFolder != null && Folder.TYPE.equalsIgnoreCase(existingFolder.getResourceType()))
-   //            {
-   //               // use existing folder instance as 
-   //               folder = (Folder)existingFolder;
-   //            }
-   //            else
-   //            {
-   //               String path = item.get(PATH).isString().stringValue();
-   //               if (sourceFolders.contains(path))
-   //               {
-   //                  folder = new SourceFolder(item);
-   //                  parentFolder.addChild(folder);
-   //                  folder.setProject(parentProject);
-   //               }
-   //               else
-   //               {
-   //                  folder = new Folder(item);
-   //                  parentFolder.addChild(folder);
-   //                  folder.setProject(parentProject);
-   //               }
-   //            }
-   //            // recursively get project
-   //            getChildren(itemObject.get(CHILDREN), folder, parentProject);
-   //         }
-   //         // File
-   //         else if (File.TYPE.equalsIgnoreCase(type))
-   //         {
-   //            File file = new File(item);
-   //            parentFolder.addChild(file);
-   //            file.setProject(parentProject);
-   //         }
-   //         else
-   //         {
-   //            Log.error(this.getClass(), "Unsupported Resource type: " + type);
-   //         }
-   //      }
-   //   }
+   private boolean isCompilationUnitName(String name)
+   {
+      IStatus status =
+         JavaConventions.validateCompilationUnitName(name, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+            JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+      switch (status.getSeverity())
+      {
+         case Status.WARNING :
+         case Status.OK :
+            return true;
+         default :
+            return false;
+      }
+   }
 
    /**
     * {@inheritDoc}
