@@ -1115,7 +1115,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-
+   
    /*
     * Linking With Editor functionality
     */
