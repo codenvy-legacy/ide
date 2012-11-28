@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.authentication;
 
+import com.google.gwt.user.client.Window.Location;
+
 import com.google.gwt.user.client.Window;
 
 import com.google.gwt.core.client.GWT;
@@ -43,6 +45,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.Alert;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -157,6 +160,7 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       }
 
       display = GWT.create(Display.class);
+      
 
       display.getLoginGoogleButton().addClickHandler(new ClickHandler()
       {
@@ -249,6 +253,13 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
 
       display.getLoginField().setValue(login);
       display.getPasswordField().setValue(password);
+      
+      
+      display.getLoginField().setValue(Location.getParameter("username"));
+      
+      display.getPasswordField().setValue(Location.getParameter("password"));
+      doLogin(asyncRequest);
+      
       checkForLoginButtonEnabled();
 
       IDE.getInstance().openView(display.asView());

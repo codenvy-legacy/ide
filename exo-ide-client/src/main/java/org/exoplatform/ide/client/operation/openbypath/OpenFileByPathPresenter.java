@@ -38,7 +38,7 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.navigation.event.GoToFolderEvent;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -233,7 +233,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
          // if tab with file content is active
          if (activeFile != null && activeFile.getId().equals(item.getId()))
          {
-            IDE.fireEvent(new GoToFolderEvent());
+            IDE.fireEvent(new GoToItemEvent());
             return;
          }
 
@@ -255,7 +255,7 @@ public class OpenFileByPathPresenter implements ViewClosedHandler, OpenFileByPat
       // if file opened by OpenFileByPathControl
       if (isNeedGoToFolderOnActiveFileChanged)
       {
-         IDE.fireEvent(new GoToFolderEvent());
+         IDE.fireEvent(new GoToItemEvent());
          isNeedGoToFolderOnActiveFileChanged = false;
       }
    }

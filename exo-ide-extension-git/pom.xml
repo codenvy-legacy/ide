@@ -54,6 +54,12 @@
 		<dependency>
 			<groupId>picocontainer</groupId>
 			<artifactId>picocontainer</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>xstream</groupId>
+					<artifactId>xstream</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
@@ -68,8 +74,8 @@
 			<artifactId>exo.core.component.security.core</artifactId>
 		</dependency>
 		<dependency>
-		 <groupId>org.everrest</groupId>
-		 <artifactId>everrest-core</artifactId>
+			<groupId>org.everrest</groupId>
+			<artifactId>everrest-core</artifactId>
 		</dependency>
 
 
@@ -113,11 +119,11 @@
 			<artifactId>exo-ide-editor</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-vfs</artifactId>
-      </dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-vfs</artifactId>
+		</dependency>
 
 	</dependencies>
 	<build>
