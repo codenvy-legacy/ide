@@ -32,6 +32,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
@@ -351,10 +352,11 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    private void onCloneSuccess(FolderModel folder, String projectType)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-      convertFolderToProject(folder, projectType);
+//      convertFolderToProject(folder, projectType);
       //TODO: not good, comment temporary need found other way 
       // for inviting collaborators
       // showInvitation(result.getRemoteUri());
+      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
    }
 
    private void handleError(Throwable e)
@@ -370,36 +372,36 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param folder
     * @param projectType
     */
-   protected void convertFolderToProject(FolderModel folder, String projectType)
-   {
-      folder.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folder.getProperties().add(new Property("vfs:projectType", projectType));
-      ProjectModel project = new ProjectModel();
-      ItemWrapper item = new ItemWrapper(project);
-      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(folder, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
+//   protected void convertFolderToProject(FolderModel folder, String projectType)
+//   {
+//      folder.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+//      folder.getProperties().add(new Property("vfs:projectType", projectType));
+//      ProjectModel project = new ProjectModel();
+//      ItemWrapper item = new ItemWrapper(project);
+//      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+//      try
+//      {
+//         VirtualFileSystem.getInstance().updateItem(folder, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
+//         {
+//
+//            @Override
+//            protected void onSuccess(ItemWrapper result)
+//            {
+//               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
+//            }
+//
+//            @Override
+//            protected void onFailure(Throwable exception)
+//            {
+//               IDE.fireEvent(new ExceptionThrownEvent(exception));
+//            }
+//         });
+//      }
+//      catch (RequestException e)
+//      {
+//         IDE.fireEvent(new ExceptionThrownEvent(e));
+//      }
+//   }
 
    /**
     * Show dialog window with proposal for invite commiters.
