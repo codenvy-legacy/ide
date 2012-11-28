@@ -471,7 +471,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          return;
       }
 
-      //System.out.println(">> select item " + event.getItemId());
+      System.out.println(">> select item " + event.getItemId());
    }
    
    /**

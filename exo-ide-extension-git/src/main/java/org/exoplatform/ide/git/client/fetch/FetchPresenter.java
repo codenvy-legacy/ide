@@ -32,6 +32,10 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -210,25 +214,31 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
    }
 
    /**
-    * Perform fetch from remote repository.
+    * Perform fetch from remote repository by sending request over WebSocket or HTTP.
     */
-   public void doFetch()
+   private void doFetch()
    {
-      final String remoteUrl = display.getRemoteName().getValue();
+      String remoteUrl = display.getRemoteName().getValue();
       String remoteName = display.getRemoteDisplayValue();
-      String localBranch = display.getLocalBranches().getValue();
-      String remoteBranch = display.getRemoteBranches().getValue();
       boolean removeDeletedRefs = display.getRemoveDeletedRefs().getValue();
-      String refs =
-         (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
-            + "refs/remotes/" + remoteName + "/" + remoteBranch;
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         doFetchWS(project, remoteName, removeDeletedRefs, remoteUrl);
+      else
+         doFetchREST(project, remoteName, removeDeletedRefs, remoteUrl);
+   }
+
+   /**
+    * Perform fetch from remote repository (sends request over HTTP).
+    */
+   private void doFetchREST(ProjectModel project, String remoteName, boolean removeDeletedRefs, final String remoteUrl)
+   {
       try
       {
-         GitClientService.getInstance().fetch(vfs.getId(), project, remoteName, new String[]{refs}, removeDeletedRefs,
+         GitClientService.getInstance().fetch(vfs.getId(), project, remoteName, getRefs(), removeDeletedRefs,
             new AsyncRequestCallback<String>()
             {
-
                @Override
                protected void onSuccess(String result)
                {
@@ -247,6 +257,52 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
          handleError(e, remoteUrl);
       }
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Perform fetch from remote repository (sends request over WebSocket).
+    */
+   private void doFetchWS(ProjectModel project, String remoteName, boolean removeDeletedRefs, final String remoteUrl)
+   {
+      try
+      {
+         GitClientService.getInstance().fetchWS(vfs.getId(), project, remoteName, getRefs(), removeDeletedRefs,
+            new RESTfulRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception, remoteUrl);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e, remoteUrl);
+      }
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Returns list of refs to fetch.
+    * 
+    * @return list of refs to fetch
+    */
+   private String[] getRefs()
+   {
+      String localBranch = display.getLocalBranches().getValue();
+      String remoteBranch = display.getRemoteBranches().getValue();
+      String remoteName = display.getRemoteDisplayValue();
+      String refs =
+         (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
+            + "refs/remotes/" + remoteName + "/" + remoteBranch;
+      return new String[]{refs};
    }
 
    private void handleError(Throwable t, String remoteUrl)

@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.extension.jenkins.server;
 
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
+
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.Pair;
+import org.everrest.websockets.message.RESTfulOutputMessage;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatus;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean;
 import org.exoplatform.ide.extension.jenkins.shared.JobStatusBean.Status;
@@ -26,6 +31,8 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -43,6 +50,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -132,6 +141,14 @@ public abstract class JenkinsClient
    private String jobTemplate;
 
    private Templates transfomRules;
+
+   private Timer checkStatusTimer = new Timer();
+
+   private static final long CHECK_JOB_STATUS_PERIOD = 2000;
+
+   private static final String JOB_STATUS_CHANNEL = "jenkins:jobStatus:";
+
+   private static final Log LOG = ExoLogger.getLogger(JenkinsClient.class);
 
    public JenkinsClient(String baseURL)
    {
@@ -415,6 +432,7 @@ public abstract class JenkinsClient
          {
             throw fault(http);
          }
+         startCheckingJobStatus(jobName, vfs, projectId);
       }
       finally
       {
@@ -648,6 +666,7 @@ public abstract class JenkinsClient
          {
             throw fault(http);
          }
+         checkStatusTimer.cancel();
       }
       finally
       {
@@ -730,6 +749,96 @@ public abstract class JenkinsClient
          throw new RuntimeException("Job name required. ");
       }
       return job;
+   }
+
+   /**
+    * Periodically checks status of the previously launched job and sends
+    * the status to WebSocket connection when job status will be changed.
+    * 
+    * @param jobName
+    *    identifier of the Jenkins job to check status
+    * @param vfs
+    *    virtual file system id
+    * @param projectId
+    *    project id
+    */
+   private void startCheckingJobStatus(final String jobName, final VirtualFileSystem vfs, final String projectId)
+   {
+      TimerTask task = new TimerTask()
+      {
+         private Status previousStatus;
+
+         @Override
+         public void run()
+         {
+            try
+            {
+               JobStatus jobStatus = jobStatus(jobName, vfs, projectId);
+               if (jobStatus.getStatus() != previousStatus)
+               {
+                  publishWebSocketMessage(jobStatus, JOB_STATUS_CHANNEL + jobName, null);
+                  previousStatus = jobStatus.getStatus();
+                  if (Status.END == jobStatus.getStatus())
+                  {
+                     cancel();
+                  }
+               }
+            }
+            catch (Exception e)
+            {
+               cancel();
+               publishWebSocketMessage(null, JOB_STATUS_CHANNEL + jobName, e);
+            }
+         }
+      };
+      checkStatusTimer.schedule(task, CHECK_JOB_STATUS_PERIOD, CHECK_JOB_STATUS_PERIOD);
+   }
+
+   /**
+    * Publishes the message over WebSocket connection.
+    * 
+    * @param data
+    *    the data to be sent to the client
+    * @param channel
+    *    channel name
+    * @param e
+    *    exception which has occurred or <code>null</code> if no exception
+    */
+   private static void publishWebSocketMessage(Object data, String channel, Exception e)
+   {
+      RESTfulOutputMessage message = new RESTfulOutputMessage();
+      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
+                                    new Pair("x-everrest-websocket-channel", channel)});
+      if (e == null)
+      {
+         message.setResponseCode(200);
+         if (data instanceof String)
+         {
+            message.setBody((String)data);
+         }
+         else if (data != null)
+         {
+            message.setBody(toJson(data));
+         }
+      }
+      else if (e instanceof JenkinsException)
+      {
+         message.setResponseCode(((JenkinsException)e).getResponseStatus());
+         message.setBody(e.getMessage());
+      }
+      else
+      {
+         message.setResponseCode(500);
+      }
+
+      try
+      {
+         WSConnectionContext.sendMessage(channel, message);
+      }
+      catch (Exception ex)
+      {
+         LOG.error("Failed to send message over WebSocket.", ex);
+      }
    }
 
 }

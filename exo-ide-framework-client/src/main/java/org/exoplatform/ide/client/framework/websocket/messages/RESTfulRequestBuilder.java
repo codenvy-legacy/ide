@@ -25,6 +25,7 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
 
@@ -45,6 +46,11 @@ public class RESTfulRequestBuilder
     * Message which is constructing and may be send.
     */
    private final RESTfulRequestMessage requestMessage;
+
+   /**
+    * Handler to show an execution state of operation.
+    */
+   private RequestStatusHandler statusHandler;
 
    /**
     * Loader to show while request is calling.
@@ -125,6 +131,18 @@ public class RESTfulRequestBuilder
    }
 
    /**
+    * Set handler to show an execution state of operation.
+    * 
+    * @param handler status handler
+    * @return this {@link RESTfulRequestBuilder}
+    */
+   public final RESTfulRequestBuilder requestStatusHandler(RequestStatusHandler handler)
+   {
+      this.statusHandler = handler;
+      return this;
+   }
+
+   /**
     * Set the loader to show while request is calling.
     * 
     * @param loader loader to show
@@ -148,12 +166,21 @@ public class RESTfulRequestBuilder
       if (callback != null)
       {
          callback.setLoader(loader);
-         loader.show();
+         callback.setStatusHandler(statusHandler);
       }
 
       try
       {
          WebSocket.getInstance().messageBus().send(message, callback, requestMessage.getUuid());
+         if (callback != null)
+         {
+            loader.show();
+            if (statusHandler != null)
+            {
+               statusHandler.requestInProgress(requestMessage.getUuid());
+            }
+            
+         }
       }
       catch (WebSocketException e)
       {

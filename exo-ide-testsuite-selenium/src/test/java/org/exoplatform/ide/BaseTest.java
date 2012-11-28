@@ -90,7 +90,7 @@ public abstract class BaseTest
 
    public static final int IDE_PORT = Integer.valueOf(IDE_SETTINGS.getString("ide.port"));
 
-   public static String BASE_URL = "http://" + IDE_HOST + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
+   public static String BASE_URL = "https://" + IDE_HOST + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
 
    public static final String USER_NAME = IDE_SETTINGS.getString("ide.user.root.name");
 

@@ -39,6 +39,10 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -186,13 +190,26 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    }
 
    /**
-    * Initialize Git repository.
+    * Initialize of the Git-repository by sending request over WebSocket or HTTP.
     * 
     * @param path working directory of the repository
     */
    private void initRepository(final ProjectModel project)
    {
       JobManager.get().showJobSeparated();
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         initRepositoryWS(project);
+      else
+         initRepositoryREST(project);
+   }
+
+   /**
+    * Initialize Git repository (sends request over HTTP).
+    * 
+    * @param path working directory of the repository
+    */
+   private void initRepositoryREST(final ProjectModel project)
+   {
       try
       {
          GitClientService.getInstance().init(vfs.getId(), project.getId(), project.getName(), false,
@@ -212,6 +229,37 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             });
       }
       catch (RequestException e)
+      {
+         handleGitError(e);
+      }
+   }
+
+   /**
+    * Initialize Git-repository (sends request over WebSocket).
+    * 
+    * @param path working directory of the repository
+    */
+   private void initRepositoryWS(final ProjectModel project)
+   {
+      try
+      {
+         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
+            new RESTfulRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  createApplication();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleGitError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
       {
          handleGitError(e);
       }

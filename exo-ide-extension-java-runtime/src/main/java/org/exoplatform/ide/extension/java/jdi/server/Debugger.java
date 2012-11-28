@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.jdi.server;
 
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
+
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Bootstrap;
 import com.sun.jdi.ClassNotPreparedException;
@@ -36,10 +38,14 @@ import com.sun.jdi.request.EventRequestManager;
 import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
 
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.Pair;
+import org.everrest.websockets.message.RESTfulOutputMessage;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointImpl;
+import org.exoplatform.ide.extension.java.jdi.server.model.DebuggerEventListImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.FieldImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.LocationImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.StackFrameDumpImpl;
@@ -79,6 +85,8 @@ public class Debugger implements EventsHandler
    private static final Log LOG = ExoLogger.getLogger(Debugger.class);
    private static final AtomicLong counter = new AtomicLong(1);
    private static final ConcurrentMap<String, Debugger> instances = new ConcurrentHashMap<String, Debugger>();
+   private static final String EVENTS_CHANNEL = "debugger:events:";
+   private static final String DISCONNECTED_CHANNEL = "debugger:disconnected:";
 
    public static Debugger newInstance(String host, int port) throws VMConnectException
    {
@@ -660,6 +668,7 @@ public class Debugger implements EventsHandler
                )
             ));
          }
+         publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id);
       }
 
       // Left target JVM in suspended state if result of evaluation of expression is boolean value and true
@@ -675,6 +684,8 @@ public class Debugger implements EventsHandler
       {
          events.add(new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
       }
+      publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id);
+
       // Lets target JVM to be in suspend state.
       return false;
    }
@@ -683,6 +694,7 @@ public class Debugger implements EventsHandler
    {
       eventsCollector.stop();
       instances.remove(id);
+      publishWebSocketMessage(null, DISCONNECTED_CHANNEL + id);
       return true;
    }
 
@@ -822,6 +834,39 @@ public class Debugger implements EventsHandler
       catch (VMCannotBeModifiedException e)
       {
          throw new DebuggerException(e.getMessage(), e);
+      }
+   }
+
+   /**
+    * Publishes the message over WebSocket connection.
+    * 
+    * @param data
+    *    the data to be sent to the client
+    * @param channel
+    *    channel name
+    */
+   private static void publishWebSocketMessage(Object data, String channel)
+   {
+      RESTfulOutputMessage message = new RESTfulOutputMessage();
+      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
+                                    new Pair("x-everrest-websocket-channel", channel)});
+      message.setResponseCode(200);
+      if (data instanceof String)
+      {
+         message.setBody((String)data);
+      }
+      else if (data != null)
+      {
+         message.setBody(toJson(data));
+      }
+
+      try
+      {
+         WSConnectionContext.sendMessage(channel, message);
+      }
+      catch (Exception e)
+      {
+         LOG.error("Failed to send message over WebSocket.", e);
       }
    }
 }

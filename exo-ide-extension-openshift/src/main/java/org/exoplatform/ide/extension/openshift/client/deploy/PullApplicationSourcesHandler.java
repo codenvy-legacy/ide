@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.openshift.client.deploy;
 
-import java.util.List;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
@@ -26,6 +26,10 @@ import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -34,7 +38,7 @@ import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.http.client.RequestException;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -84,10 +88,10 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
       pullSources();
    }
 
-   public void pullSources()
+   private void pullSources()
    {
       String remoteName = remotes.get(0).getName();
-      final String remoteUrl = remotes.get(0).getUrl();
+      String remoteUrl = remotes.get(0).getUrl();
 
       String localBranch =
          localBranches != null && !localBranches.isEmpty() ? localBranches.get(0).getDisplayName() : "master";
@@ -99,22 +103,23 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
          (localBranch == null || localBranch.length() == 0) ? remoteBranch : "refs/heads/" + remoteBranch + ":"
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
 
+      JobManager.get().showJobSeparated();
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         doPullWS(refs, remoteName, remoteUrl);
+      else
+         doPullREST(refs, remoteName, remoteUrl);
+   }
+
+   private void doPullREST(String refs, String remoteName, final String remoteUrl)
+   {
       try
       {
-         JobManager.get().showJobSeparated();
          GitClientService.getInstance().pull(vfs.getId(), project, refs, remoteName, new AsyncRequestCallback<String>()
          {
             @Override
             protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent());
-
-               if (callback != null)
-               {
-                  callback.onPullComplete(true);
-                  callback = null;
-               }
+               onPullSuccess(remoteUrl);
             }
 
             @Override
@@ -127,6 +132,49 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
       catch (RequestException e)
       {
          handleError(e, remoteUrl);
+      }
+   }
+
+   private void doPullWS(String refs, String remoteName, final String remoteUrl)
+   {
+      try
+      {
+         GitClientService.getInstance().pullWS(vfs.getId(), project, refs, remoteName,
+            new RESTfulRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  onPullSuccess(remoteUrl);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception, remoteUrl);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e, remoteUrl);
+      }
+   }
+
+   /**
+    * Performs action when pull of Git-repository is successfully completed.
+    * 
+    * @param remoteUrl URL of Git-repository
+    */
+   private void onPullSuccess(String remoteUrl)
+   {
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
+      IDE.fireEvent(new RefreshBrowserEvent());
+
+      if (callback != null)
+      {
+         callback.onPullComplete(true);
+         callback = null;
       }
    }
 

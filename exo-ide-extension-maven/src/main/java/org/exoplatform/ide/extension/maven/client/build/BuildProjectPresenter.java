@@ -47,6 +47,10 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildAndPublishProjectControl;
@@ -153,6 +157,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    protected RequestStatusHandler statusHandler;
 
+   private String buildStatusChannel;
+
    public BuildProjectPresenter()
    {
       IDE.getInstance().addControl(new BuildProjectControl());
@@ -218,7 +224,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
                   display.startAnimation();
                   previousStatus = null;
-                  refreshBuildStatusTimer.schedule(delay);
+                  startCheckingStatus(buildID);
                }
 
                @Override
@@ -243,6 +249,25 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          setBuildInProgress(false);
          display.stopAnimation();
          IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
+      }
+   }
+
+   /**
+    * Starts checking job status by subscribing on receiving
+    * messages over WebSocket or scheduling task to check status.
+    * 
+    * @param buildId id of the build job to check status
+    */
+   private void startCheckingStatus(String buildId)
+   {
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      {
+         buildStatusChannel = Channels.MAVEN_BUILD_STATUS + buildId;
+         WebSocket.getInstance().subscribe(buildStatusChannel, buildStatusHandler);
+      }
+      else
+      {
+         refreshBuildStatusTimer.schedule(delay);
       }
    }
 
@@ -512,6 +537,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void afterBuildFinished(BuildStatus buildStatus)
    {
+      WebSocket.getInstance().unsubscribe(buildStatusChannel, buildStatusHandler);
       setBuildInProgress(false);
       previousStatus = buildStatus.getStatus();
 
@@ -615,7 +641,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
       catch (RequestException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }
@@ -782,6 +807,29 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
       return formatStr.replaceFirst("&gt;&lt;", "&gt;<br>&lt;");
    }
+
+   /**
+    * Handler for processing Maven build status which is received over WebSocket connection.
+    */
+   private SubscriptionHandler<BuildStatus> buildStatusHandler = new SubscriptionHandler<BuildStatus>(
+      new org.exoplatform.ide.client.framework.websocket.messages.AutoBeanUnmarshaller<BuildStatus>(
+         BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class)))
+   {
+      @Override
+      protected void onSuccess(BuildStatus buildStatus)
+      {
+         updateBuildStatus(buildStatus);
+      }
+
+      @Override
+      protected void onFailure(Throwable exception)
+      {
+         WebSocket.getInstance().unsubscribe(buildStatusChannel, this);
+         setBuildInProgress(false);
+         display.stopAnimation();
+         IDE.fireEvent(new ExceptionThrownEvent(exception));
+      }
+   };
 
    /**
     * Deserializer for response's body.

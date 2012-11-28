@@ -24,6 +24,7 @@ import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.websocket.exceptions.ServerException;
 import org.exoplatform.ide.client.framework.websocket.exceptions.UnauthorizedException;
 
@@ -57,6 +58,11 @@ public abstract class RESTfulRequestCallback<T>
     * An object deserialized from the response.
     */
    private final T payload;
+
+   /**
+    * Handler to show an execution state of operation.
+    */
+   private RequestStatusHandler statusHandler;
 
    /**
     * Loader to show while request is calling.
@@ -104,7 +110,12 @@ public abstract class RESTfulRequestCallback<T>
 
       if (response.getResponseCode() == HTTPStatus.UNAUTHORIZED)
       {
-         onFailure(new UnauthorizedException(response));
+         UnauthorizedException exception = new UnauthorizedException(response);
+         if (statusHandler != null)
+         {
+            statusHandler.requestError(response.getUuid(), exception);
+         }
+         onFailure(exception);
          return;
       }
 
@@ -116,16 +127,29 @@ public abstract class RESTfulRequestCallback<T>
             {
                unmarshaller.unmarshal(response);
             }
+            if (statusHandler != null)
+            {
+               statusHandler.requestFinished(response.getUuid());
+            }
             onSuccess(payload);
          }
          catch (UnmarshallerException e)
          {
+            if (statusHandler != null)
+            {
+               statusHandler.requestError(response.getUuid(), e);
+            }
             onFailure(e);
          }
       }
       else
       {
-         onFailure(new ServerException(response));
+         ServerException exception = new ServerException(response);
+         if (statusHandler != null)
+         {
+            statusHandler.requestError(response.getUuid(), exception);
+         }
+         onFailure(exception);
       }
    }
 
@@ -162,6 +186,16 @@ public abstract class RESTfulRequestCallback<T>
    public void setSuccessCodes(int[] successCodes)
    {
       this.successCodes = successCodes;
+   }
+
+   /**
+    * Set handler to show an execution state of operation.
+    * 
+    * @param handler status handler
+    */
+   public final void setStatusHandler(RequestStatusHandler handler)
+   {
+      this.statusHandler = handler;
    }
 
    /**
