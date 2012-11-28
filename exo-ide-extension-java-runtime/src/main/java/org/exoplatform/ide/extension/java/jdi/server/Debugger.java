@@ -54,8 +54,10 @@ import org.exoplatform.ide.extension.java.jdi.server.model.ValueImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.VariableImpl;
 import org.exoplatform.ide.extension.java.jdi.server.model.VariablePathImpl;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPoint;
+import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.StackFrameDump;
+import org.exoplatform.ide.extension.java.jdi.shared.StepEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.Value;
 import org.exoplatform.ide.extension.java.jdi.shared.VariablePath;
 import org.exoplatform.services.log.ExoLogger;
@@ -660,15 +662,18 @@ public class Debugger implements EventsHandler
       if (hitBreakpoint)
       {
          com.sun.jdi.Location location = event.location();
+         BreakPointEvent breakPointEvent;
          synchronized (events)
          {
-            events.add(new BreakPointEventImpl(
-               new BreakPointImpl(
-                  new LocationImpl(location.declaringType().name(), location.lineNumber())
-               )
-            ));
+            breakPointEvent =
+               new BreakPointEventImpl(new BreakPointImpl(new LocationImpl(location.declaringType().name(),
+                  location.lineNumber())));
+            events.add(breakPointEvent);
          }
-         publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id);
+
+         List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>();
+         eventsList.add(breakPointEvent);
+         publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
       }
 
       // Left target JVM in suspended state if result of evaluation of expression is boolean value and true
@@ -680,11 +685,16 @@ public class Debugger implements EventsHandler
    {
       setCurrentThread(event.thread());
       com.sun.jdi.Location location = event.location();
+      StepEvent stepEvent;
       synchronized (events)
       {
-         events.add(new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber())));
+         stepEvent = new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber()));
+         events.add(stepEvent);
       }
-      publishWebSocketMessage(new DebuggerEventListImpl(events), EVENTS_CHANNEL + id);
+
+      List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>();
+      eventsList.add(stepEvent);
+      publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
 
       // Lets target JVM to be in suspend state.
       return false;
