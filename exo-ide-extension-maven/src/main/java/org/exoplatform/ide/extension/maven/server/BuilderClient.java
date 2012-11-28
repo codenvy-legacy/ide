@@ -18,11 +18,18 @@
  */
 package org.exoplatform.ide.extension.maven.server;
 
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
+
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.Pair;
+import org.everrest.websockets.message.RESTfulOutputMessage;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FilterInputStream;
@@ -31,6 +38,10 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Client to remote build server.
@@ -41,6 +52,16 @@ import java.net.URL;
 public class BuilderClient
 {
    public static final String BUILD_SERVER_BASE_URL = "exo.ide.builder.build-server-base-url";
+
+   private final Timer checkStatusTimer = new Timer();
+
+   private final ConcurrentMap<String, TimerTask> checkStatusTasks = new ConcurrentHashMap<String, TimerTask>();
+
+   private static final long CHECK_BUILD_STATUS_PERIOD = 2000;
+
+   private static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
+
+   private static final Log LOG = ExoLogger.getLogger(BuilderClient.class);
 
    private final String baseURL;
 
@@ -142,7 +163,9 @@ public class BuilderClient
       BuilderException, VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/builder/maven/build");
-      return run(url, vfs.exportZip(projectId));
+      String buildId = run(url, vfs.exportZip(projectId));
+      startCheckingBuildStatus(buildId);
+      return buildId;
    }
    
    /**
@@ -336,6 +359,12 @@ public class BuilderClient
          {
             fail(http);
          }
+
+         TimerTask task = checkStatusTasks.remove(buildID);
+         if (task != null)
+         {
+            task.cancel();
+         }
       }
       finally
       {
@@ -495,6 +524,89 @@ public class BuilderClient
          body = bout.toString();
       }
       return body;
+   }
+
+   /**
+    * Periodically checks status of the previously launched job and sends
+    * the status to WebSocket connection when job status will be changed.
+    * 
+    * @param buildId
+    *    identifier of the build job to check status
+    */
+   private void startCheckingBuildStatus(final String buildId)
+   {
+      TimerTask task = new TimerTask()
+      {
+         @Override
+         public void run()
+         {
+            try
+            {
+               String status = status(buildId);
+               if (!status.contains("\"status\":\"IN_PROGRESS\""))
+               {
+                  checkStatusTasks.remove(buildId);
+                  cancel();
+                  publishWebSocketMessage(status, BUILD_STATUS_CHANNEL + buildId, null);
+               }
+            }
+            catch (Exception e)
+            {
+               checkStatusTasks.remove(buildId);
+               cancel();
+               publishWebSocketMessage(null, BUILD_STATUS_CHANNEL + buildId, e);
+            }
+         }
+      };
+      checkStatusTasks.put(buildId, task);
+      checkStatusTimer.schedule(task, CHECK_BUILD_STATUS_PERIOD, CHECK_BUILD_STATUS_PERIOD);
+   }
+
+   /**
+    * Publishes the message over WebSocket connection.
+    * 
+    * @param data
+    *    the data to be sent to the client
+    * @param channel
+    *    channel name
+    * @param e
+    *    exception which has occurred or <code>null</code> if no exception
+    */
+   private static void publishWebSocketMessage(Object data, String channel, Exception e)
+   {
+      RESTfulOutputMessage message = new RESTfulOutputMessage();
+      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
+                                    new Pair("x-everrest-websocket-channel", channel)});
+      if (e == null)
+      {
+         message.setResponseCode(200);
+         if (data instanceof String)
+         {
+            message.setBody((String)data);
+         }
+         else if (data != null)
+         {
+            message.setBody(toJson(data));
+         }
+      }
+      else if (e instanceof BuilderException)
+      {
+         message.setResponseCode(((BuilderException)e).getResponseStatus());
+         message.setBody(e.getMessage());
+      }
+      else
+      {
+         message.setResponseCode(500);
+      }
+
+      try
+      {
+         WSConnectionContext.sendMessage(channel, message);
+      }
+      catch (Exception ex)
+      {
+         LOG.error("Failed to send message over WebSocket.", ex);
+      }
    }
 
    /** Stream that automatically close HTTP connection when all data ends. */

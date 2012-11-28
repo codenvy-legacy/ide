@@ -78,7 +78,7 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
             IDE.getInstance().closeView(display.asView().getId());
          }
       });
-      
+
       tryConnectDebuger.scheduleRepeating(3000);
    }
 
@@ -94,13 +94,13 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
       }
    }
 
-   protected void doRunDebugger()
+   protected void connectDebugger()
    {
       AutoBean<DebuggerInfo> debuggerInfo = DebuggerExtension.AUTO_BEAN_FACTORY.create(DebuggerInfo.class);
       AutoBeanUnmarshaller<DebuggerInfo> unmarshaller = new AutoBeanUnmarshaller<DebuggerInfo>(debuggerInfo);
       try
       {
-         DebuggerClientService.getInstance().create(instance.getDebugHost(), instance.getDebugPort(),
+         DebuggerClientService.getInstance().connect(instance.getDebugHost(), instance.getDebugPort(),
             new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
             {
                @Override
@@ -114,26 +114,25 @@ public class ReLaunchDebuggerPresenter implements ViewClosedHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-//                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+                  // IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }
       catch (RequestException e)
       {
-//         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+         // IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
-
    }
-   
+
    /**
-    * A timer for checking events
+    * A timer for checking events.
     */
    private Timer tryConnectDebuger = new Timer()
    {
       @Override
       public void run()
       {
-         doRunDebugger();
+         connectDebugger();
       }
    };
 

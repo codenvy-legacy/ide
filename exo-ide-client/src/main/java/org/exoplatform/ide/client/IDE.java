@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.user.client.Window.Location;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -45,6 +47,7 @@ import org.exoplatform.ide.client.framework.application.event.ApplicationClosedE
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
+import org.exoplatform.ide.client.framework.event.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
@@ -77,6 +80,7 @@ import org.exoplatform.ide.client.websocket.WebSocketHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -197,6 +201,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       }
       controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.formatControls();
+
 
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).

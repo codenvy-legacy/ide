@@ -32,6 +32,10 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -214,21 +218,27 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       }
    }
 
-   /**
-    * Push changes to remote repository.
-    */
-   public void doPush()
+   private void doPush()
    {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-
-      final String remote = display.getRemoteValue().getValue();
-      String localBranch = display.getLocalBranchesValue().getValue();
-      String remoteBranch = display.getRemoteBranchesValue().getValue();
+      String remote = display.getRemoteValue().getValue();
       IDE.getInstance().closeView(display.asView().getId());
+
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         doPushWS(project, remote);
+      else
+         doPushREST(project, remote);
+   }
+
+   /**
+    * Push changes to remote repository (sends request over HTTP).
+    */
+   private void doPushREST(ProjectModel project, final String remote)
+   {
       try
       {
-         GitClientService.getInstance().push(vfs.getId(), project, new String[]{localBranch + ":" + remoteBranch},
-            remote, false, new AsyncRequestCallback<String>()
+         GitClientService.getInstance().push(vfs.getId(), project, getRefs(), remote, false,
+            new AsyncRequestCallback<String>()
             {
 
                @Override
@@ -252,6 +262,52 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       {
          handleError(e);
       }
+   }
+
+   /**
+    * Push changes to remote repository (sends request over WebSocket).
+    */
+   private void doPushWS(ProjectModel project, final String remote)
+   {
+      try
+      {
+         GitClientService.getInstance().pushWS(vfs.getId(), project, getRefs(), remote, false,
+            new RESTfulRequestCallback<String>()
+            {
+
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+                  if (remote != null && remote.startsWith("https://"))
+                  {
+                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.OUTPUT));
+                  }
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e);
+      }
+   }
+
+   /**
+    * Returns list of refs to push.
+    * 
+    * @return list of refs to push
+    */
+   private String[] getRefs()
+   {
+      String localBranch = display.getLocalBranchesValue().getValue();
+      String remoteBranch = display.getRemoteBranchesValue().getValue();
+      return new String[]{localBranch + ":" + remoteBranch};
    }
 
    private void handleError(Throwable t)

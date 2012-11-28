@@ -31,6 +31,10 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -166,7 +170,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    }
 
    /**
-    * Perform adding to index.
+    * Performs adding to index by sending request over WebSocket or HTTP.
     */
    private void doAdd()
    {
@@ -174,15 +178,21 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          return;
       boolean update = display.getUpdateValue().getValue();
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
-      pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
-      String[] filePatterns =
-         (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
 
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         doAddWS(project, update);
+      else
+         doAddREST(project, update);
+   }
+
+   /**
+    * Perform adding to index (sends request over HTTP).
+    */
+   private void doAddREST(ProjectModel project, boolean update)
+   {
       try
       {
-         GitClientService.getInstance().add(vfs.getId(), project, update, filePatterns,
+         GitClientService.getInstance().add(vfs.getId(), project, update, getFilePatterns(),
             new AsyncRequestCallback<String>()
             {
                @Override
@@ -203,8 +213,51 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       {
          handleError(e);
       }
-
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Perform adding to index (sends request over WebSocket).
+    */
+   private void doAddWS(ProjectModel project, boolean update)
+   {
+      try
+      {
+         GitClientService.getInstance().addWS(vfs.getId(), project, update, getFilePatterns(),
+            new RESTfulRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
+                  IDE.fireEvent(new RefreshBrowserEvent());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e);
+      }
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Returns pattern of the files to be added.
+    * 
+    * @return pattern of the files to be added
+    */
+   private String[] getFilePatterns()
+   {
+      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+      String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
+      pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
+      return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
    }
 
    private void handleError(Throwable t)

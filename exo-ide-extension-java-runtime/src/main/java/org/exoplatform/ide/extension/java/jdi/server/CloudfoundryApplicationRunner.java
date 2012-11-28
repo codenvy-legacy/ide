@@ -31,7 +31,6 @@ import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
 
 import org.everrest.websockets.WSConnectionContext;
-import org.everrest.websockets.message.MessageConversionException;
 import org.everrest.websockets.message.Pair;
 import org.everrest.websockets.message.RESTfulOutputMessage;
 import org.exoplatform.container.xml.InitParams;
@@ -84,8 +83,8 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
    private static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
-   /** Delay (in milliseconds) before applications which will be expire soon to be checked. */
-   public static final long EXPIRE_SOON_CHECKING_DELAY = 2 * 60 * 1000;
+   /** Expiration time (in milliseconds) which is left to notify user about this. */
+   private static final long EXPIRATION_TIME_LEFT_TO_NOTIFY = 2 * 60 * 1000;
 
    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
@@ -726,7 +725,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       public void run()
       {
          List<String> stopped = new ArrayList<String>();
-         List<String> expireSoon = new ArrayList<String>();
          for (Application app : applications.values())
          {
             if (app.isExpired())
@@ -742,18 +740,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                // Do not try to stop application twice.
                stopped.add(app.name);
             }
-            else if (app.expiresAfter(EXPIRE_SOON_CHECKING_DELAY))
+            else if (app.isExpiresAfter(EXPIRATION_TIME_LEFT_TO_NOTIFY))
             {
-               expireSoon.add(app.name);
+               publishWebSocketMessage(null, "debugger:expireSoonApp:" + app.name);
             }
          }
          applications.keySet().removeAll(stopped);
          LOG.debug("{} applications removed. ", stopped.size());
-
-         if (!expireSoon.isEmpty())
-         {
-            publishWebSocketMessage(expireSoon);
-         }
       }
    }
 
@@ -775,7 +768,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          return expirationTime < System.currentTimeMillis();
       }
 
-      boolean expiresAfter(long delay)
+      boolean isExpiresAfter(long delay)
       {
          return expirationTime - System.currentTimeMillis() <= delay;
       }
@@ -786,26 +779,31 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     *
     * @param data
     *    the data to be sent to the client
+    * @param channelID
+    *    channelID channel identifier
     */
-   private void publishWebSocketMessage(Object data)
+   private static void publishWebSocketMessage(Object data, String channelID)
    {
       RESTfulOutputMessage message = new RESTfulOutputMessage();
       message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
-                                    new Pair("x-everrest-websocket-channel", "debugger:expireSoonApps")});
+                                    new Pair("x-everrest-websocket-channel", channelID)});
       message.setResponseCode(200);
-      message.setBody(toJson(data));
+      if (data instanceof String)
+      {
+         message.setBody((String)data);
+      }
+      else if (data != null)
+      {
+         message.setBody(toJson(data));
+      }
+
       try
       {
-         WSConnectionContext.sendMessage("debugger:expireSoonApps", message);
+         WSConnectionContext.sendMessage(channelID, message);
       }
-      catch (MessageConversionException e)
-      {
-         LOG.error("Failed to send message over WebSocket.", e);
-      }
-      catch (IOException e)
+      catch (Exception e)
       {
          LOG.error("Failed to send message over WebSocket.", e);
       }
    }
-
 }

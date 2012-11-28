@@ -39,6 +39,10 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -272,9 +276,20 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    }
 
    /**
-    * Clone repository. Remote repository is Heroku application.
+    * Clone of the repository by sending request over WebSocket or HTTP.
     */
    private void cloneRepository()
+   {
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         cloneRepositoryWS();
+      else
+         cloneRepositoryREST();
+   }
+
+   /**
+    * Clone repository (over HTTP). Remote repository is Heroku application.
+    */
+   private void cloneRepositoryREST()
    {
       try
       {
@@ -295,6 +310,35 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
             });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
+   /**
+    * Clone repository (over WebSocket). Remote repository is Heroku application.
+    */
+   private void cloneRepositoryWS()
+   {
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), project, gitLocation, null,
+            new RESTfulRequestCallback<RepoInfo>()
+            {
+            @Override
+            protected void onSuccess(RepoInfo result)
+            {
+               updateProperties();
+            }
+            
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+            });
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }

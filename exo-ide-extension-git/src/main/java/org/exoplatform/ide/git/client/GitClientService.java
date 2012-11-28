@@ -21,6 +21,8 @@ package org.exoplatform.ide.git.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.shared.Branch;
@@ -81,6 +83,20 @@ public abstract class GitClientService
       AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
+    * Add changes to Git index (temporary storage). Sends request over WebSocket.
+    * 
+    * @param vfsId virtual file system id
+    * @param project project (root of GIT repository)
+    * @param update if <code>true</code> then never stage new files, but stage modified new contents of tracked files and remove
+    *           files from the index if the corresponding files in the working tree have been removed
+    * @param filePattern pattern of the files to be added, default is "." (all files are added)
+    * @param callback callback
+    * @throws WebSocketException
+    */
+   public abstract void addWS(String vfsId, ProjectModel project, boolean update, String[] filePattern,
+      RESTfulRequestCallback<String> callback) throws WebSocketException;
+
+   /**
     * Fetch changes from remote repository to local one.
     * 
     * @param vfsId virtual file system id
@@ -101,6 +117,28 @@ public abstract class GitClientService
     */
    public abstract void fetch(String vfsId, ProjectModel project, String remote, String[] refspec,
       boolean removeDeletedRefs, AsyncRequestCallback<String> callback) throws RequestException;
+
+   /**
+    * Fetch changes from remote repository to local one (sends request over WebSocket).
+    * 
+    * @param vfsId virtual file system id
+    * @param project project root of GIT repository
+    * @param remote remote repository's name
+    * @param refspec list of refspec to fetch.
+    *           <p>
+    *           Expected form is:
+    *           <ul>
+    *           <li>
+    *           refs/heads/featured:refs/remotes/origin/featured - branch 'featured' from remote repository will be fetched to
+    *           'refs/remotes/origin/featured'.</li>
+    *           <li>featured - remote branch name.</li>
+    *           </ul>
+    * @param removeDeletedRefs if <code>true</code> then delete removed refs from local repository
+    * @param callback callback
+    * @throws WebSocketException
+    */
+   public abstract void fetchWS(String vfsId, ProjectModel project, String remote, String[] refspec,
+      boolean removeDeletedRefs, RESTfulRequestCallback<String> callback) throws WebSocketException;
 
    /**
     * Get the list of the branches. For now, all branches cannot be returned at once, so the parameter <code>remote</code> tells
@@ -226,7 +264,19 @@ public abstract class GitClientService
       AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
-    * Pull(fetch and merge) changes from remote repository to local one.
+    * Initializes new Git repository (over WebSocket).
+    * 
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
+    * @param projectName
+    * @param bare to create bare repository or not
+    * @param callback callback
+    */
+   public abstract void initWS(String vfsId, String projectid, String projectName, boolean bare,
+      RESTfulRequestCallback<String> callback) throws WebSocketException;
+
+   /**
+    * Pull (fetch and merge) changes from remote repository to local one.
     * 
     * @param vfsId virtual file system id
     * @param projectid project's id (root of GIT repository)
@@ -247,6 +297,27 @@ public abstract class GitClientService
       AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
+    * Pull (fetch and merge) changes from remote repository to local one (sends request over WebSocket).
+    * 
+    * @param vfsId virtual file system id
+    * @param projectid project's id (root of GIT repository)
+    * @param refSpec list of refspec to fetch.
+    *           <p>
+    *           Expected form is:
+    *           <ul>
+    *           <li>
+    *           refs/heads/featured:refs/remotes/origin/featured - branch 'featured' from remote repository will be fetched to
+    *           'refs/remotes/origin/featured'.</li>
+    *           <li>featured - remote branch name.</li>
+    *           </ul>
+    * @param remote remote remote repository's name
+    * @param callback callback
+    * @throws WebSocketException
+    */
+   public abstract void pullWS(String vfsId, ProjectModel project, String refSpec, String remote,
+      RESTfulRequestCallback<String> callback) throws WebSocketException;
+
+   /**
     * Push changes from local repository to remote one.
     * 
     * @param vfsId virtual file system id
@@ -262,6 +333,21 @@ public abstract class GitClientService
       AsyncRequestCallback<String> callback) throws RequestException;
 
    /**
+    * Push changes from local repository to remote one (sends request over WebSocket).
+    * 
+    * @param vfsId virtual file system id
+    * @param projectid projectid to GIT repository
+    * @param refSpec list of refspec to push
+    * @param remote remote repository name or url
+    * @param force push refuses to update a remote ref that is not an ancestor of the local ref used to overwrite it. If
+    *           <code>true</code> disables the check. This can cause the remote repository to lose commits
+    * @param callback callback
+    * @throws WebSocketException
+    */
+   public abstract void pushWS(String vfsId, ProjectModel project, String[] refSpec, String remote, boolean force,
+      RESTfulRequestCallback<String> callback) throws WebSocketException;
+
+   /**
     * Clones one remote repository to local one.
     * 
     * @param vfsId virtual file system id
@@ -273,6 +359,19 @@ public abstract class GitClientService
     */
    public abstract void cloneRepository(String vfsId, FolderModel project, String remoteUri, String remoteName,
       AsyncRequestCallback<RepoInfo> callback) throws RequestException;
+
+   /**
+    * Clones one remote repository to local one (over WebSocket).
+    * 
+    * @param vfsId virtual file system id
+    * @param project project (root of GIT repository)
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param callback {@link RESTfulRequestCallback}
+    * @throws WebSocketException
+    */
+   public abstract void cloneRepositoryWS(String vfsId, FolderModel project, String remoteUri, String remoteName,
+      RESTfulRequestCallback<RepoInfo> callback) throws WebSocketException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
@@ -287,6 +386,20 @@ public abstract class GitClientService
     */
    public abstract void commit(String vfsId, ProjectModel project, String message, boolean all,
       AsyncRequestCallback<Revision> callback) throws RequestException;
+
+   /**
+    * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
+    * returned by callback in <code>onSuccess(Revision result)</code>. Sends request over WebSocket.
+    * 
+    * @param vfsId virtual file system id
+    * @param project project (root of GIT repository)
+    * @param message commit log message
+    * @param all automatically stage files that have been modified and deleted
+    * @param callback callback
+    * @throws WebSocketException
+    */
+   public abstract void commitWS(String vfsId, ProjectModel project, String message, boolean all,
+      RESTfulRequestCallback<Revision> callback) throws WebSocketException;
 
    /**
     * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.

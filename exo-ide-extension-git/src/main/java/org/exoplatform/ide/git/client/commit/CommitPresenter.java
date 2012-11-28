@@ -36,10 +36,15 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshallerWS;
 import org.exoplatform.ide.git.shared.Revision;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -168,42 +173,38 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
       }
    }
 
-   /**
-    * Perform the commit to repository and process the response.
-    */
    private void doCommit()
    {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String message = display.getMessage().getValue();
       boolean all = display.getAllField().getValue();
 
-      Revision revision = new Revision(null, message, 0, null);
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+         doCommitWS(project, message, all);
+      else
+         doCommitREST(project, message, all);
+   }
+
+   /**
+    * Perform the commit to repository and process the response (sends request over HTTP).
+    */
+   private void doCommitREST(ProjectModel project, String message, boolean all)
+   {
       try
       {
          GitClientService.getInstance().commit(vfs.getId(), project, message, all,
-            new AsyncRequestCallback<Revision>(new RevisionUnmarshaller(revision))
+            new AsyncRequestCallback<Revision>(new RevisionUnmarshaller(new Revision(null, message, 0, null)))
             {
                @Override
                protected void onSuccess(Revision result)
                {
-                  DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
-                  String date = formatter.format(new Date(result.getCommitTime()));
-                  String message = GitExtension.MESSAGES.commitMessage(result.getId(), date);
-                  message +=
-                     (result.getCommitter() != null && result.getCommitter().getName() != null && result.getCommitter()
-                        .getName().length() > 0) ? " "
-                        + GitExtension.MESSAGES.commitUser(result.getCommitter().getName()) : "";
-                  IDE.fireEvent(new OutputEvent(message, Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent());
+                  onCommitSuccess(result);
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  String errorMessage =
-                     (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.commitFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  handleError(exception);
                }
             });
       }
@@ -213,4 +214,60 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
       }
       IDE.getInstance().closeView(display.asView().getId());
    }
+
+   /**
+    * Perform the commit to repository and process the response (sends request over WebSocket).
+    */
+   private void doCommitWS(ProjectModel project, String message, boolean all)
+   {
+      try
+      {
+         GitClientService.getInstance().commitWS(vfs.getId(), project, message, all,
+            new RESTfulRequestCallback<Revision>(new RevisionUnmarshallerWS(new Revision(null, message, 0, null)))
+            {
+               @Override
+               protected void onSuccess(Revision result)
+               {
+                  onCommitSuccess(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Performs action when commit is successfully completed.
+    * 
+    * @param revision a {@link Revision}
+    */
+   private void onCommitSuccess(Revision revision)
+   {
+      DateTimeFormat formatter = DateTimeFormat.getFormat(PredefinedFormat.DATE_TIME_MEDIUM);
+      String date = formatter.format(new Date(revision.getCommitTime()));
+      String message = GitExtension.MESSAGES.commitMessage(revision.getId(), date);
+      message +=
+         (revision.getCommitter() != null && revision.getCommitter().getName() != null && revision.getCommitter()
+            .getName().length() > 0) ? " " + GitExtension.MESSAGES.commitUser(revision.getCommitter().getName()) : "";
+      IDE.fireEvent(new OutputEvent(message, Type.INFO));
+      IDE.fireEvent(new RefreshBrowserEvent());
+   }
+
+   private void handleError(Throwable exception)
+   {
+      String errorMessage =
+         (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
+            : GitExtension.MESSAGES.commitFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+   }
+
 }

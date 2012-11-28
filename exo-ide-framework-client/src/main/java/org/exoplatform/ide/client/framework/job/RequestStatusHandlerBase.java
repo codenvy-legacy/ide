@@ -44,7 +44,7 @@ public abstract class RequestStatusHandlerBase implements RequestStatusHandler
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
+    * @see org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestStatusHandler.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
     */
    @Override
    public void requestError(String id, Throwable exception)

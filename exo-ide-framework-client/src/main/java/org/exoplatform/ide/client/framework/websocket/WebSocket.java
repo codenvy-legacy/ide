@@ -26,7 +26,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
@@ -40,10 +39,10 @@ import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBui
 import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 
 /**
- * Class represents a WebSocket connection. Each connection is identified by it's session identifier.
- * If connection was closed unexpectedly, makes 5 attempts to reconnect connection for every 5 sec.
- * You should normally only use a single instance of this class. You can create an instance using
- * the static {@code getInstance} method.
+ * Class represents a WebSocket connection. If connection was closed unexpectedly,
+ * makes <code>MAX_RECONNECTION_ATTEMPTS</code> attempts to
+ * reconnect connection for every <code>HEARTBEAT_PERIOD</code> ms.
+ * You should normally only use a single instance of this class.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: WebSocket.java Jun 7, 2012 12:44:55 PM azatsarynnyy $
@@ -83,12 +82,12 @@ public class WebSocket
    }
 
    /**
-    * The native WebSocket object.
+    * The native implementation of WebSocket.
     */
    private WebSocketImpl socket;
 
    /**
-    * WebSocket instance.
+    * This WebSocket instance.
     */
    private static WebSocket instance;
 
@@ -98,12 +97,20 @@ public class WebSocket
    private String url;
 
    /**
+    * Determines if this connection is secure.
+    */
+   private static boolean isSecureConnection;
+
+   /**
     * {@link MessageBus} for this {@link WebSocket} instance.
     */
    private MessageBus messageBus = new MessageBus();
 
    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
 
+   /**
+    * Period (in milliseconds) to send heartbeat pings.
+    */
    private static final int HEARTBEAT_PERIOD = 50 * 1000;
 
    /**
@@ -127,7 +134,15 @@ public class WebSocket
    protected WebSocket()
    {
       instance = this;
-      url = "ws://" + Window.Location.getHost() + "/websocket";
+      isSecureConnection = Window.Location.getProtocol().equals("https:");
+      if (isSecureConnection)
+      {
+         url = "wss://" + Window.Location.getHost() + "/websocket";
+      }
+      else
+      {
+         url = "ws://" + Window.Location.getHost() + "/websocket";
+      }
    }
 
    /**
@@ -188,10 +203,9 @@ public class WebSocket
    }
 
    /**
-    * Returns the instance of the {@link WebSocket} or <code>null</code>
-    * if WebSocket is not supported in the current browser.
+    * Returns the instance of the {@link WebSocket}.
     * 
-    * @return instance of {@link WebSocket} or <code>null</code> if WebSocket not supported
+    * @return instance of {@link WebSocket}
     */
    public static WebSocket getInstance()
    {
@@ -209,6 +223,17 @@ public class WebSocket
    {
       socket = WebSocketImpl.create(url);
       init();
+   }
+
+   /**
+    * Terminates the WebSocket connection and mark it as closed by user.
+    */
+   public void close()
+   {
+      if (getReadyState() == ReadyState.OPEN)
+      {
+         socket.close();
+      }
    }
 
    /**
@@ -240,7 +265,7 @@ public class WebSocket
    };
 
    /**
-    * Timer for sending heartbeat pings, mainly to prevent closing an idle WebSocket connection.
+    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
     */
    private Timer heartbeatTimer = new Timer()
    {
@@ -291,17 +316,6 @@ public class WebSocket
    }
 
    /**
-    * Terminates the WebSocket connection and mark it as closed by user.
-    */
-   public void close()
-   {
-      if (getReadyState() == ReadyState.OPEN)
-      {
-         socket.close();
-      }
-   }
-
-   /**
     * Returns the URL of the WebSocket server.
     * 
     * @return url WebSocket server's URL
@@ -322,13 +336,13 @@ public class WebSocket
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a subscription was successful or not.
     * 
-    * @param channel {@link Channels} identifier
+    * @param channelID channel identifier
     * @param handler the {@link SubscriptionHandler} to fire
     *                   when receiving an event on the subscribed channel
     */
-   public void subscribe(Channels channel, SubscriptionHandler<?> handler)
+   public void subscribe(String channelID, SubscriptionHandler<?> handler)
    {
-      messageBus.subscribe(channel, handler);
+      messageBus.subscribe(channelID, handler);
    }
 
    /**
@@ -339,12 +353,12 @@ public class WebSocket
     * <p><strong>Note:</strong> the method runs asynchronously and does not provide
     * feedback whether a unsubscription was successful or not.
     * 
-    * @param channel {@link Channels} identifier
+    * @param channelID channel identifier
     * @param handler the {@link SubscriptionHandler} for which to remove the subscription
     */
-   public void unsubscribe(Channels channel, SubscriptionHandler<?> handler)
+   public void unsubscribe(String channelID, SubscriptionHandler<?> handler)
    {
-      messageBus.unsubscribe(channel, handler);
+      messageBus.unsubscribe(channelID, handler);
    }
 
    /**
@@ -357,7 +371,7 @@ public class WebSocket
    {
       if (getReadyState() != ReadyState.OPEN)
       {
-         throw new WebSocketException("Failed to send data. WebSocket connection not opened");
+         throw new WebSocketException("Failed to send data. WebSocket connection closed");
       }
 
       try
@@ -368,6 +382,17 @@ public class WebSocket
       {
          throw new WebSocketException(e.getMessage());
       }
+   }
+
+   /**
+    * Determines if this connection is secure.
+    * 
+    * @return <code>true</code> if this is a secure connection;
+    *          <code>false</code> otherwise
+    */
+   public boolean isSecureConnection()
+   {
+      return isSecureConnection;
    }
 
    /**

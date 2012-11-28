@@ -16,30 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.jdi.client.events;
 
-import com.google.gwt.event.shared.GwtEvent;
+package org.exoplatform.ide.client.framework.event;
+
+import com.google.gwt.event.shared.EventHandler;
+
 
 /**
- * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: $
-*/
-public class StopAppEvent extends GwtEvent<StopAppHandler>
+ * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
+ *
+ */
+public interface StartWithInitParamsHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<StopAppHandler> TYPE = new GwtEvent.Type<StopAppHandler>();
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<StopAppHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   @Override
-   protected void dispatch(StopAppHandler handler)
-   {
-      handler.onStopApp(this);
-   }
+   
+   void onStartWithInitParams(StartWithInitParamsEvent event);
 
 }

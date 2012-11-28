@@ -27,22 +27,32 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
+import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Property;
 
 /**
  * Presenter for Clone Repository View.
@@ -210,8 +220,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param workDir - name of target folder 
     * @param projectType - type of project
     */
-   private void doClone(final String remoteUri, final String remoteName, //
-                        final String workDir, final String projectType)
+   public void doClone(final String remoteUri, final String remoteName, //
+                       final String workDir, final String projectType)
    {
       FolderModel folder = new FolderModel();
       folder.setName(workDir);
@@ -220,7 +230,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          VirtualFileSystem.getInstance().createFolder(vfs.getRoot(),
             new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(folder))
             {
-
                @Override
                protected void onSuccess(FolderModel result)
                {
@@ -234,7 +243,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
                         : GitExtension.MESSAGES.cloneFailed();
                   IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-
                }
             });
       }
@@ -249,23 +257,35 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    }
 
    /**
-    * Get the necessary parameters values and call the clone repository method.
+    * Clone of the repository by sending request over WebSocket or HTTP.
     */
    private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder, final String projectType)
    {
-      RepoInfo repoInfo = new RepoInfo();
-      RepoInfoUnmarshaller unmarshaller = new RepoInfoUnmarshaller(repoInfo);
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      {
+         cloneRepositoryWS(remoteUri, remoteName, folder, projectType);
+      }
+      else
+      {
+         cloneRepositoryREST(remoteUri, remoteName, folder, projectType);
+      }
+   }
+
+   /**
+    * Get the necessary parameters values and call the clone repository method (over HTTP).
+    */
+   private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder,
+                                    final String projectType)
+   {
       try
       {
          GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, remoteName,
-            new AsyncRequestCallback<RepoInfo>(unmarshaller)
+            new AsyncRequestCallback<RepoInfo>(new RepoInfoUnmarshaller(new RepoInfo()))
             {
-
                @Override
-               protected void onSuccess(final RepoInfo result)
+               protected void onSuccess(RepoInfo result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-                  IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+                  onCloneSuccess(folder, projectType);
                }
 
                @Override
@@ -279,7 +299,62 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       {
          handleError(e);
       }
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+
+   /**
+    * Get the necessary parameters values and clone repository (over WebSocket).
+    *
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param folder folder (root of GIT repository)
+    * @param projectType type of project which will be created from cloned repository
+    */
+   private void cloneRepositoryWS(String remoteUri, String remoteName, final FolderModel folder,
+                                  final String projectType)
+   {
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
+            new RESTfulRequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
+            {
+
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onCloneSuccess(folder, projectType);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         handleError(e);
+      }
       IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Perform actions when repository was successfully cloned.
+    *
+    * @param folder {@link FolderModel} to clone
+    * @param projectType type of the project which will be created
+    */
+   private void onCloneSuccess(FolderModel folder, String projectType)
+   {
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+      convertFolderToProject(folder, projectType);
+      //TODO: not good, comment temporary need found other way 
+      // for inviting collaborators
+      // showInvitation(result.getRemoteUri());
    }
 
    private void handleError(Throwable e)
@@ -287,6 +362,43 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       String errorMessage =
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.cloneFailed();
       IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+   }
+
+   /**
+    * Convert folder to project after cloning.
+    *
+    * @param folder
+    * @param projectType
+    */
+   protected void convertFolderToProject(FolderModel folder, String projectType)
+   {
+      folder.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folder.getProperties().add(new Property("vfs:projectType", projectType));
+      ProjectModel project = new ProjectModel();
+      ItemWrapper item = new ItemWrapper(project);
+      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(folder, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**

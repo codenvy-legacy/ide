@@ -41,6 +41,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
+import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -50,8 +51,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.GoToFolderEvent;
-import org.exoplatform.ide.client.framework.navigation.event.GoToFolderHandler;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
+import org.exoplatform.ide.client.framework.navigation.event.GoToItemHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent;
@@ -145,7 +146,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
    ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
-   AllFilesClosedHandler, GoToFolderHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
+   AllFilesClosedHandler, GoToItemHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler, ItemDeletedHandler
 {
 
@@ -172,6 +173,10 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    private ProjectModel openedProject;
 
    private ProjectModel currentProject;
+
+   private boolean openFileAfterGotoItem = false;
+
+   private CursorPosition openFileCursorPosition = null;
 
    private FileModel editorActiveFile;
 
@@ -202,7 +207,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       IDE.addHandler(CloseProjectEvent.TYPE, this);
 
       IDE.addHandler(SelectItemEvent.TYPE, this);
-      IDE.addHandler(GoToFolderEvent.TYPE, this);
+      IDE.addHandler(GoToItemEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(IDELoadCompleteEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
@@ -762,7 +767,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       display.selectItem(openedProject.getId());
       selectedItems = display.getSelectedItems();
 
-
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
 
@@ -799,8 +803,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          catch (RequestException e)
          {
             // TODO Auto-generated catch block
-//            e.printStackTrace();
-            IDE.fireEvent(new ExceptionThrownEvent(e));
+            e.printStackTrace();
          }
       }
       else
@@ -835,6 +838,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          loadProject();
       }
+
    }
 
    @Override
@@ -937,9 +941,45 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    }
 
    @Override
-   public void onGoToFolder(GoToFolderEvent event)
+   public void onGoToFolder(GoToItemEvent event)
    {
-      goToFolder();
+      if (event.getFileToOpen() == null)
+      {
+         goToFolder();
+      }
+      else
+      {
+         goToFolder(event.getFileToOpen(), event.getCursorPosition(), event.isNeedOpen());
+      }
+   }
+
+   private void goToFolder(FileModel fileModel, CursorPosition cursorPosition, boolean b)
+   {
+      openFileAfterGotoItem = b;
+      openFileCursorPosition = cursorPosition;
+      selectedItems.clear();
+      selectedItems.add(fileModel);
+//      openFileAfterGotoItem = 
+      itemsToBeOpened.clear();
+      itemsToBeOpened.add(openedProject.getPath());
+
+      String[] parts = fileModel.getPath().split("/");
+      String work = "";
+
+      for (int i = 0; i < parts.length; i++)
+      {
+         String part = parts[i];
+         if ("".equals(part))
+         {
+            continue;
+         }
+
+         work += "/" + part;
+         itemsToBeOpened.add(work);
+      }
+
+      foldersToRefresh.clear();
+      cyclicallyCheckItemsToBeRefreshed();
    }
 
    private void goToFolder()
@@ -1026,6 +1066,11 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
                      }
 
                      itemToSelect = result.getItem().getId();
+                     if (itemsToBeOpened.isEmpty() && openFileAfterGotoItem)
+                     {
+                        IDE.fireEvent(new OpenFileEvent(file, openFileCursorPosition));
+                        openFileCursorPosition = null;
+                     }
                   }
 
                   Scheduler.get().scheduleDeferred(new ScheduledCommand()
@@ -1057,8 +1102,8 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    }
 
    /*
-    * Linking With Editor functionality
-    */
+   * Linking With Editor functionality
+   */
 
    /**
     * Enabled or disabled Linking with Editor.
