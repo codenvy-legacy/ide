@@ -82,7 +82,7 @@ public class WebSocket
    }
 
    /**
-    * The native implementation of this WebSocket.
+    * The native implementation of WebSocket.
     */
    private WebSocketImpl socket;
 
@@ -143,7 +143,6 @@ public class WebSocket
       {
          url = "ws://" + Window.Location.getHost() + "/websocket";
       }
-         
    }
 
    /**
