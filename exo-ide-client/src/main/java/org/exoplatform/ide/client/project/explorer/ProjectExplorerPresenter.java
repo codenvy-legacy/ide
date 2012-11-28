@@ -135,10 +135,10 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
- * 
+ *
  */
 
 public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
@@ -178,8 +178,8 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    private ApplicationSettings applicationSettings;
 
    private boolean ideLoadComplete = false;
-   
-   private List<String> itemsToBeOpened = new ArrayList<String>();   
+
+   private List<String> itemsToBeOpened = new ArrayList<String>();
 
    public ProjectExplorerPresenter()
    {
@@ -293,7 +293,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Perform actions when folder is closed in browser tree.
-    * 
+    *
     * @param folder closed folder
     */
    public void onCloseFolder(Folder folder)
@@ -308,9 +308,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    }
 
    /**
-    * 
+    *
     * Handling item selected event from browser
-    * 
+    *
     */
    protected void onItemSelected()
    {
@@ -352,7 +352,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Handling of folder opened event from browser
-    * 
+    *
     * @param openedFolder
     */
    protected void onFolderOpened(Folder openedFolder)
@@ -403,7 +403,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
 
       foldersToRefresh = event.getFolders();
-      
+
       if (foldersToRefresh == null || foldersToRefresh.size() == 0)
       {
          foldersToRefresh = new ArrayList<Folder>();
@@ -419,7 +419,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
             {
                foldersToRefresh.add((Folder)item);
             }
-         }         
+         }
       }
 
       display.setUpdateTreeValue(false);
@@ -428,7 +428,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Refresh folder's properties.
-    * 
+    *
     * @param folder
     */
    private void refreshFolderProperties(final Folder folder)
@@ -560,7 +560,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Select chosen item in browser.
-    * 
+    *
     */
    public void onSelectItem(SelectItemEvent event)
    {
@@ -716,14 +716,14 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          {
             currentProject = map.get(item.getId());
          }
-        if (currentProject != null)
-        {
-           IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
-        }
-        else
-        {
-           IDE.fireEvent(new ActiveProjectChangedEvent(openedProject));
-        }
+         if (currentProject != null)
+         {
+            IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
+         }
+         else
+         {
+            IDE.fireEvent(new ActiveProjectChangedEvent(openedProject));
+         }
       }
    }
 
@@ -769,6 +769,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       // Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
       foldersToRefresh.add(openedProject);
+      refreshNextFolder();
       if (openedProject.getProjectType().equals(ProjectType.MultiModule.value()))
       {
          try
@@ -784,7 +785,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
                   {
                      parseProjectTree(openedProject, result);
                      IDE.fireEvent(new ProjectOpenedEvent(openedProject));
-                     refreshNextFolder();
+//                     refreshNextFolder();
                   }
 
                   @Override
@@ -798,10 +799,12 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          catch (RequestException e)
          {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+//            e.printStackTrace();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
-      else {
+      else
+      {
          IDE.fireEvent(new ProjectOpenedEvent(openedProject));
          refreshNextFolder();
       }
@@ -832,8 +835,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          loadProject();
       }
-
-     
    }
 
    @Override
@@ -997,7 +998,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
       String path = itemsToBeOpened.get(0);
       itemsToBeOpened.remove(0);
-      
+
       try
       {
          VirtualFileSystem.getInstance().getItemByPath(path,
@@ -1197,49 +1198,49 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
             ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+         {
+            @Override
+            protected void onSuccess(List<Item> result)
             {
-               @Override
-               protected void onSuccess(List<Item> result)
+               if (openedProject != null)
                {
-                  if (openedProject != null)
-                  {
-                     display.setProjectsListGridVisible(false);
-                     IDE.fireEvent(new ProjectSelectedEvent(null));
-                     display.setProjectNotOpenedPanelVisible(false);
-                     return;
-                  }
+                  display.setProjectsListGridVisible(false);
+                  IDE.fireEvent(new ProjectSelectedEvent(null));
+                  display.setProjectNotOpenedPanelVisible(false);
+                  return;
+               }
 
-                  List<ProjectModel> projects = new ArrayList<ProjectModel>();
-                  for (Item item : result)
+               List<ProjectModel> projects = new ArrayList<ProjectModel>();
+               for (Item item : result)
+               {
+                  if (item instanceof ProjectModel)
                   {
-                     if (item instanceof ProjectModel)
-                     {
-                        projects.add((ProjectModel)item);
-                     }
-                  }
-
-                  Collections.sort(projects, PROJECT_COMPARATOR);
-                  display.getProjectsListGrid().setValue(projects);
-
-                  if (projects.size() == 0)
-                  {
-                     display.setProjectsListGridVisible(false);
-                     IDE.fireEvent(new ProjectSelectedEvent(null));
-                     display.setProjectNotOpenedPanelVisible(true);
-                  }
-                  else
-                  {
-                     display.setProjectsListGridVisible(true);
-                     display.setProjectNotOpenedPanelVisible(false);
+                     projects.add((ProjectModel)item);
                   }
                }
 
-               @Override
-               protected void onFailure(Throwable exception)
+               Collections.sort(projects, PROJECT_COMPARATOR);
+               display.getProjectsListGrid().setValue(projects);
+
+               if (projects.size() == 0)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+                  display.setProjectsListGridVisible(false);
+                  IDE.fireEvent(new ProjectSelectedEvent(null));
+                  display.setProjectNotOpenedPanelVisible(true);
                }
-            });
+               else
+               {
+                  display.setProjectsListGridVisible(true);
+                  display.setProjectNotOpenedPanelVisible(false);
+               }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+            }
+         });
       }
       catch (RequestException e)
       {
@@ -1264,9 +1265,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * TODO Temporary method.
-    * 
+    *
     * Detected whether project type is deprecated or not.
-    * 
+    *
     * @param project
     * @return <code>true</code> if deprecated
     */
@@ -1278,9 +1279,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * TODO Temporary method.
-    * 
+    *
     * Is used to detect and set targets to deprecated project types (to support them).
-    * 
+    *
     * @param project
     */
    private void setTargets(ProjectModel project)
