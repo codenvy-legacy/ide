@@ -254,12 +254,6 @@ public class LoginPresenter implements ViewClosedHandler, ExceptionThrownHandler
       display.getLoginField().setValue(login);
       display.getPasswordField().setValue(password);
       
-      
-      display.getLoginField().setValue(Location.getParameter("username"));
-      
-      display.getPasswordField().setValue(Location.getParameter("password"));
-      doLogin(asyncRequest);
-      
       checkForLoginButtonEnabled();
 
       IDE.getInstance().openView(display.asView());
