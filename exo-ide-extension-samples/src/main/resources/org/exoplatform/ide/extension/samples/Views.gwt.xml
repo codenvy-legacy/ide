@@ -19,51 +19,53 @@
 
 -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
+   <inherits name='com.google.gwt.user.User'/>
    <replace-with class="org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter.Display"/>
    </replace-with>
    <replace-with class="org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.startpage.StartPageView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.wizard.source.WizardSourceStepPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.wizard.location.WizardLocationStepPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.wizard.definition.WizardDefinitionStepPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.wizard.deployment.WizardDeploymentStepPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.wizard.finish.WizardFinishStepPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.paas.login.LoginView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter.Display" />
-   </replace-with>
-
-   <replace-with class="org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.paas.login.LoginPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display"/>
    </replace-with>
 </module>

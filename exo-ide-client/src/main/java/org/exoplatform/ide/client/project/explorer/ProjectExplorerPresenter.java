@@ -770,17 +770,14 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
 
-      // Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
       foldersToRefresh.add(openedProject);
-      refreshNextFolder();
       if (openedProject.getProjectType().equals(ProjectType.MultiModule.value()))
       {
          try
          {
             AutoBean<ItemNode> autoBean = org.exoplatform.ide.client.IDE.AUTO_BEAN_FACTORY.itemNode();
             AutoBeanUnmarshaller<ItemNode> unmarshaller = new AutoBeanUnmarshaller<ItemNode>(autoBean);
-            //            ProjectModel project = new ProjectModel();
             VirtualFileSystem.getInstance().getProjectTree(openedProject.getId(),
                new AsyncRequestCallback<ItemNode>(unmarshaller)
                {
@@ -789,7 +786,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
                   {
                      parseProjectTree(openedProject, result);
                      IDE.fireEvent(new ProjectOpenedEvent(openedProject));
-//                     refreshNextFolder();
+                     refreshNextFolder();
                   }
 
                   @Override
@@ -802,8 +799,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          }
          catch (RequestException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
       else
