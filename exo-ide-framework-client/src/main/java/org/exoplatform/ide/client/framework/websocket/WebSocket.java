@@ -175,10 +175,8 @@ public class WebSocket
             socket = null;
             IDE.fireEvent(event);
 
-            if (!event.wasClean())
-            {
+            //if (!event.wasClean())
                reconnectWebSocketTimer.scheduleRepeating(RECONNECTION_PERIOD);
-            }
          }
       });
 
