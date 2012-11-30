@@ -30,7 +30,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
@@ -178,11 +177,7 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
          return false;
       }
       final String oldName = selectedItems.get(0).getName();
-      if (newName.equals(oldName))
-      {
-         return false;
-      }
-      return true;
+      return !newName.equals(oldName);
    }
 
    protected void rename()
@@ -279,9 +274,6 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       completeMove();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.event.RenameItemHander#onRenameItem(org.exoplatform.ide.client.navigation.event.RenameItemEvent)
-    */
    @Override
    public void onRenameItem(RenameItemEvent event)
    {
@@ -355,9 +347,6 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       openedFiles = event.getOpenedFiles();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
@@ -369,6 +358,6 @@ public class RenameFolderPresenter implements RenameItemHander, ApplicationSetti
       }
 
       lockTokens = applicationSettings.getValueAsMap("lock-tokens");
-   };
+   }
 
 }

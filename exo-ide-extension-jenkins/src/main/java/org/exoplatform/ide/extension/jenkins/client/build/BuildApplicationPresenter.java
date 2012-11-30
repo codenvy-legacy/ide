@@ -24,7 +24,6 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -202,8 +201,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Create new Jenkins job.
-    * 
-    * @param repository repository URL (public location of local repository)
     */
    private void createJob()
    {
@@ -498,8 +495,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Initialize of the Git-repository by sending request over WebSocket or HTTP.
-    * 
-    * @param path working directory of the repository
     */
    private void initRepository(final ProjectModel project)
    {
@@ -511,8 +506,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Initialize Git repository (sends request over HTTP).
-    * 
-    * @param path working directory of the repository
     */
    private void initRepositoryREST(final ProjectModel project)
    {
@@ -542,8 +535,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Initialize Git repository (sends request over WebSocket).
-    * 
-    * @param path working directory of the repository
     */
    private void initRepositoryWS(final ProjectModel project)
    {

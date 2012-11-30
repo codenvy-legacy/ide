@@ -27,7 +27,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -89,8 +88,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
       /**
        * 
        * Selects specified item in
-       * 
-       * @param currentEntryPoint
        */
       void setSelectedItem(VirtualFileSystemInfo item);
 
@@ -131,8 +128,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
 
    /**
     * Handler of ApplicationSettingsReceived Event
-    * 
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
     */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
@@ -191,8 +186,6 @@ public class SelectWorkspacePresenter implements ApplicationSettingsReceivedHand
 
    /**
     * Binding Display instance after the Display implementation has been created.
-    * 
-    * @param d
     */
    public void bindDisplay()
    {

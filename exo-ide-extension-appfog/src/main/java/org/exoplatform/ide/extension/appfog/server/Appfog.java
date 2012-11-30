@@ -47,8 +47,10 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+
 import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -80,9 +82,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import static org.exoplatform.ide.commons.JsonHelper.*;
 import static org.exoplatform.ide.commons.FileUtils.*;
-import static org.exoplatform.ide.commons.JsonHelper.fromJson;
+import static org.exoplatform.ide.commons.JsonHelper.*;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
@@ -1381,7 +1382,7 @@ public class Appfog
    private void writeServerName(VirtualFileSystem vfs, String projectId, String server)
       throws VirtualFileSystemException
    {
-      Property p = new Property("appfog-target", server);
+      Property p = new PropertyImpl("appfog-target", server);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
@@ -1407,7 +1408,7 @@ public class Appfog
    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name)
       throws VirtualFileSystemException
    {
-      Property p = new Property("appfog-application", name);
+      Property p = new PropertyImpl("appfog-application", name);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
@@ -1416,7 +1417,7 @@ public class Appfog
    private void writeInfraName(VirtualFileSystem vfs, String projectId, String name)
       throws VirtualFileSystemException
    {
-      Property p = new Property("appfog-infra", name);
+      Property p = new PropertyImpl("appfog-infra", name);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);

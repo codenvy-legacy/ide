@@ -19,11 +19,12 @@
 package org.exoplatform.ide.vfs.client.model;
 
 import com.google.gwt.json.client.JSONObject;
-
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
 import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.FolderImpl;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemListImpl;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -40,9 +41,9 @@ import java.util.Map;
  * @version $Id: $
  */
 
-public class FolderModel extends org.exoplatform.ide.vfs.shared.Folder implements ItemContext
+public class FolderModel extends FolderImpl implements ItemContext
 {
-   private ItemList<Item> children = new ItemList<Item>();
+   private ItemList<Item> children = new ItemListImpl<Item>();
 
    private ProjectModel project;
 

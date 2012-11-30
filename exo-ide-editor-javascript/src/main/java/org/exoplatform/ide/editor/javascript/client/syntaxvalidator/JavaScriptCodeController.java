@@ -22,7 +22,6 @@ import com.google.collide.client.util.ScheduledCommandExecutor;
 import com.google.collide.json.client.JsoArray;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.user.client.Timer;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;

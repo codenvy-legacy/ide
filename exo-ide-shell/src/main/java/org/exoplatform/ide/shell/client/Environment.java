@@ -19,7 +19,6 @@
 package org.exoplatform.ide.shell.client;
 
 import com.google.gwt.storage.client.Storage;
-
 import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.HashMap;
@@ -57,9 +56,9 @@ public class Environment
    }
 
    /**
-    * @return instance of Enviroment class
+    * @return instance of Environment class
     */
-   public static final Environment get()
+   public static Environment get()
    {
       if (instance == null)
       {

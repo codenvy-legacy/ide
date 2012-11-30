@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.TreeItem;
 import com.google.gwt.user.client.ui.Widget;
-
 import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
@@ -131,9 +130,6 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
       return grid;
    }
 
-   /**
-    * @param item
-    */
    private TreeItem getNodeById(String id)
    {
       TreeItem node = tree.getItem(0);
@@ -434,7 +430,7 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
             moveHighlight(tree.getSelectedItem());
          }
       }
-      catch (Exception e)
+      catch (Exception ignored)
       {
       }
    }
@@ -493,11 +489,11 @@ public class ItemTree extends org.exoplatform.gwtframework.ui.client.component.T
    /**
     * Set lock token map
     * 
-    * @param locktokens
+    * @param lockTokens
     */
-   public void setLocktokens(Map<String, String> locktokens)
+   public void setLockTokens(Map<String, String> lockTokens)
    {
-      this.locktokens = locktokens;
+      this.locktokens = lockTokens;
    }
 
    /**

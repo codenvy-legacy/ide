@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -31,6 +28,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -71,7 +71,7 @@ public class PreviewHtmlFileTest extends BaseTest
    }
 
    /**
-    * IDE-65: Preview HTML File 
+    * IDE-65: Preview HTML File
     * @throws Exception
     */
    @Test

@@ -25,7 +25,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -277,10 +276,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       this.vfs = event.getVfsInfo();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
@@ -296,10 +291,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
-    *      org.exoplatform.ide.client.framework.project.ProjectType)
-    */
    @Override
    public Composite getDeployView(String projectName, ProjectType projectType)
    {
@@ -349,10 +340,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
    {

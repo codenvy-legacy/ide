@@ -18,12 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import com.google.gwt.user.client.Command;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
@@ -31,11 +25,12 @@ import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * Check the work of Lock/Unlock feature.
@@ -164,7 +159,7 @@ public class LockFileTest extends LockFileAbstract
       IDE.EDITOR.closeFile(1);
       IDE.EDITOR.waitTabNotPresent(1);
 
-      //step 8 reopen Html File and check lock 
+      //step 8 reopen Html File and check lock
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
       //this delay needed for correct update content in folder on staging.
       Thread.sleep(500);

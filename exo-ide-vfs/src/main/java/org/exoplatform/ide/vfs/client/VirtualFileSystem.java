@@ -21,7 +21,6 @@ package org.exoplatform.ide.vfs.client;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
-
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -34,6 +33,7 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LockToken;
@@ -64,7 +64,7 @@ public class VirtualFileSystem
    private final String workspaceURL;
 
    /**
-    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl
     */
    private VirtualFileSystemInfo info;
 
@@ -106,9 +106,6 @@ public class VirtualFileSystem
     * Set information about server virtual file system and its capabilities via REST. And initialize VFS instance.
     * 
     * @param callback the callback for HTTP request
-    * @param loader the
-    * @param eventBus
-    * @param workspaceURL
     */
    public void init(AsyncRequestCallback<VirtualFileSystemInfo> callback) throws RequestException
    {
@@ -134,8 +131,6 @@ public class VirtualFileSystem
 
    /**
     * Get folder content
-    * 
-    * @param path
     */
    public void getChildren(Folder folder, AsyncRequestCallback<List<Item>> callback) throws RequestException
    {
@@ -146,8 +141,6 @@ public class VirtualFileSystem
    
    /**
     * Get folder content filtered by item type
-    * 
-    * @param path
     */
    public void getChildren(Folder folder, ItemType itemType, AsyncRequestCallback<List<Item>> callback) throws RequestException
    {
@@ -175,7 +168,6 @@ public class VirtualFileSystem
    /**
     * Get project tree.
     * 
-    * @param project
     * @param callback
     * @throws RequestException
     */
@@ -204,10 +196,8 @@ public class VirtualFileSystem
 
    /**
     * Create new folder.
-    * 
-    * @param path
     */
-   public void createFolder(org.exoplatform.ide.vfs.shared.Folder parent, AsyncRequestCallback<FolderModel> callback)
+   public void createFolder(Folder parent, AsyncRequestCallback<FolderModel> callback)
       throws RequestException
    {
       String name = callback.getPayload().getName();
@@ -225,7 +215,7 @@ public class VirtualFileSystem
     * @param callback callback
     * @throws RequestException
     */
-   public void createProject(org.exoplatform.ide.vfs.shared.Folder parent, AsyncRequestCallback<ProjectModel> callback)
+   public void createProject(Folder parent, AsyncRequestCallback<ProjectModel> callback)
       throws RequestException
    {
       ProjectModel newProject = callback.getPayload();
@@ -249,7 +239,7 @@ public class VirtualFileSystem
     * @param callback callback/
     * @throws RequestException
     */
-   public void createFile(org.exoplatform.ide.vfs.shared.Folder parent, AsyncRequestCallback<FileModel> callback)
+   public void createFile(Folder parent, AsyncRequestCallback<FileModel> callback)
       throws RequestException
    {
       FileModel newFile = callback.getPayload();
@@ -296,7 +286,6 @@ public class VirtualFileSystem
     * 
     * @param item
     * @param callback
-    * @param loader
     */
    public void delete(Item item, AsyncRequestCallback<String> callback) throws RequestException
    {

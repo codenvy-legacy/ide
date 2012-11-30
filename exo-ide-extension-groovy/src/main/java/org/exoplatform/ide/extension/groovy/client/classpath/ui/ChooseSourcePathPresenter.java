@@ -27,7 +27,6 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
@@ -103,10 +102,6 @@ public class ChooseSourcePathPresenter
 
    private VirtualFileSystemInfo vfs;
 
-   /**
-    * @param eventBus handler manager
-    * @param restContext REST context
-    */
    public ChooseSourcePathPresenter(VirtualFileSystemInfo vfs)
    {
       this.vfs = vfs;
@@ -207,8 +202,7 @@ public class ChooseSourcePathPresenter
       {
          VirtualFileSystem.getInstance().getChildren(
             folder,
-            new AsyncRequestCallback<List<Item>>(
-               new ChildrenUnmarshaller(new ArrayList<Item>()))
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
 
                @Override
@@ -267,7 +261,7 @@ public class ChooseSourcePathPresenter
       for (Item item : display.getSelectedItems())
       {
          String path = vfs.getId() + "#" + item.getPath();
-         String kind = null;
+         String kind;
          if (item instanceof FileModel)
          {
             kind = EnumSourceType.FILE.getValue();
@@ -276,7 +270,9 @@ public class ChooseSourcePathPresenter
          {
             kind = EnumSourceType.DIR.getValue();
             if (!path.endsWith("/"))
-               path += "/";
+            {
+               path += '/';
+            }
          }
 
          GroovyClassPathEntry groovyClassPathEntry = GroovyClassPathEntry.build(kind, path);

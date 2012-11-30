@@ -25,9 +25,11 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -71,8 +74,8 @@ public class ProjectPrepare
             Map<String, File> mavenModules = listMavenModulesByPath(new File(sourcePath));
 
             List<Property> properties = new ArrayList<Property>(2);
-            properties.add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-            properties.add(new Property("Maven Module", "true"));
+            properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+            properties.add(new PropertyImpl("Maven Module", "true"));
 
             //Just set for all modules where we find pom.xml that it is maven module and default project type
             for (Map.Entry<String, File> entry : mavenModules.entrySet())
@@ -167,7 +170,8 @@ public class ProjectPrepare
          //If detected project type is default it isn't necessary to set default project type, it already exist
          if (detectedType != ProjectType.DEFAULT)
          {
-            List<Property> properties = Collections.singletonList(new Property("vfs:projectType", detectedType.toString()));
+            List<Property> properties = Collections.<Property>singletonList(
+               new PropertyImpl("vfs:projectType", detectedType.toString()));
             vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, PropertyFilter.ALL_FILTER).getId(), properties, null);
          }
       }

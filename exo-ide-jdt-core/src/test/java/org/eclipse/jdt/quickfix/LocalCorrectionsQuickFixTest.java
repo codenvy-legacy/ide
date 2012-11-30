@@ -12,7 +12,6 @@
 package org.eclipse.jdt.quickfix;
 
 import com.googlecode.gwt.test.utils.GwtReflectionUtils;
-
 import org.eclipse.jdt.client.JavaCodeController;
 import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.SupportedProjectResolver;

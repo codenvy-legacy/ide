@@ -149,7 +149,7 @@ class ZipUtils
          {
             if (!".project".equals(fileOrDir.getName()))
             {
-               // File '.project' on file system is not file in VFS. 
+               // File '.project' on file system is not file in VFS.
                TestCase.assertTrue(item instanceof FileData);
                InputStream content = ((FileData)item).getContent();
                FileInputStream origin = new FileInputStream(fileOrDir);

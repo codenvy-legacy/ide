@@ -23,6 +23,7 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -82,7 +83,7 @@ public class UpdateTest extends MemoryFileSystemTest
    public void testUpdatePropertiesAndChangeFolderType2() throws Exception
    {
       MemoryFolder folder = (MemoryFolder)memoryContext.getItem(folderId);
-      folder.updateProperties(Arrays.asList(new Property("vfs:mimeType", "text/vnd.ideproject+directory")));
+      folder.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:mimeType", "text/vnd.ideproject+directory")));
       assertTrue(folder.isProject());
       String properties = "[{\"name\":\"vfs:mimeType\", \"value\":[\"text/directory\"]}]";
       doUpdate(folderId, properties);

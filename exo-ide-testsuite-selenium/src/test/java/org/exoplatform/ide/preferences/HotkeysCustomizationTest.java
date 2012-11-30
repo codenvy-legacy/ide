@@ -18,25 +18,19 @@
  */
 package org.exoplatform.ide.preferences;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.interactions.Actions;
 
 import java.io.IOException;
 
-import javax.validation.constraints.AssertFalse;
+import static org.junit.Assert.assertFalse;
 
 /**
  * IDE-156:HotKeys customization.

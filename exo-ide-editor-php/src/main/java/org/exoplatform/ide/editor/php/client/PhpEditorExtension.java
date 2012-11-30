@@ -19,6 +19,9 @@
 
 package org.exoplatform.ide.editor.php.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.TextResource;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -35,10 +38,6 @@ import org.exoplatform.ide.editor.php.client.codeassistant.PhpCodeAssistant;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpAutocompleteHelper;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpOutlineItemCreator;
 import org.exoplatform.ide.editor.php.client.codemirror.PhpParser;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.TextResource;
 
 /**
  * 

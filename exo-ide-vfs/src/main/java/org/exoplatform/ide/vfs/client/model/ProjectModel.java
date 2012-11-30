@@ -19,12 +19,12 @@
 package org.exoplatform.ide.vfs.client.model;
 
 import com.google.gwt.json.client.JSONObject;
-
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemListImpl;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 
 import java.util.ArrayList;
@@ -35,9 +35,9 @@ import java.util.List;
 /**
  * @version $Id:$
  */
-public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project implements ItemContext
+public class ProjectModel extends ProjectImpl implements ItemContext
 {
-   private ItemList<Item> children = new ItemList<Item>();
+   private ItemList<Item> children = new ItemListImpl<Item>();
    
    private List<ProjectModel> modules = new ArrayList<ProjectModel>();
 
@@ -54,7 +54,7 @@ public class ProjectModel extends org.exoplatform.ide.vfs.shared.Project impleme
       this.persisted = false;
    }
 
-   public ProjectModel(Project project)
+   public ProjectModel(ProjectImpl project)
    {
       super(project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
          .getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());

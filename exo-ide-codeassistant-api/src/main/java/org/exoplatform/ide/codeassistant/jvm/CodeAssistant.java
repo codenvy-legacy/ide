@@ -32,7 +32,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.ByteArrayInputStream;
@@ -136,7 +136,7 @@ public abstract class CodeAssistant
       {
          return set;
       }
-      Project project = getProject(projectId, vfsRegistry.getProvider(vfsId).newInstance(null, null));
+      ProjectImpl project = getProject(projectId, vfsRegistry.getProvider(vfsId).newInstance(null, null));
       if (project.hasProperty("exoide:classpath"))
       {
          String classpath = (String)project.getPropertyValue("exoide:classpath");
@@ -167,13 +167,13 @@ public abstract class CodeAssistant
     * @throws VirtualFileSystemException
     * @throws CodeAssistantException
     */
-   protected Project getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
+   protected ProjectImpl getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
    {
       Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-      Project project = null;
-      if (item instanceof Project)
-         project = (Project)item;
+      ProjectImpl project = null;
+      if (item instanceof ProjectImpl)
+         project = (ProjectImpl)item;
       else
          throw new CodeAssistantException(400, "'projectId' is not project Id");
       return project;
@@ -312,7 +312,6 @@ public abstract class CodeAssistant
     * </pre>
     * 
     * @param prefix the string for matching FQNs
-    * @param where the string that indicate where find (must be "className" or "fqn")
     * @param projectId Id of the project
     * @param vfsId Id of the VirtualFileSystem
     * @return
@@ -570,7 +569,6 @@ public abstract class CodeAssistant
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
     * 
     * @param prefix the string for matching FQNs
-    * @param where Where find FQN or CLASSNAME
     * @param projectId Id of the project
     * @param vfsId Id of the VirtualFileSystem
     * @return

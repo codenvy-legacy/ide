@@ -18,19 +18,17 @@
  */
 package org.exoplatform.ide.client.operation.uploadzip;
 
-import com.google.gwt.user.client.ui.CheckBox;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.CheckBox;
 import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Hidden;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDE;
@@ -53,7 +51,7 @@ public class UploadZipView extends ViewImpl implements
 
    private static final String ID = "ideUploadForm";
 
-   private static final String OVERWRITE_HIDDED_FIELD = "overwrite";
+   private static final String OVERWRITE_HIDDEN_FIELD = "overwrite";
 
    /**
     * Initial width of this view.
@@ -101,7 +99,7 @@ public class UploadZipView extends ViewImpl implements
       super(ID, "modal", UPLOAD_FOLDER_TITLE, new Image(IDEImageBundle.INSTANCE.upload()), WIDTH, HEIGHT, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      overwriteHiddenField = new Hidden(OVERWRITE_HIDDED_FIELD);
+      overwriteHiddenField = new Hidden(OVERWRITE_HIDDEN_FIELD);
    }
 
    @Override
@@ -148,10 +146,10 @@ public class UploadZipView extends ViewImpl implements
    }
 
    /**
-    * @see org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display#setOverwriteHiddedField(java.lang.Boolean)
+    * @see org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display#setOverwriteHiddenField(java.lang.Boolean)
     */
    @Override
-   public void setOverwriteHiddedField(Boolean overwrite)
+   public void setOverwriteHiddenField(Boolean overwrite)
    {
       overwriteHiddenField.setValue(String.valueOf(overwrite));
       if (postFieldsPanel.getWidgetIndex(overwriteHiddenField) == -1)

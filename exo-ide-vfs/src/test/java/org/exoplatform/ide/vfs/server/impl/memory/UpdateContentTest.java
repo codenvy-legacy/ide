@@ -23,7 +23,8 @@ import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -90,12 +91,12 @@ public class UpdateContentTest extends MemoryFileSystemTest
 
    public void testUpdateContentNoPermissions() throws Exception
    {
-      AccessControlEntry adminACE = new AccessControlEntry();
+      AccessControlEntry adminACE = new AccessControlEntryImpl();
       adminACE.setPrincipal("admin");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
-      AccessControlEntry userACE = new AccessControlEntry();
+      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
+      AccessControlEntry userACE = new AccessControlEntryImpl();
       userACE.setPrincipal("john");
-      userACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.READ.value())));
+      userACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
       memoryContext.getItem(fileId).updateACL(Arrays.asList(adminACE, userACE), true);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
