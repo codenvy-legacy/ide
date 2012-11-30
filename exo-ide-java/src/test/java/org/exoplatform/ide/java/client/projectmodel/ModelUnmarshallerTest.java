@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.java.client.projectmodel;
 
-import com.google.web.bindery.event.shared.EventBus;
+import static org.fest.assertions.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.common.collect.Lists;
-
 import com.google.gwt.http.client.Response;
 
 import org.apache.commons.io.IOUtils;
@@ -38,13 +40,9 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
-import static org.mockito.Mockito.*;
-import static org.fest.assertions.Assertions.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -152,7 +150,7 @@ public class ModelUnmarshallerTest extends BaseTest
       ArrayList<Resource> childrens = Lists.newArrayList(pack.getChildren().asIterable());
       assertThat(childrens).onProperty("resourceType").containsOnly(File.TYPE, CompilationUnit.TYPE, Folder.TYPE);
    }
-
+   
    /**
     * @return
     * @throws UnmarshallerException
