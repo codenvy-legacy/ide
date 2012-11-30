@@ -28,10 +28,8 @@ public enum ProjectType
    WAR("War"), //
    JAR("Jar"), //
    JAVASCRIPT("JavaScript"), //
-   NODE_JS("nodejs"), //
    PYTHON("Python"), //
    RUBY_ON_RAILS("Rails"), //
-   RUBY("Ruby"), //
    SPRING("Spring"), //
    MULTI_MODULE("Maven Multi-module"),
    DEFAULT("default");

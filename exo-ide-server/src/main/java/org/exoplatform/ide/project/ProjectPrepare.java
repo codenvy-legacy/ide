@@ -63,25 +63,53 @@ public class ProjectPrepare
     */
    public void doPrepare(String sourcePath) throws ProjectPrepareException
    {
-      try
+      //if pom.xml exist in the surce directory it means that we have java project
+      if (new File(sourcePath, "pom.xml").exists())
       {
-         Map<String, File> mavenModules = listMavenModulesByPath(new File(sourcePath));
-
-         List<Property> properties = new ArrayList<Property>(2);
-         properties.add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-         properties.add(new Property("Maven Module", "true"));
-
-         //Just set for all modules where we find pom.xml that it is maven module and default project type
-         for (Map.Entry<String, File> entry : mavenModules.entrySet())
+         try
          {
-            vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, PropertyFilter.ALL_FILTER).getId(), properties, null);
-         }
+            Map<String, File> mavenModules = listMavenModulesByPath(new File(sourcePath));
 
-         setProjectTypesProperties(mavenModules);
+            List<Property> properties = new ArrayList<Property>(2);
+            properties.add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+            properties.add(new Property("Maven Module", "true"));
+
+            //Just set for all modules where we find pom.xml that it is maven module and default project type
+            for (Map.Entry<String, File> entry : mavenModules.entrySet())
+            {
+               vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, PropertyFilter.ALL_FILTER).getId(), properties, null);
+            }
+
+            setProjectTypesProperties(mavenModules);
+         }
+         catch (VirtualFileSystemException e)
+         {
+            throw new ProjectPrepareException(e.getMessage());
+         }
       }
-      catch (VirtualFileSystemException e)
+      else if (detectRailsApp(sourcePath))
       {
-         throw new ProjectPrepareException(e.getMessage());
+         //set properties
+//         ProjectType.RUBY_ON_RAILS;
+      }
+      else if (detectPythonApp(sourcePath))
+      {
+         //set properties
+//         ProjectType.PYTHON;
+      }
+      else if (detectPHPApp(sourcePath))
+      {
+         //set properties
+//         ProjectType.PHP;
+      }
+      else if (detectJSApp(sourcePath))
+      {
+         //set properties
+//         ProjectType.JAVASCRIPT;
+      }
+      else
+      {
+         throw new ProjectPrepareException(501, "autodetection_failed");
       }
    }
 
@@ -273,6 +301,30 @@ public class ProjectPrepare
             }
          }
       }
+      return false;
+   }
+
+   private boolean detectJSApp(String sourcePath)
+   {
+      //TODO complete autodetecting javascript app
+      return false;
+   }
+
+   private boolean detectRailsApp(String sourcePath)
+   {
+      //TODO complete autodetecting rails app
+      return false;
+   }
+
+   private boolean detectPythonApp(String sourcePath)
+   {
+      //TODO complete autodetecting python app
+      return false;
+   }
+
+   private boolean detectPHPApp(String sourcePath)
+   {
+      //TODO complete autodetecting php app
       return false;
    }
 }

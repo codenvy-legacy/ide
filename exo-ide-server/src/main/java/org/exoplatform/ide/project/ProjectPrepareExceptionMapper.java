@@ -21,11 +21,13 @@ package org.exoplatform.ide.project;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@Provider
 public class ProjectPrepareExceptionMapper implements ExceptionMapper<ProjectPrepareException>
 {
    @Override

@@ -88,18 +88,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       HasValue<String> getRemoteNameValue();
 
       /**
-       * Return list of project types
-       * @return {@link HasValue<{@link String}>}
-       */
-      HasValue<String> getProjectType();
-
-      /**
-       * @param projectTypes available type of project
-       * @param def selected type by default
-       */
-      void setProjectType(String[] projectTypes, String def);
-
-      /**
        * Returns clone repository button.
        *
        * @return {@link HasClickHandlers}
@@ -161,8 +149,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          {
             doClone(display.getRemoteUriValue().getValue(),//
                display.getRemoteNameValue().getValue(),//
-               display.getWorkDirValue().getValue(),//
-               display.getProjectType().getValue());
+               display.getWorkDirValue().getValue());
          }
       });
 
@@ -187,11 +174,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
             display.enableCloneButton(enable);
          }
       });
-
-      display.setProjectType(
-         ProjectResolver.getProjectsTypes().toArray(new String[ProjectResolver.getProjectsTypes().size()]),
-         ProjectResolver.UNDEFINED);
-
    }
 
    /**
@@ -219,10 +201,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param remoteUri - git url
     * @param remoteName - remote name (by default origin)
     * @param workDir - name of target folder 
-    * @param projectType - type of project
     */
-   public void doClone(final String remoteUri, final String remoteName, //
-                       final String workDir, final String projectType)
+   public void doClone(final String remoteUri, final String remoteName, final String workDir)
    {
       FolderModel folder = new FolderModel();
       folder.setName(workDir);
@@ -234,7 +214,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(FolderModel result)
                {
-                  cloneRepository(remoteUri, remoteName, result, projectType);
+                  cloneRepository(remoteUri, remoteName, result);
                }
 
                @Override
@@ -260,20 +240,19 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    /**
     * Clone of the repository by sending request over WebSocket or HTTP.
     */
-   private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder, final String projectType)
+   private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder)
    {
       // TODO temporary disabled using WebSocket
 //      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-//         cloneRepositoryWS(remoteUri, remoteName, folder, projectType);
+//         cloneRepositoryWS(remoteUri, remoteName, folder);
 //      else
-      cloneRepositoryREST(remoteUri, remoteName, folder, projectType);
+      cloneRepositoryREST(remoteUri, remoteName, folder);
    }
 
    /**
     * Get the necessary parameters values and call the clone repository method (over HTTP).
     */
-   private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder,
-                                    final String projectType)
+   private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder)
    {
       try
       {
@@ -283,7 +262,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, projectType);
+                  onCloneSuccess(folder);
                }
 
                @Override
@@ -309,10 +288,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
     * @param folder folder (root of GIT repository)
-    * @param projectType type of project which will be created from cloned repository
     */
-   private void cloneRepositoryWS(String remoteUri, String remoteName, final FolderModel folder,
-                                  final String projectType)
+   private void cloneRepositoryWS(String remoteUri, String remoteName, final FolderModel folder)
    {
       try
       {
@@ -323,7 +300,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, projectType);
+                  onCloneSuccess(folder);
                }
 
                @Override
@@ -344,13 +321,11 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * Perform actions when repository was successfully cloned.
     *
     * @param folder {@link FolderModel} to clone
-    * @param projectType type of the project which will be created
     */
-   private void onCloneSuccess(FolderModel folder, String projectType)
+   private void onCloneSuccess(FolderModel folder)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-//      convertFolderToProject(folder, projectType);
-      //TODO: not good, comment temporary need found other way 
+      //TODO: not good, comment temporary need found other way
       // for inviting collaborators
       // showInvitation(result.getRemoteUri());
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
@@ -362,43 +337,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.cloneFailed();
       IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
    }
-
-   /**
-    * Convert folder to project after cloning.
-    *
-    * @param folder
-    * @param projectType
-    */
-//   protected void convertFolderToProject(FolderModel folder, String projectType)
-//   {
-//      folder.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-//      folder.getProperties().add(new Property("vfs:projectType", projectType));
-//      ProjectModel project = new ProjectModel();
-//      ItemWrapper item = new ItemWrapper(project);
-//      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-//      try
-//      {
-//         VirtualFileSystem.getInstance().updateItem(folder, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
-//         {
-//
-//            @Override
-//            protected void onSuccess(ItemWrapper result)
-//            {
-//               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
-//            }
-//
-//            @Override
-//            protected void onFailure(Throwable exception)
-//            {
-//               IDE.fireEvent(new ExceptionThrownEvent(exception));
-//            }
-//         });
-//      }
-//      catch (RequestException e)
-//      {
-//         IDE.fireEvent(new ExceptionThrownEvent(e));
-//      }
-//   }
 
    /**
     * Show dialog window with proposal for invite commiters.

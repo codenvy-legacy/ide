@@ -75,10 +75,10 @@ import java.util.Set;
 
 /**
  * Git extension to be added to IDE application.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 12:53:29 PM anya $
- * 
+ *
  */
 public class GitExtension extends Extension implements InitializeServicesHandler, StartWithInitParamsHandler
 {
@@ -160,16 +160,22 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       if (initParam != null && !initParam.isEmpty())
       {
          if (!initParam.containsKey("v"))
+         {
             return;
+         }
          if (initParam.get("v").size() != 1 || !initParam.get("v").get(0).equals("codenow1.0"))
+         {
             return;
+         }
          if (!initParam.containsKey("storageURL") || !initParam.containsKey("storageType"))
+         {
             return;
+         }
          List<String> giturls = initParam.get("storageURL");
          if (giturls != null && !giturls.isEmpty())
          {
             String giturl = giturls.get(0);
-            cloneRepositoryPresenter.doClone(giturl, "origin", initParam.get("projectName").get(0) + "-" + Random.nextInt(), ProjectType.JAR.value());
+            cloneRepositoryPresenter.doClone(giturl, "origin", initParam.get("projectName").get(0) + "-" + Random.nextInt());
          }
       }
 

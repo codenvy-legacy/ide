@@ -21,7 +21,6 @@ package org.exoplatform.ide.client.project.prepare;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -36,7 +35,6 @@ import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.vfs.client.Item;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
@@ -85,15 +83,24 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                }
 
                @Override
-               protected void onFailure(Throwable exception)
+               protected void onFailure(Throwable e)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent("Preparing project failed."));
+                  if ("autodetection_failed".equals(e.getLocalizedMessage()))
+                  {
+                     //TODO review this
+                     IDE.fireEvent(new ExceptionThrownEvent("Please select project type."));
+                  }
+                  else
+                  {
+                     //if some other error appear
+                     IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+                  }
                }
             });
       }
       catch (RequestException e)
       {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
       }
    }
 
