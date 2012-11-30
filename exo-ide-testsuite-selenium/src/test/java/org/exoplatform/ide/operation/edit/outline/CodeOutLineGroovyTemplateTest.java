@@ -23,7 +23,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Outline.TokenType;
-import org.exoplatform.ide.operation.edit.GroovyTypeValidationAndFixingTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

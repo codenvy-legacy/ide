@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,54 +16,42 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
-
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemNode;
+package org.exoplatform.ide.vfs.shared;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * The Project - folder w/ special meaning.
  */
-public class ItemNodeImpl implements ItemNode
+public class ProjectImpl extends FolderImpl implements Project
 {
-   private Item item;
-   private List<ItemNode> children;
 
-   public ItemNodeImpl(Item item, List<ItemNode> children)
+   protected String projectType;
+
+   @SuppressWarnings("rawtypes")
+   public ProjectImpl(String id, String name, String mimeType, String path, String parentId, long creationDate,
+                      List<Property> properties, Map<String, Link> links, String projectType)
    {
-      this.item = item;
-      this.children = children;
+      super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
+      this.projectType = projectType;
    }
 
-   public ItemNodeImpl(Item item)
+   public ProjectImpl()
    {
-      this(item, null);
-   }
-
-   @Override
-   public Item getItem()
-   {
-      return item;
+      super(ItemType.PROJECT);
+      mimeType = PROJECT_MIME_TYPE;
    }
 
    @Override
-   public void setItem(Item item)
+   public String getProjectType()
    {
-      this.item = item;
+      return projectType;
    }
 
    @Override
-   public List<ItemNode> getChildren()
+   public void setProjectType(String projectType)
    {
-      return children;
-   }
-
-   @Override
-   public void setChildren(List<ItemNode> children)
-   {
-      this.children = children;
+      this.projectType = projectType;
    }
 }

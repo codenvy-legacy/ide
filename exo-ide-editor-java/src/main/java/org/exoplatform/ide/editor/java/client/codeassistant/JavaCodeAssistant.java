@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.editor.java.client.codeassistant;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ExternalTextResource;
+import com.google.gwt.resources.client.ResourceCallback;
+import com.google.gwt.resources.client.ResourceException;
+import com.google.gwt.resources.client.TextResource;
+import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.util.Log;
@@ -39,20 +41,17 @@ import org.exoplatform.ide.editor.api.codeassitant.TokenType;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
 import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
 import org.exoplatform.ide.editor.codeassistant.ModifierHelper;
-import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.JavaCodeAssistantUtils;
+import org.exoplatform.ide.editor.java.client.JavaEditorExtension;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.CodeAssistantService;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.marshal.JavaClass;
 import org.exoplatform.ide.editor.java.client.model.Types;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONArray;
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ExternalTextResource;
-import com.google.gwt.resources.client.ResourceCallback;
-import com.google.gwt.resources.client.ResourceException;
-import com.google.gwt.resources.client.TextResource;
-import com.google.web.bindery.autobean.shared.AutoBean;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -174,11 +173,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
-    *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
-    *      org.exoplatform.ide.editor.api.codeassitant.Token)
-    */
    @Override
    public void autocompleteCalled(Editor editor, int cursorOffsetX, int cursorOffsetY, List<Token> tokenList,
       String lineMimeType, Token currentToken)
@@ -289,8 +283,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
 
    /**
     * @param currentToken
-    * @param subToken
-    * @param token
     */
    protected void showMethods(Token currentToken, String varToken)
    {
@@ -373,12 +365,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       return tokens;
    }
 
-   /**
-    * Filter {@link JavaClass} by specific {@link Action} and call
-    * {@link TokensCollectedCallback#onTokensCollected(List, String, String, String)} to complete collect tokens
-    * 
-    * @param gClass {@link JavaClass} that represent current class
-    */
    private void filterTokens(JavaClass gClass)
    {
       List<Token> arrayList = new ArrayList<Token>();
@@ -449,9 +435,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       filterTokens(gClass);
    }
 
-   /**
-    * @param arrayList
-    */
    private void filterTokens(List<Token> classNames)
    {
       final List<Token> token = new ArrayList<Token>();
@@ -627,10 +610,6 @@ public class JavaCodeAssistant extends CodeAssistant implements Comparator<Token
       return t1.getName().compareTo(t2.getName());
    }
 
-   /**
-    * @param currentClass
-    * @return
-    */
    private Collection<? extends Token> getAllMethodsFromClass(Token currentClass)
    {
       List<Token> tokens = new ArrayList<Token>();

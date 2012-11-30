@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -88,9 +87,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private Display display;
 
-   /**
-    * @param eventBus events handler
-    */
    public AddToIndexPresenter()
    {
       IDE.addHandler(AddFilesEvent.TYPE, this);
@@ -135,8 +131,8 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          Display d = GWT.create(Display.class);
          IDE.getInstance().openView(d.asView());
          bindDisplay(d);
-         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-         display.getMessage().setValue(formMessage(workdir), true);
+         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         display.getMessage().setValue(formMessage(workDir), true);
       }
    }
 

@@ -22,6 +22,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ class ProjectUpdateListener implements EventListener
    public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
    {
       List<Property> properties = new ArrayList<Property>(1);
-      properties.add(new Property("vfs:lastUpdateTime", Long.toString(System.currentTimeMillis())));
+      properties.add(new PropertyImpl("vfs:lastUpdateTime", Long.toString(System.currentTimeMillis())));
       event.getVirtualFileSystem().updateItem(projectId, properties, null);
    }
 

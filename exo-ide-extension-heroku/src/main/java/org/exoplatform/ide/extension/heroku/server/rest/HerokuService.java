@@ -29,6 +29,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -119,7 +120,7 @@ public class HerokuService
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
       // Update VFS properties. Need it to uniform client.
-      Property p = new Property("heroku-application", application.get("name"));
+      Property p = new PropertyImpl("heroku-application", application.get("name"));
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
@@ -138,7 +139,7 @@ public class HerokuService
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         Property p = new Property("heroku-application", Collections.<String> emptyList());
+         Property p = new PropertyImpl("heroku-application", Collections.<String> emptyList());
          List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);
@@ -179,7 +180,7 @@ public class HerokuService
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         Property p = new Property("heroku-application", application.get("name"));
+         Property p = new PropertyImpl("heroku-application", application.get("name"));
          List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);

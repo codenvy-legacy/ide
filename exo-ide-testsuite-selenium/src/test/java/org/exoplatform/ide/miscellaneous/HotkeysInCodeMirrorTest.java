@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.assertEquals;
-
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -31,6 +29,8 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test contains Thread.sleep, because we need

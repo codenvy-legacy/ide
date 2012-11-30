@@ -28,6 +28,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -201,7 +202,7 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       assertEquals("application/json", response.getContentType().toString());
 
-      Project project = (Project)response.getEntity();
+      ProjectImpl project = (ProjectImpl)response.getEntity();
       validateLinks(project);
       assertEquals("testGetProjectItem_PROJECT1", project.getName());
       assertEquals(Project.PROJECT_MIME_TYPE, project.getMimeType());
@@ -248,7 +249,7 @@ public class ProjectTest extends JcrFileSystemTest
          validateLinks(i);
          if (Project.PROJECT_MIME_TYPE.equals(i.getMimeType()))
          {
-            assertTrue(i instanceof Project);
+            assertTrue(i instanceof ProjectImpl);
             assertNotNull(((Project)i).getProjectType());
             list.add(i);
          }
@@ -309,7 +310,7 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       Folder project = (Folder)response.getEntity();
       assertEquals("text/vnd.ideproject+directory", project.getMimeType());
-      assertTrue("Folder must be converted to Project. ", project instanceof Project);
+      assertTrue("Folder must be converted to Project. ", project instanceof ProjectImpl);
    }
 
    public void testConvertProjectToFolder() throws Exception
@@ -342,7 +343,7 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       Folder folder = (Folder)response.getEntity();
       assertEquals("text/directory", folder.getMimeType());
-      assertFalse("Project must be converted to Folder. ", folder instanceof Project);
+      assertFalse("Project must be converted to Folder. ", folder instanceof ProjectImpl);
    }
 
    public void testProjectUpdateEventsRepositoryIsolation() throws Exception

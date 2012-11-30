@@ -22,7 +22,6 @@ import groovy.servlet.ServletBinding;
 import groovy.text.SimpleTemplateEngine;
 import groovy.text.Template;
 import groovy.text.TemplateEngine;
-
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -102,7 +101,7 @@ public class GroovyTemplateService
    private InputStream getGtmplContent(String vfsid, String id) throws VirtualFileSystemException
    {
       if (vfsid == null || vfsid.isEmpty())
-         throw new VirtualFileSystemException("Can't validate script. Id of File System may not be null or empty");
+         throw new VirtualFileSystemException("Can't validate script. Id of Virtual File System may not be null or empty");
       if (id == null || id.isEmpty())
          throw new VirtualFileSystemException("Can't validate script. Item id may not be null or empty");
 

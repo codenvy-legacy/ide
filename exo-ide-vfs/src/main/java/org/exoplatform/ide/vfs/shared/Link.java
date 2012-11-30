@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,124 +19,52 @@
 package org.exoplatform.ide.vfs.shared;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: Link.java 79579 2012-02-17 13:27:25Z andrew00x $
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class Link
+public interface Link
 {
    // Folder
-   public static String REL_CHILDREN = "children";
-
-   public static String REL_TREE = "tree";
-
-   public static String REL_CREATE_PROJECT = "create-project";
-
-   public static String REL_CREATE_FOLDER = "create-folder";
-
-   public static String REL_CREATE_FILE = "create-file";
-
-   public static String REL_UPLOAD_FILE = "upload-file";
-
-   public static String REL_EXPORT = "export";
-
-   public static String REL_IMPORT = "import";
-
-   public static String REL_DOWNLOAD_ZIP = "download-zip";
-
-   public static String REL_UPLOAD_ZIP = "upload-zip";
-
+   String REL_CHILDREN = "children";
+   String REL_TREE = "tree";
+   String REL_CREATE_PROJECT = "create-project";
+   String REL_CREATE_FOLDER = "create-folder";
+   String REL_CREATE_FILE = "create-file";
+   String REL_UPLOAD_FILE = "upload-file";
+   String REL_EXPORT = "export";
+   String REL_IMPORT = "import";
+   String REL_DOWNLOAD_ZIP = "download-zip";
+   String REL_UPLOAD_ZIP = "upload-zip";
    // File
-   public static String REL_CURRENT_VERSION = "current-version";
-
-   public static String REL_VERSION_HISTORY = "version-history";
-
-   public static String REL_CONTENT = "content";
-
-   public static String REL_DOWNLOAD_FILE = "download-file";
-
-   public static String REL_CONTENT_BY_PATH = "content-by-path";
-
-   public static String REL_UNLOCK = "unlock";
-
-   public static String REL_LOCK = "lock";
-
+   String REL_CURRENT_VERSION = "current-version";
+   String REL_VERSION_HISTORY = "version-history";
+   String REL_CONTENT = "content";
+   String REL_DOWNLOAD_FILE = "download-file";
+   String REL_CONTENT_BY_PATH = "content-by-path";
+   String REL_UNLOCK = "unlock";
+   String REL_LOCK = "lock";
    // Common
-   public static String REL_PARENT = "parent";
+   String REL_PARENT = "parent";
+   String REL_DELETE = "delete";
+   String REL_MOVE = "move";
+   String REL_COPY = "copy";
+   String REL_SELF = "self";
+   String REL_ITEM = "item";
+   String REL_ITEM_BY_PATH = "item-by-path";
+   String REL_ACL = "acl";
+   String REL_RENAME = "rename";
+   String REL_SEARCH = "search";
+   String REL_SEARCH_FORM = "search-form";
 
-   public static String REL_DELETE = "delete";
+   String getHref();
 
-   public static String REL_MOVE = "move";
+   void setHref(String href);
 
-   public static String REL_COPY = "copy";
+   String getRel();
 
-   public static String REL_SELF = "self";
+   void setRel(String rel);
 
-   public static String REL_ITEM = "item";
+   String getType();
 
-   public static String REL_ITEM_BY_PATH = "item-by-path";
-
-   public static String REL_ACL = "acl";
-
-   public static String REL_RENAME = "rename";
-
-   public static String REL_SEARCH = "search";
-
-   public static String REL_SEARCH_FORM = "search-form";
-
-   /** URL of resource. */
-   private String href;
-
-   /** Produced media type of resource described by this link. */
-   private String type;
-
-   /** Relation attribute of link. Client may use it for choice links to retrieve specific info about resource. */
-   private String rel;
-
-   public Link(String href, String rel, String type)
-   {
-      this.href = href;
-      this.rel = rel;
-      this.type = type;
-   }
-
-   public Link()
-   {
-   }
-
-   public String getHref()
-   {
-      return href;
-   }
-
-   public void setHref(String href)
-   {
-      this.href = href;
-   }
-
-   public String getRel()
-   {
-      return rel;
-   }
-
-   public void setRel(String rel)
-   {
-      this.rel = rel;
-   }
-
-   public String getType()
-   {
-      return type;
-   }
-
-   public void setType(String type)
-   {
-      this.type = type;
-   }
-
-   /** @see java.lang.Object#toString() */
-   @Override
-   public String toString()
-   {
-      return "Link [href=" + href + ", type=" + type + ", rel=" + rel + ']';
-   }
+   void setType(String type);
 }

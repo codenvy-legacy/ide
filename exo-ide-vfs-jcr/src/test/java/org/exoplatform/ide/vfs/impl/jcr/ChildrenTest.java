@@ -21,6 +21,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemImpl;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -152,7 +153,7 @@ public class ChildrenTest extends JcrFileSystemTest
          .append("skipCount=") //
          .append("1") //
          .toString();
-      checkPage(path, "GET", Item.class.getMethod("getName"), all);
+      checkPage(path, "GET", ItemImpl.class.getMethod("getName"), all);
    }
 
    @SuppressWarnings("unchecked")
@@ -180,7 +181,7 @@ public class ChildrenTest extends JcrFileSystemTest
          .append("2") //
          .toString();
       all.remove(2);
-      checkPage(path, "GET", Item.class.getMethod("getName"), all);
+      checkPage(path, "GET", ItemImpl.class.getMethod("getName"), all);
    }
 
    @SuppressWarnings("unchecked")

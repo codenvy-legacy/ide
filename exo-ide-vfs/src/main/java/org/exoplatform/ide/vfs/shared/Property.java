@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,77 +18,19 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: Property.java 79579 2012-02-17 13:27:25Z andrew00x $
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class Property
+public interface Property
 {
-   protected String name;
+   String getName();
 
-   protected List<String> value;
+   void setName(String name);
 
-   public Property(String name, List<String> value)
-   {
-      this.name = name;
-      this.value = value;
-   }
+   List<String> getValue();
 
-   /**
-    * Create single-valued Property. Using this constructor is equivalent to:
-    * <p/>
-    * <pre>
-    * V val = ...;
-    * List&lt;String&gt; l = new ArrayList&lt;String&gt;(1);
-    * l.add(val);
-    * new Property(&quot;MyName&quot;, l) {
-    * };
-    * </pre>
-    *
-    * @param name the name of property
-    * @param value the value. If <code>value == null</code> it means no value
-    */
-   public Property(String name, String value)
-   {
-      this.name = name;
-      if (value != null)
-      {
-         this.value = new ArrayList<String>(1);
-         this.value.add(value);
-      }
-   }
-
-   public Property()
-   {
-   }
-
-   public String getName()
-   {
-      return name;
-   }
-
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-
-   public List<String> getValue()
-   {
-      return value;
-   }
-
-   public void setValue(List<String> value)
-   {
-      this.value = value;
-   }
-
-   /** @see java.lang.Object#toString() */
-   @Override
-   public String toString()
-   {
-      return "Property [name=" + name + ", value=" + value + ']';
-   }
+   void setValue(List<String> value);
 }

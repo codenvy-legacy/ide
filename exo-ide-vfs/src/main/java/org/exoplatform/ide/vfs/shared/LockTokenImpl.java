@@ -24,13 +24,13 @@ package org.exoplatform.ide.vfs.shared;
  * particular lock. Is used for replace existed lock or performing actions on locked object.
  *
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: LockTokenBean.java 80595 2012-03-27 09:12:25Z azatsarynnyy $
+ * @version $Id: LockTokenImpl.java 80595 2012-03-27 09:12:25Z azatsarynnyy $
  */
-public class LockTokenBean implements LockToken
+public class LockTokenImpl implements LockToken
 {
    private String token;
 
-   public LockTokenBean()
+   public LockTokenImpl()
    {
    }
 
@@ -38,7 +38,7 @@ public class LockTokenBean implements LockToken
     * @param token string representation of lock token
     * @throws IllegalArgumentException if <code>token == null</code>
     */
-   public LockTokenBean(String token)
+   public LockTokenImpl(String token)
    {
       if (token == null)
       {
@@ -81,7 +81,7 @@ public class LockTokenBean implements LockToken
       {
          return false;
       }
-      LockTokenBean otherLockToken = (LockTokenBean)obj;
+      LockTokenImpl otherLockToken = (LockTokenImpl)obj;
       return token.equals(otherLockToken.token);
    }
 

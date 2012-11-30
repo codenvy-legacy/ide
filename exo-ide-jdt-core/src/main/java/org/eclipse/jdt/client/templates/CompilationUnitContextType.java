@@ -12,9 +12,7 @@ package org.eclipse.jdt.client.templates;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.templates.api.GlobalTemplateVariables;
-import org.eclipse.jdt.client.templates.api.SimpleTemplateVariableResolver;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateContextType;
 import org.eclipse.jdt.client.templates.api.TemplateException;

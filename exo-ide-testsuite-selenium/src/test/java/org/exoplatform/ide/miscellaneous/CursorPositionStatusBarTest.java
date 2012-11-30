@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.assertEquals;
-
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -31,6 +28,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Iuvshyn Roman</a>

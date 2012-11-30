@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -30,6 +28,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="mailto:mmusienko@exoplatform.com">Musienko Maxim</a>

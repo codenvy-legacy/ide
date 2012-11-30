@@ -22,15 +22,14 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Outline.TokenType;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.fest.assertions.AssertExtension;
-import static org.junit.Assert.*;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

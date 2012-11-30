@@ -15,64 +15,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.emul;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.Properties;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.StringTokenizer;
-
-import org.eclipse.jdt.client.core.compiler.CategorizedProblem;
-import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.core.compiler.IProblem;
-import org.eclipse.jdt.client.internal.compiler.CompilationResult;
-import org.eclipse.jdt.client.internal.compiler.Compiler;
-import org.eclipse.jdt.client.internal.compiler.ICompilerRequestor;
-import org.eclipse.jdt.client.internal.compiler.IErrorHandlingPolicy;
-import org.eclipse.jdt.client.internal.compiler.IProblemFactory;
-import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.env.AccessRestriction;
-import org.eclipse.jdt.client.internal.compiler.env.AccessRule;
-import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
-import org.eclipse.jdt.client.internal.compiler.impl.CompilerOptions;
-import org.eclipse.jdt.client.internal.compiler.impl.CompilerStats;
-import org.eclipse.jdt.client.internal.compiler.lookup.LookupEnvironment;
-import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
-import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
-import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemSeverities;
-import org.eclipse.jdt.client.internal.compiler.util.HashtableOfInt;
-import org.eclipse.jdt.client.internal.compiler.util.HashtableOfObject;
-import org.eclipse.jdt.client.internal.compiler.util.Messages;
 import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
-import org.eclipse.jdt.client.internal.compiler.util.Util;
 
 public class Main implements ProblemSeverities, SuffixConstants {
 //	public static class Logger {

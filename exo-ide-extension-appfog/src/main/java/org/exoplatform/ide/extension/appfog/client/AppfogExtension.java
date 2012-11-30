@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.extension.appfog.client;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.Image;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -49,10 +51,8 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.Image;
-import java.util.ArrayList;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -113,7 +113,7 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
 
    public static void writeProperty(ProjectModel project, String propertyName, String propertyValue)
    {
-      Property p = new Property(propertyName, propertyValue);
+      Property p = new PropertyImpl(propertyName, propertyValue);
 
       project.getProperties().add(p);
 

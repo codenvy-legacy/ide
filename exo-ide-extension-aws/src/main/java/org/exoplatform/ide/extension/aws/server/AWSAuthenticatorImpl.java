@@ -27,6 +27,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -98,7 +99,7 @@ public class AWSAuthenticatorImpl extends BaseAWSAuthenticator
             new ByteArrayInputStream((credentials.getAWSAccessKeyId() + '\n' + credentials.getAWSSecretKey()).getBytes());
          Item fileItem = vfs.createFile(parent.getId(), "aws-credentials", MediaType.TEXT_PLAIN_TYPE, content);
          List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(1);
-         acl.add(new AccessControlEntry(getUserId(), new HashSet<String>(vfs.getInfo().getPermissions())));
+         acl.add(new AccessControlEntryImpl(getUserId(), new HashSet<String>(vfs.getInfo().getPermissions())));
          vfs.updateACL(fileItem.getId(), acl, true, null);
       }
    }

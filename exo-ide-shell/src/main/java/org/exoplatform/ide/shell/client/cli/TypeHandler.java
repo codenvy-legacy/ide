@@ -20,9 +20,6 @@ package org.exoplatform.ide.shell.client.cli;
 //import java.net.MalformedURLException;
 //import java.net.URL;
 
-import org.exoplatform.ide.shell.client.cli.ParseException;
-import org.exoplatform.ide.shell.client.cli.PatternOptionBuilder;
-
 import java.util.Date;
 
 /**

@@ -11,8 +11,13 @@
  *******************************************************************************/
 package org.eclipse.jdt.emul;
 
+import org.eclipse.jdt.client.core.compiler.CharOperation;
+import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
+import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
+import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
+import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
+
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -24,22 +29,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.HashSet;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.eclipse.jdt.client.internal.compiler.ast.TypeDeclaration;
-import org.eclipse.jdt.client.internal.compiler.classfmt.ClassFileConstants;
-import org.eclipse.jdt.client.internal.compiler.lookup.ExtraCompilerModifiers;
-import org.eclipse.jdt.client.internal.compiler.lookup.ParameterizedTypeBinding;
-import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
-import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
-import org.eclipse.jdt.client.internal.compiler.lookup.TypeVariableBinding;
-import org.eclipse.jdt.client.internal.compiler.lookup.WildcardBinding;
-import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
 
 public class Util implements SuffixConstants {
 
