@@ -109,7 +109,7 @@ public class ProjectPrepare
       }
       else
       {
-         throw new ProjectPrepareException(501, "autodetection_failed");
+         throw new ProjectPrepareException(400, "autodetection:failed");
       }
    }
 
@@ -162,7 +162,7 @@ public class ProjectPrepare
    {
       for (Map.Entry<String, File> entry : mavenModules.entrySet())
       {
-         ProjectType detectedType = detectProjectType(entry.getValue());
+         ProjectType detectedType = detectJProjectType(entry.getValue());
 
          //If detected project type is default it isn't necessary to set default project type, it already exist
          if (detectedType != ProjectType.DEFAULT)
@@ -179,7 +179,7 @@ public class ProjectPrepare
     * @param modulePath - path where maven module is placed
     * @return detected project type specified on source files
     */
-   private ProjectType detectProjectType(File modulePath)
+   private ProjectType detectJProjectType(File modulePath)
    {
       File pomXML = new File(modulePath, "pom.xml");
       InputStream pomXMLStream = null;

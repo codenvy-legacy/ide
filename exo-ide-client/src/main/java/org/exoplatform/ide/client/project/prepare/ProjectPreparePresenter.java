@@ -19,8 +19,12 @@
 package org.exoplatform.ide.client.project.prepare;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -39,6 +43,10 @@ import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -48,13 +56,21 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 {
    public interface Display extends IsView
    {
+      HasClickHandlers getOkButton();
 
+      HasClickHandlers getCancelButton();
+
+      HasValue<String> getProjectTypeField();
+
+      void setProjectTypeValues(String[] types);
    }
 
    /**
     * Instance of opened {@link Display}.
     */
    private Display display;
+
+   private String folderId;
 
    public ProjectPreparePresenter()
    {
@@ -64,6 +80,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    @Override
    public void onConvertToProject(final ConvertToProjectEvent event)
    {
+      folderId = event.getFolderId();
       Loader loader = new GWTLoader();
       String url =
          Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId();
@@ -85,16 +102,8 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                @Override
                protected void onFailure(Throwable e)
                {
-                  if ("autodetection_failed".equals(e.getLocalizedMessage()))
-                  {
-                     //TODO review this
-                     IDE.fireEvent(new ExceptionThrownEvent("Please select project type."));
-                  }
-                  else
-                  {
-                     //if some other error appear
-                     IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-                  }
+                  //Show user selection menu
+                  createAndBindDisplay();
                }
             });
       }
@@ -143,6 +152,91 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    private void createAndBindDisplay()
    {
       display = GWT.create(Display.class);
+
+      String[] types = new String[]{"Jar", "War", "Spring", "JavaScript", "Rails", "Python", "PHP"};
+
+      display.setProjectTypeValues(types);
       org.exoplatform.ide.client.framework.module.IDE.getInstance().openView(display.asView());
+      display.getProjectTypeField().setValue(types[0]);
+
+      display.getOkButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            setUserProjectType(display.getProjectTypeField().getValue());
+         }
+      });
+
+      display.getCancelButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            setUserProjectType("none");
+         }
+      });
+   }
+
+   private void setUserProjectType(String projectType)
+   {
+      final List<Property> properties = new ArrayList<Property>();
+      properties.add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+
+      if (!"none".equals(projectType))
+      {
+//         properties.add(new Property("vfs:projectType", ProjectType.fromValue(projectType).value()));
+         properties.add(new Property("vfs:projectType", projectType));
+      }
+
+      try
+      {
+         VirtualFileSystem.getInstance().getItemById(folderId, new AsyncRequestCallback<ItemWrapper>()
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               Item item = result.getItem(); //TODO here is js null error gotten
+               item.getProperties().addAll(properties);
+               writeUserPropertiesToProject((ProjectModel)item);
+            }
+
+            @Override
+            protected void onFailure(Throwable e)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void writeUserPropertiesToProject(ProjectModel item)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(item, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               IDE.fireEvent(new OutputEvent("Project type updated.", OutputMessage.Type.INFO));
+               openPreparedProject(folderId);
+            }
+
+            @Override
+            protected void onFailure(Throwable e)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }

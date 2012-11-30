@@ -22,6 +22,7 @@ package org.exoplatform.ide.project;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
+@SuppressWarnings("serial")
 public class ProjectPrepareException extends Exception
 {
    private int status = 500;

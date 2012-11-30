@@ -63,4 +63,13 @@ public class ProjectPrepareService
 
       project.doPrepare(localPathResolver.resolve(vfs, folderId));
    }
+
+   @Path("type")
+   @POST
+   public void setUserProjectType(@QueryParam("folderid") String folderId,
+                                  @QueryParam("vfsid") String vfsId,
+                                  @QueryParam("type") String projectType)
+   {
+      //TODO write code to update project properties if above method couldn't detect type and user set it manualy
+   }
 }
