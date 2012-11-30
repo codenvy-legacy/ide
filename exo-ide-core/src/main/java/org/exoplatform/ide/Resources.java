@@ -23,7 +23,8 @@ import org.exoplatform.ide.texteditor.TextEditorView;
 import org.exoplatform.ide.texteditor.renderer.LineNumberRenderer;
 import org.exoplatform.ide.tree.FileTreeNodeRenderer;
 import org.exoplatform.ide.tree.Tree;
-import org.exoplatform.ide.ui.list.*;
+import org.exoplatform.ide.ui.list.SimpleList;
+import org.exoplatform.ide.wizard.WizardResource;
 
 /**
  * Interface for resources, e.g., css, images, text files, etc.
@@ -40,7 +41,7 @@ import org.exoplatform.ide.ui.list.*;
 public interface Resources extends
    //    StatusPresenter.Resources,
    Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorView.Resources, LineNumberRenderer.Resources,
-   EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources
+   EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources, WizardResource
 
 // TODO: Once we have actual consumers of the Tooltip class, we
 // can just have them extend it instead of doing it on the base interface.
