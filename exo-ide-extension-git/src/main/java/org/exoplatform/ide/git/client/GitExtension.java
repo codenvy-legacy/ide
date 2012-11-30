@@ -234,6 +234,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
                @Override
                protected void onSuccess(FolderModel result)
                {
+                  WebSocket.getInstance().subscribe("/ide/codenow/file-appear-listener", handler);
                   cloneRepository(remoteUri, remoteName, result, projectType);
                }
 
@@ -440,7 +441,6 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    private void onCloneSuccess(FolderModel folder, String projectType)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
-      WebSocket.getInstance().subscribe("/ide/codenow/file-appear-listener", handler);
       List<String> openFilePaths = initParam.get("openFilePath");
       if (openFilePaths != null && !openFilePaths.isEmpty())
       {
