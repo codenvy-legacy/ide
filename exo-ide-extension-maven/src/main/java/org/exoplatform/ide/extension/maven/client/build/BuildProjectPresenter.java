@@ -478,34 +478,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
    };
 
-   /**
-    * Output a log of build.
-    */
-   private void showLog()
-   {
-      try
-      {
-         BuilderClientService.getInstance().log(buildID,
-            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-            {
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  showBuildMessage(result.toString());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
-      }
-   }
 
    /**
     * Check for status and display necessary messages.
@@ -583,7 +555,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       if (buildStatus.getStatus() == Status.FAILED)
       {
-         showLog();
+         showBuildMessage(buildStatus.getError());
       }
 
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
