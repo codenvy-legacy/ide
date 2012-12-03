@@ -18,22 +18,22 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Random;
 
-import com.google.gwt.core.client.GWT;
-
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.StartWithInitParamsEvent;
-import org.exoplatform.ide.client.framework.event.StartWithInitParamsHandler;
+import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
+import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
+import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
-import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
 import org.exoplatform.ide.git.client.commit.CommitPresenter;
 import org.exoplatform.ide.git.client.control.AddFilesControl;
@@ -68,17 +68,18 @@ import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Git extension to be added to IDE application.
- *
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 12:53:29 PM anya $
- *
+ * 
  */
 public class GitExtension extends Extension implements InitializeServicesHandler, StartWithInitParamsHandler
 {
@@ -155,30 +156,74 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onStartWithInitParams(StartWithInitParamsEvent event)
    {
-      // v=codenow1.0&action_type=open_project&storageType=Git&storageURL=git://github.com/eXoIDE/shopping-cart-project.git&projectType=Java
       Map<String, List<String>> initParam = event.getParameterMap();
       if (initParam != null && !initParam.isEmpty())
       {
-         if (!initParam.containsKey("v"))
-         {
+         if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
+            || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
+            || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
             return;
-         }
-         if (initParam.get("v").size() != 1 || !initParam.get("v").get(0).equals("codenow1.0"))
-         {
+         if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
+            || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS))
             return;
-         }
-         if (!initParam.containsKey("storageURL") || !initParam.containsKey("storageType"))
-         {
+         if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) != null
+            || initParam.get(CodeNowSpec10.VCS_URL).isEmpty())
             return;
-         }
-         List<String> giturls = initParam.get("storageURL");
-         if (giturls != null && !giturls.isEmpty())
-         {
-            String giturl = giturls.get(0);
-            cloneRepositoryPresenter.doClone(giturl, "origin", initParam.get("projectName").get(0) + "-" + Random.nextInt());
-         }
-      }
 
+         String giturl = initParam.get(CodeNowSpec10.VCS_URL).get(0);
+
+         String prjType = ProjectType.UNDEFINED.value();
+         if (initParam.containsKey(CodeNowSpec10.PROJECT_TYPE) && initParam.get(CodeNowSpec10.PROJECT_TYPE).isEmpty())
+         {
+            prjType = initParam.get(CodeNowSpec10.PROJECT_TYPE).get(0);
+         }
+
+         String prjName = null;
+         if (initParam.get(CodeNowSpec10.PROJECT_NAME) != null && initParam.get(CodeNowSpec10.PROJECT_NAME).isEmpty())
+         {
+            prjName = initParam.get(CodeNowSpec10.PROJECT_NAME).get(0);
+         }
+         else
+         {
+            prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
+         }
+
+         extracted(giturl, prjType, prjName);
+
+      }
    }
 
+   private void extracted(final String giturl, final String prjType, final String prjName)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(prjName, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               cloneRepositoryPresenter.doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  if (((ServerException)exception).getHeader("X-Exit-Code") != null && ((ServerException)exception).getHeader("X-Exit-Code").equals(Integer.toString(ExitCodes.ITEM_NOT_FOUND)))
+                  {
+                     cloneRepositoryPresenter.doClone(giturl, "origin", prjName);
+                  }
+
+               }
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+   }
 }
