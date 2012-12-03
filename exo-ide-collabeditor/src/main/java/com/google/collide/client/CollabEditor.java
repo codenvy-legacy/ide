@@ -101,6 +101,12 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
    private ContentAssistant contentAssistant;
 
+   private String searchQuery;
+
+   private boolean caseSensitive;
+
+   private String fileId;
+
    private final class TextListenerImpl implements TextListener
    {
       /**
@@ -235,6 +241,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                   fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
                }
             });
+            CollabEditorExtension.get().getManager().documentOpened(editorDocument, fileId);
          }
       });
    }
@@ -691,10 +698,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       return contentAssistant;
    }
 
-   private String searchQuery;
-
-   private boolean caseSensitive;
-
    /**
     * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
     */
@@ -739,7 +742,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                   @Override
                   public void execute()
                   {
-                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();                     
+                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();
                      searchCompleteCallback.onSearchComplete(matches > 0);
                   }
                });
@@ -765,7 +768,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                {
                   searchCompleteCallback.onSearchComplete(false);
                }
-               
+
                if (editor.getSelection().hasSelection())
                {
                   searchCompleteCallback.onSearchComplete(true);
@@ -843,5 +846,14 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void onResize()
    {
       editor.getBuffer().onResize();
+   }
+
+   /**
+    * @param id2
+    */
+   public void setFileId(String fileId)
+   {
+      this.fileId = fileId;
+
    }
 }

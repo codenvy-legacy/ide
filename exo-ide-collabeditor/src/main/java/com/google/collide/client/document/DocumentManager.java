@@ -232,6 +232,38 @@ public class DocumentManager {
     }
   }
 
+  public void documentOpened(final Document document, String fileEditSessionKey)
+  {
+     documents.add(document);
+     boolean isLinkedToFile = fileEditSessionKey != null;
+     if (isLinkedToFile) {
+       documentsByFileEditSessionKey.put(fileEditSessionKey, document);
+       DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
+       DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
+     DocumentMetadata.putPath(document, null);
+     //TODO
+     DocumentMetadata.putBeginCcRevision(document, 0);
+     DocumentMetadata.putConflicts(document, JsonCollections.<ConflictChunk>createArray());
+//     DocumentMetadata.putConflictHandle(document, conflictHandle);
+     }
+     
+     lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+        @Override
+        public void dispatch(LifecycleListener listener) {
+          listener.onDocumentCreated(document);
+        }
+      });
+
+      if (isLinkedToFile) {
+        lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
+          @Override
+          public void dispatch(LifecycleListener listener) {
+            listener.onDocumentLinkedToFile(document, new FileContentsImpl());
+          }
+        });
+      }
+  }
+  
   /**
    * @param conflicts only required for documents that are in a conflicted state
    * @param conflictHandle only required for documents that are in a conflicted state
@@ -251,7 +283,7 @@ public class DocumentManager {
 
 //    DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
 //    DocumentMetadata.putPath(document, path);
-//    DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
+    DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
 //    DocumentMetadata.putBeginCcRevision(document, ccRevision);
 //    DocumentMetadata.putConflicts(document, conflicts);
 //    DocumentMetadata.putConflictHandle(document, conflictHandle);
@@ -368,5 +400,91 @@ public class DocumentManager {
     }
     
     return null;
+  }
+  
+  class FileContentsImpl implements FileContents
+  {
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int getCcRevision()
+   {
+      return 0;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getContents()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ContentType getContentType()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getMimeType()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getFileEditSessionKey()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getPath()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public JsonArray<ConflictChunk> getConflicts()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ConflictHandle getConflictHandle()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public JsonArray<String> getSelections()
+   {
+      return JsonCollections.createArray("[0,0]");
+   }
+     
   }
 }

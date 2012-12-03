@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.editor;
 
+import com.google.collide.client.CollabEditor;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +109,11 @@ public class EditorView extends ViewImpl implements ViewActivatedHandler
    {
       editor.asWidget().setHeight("100%");
       editor.setText(file.getContent());
+      //TODO this is nasty, need to rewrite
+      if(editor instanceof CollabEditor)
+      {
+         ((CollabEditor)editor).setFileId(file.getId());
+      }
       add(editor);
 
       openedEditors.add(editor);
