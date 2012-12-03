@@ -71,7 +71,7 @@ public class VertxBusWebsoketImpl implements VertxBus
    /**
     * {@link MessageBus} for this {@link WebSocket} instance.
     */
-   private MessageBusExtension messageBus = new MessageBusExtension();
+   private MessageBusExtension messageBus;
 
    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
 
@@ -101,6 +101,7 @@ public class VertxBusWebsoketImpl implements VertxBus
    public VertxBusWebsoketImpl(String url)
    {
       this.url = url;
+      messageBus = new MessageBusExtension(this);
       connect();
    }
 

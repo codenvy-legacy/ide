@@ -21,6 +21,8 @@ package com.google.collide.client.communication;
 import com.google.gwt.http.client.RequestBuilder;
 
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 
 import java.util.HashSet;
@@ -33,6 +35,17 @@ import java.util.Set;
  */
 public class MessageBusExtension extends MessageBus
 {
+
+   private VertxBusWebsoketImpl socket;
+
+   /**
+    * @param socket
+    */
+   public MessageBusExtension(VertxBusWebsoketImpl socket)
+   {
+      super();
+      this.socket = socket;
+   }
 
    /**
     * {@inheritDoc}
@@ -84,5 +97,18 @@ public class MessageBusExtension extends MessageBus
             .header("x-everrest-websocket-message-type", "unsubscribe-channel")
             .data("{\"channel\":\"" + channelID + "\"}").send(this, null);
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void send(String message, RESTfulRequestCallback<?> callback, String uuid) throws WebSocketException
+   {
+      if (callback != null)
+      {
+         callbackMap.put(uuid, callback);
+      }
+      socket.send(message);
    }
 }

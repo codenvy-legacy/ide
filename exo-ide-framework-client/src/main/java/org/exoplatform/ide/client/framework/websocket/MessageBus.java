@@ -89,7 +89,7 @@ public class MessageBus implements WSMessageReceivedHandler
    /**
     * Map of the call identifier to the {@link RESTfulRequestCallback}.
     */
-   private Map<String, RESTfulRequestCallback<?>> callbackMap = new HashMap<String, RESTfulRequestCallback<?>>();
+   protected Map<String, RESTfulRequestCallback<?>> callbackMap = new HashMap<String, RESTfulRequestCallback<?>>();
 
    /**
     * @see org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler
