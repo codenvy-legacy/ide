@@ -46,6 +46,11 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
+ * Preparing source directory with setting properties on folder to indicate them as eXo IDE project based on sources.
+ * For example if we find pom.xml than we sett type of folder as Java project, if ruby - Ruby project, etc.
+ * If we can't determine with what sources we works it throws exception with message and client ask user to set
+ * custom project type for source folder.
+ *
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
@@ -64,7 +69,7 @@ public class ProjectPrepare
     * @param sourcePath - absolute project path where sources are stored
     * @throws ProjectPrepareException
     */
-   public void doPrepare(String sourcePath) throws ProjectPrepareException
+   public void doPrepare(String sourcePath, String folderId) throws ProjectPrepareException, VirtualFileSystemException
    {
       //if pom.xml exist in the surce directory it means that we have java project
       if (new File(sourcePath, "pom.xml").exists())
@@ -83,36 +88,24 @@ public class ProjectPrepare
                vfs.updateItem(vfs.getItemByPath(entry.getKey(), null, PropertyFilter.ALL_FILTER).getId(), properties, null);
             }
 
-            setProjectTypesProperties(mavenModules);
+            setJavaProjectTypesProperties(mavenModules);
          }
          catch (VirtualFileSystemException e)
          {
             throw new ProjectPrepareException(e.getMessage());
          }
       }
-      else if (detectRailsApp(sourcePath))
-      {
-         //set properties
-//         ProjectType.RUBY_ON_RAILS;
-      }
-      else if (detectPythonApp(sourcePath))
-      {
-         //set properties
-//         ProjectType.PYTHON;
-      }
-      else if (detectPHPApp(sourcePath))
-      {
-         //set properties
-//         ProjectType.PHP;
-      }
-      else if (detectJSApp(sourcePath))
-      {
-         //set properties
-//         ProjectType.JAVASCRIPT;
-      }
       else
       {
-         throw new ProjectPrepareException(400, "autodetection:failed");
+         ProjectType detectedType = detectNonJavaProjectType(sourcePath);
+         if (detectedType != null)
+         {
+            writeNonJavaProjectProperty(folderId, detectedType);
+         }
+         else
+         {
+            throw new ProjectPrepareException(400, "autodetection:failed");
+         }
       }
    }
 
@@ -161,11 +154,11 @@ public class ProjectPrepare
     * @param mavenModules - path where maven module is placed
     * @throws VirtualFileSystemException - if writing properties is failed
     */
-   private void setProjectTypesProperties(Map<String, File> mavenModules) throws VirtualFileSystemException
+   private void setJavaProjectTypesProperties(Map<String, File> mavenModules) throws VirtualFileSystemException
    {
       for (Map.Entry<String, File> entry : mavenModules.entrySet())
       {
-         ProjectType detectedType = detectJProjectType(entry.getValue());
+         ProjectType detectedType = detectJavaProjectType(entry.getValue());
 
          //If detected project type is default it isn't necessary to set default project type, it already exist
          if (detectedType != ProjectType.DEFAULT)
@@ -183,7 +176,7 @@ public class ProjectPrepare
     * @param modulePath - path where maven module is placed
     * @return detected project type specified on source files
     */
-   private ProjectType detectJProjectType(File modulePath)
+   private ProjectType detectJavaProjectType(File modulePath)
    {
       File pomXML = new File(modulePath, "pom.xml");
       InputStream pomXMLStream = null;
@@ -308,27 +301,53 @@ public class ProjectPrepare
       return false;
    }
 
-   private boolean detectJSApp(String sourcePath)
+   private ProjectType detectNonJavaProjectType(String sourcePath)
    {
-      //TODO complete autodetecting javascript app
-      return false;
+      LinkedList<File> q = new LinkedList<File>();
+      q.add(new File(sourcePath));
+      while (!q.isEmpty())
+      {
+         File current = q.pop();
+         File[] list = current.listFiles();
+         if (list != null)
+         {
+            for (File f : list)
+            {
+               if (f.isDirectory())
+               {
+                  q.push(f);
+               }
+               else
+               {
+                  if (f.getName().endsWith(".rb"))
+                  {
+                     return ProjectType.RUBY_ON_RAILS;
+                  }
+                  else if (f.getName().endsWith(".js"))
+                  {
+                     return ProjectType.JAVASCRIPT;
+                  }
+                  else if (f.getName().endsWith(".py"))
+                  {
+                     return ProjectType.PYTHON;
+                  }
+                  else if (f.getName().endsWith(".php"))
+                  {
+                     return ProjectType.PHP;
+                  }
+               }
+            }
+         }
+      }
+      return null;
    }
 
-   private boolean detectRailsApp(String sourcePath)
+   private void writeNonJavaProjectProperty(String folderId, ProjectType type) throws VirtualFileSystemException
    {
-      //TODO complete autodetecting rails app
-      return false;
-   }
+      List<Property> properties = new ArrayList<Property>(2);
+      properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      properties.add(new PropertyImpl("vfs:projectType", type.toString()));
 
-   private boolean detectPythonApp(String sourcePath)
-   {
-      //TODO complete autodetecting python app
-      return false;
-   }
-
-   private boolean detectPHPApp(String sourcePath)
-   {
-      //TODO complete autodetecting php app
-      return false;
+      vfs.updateItem(folderId, properties, null);
    }
 }

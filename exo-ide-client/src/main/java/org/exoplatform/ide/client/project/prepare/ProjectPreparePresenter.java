@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
@@ -37,12 +38,11 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -188,8 +188,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 
       if (!"none".equals(projectType))
       {
-//         properties.add(new Property("vfs:projectType", ProjectType.fromValue(projectType).value()));
-         properties.add(new PropertyImpl("vfs:projectType", projectType));
+         properties.add(new PropertyImpl("vfs:projectType", ProjectType.fromValue(projectType).value()));
       }
 
       try
@@ -203,9 +202,9 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                @Override
                protected void onSuccess(ItemWrapper result)
                {
-                  Item item = result.getItem(); //TODO here is js null error gotten
+                  Item item = result.getItem();
                   item.getProperties().addAll(properties);
-                  writeUserPropertiesToProject((ProjectModel)item);
+                  writeUserPropertiesToProject(item);
                }
 
                @Override
@@ -221,7 +220,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
       }
    }
 
-   private void writeUserPropertiesToProject(ProjectModel item)
+   private void writeUserPropertiesToProject(Item item)
    {
       try
       {
@@ -244,6 +243,10 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      finally
+      {
+         IDE.getInstance().closeView(display.asView().getId());
       }
    }
 }
