@@ -42,6 +42,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -193,8 +194,11 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 
       try
       {
+         ProjectModel project = new ProjectModel();
+         ItemWrapper item = new ItemWrapper(project);
+         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
          VirtualFileSystem.getInstance().getItemById(folderId,
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
+            new AsyncRequestCallback<ItemWrapper>(unmarshaller)
             {
                @Override
                protected void onSuccess(ItemWrapper result)
