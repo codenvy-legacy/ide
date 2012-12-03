@@ -244,214 +244,214 @@ public class CollectionUtils {
     // NOTE(patcoleman): equals() and hashCode() should not be implemented in this adaptor, as
     // they are unsupported in the javascript collections.
   }
-//
-//  /**
-//   * An adapter that turns a java.util.Map<Double, V> into a NumberMap<V>.
-//   *
-//   * @param <V> type of values in the map
-//   */
-//  private static final class NumberMapAdapter<V> implements NumberMap<V> {
-//    private final Map<Double, V> backend;
-//
-//    private NumberMapAdapter(Map<Double, V> backend) {
-//      Preconditions.checkNotNull(backend, "Attempt to adapt a null map");
-//      this.backend = backend;
-//    }
-//
-//    @Override
-//    public void putAll(ReadableNumberMap<V> pairsToAdd) {
-//      // TODO(ohler): check instanceof here and implement a fallback.
-//      backend.putAll(((NumberMapAdapter<V>) pairsToAdd).backend);
-//    }
-//
-//    @Override
-//    public void putAll(Map<Double, V> sourceMap) {
-//      backend.putAll(sourceMap);
-//    }
-//
-//    @Override
-//    public void clear() {
-//      backend.clear();
-//    }
-//
-//    @Override
-//    public void put(double key, V value) {
-//      backend.put(key, value);
-//    }
-//
-//    @Override
-//    public void remove(double key) {
-//      backend.remove(key);
-//    }
-//
-//    @Override
-//    public boolean containsKey(double key) {
-//      return backend.containsKey(key);
-//    }
-//
-//    @Override
-//    public V getExisting(double key) {
-//      assert backend.containsKey(key);
-//      return backend.get(key);
-//    }
-//
-//    @Override
-//    public V get(double key) {
-//      return backend.get(key);
-//    }
-//
-//    @Override
-//    public V get(double key, V defaultValue) {
-//      if (backend.containsKey(key)) {
-//        return backend.get(key);
-//      } else {
-//        return defaultValue;
-//      }
-//    }
-//
-//    @Override
-//    public boolean isEmpty() {
-//      return backend.isEmpty();
-//    }
-//
-//    @Override
-//    public void each(ProcV<V> callback) {
-//      for (Map.Entry<Double, V> entry : backend.entrySet()) {
-//        callback.apply(entry.getKey(), entry.getValue());
-//      }
-//    }
-//
-//    @Override
-//    public void filter(EntryFilter<V> filter) {
-//      for (Iterator<Map.Entry<Double, V>> iterator = backend.entrySet().iterator();
-//          iterator.hasNext();) {
-//        Map.Entry<Double, V> entry = iterator.next();
-//        if (filter.apply(entry.getKey(), entry.getValue())) {
-//          // entry stays
-//        } else {
-//          iterator.remove();
-//        }
-//      }
-//    }
-//
-//    @Override
-//    public int countEntries() {
-//      return backend.size();
-//    }
-//
-//    @Override
-//    public String toString() {
-//      return backend.toString();
-//    }
-//
-//    // NOTE(patcoleman): equals() and hashCode() should not be implemented in this adaptor, as
-//    // they are unsupported in the javascript collections.
-//  }
-//
-//
-//  /**
-//   * An adapter that turns a java.util.Map<Integer, V> into an IntMap<V>.
-//   *
-//   * @param <V> type of values in the map
-//   */
-//  private static final class IntMapAdapter<V> implements IntMap<V> {
-//    private final Map<Integer, V> backend;
-//
-//    private IntMapAdapter(Map<Integer, V> backend) {
-//      Preconditions.checkNotNull(backend, "Attempt to adapt a null map");
-//      this.backend = backend;
-//    }
-//
-//    @Override
-//    public void putAll(ReadableIntMap<V> pairsToAdd) {
-//      // TODO(ohler): check instanceof here and implement a fallback.
-//      backend.putAll(((IntMapAdapter<V>) pairsToAdd).backend);
-//    }
-//
-//    @Override
-//    public void putAll(Map<Integer, V> sourceMap) {
-//      backend.putAll(sourceMap);
-//    }
-//
-//    @Override
-//    public void clear() {
-//      backend.clear();
-//    }
-//
-//    @Override
-//    public void put(int key, V value) {
-//      backend.put(key, value);
-//    }
-//
-//    @Override
-//    public void remove(int key) {
-//      backend.remove(key);
-//    }
-//
-//    @Override
-//    public boolean containsKey(int key) {
-//      return backend.containsKey(key);
-//    }
-//
-//    @Override
-//    public V getExisting(int key) {
-//      assert backend.containsKey(key);
-//      return backend.get(key);
-//    }
-//
-//    @Override
-//    public V get(int key) {
-//      return backend.get(key);
-//    }
-//
-//    @Override
-//    public V get(int key, V defaultValue) {
-//      if (backend.containsKey(key)) {
-//        return backend.get(key);
-//      } else {
-//        return defaultValue;
-//      }
-//    }
-//
-//    @Override
-//    public boolean isEmpty() {
-//      return backend.isEmpty();
-//    }
-//
-//    @Override
-//    public void each(ProcV<V> callback) {
-//      for (Map.Entry<Integer, V> entry : backend.entrySet()) {
-//        callback.apply(entry.getKey(), entry.getValue());
-//      }
-//    }
-//
-//    @Override
-//    public void filter(EntryFilter<V> filter) {
-//      for (Iterator<Map.Entry<Integer, V>> iterator = backend.entrySet().iterator();
-//          iterator.hasNext();) {
-//        Map.Entry<Integer, V> entry = iterator.next();
-//        if (filter.apply(entry.getKey(), entry.getValue())) {
-//          // entry stays
-//        } else {
-//          iterator.remove();
-//        }
-//      }
-//    }
-//
-//    @Override
-//    public int countEntries() {
-//      return backend.size();
-//    }
-//
-//    @Override
-//    public String toString() {
-//      return backend.toString();
-//    }
-//
-//    // NOTE(patcoleman): equals() and hashCode() should not be implemented in this adaptor, as
-//    // they are unsupported in the javascript collections.
-//  }
-//
+
+  /**
+   * An adapter that turns a java.util.Map<Double, V> into a NumberMap<V>.
+   *
+   * @param <V> type of values in the map
+   */
+  private static final class NumberMapAdapter<V> implements NumberMap<V> {
+    private final Map<Double, V> backend;
+
+    private NumberMapAdapter(Map<Double, V> backend) {
+      Preconditions.checkNotNull(backend, "Attempt to adapt a null map");
+      this.backend = backend;
+    }
+
+    @Override
+    public void putAll(ReadableNumberMap<V> pairsToAdd) {
+      // TODO(ohler): check instanceof here and implement a fallback.
+      backend.putAll(((NumberMapAdapter<V>) pairsToAdd).backend);
+    }
+
+    @Override
+    public void putAll(Map<Double, V> sourceMap) {
+      backend.putAll(sourceMap);
+    }
+
+    @Override
+    public void clear() {
+      backend.clear();
+    }
+
+    @Override
+    public void put(double key, V value) {
+      backend.put(key, value);
+    }
+
+    @Override
+    public void remove(double key) {
+      backend.remove(key);
+    }
+
+    @Override
+    public boolean containsKey(double key) {
+      return backend.containsKey(key);
+    }
+
+    @Override
+    public V getExisting(double key) {
+      assert backend.containsKey(key);
+      return backend.get(key);
+    }
+
+    @Override
+    public V get(double key) {
+      return backend.get(key);
+    }
+
+    @Override
+    public V get(double key, V defaultValue) {
+      if (backend.containsKey(key)) {
+        return backend.get(key);
+      } else {
+        return defaultValue;
+      }
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return backend.isEmpty();
+    }
+
+    @Override
+    public void each(ProcV<V> callback) {
+      for (Map.Entry<Double, V> entry : backend.entrySet()) {
+        callback.apply(entry.getKey(), entry.getValue());
+      }
+    }
+
+    @Override
+    public void filter(EntryFilter<V> filter) {
+      for (Iterator<Map.Entry<Double, V>> iterator = backend.entrySet().iterator();
+          iterator.hasNext();) {
+        Map.Entry<Double, V> entry = iterator.next();
+        if (filter.apply(entry.getKey(), entry.getValue())) {
+          // entry stays
+        } else {
+          iterator.remove();
+        }
+      }
+    }
+
+    @Override
+    public int countEntries() {
+      return backend.size();
+    }
+
+    @Override
+    public String toString() {
+      return backend.toString();
+    }
+
+    // NOTE(patcoleman): equals() and hashCode() should not be implemented in this adaptor, as
+    // they are unsupported in the javascript collections.
+  }
+
+
+  /**
+   * An adapter that turns a java.util.Map<Integer, V> into an IntMap<V>.
+   *
+   * @param <V> type of values in the map
+   */
+  private static final class IntMapAdapter<V> implements IntMap<V> {
+    private final Map<Integer, V> backend;
+
+    private IntMapAdapter(Map<Integer, V> backend) {
+      Preconditions.checkNotNull(backend, "Attempt to adapt a null map");
+      this.backend = backend;
+    }
+
+    @Override
+    public void putAll(ReadableIntMap<V> pairsToAdd) {
+      // TODO(ohler): check instanceof here and implement a fallback.
+      backend.putAll(((IntMapAdapter<V>) pairsToAdd).backend);
+    }
+
+    @Override
+    public void putAll(Map<Integer, V> sourceMap) {
+      backend.putAll(sourceMap);
+    }
+
+    @Override
+    public void clear() {
+      backend.clear();
+    }
+
+    @Override
+    public void put(int key, V value) {
+      backend.put(key, value);
+    }
+
+    @Override
+    public void remove(int key) {
+      backend.remove(key);
+    }
+
+    @Override
+    public boolean containsKey(int key) {
+      return backend.containsKey(key);
+    }
+
+    @Override
+    public V getExisting(int key) {
+      assert backend.containsKey(key);
+      return backend.get(key);
+    }
+
+    @Override
+    public V get(int key) {
+      return backend.get(key);
+    }
+
+    @Override
+    public V get(int key, V defaultValue) {
+      if (backend.containsKey(key)) {
+        return backend.get(key);
+      } else {
+        return defaultValue;
+      }
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return backend.isEmpty();
+    }
+
+    @Override
+    public void each(ProcV<V> callback) {
+      for (Map.Entry<Integer, V> entry : backend.entrySet()) {
+        callback.apply(entry.getKey(), entry.getValue());
+      }
+    }
+
+    @Override
+    public void filter(EntryFilter<V> filter) {
+      for (Iterator<Map.Entry<Integer, V>> iterator = backend.entrySet().iterator();
+          iterator.hasNext();) {
+        Map.Entry<Integer, V> entry = iterator.next();
+        if (filter.apply(entry.getKey(), entry.getValue())) {
+          // entry stays
+        } else {
+          iterator.remove();
+        }
+      }
+    }
+
+    @Override
+    public int countEntries() {
+      return backend.size();
+    }
+
+    @Override
+    public String toString() {
+      return backend.toString();
+    }
+
+    // NOTE(patcoleman): equals() and hashCode() should not be implemented in this adaptor, as
+    // they are unsupported in the javascript collections.
+  }
+
   /**
    * An adapter that turns a java.util.Set<String> into a StringSet.
    *
@@ -626,119 +626,119 @@ public class CollectionUtils {
 //    }
 //  }
 //
-//  private static class NumberPriorityQueueAdapter implements NumberPriorityQueue {
-//    private final Queue<Double> queue;
+  private static class NumberPriorityQueueAdapter implements NumberPriorityQueue {
+    private final Queue<Double> queue;
+
+    private NumberPriorityQueueAdapter(Queue<Double> queue) {
+      this.queue = queue;
+    }
+
+    @Override
+    public boolean offer(double e) {
+      return queue.offer(e);
+    }
+
+    @Override
+    public double peek() {
+      return queue.peek();
+    }
+
+    @Override
+    public double poll() {
+      return queue.poll();
+    }
+
+    @Override
+    public int size() {
+      return queue.size();
+    }
+  }
 //
-//    private NumberPriorityQueueAdapter(Queue<Double> queue) {
-//      this.queue = queue;
-//    }
-//
-//    @Override
-//    public boolean offer(double e) {
-//      return queue.offer(e);
-//    }
-//
-//    @Override
-//    public double peek() {
-//      return queue.peek();
-//    }
-//
-//    @Override
-//    public double poll() {
-//      return queue.poll();
-//    }
-//
-//    @Override
-//    public int size() {
-//      return queue.size();
-//    }
-//  }
-//
-//  /**
-//   * An adapter that wraps a java.util.IdentityHashMap<K, V> into an
-//   * IdentityMap<K, V>. Note that this is a simple map, so 'identity' is defined
-//   * by the hashCode/equals of K instances.
-//   *
-//   * @param <K> type of keys in the map.
-//   * @param <V> type of values in the map
-//   */
-//  private static class IdentityHashMapAdapter<K, V> implements IdentityMap<K, V> {
-//    private final Map<K, V> backend = new IdentityHashMap<K, V>();
-//
-//    private IdentityHashMapAdapter() {
-//    }
-//
-//    @Override
-//    public V get(K key) {
-//      return backend.get(key);
-//    }
-//
-//    @Override
-//    public boolean has(K key) {
-//      return backend.containsKey(key);
-//    }
-//
-//    @Override
-//    public void put(K key, V value) {
-//      // Note: Boxed primitives, and String, are disallowed. See explanation in
-//      // IdentitySetAdapter.
-//      if (key instanceof String || key instanceof Integer || key instanceof Double
-//          || key instanceof Long || key instanceof Boolean) {
-//        throw new UnsupportedOperationException(
-//            "Should NOT use boxed primitives as key with identity map");
-//      }
-//      backend.put(key, value);
-//    }
-//
-//    @Override
-//    public void remove(K key) {
-//      removeAndReturn(key);
-//    }
-//
-//    @Override
-//    public V removeAndReturn(K key) {
-//      return backend.remove(key);
-//    }
-//
-//    @Override
-//    public void clear() {
-//      backend.clear();
-//    }
-//
-//    @Override
-//    public boolean isEmpty() {
-//      return backend.isEmpty();
-//    }
-//
-//    @Override
-//    public void each(ProcV<? super K, ? super V> proc) {
-//      for (Map.Entry<K, V> entry : backend.entrySet()) {
-//        proc.apply(entry.getKey(), entry.getValue());
-//      }
-//    }
-//
-//    @Override
-//    public <R> R reduce(R initial, Reduce<? super K, ? super V, R> proc) {
-//      R reduction = initial;
-//      for (Map.Entry<K, V> entry : backend.entrySet()) {
-//        reduction = proc.apply(reduction, entry.getKey(), entry.getValue());
-//      }
-//      return reduction;
-//    }
-//
-//    @Override
-//    public String toString() {
-//      return backend.toString();
-//    }
-//
-//    @Override
-//    public int countEntries() {
-//      return backend.size();
-//    }
-//
-//    // NOTE(patcoleman): equals() and hashCode() should not be implemented in this adaptor, as
-//    // they are unsupported in the javascript collections.
-//  }
+  /**
+   * An adapter that wraps a java.util.IdentityHashMap<K, V> into an
+   * IdentityMap<K, V>. Note that this is a simple map, so 'identity' is defined
+   * by the hashCode/equals of K instances.
+   *
+   * @param <K> type of keys in the map.
+   * @param <V> type of values in the map
+   */
+  private static class IdentityHashMapAdapter<K, V> implements IdentityMap<K, V> {
+    private final Map<K, V> backend = new IdentityHashMap<K, V>();
+
+    private IdentityHashMapAdapter() {
+    }
+
+    @Override
+    public V get(K key) {
+      return backend.get(key);
+    }
+
+    @Override
+    public boolean has(K key) {
+      return backend.containsKey(key);
+    }
+
+    @Override
+    public void put(K key, V value) {
+      // Note: Boxed primitives, and String, are disallowed. See explanation in
+      // IdentitySetAdapter.
+      if (key instanceof String || key instanceof Integer || key instanceof Double
+          || key instanceof Long || key instanceof Boolean) {
+        throw new UnsupportedOperationException(
+            "Should NOT use boxed primitives as key with identity map");
+      }
+      backend.put(key, value);
+    }
+
+    @Override
+    public void remove(K key) {
+      removeAndReturn(key);
+    }
+
+    @Override
+    public V removeAndReturn(K key) {
+      return backend.remove(key);
+    }
+
+    @Override
+    public void clear() {
+      backend.clear();
+    }
+
+    @Override
+    public boolean isEmpty() {
+      return backend.isEmpty();
+    }
+
+    @Override
+    public void each(ProcV<? super K, ? super V> proc) {
+      for (Map.Entry<K, V> entry : backend.entrySet()) {
+        proc.apply(entry.getKey(), entry.getValue());
+      }
+    }
+
+    @Override
+    public <R> R reduce(R initial, Reduce<? super K, ? super V, R> proc) {
+      R reduction = initial;
+      for (Map.Entry<K, V> entry : backend.entrySet()) {
+        reduction = proc.apply(reduction, entry.getKey(), entry.getValue());
+      }
+      return reduction;
+    }
+
+    @Override
+    public String toString() {
+      return backend.toString();
+    }
+
+    @Override
+    public int countEntries() {
+      return backend.size();
+    }
+
+    // NOTE(patcoleman): equals() and hashCode() should not be implemented in this adaptor, as
+    // they are unsupported in the javascript collections.
+  }
 //
 //  /**
 //   * An implementation of CollectionFactory based on java.util.HashSet and
@@ -1036,19 +1036,19 @@ public class CollectionUtils {
 //    return newLinkedList(Arrays.asList(elements));
 //  }
 //
-//  /** Creates a new, empty array list. */
-//  public static <T> ArrayList<T> newArrayList() {
-//    return new ArrayList<T>();
-//  }
-//
-//  /** Creates a new array list containing elements provided by an iterable. */
-//  public static <T> ArrayList<T> newArrayList(Iterable<? extends T> elements) {
-//    ArrayList<T> list = newArrayList();
-//    for (T e : elements) {
-//      list.add(e);
-//    }
-//    return list;
-//  }
+  /** Creates a new, empty array list. */
+  public static <T> ArrayList<T> newArrayList() {
+    return new ArrayList<T>();
+  }
+
+  /** Creates a new array list containing elements provided by an iterable. */
+  public static <T> ArrayList<T> newArrayList(Iterable<? extends T> elements) {
+    ArrayList<T> list = newArrayList();
+    for (T e : elements) {
+      list.add(e);
+    }
+    return list;
+  }
 //
 //  /** Creates a new array list containing the provided elements. */
 //  public static <T> ArrayList<T> newArrayList(T... elements) {
@@ -1111,20 +1111,22 @@ public class CollectionUtils {
 //    return (IdentityMap<K, V>) EMPTY;
 //  }
 //
-//  /**
-//   * Creates a new NumberMap using the default collection factory.
-//   */
-//  public static <V> NumberMap<V> createNumberMap() {
-//    return CollectionUtils.getCollectionFactory().createNumberMap();
-//  }
-//
-//  /**
-//   * Creates a new NumberMap using the default collection factory.
-//   */
-//  public static <V> IntMap<V> createIntMap() {
+  /**
+   * Creates a new NumberMap using the default collection factory.
+   */
+  public static <V> NumberMap<V> createNumberMap() {
+     return CollectionUtils.adaptNumberMap(new HashMap<Double, V>());
+   // return CollectionUtils.getCollectionFactory().createNumberMap();
+  }
+
+  /**
+   * Creates a new NumberMap using the default collection factory.
+   */
+  public static <V> IntMap<V> createIntMap() {
+     return CollectionUtils.adaptIntMap(new HashMap<Integer, V>());
 //    return CollectionUtils.getCollectionFactory().createIntMap();
-//  }
-//
+  }
+
 //  /**
 //   * Creates a new queue using the default collection factory.
 //   */
@@ -1132,20 +1134,22 @@ public class CollectionUtils {
 //    return CollectionUtils.getCollectionFactory().createQueue();
 //  }
 //
-//  /**
-//   * Creates a new priority queue using the default collection factory.
-//   */
-//  public static NumberPriorityQueue createPriorityQueue() {
+  /**
+   * Creates a new priority queue using the default collection factory.
+   */
+  public static NumberPriorityQueue createPriorityQueue() {
+     return CollectionUtils.adaptNumberPriorityQueue(new PriorityQueue<Double>());
 //    return CollectionUtils.getCollectionFactory().createPriorityQueue();
-//  }
-//
-//  /**
-//   * Creates a new IdentityMap using the default collection factory.
-//   */
-//  public static <K, V> IdentityMap<K, V> createIdentityMap() {
+  }
+
+  /**
+   * Creates a new IdentityMap using the default collection factory.
+   */
+  public static <K, V> IdentityMap<K, V> createIdentityMap() {
+     return new IdentityHashMapAdapter<K, V>();
 //    return CollectionUtils.getCollectionFactory().createIdentityMap();
-//  }
-//
+  }
+
 //  /**
 //   * Creates a new IdentitySet using the default collection factory.
 //   */
@@ -1309,33 +1313,33 @@ public class CollectionUtils {
     return new StringMapAdapter<V>(a);
   }
 //
-//  /**
-//   * Returns a StringMap view of the specified map.
-//   */
-//  public static <V> NumberMap<V> adaptNumberMap(Map<Double, V> a) {
-//    return new NumberMapAdapter<V>(a);
-//  }
-//
-//  /**
-//   * Returns a StringMap view of the specified map.
-//   */
-//  public static <V> IntMap<V> adaptIntMap(Map<Integer, V> a) {
-//    return new IntMapAdapter<V>(a);
-//  }
-//
+  /**
+   * Returns a StringMap view of the specified map.
+   */
+  public static <V> NumberMap<V> adaptNumberMap(Map<Double, V> a) {
+    return new NumberMapAdapter<V>(a);
+  }
+
+  /**
+   * Returns a StringMap view of the specified map.
+   */
+  public static <V> IntMap<V> adaptIntMap(Map<Integer, V> a) {
+    return new IntMapAdapter<V>(a);
+  }
+
   /**
    * Returns a StringSet view of the specified set.
    */
   public static StringSet adaptStringSet(Set<String> a) {
     return new StringSetAdapter(a);
   }
-//
-//  /**
-//   * Returns a NumberPriorityQueue adaptor of a regular java.util.PriorityQueue
-//   */
-//  public static NumberPriorityQueue adaptNumberPriorityQueue(PriorityQueue<Double> priorityQueue) {
-//    return new NumberPriorityQueueAdapter(priorityQueue);
-//  }
+
+  /**
+   * Returns a NumberPriorityQueue adaptor of a regular java.util.PriorityQueue
+   */
+  public static NumberPriorityQueue adaptNumberPriorityQueue(PriorityQueue<Double> priorityQueue) {
+    return new NumberPriorityQueueAdapter(priorityQueue);
+  }
 //
 //  /**
 //   * Returns a StringSet copy of the specified set.

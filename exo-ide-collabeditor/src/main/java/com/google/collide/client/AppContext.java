@@ -14,8 +14,13 @@
 
 package com.google.collide.client;
 
+import com.google.collide.client.communication.FrontendApi;
+import com.google.collide.client.communication.MessageFilter;
+import com.google.collide.client.communication.PushChannel;
+import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.util.UserActivityManager;
 
+import com.google.collide.client.util.WindowUnloadingController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 
@@ -36,35 +41,34 @@ public class AppContext {
   /**
    * Object for making calls to the frontend api.
    */
-//  private final FrontendApi frontendApi;
+  private final FrontendApi frontendApi;
   private final Resources resources = GWT.create(Resources.class);
 //  /**
 //   * For directly handling messages/data sent to the client from the frontend.
 //   */
-//  private final MessageFilter messageFilter;
-//  private final StatusManager statusManager;
+  private final MessageFilter messageFilter;
+  private final StatusManager statusManager;
 //  private final UncaughtExceptionHandler uncaughtExceptionHandler;
 //  private final AwesomeBoxModel awesomeBoxModel;
 //  private final AwesomeBoxComponentHostModel awesomeBoxComponentHostModel;
   private final UserActivityManager userActivityManager;
-//  private final WindowUnloadingController windowUnloadingController;
-//  private final PushChannel pushChannel;
+  private final WindowUnloadingController windowUnloadingController;
+  private final PushChannel pushChannel;
 
-//  @VisibleForTesting
   public AppContext() {
 
 //    // Things that depend on nothing
 //    this.keyBindings = new KeyBindings();
-//    this.statusManager = new StatusManager();
-//    this.messageFilter = new MessageFilter();
+    this.statusManager = new StatusManager();
+    this.messageFilter = new MessageFilter();
 //    this.awesomeBoxModel = new AwesomeBoxModel();
 //    this.awesomeBoxComponentHostModel = new AwesomeBoxComponentHostModel();
     this.userActivityManager = new UserActivityManager();
-//    this.windowUnloadingController = new WindowUnloadingController();
+    this.windowUnloadingController = new WindowUnloadingController();
 //
 //    // Things that depend on message filter/frontendApi/statusManager
-//    this.pushChannel = PushChannel.create(messageFilter, statusManager);
-//    this.frontendApi = FrontendApi.create(pushChannel, statusManager);
+    this.pushChannel = PushChannel.create(messageFilter, statusManager);
+    this.frontendApi = FrontendApi.create(pushChannel, statusManager);
 //    this.uncaughtExceptionHandler = new ExceptionHandler(messageFilter, frontendApi, statusManager);
   }
 
@@ -84,26 +88,26 @@ public class AppContext {
     return userActivityManager;
   }
 
-//  /**
-//   * @return the frontendRequester
-//   */
-//  public FrontendApi getFrontendApi() {
-//    return frontendApi;
-//  }
-//
-//  /**
-//   * @return the messageFilter
-//   */
-//  public MessageFilter getMessageFilter() {
-//    return messageFilter;
-//  }
-//
-//  /**
-//   * @return the push channel API
-//   */
-//  public PushChannel getPushChannel() {
-//    return pushChannel;
-//  }
+  /**
+   * @return the frontendRequester
+   */
+  public FrontendApi getFrontendApi() {
+    return frontendApi;
+  }
+
+  /**
+   * @return the messageFilter
+   */
+  public MessageFilter getMessageFilter() {
+    return messageFilter;
+  }
+
+  /**
+   * @return the push channel API
+   */
+  public PushChannel getPushChannel() {
+    return pushChannel;
+  }
 
   /**
    * @return the resources
@@ -112,9 +116,9 @@ public class AppContext {
     return resources;
   }
 
-//  public StatusManager getStatusManager() {
-//    return statusManager;
-//  }
+  public StatusManager getStatusManager() {
+    return statusManager;
+  }
 //
 //  /**
 //   * @return the uncaught exception handler for the app.
@@ -123,10 +127,10 @@ public class AppContext {
 //    return uncaughtExceptionHandler;
 //  }
 //
-//  /**
-//   * @return the {@link WindowUnloadingController} for the app.
-//   */
-//  public WindowUnloadingController getWindowUnloadingController() {
-//    return windowUnloadingController;
-//  }
+  /**
+   * @return the {@link WindowUnloadingController} for the app.
+   */
+  public WindowUnloadingController getWindowUnloadingController() {
+    return windowUnloadingController;
+  }
 }

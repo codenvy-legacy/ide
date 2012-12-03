@@ -16,7 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package com.google.collide.client.communication;
+
+import com.google.collide.client.util.logging.Log;
 
 import com.google.gwt.http.client.RequestBuilder.Method;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -26,8 +28,12 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.Pair;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +165,7 @@ public class RESTfulRequestBuilder
     * 
     * @param callback the response handler to be notified when the request fails or completes
     */
-   public void send(RESTfulRequestCallback<?> callback)
+   public void send(MessageBus messageBus, RESTfulRequestCallback<?> callback)
    {
       AutoBean<RESTfulRequestMessage> autoBean = AutoBeanUtils.getAutoBean(requestMessage);
       String message = AutoBeanCodex.encode(autoBean).getPayload();
@@ -171,7 +177,7 @@ public class RESTfulRequestBuilder
 
       try
       {
-         WebSocket.getInstance().messageBus().send(message, callback, requestMessage.getUuid());
+         messageBus.send(message, callback, requestMessage.getUuid());
          if (callback != null)
          {
             loader.show();
@@ -184,10 +190,11 @@ public class RESTfulRequestBuilder
       }
       catch (WebSocketException e)
       {
-         if (callback != null)
-         {
-            callback.onFailure(e);
-         }
+         Log.error(getClass(), e);
+//         if (callback != null)
+//         {
+//            callback.onFailure(e);
+//         }
       }
    }
 

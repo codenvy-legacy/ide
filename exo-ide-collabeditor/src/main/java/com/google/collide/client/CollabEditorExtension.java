@@ -18,6 +18,14 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.client.code.ParticipantModel;
+
+import com.google.collide.client.collaboration.DocOpsSavedNotifier;
+
+import com.google.collide.client.collaboration.CollaborationManager;
+
+import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
+
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
@@ -144,6 +152,13 @@ public class CollabEditorExtension extends Extension
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
       documentManager = DocumentManager.create(context);
+      
+      ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+      IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
+      CollaborationManager collaborationManager =
+         CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
+
+      DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
    }
 
    public AppContext getContext()

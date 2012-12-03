@@ -83,7 +83,7 @@ public class MessageBus implements WSMessageReceivedHandler
    /**
     * Map of the channel to the subscribers.
     */
-   private Map<String, Set<SubscriptionHandler<?>>> channelToSubscribersMap =
+   protected Map<String, Set<SubscriptionHandler<?>>> channelToSubscribersMap =
       new HashMap<String, Set<SubscriptionHandler<?>>>();
 
    /**
@@ -147,7 +147,7 @@ public class MessageBus implements WSMessageReceivedHandler
     * @param handler the {@link SubscriptionHandler} to fire
     *                   when receiving an event on the subscribed channel
     */
-   void subscribe(String channelID, SubscriptionHandler<?> handler)
+   protected void subscribe(String channelID, SubscriptionHandler<?> handler)
    {
       if (handler == null)
       {
@@ -180,7 +180,7 @@ public class MessageBus implements WSMessageReceivedHandler
     * @param channelID channel identifier
     * @param handler the {@link SubscriptionHandler} for which to remove the subscription
     */
-   void unsubscribe(String channelID, SubscriptionHandler<?> handler)
+   protected void unsubscribe(String channelID, SubscriptionHandler<?> handler)
    {
       if (handler == null)
       {
