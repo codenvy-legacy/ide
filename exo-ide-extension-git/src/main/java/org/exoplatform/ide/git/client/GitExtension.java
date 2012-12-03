@@ -18,11 +18,11 @@
  */
 package org.exoplatform.ide.git.client;
 
-import com.google.gwt.http.client.RequestException;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Random;
 
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -31,8 +31,6 @@ import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
@@ -71,7 +69,7 @@ import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 
 import java.util.List;
 import java.util.Map;
@@ -168,60 +166,64 @@ public class GitExtension extends Extension implements InitializeServicesHandler
          if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
             || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS))
             return;
-         if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) != null)
+         if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) != null
+            || initParam.get(CodeNowSpec10.VCS_URL).isEmpty())
             return;
 
-         List<String> giturls = initParam.get(CodeNowSpec10.VCS_URL);
-         if (giturls != null && !giturls.isEmpty())
+         String giturl = initParam.get(CodeNowSpec10.VCS_URL).get(0);
+
+         String prjType = ProjectType.UNDEFINED.value();
+         if (initParam.containsKey(CodeNowSpec10.PROJECT_TYPE) && initParam.get(CodeNowSpec10.PROJECT_TYPE).isEmpty())
          {
-            String giturl = giturls.get(0);
-            String prjName = null;
-            if (initParam.get(CodeNowSpec10.PROJECT_NAME) != null
-               && initParam.get(CodeNowSpec10.PROJECT_NAME).isEmpty())
-            {
-               prjName = initParam.get(CodeNowSpec10.PROJECT_NAME).get(0);
-            }
-            else
-            {
-               prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
-            }
-
-            try
-            {
-               VirtualFileSystem.getInstance().getItemByPath(prjName, new AsyncRequestCallback<ItemWrapper>()
-               {
-
-                  @Override
-                  protected void onSuccess(ItemWrapper result)
-                  {
-            
-
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     //                     exception
-
-                  }
-               });
-            }
-            catch (RequestException e)
-            {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
-            }
-            
-            prjName = prjName  + "-" +  Random.nextInt(Integer.MAX_VALUE);
-            String prjType = ProjectType.UNDEFINED.value();
-            if (initParam.containsKey(CodeNowSpec10.PROJECT_TYPE)
-               && initParam.get(CodeNowSpec10.PROJECT_TYPE).isEmpty())
-            {
-               prjType = initParam.get(CodeNowSpec10.PROJECT_TYPE).get(0);
-            }
-            cloneRepositoryPresenter.doClone(giturl, "origin", prjNameRandom.nextInt(), prjType);
+            prjType = initParam.get(CodeNowSpec10.PROJECT_TYPE).get(0);
          }
+
+         String prjName = null;
+         if (initParam.get(CodeNowSpec10.PROJECT_NAME) != null && initParam.get(CodeNowSpec10.PROJECT_NAME).isEmpty())
+         {
+            prjName = initParam.get(CodeNowSpec10.PROJECT_NAME).get(0);
+         }
+         else
+         {
+            prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
+         }
+
+         extracted(giturl, prjType, prjName);
+
       }
    }
 
+   private void extracted(final String giturl, final String prjType, final String prjName)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(prjName, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               cloneRepositoryPresenter.doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  if (((ServerException)exception).getHeader("X-Exit-Code") != null && ((ServerException)exception).getHeader("X-Exit-Code").equals(Integer.toString(ExitCodes.ITEM_NOT_FOUND)))
+                  {
+                     cloneRepositoryPresenter.doClone(giturl, "origin", prjName);
+                  }
+
+               }
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+   }
 }

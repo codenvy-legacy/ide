@@ -30,7 +30,6 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.IDE;
@@ -161,9 +160,6 @@ public class CreateFolderPresenter implements CreateFolderHandler, ItemsSelected
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.navigation.event.CreateFolderHandler#onCreateFolder(org.exoplatform.ide.client.navigation.event.CreateFolderEvent)
-    */
    @Override
    public void onCreateFolder(CreateFolderEvent event)
    {

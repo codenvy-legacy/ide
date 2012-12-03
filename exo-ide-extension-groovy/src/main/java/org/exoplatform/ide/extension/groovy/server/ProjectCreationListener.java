@@ -32,6 +32,7 @@ import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -119,7 +120,7 @@ public class ProjectCreationListener implements EventListener
 
       if (!project.hasProperty(EXOIDE_CLASSPATH))
       {
-         List<Property> properties = Arrays.asList(new Property(EXOIDE_CLASSPATH, dependencys));
+         List<Property> properties = Arrays.<Property>asList(new PropertyImpl(EXOIDE_CLASSPATH, dependencys));
          vfs.updateItem(project.getId(), properties, null);
       }
 

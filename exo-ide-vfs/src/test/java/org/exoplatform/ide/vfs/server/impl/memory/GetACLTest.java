@@ -23,7 +23,8 @@ import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -51,12 +52,12 @@ public class GetACLTest extends MemoryFileSystemTest
          new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       getAclTestFolder.addChild(file);
 
-      AccessControlEntry adminACE = new AccessControlEntry();
+      AccessControlEntry adminACE = new AccessControlEntryImpl();
       adminACE.setPrincipal("admin");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
-      AccessControlEntry userACE = new AccessControlEntry();
+      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
+      AccessControlEntry userACE = new AccessControlEntryImpl();
       adminACE.setPrincipal("john");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.READ.value())));
+      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
       file.updateACL(Arrays.asList(adminACE, userACE), true);
 
       fileId = file.getId();
@@ -86,9 +87,9 @@ public class GetACLTest extends MemoryFileSystemTest
 
    public void testGetACLNoPermissions() throws Exception
    {
-      AccessControlEntry ace = new AccessControlEntry();
+      AccessControlEntry ace = new AccessControlEntryImpl();
       ace.setPrincipal("admin");
-      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
       file.updateACL(Arrays.asList(ace), true);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();

@@ -36,6 +36,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.ide.core.Response;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,18 +46,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.util.Enumeration;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Created by The eXo Platform SAS.
@@ -150,7 +144,6 @@ public class VirtualFileSystemUtils
    }
 
    /**
-    * @param filePath
     * @param mimeType
     * @param storageUrl
     * @return HTTPStatus code
@@ -510,7 +503,7 @@ public class VirtualFileSystemUtils
          parser.parse(connection.getInputStream());
 
          connection.getInputStream().close();
-         vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfo.class, parser.getJsonObject());
+         vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfoImpl.class, parser.getJsonObject());
 
          JsonValue element = parser.getJsonObject().getElement("root").getElement("links");
 

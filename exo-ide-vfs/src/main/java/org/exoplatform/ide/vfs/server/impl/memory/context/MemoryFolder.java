@@ -27,6 +27,7 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -149,7 +150,7 @@ public class MemoryFolder extends MemoryItem
 
    public void setProjectType(String projectType) throws VirtualFileSystemException
    {
-      updateProperties(Arrays.asList(new Property("vfs:projectType", projectType)));
+      updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:projectType", projectType)));
       lastModificationDate = System.currentTimeMillis();
    }
 

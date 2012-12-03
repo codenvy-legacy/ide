@@ -22,6 +22,7 @@ import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.ApplicationFile;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.Crashes;
 import org.exoplatform.ide.extension.cloudfoundry.server.json.CreateApplication;
@@ -40,12 +41,12 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemService;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -81,10 +82,10 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import static org.exoplatform.ide.commons.FileUtils.*;
+import static org.exoplatform.ide.commons.JsonHelper.*;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
-import static org.exoplatform.ide.commons.JsonHelper.*;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -2058,7 +2059,7 @@ public class Cloudfoundry
    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String name)
       throws VirtualFileSystemException
    {
-      Property p = new Property("cloudfoundry-application", name);
+      Property p = new PropertyImpl("cloudfoundry-application", name);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
@@ -2084,7 +2085,7 @@ public class Cloudfoundry
    private void writeServerName(VirtualFileSystem vfs, String projectId, String server)
       throws VirtualFileSystemException
    {
-      Property p = new Property("vmc-target", server);
+      Property p = new PropertyImpl("vmc-target", server);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);

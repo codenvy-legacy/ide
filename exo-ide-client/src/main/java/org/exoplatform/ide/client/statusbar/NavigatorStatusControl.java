@@ -18,9 +18,7 @@
  */
 package org.exoplatform.ide.client.statusbar;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.gwt.resources.client.ImageResource;
 import org.exoplatform.gwtframework.ui.client.command.StatusTextControl;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -53,7 +51,8 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import com.google.gwt.resources.client.ImageResource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -114,7 +113,6 @@ public class NavigatorStatusControl extends StatusTextControl implements IDECont
 
       /**
        * @param originalStatusMessage
-       * @param icon
        * @return
        */
       private String tuneMessage(String originalStatusMessage, String iconHTML)

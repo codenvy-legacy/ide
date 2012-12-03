@@ -44,7 +44,6 @@ import org.exoplatform.ide.client.navigator.NavigatorPresenter;
 import org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter;
 import org.exoplatform.ide.client.operation.cutcopy.CutCopyPasteItemsCommandHandler;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter;
-import org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter;
 import org.exoplatform.ide.client.operation.gotofolder.GoToFolderCommandHandler;
 import org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter;
 import org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter;

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.client.operation.cutcopy;
 
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -185,9 +184,9 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
 
       final Item item = itemsToCopy.get(0);
 
-      if (folderFromPaste.equals(folderToPaste) || folderToPaste.equals(item.getPath()))
+      if (folderFromPaste.equals(folderToPaste) || folderToPaste.getPath().equals(item.getPath()))
       {
-         String message = IDE.ERRORS_CONSTANT.pasteItemsCantCopyToTheSameFolder();;
+         String message = IDE.ERRORS_CONSTANT.pasteItemsCantCopyToTheSameFolder();
          Dialogs.getInstance().showError(message);
          return;
       }
@@ -260,7 +259,7 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
                   {
                      public void booleanValueReceived(Boolean value)
                      {
-                        if (value != null && value == true)
+                        if (value != null && value)
                         {
                            try
                            {
@@ -382,9 +381,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       openedFiles = event.getOpenedFiles();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
-    */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
@@ -392,7 +388,7 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
          event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
       }
 
-      lockTokens = (Map<String, String>)event.getApplicationSettings().getValueAsMap("lock-tokens");
+      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
    }
 
 }

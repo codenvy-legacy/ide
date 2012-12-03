@@ -19,7 +19,6 @@
 package org.eclipse.jdt.client;
 
 import com.google.gwt.event.shared.GwtEvent;
-
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 

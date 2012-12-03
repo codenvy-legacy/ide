@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -176,8 +175,6 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
    /**
     * Check, is work directory contains <code>pom.xml</code> file.
-    * 
-    * @param workDir
     */
    private void isBuildApplication()
    {
@@ -213,7 +210,7 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
                }
             });
       }
-      catch (RequestException e)
+      catch (RequestException ignored)
       {
       }
    }

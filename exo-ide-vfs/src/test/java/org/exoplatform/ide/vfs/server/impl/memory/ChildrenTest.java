@@ -23,11 +23,14 @@ import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemImpl;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -58,15 +61,15 @@ public class ChildrenTest extends MemoryFileSystemTest
 
       MemoryFile file = new MemoryFile("ChildrenTest_FILE01", "text/plain",
          new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
-      file.updateProperties(Arrays.asList(new Property("PropertyA", "A"), new Property("PropertyB", "B")));
+      file.updateProperties(Arrays.<Property>asList(new PropertyImpl("PropertyA", "A"), new PropertyImpl("PropertyB", "B")));
       folder.addChild(file);
 
       MemoryFolder folder1 = new MemoryFolder("ChildrenTest_FOLDER01");
-      folder1.updateProperties(Arrays.asList(new Property("PropertyA", "A"), new Property("PropertyB", "B")));
+      folder1.updateProperties(Arrays.<Property>asList(new PropertyImpl("PropertyA", "A"), new PropertyImpl("PropertyB", "B")));
       folder.addChild(folder1);
 
       MemoryFolder folder2 = new MemoryFolder("ChildrenTest_FOLDER02");
-      folder2.updateProperties(Arrays.asList(new Property("PropertyA", "A"), new Property("PropertyB", "B")));
+      folder2.updateProperties(Arrays.<Property>asList(new PropertyImpl("PropertyA", "A"), new PropertyImpl("PropertyB", "B")));
       folder.addChild(folder2);
 
       memoryContext.putItem(childrenTestFolder);
@@ -96,9 +99,9 @@ public class ChildrenTest extends MemoryFileSystemTest
 
    public void testGetChildrenNoPermissions() throws Exception
    {
-      AccessControlEntry ace = new AccessControlEntry();
+      AccessControlEntry ace = new AccessControlEntryImpl();
       ace.setPrincipal("admin");
-      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
       memoryContext.getItem(folderId).updateACL(Arrays.asList(ace), true);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -128,7 +131,7 @@ public class ChildrenTest extends MemoryFileSystemTest
 
       // Skip first item in result.
       path = SERVICE_URI + "children/" + folderId + "?" + "skipCount=" + 1;
-      checkPage(path, "GET", Item.class.getMethod("getName"), all);
+      checkPage(path, "GET", ItemImpl.class.getMethod("getName"), all);
    }
 
    @SuppressWarnings("unchecked")
@@ -148,7 +151,7 @@ public class ChildrenTest extends MemoryFileSystemTest
       // Exclude last item from result.
       path = SERVICE_URI + "children/" + folderId + "?" + "maxItems=" + 2;
       all.remove(2);
-      checkPage(path, "GET", Item.class.getMethod("getName"), all);
+      checkPage(path, "GET", ItemImpl.class.getMethod("getName"), all);
    }
 
    @SuppressWarnings("unchecked")

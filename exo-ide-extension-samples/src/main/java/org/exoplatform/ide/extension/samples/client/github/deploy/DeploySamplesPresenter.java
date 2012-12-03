@@ -27,7 +27,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -60,7 +59,7 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.LinkedHashMap;
@@ -423,12 +422,12 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    private void convertToProject(FolderModel folderModel)
    {
       String projectType = data.getType();
-      folderModel.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folderModel.getProperties().add(new Property("vfs:projectType", projectType));
+      folderModel.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folderModel.getProperties().add(new PropertyImpl("vfs:projectType", projectType));
 
       if (!data.getTargets().isEmpty())
       {
-         folderModel.getProperties().add(new Property(ProjectProperties.TARGET.value(), data.getTargets()));
+         folderModel.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), data.getTargets()));
       }
 
       ItemWrapper item = new ItemWrapper(new ProjectModel());

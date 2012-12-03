@@ -73,9 +73,6 @@ public class NewItemControlsFormatter implements ControlsFormatter
 
    }
 
-   /**
-    * @param eventBus
-    */
    public NewItemControlsFormatter()
    {
       initControlsOrder();

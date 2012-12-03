@@ -29,7 +29,6 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -69,6 +68,7 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -647,8 +647,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    private void writeBuildInfo(BuildStatus buildStatus)
    {
-      project.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
-      project.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
+      project.getProperties().add(new PropertyImpl(LAST_SUCCESS_BUILD, buildStatus.getTime()));
+      project.getProperties().add(new PropertyImpl(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
       try
       {
          VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()

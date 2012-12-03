@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.client.restdiscovery.ui;
 
-import java.util.List;
-import java.util.Set;
-
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.TreeItem;
 import org.exoplatform.gwtframework.commons.wadl.Method;
 import org.exoplatform.gwtframework.commons.wadl.Request;
 import org.exoplatform.gwtframework.commons.wadl.Resource;
@@ -31,8 +30,8 @@ import org.exoplatform.ide.client.framework.discovery.RestService;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.restdiscovery.UntypedTreeGrid;
 
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.TreeItem;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -275,9 +274,6 @@ public class RestServiceTree extends Tree<Object> implements UntypedTreeGrid
       return null;
    }
 
-   /**
-    * @see org.exoplatform.ide.client.component.Tree#doUpdateValue()
-    */
    @Override
    public void doUpdateValue()
    {

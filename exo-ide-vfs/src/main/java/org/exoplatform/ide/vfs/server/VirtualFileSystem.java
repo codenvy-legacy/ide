@@ -30,10 +30,10 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.ItemNode;
-import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemNode;
+import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -239,7 +239,7 @@ public interface VirtualFileSystem
     *    if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException
     *    if any other errors occur
-    * @see VirtualFileSystemInfo#getAclCapability()
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl#getAclCapability()
     */
    @GET
    @Path("acl")
@@ -577,7 +577,7 @@ public interface VirtualFileSystem
     *    if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException
     *    if any other errors occur
-    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo#isLockSupported()
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl#isLockSupported()
     */
    @POST
    @Path("lock")
@@ -680,7 +680,7 @@ public interface VirtualFileSystem
     *    </ul>
     * @throws VirtualFileSystemException
     *    if any other errors occur
-    * @see VirtualFileSystemInfo#getQueryCapability()
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl#getQueryCapability()
     */
    @POST
    @Path("search")
@@ -709,7 +709,7 @@ public interface VirtualFileSystem
     *    </ul>
     * @throws VirtualFileSystemException
     *    if any other errors occur
-    * @see VirtualFileSystemInfo#getQueryCapability()
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl#getQueryCapability()
     */
    @GET
    @Path("search")
@@ -773,7 +773,7 @@ public interface VirtualFileSystem
     *    if user which perform operation has no permissions to do it
     * @throws VirtualFileSystemException
     *    if any other errors occur
-    * @see VirtualFileSystemInfo#getAclCapability()
+    * @see org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl#getAclCapability()
     */
    @POST
    @Path("acl")

@@ -662,15 +662,16 @@ public class Debugger implements EventsHandler
       if (hitBreakpoint)
       {
          com.sun.jdi.Location location = event.location();
-         BreakPointEvent breakPointEvent =
-            new BreakPointEventImpl(new BreakPointImpl(new LocationImpl(location.declaringType().name(),
-               location.lineNumber())));
+         BreakPointEvent breakPointEvent;
          synchronized (events)
          {
+            breakPointEvent =
+               new BreakPointEventImpl(new BreakPointImpl(new LocationImpl(location.declaringType().name(),
+                  location.lineNumber())));
             events.add(breakPointEvent);
          }
 
-         List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>(1);
+         List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>();
          eventsList.add(breakPointEvent);
          publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
       }
@@ -684,13 +685,14 @@ public class Debugger implements EventsHandler
    {
       setCurrentThread(event.thread());
       com.sun.jdi.Location location = event.location();
-      StepEvent stepEvent = new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber()));
+      StepEvent stepEvent;
       synchronized (events)
       {
+         stepEvent = new StepEventImpl(new LocationImpl(location.declaringType().name(), location.lineNumber()));
          events.add(stepEvent);
       }
 
-      List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>(1);
+      List<DebuggerEvent> eventsList = new ArrayList<DebuggerEvent>();
       eventsList.add(stepEvent);
       publishWebSocketMessage(new DebuggerEventListImpl(eventsList), EVENTS_CHANNEL + id);
 

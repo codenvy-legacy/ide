@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2010 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,35 +19,39 @@
 package org.exoplatform.ide.vfs.shared;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: StringProperty.java 65773 2011-02-02 13:46:50Z andrew00x $
+ * The Project - folder w/ special meaning.
  */
-public class StringProperty extends Property
+public class ProjectImpl extends FolderImpl implements Project
 {
-   public StringProperty()
+
+   protected String projectType;
+
+   @SuppressWarnings("rawtypes")
+   public ProjectImpl(String id, String name, String mimeType, String path, String parentId, long creationDate,
+                      List<Property> properties, Map<String, Link> links, String projectType)
    {
-      super();
+      super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
+      this.projectType = projectType;
    }
 
-   public StringProperty(String name, String value)
+   public ProjectImpl()
    {
-      super(name, value);
+      super(ItemType.PROJECT);
+      mimeType = PROJECT_MIME_TYPE;
    }
 
-   public StringProperty(String name, List<String> value)
+   @Override
+   public String getProjectType()
    {
-      super(name, value);
+      return projectType;
    }
 
-   public List<String> getValue()
+   @Override
+   public void setProjectType(String projectType)
    {
-      return value;
-   }
-
-   public void setValue(List<String> value)
-   {
-      this.value = value;
+      this.projectType = projectType;
    }
 }

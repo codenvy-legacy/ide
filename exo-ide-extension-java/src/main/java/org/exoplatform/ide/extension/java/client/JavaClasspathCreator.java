@@ -102,7 +102,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
    }
 
    /**
-    * 
+    *
     */
    public JavaClasspathCreator(String restContext)
    {
@@ -117,11 +117,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       project = event.getProject();
-      if (project.getProjectType().equals(ProjectType.MultiModule.value()))
-      {
-         doBuildAndPublish();
-      }
-      else if (projectTypes.contains(project.getProjectType()) && !project.hasProperty("exoide:classpath"))
+      if (projectTypes.contains(project.getProjectType()) && !project.hasProperty("exoide:classpath"))
       {
          generateClassPath(project.getId());
       }
@@ -130,47 +126,48 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
    /**
     * Start the build of project and publish it to public repository.
     */
-   private void doBuildAndPublish()
-   {
-      statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1));
-      statusHandler.requestInProgress(project.getId());
-      try
-      {
-         BuilderClientService.getInstance().buildAndPublish(project.getId(),
-            VirtualFileSystem.getInstance().getInfo().getId(),
-            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
-            {
-               @Override
-               protected void onSuccess(StringBuilder result)
-               {
-                  buildID = result.substring(result.lastIndexOf("/") + 1);
-                  previousStatus = null;
-                  refreshBuildStatusTimer.schedule(delay);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  statusHandler.requestError(project.getId(), exception);
-                  if (exception instanceof ServerException && exception.getMessage() != null)
-                  {
-                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
-                  }
-                  else
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
-      }
-   }
+//   //TODO for vparfonov: delete this or leave for feature?
+//   private void doBuildAndPublish()
+//   {
+//      statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1));
+//      statusHandler.requestInProgress(project.getId());
+//      try
+//      {
+//         BuilderClientService.getInstance().buildAndPublish(project.getId(),
+//            VirtualFileSystem.getInstance().getInfo().getId(),
+//            new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
+//            {
+//               @Override
+//               protected void onSuccess(StringBuilder result)
+//               {
+//                  buildID = result.substring(result.lastIndexOf("/") + 1);
+//                  previousStatus = null;
+//                  refreshBuildStatusTimer.schedule(delay);
+//               }
+//
+//               @Override
+//               protected void onFailure(Throwable exception)
+//               {
+//                  statusHandler.requestError(project.getId(), exception);
+//                  if (exception instanceof ServerException && exception.getMessage() != null)
+//                  {
+//                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
+//                  }
+//                  else
+//                  {
+//                     IDE.fireEvent(new ExceptionThrownEvent(exception));
+//                  }
+//               }
+//            });
+//      }
+//      catch (RequestException e)
+//      {
+//         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
+//      }
+//   }
 
    /**
-    * @param id
+    * @param projectId
     */
    private void generateClassPath(String projectId)
    {
@@ -235,7 +232,9 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
                protected void onFailure(Throwable exception)
                {
                   IDE.fireEvent(new ExceptionThrownEvent(exception));
-               };
+               }
+
+               ;
 
             });
          }
@@ -248,7 +247,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
 
    /**
     * Check for status and display necessary messages.
-    * 
+    *
     * @param buildStatus status of build
     */
    private void updateBuildStatus(BuildStatus buildStatus)
@@ -271,7 +270,7 @@ public class JavaClasspathCreator implements ProjectOpenedHandler
 
    /**
     * Perform actions after build is finished.
-    * 
+    *
     * @param buildStatus status of build job
     */
    private void afterBuildFinished(BuildStatus buildStatus)

@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.folder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -32,6 +29,9 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by The eXo Platform SAS.

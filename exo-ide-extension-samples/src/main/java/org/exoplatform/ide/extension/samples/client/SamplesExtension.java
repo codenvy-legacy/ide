@@ -26,7 +26,6 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
-import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
@@ -42,10 +41,10 @@ import org.exoplatform.ide.git.client.github.GitHubClientServiceImpl;
 
 /**
  * Samples extension for IDE.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesExtension.java Sep 2, 2011 12:34:36 PM vereshchaka $
- * 
+ *
  */
 public class SamplesExtension extends Extension implements InitializeServicesHandler
 {
@@ -81,7 +80,6 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       new StartPagePresenter();
-      new ConvertToProjectPresenter();
       new OAuthLoginPresenter();
 
       // Import from GitHub

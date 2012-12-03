@@ -71,6 +71,7 @@ import org.exoplatform.ide.client.outline.OutlinePresenter;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
+import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
@@ -83,7 +84,7 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@exoplatform.com.ua">Dmytro Nochevnov</a>
  * @version $Id: $
  */
@@ -191,6 +192,7 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new UnsupportedBrowserHandler();
 
       new IDEDebug();
+      new ProjectPreparePresenter();
 
       // initialize extensions
       for (Extension ext : getExtensions())

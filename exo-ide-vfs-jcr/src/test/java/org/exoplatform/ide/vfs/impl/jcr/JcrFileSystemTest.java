@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import junit.framework.TestCase;
-
 import org.everrest.core.RequestHandler;
 import org.everrest.core.impl.ApplicationContextImpl;
 import org.everrest.core.impl.ContainerResponse;
@@ -32,7 +31,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
@@ -369,7 +368,7 @@ public abstract class JcrFileSystemTest extends TestCase
             link.getHref());
 
          link = links.get(Link.REL_CREATE_PROJECT);
-         if (item instanceof Project)
+         if (item instanceof ProjectImpl)
          {
             assertNull("'" + Link.REL_CREATE_PROJECT + "' link not allowed for project. ", link);
          }

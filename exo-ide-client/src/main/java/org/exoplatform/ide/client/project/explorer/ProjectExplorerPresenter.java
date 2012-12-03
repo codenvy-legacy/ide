@@ -18,14 +18,27 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONParser;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -89,7 +102,6 @@ import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
-import org.exoplatform.ide.vfs.client.ItemNode;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
@@ -108,38 +120,25 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
-import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
- * 
+ *
  */
 
 public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
@@ -173,9 +172,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    private ProjectModel openedProject;
 
    private ProjectModel currentProject;
-   
+
    private boolean openFileAfterGotoItem = false;
-   
+
    private CursorPosition openFileCursorPosition = null;
 
    private FileModel editorActiveFile;
@@ -183,8 +182,8 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    private ApplicationSettings applicationSettings;
 
    private boolean ideLoadComplete = false;
-   
-   private List<String> itemsToBeOpened = new ArrayList<String>();   
+
+   private List<String> itemsToBeOpened = new ArrayList<String>();
 
    public ProjectExplorerPresenter()
    {
@@ -298,7 +297,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Perform actions when folder is closed in browser tree.
-    * 
+    *
     * @param folder closed folder
     */
    public void onCloseFolder(Folder folder)
@@ -313,9 +312,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    }
 
    /**
-    * 
+    *
     * Handling item selected event from browser
-    * 
+    *
     */
    protected void onItemSelected()
    {
@@ -357,7 +356,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Handling of folder opened event from browser
-    * 
+    *
     * @param openedFolder
     */
    protected void onFolderOpened(Folder openedFolder)
@@ -408,7 +407,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
 
       foldersToRefresh = event.getFolders();
-      
+
       if (foldersToRefresh == null || foldersToRefresh.size() == 0)
       {
          foldersToRefresh = new ArrayList<Folder>();
@@ -424,7 +423,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
             {
                foldersToRefresh.add((Folder)item);
             }
-         }         
+         }
       }
 
       display.setUpdateTreeValue(false);
@@ -433,7 +432,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Refresh folder's properties.
-    * 
+    *
     * @param folder
     */
    private void refreshFolderProperties(final Folder folder)
@@ -512,9 +511,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          if (i instanceof ItemContext)
          {
-            ItemContext contect = (ItemContext)i;
-            contect.setParent(new FolderModel(folder));
-            contect.setProject(map.get(i.getId()) != null ? map.get(i.getId()) : openedProject);
+            ItemContext context = (ItemContext)i;
+            context.setParent(new FolderModel(folder));
+            context.setProject(map.get(i.getId()) != null ? map.get(i.getId()) : openedProject);
          }
       }
 
@@ -565,7 +564,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * Select chosen item in browser.
-    * 
+    *
     */
    public void onSelectItem(SelectItemEvent event)
    {
@@ -770,7 +769,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
 
-      // Folder folder = (Folder)navigatorSelectedItems.get(0);
       foldersToRefresh.clear();
       foldersToRefresh.add(openedProject);
       if (openedProject.getProjectType().equals(ProjectType.MultiModule.value()))
@@ -779,7 +777,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          {
             AutoBean<ItemNode> autoBean = org.exoplatform.ide.client.IDE.AUTO_BEAN_FACTORY.itemNode();
             AutoBeanUnmarshaller<ItemNode> unmarshaller = new AutoBeanUnmarshaller<ItemNode>(autoBean);
-            //            ProjectModel project = new ProjectModel();
             VirtualFileSystem.getInstance().getProjectTree(openedProject.getId(),
                new AsyncRequestCallback<ItemNode>(unmarshaller)
                {
@@ -801,8 +798,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          }
          catch (RequestException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
       else
@@ -964,7 +960,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
       String[] parts = fileModel.getPath().split("/");
       String work = "";
-       
+
       for (int i = 0; i < parts.length; i++)
       {
          String part = parts[i];
@@ -1037,7 +1033,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
       String path = itemsToBeOpened.get(0);
       itemsToBeOpened.remove(0);
-      
+
       try
       {
          VirtualFileSystem.getInstance().getItemByPath(path,
@@ -1099,10 +1095,10 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
+
    /*
-    * Linking With Editor functionality
-    */
+   * Linking With Editor functionality
+   */
 
    /**
     * Enabled or disabled Linking with Editor.
@@ -1242,49 +1238,49 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
             ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+         {
+            @Override
+            protected void onSuccess(List<Item> result)
             {
-               @Override
-               protected void onSuccess(List<Item> result)
+               if (openedProject != null)
                {
-                  if (openedProject != null)
-                  {
-                     display.setProjectsListGridVisible(false);
-                     IDE.fireEvent(new ProjectSelectedEvent(null));
-                     display.setProjectNotOpenedPanelVisible(false);
-                     return;
-                  }
+                  display.setProjectsListGridVisible(false);
+                  IDE.fireEvent(new ProjectSelectedEvent(null));
+                  display.setProjectNotOpenedPanelVisible(false);
+                  return;
+               }
 
-                  List<ProjectModel> projects = new ArrayList<ProjectModel>();
-                  for (Item item : result)
+               List<ProjectModel> projects = new ArrayList<ProjectModel>();
+               for (Item item : result)
+               {
+                  if (item instanceof ProjectModel)
                   {
-                     if (item instanceof ProjectModel)
-                     {
-                        projects.add((ProjectModel)item);
-                     }
-                  }
-
-                  Collections.sort(projects, PROJECT_COMPARATOR);
-                  display.getProjectsListGrid().setValue(projects);
-
-                  if (projects.size() == 0)
-                  {
-                     display.setProjectsListGridVisible(false);
-                     IDE.fireEvent(new ProjectSelectedEvent(null));
-                     display.setProjectNotOpenedPanelVisible(true);
-                  }
-                  else
-                  {
-                     display.setProjectsListGridVisible(true);
-                     display.setProjectNotOpenedPanelVisible(false);
+                     projects.add((ProjectModel)item);
                   }
                }
 
-               @Override
-               protected void onFailure(Throwable exception)
+               Collections.sort(projects, PROJECT_COMPARATOR);
+               display.getProjectsListGrid().setValue(projects);
+
+               if (projects.size() == 0)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+                  display.setProjectsListGridVisible(false);
+                  IDE.fireEvent(new ProjectSelectedEvent(null));
+                  display.setProjectNotOpenedPanelVisible(true);
                }
-            });
+               else
+               {
+                  display.setProjectsListGridVisible(true);
+                  display.setProjectNotOpenedPanelVisible(false);
+               }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+            }
+         });
       }
       catch (RequestException e)
       {
@@ -1309,9 +1305,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * TODO Temporary method.
-    * 
+    *
     * Detected whether project type is deprecated or not.
-    * 
+    *
     * @param project
     * @return <code>true</code> if deprecated
     */
@@ -1323,15 +1319,15 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    /**
     * TODO Temporary method.
-    * 
+    *
     * Is used to detect and set targets to deprecated project types (to support them).
-    * 
+    *
     * @param project
     */
    private void setTargets(ProjectModel project)
    {
       ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
-      project.getProperties().add(new Property(ProjectProperties.TARGET.value(), targets));
+      project.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), targets));
 
       try
       {
@@ -1362,7 +1358,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
     */
    private void parseProjectTree(ProjectModel model, ItemNode result)
    {
-      ProjectModel curentProject = model;
+      ProjectModel currentProject = model;
       List<ItemNode> children = result.getChildren();
       for (ItemNode itemNode : children)
       {
@@ -1376,10 +1372,10 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          }
          else
          {
-            map.put(itemNode.getItem().getId(), curentProject);
+            map.put(itemNode.getItem().getId(), currentProject);
             if (itemNode.getItem().getItemType().equals(ItemType.FOLDER))
             {
-               parseProjectTree(curentProject, itemNode);
+               parseProjectTree(currentProject, itemNode);
             }
          }
       }

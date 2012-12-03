@@ -26,9 +26,9 @@
    if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
    site: http://www.fsf.org. -->
 <module>
-   <inherits name='com.google.gwt.user.User' />
-   <inherits name='org.exoplatform.ide.vfs.IDEVFS' />
-   <inherits name="org.exoplatform.gwtframework.ui.UITextEditor" />
+   <inherits name='com.google.gwt.user.User'/>
+   <inherits name='org.exoplatform.ide.vfs.IDEVFS'/>
+   <inherits name="org.exoplatform.gwtframework.ui.UITextEditor"/>
 
    <!-- replace-with class="org.exoplatform.gwtframework.ui.client.component.BorderImpl">
       <when-type-is class="org.exoplatform.gwtframework.ui.client.component.Border" />
@@ -42,217 +42,222 @@
    </replace-with -->
 
    <replace-with class="org.exoplatform.ide.client.progress.ui.ProgressView">
-      <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.progress.SingleJobView">
-      <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay" />
+      <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.createfolder.CreateFolderView">
-      <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.navigator.NavigatorView">
-      <when-type-is class="org.exoplatform.ide.client.framework.project.NavigatorDisplay" />
+      <when-type-is class="org.exoplatform.ide.client.framework.project.NavigatorDisplay"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
-      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.search.SearchResultsViewExtended">
-      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchResultsPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.properties.PropertiesView">
-      <when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.properties.PropertiesPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.deleteitem.DeleteItemView">
-      <when-type-is class="org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.geturl.GetItemURLView">
-      <when-type-is class="org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.geturl.GetItemURLPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.workspace.ui.SelectWorkspaceView">
-      <when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.workspace.SelectWorkspacePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.outline.OutlineView">
-      <when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.outline.OutlinePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.preview.PreviewHTMLView">
-      <when-type-is class="org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.preview.PreviewHTMLPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.about.AboutIDEView">
-      <when-type-is class="org.exoplatform.ide.client.about.AboutIDEPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.about.AboutIDEPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.restdiscovery.ui.RestServicesDiscoveryView">
-      <when-type-is class="org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.findtext.FindTextView">
-      <when-type-is class="org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.findtext.FindTextPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.gotoline.GoToLineView">
-      <when-type-is class="org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.gotoline.GoToLinePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.create.CreateProjectView">
-      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectForm">
-      <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.template.CreateProjectTemplateView">
-      <when-type-is class="org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplateView">
-      <when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.editor.custom.OpenFileWithView">
-      <when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.editor.custom.OpenFileWithPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.output.OutputView">
-      <when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.output.OutputPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.toolbar.CustomizeToolbarView">
-      <when-type-is class="org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysView">
-      <when-type-is class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.hotkeys.show.ShowHotKeysView">
-      <when-type-is class="org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.hotkeys.show.ShowHotKeysPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.documentation.DocumentationView">
-      <when-type-is class="org.exoplatform.ide.client.documentation.DocumentationPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.documentation.DocumentationPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.template.ui.SaveAsTemplateView">
-      <when-type-is class="org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.template.SaveAsTemplatePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.dialogs.AskForValueView">
-      <when-type-is class="org.exoplatform.ide.client.dialogs.AskForValueDialog.Display" />
+      <when-type-is class="org.exoplatform.ide.client.dialogs.AskForValueDialog.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.authentication.LoginView">
-      <when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.authentication.LoginPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathView">
-      <when-type-is class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.openbypath.OpenFileByPathPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLView">
-      <when-type-is class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.openbyurl.OpenFileByURLPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
-      <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.versioning.VersionsListView">
-      <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.versioning.VersionsListPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFileView">
-      <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFilePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFilePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.rename.RenameFolderView">
-      <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFolderPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.rename.RenameFolderPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.permissions.PermissionsManagerView">
-      <when-type-is class="org.exoplatform.ide.client.permissions.PermissionsManagerPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.permissions.PermissionsManagerPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.uploadzip.UploadZipView">
-      <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.uploadzip.UploadZipPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypeView">
-      <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.DeployNodeTypePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypeView">
-      <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.chromattic.client.ui.GenerateNodeTypePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathView">
-      <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ChooseSourcePathPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathView">
-      <when-type-is class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.groovy.client.classpath.ui.ConfigureBuildPathPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFileView">
-      <when-type-is class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.openlocalfile.OpenLocalFilePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.uploadfile.UploadFileView">
-      <when-type-is class="org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.uploadfile.UploadFilePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.explorer.ProjectExplorerView">
-      <when-type-is class="org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay" />
+      <when-type-is class="org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.list.ShowProjectsView">
-      <when-type-is class="org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.project.list.ShowProjectsPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.resource.OpenResourceView">
-      <when-type-is class="org.exoplatform.ide.client.project.resource.OpenResourcePresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.project.resource.OpenResourcePresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.properties.ProjectPropertiesView">
-      <when-type-is class="org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.properties.EditPropertyView">
-      <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.project.properties.EditPropertyPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.debug.ShowImagesView">
-      <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.debug.ShowImagesPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
-      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display"/>
    </replace-with>
    <replace-with class="org.exoplatform.ide.client.operation.search.SearchFilesView">
-      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.operation.search.SearchFilesPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.preferences.PreferencesView">
-      <when-type-is class="org.exoplatform.ide.client.preferences.PreferencesPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.preferences.PreferencesPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsView">
-      <when-type-is class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter.Display" />
+      <when-type-is class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserView">
-      <when-type-is class="org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler.Display" />
+      <when-type-is class="org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler.Display"/>
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.client.project.prepare.ProjectPrepareView">
+      <when-type-is class="org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter.Display"/>
    </replace-with>
 </module>

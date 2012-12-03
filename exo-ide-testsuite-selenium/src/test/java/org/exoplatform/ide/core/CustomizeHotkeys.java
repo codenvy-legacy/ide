@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertEquals;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

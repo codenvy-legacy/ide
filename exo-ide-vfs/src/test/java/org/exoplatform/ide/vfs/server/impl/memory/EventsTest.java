@@ -28,6 +28,7 @@ import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -227,7 +228,7 @@ public class EventsTest extends MemoryFileSystemTest
    public void testStartProjectUpdateListener() throws Exception
    {
       MemoryFolder project = new MemoryFolder("project");
-      project.updateProperties(Arrays.asList(new Property("vfs:mimeType", "text/vnd.ideproject+directory")));
+      project.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:mimeType", "text/vnd.ideproject+directory")));
       assertTrue(project.isProject());
       testEventsFolder.addChild(project);
       memoryContext.putItem(project);
@@ -243,7 +244,7 @@ public class EventsTest extends MemoryFileSystemTest
    public void testStopProjectUpdateListener() throws Exception
    {
       MemoryFolder project = new MemoryFolder("project");
-      project.updateProperties(Arrays.asList(new Property("vfs:mimeType", "text/vnd.ideproject+directory")));
+      project.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:mimeType", "text/vnd.ideproject+directory")));
       assertTrue(project.isProject());
       testEventsFolder.addChild(project);
       memoryContext.putItem(project);
@@ -262,7 +263,7 @@ public class EventsTest extends MemoryFileSystemTest
    public void testProjectUpdateListener() throws Exception
    {
       MemoryFolder project = new MemoryFolder("project");
-      project.updateProperties(Arrays.asList(new Property("vfs:mimeType", "text/vnd.ideproject+directory")));
+      project.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:mimeType", "text/vnd.ideproject+directory")));
       assertTrue(project.isProject());
       testEventsFolder.addChild(project);
       memoryContext.putItem(project);

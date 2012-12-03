@@ -16,8 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
-
+package org.exoplatform.ide.vfs.shared;
 
 import java.util.List;
 
@@ -25,24 +24,43 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface ItemNode
+public class ItemNodeImpl implements ItemNode
 {
-   Item getItem();
+   private Item item;
+   private List<ItemNode> children;
 
-   void setItem(Item item);
+   public ItemNodeImpl(Item item, List<ItemNode> children)
+   {
+      this.item = item;
+      this.children = children;
+   }
 
-   /**
-    * Get children of item.
-    *
-    * @return children of item. Always return <code>null</code> for files
-    */
-   List<ItemNode> getChildren();
+   public ItemNodeImpl(Item item)
+   {
+      this(item, null);
+   }
 
-   /**
-    * Set children of item.
-    *
-    * @param children
-    *    of item. Always must be <code>null</code> for files
-    */
-   void setChildren(List<ItemNode> children);
+   @Override
+   public Item getItem()
+   {
+      return item;
+   }
+
+   @Override
+   public void setItem(Item item)
+   {
+      this.item = item;
+   }
+
+   @Override
+   public List<ItemNode> getChildren()
+   {
+      return children;
+   }
+
+   @Override
+   public void setChildren(List<ItemNode> children)
+   {
+      this.children = children;
+   }
 }

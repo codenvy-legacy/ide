@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.junit.Before;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by The eXo Platform SAS .
