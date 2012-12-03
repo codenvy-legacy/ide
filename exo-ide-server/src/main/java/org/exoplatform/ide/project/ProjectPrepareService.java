@@ -62,6 +62,6 @@ public class ProjectPrepareService
 
       ProjectPrepare project = new ProjectPrepare(vfs);
 
-      project.doPrepare(localPathResolver.resolve(vfs, folderId));
+      project.doPrepare(localPathResolver.resolve(vfs, folderId), folderId);
    }
 }
