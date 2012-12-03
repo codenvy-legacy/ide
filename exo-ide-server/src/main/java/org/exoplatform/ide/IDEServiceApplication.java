@@ -19,7 +19,6 @@
 package org.exoplatform.ide;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.codenow.FileAppearListener;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
 import org.exoplatform.ide.template.TemplatesRestService;
@@ -66,7 +65,6 @@ public class IDEServiceApplication extends Application
       classes.add(RequestContextResolver.class);
       classes.add(RestConversationState.class);
       classes.add(GoogleContactsRestService.class);
-      classes.add(FileAppearListener.class);
    }
 
    /**
