@@ -41,10 +41,12 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -181,32 +183,33 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    private void setUserProjectType(String projectType)
    {
       final List<Property> properties = new ArrayList<Property>();
-      properties.add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
 
       if (!"none".equals(projectType))
       {
 //         properties.add(new Property("vfs:projectType", ProjectType.fromValue(projectType).value()));
-         properties.add(new Property("vfs:projectType", projectType));
+         properties.add(new PropertyImpl("vfs:projectType", projectType));
       }
 
       try
       {
-         VirtualFileSystem.getInstance().getItemById(folderId, new AsyncRequestCallback<ItemWrapper>()
-         {
-            @Override
-            protected void onSuccess(ItemWrapper result)
+         VirtualFileSystem.getInstance().getItemById(folderId,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
             {
-               Item item = result.getItem(); //TODO here is js null error gotten
-               item.getProperties().addAll(properties);
-               writeUserPropertiesToProject((ProjectModel)item);
-            }
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  Item item = result.getItem(); //TODO here is js null error gotten
+                  item.getProperties().addAll(properties);
+                  writeUserPropertiesToProject((ProjectModel)item);
+               }
 
-            @Override
-            protected void onFailure(Throwable e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable e)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(e));
+               }
+            });
       }
       catch (RequestException e)
       {
