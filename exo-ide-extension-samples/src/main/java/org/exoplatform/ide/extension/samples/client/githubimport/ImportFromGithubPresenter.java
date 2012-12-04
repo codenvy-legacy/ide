@@ -45,11 +45,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
@@ -76,7 +74,7 @@ import java.util.List;
  *
  */
 public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler,
-   GithubStep<ProjectData>, UserInfoReceivedHandler, VfsChangedHandler
+   UserInfoReceivedHandler, VfsChangedHandler
 {
    public interface Display extends IsView
    {
@@ -99,7 +97,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
        *
        * @return {@link HasClickHandlers} button's click handler
        */
-      HasClickHandlers getNextButton();
+      HasClickHandlers getFinishButton();
 
       /**
        * Returns cancel button's click handler.
@@ -120,14 +118,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
        *
        * @param enabled enabled state of the next button
        */
-      void setNextButtonEnabled(boolean enabled);
-
-      /**
-       * Show/hide the import step.
-       *
-       * @param show
-       */
-      void showImportStep(boolean show);
+      void setFinishButtonEnabled(boolean enabled);
    }
 
    private UserInfo userInfo;
@@ -178,17 +169,17 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
             {
                data = event.getSelectedItem();
                display.getProjectNameField().setValue(event.getSelectedItem().getName());
-               display.setNextButtonEnabled(true);
+               display.setFinishButtonEnabled(true);
             }
          }
       });
 
-      display.getNextButton().addClickHandler(new ClickHandler()
+      display.getFinishButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            if (!display.getProjectNameField().getValue().isEmpty())
+            if (data != null && !display.getProjectNameField().getValue().isEmpty())
             {
                createFolder();
             }
@@ -219,6 +210,12 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                      readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
                   }
                   display.getRepositoriesGrid().setValue(projectDataList);
+
+                  if (projectDataList.size() != 0)
+                  {
+                     display.getRepositoriesGrid().selectItem(projectDataList.get(0));
+                     data = projectDataList.get(0);
+                  }
                }
 
                @Override
@@ -271,23 +268,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onOpen(java.lang.Object)
-    */
-   @Override
-   public void onOpen(ProjectData value)
-   {
-      this.data = value;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onReturn()
-    */
-   @Override
-   public void onReturn()
-   {
-   }
-
-   /**
     * Open view.
     */
    private void openView()
@@ -301,22 +281,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          display.getReadOnlyModeField().setValue(true);
          return;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setNextStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
-    */
-   @Override
-   public void setNextStep(GithubStep<ProjectData> step)
-   {
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setPreviousStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
-    */
-   @Override
-   public void setPreviousStep(GithubStep<ProjectData> step)
-   {
    }
 
    /**
@@ -346,7 +310,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                   else
                   {
                      openView();
-                     display.setNextButtonEnabled(false);
+                     display.setFinishButtonEnabled(false);
                      getUserRepos();
                   }
                }

@@ -52,10 +52,6 @@
          float: right;
       }
 
-      .indents20 {
-         margin: 20px;
-      }
-
       .indents10 {
          margin: 0 10px 10px;
       }
@@ -98,7 +94,7 @@
                            imageResource="{resource.cancel}"
                            disabledImageResource="{resource.cancelDisabled}"
                            addStyleNames="{style.floatLeft}"></f:ImageButton>
-            <f:ImageButton ui:field="nextButton" width="90" height="22" text="{locale.finishButton}"
+            <f:ImageButton ui:field="finishButton" width="90" height="22" text="{locale.finishButton}"
                            imageResource="{resource.next}"
                            disabledImageResource="{resource.nextDisabled}"
                            addStyleNames="{style.floatRight}"></f:ImageButton>
