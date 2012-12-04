@@ -359,14 +359,15 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
       }
       JobManager.get().showJobSeparated();
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-      {
-         cloneFolderWS(repo, folder, remoteUri);
-      }
-      else
-      {
-         cloneFolderREST(repo, folder, remoteUri);
-      }
+      //Temporary disable websockets for this function because error appear that ssh key not found through websocket
+//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+//      {
+//         cloneFolderWS(repo, folder, remoteUri);
+//      }
+//      else
+//      {
+      cloneFolderREST(repo, folder, remoteUri);
+//      }
    }
 
    /**
