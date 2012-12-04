@@ -41,18 +41,6 @@
          float: left;
       }
 
-      .space {
-         margin: 10px;
-      }
-
-      .errorLabel {
-         margin-top: 5px;
-         font-size: 11px;
-         font-family: Verdana, Bitstream Vera Sans, sans-serif;
-         float: left;
-         color: #D21A1A;
-      }
-
       .label {
          margin-top: 3px;
       }
