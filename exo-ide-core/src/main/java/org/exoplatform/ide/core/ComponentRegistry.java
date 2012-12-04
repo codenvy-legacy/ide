@@ -23,6 +23,7 @@ import com.google.inject.Inject;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.util.loging.Log;
 
 /**
  *
@@ -36,10 +37,11 @@ public class ComponentRegistry
     * Instantiates Component Registry. All components should be listed in this constructor
     */
    @Inject
-   public ComponentRegistry(ResourceProvider resourceManager)
+   public ComponentRegistry(ResourceProvider resourceManager, StandartComponentInitializer componentInitializer)
    {
       pendingComponents = JsonCollections.<Component> createArray();
       pendingComponents.add(resourceManager);
+      pendingComponents.add(componentInitializer);
    }
 
    /**
@@ -58,7 +60,7 @@ public class ComponentRegistry
             // all components started
             if (pendingComponents.size() == 0)
             {
-               GWT.log("All services initialized. Starting.");
+               Log.info(ComponentRegistry.class, "All services initialized. Starting.");
                callback.onSuccess(null);
             }
          }
@@ -67,11 +69,10 @@ public class ComponentRegistry
          public void onFailure(ComponentException reason)
          {
             callback.onFailure(new ComponentException("Failed to start component", reason.getComponent()));
-            GWT.log("FAILED to start service:" + reason.getComponent());
+            Log.info(ComponentRegistry.class, "FAILED to start service:" + reason.getComponent());
          }
       };
 
-      pendingComponents.asIterable();
       for (Component component : pendingComponents.asIterable())
       {
          component.start(internalCallback);

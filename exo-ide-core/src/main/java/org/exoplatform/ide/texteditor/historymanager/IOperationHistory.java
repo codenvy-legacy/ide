@@ -8,9 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.exoplatform.ide.commands.operations;
+package org.exoplatform.ide.texteditor.historymanager;
 
-import org.exoplatform.ide.commands.ExecutionException;
 import org.exoplatform.ide.runtime.IStatus;
 
 /**
@@ -153,8 +152,8 @@ public interface IOperationHistory
     *            an instance which is already registered with this instance,
     *            this method has no effect.
     * 
-    * @see org.eclipse.core.commands.operations.IOperationHistoryListener
-    * @see org.eclipse.core.commands.operations.OperationHistoryEvent
+    * @see org.exoplatform.ide.texteditor.historymanager.core.commands.operations.IOperationHistoryListener
+    * @see org.exoplatform.ide.texteditor.historymanager.core.commands.operations.OperationHistoryEvent
     */
    void addOperationHistoryListener(IOperationHistoryListener listener);
 

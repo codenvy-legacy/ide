@@ -10,16 +10,6 @@
  *******************************************************************************/
 package org.exoplatform.ide.text.undo;
 
-import org.exoplatform.ide.commands.ExecutionException;
-import org.exoplatform.ide.commands.operations.AbstractOperation;
-import org.exoplatform.ide.commands.operations.IContextReplacingOperation;
-import org.exoplatform.ide.commands.operations.IOperationHistory;
-import org.exoplatform.ide.commands.operations.IOperationHistoryListener;
-import org.exoplatform.ide.commands.operations.IUndoContext;
-import org.exoplatform.ide.commands.operations.IUndoableOperation;
-import org.exoplatform.ide.commands.operations.ObjectUndoContext;
-import org.exoplatform.ide.commands.operations.OperationHistoryEvent;
-import org.exoplatform.ide.commands.operations.OperationHistoryFactory;
 import org.exoplatform.ide.runtime.Assert;
 import org.exoplatform.ide.runtime.IStatus;
 import org.exoplatform.ide.runtime.Status;
@@ -29,6 +19,16 @@ import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentListener;
 import org.exoplatform.ide.text.ListenerList;
 import org.exoplatform.ide.text.TextUtilities;
+import org.exoplatform.ide.texteditor.historymanager.AbstractOperation;
+import org.exoplatform.ide.texteditor.historymanager.ExecutionException;
+import org.exoplatform.ide.texteditor.historymanager.IContextReplacingOperation;
+import org.exoplatform.ide.texteditor.historymanager.IOperationHistory;
+import org.exoplatform.ide.texteditor.historymanager.IOperationHistoryListener;
+import org.exoplatform.ide.texteditor.historymanager.IUndoContext;
+import org.exoplatform.ide.texteditor.historymanager.IUndoableOperation;
+import org.exoplatform.ide.texteditor.historymanager.ObjectUndoContext;
+import org.exoplatform.ide.texteditor.historymanager.OperationHistoryEvent;
+import org.exoplatform.ide.texteditor.historymanager.OperationHistoryFactory;
 
 import java.util.ArrayList;
 import java.util.List;

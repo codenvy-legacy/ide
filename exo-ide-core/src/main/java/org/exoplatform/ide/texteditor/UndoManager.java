@@ -13,8 +13,6 @@ package org.exoplatform.ide.texteditor;
 
 import com.google.gwt.event.dom.client.KeyCodes;
 
-import org.exoplatform.ide.commands.ExecutionException;
-import org.exoplatform.ide.commands.operations.IUndoContext;
 import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
@@ -25,6 +23,8 @@ import org.exoplatform.ide.text.undo.DocumentUndoListener;
 import org.exoplatform.ide.text.undo.DocumentUndoManager;
 import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.historymanager.ExecutionException;
+import org.exoplatform.ide.texteditor.historymanager.IUndoContext;
 import org.exoplatform.ide.util.input.SignalEvent;
 
 /**

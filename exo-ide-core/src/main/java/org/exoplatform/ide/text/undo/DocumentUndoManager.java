@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.exoplatform.ide.text.undo;
 
-import org.exoplatform.ide.commands.ExecutionException;
-import org.exoplatform.ide.commands.operations.IUndoContext;
+import org.exoplatform.ide.texteditor.historymanager.ExecutionException;
+import org.exoplatform.ide.texteditor.historymanager.IUndoContext;
 
 /**
  * Interface for a document undo manager. Tracks changes in a document and

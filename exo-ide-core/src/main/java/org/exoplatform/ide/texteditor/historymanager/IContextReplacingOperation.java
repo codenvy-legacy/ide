@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.exoplatform.ide.commands.operations;
+package org.exoplatform.ide.texteditor.historymanager;
 
 /**
  * IContextReplacingOperation defines an interface for undoable operations that
