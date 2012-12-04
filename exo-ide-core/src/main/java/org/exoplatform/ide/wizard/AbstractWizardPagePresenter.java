@@ -26,7 +26,7 @@ import com.google.gwt.resources.client.ImageResource;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  *
  */
-public abstract class AbstractPagePresenter implements WizardPagePresenter
+public abstract class AbstractWizardPagePresenter implements WizardPagePresenter
 {
    protected WizardUpdateDelegate delegate;
 
@@ -39,18 +39,19 @@ public abstract class AbstractPagePresenter implements WizardPagePresenter
     * 
     * @param caption
     */
-   public AbstractPagePresenter(String caption)
+   public AbstractWizardPagePresenter(String caption)
    {
       this(caption, null);
    }
 
    /**
-    * Create WizardPage with given wizard page caption and wizard page image 
+    * Create WizardPage with given wizard page caption and wizard page image.
+    * Size of image must be less than 48px * 48px.
     * 
     * @param caption
     * @param image
     */
-   public AbstractPagePresenter(String caption, ImageResource image)
+   public AbstractWizardPagePresenter(String caption, ImageResource image)
    {
       this.caption = caption;
       this.image = image;

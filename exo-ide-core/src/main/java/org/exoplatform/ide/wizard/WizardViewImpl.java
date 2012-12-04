@@ -67,7 +67,6 @@ public class WizardViewImpl extends DialogBox implements WizardView
     */
    public WizardViewImpl(WizardResource resources, String title)
    {
-      setAnimationEnabled(true);
       setText(title);
       addStyleName(resources.wizardCss().ideWizard());
 
@@ -75,6 +74,17 @@ public class WizardViewImpl extends DialogBox implements WizardView
       mainPanel.setSize("600px", "400px");
 
       DockLayoutPanel northPanel = new DockLayoutPanel(Unit.PX);
+
+      FlowPanel buttonPanel = new FlowPanel();
+      btnFinish = new Button("Finish");
+      btnFinish.setStyleName(resources.wizardCss().alignBtn());
+      buttonPanel.add(btnFinish);
+
+      btnCancel = new Button("Cancel");
+      btnCancel.setStyleName(resources.wizardCss().alignBtn());
+      buttonPanel.add(btnCancel);
+
+      mainPanel.addSouth(buttonPanel, 26);
 
       //TODO needs improvement next and back buttons      
       btnBack = new Button("<");
@@ -100,16 +110,6 @@ public class WizardViewImpl extends DialogBox implements WizardView
 
       mainPanel.addNorth(northPanel, 48);
 
-      FlowPanel buttonPanel = new FlowPanel();
-      btnFinish = new Button("Finish");
-      btnFinish.setStyleName(resources.wizardCss().alignBtn());
-      buttonPanel.add(btnFinish);
-
-      btnCancel = new Button("Cancel");
-      btnCancel.setStyleName(resources.wizardCss().alignBtn());
-      buttonPanel.add(btnCancel);
-
-      mainPanel.addSouth(buttonPanel, 26);
 
       contentPanel = new DeckLayoutPanel();
       contentPanel.setAnimationDuration(400);

@@ -16,34 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard;
+package org.exoplatform.ide.api.ui.wizard;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.inject.Provider;
+
+import org.exoplatform.ide.extension.SDK;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
- * Contains resources for wizard view.
+ * Provides register wizards for creating new project.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  *
  */
-public interface WizardResource extends ClientBundle
+@SDK(title = "ide.api.ui.wizard.newproject")
+public interface NewProjectWizardAgent
 {
-   public interface WizardCSS extends CssResource
-   {
-      @ClassName("backBtn")
-      String backBtn();
-
-      @ClassName("nextBtn")
-      String nextBtn();
-
-      @ClassName("alignBtn")
-      String alignBtn();
-
-      @ClassName("ide-Wizard")
-      String ideWizard();
-   }
-
-   @Source("org/exoplatform/ide/wizard/Wizard.css")
-   WizardCSS wizardCss();
+   /**
+    * Registers new wizard.
+    * 
+    * @param title
+    * @param description
+    * @param primaryNature
+    * @param icon
+    * @param wizardPage first wizard page
+    * @param natures
+    */
+   void registerWizard(String title, String description, String primaryNature, ImageResource icon,
+      Provider<WizardPagePresenter> wizardPage, JsonArray<String> natures);
 }

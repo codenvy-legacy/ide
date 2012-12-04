@@ -64,7 +64,7 @@ public interface WizardView
    /**
     * Sets new delegate
     * 
-    * @param delegate new delegate
+    * @param delegate
     */
    void setDelegate(ActionDelegate delegate);
 
