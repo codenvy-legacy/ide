@@ -19,57 +19,58 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:e="urn:import:org.exoplatform.ide.extension.samples.client.githubimport">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:e="urn:import:org.exoplatform.ide.extension.samples.client.githubimport">
 
-   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
+   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle'/>
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
    <ui:style>
       .buttons {
-      	display: block;
-      	margin-left: 10px;
-      	margin-right: 10px;
+         display: block;
+         margin-left: 10px;
+         margin-right: 10px;
       }
-      
+
       .floatRight {
-      	float: right;
+         float: right;
       }
-      
+
       .floatLeft {
-      	float: left;
+         float: left;
       }
-      
+
       .space {
-      	margin: 10px;
+         margin: 10px;
       }
-      
+
       .errorLabel {
-      	margin-top: 5px;
-      	font-size: 11px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	float: left;
-      	color: #D21A1A;
+         margin-top: 5px;
+         font-size: 11px;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         float: left;
+         color: #D21A1A;
       }
-      
+
       .label {
-      	margin-top: 3px;
+         margin-top: 3px;
       }
-      
+
       .checkbox {
-      	margin-top: 7px;
-      	margin-left: -5px;
-      	font-size: 11px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	float: left;
+         margin-top: 2px;
+         margin-left: 0px;
+         font-size: 11px;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         float: right;
       }
-      
+
       .indents20 {
-      	margin: 20px;
+         margin: 20px;
       }
-      
+
       .indents10 {
-      	margin: 0 10px 10px;
+         margin: 0 10px 10px;
       }
    </ui:style>
 
@@ -86,18 +87,19 @@
                <f:Border margin="10">
                   <f:layer top="0px" bottom="0">
                      <g:ScrollPanel>
-                        <e:GitHubProjectsListGrid width="100%" ui:field="repositoriesGrid" height="100%"></e:GitHubProjectsListGrid>
+                        <e:GitHubProjectsListGrid width="100%" ui:field="repositoriesGrid"
+                                                  height="100%"></e:GitHubProjectsListGrid>
                      </g:ScrollPanel>
                   </f:layer>
                </f:Border>
             </g:center>
             <g:south size="60">
                <g:FlowPanel styleName="{style.indents10}">
-                  <f:Label text="Name" height="18px" width="45px" addStyleNames="{style.floatLeft} {style.label}"></f:Label>
+                  <f:Label text="Name" height="18px" width="45px"
+                           addStyleNames="{style.floatLeft} {style.label}"></f:Label>
                   <f:TextInput ui:field="projectNameField" width="140px" styleName="{style.floatLeft}"></f:TextInput>
-                  <f:SelectItem ui:field="projectTypeField" width="140px" styleName="{style.floatRight}"></f:SelectItem>
-                  <g:Label text="{locale.importFromGithubSelectProjectType}" height="18px" width="115px" addStyleNames="{style.floatRight} {style.label}"></g:Label>
-                  <g:CheckBox ui:field="readOnlyModeField" HTML="{locale.gitReadOnly}" styleName="{style.checkbox}"></g:CheckBox>
+                  <g:CheckBox ui:field="readOnlyModeField" HTML="{locale.gitReadOnly}"
+                              styleName="{style.checkbox}"></g:CheckBox>
                </g:FlowPanel>
             </g:south>
          </g:DockLayoutPanel>
@@ -105,10 +107,14 @@
 
       <g:layer height="22px" bottom="10">
          <g:FlowPanel styleName="{style.buttons}">
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageResource="{resource.cancel}"
-               disabledImageResource="{resource.cancelDisabled}" addStyleNames="{style.floatLeft}"></f:ImageButton>
-            <f:ImageButton ui:field="nextButton" width="90" height="22" text="{locale.nextButton}" imageResource="{resource.next}"
-               disabledImageResource="{resource.nextDisabled}" addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}"
+                           imageResource="{resource.cancel}"
+                           disabledImageResource="{resource.cancelDisabled}"
+                           addStyleNames="{style.floatLeft}"></f:ImageButton>
+            <f:ImageButton ui:field="nextButton" width="90" height="22" text="{locale.nextButton}"
+                           imageResource="{resource.next}"
+                           disabledImageResource="{resource.nextDisabled}"
+                           addStyleNames="{style.floatRight}"></f:ImageButton>
          </g:FlowPanel>
       </g:layer>
    </g:LayoutPanel>

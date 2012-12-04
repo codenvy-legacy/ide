@@ -39,7 +39,7 @@ import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 
 /**
  * View for importing projects from GitHub.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubView.java Dec 7, 2011 3:37:28 PM vereshchaka $
  */
@@ -57,7 +57,7 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
 
    private static final String NAME_FIELD_ID = "ideImportFromGithubViewNameField";
 
-   private static final String TYPE_FIELD_ID = "ideImportFromGithubViewTypeField";
+//   private static final String TYPE_FIELD_ID = "ideImportFromGithubViewTypeField";
 
    private static final String NEXT_BUTTON_ID = "ideImportFromGithubViewNextButton";
 
@@ -74,8 +74,8 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
    /**
     * Select project's type field.
     */
-   @UiField
-   SelectItem projectTypeField;
+//   @UiField
+//   SelectItem projectTypeField;
 
    /**
     * Cancel button.
@@ -122,7 +122,7 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
 
       projectNameField.setName(NAME_FIELD_ID);
-      projectTypeField.setName(TYPE_FIELD_ID);
+//      projectTypeField.setName(TYPE_FIELD_ID);
       readOnlyModeField.setName(READONLY_MODE_FIELD_ID);
    }
 
@@ -138,20 +138,20 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
    /**
     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getProjectTypeField()
     */
-   @Override
-   public HasValue<String> getProjectTypeField()
-   {
-      return projectTypeField;
-   }
+//   @Override
+//   public HasValue<String> getProjectTypeField()
+//   {
+//      return projectTypeField;
+//   }
 
    /**
     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setProjectTypeValues(java.lang.String[])
     */
-   @Override
-   public void setProjectTypeValues(String[] values)
-   {
-      projectTypeField.setValueMap(values);
-   }
+//   @Override
+//   public void setProjectTypeValues(String[] values)
+//   {
+//      projectTypeField.setValueMap(values);
+//   }
 
    /**
     * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getNextButton()
