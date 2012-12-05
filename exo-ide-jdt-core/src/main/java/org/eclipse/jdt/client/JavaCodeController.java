@@ -310,7 +310,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
                      .fireEvent(
                         new OutputEvent("Can't build classpath:<br>" + "<pre>" + result.toString() + "</pre>",
                            Type.ERROR));
-                  IDE.eventBus().fireEvent(new OutputEvent(JdtExtension.LOCALIZATION_CONSTANT.updateDependencySuggest(), Type.WARNING));
+                  IDE.eventBus().fireEvent(
+                     new OutputEvent(JdtExtension.LOCALIZATION_CONSTANT.updateDependencySuggest(), Type.WARNING));
                }
 
                @Override
@@ -454,6 +455,8 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    @Override
    public void onReparseOpenedFiles(ReparseOpenedFilesEvent event)
    {
+      if (editors.isEmpty())
+         return;
       for (String id : editors.keySet())
       {
          needReparse.add(id);

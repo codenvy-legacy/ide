@@ -34,7 +34,7 @@ public class CodeNowSpec10
     */
    public final static String VERSION_PARAMETER = "v";
 
-   public final static String CURRENT_VERSION = "codenow10";
+   public final static String CURRENT_VERSION = "codenow1.0";
 
    /**
     * Mandatory parameter use for setting location sources in Version Control System  
@@ -57,12 +57,6 @@ public class CodeNowSpec10
    public final static String ACTION_PARAMETER = "action";
 
    public final static String DEFAULT_ACTION = "openproject";
-
-   /**
-    * Optional parameter we can try detect project type after cloning,
-    * if can't we will ask 
-    */
-   public final static String PROJECT_TYPE = "pt";
 
    /**
     * Optional parameter for project name in file system, if not set we try detect it from  

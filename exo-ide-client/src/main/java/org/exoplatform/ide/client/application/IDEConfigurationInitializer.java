@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.application;
 
+import com.google.gwt.core.shared.GWT;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.json.client.JSONObject;
@@ -198,8 +200,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       {
          promptToSelectEntryPoint();
       }
+      
       Map<String, List<String>> parameterMap = Location.getParameterMap();
-      if (parameterMap != null && !parameterMap.isEmpty())
+      
+      if (parameterMap != null && parameterMap.size() > 1)
       {
          IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
       }

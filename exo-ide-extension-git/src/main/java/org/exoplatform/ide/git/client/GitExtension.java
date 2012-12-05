@@ -31,7 +31,6 @@ import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
@@ -156,44 +155,54 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onStartWithInitParams(StartWithInitParamsEvent event)
    {
-      Map<String, List<String>> initParam = event.getParameterMap();
-      if (initParam != null && !initParam.isEmpty())
+      if (isValidParam(event.getParameterMap()))
       {
-         if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
-            || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
-            || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
-            return;
-         if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
-            || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS))
-            return;
-         if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) != null
-            || initParam.get(CodeNowSpec10.VCS_URL).isEmpty())
-            return;
-
-         String giturl = initParam.get(CodeNowSpec10.VCS_URL).get(0);
-
-         String prjType = ProjectType.UNDEFINED.value();
-         if (initParam.containsKey(CodeNowSpec10.PROJECT_TYPE) && initParam.get(CodeNowSpec10.PROJECT_TYPE).isEmpty())
-         {
-            prjType = initParam.get(CodeNowSpec10.PROJECT_TYPE).get(0);
-         }
+         String giturl = event.getParameterMap().get(CodeNowSpec10.VCS_URL).get(0);
 
          String prjName = null;
-         if (initParam.get(CodeNowSpec10.PROJECT_NAME) != null && initParam.get(CodeNowSpec10.PROJECT_NAME).isEmpty())
+         if (event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME) != null && event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).isEmpty())
          {
-            prjName = initParam.get(CodeNowSpec10.PROJECT_NAME).get(0);
+            prjName = event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).get(0);
          }
          else
          {
             prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
          }
 
-         extracted(giturl, prjType, prjName);
-
+         cloneProject(giturl, prjName);
       }
+
    }
 
-   private void extracted(final String giturl, final String prjType, final String prjName)
+   /**
+    * @param initParam
+    */
+   private boolean isValidParam(Map<String, List<String>> initParam)
+   {
+      if (initParam == null || initParam.isEmpty())
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
+         || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
+         || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
+         || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS))
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) == null
+         || initParam.get(CodeNowSpec10.VCS_URL).isEmpty())
+      {
+         return false;
+      }
+      return true;
+   }
+
+   private void cloneProject(final String giturl, final String prjName)
    {
       try
       {
@@ -203,6 +212,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
             @Override
             protected void onSuccess(ItemWrapper result)
             {
+               //Project already exist with same name. Generate random suffix for it
                cloneRepositoryPresenter.doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE));
             }
 
@@ -211,7 +221,10 @@ public class GitExtension extends Extension implements InitializeServicesHandler
             {
                if (exception instanceof ServerException)
                {
-                  if (((ServerException)exception).getHeader("X-Exit-Code") != null && ((ServerException)exception).getHeader("X-Exit-Code").equals(Integer.toString(ExitCodes.ITEM_NOT_FOUND)))
+                  //Check if item not with given name not exist, it's ok for us we can start cloning
+                  if (((ServerException)exception).getHeader("X-Exit-Code") != null
+                     && ((ServerException)exception).getHeader("X-Exit-Code").equals(
+                        Integer.toString(ExitCodes.ITEM_NOT_FOUND)))
                   {
                      cloneRepositoryPresenter.doClone(giturl, "origin", prjName);
                   }
@@ -222,7 +235,6 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       }
       catch (RequestException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
    }

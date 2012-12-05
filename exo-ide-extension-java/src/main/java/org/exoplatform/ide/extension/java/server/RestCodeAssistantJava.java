@@ -37,8 +37,14 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -49,6 +55,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -329,7 +336,7 @@ public class RestCodeAssistantJava
    @GET
    @Path("/update-dependencies")
    @Produces(MediaType.APPLICATION_JSON)
-   public void updateDepndency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
+   public List<String> updateDepndency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
       throws CodeAssistantException, VirtualFileSystemException, IOException, BuilderException, JsonException
    {
       final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
@@ -342,6 +349,16 @@ public class RestCodeAssistantJava
          if (buildStatus.getDownloadUrl() != null && !buildStatus.getDownloadUrl().isEmpty())
          {
             dependencys = makeRequest(buildStatus.getDownloadUrl());
+            ConversationState.setCurrent(new ConversationState(new Identity("__system")));
+            Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+            if (item.hasProperty("exoide:classpath") && item.getPropertyValue("exoide:classpath").equals(dependencys))
+            {
+               return getAllPackages(vfsId, projectId);
+            }
+            List<Property> properties =
+               Arrays.<Property> asList(new PropertyImpl("exoide:classpath", dependencys), new PropertyImpl(
+                  "exoide:build_error", (String)null));
+            vfs.updateItem(projectId, properties, null);
          }
       }
       else
@@ -366,7 +383,16 @@ public class RestCodeAssistantJava
          throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
       }
       statusUrl = storageClient.updateDockIndex(dependencys, buildStatus.getDownloadUrl());
-      waitStorageTaskFinish(statusUrl);
+      try
+      {
+         waitStorageTaskFinish(statusUrl);
+      }
+      catch (Exception e)//Ignore exception in case add javadoc
+      {
+         LOG.debug("Adding sources artifact fail : " + statusUrl, e );
+      }
+
+      return getAllPackages(vfsId, projectId);
    }
 
    /**
