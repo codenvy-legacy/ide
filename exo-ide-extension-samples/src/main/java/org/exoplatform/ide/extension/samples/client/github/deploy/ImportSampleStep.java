@@ -20,14 +20,14 @@ package org.exoplatform.ide.extension.samples.client.github.deploy;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubStep.java Nov 22, 2011 11:53:47 AM vereshchaka $
+ * @version $Id: ImportSampleStep.java Nov 22, 2011 11:53:47 AM vereshchaka $
  */
-public interface GithubStep<T>
+public interface ImportSampleStep<T>
 {
 
    /**
     * What to do, when open this screen.
-    * 
+    *
     * @param value context data of wizard
     */
    void onOpen(T value);
@@ -37,8 +37,8 @@ public interface GithubStep<T>
     */
    void onReturn();
 
-   void setNextStep(GithubStep<T> step);
+   void setNextStep(ImportSampleStep<T> step);
 
-   void setPreviousStep(GithubStep<T> step);
+   void setPreviousStep(ImportSampleStep<T> step);
 
 }

@@ -21,8 +21,13 @@ package org.exoplatform.ide.maven;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.codehaus.plexus.util.cli.CommandLineException;
 
+import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.net.URI;
 import java.util.Date;
 
@@ -37,6 +42,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -99,7 +105,7 @@ public class Builder
    @Path("dependencies/copy")
    @Consumes("application/zip")
    public Response dependenciesCopy(@Context UriInfo uriInfo, @QueryParam("classifier") String classifier,
-      InputStream data) throws IOException
+                                    InputStream data) throws IOException
    {
       MavenBuildTask task = tasks.dependenciesCopy(data, classifier);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
@@ -151,11 +157,40 @@ public class Builder
                         .entity("{\"status\":\"FAILED\",\"error\":\"" + cle.getMessage() + "\"}")
                         .type(MediaType.APPLICATION_JSON).build();
                   }
-                  String error = task.getLogger().getLogAsString();
-                  if (error != null)
-                     error = error.replaceAll("\n", "\\\\n");
+                  Reader reader = task.getLogger().getLogReader();
+                  StringBuilder error = new StringBuilder();
+                  // Show plain text as HTML.
+                  error.append("<div>");
+                  try
+                  {
+                     BufferedReader bReader = new BufferedReader(reader);
+                     String line;
+                     while ((line = bReader.readLine()) != null)
+                     {
+                        // Replace location to surefire-reports by link accessible through the web.
+                        if (line.startsWith("[ERROR] Please refer to ") && line.endsWith(" for the individual test results."))
+                        {
+                           error.append("[ERROR] Please refer to ");
+                           error.append("<a href='");
+                           error.append(
+                              uriInfo.getBaseUriBuilder().path(getClass(), "getSurefireReports").build(buildID).toString());
+                           error.append("' target='_blank'>surefire reports</a>");
+                           error.append(" for the individual test results.<br/>");
+                        }
+                        else
+                        {
+                           error.append(line);
+                           error.append("<br/>");
+                        }
+                     }
+                  }
+                  finally
+                  {
+                     reader.close();
+                  }
+                  error.append("</div>");
                   return Response.status(200)
-                     .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + ",\"error\":\"" + error +"\"}")
+                     .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + ",\"error\":\"" + error + "\"}")
                      .type(MediaType.APPLICATION_JSON).build();
                }
             }
@@ -167,6 +202,69 @@ public class Builder
             {
                throw new WebApplicationException(e);
             }
+         }
+         return Response.status(200).entity("{\"status\":\"IN_PROGRESS\"}").type(MediaType.APPLICATION_JSON).build();
+      }
+      // Incorrect task ID.
+      throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
+         .type(MediaType.TEXT_PLAIN).build());
+   }
+
+   @GET
+   @Path("reports/{buildid}")
+   public Response getSurefireReports(@PathParam("buildid") final String buildID, @Context final UriInfo uriInfo)
+   {
+      MavenBuildTask task = tasks.get(buildID);
+      if (task != null)
+      {
+         if (task.isDone())
+         {
+            File reports = new File(task.getProjectDirectory(), "target/surefire-reports");
+            final String[] files = reports.list();
+            if (files == null)
+            {
+               return Response.status(200).entity("Report files are not available.").type(MediaType.TEXT_PLAIN).build();
+            }
+            StreamingOutput body = new StreamingOutput()
+            {
+               @Override
+               public void write(OutputStream output) throws IOException, WebApplicationException
+               {
+                  PrintWriter writer = new PrintWriter(output);
+                  for (String name : files)
+                  {
+                     writer.printf("<a href='%s'>%s</a><br/>", uriInfo.getBaseUriBuilder()
+                        .path(Builder.this.getClass(), "getReportFile").queryParam("name", name).build(buildID), name);
+                  }
+                  writer.flush();
+               }
+            };
+            return Response.status(200).entity(body).type(MediaType.TEXT_HTML).build();
+         }
+         return Response.status(200).entity("{\"status\":\"IN_PROGRESS\"}").type(MediaType.APPLICATION_JSON).build();
+      }
+      // Incorrect task ID.
+      throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")
+         .type(MediaType.TEXT_PLAIN).build());
+   }
+
+   @GET
+   @Path("report/file/{buildid}")
+   public Response getReportFile(@PathParam("buildid") String buildID, @QueryParam("name") String name)
+   {
+      MavenBuildTask task = tasks.get(buildID);
+      if (task != null)
+      {
+         if (task.isDone())
+         {
+            File report = new File(task.getProjectDirectory(), "target/surefire-reports/" + name);
+            if (report.exists())
+            {
+               String mediaType = report.getName().endsWith(".xml") ? MediaType.APPLICATION_XML : MediaType.TEXT_PLAIN;
+               return Response.status(200).entity(report).type(mediaType).build();
+            }
+            return Response.status(200)
+               .entity("Report file " + name + " is not available.").type(MediaType.TEXT_PLAIN).build();
          }
          return Response.status(200).entity("{\"status\":\"IN_PROGRESS\"}").type(MediaType.APPLICATION_JSON).build();
       }

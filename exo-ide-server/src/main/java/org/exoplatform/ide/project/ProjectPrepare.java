@@ -196,7 +196,7 @@ public class ProjectPrepare
          File webXML = findWebXML(pomObject, modulePath);
          if (webXML.exists() && detectSpringApp(webXML))
          {
-            return ProjectType.SPRING;
+            return ProjectType.WAR;
          }
 
          //Detecting GAE project type
