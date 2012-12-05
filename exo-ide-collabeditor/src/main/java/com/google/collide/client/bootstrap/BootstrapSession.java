@@ -14,10 +14,7 @@
 
 package com.google.collide.client.bootstrap;
 
-import com.google.gwt.event.shared.HandlerManager;
-
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * Bootstrap information for the client.
@@ -29,25 +26,25 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
  * along with subsequent requests.
  *
  */
-public final class BootstrapSession implements UserInfoReceivedHandler
+public final class BootstrapSession
 {
 
    private static BootstrapSession instance;
-
-   private String userUd;
 
    /**
     * Use this method to obtain an instance of the Session object.
     */
    public static BootstrapSession getBootstrapSession()
    {
+      if(instance == null)
+      {
+         instance = new BootstrapSession();
+      }
       return instance;
-   };
+   }
 
-   public BootstrapSession(HandlerManager eventBus)
+   protected BootstrapSession()
    {
-      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
-      instance = this;
    }
 
    /**
@@ -55,7 +52,7 @@ public final class BootstrapSession implements UserInfoReceivedHandler
     */
    public String getActiveClientId()
    {
-      return userUd;
+      return IDE.userId;
    }
 
    /**
@@ -63,7 +60,7 @@ public final class BootstrapSession implements UserInfoReceivedHandler
     */
    public String getUsername()
    {
-      return userUd;
+      return IDE.userId;
    }
 
    /**
@@ -71,15 +68,7 @@ public final class BootstrapSession implements UserInfoReceivedHandler
     */
    public String getUserId()
    {
-      return userUd;
+      return IDE.userId;
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      userUd = event.getUserInfo().getName();
-   }
 }

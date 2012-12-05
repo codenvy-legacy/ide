@@ -40,16 +40,18 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  7/18/12 evgen $
  */
-public class CollabEditorExtension extends Extension implements InitializeServicesHandler
+public class CollabEditorExtension extends Extension implements UserInfoReceivedHandler
 {
 
    private static CollabEditorExtension instance;
-   private AppContext context = AppContext.create();
+   private AppContext context;
    private DocumentManager documentManager;
 
    public static CollabEditorExtension get()
@@ -67,6 +69,41 @@ public class CollabEditorExtension extends Extension implements InitializeServic
 //    GWT.setUncaughtExceptionHandler(appContext.getUncaughtExceptionHandler());
 //    XhrWarden.watch();
 //
+      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+   }
+
+   public AppContext getContext()
+   {
+      return context;
+   }
+
+   public DocumentManager getManager()
+   {
+      return documentManager;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onUserInfoReceived(UserInfoReceivedEvent event)
+   {
+      context = AppContext.create();
+      documentManager = DocumentManager.create(context);
+      init();
+      ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+      IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
+      CollaborationManager collaborationManager =
+         CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
+
+      DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+   }
+
+   /**
+    * 
+    */
+   private void init()
+   {
       com.google.collide.client.Resources resources = context.getResources();
       com.google.gwt.user.client.Element div = DOM.createDiv();
       div.setId(AppContext.GWT_ROOT);
@@ -156,34 +193,6 @@ public class CollabEditorExtension extends Extension implements InitializeServic
       styleBuilder.append(resources.notificationCss().getText());
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
-      documentManager = DocumentManager.create(context);
-      
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      new BootstrapSession(IDE.eventBus());
-   }
-
-   public AppContext getContext()
-   {
-      return context;
-   }
-
-   public DocumentManager getManager()
-   {
-      return documentManager;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-      ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
-      IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
-      CollaborationManager collaborationManager =
-         CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
-
-      DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
    }
 
 }
