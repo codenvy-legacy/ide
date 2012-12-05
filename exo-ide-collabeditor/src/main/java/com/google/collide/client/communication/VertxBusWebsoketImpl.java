@@ -40,10 +40,13 @@ import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorHandl
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.Pair;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBuilder;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestMessage;
 import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
+
+import java.util.Arrays;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -152,6 +155,10 @@ public class VertxBusWebsoketImpl implements VertxBus
       requestMessage.setBody(message);
       AutoBean<RESTfulRequestMessage> autoBean = AutoBeanUtils.getAutoBean(requestMessage);
       String messageJson = AutoBeanCodex.encode(autoBean).getPayload();
+      Pair contentType = WebSocket.AUTO_BEAN_FACTORY.pair().as();
+      contentType.setName("content-type");
+      contentType.setValue("application/json");
+      requestMessage.setHeaders(Arrays.asList(contentType));
       try
       {
          messageBus.send(messageJson, new RESTfulRequestCallback<StringBuilder>(new StringUnmarshaller(

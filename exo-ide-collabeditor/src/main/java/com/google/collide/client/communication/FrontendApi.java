@@ -162,71 +162,71 @@ public class FrontendApi {
    */
 
   public final RequestResponseApi<ClientToServerDocOp, ServerToClientDocOps> MUTATE_FILE =
-      makeApi("documents.mutate");
+      makeApi("documents/mutate");
 
   /**
    * Lets a client re-synchronize with the server's version of a file after being offline or missing
    * a doc op broadcast.
    */
   public final RequestResponseApi<RecoverFromMissedDocOps, RecoverFromMissedDocOpsResponse>
-      RECOVER_FROM_MISSED_DOC_OPS = makeApi("documents.recoverMissedDocop");
+      RECOVER_FROM_MISSED_DOC_OPS = makeApi("documents/recoverMissedDocop");
 
   /**
    * Get the contents of a file and provisions an edit session so that it can be edited.
    */
   public final RequestResponseApi<GetFileContents, GetFileContentsResponse> GET_FILE_CONTENTS =
-      makeApi("documents.createEditSession");
+      makeApi("documents/createEditSession");
 
   /**
    * Get a subdirectory. Just the subtree rooted at that path. No associated meta data.
    */
   public final RequestResponseApi<GetDirectory, GetDirectoryResponse> GET_DIRECTORY =
-      makeApi("tree.get");
+      makeApi("tree/get");
 
   /** Sends an ADD_FILE, ADD_DIR, COPY, MOVE, or DELETE tree mutation. */
   public final RequestResponseApi<WorkspaceTreeUpdate, EmptyMessage>
-      MUTATE_WORKSPACE_TREE = makeApi("tree.mutate");
+      MUTATE_WORKSPACE_TREE = makeApi("tree/mutate");
 
   /**
    * Send a keep-alive for the client in a workspace.
    */
-  public final SendApi<KeepAlive> KEEP_ALIVE = makeApi("participants.keepAlive");
+  public final SendApi<KeepAlive> KEEP_ALIVE = makeApi("participants/keepAlive");
 
   /**
    * Gets the list of workspace participants.
    */
   public final RequestResponseApi<GetWorkspaceParticipants, GetWorkspaceParticipantsResponse>
-      GET_WORKSPACE_PARTICIPANTS = makeApi("participants.getParticipants");
+      GET_WORKSPACE_PARTICIPANTS = makeApi("participants/getParticipants");
 
   /** Requests that we get updated information about a workspace's run targets. */
   public final SendApi<UpdateWorkspaceRunTargets> UPDATE_WORKSPACE_RUN_TARGETS =
-      makeApi("workspace.updateRunTarget");
+      makeApi("workspace/updateRunTarget");
   
   /** Requests workspace state like the last opened files and run targets. */
   public final RequestResponseApi<GetWorkspaceMetaData, GetWorkspaceMetaDataResponse> 
-      GET_WORKSPACE_META_DATA = makeApi("workspace.getMetaData");
+      GET_WORKSPACE_META_DATA = makeApi("workspace/getMetaData");
 
   /**
    * Retrieves code errors for a file.
    */
   public final RequestResponseApi<CodeErrorsRequest, CodeErrors> GET_CODE_ERRORS =
-      makeApi("todo.implementMe");
+      makeApi("todo/implementMe");
 
   /**
    * Retrieves code parsing results.
    */
   public final RequestResponseApi<CodeGraphRequest, CodeGraphResponse> GET_CODE_GRAPH =
-      makeApi("todo.implementMe");
+      makeApi("todo/implementMe");
   /**
    * Log an exception to the server and potentially receive an unobfuscated response.
    */
   public final RequestResponseApi<LogFatalRecord, LogFatalRecordResponse> LOG_REMOTE =
-      makeApi("todo.implementMe");
+      makeApi("todo/implementMe");
 
   // TODO: this may want to move to browser channel instead, for
   // search-as-you-type streaming. No sense to it yet until we have a real
   // backend, though.
-  public final RequestResponseApi<Search, SearchResponse> SEARCH = makeApi("todo.implementMe");
+  public final RequestResponseApi<Search, SearchResponse> SEARCH = makeApi("todo/implementMe");
 
   // /////////////////////////////
   // END AVAILABLE FRONTEND APIS

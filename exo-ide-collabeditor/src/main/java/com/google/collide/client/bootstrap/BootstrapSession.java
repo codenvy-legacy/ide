@@ -14,8 +14,10 @@
 
 package com.google.collide.client.bootstrap;
 
-import com.google.collide.dto.shared.JsonFieldConstants;
-import com.google.collide.json.client.Jso;
+import com.google.gwt.event.shared.HandlerManager;
+
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
+import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
 
 /**
  * Bootstrap information for the client.
@@ -27,70 +29,57 @@ import com.google.collide.json.client.Jso;
  * along with subsequent requests.
  *
  */
-public final class BootstrapSession extends Jso {
-  /**
-   * Use this method to obtain an instance of the Session object.
-   */
-  public static native BootstrapSession getBootstrapSession() /*-{
-    return window['__session'] || {};
-  }-*/;
+public final class BootstrapSession implements UserInfoReceivedHandler
+{
 
-  protected BootstrapSession() {
-  }
+   private static BootstrapSession instance;
 
-  /**
-   * @return The active client ID for the current tab.
-   */
-  public String getActiveClientId() {
-     //TODO
-    return "clientID";
-  }
+   private String userUd;
 
-  /**
-   * @return The user's handle. This is his name or email.
-   */
-  public String getUsername() {
-     //TODO
-    return "evgen";
-  }
+   /**
+    * Use this method to obtain an instance of the Session object.
+    */
+   public static BootstrapSession getBootstrapSession()
+   {
+      return instance;
+   };
 
-  /**
-   * @return The user's unique ID (obfuscated GAIA ID).
-   */
-  public String getUserId() {
-     //TODO
-    return "evgen";
-  }
+   public BootstrapSession(HandlerManager eventBus)
+   {
+      eventBus.addHandler(UserInfoReceivedEvent.TYPE, this);
+      instance = this;
+   }
 
-  /**
-   * @return The user's XSRF token that it sends with each request to validate
-   *         that it originated from the client.
-   */
-  public String getXsrfToken() {
-    return getStringField(JsonFieldConstants.XSRF_TOKEN);
-  }
+   /**
+    * @return The active client ID for the current tab.
+    */
+   public String getActiveClientId()
+   {
+      return userUd;
+   }
 
-  /**
-   * @return The domain that we must talk to in order to fetch static
-   *         file content from user branches.
-   */
-  public String getStaticContentServingDomain() {
-    return getStringField(JsonFieldConstants.STATIC_FILE_CONTENT_DOMAIN);
-  }
+   /**
+    * @return The user's handle. This is his name or email.
+    */
+   public String getUsername()
+   {
+      return userUd;
+   }
 
-  /**
-   * Updates the client's XSRF token.
-   * 
-   * @param newXsrfToken
-   */
-  public void setXsrfToken(String newXsrfToken) {
-    this.addField(JsonFieldConstants.XSRF_TOKEN, newXsrfToken);
-  }
-  
-  /**
-   * @return The url for the user's profile image.
-   */
-  public String getProfileImageUrl() {
-    return getStringField(JsonFieldConstants.PROFILE_IMAGE_URL);
-  }
+   /**
+    * @return The user's unique ID (obfuscated GAIA ID).
+    */
+   public String getUserId()
+   {
+      return userUd;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onUserInfoReceived(UserInfoReceivedEvent event)
+   {
+      userUd = event.getUserInfo().getName();
+   }
 }

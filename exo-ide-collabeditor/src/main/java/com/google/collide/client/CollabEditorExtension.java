@@ -18,6 +18,8 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.client.bootstrap.BootstrapSession;
+
 import com.google.collide.client.code.ParticipantModel;
 
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
@@ -34,13 +36,16 @@ import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.user.client.DOM;
 import elemental.dom.Node;
 
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
+import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  7/18/12 evgen $
  */
-public class CollabEditorExtension extends Extension
+public class CollabEditorExtension extends Extension implements InitializeServicesHandler
 {
 
    private static CollabEditorExtension instance;
@@ -153,12 +158,8 @@ public class CollabEditorExtension extends Extension
       Elements.injectJs(CodeMirror2.getJs());
       documentManager = DocumentManager.create(context);
       
-      ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
-      IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
-      CollaborationManager collaborationManager =
-         CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
-
-      DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      new BootstrapSession(IDE.eventBus());
    }
 
    public AppContext getContext()
@@ -169,6 +170,20 @@ public class CollabEditorExtension extends Extension
    public DocumentManager getManager()
    {
       return documentManager;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onInitializeServices(InitializeServicesEvent event)
+   {
+      ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+      IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
+      CollaborationManager collaborationManager =
+         CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
+
+      DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
    }
 
 }
