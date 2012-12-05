@@ -35,7 +35,6 @@ import org.exoplatform.ide.json.JsonArray;
  * Provides selecting type of technology for creating new project.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public class NewProjectPageViewImpl implements NewProjectPageView
 {

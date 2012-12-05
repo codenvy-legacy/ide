@@ -27,7 +27,6 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  * Provides selecting kind of project which user wish to create.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate
 {
@@ -37,21 +36,34 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
 
    private NewProjectPageView view;
 
-   private NewProjectWizardAgentImpl container;
+   private NewProjectWizardAgentImpl wizardAgent;
 
    /**
     * Create presenter
     * 
-    * @param caption
-    * @param container
+    * @param wizardAgent
     * @param resources
     */
-   public NewProjectPagePresenter(String caption, NewProjectWizardAgentImpl container,
-      NewProjectWizardResource resources)
+   public NewProjectPagePresenter(NewProjectWizardAgentImpl wizardAgent, NewProjectWizardResource resources)
    {
-      super(caption, resources.newProjectIcon());
-      this.container = container;
-      view = new NewProjectPageViewImpl(container.getWizards(), resources);
+      this(wizardAgent, resources, new NewProjectPageViewImpl(wizardAgent.getWizards(), resources));
+   }
+
+   /**
+    * Create presenter
+    * 
+    * For tests
+    * 
+    * @param wizardAgent
+    * @param resources
+    * @param view
+    */
+   protected NewProjectPagePresenter(NewProjectWizardAgentImpl wizardAgent, NewProjectWizardResource resources,
+      NewProjectPageView view)
+   {
+      super("Select a wizard", resources.newProjectIcon());
+      this.wizardAgent = wizardAgent;
+      this.view = view;
       view.setBtnPressedDelegate(this);
    }
 
@@ -134,7 +146,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     */
    public void onButtonPressed(int id)
    {
-      next = container.getWizards().get(id).getWizardPage();
+      next = wizardAgent.getWizards().get(id).getWizardPage();
       delegate.updateControls();
    }
 }

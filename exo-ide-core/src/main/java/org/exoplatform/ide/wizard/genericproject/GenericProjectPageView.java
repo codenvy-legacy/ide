@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Interface of new generic project wizard view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public interface GenericProjectPageView extends IsWidget
 {

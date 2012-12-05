@@ -60,6 +60,10 @@ public class WizardViewImpl extends DialogBox implements WizardView
 
    private WizardView.ActionDelegate delegate;
 
+   private final int ANIMATION_TIME = 400;
+
+   private final int NO_TIME = 0;
+
    /**
     * Create view with given instance of resources
     * 
@@ -110,9 +114,7 @@ public class WizardViewImpl extends DialogBox implements WizardView
 
       mainPanel.addNorth(northPanel, 48);
 
-
       contentPanel = new DeckLayoutPanel();
-      contentPanel.setAnimationDuration(400);
       mainPanel.add(contentPanel);
 
       add(mainPanel);
@@ -245,5 +247,20 @@ public class WizardViewImpl extends DialogBox implements WizardView
    {
       this.center();
       this.show();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void setChangePageAnimationEnabled(boolean isEnabled)
+   {
+      if (isEnabled)
+      {
+         contentPanel.setAnimationDuration(ANIMATION_TIME);
+      }
+      else
+      {
+         contentPanel.setAnimationDuration(NO_TIME);
+      }
    }
 }

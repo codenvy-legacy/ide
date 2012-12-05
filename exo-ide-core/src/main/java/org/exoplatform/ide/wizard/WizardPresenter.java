@@ -29,28 +29,14 @@ import com.google.gwt.user.client.ui.Image;
  * presentation of its pages.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate, WizardView.ActionDelegate
 {
    private WizardPagePresenter currentPage;
 
-   private WizardView display;
+   private WizardView view;
 
-   /**
-    * Creates WizardPresenter with given instance of view and current wizard page
-    * 
-    * For Unit Tests
-    * 
-    * @param currentPage
-    * @param display
-    */
-   protected WizardPresenter(WizardPagePresenter currentPage, WizardView display)
-   {
-      this.display = display;
-      currentPage.setUpdateDelegate(this);
-      setPage(currentPage);
-   }
+   private boolean isFirstFlipToNext;
 
    /**
     * Creates WizardPresenter with given current wizard page, resources, wizard's title
@@ -61,14 +47,26 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
     */
    public WizardPresenter(WizardPagePresenter currentPage, WizardResource resources, String title)
    {
-      this.display = new WizardViewImpl(resources, title);
-      display.setDelegate(this);
-
-      currentPage.setUpdateDelegate(this);
-      setPage(currentPage);
+      this(currentPage, new WizardViewImpl(resources, title));
    }
 
-   
+   /**
+    * Creates WizardPresenter with given instance of view and current wizard page
+    * 
+    * For Unit Tests
+    * 
+    * @param currentPage
+    * @param view
+    */
+   protected WizardPresenter(WizardPagePresenter currentPage, WizardView view)
+   {
+      this.view = view;
+      view.setDelegate(this);
+      currentPage.setUpdateDelegate(this);
+      setPage(currentPage);
+      isFirstFlipToNext = true;
+   }
+
    /**
     * {@inheritDoc}
     */
@@ -76,7 +74,12 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
    {
       currentPage = currentPage.flipToNext();
       updateControls();
-      currentPage.go(display.getContentPanel());
+      if (isFirstFlipToNext)
+      {
+         view.setChangePageAnimationEnabled(true);
+         isFirstFlipToNext = false;
+      }
+      currentPage.go(view.getContentPanel());
    }
 
    /**
@@ -87,7 +90,7 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
       currentPage = currentPage.flipToPrevious();
       // update buttons, once the page changed
       updateControls();
-      currentPage.go(display.getContentPanel());
+      currentPage.go(view.getContentPanel());
    }
 
    /**
@@ -96,7 +99,7 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
    public void onFinishClicked()
    {
       currentPage.doFinish();
-      display.close();
+      view.close();
    }
 
    /**
@@ -105,7 +108,7 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
    public void onCancelClicked()
    {
       currentPage.doCancel();
-      display.close();
+      view.close();
    }
 
    /**
@@ -116,7 +119,7 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
       page.setPrevious(currentPage);
       currentPage = page;
       updateControls();
-      currentPage.go(display.getContentPanel());
+      currentPage.go(view.getContentPanel());
    }
 
    /**
@@ -125,15 +128,15 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
    public void updateControls()
    {
       // read the state of the buttons from current page
-      display.setBackButtonVisible(currentPage.hasPrevious());
-      display.setNextButtonVisible(currentPage.hasNext());
-      display.setNextButtonEnabled(currentPage.isCompleted());
-      display.setFinishButtonEnabled(currentPage.canFinish());
+      view.setBackButtonVisible(currentPage.hasPrevious());
+      view.setNextButtonVisible(currentPage.hasNext());
+      view.setNextButtonEnabled(currentPage.isCompleted());
+      view.setFinishButtonEnabled(currentPage.canFinish());
 
-      display.setCaption(currentPage.getCaption());
-      display.setNotice(currentPage.getNotice());
+      view.setCaption(currentPage.getCaption());
+      view.setNotice(currentPage.getNotice());
       ImageResource image = currentPage.getImage();
-      display.setImage(image == null ? null : new Image(image));
+      view.setImage(image == null ? null : new Image(image));
    }
 
    /**
@@ -141,6 +144,6 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
     */
    public void showWizard()
    {
-      display.showWizard();
+      view.showWizard();
    }
 }

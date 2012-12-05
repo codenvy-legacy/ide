@@ -32,6 +32,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
@@ -40,6 +41,7 @@ import elemental.html.TableElement;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
+import org.exoplatform.ide.api.ui.wizard.NewProjectWizardAgent;
 import org.exoplatform.ide.client.ImageBundle;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
@@ -73,6 +75,10 @@ import org.exoplatform.ide.ui.list.SimpleList;
 import org.exoplatform.ide.ui.list.SimpleList.View;
 import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.loging.Log;
+import org.exoplatform.ide.wizard.WizardPagePresenter;
+import org.exoplatform.ide.wizard.genericproject.GenericProjectPagePresenter;
+import org.exoplatform.ide.wizard.newproject.NewProjectWizardAgentImpl;
+import org.exoplatform.ide.wizard.newproject.ShowNewProjectWizardCommand;
 
 import java.util.Date;
 
@@ -120,7 +126,7 @@ public class WorkspacePeresenter implements Presenter
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
       final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
       JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
-      OutlinePartPresenter outlinePresenter)
+      OutlinePartPresenter outlinePresenter, NewProjectWizardAgentImpl newProjectWizardAgent)
    {
       super();
       this.display = display;
@@ -141,7 +147,9 @@ public class WorkspacePeresenter implements Presenter
 
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
-      menuPresenter.addMenuItem("File/New/new Project", null);
+      registerWizards(newProjectWizardAgent, resourceProvider);
+      menuPresenter.addMenuItem("File/New/new Project", new ShowNewProjectWizardCommand(newProjectWizardAgent,
+         resources));
       menuPresenter.addMenuItem("File/Open Project", null, new OpenProjectCommand(resourceProvider), null,
          noProjectOpenedExpression);
 
@@ -165,6 +173,23 @@ public class WorkspacePeresenter implements Presenter
       partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
       partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
+   }
+
+   private void registerWizards(NewProjectWizardAgent newProjectWizardAgent, final ResourceProvider resourceProvider)
+   {
+      //TODO
+      Provider<WizardPagePresenter> provider = new Provider<WizardPagePresenter>()
+      {
+         public WizardPagePresenter get()
+         {
+            return new GenericProjectPagePresenter(resources, resourceProvider);
+         }
+      };
+
+      newProjectWizardAgent.registerWizard("Title1", "Description", "primaryNature", resources.genericProjectIcon(),
+         provider, JsonCollections.<String> createArray());
+      newProjectWizardAgent.registerWizard("Title2", "Description", "primaryNature", resources.genericProjectIcon(),
+         provider, JsonCollections.<String> createArray());
    }
 
    /**
@@ -659,5 +684,6 @@ public class WorkspacePeresenter implements Presenter
          return dialogBox;
       }
    }
+
 
 }

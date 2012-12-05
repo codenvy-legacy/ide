@@ -18,29 +18,36 @@
  */
 package org.exoplatform.ide.wizard.newproject;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.Command;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
+import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.wizard.WizardPresenter;
 
 /**
- * Contains of resources for new project's page view.
+ * Open New project wizard dialog.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewProjectWizardResource extends ClientBundle
+@Singleton
+public class ShowNewProjectWizardCommand implements Command
 {
-   public interface NewProjectWizardCss extends CssResource
-   {
-      @ClassName("alignTechPanel")
-      String alignTechPanel();
+   private final NewProjectWizardAgentImpl wizardAgent;
 
-      @ClassName("ide-NewProjectWizard")
-      String newProjectWizard();
+   private final Resources resources;
+
+   @Inject
+   public ShowNewProjectWizardCommand(NewProjectWizardAgentImpl wizardAgent, Resources resources)
+   {
+      this.wizardAgent = wizardAgent;
+      this.resources = resources;
    }
 
-   @Source("org/exoplatform/ide/wizard/NewProjectWizard.css")
-   NewProjectWizardCss newProjectWizardCss();
-
-   @Source("org/exoplatform/ide/wizard/images/NewProjectIcon.png")
-   ImageResource newProjectIcon();
+   public void execute()
+   {
+      NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources);
+      WizardPresenter wizardDialog = new WizardPresenter(firstPage, resources, "Create project");
+      wizardDialog.showWizard();
+   }
 }

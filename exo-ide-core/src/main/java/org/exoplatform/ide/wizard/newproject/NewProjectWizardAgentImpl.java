@@ -33,7 +33,6 @@ import javax.inject.Singleton;
  * Implements register wizards and returns all available wizard.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 @Singleton
 public class NewProjectWizardAgentImpl implements NewProjectWizardAgent

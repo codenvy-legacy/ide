@@ -98,6 +98,14 @@ public interface WizardView
     * Show wizard
     */
    void showWizard();
+   
+   /**
+    * Sets whether animation for change page is enabled.
+    * 
+    * @param isEnabled <code>true</code> to enable the animation, <code>false</code>
+    * to disable it
+    */
+   void setChangePageAnimationEnabled(boolean isEnabled);
 
    /**
     * Returns place of main form where will be shown current wizard page.

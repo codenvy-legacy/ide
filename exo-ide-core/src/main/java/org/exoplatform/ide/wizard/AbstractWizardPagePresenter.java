@@ -24,7 +24,6 @@ import com.google.gwt.resources.client.ImageResource;
  * AbstractPagePresenter is an abstract base implementation of a WizardPagePresenter.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public abstract class AbstractWizardPagePresenter implements WizardPagePresenter
 {

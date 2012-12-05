@@ -30,7 +30,6 @@ import com.google.gwt.user.client.ui.Widget;
  * Provides entering project's name for new generic project.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public class GenericProjectPageViewImpl implements GenericProjectPageView
 {

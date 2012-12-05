@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.IsWidget;
  * Interface of new project page view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public interface NewProjectPageView extends IsWidget
 {

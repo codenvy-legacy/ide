@@ -25,7 +25,6 @@ import com.google.gwt.resources.client.CssResource;
  * Contains resources for wizard view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public interface WizardResource extends ClientBundle
 {

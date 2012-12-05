@@ -29,7 +29,6 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  * Aggregate information about registered wizard.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 public class NewProjectWizardData
 {
