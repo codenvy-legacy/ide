@@ -116,7 +116,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
          fireEvent(new EditorContentChangedEvent(CollabEditor.this));
-         udateDocument();
+         updateDocument();
       }
 
    }
@@ -157,7 +157,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    /**
     * 
     */
-   private void udateDocument()
+   private void updateDocument()
    {
       //TODO change document, not all content
       document.removeDocumentListener(documentAdaptor);
