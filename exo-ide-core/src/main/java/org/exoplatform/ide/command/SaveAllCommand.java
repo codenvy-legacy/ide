@@ -37,11 +37,13 @@ public class SaveAllCommand implements ExtendedCommand
 
 
    private EditorAgent editorAgent;
+   private EditorsDirtyExpression expression;
 
    @Inject
-   public SaveAllCommand(EditorAgent editorAgent)
+   public SaveAllCommand(EditorAgent editorAgent, EditorsDirtyExpression expression)
    {
       this.editorAgent = editorAgent;
+      this.expression = expression;
    }
 
    @Override
@@ -77,7 +79,6 @@ public class SaveAllCommand implements ExtendedCommand
    @Override
    public Expression enabledWhen()
    {
-      //TODO
-      return null;
+      return expression;
    }
 }

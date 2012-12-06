@@ -77,6 +77,6 @@ public class EditorDirtyExpression extends AbstractExpression
 
    private boolean calculateValue()
    {
-      return activeEditor.isDirty();
+      return activeEditor!=null && activeEditor.isDirty();
    }
 }

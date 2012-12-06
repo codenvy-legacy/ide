@@ -21,12 +21,11 @@ package org.exoplatform.ide.command;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
-import org.exoplatform.ide.core.expressions.ActivePartConstraintExpression;
 import org.exoplatform.ide.core.expressions.EditorDirtyConstraintExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.editor.EditorPartPresenter;
-import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.part.PartPresenter;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.JsonCollections;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -34,27 +33,30 @@ import org.exoplatform.ide.part.PartPresenter;
  */
 @Singleton
 public class EditorsDirtyExpression extends AbstractExpression
-   implements EditorDirtyConstraintExpression, ActivePartConstraintExpression
+   implements EditorDirtyConstraintExpression
 {
+   JsonArray<EditorPartPresenter> dirtyEditors;
+
    @Inject
    public EditorsDirtyExpression(ExpressionManager expressionManager)
    {
       super(expressionManager, false);
+      dirtyEditors = JsonCollections.createArray();
    }
 
-   private JsonStringMap<EditorPartPresenter> dirtyEditors;
-
-   @Override
-   public boolean onActivePartChanged(PartPresenter part)
-   {
-      //TODO
-      return false;
-   }
 
    @Override
    public boolean onEditorDirtyChanged(EditorPartPresenter editor)
    {
-      //TODO
-      return false;
+      if (editor.isDirty())
+      {
+         dirtyEditors.add(editor);
+      }
+      else
+      {
+         dirtyEditors.remove(editor);
+      }
+      value = !dirtyEditors.isEmpty();
+      return value;
    }
 }
