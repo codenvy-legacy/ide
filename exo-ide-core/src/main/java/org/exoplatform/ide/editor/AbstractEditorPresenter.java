@@ -53,25 +53,16 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
    protected abstract void initializeEditor();
    
    /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#doSave()
+    * Set dirty state and notify expressions 
+    * @param dirty
     */
-   @Override
-   public void doSave()
+   protected void updateDirtyState(boolean dirty)
    {
-      // TODO Auto-generated method stub
-   
+      dirtyState = dirty;
+      firePropertyChange(EditorPartPresenter.PROP_TITLE);
+      firePropertyChange(EditorPartPresenter.PROP_DIRTY);
    }
-
-   /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#doSaveAs()
-    */
-   @Override
-   public void doSaveAs()
-   {
-      // TODO Auto-generated method stub
    
-   }
-
    /**
     * @see org.exoplatform.ide.editor.EditorPartPresenter#isDirty()
     */

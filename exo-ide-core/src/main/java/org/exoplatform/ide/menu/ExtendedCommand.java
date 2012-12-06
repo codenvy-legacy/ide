@@ -27,13 +27,6 @@ import org.exoplatform.ide.core.expressions.Expression;
  */
 public interface ExtendedCommand extends Command
 {
-
-   /**
-    * Command should be uniquely identified by it's id.
-    * 
-    * @return String, Command Id 
-    */
-   public String getUniqueId();
    
    /**
     * {@inheritDoc}

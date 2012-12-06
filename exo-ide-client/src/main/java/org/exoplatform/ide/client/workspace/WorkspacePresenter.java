@@ -50,6 +50,9 @@ import org.exoplatform.ide.client.extensionsPart.ExtensionsPage;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.welcome.WelcomePage;
 import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
+import org.exoplatform.ide.command.EditorActiveExpression;
+import org.exoplatform.ide.command.NoProjectOpenedExpression;
+import org.exoplatform.ide.command.ProjectOpenedExpression;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ActivePartConstraintExpression;
@@ -91,7 +94,7 @@ import java.util.Date;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-public class WorkspacePeresenter implements Presenter
+public class WorkspacePresenter implements Presenter
 {
 
    public interface Display extends IsWidget
@@ -111,7 +114,7 @@ public class WorkspacePeresenter implements Presenter
 
    EventBus eventBus;
 
-   ProjectExplorerPresenter projectExpolorerPresenter;
+   ProjectExplorerPresenter projectExplorerPresenter;
 
    private final MainMenuPresenter menuPresenter;
 
@@ -122,15 +125,16 @@ public class WorkspacePeresenter implements Presenter
    protected final Resources resources;
 
    @Inject
-   protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
-      EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
-      final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-      JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
-      OutlinePartPresenter outlinePresenter, NewProjectWizardAgentImpl newProjectWizardAgent)
+   protected WorkspacePresenter(Display display, final ProjectExplorerPresenter projectExplorerPresenter,
+                                EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
+                                final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
+                                JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
+                                OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
+                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression, NewProjectWizardAgentImpl newProjectWizardAgent)
    {
       super();
       this.display = display;
-      this.projectExpolorerPresenter = projectExpolorerPresenter;
+      this.projectExplorerPresenter = projectExplorerPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
       this.editorAgent = editorAgent;
@@ -138,13 +142,7 @@ public class WorkspacePeresenter implements Presenter
       this.resources = resources;
 
       // FOR DEMO
-      // REGISTRE EXPRESSIONS
-      NoProjectOpenedExpression noProjectOpenedExpression = new NoProjectOpenedExpression();
-      expressionManager.registerExpression(noProjectOpenedExpression);
-
-      EditorActiveExpression editorActiveExpression = new EditorActiveExpression();
-      expressionManager.registerExpression(editorActiveExpression);
-
+      
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
       registerWizards(newProjectWizardAgent, resourceProvider);
@@ -160,8 +158,6 @@ public class WorkspacePeresenter implements Presenter
       menuPresenter.addMenuItem("Edit", null, null, editorActiveExpression, null);
       menuPresenter.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
 
-      ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
-      expressionManager.registerExpression(projectOpenedExpression);
       menuPresenter.addMenuItem("Project", null, null, projectOpenedExpression, null);
       menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression,
          noProjectOpenedExpression);
@@ -171,7 +167,7 @@ public class WorkspacePeresenter implements Presenter
 
       partAgent.addPart(extensionsPage, PartStackType.EDITING);
       partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
-      partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
+      partAgent.addPart(projectExplorerPresenter, PartStackType.NAVIGATION);
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
 

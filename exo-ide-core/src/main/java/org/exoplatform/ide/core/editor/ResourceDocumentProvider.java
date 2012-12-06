@@ -48,7 +48,7 @@ public class ResourceDocumentProvider implements DocumentProvider
    }
 
    /**
-    * @see org.exoplatform.ide.editor.DocumentProvider#getDocument(org.exoplatform.ide.editor.EditorInput)
+    * {@inheritDoc}
     */
    @Override
    public void getDocument(EditorInput input, final DocumentCallback callback)
@@ -82,26 +82,28 @@ public class ResourceDocumentProvider implements DocumentProvider
       callback.onDocument(new DocumentImpl(content));
    }
 
+
    /**
-    * @see org.exoplatform.ide.editor.DocumentProvider#saveDocument(org.exoplatform.ide.editor.EditorInput, org.exoplatform.ide.text.Document, boolean)
+    * {@inheritDoc}
     */
    @Override
-   public void saveDocument(EditorInput input, Document document, boolean overwrite)
+   public void saveDocument(final EditorInput input, Document document, boolean overwrite, final AsyncCallback<EditorInput> callback)
    {
       File file = input.getFile();
+      file.setContent(document.get());
       file.getProject().updateContent(file, new AsyncCallback<File>()
       {
 
          @Override
          public void onSuccess(File result)
          {
-            //TODO
+            callback.onSuccess(input);
          }
 
          @Override
          public void onFailure(Throwable caught)
          {
-            Log.error(ResourceDocumentProvider.class, caught);
+            callback.onFailure(caught);
          }
       });
    }

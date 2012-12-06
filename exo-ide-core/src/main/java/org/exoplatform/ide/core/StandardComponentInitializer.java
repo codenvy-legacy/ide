@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
+import com.google.inject.Inject;
 import org.exoplatform.ide.command.SaveCommand;
 import org.exoplatform.ide.menu.MainMenuPresenter;
-
-import com.google.inject.Inject;
-
-import com.google.gwt.core.client.Callback;
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc) 
@@ -31,31 +28,15 @@ import com.google.gwt.core.client.Callback;
  * @version $Id:
  *
  */
-public class StandartComponentInitializer implements Component
+public class StandardComponentInitializer
 {
-
-   private final MainMenuPresenter menuPresenter;
-
-   private final SaveCommand saveCommand;
 
    /**
     * 
     */
    @Inject
-   public StandartComponentInitializer(MainMenuPresenter menuPresenter, SaveCommand saveCommand)
-   {
-      this.menuPresenter = menuPresenter;
-      this.saveCommand = saveCommand;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void start(Callback<Component, ComponentException> callback)
+   public StandardComponentInitializer(MainMenuPresenter menuPresenter, SaveCommand saveCommand)
    {
       menuPresenter.addMenuItem("File/Save", saveCommand);
-      callback.onSuccess(this);
    }
-
 }

@@ -18,18 +18,42 @@
  */
 package org.exoplatform.ide.command;
 
+import com.google.web.bindery.event.shared.EventBus;
+
+import com.google.inject.Inject;
+
+import com.google.inject.Singleton;
+
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.ide.core.event.ActivePartChangedEvent;
+import org.exoplatform.ide.core.event.ActivePartChangedHandler;
 import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
+ * Command for "Save" action
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class SaveCommand implements ExtendedCommand
+@Singleton
+public class SaveCommand implements ExtendedCommand, ActivePartChangedHandler
 {
+
+   private EditorPartPresenter editor;
+   private final EditorDirtyExpression expression;
+
+   /**
+    * 
+    */
+   @Inject
+   public SaveCommand(EventBus eventBus, EditorDirtyExpression expression)
+   {
+      this.expression = expression;
+      eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
+   }
 
    /**
     * {@inheritDoc}
@@ -37,18 +61,10 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public void execute()
    {
-      // TODO Auto-generated method stub
-      
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getUniqueId()
-   {
-      // TODO Auto-generated method stub
-      return null;
+      if (editor != null)
+      {
+         editor.doSave();
+      }
    }
 
    /**
@@ -67,7 +83,6 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public Expression visibleWhen()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -77,8 +92,19 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public Expression enabledWhen()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return expression;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onActivePartChanged(ActivePartChangedEvent event)
+   {
+      if (event.getActivePart() instanceof EditorPartPresenter)
+      {
+         editor = (EditorPartPresenter)event.getActivePart();
+      }
    }
 
 }

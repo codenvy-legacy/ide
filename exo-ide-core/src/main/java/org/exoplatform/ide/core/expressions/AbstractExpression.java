@@ -30,13 +30,14 @@ public class AbstractExpression implements Expression
    protected int id;
 
    /**
-    * Construct expression with auto-generated id
+    * Construct expression with auto-generated id and register in {@link ExpressionManager} 
     * @param value default initial value
     */
-   public AbstractExpression(boolean value)
+   public AbstractExpression(ExpressionManager expressionManager, boolean value)
    {
       this.value = value;
       this.id = ++UNIQUE_ID;
+      expressionManager.registerExpression(this);
    }
    
    /**

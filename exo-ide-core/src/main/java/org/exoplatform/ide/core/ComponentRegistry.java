@@ -17,8 +17,8 @@
 package org.exoplatform.ide.core;
 
 import com.google.gwt.core.client.Callback;
-import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.json.JsonArray;
@@ -32,16 +32,17 @@ import org.exoplatform.ide.util.loging.Log;
 public class ComponentRegistry
 {
    private JsonArray<Component> pendingComponents;
+   private Provider<StandardComponentInitializer> componentInitializer;
 
    /**
     * Instantiates Component Registry. All components should be listed in this constructor
     */
    @Inject
-   public ComponentRegistry(ResourceProvider resourceManager, StandartComponentInitializer componentInitializer)
+   public ComponentRegistry(ResourceProvider resourceManager, Provider<StandardComponentInitializer> componentInitializer)
    {
-      pendingComponents = JsonCollections.<Component> createArray();
+      this.componentInitializer = componentInitializer;
+      pendingComponents = JsonCollections.createArray();
       pendingComponents.add(resourceManager);
-      pendingComponents.add(componentInitializer);
    }
 
    /**
@@ -61,6 +62,8 @@ public class ComponentRegistry
             if (pendingComponents.size() == 0)
             {
                Log.info(ComponentRegistry.class, "All services initialized. Starting.");
+               //initialize standard components
+               componentInitializer.get();
                callback.onSuccess(null);
             }
          }

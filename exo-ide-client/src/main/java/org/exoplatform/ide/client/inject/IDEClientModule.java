@@ -23,7 +23,7 @@ import org.exoplatform.ide.client.BootstrapController;
 import org.exoplatform.ide.client.StyleInjector;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.projectExplorer.ProjectTreeView;
-import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
+import org.exoplatform.ide.client.workspace.WorkspacePresenter;
 import org.exoplatform.ide.client.workspace.WorkspaceView;
 
 /**
@@ -46,8 +46,8 @@ public class IDEClientModule extends AbstractGinModule
    protected void configure()
    {
       bind(BootstrapController.class).in(Singleton.class);
-      bind(WorkspacePeresenter.Display.class).to(WorkspaceView.class).in(Singleton.class);
-      bind(WorkspacePeresenter.class).in(Singleton.class);
+      bind(WorkspacePresenter.Display.class).to(WorkspaceView.class).in(Singleton.class);
+      bind(WorkspacePresenter.class).in(Singleton.class);
       bind(ProjectExplorerPresenter.Display.class).to(ProjectTreeView.class).in(Singleton.class);
       bind(ProjectExplorerPresenter.class).in(Singleton.class);
       bind(StyleInjector.class).in(Singleton.class);

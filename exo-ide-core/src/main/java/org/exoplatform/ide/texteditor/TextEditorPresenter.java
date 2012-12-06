@@ -18,19 +18,14 @@
  */
 package org.exoplatform.ide.texteditor;
 
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
-
 import org.exoplatform.ide.Resources;
-import org.exoplatform.ide.editor.AbstractEditorPresenter;
+import org.exoplatform.ide.editor.AbstractTextEditorPresenter;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.DocumentProvider.DocumentCallback;
-import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.SelectionProvider;
-import org.exoplatform.ide.editor.TextEditorPartPresenter;
-import org.exoplatform.ide.outline.OutlinePresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
@@ -45,12 +40,10 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
-public class TextEditorPresenter extends AbstractEditorPresenter implements TextEditorPartPresenter
+public class TextEditorPresenter extends AbstractTextEditorPresenter
 {
 
    protected TextEditorPartDisplay editor;
-
-   protected final DocumentProvider documentProvider;
 
    private final TextListener textListener = new TextListener()
    {
@@ -58,16 +51,12 @@ public class TextEditorPresenter extends AbstractEditorPresenter implements Text
       @Override
       public void onTextChange(TextChange textChange)
       {
-         if (!dirtyState)
+         if (!isDirty())
          {
-            dirtyState = true;
-            firePropertyChange(EditorPartPresenter.PROP_TITLE);
-            firePropertyChange(EditorPartPresenter.PROP_DIRTY);
+            updateDirtyState(true);
          }
       }
    };
-
-   protected TextEditorConfiguration configuration;
 
    /**
     * @param documentProvider 
@@ -76,8 +65,7 @@ public class TextEditorPresenter extends AbstractEditorPresenter implements Text
    public TextEditorPresenter(Resources resources, UserActivityManager userActivityManager,
       DocumentProvider documentProvider, TextEditorConfiguration configuration)
    {
-      this.documentProvider = documentProvider;
-      this.configuration = configuration;
+      super(configuration, documentProvider);
       editor = new TextEditorView(resources, userActivityManager);
       editor.getTextListenerRegistrar().add(textListener);
    }
@@ -95,20 +83,12 @@ public class TextEditorPresenter extends AbstractEditorPresenter implements Text
          @Override
          public void onDocument(Document document)
          {
+            TextEditorPresenter.this.document = document;
             AnnotationModel annotationModel = documentProvider.getAnnotationModel(input);
             editor.setDocument((DocumentImpl)document, annotationModel);
             firePropertyChange(PROP_INPUT);
          }
       });
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.TextEditorPartPresenter#getDocumentProvider()
-    */
-   @Override
-   public DocumentProvider getDocumentProvider()
-   {
-      return documentProvider;
    }
 
    /**
@@ -159,20 +139,6 @@ public class TextEditorPresenter extends AbstractEditorPresenter implements Text
    }
 
    /**
-    * @see org.exoplatform.ide.part.PartPresenter#getTitle()
-    */
-   @Override
-   public String getTitle()
-   {
-      if (isDirty())
-      {
-         return "*" + input.getName();
-      }
-      else
-         return input.getName();
-   }
-
-   /**
     * @see org.exoplatform.ide.presenter.Presenter#go(com.google.gwt.user.client.ui.HasWidgets)
     */
    @Override
@@ -182,30 +148,12 @@ public class TextEditorPresenter extends AbstractEditorPresenter implements Text
    }
 
    /**
-    * @see org.exoplatform.ide.part.PartPresenter#getTitleImage()
-    */
-   @Override
-   public ImageResource getTitleImage()
-   {
-      return input.getImageResource();
-   }
-
-   /**
     * @see org.exoplatform.ide.part.PartPresenter#getTitleToolTip()
     */
    @Override
    public String getTitleToolTip()
    {
       // TODO Auto-generated method stub
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public OutlinePresenter getOutline()
-   {
       return null;
    }
 

@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.part;
 
+import com.google.web.bindery.event.shared.EventBus;
+
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -28,6 +30,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 
+import org.exoplatform.ide.core.event.EditorDirtyStateChangedEvent;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.part.PartStackPresenter.Display.TabItem;
@@ -100,19 +104,25 @@ public class PartStackPresenter implements Presenter
       /** Update Tab */
       public void updateTabItem(int index, ImageResource icon, String title, String toolTip);
    }
-   
+
    private PropertyListener propertyListener = new PropertyListener()
    {
-      
+
       @Override
       public void propertyChanged(PartPresenter source, int propId)
       {
-         if(PartPresenter.PROP_TITLE == propId)
+         if (PartPresenter.PROP_TITLE == propId)
          {
             updatePartTab(source);
          }
+         else if (EditorPartPresenter.PROP_DIRTY == propId)
+         {
+            eventBus.fireEvent(new EditorDirtyStateChangedEvent((EditorPartPresenter)source));
+         }
       }
    };
+
+   private final EventBus eventBus;
 
    /**
     * 
@@ -121,16 +131,17 @@ public class PartStackPresenter implements Presenter
     * @param partStackResources
     */
    @Inject
-   public PartStackPresenter(Display display, PartStackUIResources partStackResources)
+   public PartStackPresenter(Display display, PartStackUIResources partStackResources, EventBus eventBus)
    {
       this.display = display;
+      this.eventBus = eventBus;
       display.setFocusRequstHandler(new FocusRequstHandler()
       {
          @Override
          public void onRequestFocus()
          {
             // notify partStackHandler
-            if (partStackHandler!=null)
+            if (partStackHandler != null)
             {
                partStackHandler.onRequestFocus(PartStackPresenter.this);
             }
@@ -138,15 +149,14 @@ public class PartStackPresenter implements Presenter
       });
    }
 
-   
    /**
     * Update part tab, it's may be title, icon or tooltip
     * @param part
     */
    private void updatePartTab(PartPresenter part)
    {
-      if(!parts.contains(part))
-         throw  new IllegalArgumentException("This part stack not contains: " + part.getTitle());
+      if (!parts.contains(part))
+         throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
       int index = parts.indexOf(part);
       display.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
    }

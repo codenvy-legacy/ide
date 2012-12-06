@@ -21,7 +21,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.client.workspace.WorkspacePeresenter;
+import org.exoplatform.ide.client.workspace.WorkspacePresenter;
 import org.exoplatform.ide.core.ComponentException;
 import org.exoplatform.ide.core.ComponentRegistry;
 
@@ -41,7 +41,7 @@ public class BootstrapController
     * @param extensionManager
     */
    @Inject
-   public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePeresenter workspacePeresenter,
+   public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
       StyleInjector styleInjector, final ExtensionManager extensionManager)
    {
       styleInjector.inject();

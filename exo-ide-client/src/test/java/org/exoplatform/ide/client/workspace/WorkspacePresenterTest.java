@@ -54,7 +54,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class WorkspacePresenterTest
 {
    @Mock
-   WorkspacePeresenter.Display display;
+   WorkspacePresenter.Display display;
 
    @Mock
    ProjectExplorerPresenter projectExpolorerPresenter;
@@ -72,7 +72,7 @@ public class WorkspacePresenterTest
    EventBus eventBus = new SimpleEventBus();
 
    @InjectMocks
-   WorkspacePeresenter wsPresenter;
+   WorkspacePresenter wsPresenter;
 
    @Before
    public void disarm()
@@ -118,7 +118,7 @@ public class WorkspacePresenterTest
       when(wsPresenter.display.getLeftPanel()).thenReturn(leftWorkspacePanel);
       wsPresenter.go(mock(HasWidgets.class));
       // verify ProjectView opened
-      verify(wsPresenter.projectExpolorerPresenter).go(eq(leftWorkspacePanel));
+      verify(wsPresenter.projectExplorerPresenter).go(eq(leftWorkspacePanel));
    }
 
    @Ignore

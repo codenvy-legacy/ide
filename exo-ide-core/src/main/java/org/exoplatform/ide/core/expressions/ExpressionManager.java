@@ -21,9 +21,12 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.core.event.ActivePartChangedEvent;
 import org.exoplatform.ide.core.event.ActivePartChangedHandler;
+import org.exoplatform.ide.core.event.EditorDirtyStateChangedEvent;
+import org.exoplatform.ide.core.event.EditorDirtyStateChangedHandler;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ProjectActionHandler;
+import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
@@ -58,6 +61,7 @@ public class ExpressionManager
    {
       eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectChangedHandler());
       eventBus.addHandler(ActivePartChangedEvent.TYPE, new PartChangedHandler());
+      eventBus.addHandler(EditorDirtyStateChangedEvent.TYPE, new EditorDirtyChangedHandler());
    }
 
    /**
@@ -83,7 +87,7 @@ public class ExpressionManager
    /**
     * Gathers the list of changed {@link ActivePartConstraintExpression}
     * 
-    * @param project
+    * @param activePart
     */
    private void calculateActivePartConstraintExpressions(final PartPresenter activePart)
    {
@@ -143,6 +147,35 @@ public class ExpressionManager
    }
 
    /**
+    * Gathers the list of changed {@link EditorDirtyConstraintExpression}
+    * @param editor
+    */
+   private void calculateEditorDirtyStateChanged(final EditorPartPresenter editor)
+   {
+      final JsonIntegerMap<Boolean> changedExpressions = JsonCollections.createIntegerMap();
+      expressions.iterate(new IterationCallback<Expression>()
+      {
+         @Override
+         public void onIteration(int id, Expression expression)
+         {
+            if (expression instanceof EditorDirtyConstraintExpression)
+            {
+               boolean oldVal = expression.getValue();
+               if (((EditorDirtyConstraintExpression)expression).onEditorDirtyChanged(editor) != oldVal)
+               {
+                  // value changed
+                  changedExpressions.put(id, !oldVal);
+               }
+            }
+         }
+      });
+      if (!changedExpressions.isEmpty())
+      {
+         fireChangedExpressions(changedExpressions);
+      }
+   }
+
+   /**
     * Fires the event, notifying that following Core Expressions have changed.
     * 
     * @param newValues
@@ -186,5 +219,22 @@ public class ExpressionManager
       {
          calculateProjectConstraintExpressions(null);
       }
+   }
+
+   /**
+    * Process {@link EditorDirtyStateChangedEvent}
+    */
+   private final class EditorDirtyChangedHandler implements EditorDirtyStateChangedHandler
+   {
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void onEditorDirtyStateChanged(EditorDirtyStateChangedEvent event)
+      {
+         calculateEditorDirtyStateChanged(event.getEditor());
+      }
+
    }
 }
