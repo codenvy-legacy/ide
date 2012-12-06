@@ -22,9 +22,8 @@ import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
-
+import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 
 /**
  * Unmarshaller for unmarshalling response as {@link String}.
@@ -33,7 +32,8 @@ import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
  * @version $Id: StringUnmarshaller.java Aug 27, 2012 10:05:35 AM azatsarynnyy $
  *
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder>, org.exoplatform.gwtframework.commons.rest.Unmarshallable<StringBuilder>
+public class StringUnmarshaller implements Unmarshallable<StringBuilder>,
+   org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>
 {
 
    protected StringBuilder builder;
@@ -48,17 +48,17 @@ public class StringUnmarshaller implements Unmarshallable<StringBuilder>, org.ex
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage)
     */
    @Override
-   public void unmarshal(RESTfulResponseMessage response) throws UnmarshallerException
+   public void unmarshal(ResponseMessage response) throws UnmarshallerException
    {
       if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null)
-        builder.append(response.getBody());
+         builder.append(response.getBody());
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload()
+    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#getPayload()
     */
    @Override
    public StringBuilder getPayload()
@@ -66,14 +66,15 @@ public class StringUnmarshaller implements Unmarshallable<StringBuilder>, org.ex
       return builder;
    }
 
+   /**
+    * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+    */
    @Override
    public void unmarshal(Response response) throws UnmarshallerException
    {
       if (response.getStatusCode() != HTTPStatus.NO_CONTENT && response.getText() != null)
          builder.append(response.getText());
-      
+
    }
-   
-   
 
 }

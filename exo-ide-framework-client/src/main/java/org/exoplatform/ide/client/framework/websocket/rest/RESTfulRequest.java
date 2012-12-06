@@ -31,7 +31,6 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Builder for constructing and sending {@link RequestMessage}.
@@ -66,7 +65,7 @@ public class RESTfulRequest
    protected RESTfulRequest(Method method, String path)
    {
       requestMessage = RESTMessageBus.AUTO_BEAN_FACTORY.requestMessage().as();
-      requestMessage.setUuid(generateUuid());
+      requestMessage.setUuid(UUID.uuid());
       requestMessage.setMethod((method == null) ? null : method.toString());
       requestMessage.setPath(path);
       loader = new EmptyLoader();
@@ -189,29 +188,6 @@ public class RESTfulRequest
             callback.onFailure(e);
          }
       }
-   }
-
-   /**
-    * Returns randomly generated identifier.
-    * 
-    * @return a randomly generated identifier
-    */
-   private String generateUuid()
-   {
-      Random rand = new Random();
-      String id = "";
-
-      for (int i = 0; i < 12; i++)
-      {
-         int r = rand.nextInt(62);
-         if (r > 35)
-            id += (char)(r + 61);
-         else if (r > 9)
-            id += (char)(r + 55);
-         else
-            id += r;
-      }
-      return id;
    }
 
 }
