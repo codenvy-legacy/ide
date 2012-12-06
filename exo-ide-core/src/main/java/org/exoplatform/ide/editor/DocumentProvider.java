@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
 
@@ -69,8 +71,9 @@ public interface DocumentProvider
     * @param document the document
     * @param overwrite indicates whether overwrite should be performed
     *          while saving the given element if necessary
+    * @param callback the callback for save operation
     */
-   void saveDocument(EditorInput input, Document document, boolean overwrite);
+   void saveDocument(EditorInput input, Document document, boolean overwrite, AsyncCallback<EditorInput> callback);
    
    /**
     * Saves the given document as new resource, provided for the given input.

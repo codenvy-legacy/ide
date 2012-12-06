@@ -47,12 +47,11 @@ import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.extensionsPart.ExtensionsPage;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.welcome.WelcomePage;
+import org.exoplatform.ide.command.EditorActiveExpression;
+import org.exoplatform.ide.command.NoProjectOpenedExpression;
+import org.exoplatform.ide.command.ProjectOpenedExpression;
 import org.exoplatform.ide.core.editor.EditorAgent;
-import org.exoplatform.ide.core.expressions.AbstractExpression;
-import org.exoplatform.ide.core.expressions.ActivePartConstraintExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
-import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
-import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
 import org.exoplatform.ide.java.client.projectmodel.JavaProjectDesctiprion;
@@ -61,7 +60,6 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.outline.OutlinePartPresenter;
 import org.exoplatform.ide.part.PartAgentPresenter;
-import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
@@ -120,7 +118,8 @@ public class WorkspacePeresenter implements Presenter
       EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
       final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
       JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
-      OutlinePartPresenter outlinePresenter)
+      OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
+      EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
    {
       super();
       this.display = display;
@@ -132,12 +131,6 @@ public class WorkspacePeresenter implements Presenter
       this.resources = resources;
 
       // FOR DEMO
-      // REGISTRE EXPRESSIONS
-      NoProjectOpenedExpression noProjectOpenedExpression = new NoProjectOpenedExpression();
-      expressionManager.registerExpression(noProjectOpenedExpression);
-
-      EditorActiveExpression editorActiveExpression = new EditorActiveExpression();
-      expressionManager.registerExpression(editorActiveExpression);
 
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
@@ -152,8 +145,6 @@ public class WorkspacePeresenter implements Presenter
       menuPresenter.addMenuItem("Edit", null, null, editorActiveExpression, null);
       menuPresenter.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
 
-      ProjectOpenedExpression projectOpenedExpression = new ProjectOpenedExpression();
-      expressionManager.registerExpression(projectOpenedExpression);
       menuPresenter.addMenuItem("Project", null, null, projectOpenedExpression, null);
       menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression,
          noProjectOpenedExpression);
@@ -222,60 +213,6 @@ public class WorkspacePeresenter implements Presenter
             }
          }
       });
-   }
-
-   // FOR DEMO:
-   private final class EditorActiveExpression extends AbstractExpression implements ActivePartConstraintExpression
-   {
-      public EditorActiveExpression()
-      {
-         super(false);
-      }
-
-      /**
-      * {@inheritDoc}
-      */
-      @Override
-      public boolean onActivePartChanged(PartPresenter part)
-      {
-         value = (part instanceof EditorPartPresenter);
-         return value;
-      }
-
-   }
-
-   // FOR DEMO:
-   private final class ProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
-   {
-      public ProjectOpenedExpression()
-      {
-         super(false);
-      }
-
-      @Override
-      public boolean onProjectChanged(Project project)
-      {
-         value = project != null;
-         return value;
-      }
-
-   }
-
-   // FOR DEMO:
-   private final class NoProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
-   {
-      public NoProjectOpenedExpression()
-      {
-         super(true);
-      }
-
-      @Override
-      public boolean onProjectChanged(Project project)
-      {
-         value = project == null;
-         return value;
-      }
-
    }
 
    // FOR DEMO:
@@ -403,7 +340,7 @@ public class WorkspacePeresenter implements Presenter
 
                               }
                            });
-                           
+
                            project.createFolder(result, "webapp", new AsyncCallback<Folder>()
                            {
 

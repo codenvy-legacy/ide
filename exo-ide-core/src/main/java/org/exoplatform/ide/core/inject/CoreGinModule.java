@@ -28,7 +28,7 @@ import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.part.PartAgent;
-import org.exoplatform.ide.core.StandartComponentInitializer;
+import org.exoplatform.ide.core.StandardComponentInitializer;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.core.editor.ResourceDocumentProvider;
@@ -69,7 +69,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(Loader.class).to(EmptyLoader.class).in(Singleton.class);
       bind(Resources.class).in(Singleton.class);
       bind(ExtensionRegistry.class).in(Singleton.class);
-      bind(StandartComponentInitializer.class).in(Singleton.class);
+      bind(StandardComponentInitializer.class).in(Singleton.class);
 
       
       resourcesAPIconfigure();
