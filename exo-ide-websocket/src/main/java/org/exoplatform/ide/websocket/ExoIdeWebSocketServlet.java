@@ -32,7 +32,7 @@ import javax.ws.rs.ext.ContextResolver;
 
 /**
  * Servlet used for processing requests to Everrest over WebSocket connections.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ExoIdeWebSocketServlet.java Nov 7, 2012 4:29:51 PM azatsarynnyy $
  *
@@ -50,7 +50,7 @@ public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet
          ((DependencySupplier)getContainer().getComponentInstanceOfType(DependencySupplier.class));
       EverrestConfiguration config = new EverrestConfiguration();
       ProviderBinder providers = ProviderBinder.getInstance();
-      return new EverrestProcessor(resources, providers, dependencies, config, null);
+      return new EverrestProcessor(resources, providers, dependencies, config, new WebSocketFilterApplication());
    }
 
    @Override

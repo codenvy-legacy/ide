@@ -242,11 +242,14 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder)
    {
-      // TODO temporary disabled using WebSocket
-//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-//         cloneRepositoryWS(remoteUri, remoteName, folder);
-//      else
-      cloneRepositoryREST(remoteUri, remoteName, folder);
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      {
+         cloneRepositoryWS(remoteUri, remoteName, folder);
+      }
+      else
+      {
+         cloneRepositoryREST(remoteUri, remoteName, folder);
+      }
    }
 
    /**
