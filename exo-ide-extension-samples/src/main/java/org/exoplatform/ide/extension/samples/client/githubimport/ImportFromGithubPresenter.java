@@ -45,6 +45,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
@@ -372,15 +373,14 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       }
       JobManager.get().showJobSeparated();
 
-      //Temporary disable websockets for this function because error appear that ssh key not found through websocket
-//      if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
-//      {
-//         cloneFolderWS(folder, remoteUri);
-//      }
-//      else
-//      {
-      cloneFolderREST(folder, remoteUri);
-//      }
+      if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
+      {
+         cloneFolderWS(folder, remoteUri);
+      }
+      else
+      {
+         cloneFolderREST(folder, remoteUri);
+      }
    }
 
    private void cloneFolderREST(final FolderModel folder, String remoteUri)
