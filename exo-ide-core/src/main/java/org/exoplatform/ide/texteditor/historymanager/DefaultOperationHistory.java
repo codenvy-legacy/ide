@@ -10,9 +10,8 @@
  *     Tasktop Technologies -  Bug 323444 - [Undo] [Commands] java.util.ConcurrentModificationException 
  *     		when trying to get the undo history from a source viewer
  *******************************************************************************/
-package org.exoplatform.ide.commands.operations;
+package org.exoplatform.ide.texteditor.historymanager;
 
-import org.exoplatform.ide.commands.ExecutionException;
 import org.exoplatform.ide.runtime.Assert;
 import org.exoplatform.ide.runtime.IStatus;
 import org.exoplatform.ide.runtime.OperationCanceledException;
@@ -61,7 +60,7 @@ import java.util.Map;
  * This implementation is not intended to be subclassed.
  * </p>
  * 
- * @see org.eclipse.core.commands.operations.IOperationHistory
+ * @see org.exoplatform.ide.texteditor.historymanager.core.commands.operations.IOperationHistory
  * @see org.eclipse.core.commands.operations.IOperationApprover
  * 
  */
@@ -242,8 +241,8 @@ public final class DefaultOperationHistory implements IOperationHistory
     * @param listener
     *            the IOperationHistoryListener to be added as a listener.
     * 
-    * @see org.eclipse.core.commands.operations.IOperationHistoryListener
-    * @see org.eclipse.core.commands.operations.OperationHistoryEvent
+    * @see org.exoplatform.ide.texteditor.historymanager.core.commands.operations.IOperationHistoryListener
+    * @see org.exoplatform.ide.texteditor.historymanager.core.commands.operations.OperationHistoryEvent
     */
    public void addOperationHistoryListener(IOperationHistoryListener listener)
    {

@@ -8,9 +8,8 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package org.exoplatform.ide.commands.operations;
+package org.exoplatform.ide.texteditor.historymanager;
 
-import org.exoplatform.ide.commands.ExecutionException;
 import org.exoplatform.ide.runtime.IStatus;
 
 /**

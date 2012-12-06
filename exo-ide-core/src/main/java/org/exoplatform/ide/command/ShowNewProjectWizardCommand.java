@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.newproject;
+package org.exoplatform.ide.command;
 
 import com.google.gwt.user.client.Command;
 import com.google.inject.Inject;
@@ -24,6 +24,8 @@ import com.google.inject.Singleton;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.wizard.WizardPresenter;
+import org.exoplatform.ide.wizard.newproject.NewProjectPagePresenter;
+import org.exoplatform.ide.wizard.newproject.NewProjectWizardAgentImpl;
 
 /**
  * Open New project wizard dialog.
@@ -37,6 +39,12 @@ public class ShowNewProjectWizardCommand implements Command
 
    private final Resources resources;
 
+   /**
+    * Create command
+    * 
+    * @param wizardAgent
+    * @param resources
+    */
    @Inject
    public ShowNewProjectWizardCommand(NewProjectWizardAgentImpl wizardAgent, Resources resources)
    {
@@ -44,6 +52,9 @@ public class ShowNewProjectWizardCommand implements Command
       this.resources = resources;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    public void execute()
    {
       NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources);

@@ -49,6 +49,7 @@ import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.extensionsPart.ExtensionsPage;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.welcome.WelcomePage;
+import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ActivePartConstraintExpression;
@@ -78,7 +79,6 @@ import org.exoplatform.ide.util.loging.Log;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 import org.exoplatform.ide.wizard.genericproject.GenericProjectPagePresenter;
 import org.exoplatform.ide.wizard.newproject.NewProjectWizardAgentImpl;
-import org.exoplatform.ide.wizard.newproject.ShowNewProjectWizardCommand;
 
 import java.util.Date;
 
@@ -684,6 +684,5 @@ public class WorkspacePeresenter implements Presenter
          return dialogBox;
       }
    }
-
 
 }

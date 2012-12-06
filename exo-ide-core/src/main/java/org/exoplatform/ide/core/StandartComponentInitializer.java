@@ -16,24 +16,46 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.commands;
+package org.exoplatform.ide.core;
+
+import org.exoplatform.ide.command.SaveCommand;
+import org.exoplatform.ide.menu.MainMenuPresenter;
+
+import com.google.inject.Inject;
+
+import com.google.gwt.core.client.Callback;
 
 /**
+ * Initializer for standard component i.e. some basic menu commands (Save, Save As etc) 
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: $
+ * @version $Id:
  *
  */
-public class ExecutionException extends Exception
+public class StandartComponentInitializer implements Component
 {
-   private static final long serialVersionUID = 1L;
+
+   private final MainMenuPresenter menuPresenter;
+
+   private final SaveCommand saveCommand;
 
    /**
-    * @param string
-    * @param e
+    * 
     */
-   public ExecutionException(String message, Exception e)
+   @Inject
+   public StandartComponentInitializer(MainMenuPresenter menuPresenter, SaveCommand saveCommand)
    {
-      super(message, e);
+      this.menuPresenter = menuPresenter;
+      this.saveCommand = saveCommand;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void start(Callback<Component, ComponentException> callback)
+   {
+      menuPresenter.addMenuItem("File/Save", saveCommand);
+      callback.onSuccess(this);
    }
 
 }

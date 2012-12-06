@@ -24,17 +24,13 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.editor.AbstractEditorPresenter;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.DocumentProvider.DocumentCallback;
-import org.exoplatform.ide.editor.EditorInitException;
-import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.editor.SelectionProvider;
 import org.exoplatform.ide.editor.TextEditorPartPresenter;
-import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.outline.OutlinePresenter;
-import org.exoplatform.ide.part.AbstractPartPresenter;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
@@ -49,18 +45,12 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
-public class TextEditorPresenter extends AbstractPartPresenter implements TextEditorPartPresenter
+public class TextEditorPresenter extends AbstractEditorPresenter implements TextEditorPartPresenter
 {
 
    protected TextEditorPartDisplay editor;
 
    protected final DocumentProvider documentProvider;
-
-   protected EditorInput input;
-
-   protected boolean dirtyState;
-
-   private final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
 
    private final TextListener textListener = new TextListener()
    {
@@ -93,13 +83,12 @@ public class TextEditorPresenter extends AbstractPartPresenter implements TextEd
    }
 
    /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#init(org.exoplatform.ide.editor.api.EditorSite, org.exoplatform.ide.editor.EditorInput)
+    * {@inheritDoc}
     */
    @Override
-   public void init(final EditorInput input) throws EditorInitException
+   protected void initializeEditor()
    {
       editor.configure(configuration);
-      this.input = input;
       documentProvider.getDocument(input, new DocumentCallback()
       {
 
@@ -111,35 +100,6 @@ public class TextEditorPresenter extends AbstractPartPresenter implements TextEd
             firePropertyChange(PROP_INPUT);
          }
       });
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#doSave()
-    */
-   @Override
-   public void doSave()
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#doSaveAs()
-    */
-   @Override
-   public void doSaveAs()
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * @see org.exoplatform.ide.editor.EditorPartPresenter#isDirty()
-    */
-   @Override
-   public boolean isDirty()
-   {
-      return dirtyState;
    }
 
    /**
@@ -213,43 +173,12 @@ public class TextEditorPresenter extends AbstractPartPresenter implements TextEd
    }
 
    /**
-    * @see org.exoplatform.ide.part.PartPresenter#onClose()
-    */
-   @Override
-   public boolean onClose()
-   {
-      boolean allowClose = true;
-
-      if (allowClose)
-      {
-         for (int i = 0; i < closeHandlers.size(); i++)
-         {
-            EditorPartCloseHandler handler = closeHandlers.get(i);
-            handler.onClose(this);
-         }
-      }
-      return allowClose;
-   }
-
-   /**
     * @see org.exoplatform.ide.presenter.Presenter#go(com.google.gwt.user.client.ui.HasWidgets)
     */
    @Override
    public void go(HasWidgets container)
    {
       container.add(getWidget());
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void addCloseHandler(EditorPartCloseHandler closeHandler)
-   {
-      if (!closeHandlers.contains(closeHandler))
-      {
-         closeHandlers.add(closeHandler);
-      }
    }
 
    /**
@@ -269,15 +198,6 @@ public class TextEditorPresenter extends AbstractPartPresenter implements TextEd
    {
       // TODO Auto-generated method stub
       return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public EditorInput getEditorInput()
-   {
-      return input;
    }
 
    /**
