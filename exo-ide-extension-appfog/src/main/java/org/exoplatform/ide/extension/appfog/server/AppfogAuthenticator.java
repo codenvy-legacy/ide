@@ -24,12 +24,14 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.security.ConversationState;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -175,7 +177,7 @@ public class AppfogAuthenticator extends BaseAppfogAuthenticator
          Item fileItem = vfs.createFile(parent.getId(), file, MediaType.TEXT_PLAIN_TYPE, content);
          List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(1);
          String user = ConversationState.getCurrent().getIdentity().getUserId();
-         acl.add(new AccessControlEntry(user, new HashSet<String>(vfs.getInfo().getPermissions())));
+         acl.add(new AccessControlEntryImpl(user, new HashSet<String>(vfs.getInfo().getPermissions())));
          vfs.updateACL(fileItem.getId(), acl, true, null);
       }
    }

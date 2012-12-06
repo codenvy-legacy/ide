@@ -16,20 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.exoplatform.ide.vfs.shared;
 
-package org.exoplatform.ide.client.framework.event;
-
-import com.google.gwt.event.shared.EventHandler;
-
+import java.util.List;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
- *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public interface StartWithInitParamsHandler extends EventHandler
+public class ItemNodeImpl implements ItemNode
 {
-   
-   void onStartWithInitParams(StartWithInitParamsEvent event);
+   private Item item;
+   private List<ItemNode> children;
 
+   public ItemNodeImpl(Item item, List<ItemNode> children)
+   {
+      this.item = item;
+      this.children = children;
+   }
+
+   public ItemNodeImpl(Item item)
+   {
+      this(item, null);
+   }
+
+   @Override
+   public Item getItem()
+   {
+      return item;
+   }
+
+   @Override
+   public void setItem(Item item)
+   {
+      this.item = item;
+   }
+
+   @Override
+   public List<ItemNode> getChildren()
+   {
+      return children;
+   }
+
+   @Override
+   public void setChildren(List<ItemNode> children)
+   {
+      this.children = children;
+   }
 }

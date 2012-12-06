@@ -20,8 +20,9 @@
 package org.exoplatform.ide.vfs.client.model;
 
 import com.google.gwt.json.client.JSONObject;
-
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Lock;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -38,7 +39,7 @@ import java.util.List;
  * @author eXo
  * @version $Id: $
  */
-public class FileModel extends org.exoplatform.ide.vfs.shared.File implements ItemContext
+public class FileModel extends FileImpl implements ItemContext
 {
    private boolean persisted;
 
@@ -77,7 +78,7 @@ public class FileModel extends org.exoplatform.ide.vfs.shared.File implements It
       init(itemObject);
    }
 
-   public FileModel(org.exoplatform.ide.vfs.shared.File file)
+   public FileModel(File file)
    {
       super(file.getId(), file.getName(), file.getPath(), file.getParentId(), file.getCreationDate(), file
          .getLastModificationDate(), file.getVersionId(), file.getMimeType(), file.getLength(), file.isLocked(), file

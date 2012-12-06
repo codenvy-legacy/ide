@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.assertEquals;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -27,6 +25,8 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>

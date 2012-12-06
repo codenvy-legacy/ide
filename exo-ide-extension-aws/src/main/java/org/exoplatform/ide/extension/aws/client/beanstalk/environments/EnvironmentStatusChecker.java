@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.aws.client.beanstalk.environments;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -47,7 +46,7 @@ import java.util.List;
 
 /**
  * Class used to check environment status periodically. Status will be checked as long as it is in a follow state:
- * {@link EnvironmentStatus.Launching}, {@link EnvironmentStatus.Updating}, {@link EnvironmentStatus.Terminating}.
+ * {@link EnvironmentStatus#Launching}, {@link EnvironmentStatus#Updating}, {@link EnvironmentStatus#Terminating}.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.com">Artem Zatsarynnyy</a>
  * @version $Id: EnvironmentStatusChecker.java Oct 1, 2012 2:16:56 PM azatsarynnyy $
@@ -98,7 +97,7 @@ public class EnvironmentStatusChecker
    /**
     * Constructs a new instance of {@link EnvironmentStatusChecker}.
     * 
-    * @param vfs {@link VirtualFileSystemInfo}
+    * @param vfs {@link org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo}
     * @param project {@link ProjectModel}
     * @param environment {@link EnvironmentInfo} to check status
     * @param showEvents if <code>true</code> - events will be printed to output view
@@ -243,10 +242,10 @@ public class EnvironmentStatusChecker
    }
 
    /**
-    * Checks the environment status and if it {@link EnvironmentStatus.Ready} or
-    * {@link EnvironmentStatus.Terminated} and then print appropriate message to the output view.
+    * Checks the environment status and if it {@link EnvironmentStatus#Ready} or
+    * {@link EnvironmentStatus#Terminated} and then print appropriate message to the output view.
     * 
-    * @param environmentToCheck {@link EnvironmentInfo}
+    * @param env {@link EnvironmentInfo}
     */
    private void updateEnvironmentStatus(EnvironmentInfo env)
    {
@@ -282,7 +281,7 @@ public class EnvironmentStatusChecker
    /**
     * Returns formatted environment's URL.
     * 
-    * @param environmentToCheck environment
+    * @param env environment
     * @return environment URL
     */
    private String getAppUrl(EnvironmentInfo env)

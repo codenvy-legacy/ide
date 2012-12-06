@@ -31,6 +31,7 @@ import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -100,18 +101,6 @@ public class CodeAssistant extends AbstractTestModule
       typeToInput(text);
    }
 
-   // /**
-   // * Check, that element <code>elementTitle</code> is present in autocomplete panel.
-   // *
-   // * @param elementTitle - the title of element
-   // */
-   // @Deprecated
-   // public void checkElementPresent(String elementTitle)
-   // {
-   //
-   // assertTrue(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
-   // }
-
    public boolean isElementPresent(String elementTitle)
    {
       try
@@ -145,9 +134,14 @@ public class CodeAssistant extends AbstractTestModule
       return texts;
    }
 
+   /**
+    * @param elementTitle
+    */
    public void checkElementNotPresent(String elementTitle)
    {
-      assertFalse(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
+
+      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(PANEL
+         + "//div[text()='" + elementTitle + "']")));
    }
 
    /**
@@ -258,7 +252,7 @@ public class CodeAssistant extends AbstractTestModule
 
    public void checkDocFormPresent()
    {
-      assertTrue(selenium().isElementPresent(JAVADOC_DIV));
+      assertTrue(driver().findElement(By.id(JAVADOC_DIV)).isDisplayed());
    }
 
    public void clickOnLineNumer(int num)

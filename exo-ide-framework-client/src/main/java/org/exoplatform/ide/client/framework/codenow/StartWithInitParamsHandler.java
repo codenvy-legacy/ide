@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,29 +16,20 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.github.deploy;
+
+package org.exoplatform.ide.client.framework.codenow;
+
+import com.google.gwt.event.shared.EventHandler;
+
 
 /**
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: GithubStep.java Nov 22, 2011 11:53:47 AM vereshchaka $
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: StartWithInitParamsHandler.java Nov 21, 2012 vetal $
+ *
  */
-public interface GithubStep<T>
+public interface StartWithInitParamsHandler extends EventHandler
 {
-
-   /**
-    * What to do, when open this screen.
-    * 
-    * @param value context data of wizard
-    */
-   void onOpen(T value);
-
-   /**
-    * What to do, when you return to this screen from next.
-    */
-   void onReturn();
-
-   void setNextStep(GithubStep<T> step);
-
-   void setPreviousStep(GithubStep<T> step);
+   
+   void onStartWithInitParams(StartWithInitParamsEvent event);
 
 }

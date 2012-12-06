@@ -18,14 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import com.google.gwt.user.client.Command;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -34,6 +28,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -68,7 +65,6 @@ public class HighlightOutlineTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-      deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);

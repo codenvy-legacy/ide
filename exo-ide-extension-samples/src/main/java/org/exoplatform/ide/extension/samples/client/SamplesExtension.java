@@ -26,9 +26,8 @@ import org.exoplatform.ide.client.framework.application.event.InitializeServices
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.control.WelcomeControl;
-import org.exoplatform.ide.extension.samples.client.convert.ConvertToProjectPresenter;
 import org.exoplatform.ide.extension.samples.client.github.deploy.DeploySamplesPresenter;
-import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
+import org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesControl;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
@@ -42,10 +41,10 @@ import org.exoplatform.ide.git.client.github.GitHubClientServiceImpl;
 
 /**
  * Samples extension for IDE.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesExtension.java Sep 2, 2011 12:34:36 PM vereshchaka $
- * 
+ *
  */
 public class SamplesExtension extends Extension implements InitializeServicesHandler
 {
@@ -81,18 +80,14 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       new StartPagePresenter();
-      new ConvertToProjectPresenter();
       new OAuthLoginPresenter();
 
       // Import from GitHub
-      GithubStep<ProjectData> firstStep = new ShowSamplesPresenter();
-      GithubStep<ProjectData> secondStep = new DeploySamplesPresenter();
+      ImportSampleStep<ProjectData> firstStep = new ShowSamplesPresenter();
+      ImportSampleStep<ProjectData> secondStep = new DeploySamplesPresenter();
       firstStep.setNextStep(secondStep);
       secondStep.setPreviousStep(firstStep);
 
-      GithubStep<ProjectData> secondStepUser = new DeploySamplesPresenter();
-      GithubStep<ProjectData> firstStepUser = new ImportFromGithubPresenter();
-      firstStepUser.setNextStep(secondStepUser);
-      secondStepUser.setPreviousStep(firstStepUser);
+      new ImportFromGithubPresenter();
    }
 }

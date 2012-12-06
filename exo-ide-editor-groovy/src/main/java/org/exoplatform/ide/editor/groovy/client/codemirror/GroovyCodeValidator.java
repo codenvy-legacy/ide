@@ -18,15 +18,15 @@
  */
 package org.exoplatform.ide.editor.groovy.client.codemirror;
 
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.exoplatform.ide.editor.api.CodeLine;
 import org.exoplatform.ide.editor.api.CodeLine.CodeType;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.java.client.codemirror.JavaCodeValidator;
+
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>

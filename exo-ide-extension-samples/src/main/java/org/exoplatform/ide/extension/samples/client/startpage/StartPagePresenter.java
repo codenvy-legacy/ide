@@ -36,7 +36,7 @@ import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromG
 
 /**
  * Presenter for welcome view.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomePresenter.java Aug 25, 2011 12:27:27 PM vereshchaka $
  */
@@ -48,8 +48,6 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
       HasClickHandlers getSamplesLink();
 
       HasClickHandlers getProjectLink();
-
-      HasClickHandlers getConvertLink();
 
       HasClickHandlers getImportLink();
    }
@@ -79,16 +77,6 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          public void onClick(ClickEvent event)
          {
             IDE.fireEvent(new CreateProjectEvent());
-         }
-      });
-
-      display.getConvertLink().addClickHandler(new ClickHandler()
-      {
-
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.fireEvent(new ConvertToProjectEvent());
          }
       });
 

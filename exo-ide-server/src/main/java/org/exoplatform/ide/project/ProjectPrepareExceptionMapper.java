@@ -16,23 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
+package org.exoplatform.ide.project;
 
-public interface Link
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+
+/**
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
+ */
+@Provider
+public class ProjectPrepareExceptionMapper implements ExceptionMapper<ProjectPrepareException>
 {
+   @Override
+   public Response toResponse(ProjectPrepareException exception)
+   {
+      String message = exception.getMessage();
+      if (message != null)
+      {
+         return Response.status(exception.getStatus()).entity(message).type(MediaType.TEXT_HTML).build();
+      }
 
-  
-
-      String getHref();
-
-      void setHref(String href);
-
-      String getRel();
-
-      void setRel(String rel);
-
-      String getType();
-
-      void setType(String type);
-
+      return Response.status(exception.getStatus()).entity(exception.getCause()).type(MediaType.TEXT_HTML).build();
+   }
 }

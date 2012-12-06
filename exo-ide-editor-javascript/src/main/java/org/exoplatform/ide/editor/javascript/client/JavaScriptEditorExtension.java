@@ -19,9 +19,7 @@
 package org.exoplatform.ide.editor.javascript.client;
 
 import com.google.collide.client.util.Elements;
-
 import com.google.gwt.core.client.GWT;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;

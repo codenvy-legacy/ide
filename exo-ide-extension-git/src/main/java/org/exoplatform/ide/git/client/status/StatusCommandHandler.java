@@ -21,7 +21,6 @@ package org.exoplatform.ide.git.client.status;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.ImageResource;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -52,10 +51,9 @@ import java.util.Map;
 
 /**
  * Handler to process actions with displaying the status of the Git work tree.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:58:20 PM anya $
- * 
  */
 public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler
 {
@@ -71,9 +69,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
       IDE.addHandler(FolderRefreshedEvent.TYPE, this);
    }
 
-   /**
-    * @see org.exoplatform.ide.git.client.status.ShowWorkTreeStatusHandler#onShowWorkTreeStatus(org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent)
-    */
+   /** @see org.exoplatform.ide.git.client.status.ShowWorkTreeStatusHandler#onShowWorkTreeStatus(org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent) */
    @Override
    public void onShowWorkTreeStatus(ShowWorkTreeStatusEvent event)
    {
@@ -85,14 +81,16 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
    /**
     * Get the status for Git work tree and display it on success.
-    * 
-    * @param workTree the location of the ".git" folder
-    * @param item item in work tree
+    *
+    * @param item
+    *    item in work tree
     */
    private void getStatusText(ProjectModel project, Item item)
    {
       if (project == null)
+      {
          return;
+      }
       String[] fileFilter = null;
       if (item instanceof Folder)
       {
@@ -118,7 +116,9 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                protected void onSuccess(StatusResponse result)
                {
                   if (result.getWorkTreeStatus() == null)
+                  {
                      return;
+                  }
                   String status = result.getWorkTreeStatus();
                   status = status.replace("\n", "<br>");
                   IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.INFO));
@@ -140,9 +140,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent)
-    */
+   /** @see org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler#onFolderRefreshed(org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent) */
    @Override
    public void onFolderRefreshed(FolderRefreshedEvent event)
    {
@@ -151,7 +149,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
    /**
     * Get working directory of the Git repository and if found - get status.
-    * 
+    *
     * @param folder
     */
    private void updateBrowserTreeStatus(final Folder folder)
@@ -172,9 +170,9 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
    /**
     * Get the files in different state of Git cycle and mark them in browser tree.
-    * 
-    * @param workDir working directory
-    * @param folder folder to be updated
+    *
+    * @param folder
+    *    folder to be updated
     */
    private void getStatus(final ProjectModel project, final Folder folder)
    {
@@ -202,16 +200,18 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                }
             });
       }
-      catch (RequestException e)
+      catch (RequestException ignored)
       {
       }
    }
 
    /**
     * Update icons for all items in the specified folder.
-    * 
-    * @param project project
-    * @param folder folder to be updated
+    *
+    * @param project
+    *    project
+    * @param folder
+    *    folder to be updated
     */
    private void addItemsTreeIcons(ProjectModel project, Folder folder)
    {
@@ -264,9 +264,11 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
 
    /**
     * Check whether files from Git status contain the match with pointed pattern.
-    * 
-    * @param files files in status
-    * @param pattern pattern to compare
+    *
+    * @param files
+    *    files in status
+    * @param pattern
+    *    pattern to compare
     * @return pattern matchers one of the files in the list or not
     */
    private boolean contains(List<GitFile> files, String pattern)
@@ -274,7 +276,9 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
       for (GitFile file : files)
       {
          if (pattern.equals(file.getPath()))
+         {
             return true;
+         }
       }
       return false;
    }

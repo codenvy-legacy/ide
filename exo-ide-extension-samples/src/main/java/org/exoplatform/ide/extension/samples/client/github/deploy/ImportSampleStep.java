@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,33 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.client;
-
-
-import java.util.List;
+package org.exoplatform.ide.extension.samples.client.github.deploy;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: ImportSampleStep.java Nov 22, 2011 11:53:47 AM vereshchaka $
  */
-public interface ItemNode
+public interface ImportSampleStep<T>
 {
-   Item getItem();
-
-   void setItem(Item item);
 
    /**
-    * Get children of item.
+    * What to do, when open this screen.
     *
-    * @return children of item. Always return <code>null</code> for files
+    * @param value context data of wizard
     */
-   List<ItemNode> getChildren();
+   void onOpen(T value);
 
    /**
-    * Set children of item.
-    *
-    * @param children
-    *    of item. Always must be <code>null</code> for files
+    * What to do, when you return to this screen from next.
     */
-   void setChildren(List<ItemNode> children);
+   void onReturn();
+
+   void setNextStep(ImportSampleStep<T> step);
+
+   void setPreviousStep(ImportSampleStep<T> step);
+
 }

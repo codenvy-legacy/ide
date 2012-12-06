@@ -41,7 +41,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant;
-import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
+import org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep;
 import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
 import org.exoplatform.ide.git.shared.GitHubRepository;
@@ -52,13 +52,13 @@ import java.util.List;
 
 /**
  * Presenter to show the list of samples, that stored on github.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: GithubSamplesPresenter.java Aug 30, 2011 12:12:39 PM vereshchaka $
- * 
+ *
  */
 public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandler, ItemsSelectedHandler,
-   GithubStep<ProjectData>
+   ImportSampleStep<ProjectData>
 {
 
    public interface Display extends IsView
@@ -91,7 +91,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
 
    private ProjectData selectedProjectData;
 
-   private GithubStep<ProjectData> nextStep;
+   private ImportSampleStep<ProjectData> nextStep;
 
    public ShowSamplesPresenter()
    {
@@ -246,7 +246,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
     * <code>Type: &lt;project type&gt; Desc: &lt;project description&gt;</code>
     * <p/>
     * Return an array with 2 elements, where element[0] is the type of project and element[1] is the description
-    * 
+    *
     * @param text
     * @return
     */
@@ -311,7 +311,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onOpen(java.lang.Object)
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#onOpen(java.lang.Object)
     */
    @Override
    public void onOpen(ProjectData value)
@@ -320,7 +320,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onReturn()
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#onReturn()
     */
    @Override
    public void onReturn()
@@ -362,19 +362,19 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setNextStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#setNextStep(org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep)
     */
    @Override
-   public void setNextStep(GithubStep<ProjectData> step)
+   public void setNextStep(ImportSampleStep<ProjectData> step)
    {
       nextStep = step;
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setPreviousStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
+    * @see org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep#setPreviousStep(org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleStep)
     */
    @Override
-   public void setPreviousStep(GithubStep<ProjectData> step)
+   public void setPreviousStep(ImportSampleStep<ProjectData> step)
    {
       // has no prev step
    }

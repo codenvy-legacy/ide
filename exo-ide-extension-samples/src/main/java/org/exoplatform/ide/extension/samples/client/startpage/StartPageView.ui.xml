@@ -19,88 +19,85 @@
 
 -->
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
 
-   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle' />
+   <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle'/>
    <ui:with field="locale" type="org.exoplatform.ide.extension.samples.client.SamplesLocalizationConstant"></ui:with>
 
    <!-- To make button look like link -->
    <ui:style>
       .button-link, .a {
-      cursor: pointer;
-      border: none;
-      /* Disable the button-style */
-      background-color: transparent;
-      padding: 10px 30px 0 0;
-      font-family:
-      Verdana,Arial,sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      color: #5E5E5E;
-      text-decoration: none;
-      text-align: left;
+         cursor: pointer;
+         border: none;
+         /* Disable the button-style */
+         background-color: transparent;
+         padding: 10px 30px 0 0;
+         font-family: Verdana, Arial, sans-serif;
+         font-size: 18px;
+         font-weight: bold;
+         color: #5E5E5E;
+         text-decoration: none;
+         text-align: left;
       }
-      
-      .a:visited { 
-      color: #5E5E5E;
+
+      .a:visited {
+         color: #5E5E5E;
       }
-      
+
       .a:hover {
-      color: #5E5E5E;
-      text-decoration: underline;
+         color: #5E5E5E;
+         text-decoration: underline;
       }
-      
+
       .button-link:hover {
-      text-decoration: underline;
+         text-decoration: underline;
       }
 
       .hPanel {
-      margin-top: 0px;
+         margin-top: 0px;
       }
 
       .textPanel {
-      padding:
-      20px
-      20px 0 20px;
+         padding: 20px 20px 0 20px;
       }
 
       .scroll {
-      overflow-x: hidden;
+         overflow-x: hidden;
       }
 
       .img {
-      margin-left: 30px;
+         margin-left: 30px;
       }
-      
+
       .img2 {
-      margin-top: 9px;
+         margin-top: 9px;
       }
 
       .linkText {
-      margin-left: 3px;
+         margin-left: 3px;
       }
-      
+
       .welcomaLabel {
-      padding-right: 30px;
-      font-size: 12px;
-      color: #5E5E5E;
-      font-family: Verdana, Arial, sans-serif;
+         padding-right: 30px;
+         font-size: 12px;
+         color: #5E5E5E;
+         font-family: Verdana, Arial, sans-serif;
       }
-      
+
       .welcomeBox {
-      	padding-top: 40px;
+         padding-top: 40px;
       }
-      
-      .fbLikePanel
-      {
-			position: absolute;
-			width: 100px;
-			height: 25px;
-			background: none;
-			border: none;
-			top: 28px;
-			right: 0px;
-			overflow: hidden;
+
+      .fbLikePanel {
+         position: absolute;
+         width: 100px;
+         height: 25px;
+         background: none;
+         border: none;
+         top: 28px;
+         right: 0px;
+         overflow: hidden;
       }
 
    </ui:style>
@@ -115,7 +112,8 @@
             <g:center>
                <g:HTMLPanel>
                		<g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
-           		    <iframe class="{style.fbLikePanel}" src="/IDE/fblike.html" frameborder="0" marginheight="0px" marginwidth="0px;" style="overflow:hidden;" allowtransparency="true"></iframe>
+           		    <iframe class="{style.fbLikePanel}" src="/IDE/fblike.html" frameborder="0" marginheight="0px"
+                             marginwidth="0px;" style="overflow:hidden;" allowtransparency="true"></iframe>
                </g:HTMLPanel>
             </g:center>
          </g:DockLayoutPanel>
@@ -133,8 +131,10 @@
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
-                              <g:Button ui:field="projectLink" width="100%" text="{locale.projectTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.projectText}" width="100%" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                              <g:Button ui:field="projectLink" width="100%" text="{locale.projectTitle}"
+                                        styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.projectText}" width="100%"
+                                       styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>
                      </g:DockLayoutPanel>
@@ -143,14 +143,16 @@
                      <!-- Documentation -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="documentationImage" resource="{resource.documentation}" stylePrimaryName="{style.img}"></g:Image>
+                           <g:Image ui:field="documentationImage" resource="{resource.documentation}"
+                                    stylePrimaryName="{style.img}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
                               <g:FlowPanel height="10px" width="100%">
                               </g:FlowPanel>
-                              <g:Anchor ui:field="documentationLink" styleName="{style.a}" text="{locale.documentationTitle}"
-                                 target="_blank" href="/documentation"></g:Anchor>
+                              <g:Anchor ui:field="documentationLink" styleName="{style.a}"
+                                        text="{locale.documentationTitle}"
+                                        target="_blank" href="/documentation"></g:Anchor>
                               <g:Label text="{locale.documentationText}" styleName="{style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>
@@ -168,8 +170,10 @@
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
-                              <g:Button ui:field="importLink" text="{locale.importTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.importText}" styleName="{style.linkText}  {style.welcomaLabel}"></g:Label>
+                              <g:Button ui:field="importLink" text="{locale.importTitle}"
+                                        styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.importText}"
+                                       styleName="{style.linkText}  {style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>
                      </g:DockLayoutPanel>
@@ -178,14 +182,16 @@
                      <!-- Tutorial link -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="tutorialImage" resource="{resource.welcomeTutorial}" stylePrimaryName="{style.img} {style.img2}"></g:Image>
+                           <g:Image ui:field="tutorialImage" resource="{resource.welcomeTutorial}"
+                                    stylePrimaryName="{style.img} {style.img2}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
                               <g:FlowPanel height="10px" width="100%">
                               </g:FlowPanel>
-                              <g:Anchor ui:field="tutorialLink" text="{locale.tutorialTitle}" target="_blank" styleName="{style.a}"
-                                 href="http://www.exoplatform.com/company/en/eXo-Cloud-IDE"></g:Anchor>
+                              <g:Anchor ui:field="tutorialLink" text="{locale.tutorialTitle}" target="_blank"
+                                        styleName="{style.a}"
+                                        href="http://www.exoplatform.com/company/en/eXo-Cloud-IDE"></g:Anchor>
                               <g:Label text="{locale.tutorialText}" styleName="{style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>
@@ -198,12 +204,15 @@
                      <!-- Import Sample Project -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}" stylePrimaryName="{style.img}"></g:Image>
+                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"
+                                    stylePrimaryName="{style.img}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
-                              <g:Button ui:field="samplesLink" text="{locale.sampleTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.sampleText}" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                              <g:Button ui:field="samplesLink" text="{locale.sampleTitle}"
+                                        styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.sampleText}"
+                                       styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>
                      </g:DockLayoutPanel>
@@ -217,9 +226,11 @@
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
                               <!-- g:Button ui:field="supportLink" text="{locale.supportTitle}" styleName="{style.button-link}"></g:Button-->
-                              <g:Anchor ui:field="supportLink" text="{locale.supportTitle}" target="_blank" styleName="{style.a}"
-                                 href="http://community.exoplatform.org/portal/public/classic/forum/cloud-ide/ForumService"></g:Anchor>
-                              <g:Label text="{locale.supportText}" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                              <g:Anchor ui:field="supportLink" text="{locale.supportTitle}" target="_blank"
+                                        styleName="{style.a}"
+                                        href="http://community.exoplatform.org/portal/public/classic/forum/cloud-ide/ForumService"></g:Anchor>
+                              <g:Label text="{locale.supportText}"
+                                       styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>
                      </g:DockLayoutPanel>
@@ -227,20 +238,6 @@
                </g:DockLayoutPanel>
 
                <g:DockLayoutPanel unit="PCT" height="90px" width="100%" stylePrimaryName="{style.hPanel}">
-                  <g:west size="50">
-                     <!-- Convert folder to project -->
-                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
-                        <g:west size="130">
-                           <g:Image ui:field="convertImage" resource="{resource.convertToProject}" stylePrimaryName="{style.img}"></g:Image>
-                        </g:west>
-                        <g:center>
-                           <g:FlowPanel height="100%" width="100%">
-                              <g:Button ui:field="convertLink" text="{locale.convertTitle}" styleName="{style.button-link}"></g:Button>
-                              <g:Label text="{locale.convertText}" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
-                           </g:FlowPanel>
-                        </g:center>
-                     </g:DockLayoutPanel>
-                  </g:west>
                   <g:center>
                      <!-- Survey -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
@@ -252,7 +249,7 @@
                               <g:FlowPanel height="10px" width="100%">
                               </g:FlowPanel>
                               <g:Anchor ui:field="surveyLink" styleName="{style.a}" text="{locale.surveyTitle}"
-                                 target="_blank" href="/feedback"></g:Anchor>
+                                        target="_blank" href="/feedback"></g:Anchor>
                               <g:Label text="{locale.surverText}" styleName="{style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
                         </g:center>

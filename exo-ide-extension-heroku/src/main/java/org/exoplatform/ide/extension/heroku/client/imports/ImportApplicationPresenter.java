@@ -26,7 +26,6 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -54,6 +53,7 @@ import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -371,11 +371,11 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
     */
    private void updateProperties()
    {
-      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("heroku-application", herokuApplication));
+      project.getProperties().add(new PropertyImpl("heroku-application", herokuApplication));
       project.getProperties().add(
-         new org.exoplatform.ide.vfs.shared.Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+         new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
       project.getProperties()
-         .add(new org.exoplatform.ide.vfs.shared.Property("vfs:projectType", ProjectResolver.RAILS));
+         .add(new PropertyImpl("vfs:projectType", ProjectResolver.RAILS));
 
       try
       {

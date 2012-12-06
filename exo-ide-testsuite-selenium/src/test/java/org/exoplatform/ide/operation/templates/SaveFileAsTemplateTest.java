@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -33,6 +29,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by The eXo Platform SAS.
@@ -102,7 +100,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
       
       //--------- 2 --------
-      //Click on "File->Save As Template" top menu item, 
+      //Click on "File->Save As Template" top menu item,
       //set "Name" field on "test REST template", 
       //"Description" field on "test REST Service template description", and then click on "Save" button.
       assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE));
@@ -148,7 +146,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
       IDE.EDITOR.waitTabPresent(2);
-      //there should be new tab with title "Test Groovy File.groovy", 
+      //there should be new tab with title "Test Groovy File.groovy",
       //first line "// test groovy file template" in content and with "Groovy" 
       //highlighting opened in the Content Panel.
       assertEquals(REST_SERVICE_FILE_NAME + " *", IDE.EDITOR.getTabTitle(2));

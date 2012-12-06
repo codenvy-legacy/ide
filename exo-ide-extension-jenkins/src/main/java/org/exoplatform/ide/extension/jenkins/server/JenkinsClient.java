@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.extension.jenkins.server;
 
-import static org.exoplatform.ide.commons.JsonHelper.toJson;
-
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.Pair;
 import org.everrest.websockets.message.RESTfulOutputMessage;
@@ -31,6 +29,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -67,6 +66,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
+
+import static org.exoplatform.ide.commons.JsonHelper.toJson;
 
 /**
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
@@ -314,7 +315,7 @@ public abstract class JenkinsClient
          InputStream xsltSource = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
          if (xsltSource == null)
          {
-            throw new RuntimeException("File " + fileName + " not found.");
+            throw new RuntimeException("File" + fileName + " not found.");
          }
          try
          {
@@ -734,7 +735,7 @@ public abstract class JenkinsClient
    private void writeJenkinsJobName(VirtualFileSystem vfs, String projectId, String jobName)
       throws VirtualFileSystemException
    {
-      Property p = new Property("jenkins-job", jobName);
+      Property p = new PropertyImpl("jenkins-job", jobName);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);

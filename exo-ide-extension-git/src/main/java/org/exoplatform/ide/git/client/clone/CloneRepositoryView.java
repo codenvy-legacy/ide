@@ -34,10 +34,10 @@ import org.exoplatform.ide.git.client.GitExtension;
 
 /**
  * UI for cloning repository.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 22, 2011 4:54:24 PM anya $
- * 
+ *
  */
 public class CloneRepositoryView extends ViewImpl implements
    org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display
@@ -53,7 +53,7 @@ public class CloneRepositoryView extends ViewImpl implements
    private static final String REMOTE_URI_FIELD_ID = "ideCloneRepositoryViewRemoteUriField";
 
    private static final String REMOTE_NAME_FIELD_ID = "ideCloneRepositoryViewRemoteNameField";
-   
+
    private static final String PROJECT_TYPE_FIELD_ID = "ideCloneRepositoryProjectTypeId";
 
    @UiField
@@ -71,9 +71,6 @@ public class CloneRepositoryView extends ViewImpl implements
    @UiField
    TextInput remoteNameField;
 
-   @UiField
-   SelectItem projectType;
-
    interface CloneRepositoryViewUiBinder extends UiBinder<Widget, CloneRepositoryView>
    {
    }
@@ -82,14 +79,13 @@ public class CloneRepositoryView extends ViewImpl implements
 
    public CloneRepositoryView()
    {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.cloneTitle(), null, 480, 300, false);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.cloneTitle(), null, 480, 230, false);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       workdirField.setName(WORKDIR_FIELD_ID);
       remoteUriField.setName(REMOTE_URI_FIELD_ID);
       remoteNameField.setName(REMOTE_NAME_FIELD_ID);
-      projectType.getElement().setId(PROJECT_TYPE_FIELD_ID);
 
       cloneButton.setButtonId(CLONE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
@@ -151,23 +147,4 @@ public class CloneRepositoryView extends ViewImpl implements
    {
       remoteUriField.focus();
    }
-   
-   /**
-    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display#getProjectType()
-    */
-   @Override
-   public HasValue<String> getProjectType()
-   {
-      return projectType;
-   }
-   
-   /**
-    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter.Display#setProjectType(java.lang.String[])
-    */
-   @Override
-   public void setProjectType(String[] projectTypes, String def)
-   {
-     projectType.setValueMap(projectTypes, def);
-   }
-
 }

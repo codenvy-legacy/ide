@@ -50,7 +50,7 @@ public class Utils
       }
       if (!path.endsWith("/"))
       {
-         path += "/";
+         path += '/';
       }
       // absolute path
       if (path.startsWith("/"))
@@ -122,14 +122,14 @@ public class Utils
     * @param items
     * @return
     */
-   public static String fomatItems(List<Item> items)
+   public static String formatItems(List<Item> items)
    {
       List<List<Item>> table = new ArrayList<List<Item>>();
       StringBuilder result = new StringBuilder();
       List<StringBuilder> strings = new ArrayList<StringBuilder>();
 
       int splitCount = 1;
-      boolean formatComplete = false;
+      boolean formatComplete;
       do
       {
          table.clear();

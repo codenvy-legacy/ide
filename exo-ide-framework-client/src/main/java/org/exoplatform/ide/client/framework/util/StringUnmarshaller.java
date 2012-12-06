@@ -16,12 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.googlecontacts;
+package org.exoplatform.ide.client.framework.util;
 
 import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
+
 
 /**
  * Unmarshaller for unmarshalling response as {@link String}.
@@ -30,7 +33,7 @@ import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
  * @version $Id: StringUnmarshaller.java Aug 27, 2012 10:05:35 AM azatsarynnyy $
  *
  */
-public class StringUnmarshaller implements Unmarshallable<StringBuilder>
+public class StringUnmarshaller implements Unmarshallable<StringBuilder>, org.exoplatform.gwtframework.commons.rest.Unmarshallable<StringBuilder>
 {
 
    protected StringBuilder builder;
@@ -48,9 +51,10 @@ public class StringUnmarshaller implements Unmarshallable<StringBuilder>
     * @see org.exoplatform.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
     */
    @Override
-   public void unmarshal(Response response) throws UnmarshallerException
+   public void unmarshal(RESTfulResponseMessage response) throws UnmarshallerException
    {
-      builder.append(response.getText());
+      if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null)
+        builder.append(response.getBody());
    }
 
    /**
@@ -61,5 +65,15 @@ public class StringUnmarshaller implements Unmarshallable<StringBuilder>
    {
       return builder;
    }
+
+   @Override
+   public void unmarshal(Response response) throws UnmarshallerException
+   {
+      if (response.getStatusCode() != HTTPStatus.NO_CONTENT && response.getText() != null)
+         builder.append(response.getText());
+      
+   }
+   
+   
 
 }

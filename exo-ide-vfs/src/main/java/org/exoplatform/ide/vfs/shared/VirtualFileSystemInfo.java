@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,19 +18,58 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Describe virtual file system and its capabilities.
- *
- * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
- * @version $Id: VirtualFileSystemInfo.java 79579 2012-02-17 13:27:25Z andrew00x $
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class VirtualFileSystemInfo
+public interface VirtualFileSystemInfo
 {
+   String ANONYMOUS_PRINCIPAL = "anonymous";
+   String ANY_PRINCIPAL = "any";
+
+   String getId();
+
+   void setId(String id);
+
+   boolean isVersioningSupported();
+
+   void setVersioningSupported(boolean versioningSupported);
+
+   boolean isLockSupported();
+
+   void setLockSupported(boolean lockSupported);
+
+   String getAnonymousPrincipal();
+
+   void setAnyPrincipal(String anyPrincipal);
+
+   String getAnyPrincipal();
+
+   void setAnonymousPrincipal(String anonymousPrincipal);
+
+   Collection<String> getPermissions();
+
+   void setPermissions(Collection<String> permissions);
+
+   ACLCapability getAclCapability();
+
+   void setAclCapability(ACLCapability aclCapability);
+
+   QueryCapability getQueryCapability();
+
+   void setQueryCapability(QueryCapability queryCapability);
+
+   Map<String, Link> getUrlTemplates();
+
+   void setUrlTemplates(Map<String, Link> uriTemplates);
+
+   Folder getRoot();
+
+   void setRoot(Folder root);
+
    /** ACL capabilities. */
    public enum ACLCapability
    {
@@ -73,7 +112,7 @@ public class VirtualFileSystemInfo
          throw new IllegalArgumentException(value);
       }
 
-      /** @see java.lang.Enum#toString() */
+      /** @see Enum#toString() */
       public String toString()
       {
          return value;
@@ -126,7 +165,7 @@ public class VirtualFileSystemInfo
          throw new IllegalArgumentException(value);
       }
 
-      /** @see java.lang.Enum#toString() */
+      /** @see Enum#toString() */
       @Override
       public String toString()
       {
@@ -176,189 +215,11 @@ public class VirtualFileSystemInfo
          throw new IllegalArgumentException(value);
       }
 
-      /** @see java.lang.Enum#toString() */
+      /** @see Enum#toString() */
       @Override
       public String toString()
       {
          return value;
       }
-   }
-
-   public static final String ANONYMOUS_PRINCIPAL = "anonymous";
-
-   public static final String ANY_PRINCIPAL = "any";
-
-   private boolean versioningSupported;
-
-   private boolean lockSupported;
-
-   private String anonymousPrincipal;
-
-   private String anyPrincipal;
-
-   private Collection<String> permissions;
-
-   private ACLCapability aclCapability;
-
-   private QueryCapability queryCapability;
-
-   private Folder root;
-
-   private String id;
-
-   /**
-    * Templates of URL than can be used by client to manage virtual file system. Templates may contains parameters. It
-    * is path or
-    * query segments like next: [parameter]. Client should replace parameters by corresponded value or remove it from
-    * template if
-    * there is now value for it. Example:
-    * <p/>
-    * <pre>
-    * http://localhost/service/vfs/jcr/file/[parentId]?name=[name]&mediaType=[mediaType]
-    * become to
-    * http://localhost/service/vfs/jcr/file/MyFolder001?name=NewFile.txt&mediaType=text/plain
-    * </pre>
-    */
-   private Map<String, Link> urlTemplates;
-
-   public VirtualFileSystemInfo(String id,
-                                boolean versioningSupported,
-                                boolean lockSupported,
-                                String anonymousPrincipal,
-                                String anyPrincipal,
-                                Collection<String> permissions,
-                                ACLCapability aclCapability,
-                                QueryCapability queryCapability,
-                                Map<String, Link> urlTemplates,
-                                Folder root)
-   {
-      this.versioningSupported = versioningSupported;
-      this.lockSupported = lockSupported;
-      this.anonymousPrincipal = anonymousPrincipal;
-      this.anyPrincipal = anyPrincipal;
-      this.permissions = permissions;
-      this.aclCapability = aclCapability;
-      this.queryCapability = queryCapability;
-      this.urlTemplates = urlTemplates;
-      this.root = root;
-      this.id = id;
-   }
-
-   public VirtualFileSystemInfo()
-   {
-      this("default",
-         false,
-         false,
-         ANONYMOUS_PRINCIPAL,
-         ANY_PRINCIPAL,
-         new ArrayList<String>(),
-         ACLCapability.NONE,
-         QueryCapability.NONE,
-         null,
-         null);
-   }
-
-   public String getId()
-   {
-      return id;
-   }
-
-   public void setId(String id)
-   {
-      this.id = id;
-   }
-
-   public boolean isVersioningSupported()
-   {
-      return versioningSupported;
-   }
-
-   public void setVersioningSupported(boolean versioningSupported)
-   {
-      this.versioningSupported = versioningSupported;
-   }
-
-   public boolean isLockSupported()
-   {
-      return lockSupported;
-   }
-
-   public void setLockSupported(boolean lockSupported)
-   {
-      this.lockSupported = lockSupported;
-   }
-
-   public String getAnonymousPrincipal()
-   {
-      return anonymousPrincipal;
-   }
-
-   public void setAnyPrincipal(String anyPrincipal)
-   {
-      this.anyPrincipal = anyPrincipal;
-   }
-
-   public String getAnyPrincipal()
-   {
-      return anyPrincipal;
-   }
-
-   public void setAnonymousPrincipal(String anonymousPrincipal)
-   {
-      this.anonymousPrincipal = anonymousPrincipal;
-   }
-
-   public Collection<String> getPermissions()
-   {
-      return permissions;
-   }
-
-   public void setPermissions(Collection<String> permissions)
-   {
-      this.permissions = permissions;
-   }
-
-   public ACLCapability getAclCapability()
-   {
-      return aclCapability;
-   }
-
-   public void setAclCapability(ACLCapability aclCapability)
-   {
-      this.aclCapability = aclCapability;
-   }
-
-   public QueryCapability getQueryCapability()
-   {
-      return queryCapability;
-   }
-
-   public void setQueryCapability(QueryCapability queryCapability)
-   {
-      this.queryCapability = queryCapability;
-   }
-
-   public Map<String, Link> getUrlTemplates()
-   {
-      if (urlTemplates == null)
-      {
-         urlTemplates = new HashMap<String, Link>();
-      }
-      return urlTemplates;
-   }
-
-   public void setUrlTemplates(Map<String, Link> uriTemplates)
-   {
-      this.urlTemplates = uriTemplates;
-   }
-
-   public Folder getRoot()
-   {
-      return root;
-   }
-
-   public void setRoot(Folder root)
-   {
-      this.root = root;
    }
 }

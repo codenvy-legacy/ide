@@ -23,11 +23,14 @@ import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -65,21 +68,21 @@ public class GetItemTest extends MemoryFileSystemTest
       MemoryFile file = new MemoryFile("GetObjectTest_FILE", "text/plain",
          new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       getItemTestFolder.addChild(file);
-      file.updateProperties(Arrays.asList(
-         new Property("MyProperty01", "hello world"),
-         new Property("MyProperty02", "to be or not to be"),
-         new Property("MyProperty03", "123"),
-         new Property("MyProperty04", "true"),
-         new Property("MyProperty05", Calendar.getInstance().toString()),
-         new Property("MyProperty06", "123.456")
+      file.updateProperties(Arrays.<Property>asList(
+         new PropertyImpl("MyProperty01", "hello world"),
+         new PropertyImpl("MyProperty02", "to be or not to be"),
+         new PropertyImpl("MyProperty03", "123"),
+         new PropertyImpl("MyProperty04", "true"),
+         new PropertyImpl("MyProperty05", Calendar.getInstance().toString()),
+         new PropertyImpl("MyProperty06", "123.456")
       ));
       fileId = file.getId();
       filePath = file.getPath();
 
       MemoryFolder project = new MemoryFolder("GetObjectTest_PROJECT");
       project.setMediaType("text/vnd.ideproject+directory");
-      project.updateProperties(Arrays.asList(new Property("vfs:projectType", "java"),
-         new Property("prop1", "val1")));
+      project.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:projectType", "java"),
+         new PropertyImpl("prop1", "val1")));
       assertTrue(project.isProject());
       getItemTestFolder.addChild(project);
       projectId = project.getId();
@@ -165,9 +168,9 @@ public class GetItemTest extends MemoryFileSystemTest
 
    public void testGetFileNoPermissions() throws Exception
    {
-      AccessControlEntry ace = new AccessControlEntry();
+      AccessControlEntry ace = new AccessControlEntryImpl();
       ace.setPrincipal("admin");
-      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+      ace.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
       memoryContext.getItem(fileId).updateACL(Arrays.asList(ace), true);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String path = SERVICE_URI + "item/" + fileId;
@@ -222,7 +225,7 @@ public class GetItemTest extends MemoryFileSystemTest
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       assertEquals("application/json", response.getContentType().toString());
 
-      Project project = (Project)response.getEntity();
+      ProjectImpl project = (ProjectImpl)response.getEntity();
       validateLinks(project);
       assertEquals("GetObjectTest_PROJECT", project.getName());
       assertEquals(Project.PROJECT_MIME_TYPE, project.getMimeType());

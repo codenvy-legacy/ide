@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -32,6 +28,8 @@ import org.junit.Test;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
+
+import static org.junit.Assert.*;
 
 /**
  * IDE-48: Opening and Saving new XML file with non-latin name.

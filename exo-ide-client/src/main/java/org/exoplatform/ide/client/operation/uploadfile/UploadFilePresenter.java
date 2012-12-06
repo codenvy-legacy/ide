@@ -19,10 +19,18 @@
 
 package org.exoplatform.ide.client.operation.uploadfile;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.FormPanel;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
+import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
+import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
+import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.IDELoader;
@@ -45,18 +53,9 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Link;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.FormPanel;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
-import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
-import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 
@@ -202,12 +201,12 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
    private List<String> getMimeTypesByFileName(String fileName)
    {
-      if (fileName.indexOf(".") < 0)
+      if (fileName.indexOf('.') < 0)
       {
          return getSupportedMimeTypes();
       }
 
-      String fileExtension = fileName.substring(fileName.lastIndexOf(".") + 1);
+      String fileExtension = fileName.substring(fileName.lastIndexOf('.') + 1);
       FileType[] fileTypes = IDE.getInstance().getFileTypeRegistry().getSupportedFileTypes();
       List<String> mimeTypeList = new ArrayList<String>();
 
@@ -243,7 +242,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
 
          List<String> proposalMimeTypes = getMimeTypesByFileName(event.getFileName());
 
-         String[] valueMap = mimeTypes.toArray(new String[0]);
+         String[] valueMap = mimeTypes.toArray(new String[mimeTypes.size()]);
 
          display.setMimeTypes(valueMap);
 
@@ -286,7 +285,7 @@ public class UploadFilePresenter implements UploadFileHandler, ViewClosedHandler
       }
 
       Item item = selectedItems.get(0);
-      String uploadUrl = "";
+      String uploadUrl;
       if (item instanceof FileModel)
       {
          uploadUrl = ((FileModel)item).getParent().getLinkByRelation(Link.REL_UPLOAD_FILE).getHref();

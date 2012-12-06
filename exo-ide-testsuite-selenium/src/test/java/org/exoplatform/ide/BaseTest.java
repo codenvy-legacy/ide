@@ -18,42 +18,30 @@
  */
 package org.exoplatform.ide;
 
-import static com.thoughtworks.selenium.grid.tools.ThreadSafeSeleniumSessionStorage.closeSeleniumSession;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import com.thoughtworks.selenium.Selenium;
-
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.runner.RunWith;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
+
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverBackedSelenium;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
@@ -103,7 +91,7 @@ public abstract class BaseTest
    protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
    protected static String LOGIN_URL = "https://" + IDE_HOST + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
-   
+
    protected static String STANDALONE_LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");;
 
    public static final String REST_CONTEXT = IDE_SETTINGS.getString("ide.rest.context");
@@ -221,176 +209,10 @@ public abstract class BaseTest
       }
    }
 
-   protected void logout() throws Exception
-   {
-      if (isRunIdeUnderPortal())
-      {
-         //TODO
-         //log out from ide
-         fail("Can't logout under portal. Fix it!!!");
-      }
-      else if (isRunIdeAsStandalone())
-      {
-         standaloneLogout();
-      }
-   }
-
-   private void standaloneLogout() throws Exception
-   {
-      selenium().clickAt("//a[contains(@href, '" + IDE_SETTINGS.getString("ide.logout.url") + "')]", "1,1");
-      selenium().waitForPageToLoad("" + TestConstants.IDE_INITIALIZATION_PERIOD);
-   }
-
    @AfterClass
    public static void stopSelenium()
    {
-      closeSeleniumSession();
       beforeClass = false;
-   }
-
-   /**
-    * Get selected text from browser window.
-    * Note: if use editor - select frame with it.
-    * 
-    * @return {@link String}
-    */
-   protected String getSelectedText()
-   {
-      return selenium().getEval("if (window.getSelection) { window.getSelection();}");
-   }
-
-   /**
-    * Calls Save As command by clicking Save As... icon on toolbar.
-    * <p/>
-    * Checks is dialog appears, and do all elements are present in window.
-    * <p/>
-    * Enters name to text field and click Ok button.
-    * <p/>
-    * If name is null, will created with proposed default name.
-    * <b>Use IDE.NAVIGATION.saveFileAs(...) against this method</b>
-    * 
-    * @param name file name
-    * @throws Exception
-    */
-   @Deprecated
-   protected void saveAsUsingToolbarButton(String name) throws Exception
-   {
-      IDE.TOOLBAR.runCommand("Save As...");
-      SaveFileUtils.checkSaveAsDialogAndSave(name, true);
-   }
-
-   /**
-    * Call Save As command using top menu File.
-    * 
-    * If name is null, will created with proposed default name.
-    * 
-    * @param name file name to save
-    * @throws Exception
-    */
-   @Deprecated
-   /*
-    * Use IDE.NAVIGATION.saveFileAs(...) against this method
-    */
-   protected void saveAsByTopMenu(String name) throws Exception
-   {
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
-
-      SaveFileUtils.checkSaveAsDialogAndSave(name, true);
-   }
-
-   @Deprecated
-   protected void saveCurrentFile() throws Exception
-   {
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-   }
-
-   /**
-    * Clicks on New button on toolbar and then clicks on 
-    * menuName from list
-    * @param menuName
-    */
-   protected void callNewItemFromToolbar(String itemName) throws Exception
-   {
-      IDE.TOOLBAR.runCommand("New");
-
-      String locator = "//td[@class=\"exo-popupMenuTitleField\"]//nobr[text()='" + itemName + "']";
-      selenium().mouseOver(locator);
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      String hoverLocator = "//td[@class=\"exo-popupMenuTitleFieldOver\"]//nobr[text()='" + itemName + "']";
-      selenium().mouseDownAt(hoverLocator, "");
-      //time to wait while gadget open new file
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-   }
-
-   /**
-    * Get the URL of selected item.
-    * 
-    * @return {@link String} URL
-    * @throws Exception
-    */
-   @Deprecated
-   protected String getSelectedItemUrl() throws Exception
-   {
-      final String getItemUrlFormLocator = "//div[@view-id='ideGetItemURLForm']";
-      final String okButtonId = "ideGetItemURLFormOkButton";
-      final String privateUrlFieldName = "ideGetItemPrivateURLFormURLField";
-      IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GET_URL);
-
-      Thread.sleep(TestConstants.SLEEP);
-      waitForElementPresent(getItemUrlFormLocator);
-      assertTrue(selenium().isElementPresent(getItemUrlFormLocator));
-      assertTrue(selenium().isElementPresent(okButtonId));
-      assertTrue(selenium().isElementPresent(privateUrlFieldName));
-
-      final String url = selenium().getValue(privateUrlFieldName);
-
-      //Close form
-      selenium().click(okButtonId);
-      waitForElementNotPresent(getItemUrlFormLocator);
-      assertFalse(selenium().isElementPresent(getItemUrlFormLocator));
-      return url;
-   }
-
-   /**
-    * Select "Workspace" tab in navigation panel
-    */
-   protected void selectWorkspaceTab()
-   {
-      selenium().click("//div[@panel-id='navigation']//td[text()='Workspace']");
-   }
-
-   /**
-    * Get text shown in status bar.
-    * 
-    * @return {@link String} text
-    */
-   @Deprecated
-   protected String getStatusbarText()
-   {
-      return selenium().getText("//table[@class='exo-statusText-table']");
-   }
-
-   /**
-    * Use to create new file in selected folder.
-    * 
-    * @param menuCommand name of command from New button on toolbar
-    * @param fileName name of file
-    * @param tabIndex - index of tab, where new file will be opened (starts with 0)
-    * @throws Exception
-    */
-   @Deprecated
-   protected void createSaveAndCloseFile(String menuCommand, String fileName, int tabIndex) throws Exception
-   {
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(menuCommand);
-      IDE.EDITOR.waitTabPresent(tabIndex);
-
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
-      saveAsUsingToolbarButton(fileName);
-
-      IDE.EDITOR.closeFile(tabIndex);
-      Thread.sleep(TestConstants.SLEEP);
    }
 
    /**
@@ -431,122 +253,6 @@ public abstract class BaseTest
    }
 
    /**
-    * Read value from cursor position panel in status bar.
-    * 
-    * @return {@link String}
-    */
-   @Deprecated
-   protected String getCursorPositionUsingStatusBar()
-   {
-      return selenium()
-         .getText(
-            "//div[@class='exo-statusText-panel']/table[@class='exo-statusText-table']//td[@class='exo-statusText-table-middle']/nobr");
-   }
-
-   /**
-    * Use instead IDE.UPLOAD.open(String formName, String filePath, String mimeType);
-    * 
-    * @param formName name of the form
-    * @param filePath path to file 
-    * @param mimeType mime type of the file
-    * @throws InterruptedException 
-    */
-   @Deprecated
-   protected void uploadFile(String formName, String filePath, String mimeType) throws Exception
-   {
-      if (!MenuCommands.File.OPEN_LOCAL_FILE.equals(formName) && !MenuCommands.File.UPLOAD_FILE.equals(formName))
-      {
-         Assert.fail("Form name must be - " + MenuCommands.File.OPEN_LOCAL_FILE + " or - "
-            + MenuCommands.File.UPLOAD_FILE);
-      }
-
-      IDE.MENU.runCommand(MenuCommands.File.FILE, formName);
-
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertTrue(selenium().isElementPresent("ideUploadForm"));
-      assertTrue(selenium().isElementPresent("ideUploadFormBrowseButton"));
-      try
-      {
-         File file = new File(filePath);
-         selenium().type("//input[@type='file']", file.getCanonicalPath());
-      }
-      catch (Exception e)
-      {
-      }
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertEquals(filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length()),
-         selenium().getValue("ideUploadFormFilenameField"));
-
-      selenium().type("ideUploadFormMimeTypeField", mimeType);
-      assertTrue(selenium().isElementPresent("ideUploadFormUploadButton"));
-
-      selenium().click("ideUploadFormUploadButton");
-      Thread.sleep(TestConstants.SLEEP);
-
-      assertFalse(selenium().isElementPresent("ideUploadForm"));
-   }
-
-   /**
-    * Create file from template.
-    * 
-    * @param templateName
-    * @param fileName
-    * @throws Exception
-    */
-   protected void createFileFromTemplate(String templateName, String fileName) throws Exception
-   {
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-
-      useTemplateForm(templateName, fileName);
-   }
-
-   /**
-    * If you have opened create file from template form,
-    * use this method to create file.
-    * 
-    * @param templateName
-    * @param fileName
-    * @throws Exception
-    */
-   protected void useTemplateForm(String templateName, String fileName) throws Exception
-   {
-      assertTrue(selenium().isElementPresent(
-         "//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']"));
-
-      selenium().mouseDownAt(
-         "//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
-
-      selenium().mouseUpAt(
-         "//div[@class='windowBody']//table[@class='listTable']//nobr/span[@title='" + templateName + "']", "2,2");
-
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-
-      if (fileName != null)
-      {
-         //type file name into name field
-         selenium().type(
-            "scLocator=//DynamicForm[ID=\"ideCreateFileFromTemplateFormDynamicForm\"]/item["
-               + "name=ideCreateFileFromTemplateFormFileNameField||title=File Name]/element", fileName);
-      }
-
-      //click Create Button
-      selenium().click("scLocator=//IButton[ID=\"ideCreateFileFromTemplateFormCreateButton\"]/");
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /*
-    * set the focus to hidden input
-    */
-   public void clearFocus() throws Exception
-   {
-      selenium().focus(
-         "//body/input[@class='gwt-TextBox' and contains(@style,'position: absolute; left: -100px; top: -100px;')]");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   /**
     * wait load login page
     * @throws Exception
     */
@@ -572,20 +278,13 @@ public abstract class BaseTest
       {
          IDE.POPUP.acceptAlert();
       }
-      driver.close();
+      driver.quit();
+
       if (IDE.POPUP.isAlertPresent())
       {
          IDE.POPUP.acceptAlert();
       }
 
-   }
-
-   protected static boolean isRunIdeUnderPortal()
-   {
-      //      return APPLICATION_URL.equals(IdeAddress.PORTAL.getApplicationUrl());
-
-      //now ide not run under portal
-      return false;
    }
 
    protected boolean isRunIdeAsTenant()
@@ -603,230 +302,8 @@ public abstract class BaseTest
       return APPLICATION_URL.contains("IDE/Shell");
    }
 
-   protected boolean isRunTestUnderWindowsOS()
-   {
-      return selenium().getEval("/Win/.test(navigator.platform)").equals("true");
-   }
-
-   /**
-    * remove all cookies which can be stored by IDE
-    */
-   protected static void deleteCookies()
-   {
-      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-line-numbers_bool"))
-      {
-         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-line-numbers_bool", "path=/, recurse=true");
-      }
-      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-opened-files_list"))
-      {
-         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-opened-files_list", "path=/, recurse=true");
-      }
-      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-active-file_str"))
-      {
-         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-active-file_str", "path=/, recurse=true");
-      }
-      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-line-numbers_bool"))
-      {
-         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-line-numbers_bool", "path=/, recurse=true");
-      }
-      if (selenium().isCookiePresent("eXo-IDE-" + USER_NAME + "-lock-tokens_map"))
-      {
-         selenium().deleteCookie("eXo-IDE-" + USER_NAME + "-lock-tokens_map", "path=/, recurse=true");
-      }
-   }
-
-   private static final String SELECTED_WORKSPACE_LOCATOR = "//td[@class='cellSelected']//span";
-
-   /**
-    * 
-    * @return non-active workspace name from "Select Workspace" form
-    * @throws Exception 
-    */
-   public String getNonActiveWorkspaceName() throws Exception
-   {
-      String secondWorkspaceUrl = null;
-
-      //runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
-
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
-
-      Thread.sleep(TestConstants.SLEEP);
-      selenium().click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/");
-
-      // click "UP" to go to previous workspace in the list
-      selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_UP);
-      selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_UP);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-      // test if "Ok" button is enabled
-      if (selenium().isElementPresent(
-         "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
-      {
-         secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
-      }
-      else
-      {
-         // click "DOWN" to go to next workspace in the list
-         selenium().keyDownNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         selenium().keyUpNative("" + java.awt.event.KeyEvent.VK_DOWN);
-         Thread.sleep(TestConstants.REDRAW_PERIOD);
-
-         // test if "Ok" button is enabled
-         if (selenium().isElementPresent(
-            "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"))
-         {
-            secondWorkspaceUrl = selenium().getText(SELECTED_WORKSPACE_LOCATOR);
-         }
-      }
-
-      if ((secondWorkspaceUrl == null) || ("".equals(secondWorkspaceUrl)))
-      {
-         System.out.println("Error. It is impossible to recognise second workspace!");
-      }
-
-      // click the "Cancel" button
-      selenium().click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormCancelButton\"]");
-
-      // remove text before workspace name
-      String secondWorkspaceName = secondWorkspaceUrl.toLowerCase().replace((ENTRY_POINT_URL).toLowerCase(), "");
-
-      // remove ended '/'
-      secondWorkspaceName = secondWorkspaceName.replace("/", "");
-
-      return secondWorkspaceName;
-   }
-
-   /**
-    * Select workspace from "Select Workspace" form by workspaceName 
-    * @param workspaceName
-    * @throws Exception
-    * @throws InterruptedException
-    */
-   public void selectWorkspace(String workspaceName) throws Exception, InterruptedException
-   {
-      //      runTopMenuCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.SELECT_WORKSPACE);
-      //      Thread.sleep(TestConstants.SLEEP);
-
-      IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);
-
-      // selenium().click("scLocator=//ListGrid[ID=\"ideEntryPointListGrid\"]/body/row[entryPoint[contains(\"/" + workspaceName + "/\")]]/col[fieldName=entryPoint]");
-
-      selenium().mouseDownAt(
-         "//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '/"
-            + workspaceName + "/')]", "");
-      selenium().mouseUpAt(
-         "//div[@eventproxy='ideEntryPointListGrid']//table[@class='listTable']//span[contains(text(), '/"
-            + workspaceName + "/')]", "");
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      // test is "Ok" button enabled
-      assertTrue(selenium().isElementPresent(
-         "//div[@eventproxy='ideSelectWorkspaceFormOkButton']//td[@class='buttonTitle' and text()='OK']"));
-
-      // click the "Ok" button 
-      selenium().click("scLocator=//IButton[ID=\"ideSelectWorkspaceFormOkButton\"]");
-      Thread.sleep(TestConstants.SLEEP);
-
-      // test is workspace opened
-      assertTrue(selenium().isTextPresent(workspaceName));
-      Thread.sleep(TestConstants.SLEEP);
-   }
-
-   /**
-    * Go to line with lineNumber in the Code Editor by using top menu command "Edit > Go to Line..."
-    * @param lineNumber
-    * @throws InterruptedException
-    * Use IDE.GOTOLINE
-    */
-   @Deprecated
-   public void goToLine(int lineNumber) throws Exception
-   {
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-
-      waitForElementPresent("//div[@view-id=\"ideGoToLineForm\"]");
-      // Type line number
-      selenium().type(Locators.GoToLineWindow.GOTO_LINE_FORM_TEXT_FIELD_LOCATOR, String.valueOf(lineNumber));
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
-
-      // click "Go" button
-      selenium().click(Locators.GoToLineWindow.GOTO_LINE_FORM_GO_BUTTON_LOCATOR);
-      Thread.sleep(TestConstants.SLEEP_SHORT);
-   }
-
-   /**
-    * Calls selenium refresh method and waits for {@link TestConstants}.IDE_LOAD_PERIOD seconds.
-    * 
-    * After waits for {@link TestConstants}.SLEEP seconds (while all elements are drawing).
-    * 
-    * @throws Exception
-    */
-   public void refresh() throws Exception
-   {
-      selenium().refresh();
-      selenium().waitForPageToLoad("" + TestConstants.IDE_LOAD_PERIOD);
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.REFRESH, true);
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-   }
-
-   /**
-    * Wait while element present in IDE.
-    * 
-    * @param locator - element locator
-    * @throws Exception
-    */
-   public static void waitForElementPresent(String locator) throws Exception
-   {
-      long startTime = System.currentTimeMillis();
-
-      while (true)
-      {
-         if (selenium().isElementPresent(locator))
-         {
-            break;
-         }
-
-         long time = System.currentTimeMillis() - startTime;
-         if (time > TestConstants.TIMEOUT)
-         {
-            fail("timeout for element " + locator);
-         }
-
-         Thread.sleep(1);
-      }
-   }
-
-   /**
-    * Wait while element not present in IDE.
-    * 
-    * @param locator - element locator
-    * @throws Exception
-    */
-
-   public void waitForElementNotPresent(String locator) throws Exception
-   {
-      for (int second = 0;; second++)
-      {
-         if (second >= 60)
-            fail("timeout");
-
-         try
-         {
-            if (!selenium().isElementPresent("locator"))
-               break;
-         }
-
-         catch (Exception e)
-         {
-            fail("timeout for element " + locator);
-         }
-
-         Thread.sleep(TestConstants.REDRAW_PERIOD * 2);
-      }
-   }
-
    @AfterFailure
-   public void captureScreenShotOnFailure(Throwable failure)
+   public void captureScreenShotOnFailure(Throwable failure) throws IOException
    {
       // Get test method name
       String testMethodName = null;
@@ -839,50 +316,39 @@ public abstract class BaseTest
          }
       }
 
+      byte[] sc = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
+      File parent = new File("target/screenshots");
+      parent.mkdirs();
+      File file = new File(parent, this.getClass().getName() + "." + testMethodName + ".png");
       try
       {
-         byte[] sc = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BYTES);
-         File parent = new File("target/screenshots");
-         parent.mkdirs();
-         File file = new File(parent, this.getClass().getName() + "." + testMethodName + ".png");
          file.createNewFile();
-         FileOutputStream outputStream = new FileOutputStream(file);
-         outputStream.write(sc);
-         outputStream.close();
-      }
-      catch (WebDriverException e)
-      {
-      }
-      catch (FileNotFoundException e)
-      {
       }
       catch (IOException e)
       {
+         throw new IOException("I/O Error: Can't create screenshot file :" + file.toString());
+      }
+      FileOutputStream outputStream = new FileOutputStream(file);
+      try
+      {
+         outputStream.write(sc);
+      }
+      // Closing opened file
+      finally
+      {
+         try
+         {
+            //need to check for null
+            if (outputStream != null)
+            {
+               outputStream.close();
+            }
+         }
+         catch (Exception e)
+         {
+            throw new IOException("I/O Error: Can't write screenshot to file :" + file.toString());
+         }
       }
    }
 
-   /**
-    * Click on close button of form.
-    * 
-    * @param locator locator of form
-    * @throws Exception
-    */
-   protected void closeForm(String locator) throws Exception
-   {
-      selenium().click(locator + "CancelButton");
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
-   }
-
-   /**
-    * @param host
-    */
-   public static void updateAllUrls(String host)
-   {
-      IDE_HOST = host;
-      BASE_URL = "http://" + IDE_HOST + ":" + IDE_PORT + "/";
-      APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
-      LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");
-      ENTRY_POINT_URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
-      ENTRY_POINT_URL_IDE = BASE_URL + REST_CONTEXT_IDE + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/";
-   }
 }

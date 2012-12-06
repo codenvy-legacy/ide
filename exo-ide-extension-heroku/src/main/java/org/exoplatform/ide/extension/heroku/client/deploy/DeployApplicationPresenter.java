@@ -22,7 +22,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -245,8 +244,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    /**
     * Initialize of the Git-repository by sending request over WebSocket or HTTP.
-    * 
-    * @param path working directory of the repository
     */
    private void initRepository(final ProjectModel project)
    {
@@ -259,8 +256,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    /**
     * Initialize Git repository (sends request over HTTP).
-    * 
-    * @param path working directory of the repository
     */
    private void initRepositoryREST(final ProjectModel project)
    {
@@ -290,8 +285,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    /**
     * Initialize Git-repository (sends request over WebSocket).
-    * 
-    * @param path working directory of the repository
     */
    private void initRepositoryWS(final ProjectModel project)
    {
@@ -319,10 +312,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
-    *      org.exoplatform.ide.client.framework.project.ProjectType)
-    */
    @Override
    public Composite getDeployView(String projectName, ProjectType projectType)
    {
@@ -337,10 +326,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       return display.getView();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
@@ -389,10 +374,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
    {
@@ -430,7 +411,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                }
             });
       }
-      catch (RequestException e)
+      catch (RequestException ignored)
       {
       }
    }

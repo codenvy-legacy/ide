@@ -21,6 +21,8 @@ package org.exoplatform.ide;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
+import org.exoplatform.ide.project.ProjectPrepareExceptionMapper;
+import org.exoplatform.ide.project.ProjectPrepareService;
 import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
@@ -36,10 +38,10 @@ import javax.ws.rs.core.Application;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Jan 12, 2011 5:24:37 PM evgen $
- * 
+ *
  */
 public class IDEServiceApplication extends Application
 {
@@ -49,7 +51,7 @@ public class IDEServiceApplication extends Application
    private final Set<Object> objects = new HashSet<Object>();
 
    public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList,
-      InitParams initParams)
+                                InitParams initParams)
    {
       String entryPoint = ExoConfigurationHelper.readValueParam(initParams, "defaultEntryPoint");
       boolean discoverable = Boolean.parseBoolean(ExoConfigurationHelper.readValueParam(initParams, "discoverable"));
@@ -60,11 +62,13 @@ public class IDEServiceApplication extends Application
       objects.add(new UploadServiceExceptionMapper());
       objects.add(new IDEConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));
       objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry, eventListenerList));
+      objects.add(new ProjectPrepareExceptionMapper());
 
       classes.add(LoopbackContentService.class);
       classes.add(RequestContextResolver.class);
       classes.add(RestConversationState.class);
       classes.add(GoogleContactsRestService.class);
+      classes.add(ProjectPrepareService.class);
    }
 
    /**

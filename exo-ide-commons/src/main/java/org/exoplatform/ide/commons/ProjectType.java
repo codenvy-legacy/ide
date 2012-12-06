@@ -16,54 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
-
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemNode;
-
-import java.util.List;
+package org.exoplatform.ide.commons;
 
 /**
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class ItemNodeImpl implements ItemNode
+public enum ProjectType
 {
-   private Item item;
-   private List<ItemNode> children;
+   PHP("PHP"), //
+   WAR("War"), //
+   JAR("Jar"), //
+   JAVASCRIPT("JavaScript"), //
+   PYTHON("Python"), //
+   RUBY_ON_RAILS("Rails"), //
+   SPRING("Spring"), //
+   MULTI_MODULE("Maven Multi-module"),
+   DEFAULT("default");
 
-   public ItemNodeImpl(Item item, List<ItemNode> children)
+   private final String value;
+
+   private ProjectType(String value)
    {
-      this.item = item;
-      this.children = children;
+      this.value = value;
    }
 
-   public ItemNodeImpl(Item item)
+   public String toString()
    {
-      this(item, null);
+      return value;
    }
 
-   @Override
-   public Item getItem()
+   public static ProjectType fromValue(String value)
    {
-      return item;
-   }
-
-   @Override
-   public void setItem(Item item)
-   {
-      this.item = item;
-   }
-
-   @Override
-   public List<ItemNode> getChildren()
-   {
-      return children;
-   }
-
-   @Override
-   public void setChildren(List<ItemNode> children)
-   {
-      this.children = children;
+      for (ProjectType v : ProjectType.values())
+      {
+         if (v.value.equals(value))
+         {
+            return v;
+         }
+      }
+      throw new IllegalArgumentException("Invalid value '" + value + "' ");
    }
 }

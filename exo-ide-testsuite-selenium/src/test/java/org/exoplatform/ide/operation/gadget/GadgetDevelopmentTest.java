@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.operation.gadget;
 
-import static org.junit.Assert.assertEquals;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -33,6 +31,8 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for creating gadget from template.

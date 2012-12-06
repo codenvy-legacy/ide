@@ -506,10 +506,10 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
       // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         createApplicationWS(appData, project, loggedInHandler);
-//      else
-         createApplicationREST(appData, project, loggedInHandler);
+      //      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      //         createApplicationWS(appData, project, loggedInHandler);
+      //      else
+      createApplicationREST(appData, project, loggedInHandler);
    }
 
    /**
@@ -524,7 +524,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       try
       {
          AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
          AppfogClientService.getInstance().create(appData.server, appData.name, appData.type, appData.url,
             appData.instances, appData.memory, appData.nostart, vfs.getId(), project.getId(), warUrl, appData.infra,
             new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server)
@@ -562,7 +563,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       try
       {
          AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
-         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller = new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
+         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller =
+            new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
          AppfogClientService.getInstance().createWS(appData.server, appData.name, appData.type, appData.url,
             appData.instances, appData.memory, appData.nostart, vfs.getId(), project.getId(), warUrl, appData.infra,
             new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server)

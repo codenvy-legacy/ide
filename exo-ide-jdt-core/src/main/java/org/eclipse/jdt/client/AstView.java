@@ -18,13 +18,10 @@
  */
 package org.eclipse.jdt.client;
 
-import static org.eclipse.jdt.client.AstPresenter.Display.id;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
-
 import org.eclipse.jdt.client.AstPresenter.Display;
 import org.eclipse.jdt.client.astview.ASTTreeViewModel;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
@@ -41,7 +38,7 @@ public class AstView extends ViewImpl implements Display
    private ScrollPanel scrollPanel;
 
    /**
-    * 
+    *
     */
    public AstView()
    {

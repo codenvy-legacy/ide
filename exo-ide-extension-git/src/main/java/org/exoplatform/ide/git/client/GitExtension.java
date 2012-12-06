@@ -18,22 +18,21 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Random;
 
-import com.google.gwt.core.client.GWT;
-
+import org.exoplatform.gwtframework.commons.exception.ServerException;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
-import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
-import org.exoplatform.ide.client.framework.event.StartWithInitParamsEvent;
-import org.exoplatform.ide.client.framework.event.StartWithInitParamsHandler;
+import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
+import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
+import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
-import org.exoplatform.ide.git.client.clone.CloneRepositoryEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
 import org.exoplatform.ide.git.client.commit.CommitPresenter;
 import org.exoplatform.ide.git.client.control.AddFilesControl;
@@ -68,10 +67,11 @@ import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
+import org.exoplatform.ide.vfs.shared.ExitCodes;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Git extension to be added to IDE application.
@@ -155,24 +155,87 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    @Override
    public void onStartWithInitParams(StartWithInitParamsEvent event)
    {
-      // v=codenow1.0&action_type=open_project&storageType=Git&storageURL=git://github.com/eXoIDE/shopping-cart-project.git&projectType=Java
-      Map<String, List<String>> initParam = event.getParameterMap();
-      if (initParam != null && !initParam.isEmpty())
+      if (isValidParam(event.getParameterMap()))
       {
-         if (!initParam.containsKey("v"))
-            return;
-         if (initParam.get("v").size() != 1 || !initParam.get("v").get(0).equals("codenow1.0"))
-            return;
-         if (!initParam.containsKey("storageURL") || !initParam.containsKey("storageType"))
-            return;
-         List<String> giturls = initParam.get("storageURL");
-         if (giturls != null && !giturls.isEmpty())
+         String giturl = event.getParameterMap().get(CodeNowSpec10.VCS_URL).get(0);
+
+         String prjName = null;
+         if (event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME) != null && event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).isEmpty())
          {
-            String giturl = giturls.get(0);
-            cloneRepositoryPresenter.doClone(giturl, "origin", initParam.get("projectName").get(0) + "-" + Random.nextInt(), ProjectType.JAR.value());
+            prjName = event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).get(0);
          }
+         else
+         {
+            prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
+         }
+
+         cloneProject(giturl, prjName);
       }
 
    }
 
+   /**
+    * @param initParam
+    */
+   private boolean isValidParam(Map<String, List<String>> initParam)
+   {
+      if (initParam == null || initParam.isEmpty())
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
+         || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
+         || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
+         || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS))
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) == null
+         || initParam.get(CodeNowSpec10.VCS_URL).isEmpty())
+      {
+         return false;
+      }
+      return true;
+   }
+
+   private void cloneProject(final String giturl, final String prjName)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(prjName, new AsyncRequestCallback<ItemWrapper>()
+         {
+
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               //Project already exist with same name. Generate random suffix for it
+               cloneRepositoryPresenter.doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               if (exception instanceof ServerException)
+               {
+                  //Check if item not with given name not exist, it's ok for us we can start cloning
+                  if (((ServerException)exception).getHeader("X-Exit-Code") != null
+                     && ((ServerException)exception).getHeader("X-Exit-Code").equals(
+                        Integer.toString(ExitCodes.ITEM_NOT_FOUND)))
+                  {
+                     cloneRepositoryPresenter.doClone(giturl, "origin", prjName);
+                  }
+
+               }
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
+   }
 }

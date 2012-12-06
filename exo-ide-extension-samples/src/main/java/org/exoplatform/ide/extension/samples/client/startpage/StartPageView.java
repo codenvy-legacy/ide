@@ -37,7 +37,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: WelcomeView.java Aug 25, 2011 12:33:32 PM vereshchaka $
- * 
+ *
  */
 public class StartPageView extends ViewImpl implements StartPagePresenter.Display
 {
@@ -63,12 +63,6 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
 
    @UiField
    Image samplesImage;
-
-   @UiField
-   Button convertLink;
-
-   @UiField
-   Image convertImage;
 
    @UiField
    Button projectLink;
@@ -101,7 +95,7 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
          {
             supportAndFeedback();
          }
-      });      
+      });
    }
 
    /**
@@ -120,15 +114,6 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    public HasClickHandlers getProjectLink()
    {
       return projectLink;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter.Display#getConvertLink()
-    */
-   @Override
-   public HasClickHandlers getConvertLink()
-   {
-      return convertLink;
    }
 
    /**

@@ -29,6 +29,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeExcepti
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.io.InputStream;
 import java.util.Calendar;
@@ -393,7 +394,7 @@ public class FolderData extends ItemData
 
          if (mediaType != null)
          {
-            updateProperty(node, new Property("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype())));
+            updateProperty(node, new PropertyImpl("vfs:mimeType", (mediaType.getType() + "/" + mediaType.getSubtype())));
          }
 
          session.save();
