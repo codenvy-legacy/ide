@@ -19,6 +19,7 @@ package org.exoplatform.ide.part;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.ui.part.PartAgent;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
+@Singleton
 public class PartAgentPresenter implements PartAgent
 {
 

@@ -20,10 +20,14 @@ package org.exoplatform.ide.core.editor;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
+import org.exoplatform.ide.core.event.ActivePartChangedEvent;
+import org.exoplatform.ide.core.event.ActivePartChangedHandler;
 import org.exoplatform.ide.editor.EditorInitException;
 import org.exoplatform.ide.editor.EditorInput;
 import org.exoplatform.ide.editor.EditorPartPresenter;
@@ -41,6 +45,7 @@ import org.exoplatform.ide.util.loging.Log;
  * @version $Id:
  *
  */
+@Singleton
 public class EditorAgent
 {
 
@@ -58,15 +63,25 @@ public class EditorAgent
       }
    };
 
+   private final ActivePartChangedHandler activePartChangedHandler = new ActivePartChangedHandler()
+   {
+      @Override
+      public void onActivePartChanged(ActivePartChangedEvent event)
+      {
+         if(event.getActivePart() instanceof EditorPartPresenter)
+         {
+            activeEditor = (EditorPartPresenter)event.getActivePart();
+         }
+      }
+   };
+
    /**
-    * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
-    * @version $Id:
     *
     */
    final class EditorInputImpl implements EditorInput
    {
       /**
-       * 
+       *
        */
       private final File file;
 
@@ -111,14 +126,17 @@ public class EditorAgent
 
    private PartAgent partAgent;
 
+   private EditorPartPresenter activeEditor;
+
    @Inject
-   public EditorAgent(EditorRegistry editorRegistry, ResourceProvider provider, PartAgent partAgent)
+   public EditorAgent(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider, PartAgent partAgent)
    {
       super();
       this.editorRegistry = editorRegistry;
       this.provider = provider;
       this.partAgent = partAgent;
       openedEditors = JsonCollections.createStringMap();
+      eventBus.addHandler(ActivePartChangedEvent.TYPE, activePartChangedHandler);
    }
 
    public void openEditor(final File file)
@@ -147,10 +165,14 @@ public class EditorAgent
    }
 
    /**
-    * @param target
+    * @param editor
     */
    protected void editorClosed(EditorPartPresenter editor)
    {
+      if (activeEditor == editor)
+      {
+         activeEditor = null;
+      }
       JsonArray<String> keys = openedEditors.getKeys();
       for (int i = 0; i < keys.size(); i++)
       {
@@ -162,6 +184,24 @@ public class EditorAgent
             return;
          }
       }
+
    }
 
+   /**
+    *Get all opened editors
+    * @return map with all opened editors
+    */
+   public JsonStringMap<EditorPartPresenter> getOpenedEditors()
+   {
+      return openedEditors;
+   }
+
+   /**
+    * Current active editor
+    * @return the current active editor
+    */
+   public EditorPartPresenter getActiveEditor()
+   {
+      return activeEditor;
+   }
 }
