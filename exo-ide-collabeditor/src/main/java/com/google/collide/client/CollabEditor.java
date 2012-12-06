@@ -219,6 +219,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          {
             initialized = true;
             Document editorDocument = Document.createFromString(text);
+            CollabEditorExtension.get().getManager().documentOpened(editorDocument, fileId);
             editorDocument.putTag("IDocument", document);
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
             editorBundle.setDocument(editorDocument, mimeType, "");
@@ -241,7 +242,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                   fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
                }
             });
-            CollabEditorExtension.get().getManager().documentOpened(editorDocument, fileId);
+            
          }
       });
    }

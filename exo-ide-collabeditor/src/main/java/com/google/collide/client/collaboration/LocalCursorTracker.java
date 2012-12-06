@@ -14,6 +14,8 @@
 
 package com.google.collide.client.collaboration;
 
+import com.google.collide.client.util.logging.Log;
+
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
@@ -41,6 +43,7 @@ class LocalCursorTracker
     this.selectionModel = selectionModel;
 
     cursorListenerRemover = selectionModel.getCursorListenerRegistrar().add(this);
+    Log.debug(getClass(), "LocalCursorTracker created");
   }
 
   @Override
