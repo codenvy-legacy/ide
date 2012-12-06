@@ -77,12 +77,6 @@
 		<!--Selenium Grid -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium.grid</groupId>
-			<artifactId>selenium-grid-core</artifactId>
-			<version>1.0.5</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.seleniumhq.selenium.grid</groupId>
 			<artifactId>selenium-grid-hub</artifactId>
 			<version>1.0.5</version>
 		</dependency>
