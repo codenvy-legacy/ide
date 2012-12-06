@@ -22,7 +22,6 @@ package org.exoplatform.ide.core;
 import org.exoplatform.ide.core.project.Classpath;
 import org.exoplatform.ide.core.project.ClasspathSource;
 import org.exoplatform.ide.core.project.CreateProject;
-import org.exoplatform.ide.core.project.CreateProjectTemplate;
 import org.exoplatform.ide.core.project.OpenProject;
 import org.exoplatform.ide.core.project.ProjectExplorer;
 import org.openqa.selenium.support.PageFactory;
@@ -43,8 +42,6 @@ public class Project extends AbstractTestModule
    
    public OpenProject OPEN;
    
-   public CreateProjectTemplate TEMPLATE = new CreateProjectTemplate();
-
    public Classpath CLASSPATH;
 
    public ClasspathSource CLASSPATH_SOURCE;
