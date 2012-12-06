@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
@@ -29,21 +29,24 @@ import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: AutoBeanUnmarshaller.java Nov 19, 2012 11:44:19 AM azatsarynnyy $
+ * @version $Id: AutoBeanUnmarshallerWS.java Nov 19, 2012 11:44:19 AM azatsarynnyy $
  *
  * @param <T>
  */
-public class AutoBeanUnmarshaller<T> implements Unmarshallable<T>
+public class AutoBeanUnmarshallerWS<T> implements Unmarshallable<T>
 {
    private AutoBean<T> bean;
 
-   public AutoBeanUnmarshaller(AutoBean<T> autoBean)
+   public AutoBeanUnmarshallerWS(AutoBean<T> autoBean)
    {
       this.bean = autoBean;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage)
+    */
    @Override
-   public void unmarshal(RESTfulResponseMessage response) throws UnmarshallerException
+   public void unmarshal(ResponseMessage response) throws UnmarshallerException
    {
       if (response.getResponseCode() != HTTPStatus.NO_CONTENT && response.getBody() != null)
       {
@@ -52,6 +55,10 @@ public class AutoBeanUnmarshaller<T> implements Unmarshallable<T>
       }
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#getPayload()
+    */
+   @Override
    public T getPayload()
    {
       return bean.as();

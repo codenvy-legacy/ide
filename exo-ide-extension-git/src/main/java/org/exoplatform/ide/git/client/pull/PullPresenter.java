@@ -33,10 +33,9 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -262,7 +261,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       IDE.getInstance().closeView(display.asView().getId());
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
          doPullWS(project, remoteUrl, remoteName);
       else
          doPullREST(project, remoteUrl, remoteName);
@@ -308,7 +307,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       try
       {
          GitClientService.getInstance().pullWS(vfs.getId(), project, getRefs(), remoteName,
-            new RESTfulRequestCallback<String>()
+            new RequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)

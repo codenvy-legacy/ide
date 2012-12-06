@@ -575,8 +575,7 @@ public class BuilderClient
    private static void publishWebSocketMessage(Object data, String channel, Exception e)
    {
       RESTfulOutputMessage message = new RESTfulOutputMessage();
-      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
-                                    new Pair("x-everrest-websocket-channel", channel)});
+      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-channel", channel)});
       if (e == null)
       {
          message.setResponseCode(200);

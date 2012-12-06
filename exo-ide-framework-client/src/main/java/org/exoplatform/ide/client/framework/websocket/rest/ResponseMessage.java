@@ -16,23 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.events;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 /**
- * Handler for {@link WebSocketOpenedEvent} event.
+ * RESTful response messages.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketOpenedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: ResponseMessage.java Nov 8, 2012 6:29:19 PM azatsarynnyy $
+ *
  */
-public interface WebSocketOpenedHandler extends EventHandler
+public interface ResponseMessage extends RESTMessage
 {
+
    /**
-    * Perform actions, when WebSocket connection is opened.
-    * 
-    * @param event
+    * Get response code.
+    *
+    * @return response code
     */
-   void onWebSocketOpened(WebSocketOpenedEvent event);
+   int getResponseCode();
+
+   /**
+    * Get response code.
+    *
+    * @param responseCode
+    *    response code
+    */
+   void setResponseCode(int responseCode);
 }

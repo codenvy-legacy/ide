@@ -27,6 +27,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -39,10 +40,13 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.appfog.client.AppfogAsyncRequestCallback;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientService;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.AppfogLocalizationConstant;
+import org.exoplatform.ide.extension.appfog.client.AppfogRESTfulRequestCallback;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.appfog.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.appfog.client.marshaller.InfrasUnmarshaller;
@@ -145,7 +149,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       boolean nostart;
 
-      public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart, String infra)
+      public AppData(String server, String name, String type, String url, int instances, int memory, boolean nostart,
+         String infra)
       {
          this.server = server;
          this.name = name;
@@ -448,8 +453,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       try
       {
          AppfogClientService.getInstance().getFrameworks(
-            new AppfogAsyncRequestCallback<List<Framework>>(
-               new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null)
+            new AppfogAsyncRequestCallback<List<Framework>>(new FrameworksUnmarshaller(new ArrayList<Framework>()),
+               getFrameworksLoggedInHandler, null)
             {
                @Override
                protected void onSuccess(List<Framework> result)
@@ -483,68 +488,52 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       IDE.fireEvent(new BuildProjectEvent());
    }
 
-   private void createApplication(final AppData app)
+   /**
+    * Create application on AppFog by sending request over WebSocket or HTTP.
+    * 
+    * @param appData data to create new application
+    */
+   private void createApplication(final AppData appData)
    {
-      LoggedInHandler createAppHandler = new LoggedInHandler()
+      LoggedInHandler loggedInHandler = new LoggedInHandler()
       {
          @Override
          public void onLoggedIn()
          {
-            createApplication(app);
+            createApplication(appData);
          }
       };
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      // TODO temporary disabled using WebSocket
+      //      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      //         createApplicationWS(appData, project, loggedInHandler);
+      //      else
+      createApplicationREST(appData, project, loggedInHandler);
+   }
+
+   /**
+    * Create application on AppFog by sending request over HTTP.
+    * 
+    * @param appData data to create new application
+    * @param project {@link ProjectModel}
+    * @param loggedInHandler handler that should be called after success login
+    */
+   private void createApplicationREST(final AppData appData, final ProjectModel project, LoggedInHandler loggedInHandler)
+   {
       try
       {
-         AutoBean<AppfogApplication> appfogApplication =
-            AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+         AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
          AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
             new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
-         AppfogClientService.getInstance().create(
-            app.server,
-            app.name,
-            app.type,
-            app.url,
-            app.instances,
-            app.memory,
-            app.nostart,
-            vfs.getId(),
-            project.getId(),
-            warUrl,
-            app.infra,
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, createAppHandler, null,
-               app.server)
+         AppfogClientService.getInstance().create(appData.server, appData.name, appData.type, appData.url,
+            appData.instances, appData.memory, appData.nostart, vfs.getId(), project.getId(), warUrl, appData.infra,
+            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server)
             {
                @Override
                protected void onSuccess(AppfogApplication result)
                {
-                  warUrl = null;
-
-                  if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances())
-                  {
-                     String msg = lb.applicationCreatedSuccessfully(result.getName());
-                     if (result.getUris().isEmpty())
-                     {
-                        msg += "<br>" + lb.applicationStartedWithNoUrls();
-                     }
-                     else
-                     {
-                        msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
-                     }
-                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  }
-                  else if ("STARTED".equals(result.getState()) && result.getInstances() != result.getRunningInstances())
-                  {
-                     String msg = lb.applicationWasNotStarted(result.getName());
-                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
-                  }
-                  else
-                  {
-                     String msg = lb.applicationCreatedSuccessfully(result.getName());
-                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  }
-
+                  onAppCreatedSuccess(result);
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
 
@@ -559,6 +548,79 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       catch (RequestException e)
       {
          IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      }
+   }
+
+   /**
+    * Create application on AppFog by sending request over WebSocket.
+    * 
+    * @param appData data to create new application
+    * @param project {@link ProjectModel}
+    * @param loggedInHandler handler that should be called after success login
+    */
+   private void createApplicationWS(final AppData appData, final ProjectModel project, LoggedInHandler loggedInHandler)
+   {
+      try
+      {
+         AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller =
+            new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
+         AppfogClientService.getInstance().createWS(appData.server, appData.name, appData.type, appData.url,
+            appData.instances, appData.memory, appData.nostart, vfs.getId(), project.getId(), warUrl, appData.infra,
+            new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, appData.server)
+            {
+               @Override
+               protected void onSuccess(AppfogApplication result)
+               {
+                  onAppCreatedSuccess(result);
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      }
+   }
+
+   /**
+    * Performs action when application successfully created.
+    * 
+    * @param app @link AppfogApplication} which is created
+    */
+   private void onAppCreatedSuccess(AppfogApplication app)
+   {
+      warUrl = null;
+
+      if ("STARTED".equals(app.getState()) && app.getInstances() == app.getRunningInstances())
+      {
+         String msg = lb.applicationCreatedSuccessfully(app.getName());
+         if (app.getUris().isEmpty())
+         {
+            msg += "<br>" + lb.applicationStartedWithNoUrls();
+         }
+         else
+         {
+            msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+         }
+         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      }
+      else if ("STARTED".equals(app.getState()) && app.getInstances() != app.getRunningInstances())
+      {
+         String msg = lb.applicationWasNotStarted(app.getName());
+         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+      }
+      else
+      {
+         String msg = lb.applicationCreatedSuccessfully(app.getName());
+         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       }
    }
 
@@ -746,7 +808,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                         isMavenProject = true;
                      }
                   }
-                  openView(Collections.<Framework>emptyList());
+                  openView(Collections.<Framework> emptyList());
                }
 
                @Override
@@ -817,13 +879,12 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       try
       {
-         AppfogClientService.getInstance().infras(server, null, null,
-            new AppfogAsyncRequestCallback<List<InfraDetail>>(
-               new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
-               getInfrasHandler,
-               null,
-               server
-            )
+         AppfogClientService.getInstance().infras(
+            server,
+            null,
+            null,
+            new AppfogAsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
+               getInfrasHandler, null, server)
             {
                @Override
                protected void onSuccess(List<InfraDetail> result)

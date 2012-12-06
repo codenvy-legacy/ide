@@ -28,6 +28,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.openshift.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.Credentials;
@@ -146,6 +149,20 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
       AsyncRequest.build(RequestBuilder.POST, url + params, true).requestStatusHandler(new CreateRequestHandler(name))
          .send(callback);
+   }
+
+   /**
+    * @throws WebSocketException
+    * @see org.exoplatform.ide.extension.openshift.client.OpenShiftClientService#createApplicationWS(java.lang.String, java.lang.String,
+    *       java.lang.String, java.lang.String, org.exoplatform.ide.client.framework.websocket.rest.RequestCallback)
+    */
+   @Override
+   public void createApplicationWS(String name, String vfsId, String projectId, String type,
+      RequestCallback<AppInfo> callback) throws WebSocketException
+   {
+      String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
+      RESTfulRequest.build(RequestBuilder.POST, CREATE_APPLICATION + params)
+         .requestStatusHandler(new CreateRequestHandler(name)).send(callback);
    }
 
    /**

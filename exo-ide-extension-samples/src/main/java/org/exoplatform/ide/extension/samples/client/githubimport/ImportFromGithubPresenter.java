@@ -45,9 +45,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
@@ -373,7 +373,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       }
       JobManager.get().showJobSeparated();
 
-      if (WebSocket.getInstance().getReadyState() == WebSocket.ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
       {
          cloneFolderWS(folder, remoteUri);
       }
@@ -421,7 +421,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       try
       {
          GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
-            new RESTfulRequestCallback<RepoInfo>()
+            new RequestCallback<RepoInfo>()
             {
                @Override
                protected void onSuccess(RepoInfo result)

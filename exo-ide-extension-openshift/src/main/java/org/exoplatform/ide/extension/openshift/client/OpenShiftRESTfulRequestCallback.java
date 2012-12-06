@@ -19,23 +19,26 @@
 package org.exoplatform.ide.extension.openshift.client;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 
 /**
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
- * @version $
  * 
- * @see OpenShiftRESTfulRequestCallback
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: OpenShiftRESTfulRequestCallback.java Nov 30, 2012 4:40:25 PM azatsarynnyy $
+ *
+ * @param <T>
+ * 
+ * @see OpenShiftAsyncRequestCallback
  */
-public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T>
+public abstract class OpenShiftRESTfulRequestCallback<T> extends RequestCallback<T>
 {
 
    private LoggedInHandler loggedInHandler;
@@ -44,12 +47,12 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
 
    private String errorMessage;
 
-   public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller)
+   public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller)
    {
       super(unmarshaller);
    }
 
-   public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
+   public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
       LoginCanceledHandler loginCanceledHandler)
    {
       super(unmarshaller);
@@ -58,7 +61,7 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
       this.loginCanceledHandler = loginCanceledHandler;
    }
 
-   public OpenShiftAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
+   public OpenShiftRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedInHandler,
       LoginCanceledHandler loginCanceledHandler, String errorMessage)
    {
       super(unmarshaller);
@@ -69,7 +72,7 @@ public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallb
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+    * @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
    protected void onFailure(Throwable exception)

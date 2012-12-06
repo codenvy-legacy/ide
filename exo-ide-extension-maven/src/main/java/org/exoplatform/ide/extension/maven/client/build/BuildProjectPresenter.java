@@ -46,10 +46,9 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
+import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
 import org.exoplatform.ide.extension.maven.client.control.BuildAndPublishProjectControl;
@@ -260,10 +259,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void startCheckingStatus(String buildId)
    {
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
       {
-         buildStatusChannel = Channels.MAVEN_BUILD_STATUS + buildId;
-         WebSocket.getInstance().subscribe(buildStatusChannel, buildStatusHandler);
+         buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildId;
+         IDE.messageBus().subscribe(buildStatusChannel, buildStatusHandler);
       }
       else
       {
@@ -509,7 +508,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void afterBuildFinished(BuildStatus buildStatus)
    {
-      WebSocket.getInstance().unsubscribe(buildStatusChannel, buildStatusHandler);
+      IDE.messageBus().unsubscribe(buildStatusChannel, buildStatusHandler);
       setBuildInProgress(false);
       previousStatus = buildStatus.getStatus();
 
@@ -784,8 +783,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     * Handler for processing Maven build status which is received over WebSocket connection.
     */
    private SubscriptionHandler<BuildStatus> buildStatusHandler = new SubscriptionHandler<BuildStatus>(
-      new org.exoplatform.ide.client.framework.websocket.messages.AutoBeanUnmarshaller<BuildStatus>(
-         BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class)))
+      new AutoBeanUnmarshallerWS<BuildStatus>(BuilderExtension.AUTO_BEAN_FACTORY.create(BuildStatus.class)))
    {
       @Override
       protected void onSuccess(BuildStatus buildStatus)
@@ -796,7 +794,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       @Override
       protected void onFailure(Throwable exception)
       {
-         WebSocket.getInstance().unsubscribe(buildStatusChannel, this);
+         IDE.messageBus().unsubscribe(buildStatusChannel, this);
          setBuildInProgress(false);
          display.stopAnimation();
          IDE.fireEvent(new ExceptionThrownEvent(exception));

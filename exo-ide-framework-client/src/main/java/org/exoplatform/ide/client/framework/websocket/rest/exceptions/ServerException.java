@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,12 +18,14 @@
  *
  */
 
-package org.exoplatform.ide.client.framework.websocket.exceptions;
+package org.exoplatform.ide.client.framework.websocket.rest.exceptions;
 
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.ide.client.framework.websocket.rest.Pair;
+import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 
 /**
- * Thrown when there was an any exception was received from the server.
+ * Thrown when there was an any exception was received from the server over WebSocket.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ServerException.java Nov 9, 2012 5:20:18 PM azatsarynnyy $
@@ -32,11 +34,14 @@ import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMe
 @SuppressWarnings("serial")
 public class ServerException extends Exception
 {
-   private RESTfulResponseMessage response;
+   private ResponseMessage response;
 
-   public ServerException(RESTfulResponseMessage response)
+   private boolean errorMessageProvided;
+
+   public ServerException(ResponseMessage response)
    {
       this.response = response;
+      this.errorMessageProvided = checkErrorMessageProvided();
    }
 
    @Override
@@ -50,5 +55,33 @@ public class ServerException extends Exception
    public int getHTTPStatus()
    {
       return response.getResponseCode();
+   }
+
+   public String getHeader(String key)
+   {
+      for (Pair header : response.getHeaders())
+      {
+         if (key.equals(header.getName()))
+         {
+            return header.getValue();
+         }
+      }
+
+      return null;
+   }
+
+   private boolean checkErrorMessageProvided()
+   {
+      String value = getHeader(HTTPHeader.JAXRS_BODY_PROVIDED);
+      if (value != null)
+      {
+         return true;
+      }
+      return false;
+   }
+
+   public boolean isErrorMessageProvided()
+   {
+      return errorMessageProvided;
    }
 }

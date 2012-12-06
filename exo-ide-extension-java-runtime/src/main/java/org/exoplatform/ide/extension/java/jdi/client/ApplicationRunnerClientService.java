@@ -28,9 +28,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBuilder;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
@@ -41,6 +41,10 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
  */
 public class ApplicationRunnerClientService
 {
+   public static final String RUN = "/ide/java/runner/run";
+
+   public static final String DEBUG = "/ide/java/runner/debug";
+
    public static final String PROLONG = "/ide/java/runner/prolong";
 
    private static String BASE_URL;
@@ -74,12 +78,36 @@ public class ApplicationRunnerClientService
          data = jsonObject.toString();
       }
 
-      Loader loader = new GWTLoader();
-      loader.setMessage("Starting.... ");
       AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
          .requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
 
+   /**
+    * Run application by sending request over WebSocket.
+    * 
+    * @param project
+    * @param war
+    * @param useJRebel
+    * @param callback
+    * @throws WebSocketException
+    */
+   public void runApplicationWS(String project, String war, boolean useJRebel,
+      RequestCallback<ApplicationInstance> callback) throws WebSocketException
+   {
+      String param = "?war=" + war;
+
+      String data = "";
+      if (useJRebel)
+      {
+         JSONObject jsonObject = new JSONObject();
+         jsonObject.put("jrebel", new JSONString("true"));
+         data = jsonObject.toString();
+      }
+
+      RESTfulRequest.build(RequestBuilder.POST, RUN + param)
+         .requestStatusHandler(new RunningAppStatusHandler(project))
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
    public void debugApplication(String project, String war, boolean useJRebel,
@@ -94,12 +122,36 @@ public class ApplicationRunnerClientService
       }
 
       String requestUrl = BASE_URL + "/debug?war=" + war + "&suspend=false";
-      Loader loader = new GWTLoader();
-      loader.setMessage("Starting.... ");
       AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
          .requestStatusHandler(new RunningAppStatusHandler(project))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+   }
 
+   /**
+    * Run application in debug mode by sending request over WebSocket.
+    * 
+    * @param project
+    * @param war
+    * @param useJRebel
+    * @param callback
+    * @throws WebSocketException
+    */
+   public void debugApplicationWS(String project, String war, boolean useJRebel,
+      RequestCallback<ApplicationInstance> callback) throws WebSocketException
+   {
+      String param = "?war=" + war + "&suspend=false";
+
+      String data = "";
+      if (useJRebel)
+      {
+         JSONObject jsonObject = new JSONObject();
+         jsonObject.put("jrebel", new JSONString("true"));
+         data = jsonObject.toString();
+      }
+
+      RESTfulRequest.build(RequestBuilder.POST, DEBUG + param)
+         .requestStatusHandler(new RunningAppStatusHandler(project))
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
    }
 
    public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException
@@ -122,11 +174,11 @@ public class ApplicationRunnerClientService
     * @param callback {@link RESTfulRequestCallback}
     * @throws WebSocketException
     */
-   public void prolongExpirationTime(String name, long time, RESTfulRequestCallback<Object> callback)
+   public void prolongExpirationTime(String name, long time, RequestCallback<Object> callback)
       throws WebSocketException
    {
       StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
-      RESTfulRequestBuilder.build(RequestBuilder.GET, PROLONG + params).send(callback);
+      RESTfulRequest.build(RequestBuilder.GET, PROLONG + params).send(callback);
    }
 
    /**
@@ -144,7 +196,7 @@ public class ApplicationRunnerClientService
       StringBuilder params = new StringBuilder("?name=").append(name).append("&war=").append(war);
 
       Loader loader = new GWTLoader();
-      loader.setMessage("Updating application.... ");
+      loader.setMessage("Updating application...");
 
       AsyncRequest.build(RequestBuilder.GET, url + params.toString()).loader(loader).send(callback);
    }

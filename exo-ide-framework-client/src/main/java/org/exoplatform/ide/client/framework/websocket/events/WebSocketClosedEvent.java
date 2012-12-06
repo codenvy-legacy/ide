@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.client.framework.websocket.events;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 /**
  * Event is fired, when WebSocket connection is closed.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
+ * @version $Id: WebSocketClosedEvent.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
  * 
  */
-public class WebSocketClosedEvent extends GwtEvent<WebSocketClosedHandler>
+public class WebSocketClosedEvent
 {
    /**
     * The WebSocket connection close code provided by the server.
@@ -51,29 +49,6 @@ public class WebSocketClosedEvent extends GwtEvent<WebSocketClosedHandler>
       this.code = code;
       this.reason = reason;
       this.wasClean = wasClean;
-   }
-
-   /**
-    * Type, used to register event.
-    */
-   public static final GwtEvent.Type<WebSocketClosedHandler> TYPE = new GwtEvent.Type<WebSocketClosedHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<WebSocketClosedHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(WebSocketClosedHandler handler)
-   {
-      handler.onWebSocketClosed(this);
    }
 
    /**

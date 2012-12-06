@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,29 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudfoundry.client;
+package org.exoplatform.ide.extension.appfog.client;
+
+import com.google.gwt.regexp.shared.RegExp;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
-import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
+import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.appfog.client.login.LoginCanceledHandler;
+import org.exoplatform.ide.extension.appfog.client.login.LoginEvent;
 
 /**
- * Asynchronous CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
- * exception, in this case - the {@link LoginEvent} is fired.
+ * WebSocket AppFog request.
  * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CloudFoundryAsyncRequestCallback.java Jul 8, 2011 3:36:01 PM vereshchaka $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: AppfogRESTfulRequestCallback.java Nov 30, 2012 3:07:27 PM azatsarynnyy $
+ *
+ * @param <T>
  * 
- * @see CloudFoundryRESTfulRequestCallback
+ * @see AppfogAsyncRequestCallback
  */
-public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T>
+public abstract class AppfogRESTfulRequestCallback<T> extends RequestCallback<T>
 {
    private LoggedInHandler loggedIn;
 
@@ -46,15 +49,15 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
 
    private String loginUrl;
 
-   private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
+   private final static String APPFOG_EXIT_CODE = "Appfog-Exit-Code";
 
-   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+   public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled)
    {
       this(unmarshaller, loggedIn, loginCanceled, null);
    }
 
-   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+   public AppfogRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, String loginUrl)
    {
       super(unmarshaller);
@@ -64,7 +67,7 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback#onFailure(java.lang.Throwable)
+    * @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
    protected void onFailure(Throwable exception)
@@ -79,17 +82,17 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             return;
          }
          else if (HTTPStatus.FORBIDDEN == serverException.getHTTPStatus()
-            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
-            && "200".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
+            && serverException.getHeader(APPFOG_EXIT_CODE) != null
+            && "200".equals(serverException.getHeader(APPFOG_EXIT_CODE)))
          {
             IDE.fireEvent(new LoginEvent(loggedIn, loginCanceled, loginUrl));
             return;
          }
          else if (HTTPStatus.NOT_FOUND == serverException.getHTTPStatus()
-            && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
-            && "301".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
+            && serverException.getHeader(APPFOG_EXIT_CODE) != null
+            && "301".equals(serverException.getHeader(APPFOG_EXIT_CODE)))
          {
-            Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationNotFound());
+            Dialogs.getInstance().showError(AppfogExtension.LOCALIZATION_CONSTANT.applicationNotFound());
             return;
          }
          else
@@ -98,16 +101,24 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             if (serverException.isErrorMessageProvided())
             {
                msg = serverException.getLocalizedMessage();
+               if (RegExp.compile("Application '.+' already exists. Use update or delete.").exec(msg) != null)
+               {
+                  msg = "Application already exist on appfog";
+               }
+               else if (RegExp.compile("Unexpected response from service gateway").exec(msg) != null)
+               {
+                  msg = "Appfog error: " + msg;
+               }
             }
             else
             {
-               msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+               msg = "Status:&nbsp;" + serverException.getHTTPStatus();// + "&nbsp;" + serverException.getStatusText();
             }
+
             Dialogs.getInstance().showError(msg);
             return;
          }
       }
       IDE.fireEvent(new ExceptionThrownEvent(exception));
    }
-
 }

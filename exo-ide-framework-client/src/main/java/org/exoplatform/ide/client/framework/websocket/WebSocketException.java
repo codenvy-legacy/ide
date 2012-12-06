@@ -16,23 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.events;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.websocket;
 
 /**
- * Handler for {@link WSMessageReceivedEvent} event.
+ * Thrown when there was a problem with WebSocket connection.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WSMessageReceivedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
  */
-public interface WSMessageReceivedHandler extends EventHandler
+@SuppressWarnings("serial")
+public class WebSocketException extends Exception
 {
-   /**
-    * Perform actions, when a WebSocket message was received.
-    * 
-    * @param event {@link WSMessageReceivedEvent}
-    */
-   void onWSMessageReceived(WSMessageReceivedEvent event);
+
+   public WebSocketException()
+   {
+      super();
+   }
+
+   public WebSocketException(String message)
+   {
+      super(message);
+   }
+
+   public WebSocketException(Throwable cause)
+   {
+      super(cause);
+   }
+
+   public WebSocketException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

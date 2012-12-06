@@ -16,23 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.events;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 /**
- * Handler for {@link WebSocketErrorEvent} event.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketErrorHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
+ *
  */
-public interface WebSocketErrorHandler extends EventHandler
+public interface Pair
 {
-   /**
-    * Perform actions, when error has occurred during WebSocket connection.
-    * 
-    * @param event
-    */
-   void onWebSocketError(WebSocketErrorEvent event);
+   String getName();
+
+   void setName(String name);
+
+   String getValue();
+
+   void setValue(String value);
 }

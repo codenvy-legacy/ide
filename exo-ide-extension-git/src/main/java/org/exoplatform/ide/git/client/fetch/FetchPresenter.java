@@ -32,10 +32,9 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -223,7 +222,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       boolean removeDeletedRefs = display.getRemoveDeletedRefs().getValue();
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
          doFetchWS(project, remoteName, removeDeletedRefs, remoteUrl);
       else
          doFetchREST(project, remoteName, removeDeletedRefs, remoteUrl);
@@ -267,7 +266,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       try
       {
          GitClientService.getInstance().fetchWS(vfs.getId(), project, remoteName, getRefs(), removeDeletedRefs,
-            new RESTfulRequestCallback<String>()
+            new RequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)

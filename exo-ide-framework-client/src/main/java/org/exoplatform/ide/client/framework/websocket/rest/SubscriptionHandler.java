@@ -16,12 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.ide.client.framework.websocket.exceptions.ServerException;
+import org.exoplatform.ide.client.framework.websocket.Message;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
 
 /**
  * Class that implements this interface will receive all
@@ -29,11 +31,11 @@ import org.exoplatform.ide.client.framework.websocket.exceptions.ServerException
  * and all subscribers to a channel will receive the same messages.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WSEventHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
+ * @version $Id: SubscriptionHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
  */
-public abstract class SubscriptionHandler<T>
+public abstract class SubscriptionHandler<T> implements MessageBus.MessageHandler
 {
-// http code 207 is "Multi-Status"
+   // http code 207 is "Multi-Status"
    // IE misinterpreting HTTP status code 204 as 1223 (http://www.mail-archive.com/jquery-en@googlegroups.com/msg13093.html)
    private static final int[] DEFAULT_SUCCESS_CODES = {Response.SC_OK, Response.SC_CREATED, Response.SC_NO_CONTENT,
       207, 1223};
@@ -44,7 +46,7 @@ public abstract class SubscriptionHandler<T>
    private int[] successCodes;
 
    /**
-    * Deserializer for the body of the {@link RESTfulResponseMessage}.
+    * Deserializer for the body of the {@link ResponseMessage}.
     */
    private final Unmarshallable<T> unmarshaller;
 
@@ -81,12 +83,19 @@ public abstract class SubscriptionHandler<T>
    }
 
    /**
-    * Perform actions when {@link RESTfulResponseMessage} was received.
+    * Perform actions when {@link ResponseMessage} was received.
     * 
-    * @param response received {@link RESTfulResponseMessage}
+    * @param response received {@link ResponseMessage}
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus.MessageHandler#onMessage(org.exoplatform.ide.client.framework.websocket.Message)
     */
-   public void onResponseReceived(RESTfulResponseMessage response)
+   @Override
+   public void onMessage(Message message)
    {
+      if (!(message instanceof ResponseMessage))
+         throw new IllegalArgumentException("Invalid input message.");
+
+      ResponseMessage response = (ResponseMessage)message;
+
       if (isSuccessful(response))
       {
          try
@@ -111,10 +120,10 @@ public abstract class SubscriptionHandler<T>
    /**
     * Is response successful?
     * 
-    * @param response {@link RESTfulResponseMessage}
+    * @param response {@link ResponseMessage}
     * @return <code>true</code> if response is successful and <code>false</code> if response is not successful
     */
-   protected final boolean isSuccessful(RESTfulResponseMessage response)
+   protected final boolean isSuccessful(ResponseMessage response)
    {
       if (successCodes == null)
       {
