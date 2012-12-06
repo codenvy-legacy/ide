@@ -165,24 +165,5 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "y");
       assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1,2,3");
-
    }
-
-   /**
-    * @throws Exception
-    */
-   private void checkNoFileOpened() throws Exception
-   {
-      String divIndex = "0";
-
-      //check Code Editor is not present in tab 0
-      assertFalse(selenium().isElementPresent(
-         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//div[@class='CodeMirror-wrapping']/iframe"));
-      //check CK editor is not present in tab 0
-      assertFalse(selenium().isElementPresent(
-         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//div[@class='CodeMirror-wrapping']/iframe"));
-   }
-
 }
