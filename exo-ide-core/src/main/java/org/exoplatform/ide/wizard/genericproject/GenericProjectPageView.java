@@ -16,33 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard;
+package org.exoplatform.ide.wizard.genericproject;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * Contains resources for wizard view.
+ * Interface of new generic project wizard view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardResource extends ClientBundle
+public interface GenericProjectPageView extends IsWidget
 {
-   public interface WizardCSS extends CssResource
+   /**
+    * Returns entered project's name.
+    * 
+    * @return
+    */
+   String getProjectName();
+   
+   /**
+    * Sets new delegate
+    * 
+    * @param delegate
+    */
+   void setCheckProjNameDelegate(ActionDelegate delegate);
+
+   /**
+    * Needs for delegate some function into GenericProjectPage view.
+    */
+   public interface ActionDelegate
    {
-      @ClassName("backBtn")
-      String backBtn();
-
-      @ClassName("nextBtn")
-      String nextBtn();
-
-      @ClassName("alignBtn")
-      String alignBtn();
-
-      @ClassName("ide-Wizard")
-      String ideWizard();
+      /**
+       * Checks whether project's name is complete or not and updates navigation buttons.
+       */
+      void checkProjectName();
    }
-
-   @Source("org/exoplatform/ide/wizard/Wizard.css")
-   WizardCSS wizardCss();
 }

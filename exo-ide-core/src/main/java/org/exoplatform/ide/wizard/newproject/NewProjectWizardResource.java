@@ -16,33 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard;
+package org.exoplatform.ide.wizard.newproject;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Contains resources for wizard view.
+ * Contains of resources for new project's page view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardResource extends ClientBundle
+public interface NewProjectWizardResource extends ClientBundle
 {
-   public interface WizardCSS extends CssResource
-   {
-      @ClassName("backBtn")
-      String backBtn();
-
-      @ClassName("nextBtn")
-      String nextBtn();
-
-      @ClassName("alignBtn")
-      String alignBtn();
-
-      @ClassName("ide-Wizard")
-      String ideWizard();
-   }
-
-   @Source("org/exoplatform/ide/wizard/Wizard.css")
-   WizardCSS wizardCss();
+   @Source("org/exoplatform/ide/wizard/images/NewProjectIcon.png")
+   ImageResource newProjectIcon();
 }

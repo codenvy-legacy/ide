@@ -16,33 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard;
+package org.exoplatform.ide.wizard.newproject;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * Contains resources for wizard view.
+ * Interface of new project page view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardResource extends ClientBundle
+public interface NewProjectPageView extends IsWidget
 {
-   public interface WizardCSS extends CssResource
+   /**
+    * Sets new delegate
+    * 
+    * @param delegate
+    */
+   void setBtnPressedDelegate(ActionDelegate delegate);
+
+   /**
+    * Needs for delegate some function into NewProjectPage view.
+    */
+   public interface ActionDelegate
    {
-      @ClassName("backBtn")
-      String backBtn();
-
-      @ClassName("nextBtn")
-      String nextBtn();
-
-      @ClassName("alignBtn")
-      String alignBtn();
-
-      @ClassName("ide-Wizard")
-      String ideWizard();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the button with id
+       * 
+       * @param id button's id
+       */
+      void onButtonPressed(int id);
    }
-
-   @Source("org/exoplatform/ide/wizard/Wizard.css")
-   WizardCSS wizardCss();
 }
