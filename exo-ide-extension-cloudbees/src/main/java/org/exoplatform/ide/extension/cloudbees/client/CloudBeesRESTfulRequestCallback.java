@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,47 +19,48 @@
 package org.exoplatform.ide.extension.cloudbees.client;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
 
 /**
- * Asynchronous CloudBees request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception,
+ * WebSocket CloudBees request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception,
  * in this case - the {@link LoginEvent} is fired.
  * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: HerokuAsyncRequestCallback.java Jun 24, 2011 2:27:50 PM vereshchaka $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: CloudBeesRESTfulRequestCallback.java Nov 30, 2012 2:29:52 PM azatsarynnyy $
+ *
+ * @param <T>
  * 
- * @see CloudBeesRESTfulRequestCallback
+ * @see CloudBeesAsyncRequestCallback
  */
-public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallback<T>
+public abstract class CloudBeesRESTfulRequestCallback<T> extends RequestCallback<T>
 {
    private LoggedInHandler loggedIn;
 
    private LoginCanceledHandler loginCanceled;
 
-   public CloudBeesAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+   public CloudBeesRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled)
    {
       super(unmarshaller);
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
    }
-   
-   public CloudBeesAsyncRequestCallback(LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled)
+
+   public CloudBeesRESTfulRequestCallback(LoggedInHandler loggedIn, LoginCanceledHandler loginCanceled)
    {
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+    * @see org.exoplatform.ide.client.framework.websocket.rest.RequestCallback#onFailure(java.lang.Throwable)
     */
    @Override
    protected void onFailure(Throwable exception)

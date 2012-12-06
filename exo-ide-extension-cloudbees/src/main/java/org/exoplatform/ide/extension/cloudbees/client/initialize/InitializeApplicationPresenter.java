@@ -37,9 +37,12 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
+import org.exoplatform.ide.extension.cloudbees.client.CloudBeesRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
@@ -207,9 +210,27 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
       }
    };
 
+   /**
+    * Deploy application to Cloud Bees by sending request over WebSocket or HTTP.
+    */
    private void doDeployApplication()
    {
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+
+      // TODO temporary disabled using WebSocket
+//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+//         doDeployApplicationWS(project);
+//      else
+         doDeployApplicationREST(project);
+   }
+
+   /**
+    * Deploy application to Cloud Bees by sending request over HTTP.
+    * 
+    * @param project {@link ProjectModel} to deploy
+    */
+   private void doDeployApplicationREST(final ProjectModel project)
+   {
       try
       {
          AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
@@ -223,36 +244,9 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
                deployWarLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(final ApplicationInfo appInfo)
+               protected void onSuccess(ApplicationInfo appInfo)
                {
-                  StringBuilder output =
-                     new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess())
-                        .append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
-
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
-                     .append(appInfo.getId()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
-                     .append(appInfo.getTitle()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool())
-                     .append(" : ").append(appInfo.getServerPool()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
-                     .append(appInfo.getStatus()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer())
-                     .append(" : ").append(appInfo.getContainer()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout())
-                     .append(" : ").append(appInfo.getIdleTimeout()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory())
-                     .append(" : ").append(appInfo.getMaxMemory()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode())
-                     .append(" : ").append(appInfo.getSecurityMode()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize())
-                     .append(" : ").append(appInfo.getClusterSize()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
-                     .append("<a href='").append(appInfo.getUrl()).append("' target='_blank'>")
-                     .append(appInfo.getUrl()).append("</a>").append("<br>");
-
-                  IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
+                  onDeploySuccess(appInfo);
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
 
@@ -266,13 +260,83 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
                      .deployApplicationFailureMessage(), Type.INFO));
                   super.onFailure(exception);
                }
-
             });
       }
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Deploy application to Cloud Bees by sending request over WebSocket.
+    * 
+    * @param project {@link ProjectModel} to deploy
+    */
+   private void doDeployApplicationWS(final ProjectModel project)
+   {
+      try
+      {
+         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+         CloudBeesClientService.getInstance().initializeApplicationWS(
+            applicationId,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            null,
+            new CloudBeesRESTfulRequestCallback<ApplicationInfo>(new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean),
+               deployWarLoggedInHandler, null)
+            {
+               @Override
+               protected void onSuccess(ApplicationInfo appInfo)
+               {
+                  onDeploySuccess(appInfo);
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .deployApplicationFailureMessage(), Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void onDeploySuccess(ApplicationInfo appInfo)
+   {
+      StringBuilder output =
+         new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
+         .append(appInfo.getId()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
+         .append(appInfo.getTitle()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool()).append(" : ")
+         .append(appInfo.getServerPool()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
+         .append(appInfo.getStatus()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer()).append(" : ")
+         .append(appInfo.getContainer()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout()).append(" : ")
+         .append(appInfo.getIdleTimeout()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory()).append(" : ")
+         .append(appInfo.getMaxMemory()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode()).append(" : ")
+         .append(appInfo.getSecurityMode()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize()).append(" : ")
+         .append(appInfo.getClusterSize()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
+         .append("<a href='").append(appInfo.getUrl()).append("' target='_blank'>").append(appInfo.getUrl())
+         .append("</a>").append("<br>");
+
+      IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
    }
 
    /**

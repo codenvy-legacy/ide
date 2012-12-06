@@ -21,6 +21,8 @@ package org.exoplatform.ide.extension.openshift.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 
@@ -86,6 +88,19 @@ public abstract class OpenShiftClientService
     */
    public abstract void createApplication(String name, String vfsId, String projectId, String type,
       AsyncRequestCallback<AppInfo> callback) throws RequestException;
+
+   /**
+    * Creates OpenShift application by sending request over WebSocket.
+    * 
+    * @param name application's name
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
+    * @param type application's type
+    * @param workdir application's working directory
+    * @param callback callback
+    */
+   public abstract void createApplicationWS(String name, String vfsId, String projectId, String type,
+      RequestCallback<AppInfo> callback) throws WebSocketException;
 
    /**
     * Destroys application with pointed name from OpenShift.

@@ -18,37 +18,33 @@
  */
 package org.exoplatform.ide.client.framework.websocket.events;
 
-import com.google.gwt.event.shared.GwtEvent;
-
 /**
- * Event is fired, when error has occurred during WebSocket connection.
+ * Event is fired, when WebSocket message was received.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocket.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
+ * @version $Id: MessageReceivedEvent.java Jun 18, 2012 14:33:50 PM azatsarynnyy $
  * 
  */
-public class WebSocketErrorEvent extends GwtEvent<WebSocketErrorHandler>
+public class MessageReceivedEvent
 {
    /**
-    * Type, used to register event.
+    * Received message.
     */
-   public static final GwtEvent.Type<WebSocketErrorHandler> TYPE = new GwtEvent.Type<WebSocketErrorHandler>();
+   private String message;
 
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<WebSocketErrorHandler> getAssociatedType()
+   public MessageReceivedEvent(String message)
    {
-      return TYPE;
+      this.message = message;
    }
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    * Returns message.
+    * 
+    * @return message
     */
-   @Override
-   protected void dispatch(WebSocketErrorHandler handler)
+   public String getMessage()
    {
-      handler.onWebSocketError(this);
+      return message;
    }
+
 }

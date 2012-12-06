@@ -16,23 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.events;
+package org.exoplatform.ide.client.framework.websocket.rest.exceptions;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 
 /**
- * Handler for {@link WebSocketClosedEvent} event.
+ * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketClosedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: UnauthorizedException.java Nov 9, 2012 5:09:29 PM azatsarynnyy $
+ *
  */
-public interface WebSocketClosedHandler extends EventHandler
+@SuppressWarnings("serial")
+public class UnauthorizedException extends Exception
 {
-   /**
-    * Perform actions, when WebSocket connection is closed.
-    * 
-    * @param event
-    */
-   void onWebSocketClosed(WebSocketClosedEvent event);
+   private ResponseMessage response;
+
+   public UnauthorizedException(ResponseMessage response)
+   {
+      this.response = response;
+   }
+
+   public int getHTTPStatus()
+   {
+      return response.getResponseCode();
+   }
 }

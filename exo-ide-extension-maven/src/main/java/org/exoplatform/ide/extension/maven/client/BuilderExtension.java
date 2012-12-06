@@ -37,6 +37,9 @@ public class BuilderExtension extends Extension implements InitializeServicesHan
 {
    public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
 
+   /** Channel for the messages containing status of the Maven build job. */
+   public static final String BUILD_STATUS_CHANNEL = "maven:buildStatus:";
+
    /**
     * Localization constants.
     */

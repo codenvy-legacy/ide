@@ -22,8 +22,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
 import org.exoplatform.ide.git.shared.GitUser;
 import org.exoplatform.ide.git.shared.Revision;
 
@@ -48,10 +48,10 @@ public class RevisionUnmarshallerWS implements Unmarshallable<Revision>, Constan
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage)
+    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage)
     */
    @Override
-   public void unmarshal(RESTfulResponseMessage response)
+   public void unmarshal(ResponseMessage response)
    {
       if (response.getBody() == null || response.getBody().isEmpty())
       {

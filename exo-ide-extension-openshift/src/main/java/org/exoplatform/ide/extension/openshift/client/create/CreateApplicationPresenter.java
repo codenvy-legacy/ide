@@ -37,10 +37,13 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftAsyncRequestCallback;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
+import org.exoplatform.ide.extension.openshift.client.OpenShiftRESTfulRequestCallback;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledEvent;
@@ -63,7 +66,7 @@ import java.util.List;
  */
 public class CreateApplicationPresenter extends GitPresenter implements CreateApplicationHandler, ViewClosedHandler
 {
-   
+
    public interface Display extends IsView
    {
       /**
@@ -184,41 +187,42 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
          try
          {
-            
-            OpenShiftClientService.getInstance().getApplicationTypes(new OpenShiftAsyncRequestCallback<List<String>>(new ApplicationTypesUnmarshaller(new ArrayList<String>()),
-                     new LoggedInHandler()
-                     {
-                        @Override
-                        public void onLoggedIn(LoggedInEvent event)
-                        {
-                           onCreateApplication(createApplicationEvent);
-                        }
-                     },
-                     
-                     new LoginCanceledHandler()
-                     {
-                        @Override
-                        public void onLoginCanceled(LoginCanceledEvent event)
-                        {
-                           
-                        }
-                     })
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  if (display == null)
+
+            OpenShiftClientService.getInstance().getApplicationTypes(
+               new OpenShiftAsyncRequestCallback<List<String>>(
+                  new ApplicationTypesUnmarshaller(new ArrayList<String>()), new LoggedInHandler()
                   {
-                     display = GWT.create(Display.class);
-                     bindDisplay();
-                     IDE.getInstance().openView(display.asView());
-                     display.setApplicationTypeValues(result.toArray(new String[result.size()]));
-                     display.focusInApplicationNameField();
-                     display.getWorkDirLocationField().setValue(projectModel.getPath());
-                     display.enableCreateButton(false);
-                  }                  
-               }
-            });
+                     @Override
+                     public void onLoggedIn(LoggedInEvent event)
+                     {
+                        onCreateApplication(createApplicationEvent);
+                     }
+                  },
+
+                  new LoginCanceledHandler()
+                  {
+                     @Override
+                     public void onLoginCanceled(LoginCanceledEvent event)
+                     {
+
+                     }
+                  })
+               {
+                  @Override
+                  protected void onSuccess(List<String> result)
+                  {
+                     if (display == null)
+                     {
+                        display = GWT.create(Display.class);
+                        bindDisplay();
+                        IDE.getInstance().openView(display.asView());
+                        display.setApplicationTypeValues(result.toArray(new String[result.size()]));
+                        display.focusInApplicationNameField();
+                        display.getWorkDirLocationField().setValue(projectModel.getPath());
+                        display.enableCreateButton(false);
+                     }
+                  }
+               });
          }
          catch (RequestException e)
          {
@@ -228,13 +232,32 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    }
 
    /**
-    * Perform creation of application on OpenShift.
+    * Perform creation of application on OpenShift by sending request over WebSocket or HTTP.
     */
    protected void doCreateApplication()
    {
-      final String applicationName = display.getApplicationNameField().getValue();
+      String applicationName = display.getApplicationNameField().getValue();
       String type = display.getTypeField().getValue();
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+
+      // TODO temporary disabled using WebSocket
+//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+//         doCreateApplicationWS(applicationName, projectId, type);
+//      else
+         doCreateApplicationREST(applicationName, projectId, type);
+
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Perform creation of application on OpenShift by sending request over HTTP.
+    * 
+    * @param applicationName application's name 
+    * @param projectId identifier of the project to deploy
+    * @param type type of the application
+    */
+   protected void doCreateApplicationREST(String applicationName, String projectId, String type)
+   {
       try
       {
          AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
@@ -263,8 +286,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                @Override
                protected void onSuccess(AppInfo result)
                {
-                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  onCreatedSuccess(result);
                }
             });
       }
@@ -273,7 +295,60 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
             .createApplicationFail(applicationName)));
       }
-      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Perform creation of application on OpenShift by sending request over WebSocket.
+    * 
+    * @param applicationName application's name 
+    * @param projectId identifier of the project to deploy
+    * @param type type of the application
+    */
+   protected void doCreateApplicationWS(String applicationName, String projectId, String type)
+   {
+      try
+      {
+         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+         AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
+
+         String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
+
+         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), projectId, type,
+            new OpenShiftRESTfulRequestCallback<AppInfo>(unmarshaller, new LoggedInHandler()
+            {
+               @Override
+               public void onLoggedIn(LoggedInEvent event)
+               {
+                  doCreateApplication();
+               }
+            }, new LoginCanceledHandler()
+            {
+
+               @Override
+               public void onLoginCanceled(LoginCanceledEvent event)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+            }, errorMessage)
+            {
+               @Override
+               protected void onSuccess(AppInfo result)
+               {
+                  onCreatedSuccess(result);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .createApplicationFail(applicationName)));
+      }
+   }
+
+   private void onCreatedSuccess(AppInfo app)
+   {
+      IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
+      IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
    }
 
    /**
@@ -295,5 +370,5 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       return OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationSuccess(applicationStr);
    }
-   
+
 }

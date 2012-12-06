@@ -46,10 +46,8 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -356,9 +354,10 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
       JobManager.get().showJobSeparated();
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         cloneFolderWS(repo, folder, remoteUri);
-      else
+      // TODO temporary disabled using WebSocket
+//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+//         cloneFolderWS(repo, folder, remoteUri);
+//      else
          cloneFolderREST(repo, folder, remoteUri);
    }
 
@@ -399,7 +398,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       try
       {
          GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
-            new RESTfulRequestCallback<RepoInfo>()
+            new RequestCallback<RepoInfo>()
             {
                @Override
                protected void onSuccess(RepoInfo result)

@@ -32,10 +32,9 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -224,7 +223,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       String remote = display.getRemoteValue().getValue();
       IDE.getInstance().closeView(display.asView().getId());
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
          doPushWS(project, remote);
       else
          doPushREST(project, remote);
@@ -272,7 +271,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       try
       {
          GitClientService.getInstance().pushWS(vfs.getId(), project, getRefs(), remote, false,
-            new RESTfulRequestCallback<String>()
+            new RequestCallback<String>()
             {
 
                @Override

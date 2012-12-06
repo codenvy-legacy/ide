@@ -39,10 +39,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -280,9 +278,10 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
     */
    private void cloneRepository()
    {
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         cloneRepositoryWS();
-      else
+      // TODO temporary disabled using WebSocket
+//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+//         cloneRepositoryWS();
+//      else
          cloneRepositoryREST();
    }
 
@@ -323,7 +322,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       try
       {
          GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), project, gitLocation, null,
-            new RESTfulRequestCallback<RepoInfo>()
+            new RequestCallback<RepoInfo>()
             {
             @Override
             protected void onSuccess(RepoInfo result)

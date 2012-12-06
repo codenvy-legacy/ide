@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.cloudbees.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
@@ -62,6 +63,19 @@ public abstract class CloudBeesClientService
     */
    public abstract void initializeApplication(String appId, String vfsId, String projectId, String warFile,
       String message, CloudBeesAsyncRequestCallback<ApplicationInfo> callback) throws RequestException;
+
+   /**
+    * Initialize application by sending request over WebSocket.
+    * 
+    * @param appId application's id
+    * @param vfsId virtual file system's id
+    * @param projectId project's id
+    * @param warFile location of the build war with application
+    * @param message initialization message
+    * @param callback callback
+    */
+   public abstract void initializeApplicationWS(String appId, String vfsId, String projectId, String warFile,
+      String message, CloudBeesRESTfulRequestCallback<ApplicationInfo> callback) throws WebSocketException;
 
    /**
     * Get the available domains.

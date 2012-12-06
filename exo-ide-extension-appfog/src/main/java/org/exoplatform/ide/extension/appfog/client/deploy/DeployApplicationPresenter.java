@@ -25,6 +25,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -43,10 +44,13 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.appfog.client.AppfogAsyncRequestCallback;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientService;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.AppfogLocalizationConstant;
+import org.exoplatform.ide.extension.appfog.client.AppfogRESTfulRequestCallback;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.appfog.client.marshaller.InfrasUnmarshaller;
 import org.exoplatform.ide.extension.appfog.client.marshaller.TargetsUnmarshaller;
@@ -62,6 +66,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -196,9 +201,14 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       IDE.fireEvent(new BuildProjectEvent(project));
    }
 
+   /**
+    * Create application on AppFog by sending request over WebSocket or HTTP.
+    * 
+    * @param appData data to create new application
+    */
    private void createApplication()
    {
-      LoggedInHandler createAppHandler = new LoggedInHandler()
+      LoggedInHandler loggedInHandler = new LoggedInHandler()
       {
          @Override
          public void onLoggedIn()
@@ -206,40 +216,37 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             createApplication();
          }
       };
+      JobManager.get().showJobSeparated();
 
+      // TODO temporary disabled using WebSocket
+//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+//         createApplicationWS(loggedInHandler);
+//      else
+         createApplicationREST(loggedInHandler);
+   }
+
+   /**
+    * Create application on AppFog by sending request over HTTP.
+    * 
+    * @param loggedInHandler handler that should be called after success login
+    */
+   private void createApplicationREST(LoggedInHandler loggedInHandler)
+   {
       try
       {
-         JobManager.get().showJobSeparated();
-         AutoBean<AppfogApplication> appfogApplication =
-            AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
-
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
-            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+         AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+         AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
          // Application will be started after creation (IDE-1618)
-         AppfogClientService.getInstance().create(server, name, null, url, 0, 0, false, vfs.getId(),
-            project.getId(), warUrl, currentInfra.getInfra(),
-            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, createAppHandler, null, server)
+         boolean noStart = false;
+         AppfogClientService.getInstance().create(server, name, null, url, 0, 0, noStart, vfs.getId(), project.getId(),
+            warUrl, currentInfra.getInfra(),
+            new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, server)
             {
                @Override
                protected void onSuccess(AppfogApplication result)
                {
-                  warUrl = null;
-                  String msg = lb.applicationCreatedSuccessfully(result.getName());
-                  if ("STARTED".equals(result.getState()))
-                  {
-                     if (result.getUris().isEmpty())
-                     {
-                        msg += "<br>" + lb.applicationStartedWithNoUrls();
-                     }
-                     else
-                     {
-                        msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
-                     }
-                  }
-                  deployResultHandler.onDeployFinished(true);
-                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
+                  onAppCreatedSuccess(result);
                }
 
                @Override
@@ -256,6 +263,71 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
          deployResultHandler.onDeployFinished(false);
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Create application on AppFog by sending request over WebSocket.
+    * 
+    * @param loggedInHandler handler that should be called after success login
+    */
+   private void createApplicationWS(LoggedInHandler loggedInHandler)
+   {
+      try
+      {
+         AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller = new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
+
+         // Application will be started after creation (IDE-1618)
+         boolean noStart = false;
+         AppfogClientService.getInstance().createWS(server, name, null, url, 0, 0, noStart, vfs.getId(),
+            project.getId(), warUrl, currentInfra.getInfra(),
+            new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, server)
+            {
+               @Override
+               protected void onSuccess(AppfogApplication result)
+               {
+                  onAppCreatedSuccess(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  deployResultHandler.onDeployFinished(false);
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         deployResultHandler.onDeployFinished(false);
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Performs action when application successfully created.
+    * 
+    * @param app @link AppfogApplication} which is created
+    */
+   private void onAppCreatedSuccess(AppfogApplication app)
+   {
+      warUrl = null;
+      String msg = lb.applicationCreatedSuccessfully(app.getName());
+      if ("STARTED".equals(app.getState()))
+      {
+         if (app.getUris().isEmpty())
+         {
+            msg += "<br>" + lb.applicationStartedWithNoUrls();
+         }
+         else
+         {
+            msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+         }
+      }
+      deployResultHandler.onDeployFinished(true);
+      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      IDE.fireEvent(new RefreshBrowserEvent(project));
    }
 
    private String getAppUrlsAsString(AppfogApplication application)
@@ -331,13 +403,12 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
       try
       {
-         AppfogClientService.getInstance().infras(server, null, null,
-            new AppfogAsyncRequestCallback<List<InfraDetail>>(
-               new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
-               getInfrasHandler,
-               null,
-               server
-            )
+         AppfogClientService.getInstance().infras(
+            server,
+            null,
+            null,
+            new AppfogAsyncRequestCallback<List<InfraDetail>>(new InfrasUnmarshaller(new ArrayList<InfraDetail>()),
+               getInfrasHandler, null, server)
             {
                @Override
                protected void onSuccess(List<InfraDetail> result)
@@ -386,15 +457,15 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
       try
       {
-         AppfogClientService.getInstance().validateAction("create", server, name, null, url, vfs.getId(), null,
-            0, 0, true, new AppfogAsyncRequestCallback<String>(null, validateHandler, null, server)
-         {
-            @Override
-            protected void onSuccess(String result)
+         AppfogClientService.getInstance().validateAction("create", server, name, null, url, vfs.getId(), null, 0, 0,
+            true, new AppfogAsyncRequestCallback<String>(null, validateHandler, null, server)
             {
-               beforeDeploy();
-            }
-         });
+               @Override
+               protected void onSuccess(String result)
+               {
+                  beforeDeploy();
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -412,7 +483,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
       this.deployResultHandler = deployResultHandler;
-      if (display.getInfraField().getValue() == null || display.getInfraField().getValue().isEmpty() || currentInfra == null)
+      if (display.getInfraField().getValue() == null || display.getInfraField().getValue().isEmpty()
+         || currentInfra == null)
       {
          Dialogs.getInstance().showError("Infrastructure field must be valid and not empty.");
       }
@@ -522,6 +594,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
    {
       return display.getNameField().getValue() != null && !display.getNameField().getValue().isEmpty()
          && display.getUrlField().getValue() != null && !display.getUrlField().getValue().isEmpty();
-//         && display.getInfraField().getValue() != null && !display.getInfraField().getValue().isEmpty();
+      //         && display.getInfraField().getValue() != null && !display.getInfraField().getValue().isEmpty();
    }
 }

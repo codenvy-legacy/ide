@@ -28,6 +28,8 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 import org.exoplatform.ide.extension.heroku.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.heroku.shared.Credentials;
 
@@ -115,7 +117,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
    /**
     * @throws RequestException
     * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplication(java.lang.String, java.lang.String,
-    *      java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
+    *      java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback)
     */
    @Override
    public void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
@@ -128,6 +130,26 @@ public class HerokuClientServiceImpl extends HerokuClientService
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid + "&" : "";
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).loader(loader)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(new CreateRequestHandler())
+         .send(callback);
+   }
+
+   /**
+    * @throws WebSocketException
+    * @see org.exoplatform.ide.extension.heroku.client.HerokuClientService#createApplicationWS(java.lang.String, java.lang.String,
+    *       java.lang.String, java.lang.String, org.exoplatform.ide.extension.heroku.client.HerokuRESTfulRequestCallback)
+    */
+   @Override
+   public void createApplicationWS(String applicationName, String vfsId, String projectid, String remoteName,
+      HerokuRESTfulRequestCallback callback) throws WebSocketException
+   {
+      String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
+      params += (remoteName != null && !remoteName.trim().isEmpty()) ? "remote=" + remoteName + "&" : "";
+      params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
+      params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid + "&" : "";
+
+      RESTfulRequest.build(RequestBuilder.POST, CREATE_APPLICATION + '?' + params).loader(loader)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).requestStatusHandler(new CreateRequestHandler())
          .send(callback);
