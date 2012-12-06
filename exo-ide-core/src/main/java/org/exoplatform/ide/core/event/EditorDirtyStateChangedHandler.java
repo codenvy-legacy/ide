@@ -16,29 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.core;
+package org.exoplatform.ide.core.event;
 
-import com.google.inject.Inject;
-import org.exoplatform.ide.command.SaveAllCommand;
-import org.exoplatform.ide.command.SaveCommand;
-import org.exoplatform.ide.menu.MainMenuPresenter;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Initializer for standard component i.e. some basic menu commands (Save, Save As etc) 
+ * Handle {@link EditorDirtyStateChangedEvent}
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class StandardComponentInitializer
+public interface EditorDirtyStateChangedHandler extends EventHandler
 {
 
-   /**
-    *
-    */
-   @Inject
-   public StandardComponentInitializer(MainMenuPresenter menuPresenter, SaveCommand saveCommand, SaveAllCommand saveAllCommand)
-   {
-      menuPresenter.addMenuItem("File/Save", saveCommand);
-      menuPresenter.addMenuItem("File/Save All", saveAllCommand);
-   }
+   void onEditorDirtyStateChanged(EditorDirtyStateChangedEvent event);
+   
 }
