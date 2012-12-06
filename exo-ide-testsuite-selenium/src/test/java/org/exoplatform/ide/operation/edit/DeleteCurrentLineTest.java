@@ -159,7 +159,8 @@ public class DeleteCurrentLineTest extends BaseTest
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4.trim();
       IDE.STATUSBAR.waitCursorPositionControl();
       assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
-      waitForElementPresent(WAIT_APPEAR_STATUSBAR);
+
+      IDE.STATUSBAR.waitCursorPositionAt("3 : 1");
       assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
       //----- 7 -----------
