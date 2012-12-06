@@ -212,14 +212,14 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    
    private void resolveDependencies(ProjectModel... projects)
    {
-//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-//      {
-//         resolveDependenciesWS(projects);
-//      }
-//      else
-//      {
+      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      {
+         resolveDependenciesWS(projects);
+      }
+      else
+      {
          resolveDependenciesRest(projects);
-//      }
+      }
    }
 
 

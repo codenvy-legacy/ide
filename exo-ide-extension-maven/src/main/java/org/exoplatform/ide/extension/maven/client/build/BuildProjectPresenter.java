@@ -29,6 +29,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -46,9 +47,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
 import org.exoplatform.ide.extension.maven.client.BuilderExtension;
@@ -114,7 +113,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private String projectId = null;
 
    /**
-    * The build's identifier.
+    * The builds identifier.
     */
    private String buildID = null;
 
@@ -260,15 +259,15 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void startCheckingStatus(String buildId)
    {
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-      {
-         buildStatusChannel = Channels.MAVEN_BUILD_STATUS + buildId;
-         WebSocket.getInstance().subscribe(buildStatusChannel, buildStatusHandler);
-      }
-      else
-      {
+//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+//      {
+//         buildStatusChannel = Channels.MAVEN_BUILD_STATUS + buildId;
+//         WebSocket.getInstance().subscribe(buildStatusChannel, buildStatusHandler);
+//      }
+//      else
+//      {
          refreshBuildStatusTimer.schedule(delay);
-      }
+//      }
    }
 
    /**
@@ -532,7 +531,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          if (publishAfterBuild)
          {
-            getPublisArtifactResult();
+            getPublishArtifactResult();
          }
       }
       else if (buildStatus.getStatus() == Status.FAILED)
@@ -549,15 +548,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          statusHandler.requestError(projectId, new Exception(exceptionMessage));
       }
-
+      System.out.println("BuildProjectPresenter.afterBuildFinished()" + message.toString());
       showBuildMessage(message.toString());
       display.stopAnimation();
-
-      if (buildStatus.getStatus() == Status.FAILED)
-      {
-         showBuildMessage(buildStatus.getError());
-      }
-
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
 
@@ -575,7 +568,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     * Getting information about publish artifact process for its only suggest dependency
     *
     */
-   private void getPublisArtifactResult()
+   private void getPublishArtifactResult()
    {
       try
       {
@@ -804,7 +797,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    };
 
    /**
-    * Deserializer for response's body.
+    * Deserializer for responses body.
     */
    private class StringUnmarshaller implements Unmarshallable<StringBuilder>
    {
