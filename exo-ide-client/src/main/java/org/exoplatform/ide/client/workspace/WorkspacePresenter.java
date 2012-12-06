@@ -49,16 +49,12 @@ import org.exoplatform.ide.client.event.FileEventHandler;
 import org.exoplatform.ide.client.extensionsPart.ExtensionsPage;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
 import org.exoplatform.ide.client.welcome.WelcomePage;
-import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.command.EditorActiveExpression;
 import org.exoplatform.ide.command.NoProjectOpenedExpression;
 import org.exoplatform.ide.command.ProjectOpenedExpression;
+import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.core.editor.EditorAgent;
-import org.exoplatform.ide.core.expressions.AbstractExpression;
-import org.exoplatform.ide.core.expressions.ActivePartConstraintExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
-import org.exoplatform.ide.core.expressions.ProjectConstraintExpression;
-import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
 import org.exoplatform.ide.java.client.projectmodel.JavaProjectDesctiprion;
@@ -67,7 +63,6 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.outline.OutlinePartPresenter;
 import org.exoplatform.ide.part.PartAgentPresenter;
-import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.presenter.Presenter;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
@@ -130,7 +125,8 @@ public class WorkspacePresenter implements Presenter
                                 final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
                                 JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
                                 OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
-                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression, NewProjectWizardAgentImpl newProjectWizardAgent)
+                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression, 
+                                NewProjectWizardAgentImpl newProjectWizardAgent)
    {
       super();
       this.display = display;
@@ -171,10 +167,15 @@ public class WorkspacePresenter implements Presenter
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
 
+   /**
+    * Registers available wizards.
+    * 
+    * @param newProjectWizardAgent
+    * @param resourceProvider
+    */
    private void registerWizards(NewProjectWizardAgent newProjectWizardAgent, final ResourceProvider resourceProvider)
    {
-      //TODO
-      Provider<WizardPagePresenter> provider = new Provider<WizardPagePresenter>()
+      Provider<WizardPagePresenter> genericProjectWizard = new Provider<WizardPagePresenter>()
       {
          public WizardPagePresenter get()
          {
@@ -182,10 +183,8 @@ public class WorkspacePresenter implements Presenter
          }
       };
 
-      newProjectWizardAgent.registerWizard("Title1", "Description", "primaryNature", resources.genericProjectIcon(),
-         provider, JsonCollections.<String> createArray());
-      newProjectWizardAgent.registerWizard("Title2", "Description", "primaryNature", resources.genericProjectIcon(),
-         provider, JsonCollections.<String> createArray());
+      newProjectWizardAgent.registerWizard("Generic Project", "Creates generic project", "",
+         resources.genericProjectIcon(), genericProjectWizard, JsonCollections.<String> createArray());
    }
 
    /**
@@ -243,60 +242,6 @@ public class WorkspacePresenter implements Presenter
             }
          }
       });
-   }
-
-   // FOR DEMO:
-   private final class EditorActiveExpression extends AbstractExpression implements ActivePartConstraintExpression
-   {
-      public EditorActiveExpression()
-      {
-         super(false);
-      }
-
-      /**
-      * {@inheritDoc}
-      */
-      @Override
-      public boolean onActivePartChanged(PartPresenter part)
-      {
-         value = (part instanceof EditorPartPresenter);
-         return value;
-      }
-
-   }
-
-   // FOR DEMO:
-   private final class ProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
-   {
-      public ProjectOpenedExpression()
-      {
-         super(false);
-      }
-
-      @Override
-      public boolean onProjectChanged(Project project)
-      {
-         value = project != null;
-         return value;
-      }
-
-   }
-
-   // FOR DEMO:
-   private final class NoProjectOpenedExpression extends AbstractExpression implements ProjectConstraintExpression
-   {
-      public NoProjectOpenedExpression()
-      {
-         super(true);
-      }
-
-      @Override
-      public boolean onProjectChanged(Project project)
-      {
-         value = project == null;
-         return value;
-      }
-
    }
 
    // FOR DEMO:

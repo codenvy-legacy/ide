@@ -22,6 +22,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.HTMLTable;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ToggleButton;
@@ -53,14 +55,13 @@ public class NewProjectPageViewImpl implements NewProjectPageView
    public NewProjectPageViewImpl(JsonArray<NewProjectWizardData> wizardDatas, final NewProjectWizardResource resources)
    {
       mainPanel = new FlowPanel();
-      mainPanel.setStyleName(resources.newProjectWizardCss().newProjectWizard());
 
       Label label = new Label("Choosen a Technology");
       mainPanel.add(label);
 
       //create table where contains kind of technology
       Grid technologies = new Grid(2, wizardDatas.size());
-      technologies.setStyleName(resources.newProjectWizardCss().alignTechPanel());
+      HTMLTable.CellFormatter formatter = technologies.getCellFormatter();
       mainPanel.add(technologies);
 
       //create button for each available wizard
@@ -104,9 +105,11 @@ public class NewProjectPageViewImpl implements NewProjectPageView
             }
          });
          technologies.setWidget(0, i, btn);
+         formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
 
-         Label label1 = new Label(wizardData.getTitle());
-         technologies.setWidget(1, i, label1);
+         Label title = new Label(wizardData.getTitle());
+         technologies.setWidget(1, i, title);
+         formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
       }
    }
 

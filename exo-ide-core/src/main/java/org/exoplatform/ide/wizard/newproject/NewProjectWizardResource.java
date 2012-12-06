@@ -19,7 +19,6 @@
 package org.exoplatform.ide.wizard.newproject;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -29,18 +28,6 @@ import com.google.gwt.resources.client.ImageResource;
  */
 public interface NewProjectWizardResource extends ClientBundle
 {
-   public interface NewProjectWizardCss extends CssResource
-   {
-      @ClassName("alignTechPanel")
-      String alignTechPanel();
-
-      @ClassName("ide-NewProjectWizard")
-      String newProjectWizard();
-   }
-
-   @Source("org/exoplatform/ide/wizard/NewProjectWizard.css")
-   NewProjectWizardCss newProjectWizardCss();
-
    @Source("org/exoplatform/ide/wizard/images/NewProjectIcon.png")
    ImageResource newProjectIcon();
 }

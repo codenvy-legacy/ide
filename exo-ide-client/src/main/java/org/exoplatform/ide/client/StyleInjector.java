@@ -55,7 +55,6 @@ public class StyleInjector
       resources.partStackCss().ensureInjected();
       resources.parenMatchHighlighterCss().ensureInjected();
       resources.wizardCss().ensureInjected();
-      resources.newProjectWizardCss().ensureInjected();
       resources.genericProjectWizardCss().ensureInjected();
    }
 }
