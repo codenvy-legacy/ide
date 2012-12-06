@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.client.workspace.WorkspacePeresenter.Display;
+import org.exoplatform.ide.client.workspace.WorkspacePresenter.Display;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 
 /**

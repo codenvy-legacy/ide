@@ -41,7 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class WorkspacePresenterTestNonAnotationBased
 {
 
-   WorkspacePeresenter wsPresenter;
+   WorkspacePresenter wsPresenter;
 
    
    @Before
@@ -50,11 +50,11 @@ public class WorkspacePresenterTestNonAnotationBased
       // don't throw an exception if GWT.create() invoked
       GWTMockUtilities.disarm();
       // workspace presenter will be an object that calls real methods, not the mocked ones
-      wsPresenter = mock(WorkspacePeresenter.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
+      wsPresenter = mock(WorkspacePresenter.class, withSettings().defaultAnswer(CALLS_REAL_METHODS));
       // initialize service with a mock
       wsPresenter.eventBus = mock(EventBus.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
       // initialize display mock
-      wsPresenter.display = mock(WorkspacePeresenter.Display.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
+      wsPresenter.display = mock(WorkspacePresenter.Display.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
 
    }
 

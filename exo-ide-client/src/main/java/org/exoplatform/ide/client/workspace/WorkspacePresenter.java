@@ -83,7 +83,7 @@ import java.util.Date;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-public class WorkspacePeresenter implements Presenter
+public class WorkspacePresenter implements Presenter
 {
 
    public interface Display extends IsWidget
@@ -103,7 +103,7 @@ public class WorkspacePeresenter implements Presenter
 
    EventBus eventBus;
 
-   ProjectExplorerPresenter projectExpolorerPresenter;
+   ProjectExplorerPresenter projectExplorerPresenter;
 
    private final MainMenuPresenter menuPresenter;
 
@@ -114,16 +114,16 @@ public class WorkspacePeresenter implements Presenter
    protected final Resources resources;
 
    @Inject
-   protected WorkspacePeresenter(Display display, final ProjectExplorerPresenter projectExpolorerPresenter,
-      EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
-      final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-      JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
-      OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
-      EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
+   protected WorkspacePresenter(Display display, final ProjectExplorerPresenter projectExplorerPresenter,
+                                EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
+                                final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
+                                JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
+                                OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
+                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
    {
       super();
       this.display = display;
-      this.projectExpolorerPresenter = projectExpolorerPresenter;
+      this.projectExplorerPresenter = projectExplorerPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
       this.editorAgent = editorAgent;
@@ -154,7 +154,7 @@ public class WorkspacePeresenter implements Presenter
 
       partAgent.addPart(extensionsPage, PartStackType.EDITING);
       partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
-      partAgent.addPart(projectExpolorerPresenter, PartStackType.NAVIGATION);
+      partAgent.addPart(projectExplorerPresenter, PartStackType.NAVIGATION);
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
 
