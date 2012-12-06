@@ -58,7 +58,6 @@ public class EditorDirtyExpression extends AbstractExpression
    {
       value = editor == activeEditor && editor.isDirty();
       return value;
-
    }
 
    /**

@@ -35,7 +35,7 @@ import org.exoplatform.ide.json.JsonCollections;
 public class EditorsDirtyExpression extends AbstractExpression
    implements EditorDirtyConstraintExpression
 {
-   JsonArray<EditorPartPresenter> dirtyEditors;
+   private JsonArray<EditorPartPresenter> dirtyEditors;
 
    @Inject
    public EditorsDirtyExpression(ExpressionManager expressionManager)

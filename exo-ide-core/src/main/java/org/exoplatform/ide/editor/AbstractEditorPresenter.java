@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor;
 
+import com.google.gwt.user.client.Window;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.part.AbstractPartPresenter;
@@ -31,12 +32,12 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
 {
 
    protected boolean dirtyState;
-   
+
    protected EditorInput input;
-   
+
    protected final JsonArray<EditorPartCloseHandler> closeHandlers = JsonCollections.createArray();
 
-   
+
    /**
     * {@inheritDoc}
     */
@@ -46,12 +47,12 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
       this.input = input;
       initializeEditor();
    }
-   
+
    /**
     * Initializes this editor.
     */
    protected abstract void initializeEditor();
-   
+
    /**
     * Set dirty state and notify expressions 
     * @param dirty
@@ -62,7 +63,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
       firePropertyChange(EditorPartPresenter.PROP_TITLE);
       firePropertyChange(EditorPartPresenter.PROP_DIRTY);
    }
-   
+
    /**
     * @see org.exoplatform.ide.editor.EditorPartPresenter#isDirty()
     */
@@ -73,8 +74,8 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public void addCloseHandler(EditorPartCloseHandler closeHandler)
    {
@@ -99,17 +100,25 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
    @Override
    public boolean onClose()
    {
-      boolean allowClose = true;
-   
-      if (allowClose)
+      if (isDirty())
       {
-         for (int i = 0; i < closeHandlers.size(); i++)
+         if (Window.confirm("'" + getEditorInput().getName() + "' has been modified. Save changes?"))
          {
-            EditorPartCloseHandler handler = closeHandlers.get(i);
-            handler.onClose(this);
+            doSave();
          }
       }
-      return allowClose;
+      handleClose();
+      return true;
    }
+
+   protected void handleClose()
+   {
+      for (int i = 0; i < closeHandlers.size(); i++)
+      {
+         EditorPartCloseHandler handler = closeHandlers.get(i);
+         handler.onClose(this);
+      }
+   }
+
 
 }
