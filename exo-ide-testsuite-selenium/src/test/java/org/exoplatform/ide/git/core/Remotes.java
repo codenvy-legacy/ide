@@ -26,6 +26,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -170,13 +171,12 @@ public class Remotes extends AbstractTestModule
    }
 
    /**
-    * Waits for Add remote repository view to be closed.
-    * 
-    * @throws Exception
+    *  wait remote view closed
     */
-   public void waitAddRemoteViewClosed() throws Exception
+   public void waitAddRemoteViewClosed()
    {
-      waitForElementNotPresent(Locators.ADD_REMOTE_VIEW_LOCATOR);
+      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .xpath(Locators.ADD_REMOTE_VIEW_LOCATOR)));
    }
 
    /**
