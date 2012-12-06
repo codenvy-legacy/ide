@@ -44,6 +44,7 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.appfog.client.AppfogAsyncRequestCallback;
@@ -218,11 +219,14 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       };
       JobManager.get().showJobSeparated();
 
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         createApplicationWS(loggedInHandler);
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         createApplicationWS(loggedInHandler);
+      }
+      else
+      {
          createApplicationREST(loggedInHandler);
+      }
    }
 
    /**
@@ -235,7 +239,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       try
       {
          AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
-         AutoBeanUnmarshaller<AppfogApplication> unmarshaller = new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
+         AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
+            new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
          // Application will be started after creation (IDE-1618)
          boolean noStart = false;
@@ -275,7 +280,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       try
       {
          AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
-         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller = new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
+         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller =
+            new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
 
          // Application will be started after creation (IDE-1618)
          boolean noStart = false;

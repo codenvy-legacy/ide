@@ -25,6 +25,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -202,11 +203,14 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       };
       JobManager.get().showJobSeparated();
 
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         createApplicationWS(loggedInHandler);
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         createApplicationWS(loggedInHandler);
+      }
+      else
+      {
          createApplicationREST(loggedInHandler);
+      }
    }
 
    /**

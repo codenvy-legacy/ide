@@ -25,6 +25,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -43,6 +44,7 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -208,10 +210,9 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       };
       JobManager.get().showJobSeparated();
 
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         createApplicationWS(loggedInHandler);
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+         createApplicationWS(loggedInHandler);
+      else
          createApplicationREST(loggedInHandler);
    }
 

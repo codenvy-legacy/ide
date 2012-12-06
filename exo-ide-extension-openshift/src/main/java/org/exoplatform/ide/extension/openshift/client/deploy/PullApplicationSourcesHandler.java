@@ -105,9 +105,13 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
       JobManager.get().showJobSeparated();
 
       if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
          doPullWS(refs, remoteName, remoteUrl);
+      }
       else
+      {
          doPullREST(refs, remoteName, remoteUrl);
+      }
    }
 
    private void doPullREST(String refs, String remoteName, final String remoteUrl)
@@ -139,21 +143,20 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
    {
       try
       {
-         GitClientService.getInstance().pullWS(vfs.getId(), project, refs, remoteName,
-            new RequestCallback<String>()
+         GitClientService.getInstance().pullWS(vfs.getId(), project, refs, remoteName, new RequestCallback<String>()
+         {
+            @Override
+            protected void onSuccess(String result)
             {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  onPullSuccess(remoteUrl);
-               }
+               onPullSuccess(remoteUrl);
+            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, remoteUrl);
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               handleError(exception, remoteUrl);
+            }
+         });
       }
       catch (WebSocketException e)
       {
