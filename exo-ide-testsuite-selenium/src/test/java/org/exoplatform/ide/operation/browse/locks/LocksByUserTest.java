@@ -23,6 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
@@ -31,7 +32,12 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -42,7 +48,7 @@ import java.util.Map;
  * @version $Id: Oct 14, 2010 $
  *
  */
-public class LocksByUserTest extends LockFileAbstract
+public class LocksByUserTest extends BaseTest
 {
    private static String PROJECT = LockFileTest.class.getSimpleName();
 
@@ -123,7 +129,6 @@ public class LocksByUserTest extends LockFileAbstract
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       //check lock icons
       IDE.LOCK_FILE.isLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
@@ -136,7 +141,6 @@ public class LocksByUserTest extends LockFileAbstract
       IDE.EDITOR.typeTextIntoEditor(0, "Change in locked file");
       assertEquals("Change in locked file", IDE.EDITOR.getTextFromCodeEditor(0));
       assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-      Thread.sleep(5000);
       IDE.EDITOR.closeFile(0);
       //ask dialog sholudn't appearance
       assertFalse(IDE.ASK_DIALOG.isOpened());

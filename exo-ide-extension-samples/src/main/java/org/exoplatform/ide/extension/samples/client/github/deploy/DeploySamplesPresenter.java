@@ -46,6 +46,7 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
@@ -358,15 +359,14 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
       }
       JobManager.get().showJobSeparated();
 
-      //Temporary disable websockets for this function because error appear that ssh key not found through websocket
-      //      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-      //      {
-      //         cloneFolderWS(repo, folder, remoteUri);
-      //      }
-      //      else
-      //      {
-      cloneFolderREST(repo, folder, remoteUri);
-      //      }
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         cloneFolderWS(repo, folder, remoteUri);
+      }
+      else
+      {
+         cloneFolderREST(repo, folder, remoteUri);
+      }
    }
 
    /**
