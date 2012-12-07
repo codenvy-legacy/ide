@@ -31,6 +31,13 @@ import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
@@ -58,6 +65,8 @@ import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.history.HistoryPresenter;
 import org.exoplatform.ide.git.client.init.InitRepositoryPresenter;
 import org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlPresenter;
+import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.client.merge.MergePresenter;
 import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
@@ -66,7 +75,10 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
+import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
 
@@ -80,14 +92,12 @@ import java.util.Map;
  * @version $Id: Mar 22, 2011 12:53:29 PM anya $
  * 
  */
-public class GitExtension extends Extension implements InitializeServicesHandler, StartWithInitParamsHandler
+public class GitExtension extends Extension implements InitializeServicesHandler
 {
 
    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
 
    public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
-
-   private CloneRepositoryPresenter cloneRepositoryPresenter;
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -96,7 +106,6 @@ public class GitExtension extends Extension implements InitializeServicesHandler
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
 
       // Add controls:
       IDE.getInstance().addControl(new InitRepositoryControl());
@@ -120,8 +129,10 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new ShowProjectGitReadOnlyUrl());
       IDE.getInstance().addControlsFormatter(new GitControlsFormatter());
 
+      
+      new CodeNowHandler();
       // Create presenters:
-      cloneRepositoryPresenter = new CloneRepositoryPresenter();
+      new CloneRepositoryPresenter();
       new InitRepositoryPresenter();
       new StatusCommandHandler();
       new AddToIndexPresenter();
@@ -152,90 +163,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new GitClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
    }
 
-   @Override
-   public void onStartWithInitParams(StartWithInitParamsEvent event)
-   {
-      if (isValidParam(event.getParameterMap()))
-      {
-         String giturl = event.getParameterMap().get(CodeNowSpec10.VCS_URL).get(0);
+  
 
-         String prjName = null;
-         if (event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME) != null && event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).isEmpty())
-         {
-            prjName = event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).get(0);
-         }
-         else
-         {
-            prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
-         }
-
-         cloneProject(giturl, prjName);
-      }
-
-   }
-
-   /**
-    * @param initParam
-    */
-   private boolean isValidParam(Map<String, List<String>> initParam)
-   {
-      if (initParam == null || initParam.isEmpty())
-      {
-         return false;
-      }
-      if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
-         || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
-         || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
-      {
-         return false;
-      }
-      if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
-         || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS))
-      {
-         return false;
-      }
-      if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) == null
-         || initParam.get(CodeNowSpec10.VCS_URL).isEmpty())
-      {
-         return false;
-      }
-      return true;
-   }
-
-   private void cloneProject(final String giturl, final String prjName)
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().getItemByPath(prjName, new AsyncRequestCallback<ItemWrapper>()
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               //Project already exist with same name. Generate random suffix for it
-               cloneRepositoryPresenter.doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               if (exception instanceof ServerException)
-               {
-                  //Check if item not with given name not exist, it's ok for us we can start cloning
-                  if (((ServerException)exception).getHeader("X-Exit-Code") != null
-                     && ((ServerException)exception).getHeader("X-Exit-Code").equals(
-                        Integer.toString(ExitCodes.ITEM_NOT_FOUND)))
-                  {
-                     cloneRepositoryPresenter.doClone(giturl, "origin", prjName);
-                  }
-
-               }
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
-   }
+   
 }

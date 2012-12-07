@@ -29,6 +29,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -113,7 +114,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    private String projectId = null;
 
    /**
-    * The build's identifier.
+    * The builds identifier.
     */
    private String buildID = null;
 
@@ -531,7 +532,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          if (publishAfterBuild)
          {
-            getPublisArtifactResult();
+            getPublishArtifactResult();
          }
       }
       else if (buildStatus.getStatus() == Status.FAILED)
@@ -548,15 +549,9 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
          statusHandler.requestError(projectId, new Exception(exceptionMessage));
       }
-
+      System.out.println("BuildProjectPresenter.afterBuildFinished()" + message.toString());
       showBuildMessage(message.toString());
       display.stopAnimation();
-
-      if (buildStatus.getStatus() == Status.FAILED)
-      {
-         showBuildMessage(buildStatus.getError());
-      }
-
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
 
@@ -574,7 +569,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     * Getting information about publish artifact process for its only suggest dependency
     *
     */
-   private void getPublisArtifactResult()
+   private void getPublishArtifactResult()
    {
       try
       {
@@ -802,7 +797,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    };
 
    /**
-    * Deserializer for response's body.
+    * Deserializer for responses body.
     */
    private class StringUnmarshaller implements Unmarshallable<StringBuilder>
    {

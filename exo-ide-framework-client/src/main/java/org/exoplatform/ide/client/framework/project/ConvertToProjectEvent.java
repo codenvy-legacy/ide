@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.client.framework.project;
 
+import org.exoplatform.ide.vfs.shared.Property;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -37,6 +42,8 @@ public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
    private String folderId;
 
    private String vfsId;
+   
+   private List<Property>  properties = new ArrayList<Property>();
 
    public ConvertToProjectEvent()
    {
@@ -46,6 +53,13 @@ public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
    {
       this.folderId = folderId;
       this.vfsId = vfsId;
+   }
+   
+   public ConvertToProjectEvent(String folderId, String vfsId, List<Property> properties)
+   {
+      this.folderId = folderId;
+      this.vfsId = vfsId;
+      this.properties = properties;
    }
 
    /**
@@ -74,5 +88,10 @@ public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
    public String getVfsId()
    {
       return vfsId;
+   }
+   
+   public List<Property> getProperties()
+   {
+      return properties;
    }
 }

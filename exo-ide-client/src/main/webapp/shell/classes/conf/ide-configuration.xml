@@ -216,19 +216,6 @@
       </init-params>
    </component>
 
-   <component>
-      <type>org.exoplatform.ide.extension.java.server.PomListener</type>
-      <init-params>
-         <value-param>
-            <name>vfsId</name>
-            <value>dev-monit</value>
-         </value-param>
-         <value-param>
-            <name>delay</name>
-            <value>2000</value>
-         </value-param>
-      </init-params>
-   </component>
 
    <component>
       <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
