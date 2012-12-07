@@ -33,6 +33,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
@@ -191,11 +192,14 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
     */
    protected void doCreateApplication()
    {
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         doCreateApplicationWS();
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         doCreateApplicationWS();
+      }
+      else
+      {
          doCreateApplicationREST();
+      }
    }
 
    /**

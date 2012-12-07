@@ -142,10 +142,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             : display.getRemoteNameField().getValue();
       JobManager.get().showJobSeparated();
 
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         createApplicationWS(applicationName, remoteName);
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+         createApplicationWS(applicationName, remoteName);
+      else
          createApplicationREST(applicationName, remoteName);
    }
 

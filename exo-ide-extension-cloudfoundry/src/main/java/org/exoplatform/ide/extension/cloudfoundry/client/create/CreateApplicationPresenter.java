@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -494,11 +495,14 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       };
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         createApplicationWS(appData, project, loggedInHandler);
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         createApplicationWS(appData, project, loggedInHandler);
+      }
+      else
+      {
          createApplicationREST(appData, project, loggedInHandler);
+      }
    }
 
    /**

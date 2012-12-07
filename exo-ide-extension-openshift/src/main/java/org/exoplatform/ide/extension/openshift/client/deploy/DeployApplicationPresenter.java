@@ -46,6 +46,7 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -239,11 +240,14 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       String applicationType = display.getTypeField().getValue();
       JobManager.get().showJobSeparated();
 
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         createApplicationWS(applicationName, applicationType);
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         createApplicationWS(applicationName, applicationType);
+      }
+      else
+      {
          createApplicationREST(applicationName, applicationType);
+      }
    }
 
    /**

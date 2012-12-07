@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -217,11 +218,14 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
    {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      // TODO temporary disabled using WebSocket
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//         doDeployApplicationWS(project);
-//      else
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         doDeployApplicationWS(project);
+      }
+      else
+      {
          doDeployApplicationREST(project);
+      }
    }
 
    /**
