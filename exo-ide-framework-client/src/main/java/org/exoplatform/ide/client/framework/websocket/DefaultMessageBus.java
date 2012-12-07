@@ -91,22 +91,23 @@ public abstract class DefaultMessageBus implements MessageBus, MessageReceivedHa
    @Override
    public ReadyState getReadyState()
    {
-      if (ws == null)
-         throw new IllegalStateException("WebSocket is not initialized.");
-
-      switch (ws.getReadyState())
-      {
-         case 0 :
-            return ReadyState.CONNECTING;
-         case 1 :
-            return ReadyState.OPEN;
-         case 2 :
-            return ReadyState.CLOSING;
-         case 3 :
-            return ReadyState.CLOSED;
-         default :
-            return ReadyState.CLOSED;
-      }
+      return ReadyState.CLOSED;
+//      if (ws == null)
+//         throw new IllegalStateException("WebSocket is not initialized.");
+//
+//      switch (ws.getReadyState())
+//      {
+//         case 0 :
+//            return ReadyState.CONNECTING;
+//         case 1 :
+//            return ReadyState.OPEN;
+//         case 2 :
+//            return ReadyState.CLOSING;
+//         case 3 :
+//            return ReadyState.CLOSED;
+//         default :
+//            return ReadyState.CLOSED;
+//      }
    }
 
    /**
