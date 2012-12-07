@@ -512,6 +512,12 @@ public class Cloudfoundry
             framework = getFramework(systemInfo, frameworkName);
          }
 
+         //Need this because cloudfoundry has a problem with deploying rails apps with version 1.8
+         if ("rails3".equals(frameworkName))
+         {
+            runtime = "ruby19";
+         }
+
          if (instances <= 0)
          {
             instances = 1;
