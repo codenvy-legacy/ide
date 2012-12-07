@@ -20,7 +20,7 @@ package org.exoplatform.ide.extension.java.server;
 
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
-import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.core.tools.ResourceLauncher;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.container.StandaloneContainer;
@@ -66,7 +66,7 @@ public class Base
 
    public static int resourceNumber = 0;
 
-   protected static DummySecurityContext adminSecurityContext;
+   protected static SimpleSecurityContext adminSecurityContext;
 
    protected final Log log = ExoLogger.getLogger(this.getClass().getSimpleName());
 
@@ -95,7 +95,7 @@ public class Base
       adminRoles.add("administrators");
       Set<String> devRoles = new HashSet<String>();
       devRoles.add("developers");
-      adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
+      adminSecurityContext = new SimpleSecurityContext(new MockPrincipal("root"), adminRoles,"BASIC", false);
    }
 
 }
