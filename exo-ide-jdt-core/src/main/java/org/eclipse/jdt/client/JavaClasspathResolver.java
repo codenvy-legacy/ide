@@ -55,10 +55,9 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBuilder;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -212,14 +211,14 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    
    private void resolveDependencies(ProjectModel... projects)
    {
-//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-//      {
-//         resolveDependenciesWS(projects);
-//      }
-//      else
-//      {
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         resolveDependenciesWS(projects);
+      }
+      else
+      {
          resolveDependenciesRest(projects);
-//      }
+      }
    }
 
 
@@ -277,9 +276,9 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
          String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
          StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
-         RESTfulRequestBuilder.build(RequestBuilder.GET, url).send(
-            new RESTfulRequestCallback<StringBuilder>(
-               (org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable<StringBuilder>)unmarshaller)
+         RESTfulRequest.build(RequestBuilder.GET, url).send(
+            new RequestCallback<StringBuilder>(
+               (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller)
             {
 
                @Override

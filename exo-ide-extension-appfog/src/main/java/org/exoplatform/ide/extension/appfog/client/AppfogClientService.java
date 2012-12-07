@@ -22,11 +22,14 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
 import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
@@ -35,6 +38,7 @@ import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
+
 import java.util.List;
 
 /**
@@ -100,6 +104,7 @@ public class AppfogClientService
    private static final String INFRAS = BASE_URL + "/infras";
 
    private Loader loader;
+
    private String restServiceContext;
 
    //------------------------------------------------------------------
@@ -114,6 +119,7 @@ public class AppfogClientService
    {
       instance = this;
    }
+
    //------------------------------------------------------------------
 
    public AppfogClientService(String restContext, Loader loader)
@@ -133,18 +139,9 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void create(String server,
-                      String name,
-                      String type,
-                      String url,
-                      int instances,
-                      int memory,
-                      boolean nostart,
-                      String vfsId,
-                      String projectId,
-                      String war,
-                      String infra,
-                      AppfogAsyncRequestCallback<AppfogApplication> callback) throws RequestException
+   public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
+      String vfsId, String projectId, String war, String infra, AppfogAsyncRequestCallback<AppfogApplication> callback)
+      throws RequestException
    {
       final String requestUrl = restServiceContext + CREATE;
 
@@ -166,14 +163,40 @@ public class AppfogClientService
 
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
 
-      AsyncRequest.build(RequestBuilder.POST, requestUrl, true).requestStatusHandler(new CreateApplicationRequestStatusHandler(name)).data(data)
+      AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
+         .requestStatusHandler(new CreateApplicationRequestStatusHandler(name)).data(data)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void login(String server,
-                     String email,
-                     String password,
-                     AsyncRequestCallback<String> callback) throws RequestException
+   public void createWS(String server, String name, String type, String url, int instances, int memory,
+      boolean nostart, String vfsId, String projectId, String war, String infra,
+      AppfogRESTfulRequestCallback<AppfogApplication> callback) throws WebSocketException
+   {
+      server = checkServerUrl(server);
+
+      CreateAppfogApplicationRequest createApplicationRequest =
+         AppfogExtension.AUTO_BEAN_FACTORY.createAppfogApplicationRequest().as();
+      createApplicationRequest.setName(name);
+      createApplicationRequest.setServer(server);
+      createApplicationRequest.setType(type);
+      createApplicationRequest.setUrl(url);
+      createApplicationRequest.setInstances(instances);
+      createApplicationRequest.setMemory(memory);
+      createApplicationRequest.setNostart(nostart);
+      createApplicationRequest.setVfsid(vfsId);
+      createApplicationRequest.setProjectid(projectId);
+      createApplicationRequest.setWar(war);
+      createApplicationRequest.setInfra(infra);
+
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+
+      RESTfulRequest.build(RequestBuilder.POST, CREATE)
+         .requestStatusHandler(new CreateApplicationRequestStatusHandler(name)).data(data)
+         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   public void login(String server, String email, String password, AsyncRequestCallback<String> callback)
+      throws RequestException
    {
       String url = restServiceContext + LOGIN;
 
@@ -201,12 +224,8 @@ public class AppfogClientService
       AsyncRequest.build(RequestBuilder.POST, url + params).loader(loader).send(callback);
    }
 
-   public void getApplicationInfo(String vfsId,
-                                  String projectId,
-                                  String appId,
-                                  String server,
-                                  AppfogAsyncRequestCallback<AppfogApplication> callback)
-      throws RequestException
+   public void getApplicationInfo(String vfsId, String projectId, String appId, String server,
+      AppfogAsyncRequestCallback<AppfogApplication> callback) throws RequestException
    {
       final String url = restServiceContext + APPS_INFO;
 
@@ -222,12 +241,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void deleteApplication(String vfsId,
-                                 String projectId,
-                                 String appId,
-                                 String server,
-                                 boolean deleteServices,
-                                 AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void deleteApplication(String vfsId, String projectId, String appId, String server, boolean deleteServices,
+      AppfogAsyncRequestCallback<String> callback) throws RequestException
    {
       final String url = restServiceContext + DELETE;
 
@@ -243,12 +258,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void startApplication(String vfsId,
-                                String projectId,
-                                String name,
-                                String server,
-                                AppfogAsyncRequestCallback<AppfogApplication> callback)
-      throws RequestException
+   public void startApplication(String vfsId, String projectId, String name, String server,
+      AppfogAsyncRequestCallback<AppfogApplication> callback) throws RequestException
    {
       final String url = restServiceContext + START;
 
@@ -264,11 +275,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void stopApplication(String vfsId,
-                               String projectId,
-                               String name,
-                               String server,
-                               AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void stopApplication(String vfsId, String projectId, String name, String server,
+      AppfogAsyncRequestCallback<String> callback) throws RequestException
    {
       final String url = restServiceContext + STOP;
 
@@ -284,12 +292,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void restartApplication(String vfsId,
-                                  String projectId,
-                                  String name,
-                                  String server,
-                                  AppfogAsyncRequestCallback<AppfogApplication> callback)
-      throws RequestException
+   public void restartApplication(String vfsId, String projectId, String name, String server,
+      AppfogAsyncRequestCallback<AppfogApplication> callback) throws RequestException
    {
       final String url = restServiceContext + RESTART;
 
@@ -305,12 +309,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void updateApplication(String vfsId,
-                                 String projectId,
-                                 String name,
-                                 String server,
-                                 String war,
-                                 AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void updateApplication(String vfsId, String projectId, String name, String server, String war,
+      AppfogAsyncRequestCallback<String> callback) throws RequestException
    {
       final String url = restServiceContext + UPDATE;
 
@@ -327,12 +327,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void renameApplication(String vfsId,
-                                 String projectId,
-                                 String name,
-                                 String server,
-                                 String newName,
-                                 AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void renameApplication(String vfsId, String projectId, String name, String server, String newName,
+      AppfogAsyncRequestCallback<String> callback) throws RequestException
    {
       //Doesn't realized in rest
       final String url = restServiceContext + RENAME;
@@ -349,12 +345,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void mapUrl(String vfsId,
-                      String projectId,
-                      String name,
-                      String server,
-                      String url,
-                      AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void mapUrl(String vfsId, String projectId, String name, String server, String url,
+      AppfogAsyncRequestCallback<String> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + MAP_URL;
 
@@ -370,12 +362,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void unmapUrl(String vfsId,
-                        String projectId,
-                        String name,
-                        String server,
-                        String url,
-                        AppfogAsyncRequestCallback<Object> callback) throws RequestException
+   public void unmapUrl(String vfsId, String projectId, String name, String server, String url,
+      AppfogAsyncRequestCallback<Object> callback) throws RequestException
    {
       final String requestUrl = restServiceContext + UNMAP_URL;
 
@@ -391,12 +379,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void updateMemory(String vfsId,
-                            String projectId,
-                            String name,
-                            String server,
-                            int mem,
-                            AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void updateMemory(String vfsId, String projectId, String name, String server, int mem,
+      AppfogAsyncRequestCallback<String> callback) throws RequestException
    {
       final String url = restServiceContext + UPDATE_MEMORY;
 
@@ -412,12 +396,8 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void updateInstances(String vfsId,
-                               String projectId,
-                               String name,
-                               String server,
-                               String expression,
-                               AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void updateInstances(String vfsId, String projectId, String name, String server, String expression,
+      AppfogAsyncRequestCallback<String> callback) throws RequestException
    {
       final String url = restServiceContext + UPDATE_INSTANCES;
 
@@ -433,17 +413,9 @@ public class AppfogClientService
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void validateAction(String action,
-                              String server,
-                              String appName,
-                              String framework,
-                              String url,
-                              String vfsId,
-                              String projectId,
-                              int instances,
-                              int memory,
-                              boolean nostart,
-                              AppfogAsyncRequestCallback<String> callback) throws RequestException
+   public void validateAction(String action, String server, String appName, String framework, String url, String vfsId,
+      String projectId, int instances, int memory, boolean nostart, AppfogAsyncRequestCallback<String> callback)
+      throws RequestException
    {
       final String postUrl = restServiceContext + VALIDATE_ACTION;
 
@@ -463,8 +435,7 @@ public class AppfogClientService
       AsyncRequest.build(RequestBuilder.POST, postUrl + "?" + params).loader(loader).send(callback);
    }
 
-   public void getApplicationList(String server,
-                                  AppfogAsyncRequestCallback<List<AppfogApplication>> callback)
+   public void getApplicationList(String server, AppfogAsyncRequestCallback<List<AppfogApplication>> callback)
       throws RequestException
    {
       String url = restServiceContext + APPS;
@@ -479,8 +450,7 @@ public class AppfogClientService
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
-   public void getSystemInfo(String server,
-                             AsyncRequestCallback<SystemInfo> callback) throws RequestException
+   public void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback) throws RequestException
    {
       final String url = restServiceContext + SYSTEM_INFO_URL;
 
@@ -507,9 +477,8 @@ public class AppfogClientService
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
-   public void getLogs(String vfsId,
-                       String projectId,
-                       AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   public void getLogs(String vfsId, String projectId, AsyncRequestCallback<StringBuilder> callback)
+      throws RequestException
    {
       String url = restServiceContext + LOGS + "?projectid=" + projectId + "&vfsid=" + vfsId;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
@@ -524,14 +493,9 @@ public class AppfogClientService
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void createService(String server,
-                             String type,
-                             String name,
-                             String application,
-                             String vfsId,
-                             String projectId,
-                             String infra,
-                             AppfogAsyncRequestCallback<AppfogProvisionedService> callback) throws RequestException
+   public void createService(String server, String type, String name, String application, String vfsId,
+      String projectId, String infra, AppfogAsyncRequestCallback<AppfogProvisionedService> callback)
+      throws RequestException
    {
       String url = restServiceContext + SERVICES_CREATE;
       StringBuilder params = new StringBuilder("?");
@@ -562,9 +526,8 @@ public class AppfogClientService
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void deleteService(String server,
-                             String name,
-                             AppfogAsyncRequestCallback<Object> callback) throws RequestException
+   public void deleteService(String server, String name, AppfogAsyncRequestCallback<Object> callback)
+      throws RequestException
    {
       String url = restServiceContext + SERVICES_DELETE + "/" + name;
       String params = (server != null) ? "?server=" + server : "";
@@ -573,12 +536,8 @@ public class AppfogClientService
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void bindService(String server,
-                           String name,
-                           String application,
-                           String vfsId,
-                           String projectId,
-                           AppfogAsyncRequestCallback<Object> callback) throws RequestException
+   public void bindService(String server, String name, String application, String vfsId, String projectId,
+      AppfogAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + SERVICES_BIND + "/" + name;
       StringBuilder params = new StringBuilder("?");
@@ -604,12 +563,8 @@ public class AppfogClientService
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void unbindService(String server,
-                             String name,
-                             String application,
-                             String vfsId,
-                             String projectId,
-                             AppfogAsyncRequestCallback<Object> callback) throws RequestException
+   public void unbindService(String server, String name, String application, String vfsId, String projectId,
+      AppfogAsyncRequestCallback<Object> callback) throws RequestException
    {
       String url = restServiceContext + SERVICES_UNBIND + "/" + name;
       StringBuilder params = new StringBuilder("?");
@@ -635,10 +590,8 @@ public class AppfogClientService
          .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
    }
 
-   public void infras(String server,
-                      String vfsId,
-                      String projectId,
-                      AsyncRequestCallback<List<InfraDetail>> callback) throws RequestException
+   public void infras(String server, String vfsId, String projectId, AsyncRequestCallback<List<InfraDetail>> callback)
+      throws RequestException
    {
       String url = restServiceContext + INFRAS;
       StringBuilder params = new StringBuilder("?");

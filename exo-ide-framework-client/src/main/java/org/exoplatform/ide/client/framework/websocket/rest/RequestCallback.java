@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 import com.google.gwt.http.client.Response;
 
@@ -25,18 +25,20 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
-import org.exoplatform.ide.client.framework.websocket.exceptions.ServerException;
-import org.exoplatform.ide.client.framework.websocket.exceptions.UnauthorizedException;
+import org.exoplatform.ide.client.framework.websocket.Message;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReplyHandler;
+import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
+import org.exoplatform.ide.client.framework.websocket.rest.exceptions.UnauthorizedException;
 
 /**
- * Callback to receive a {@link RESTfulResponseMessage}.
+ * Callback to receive a {@link ResponseMessage}.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RESTfulRequestCallback.java Nov 12, 2012 10:13:13 AM azatsarynnyy $
+ * @version $Id: RequestCallback.java Nov 12, 2012 10:13:13 AM azatsarynnyy $
  *
  * @param <T>
  */
-public abstract class RESTfulRequestCallback<T>
+public abstract class RequestCallback<T> implements ReplyHandler
 {
 
    // http code 207 is "Multi-Status"
@@ -50,7 +52,7 @@ public abstract class RESTfulRequestCallback<T>
    private int[] successCodes;
 
    /**
-    * Deserializer for the body of the {@link RESTfulResponseMessage}.
+    * Deserializer for the body of the {@link ResponseMessage}.
     */
    private final Unmarshallable<T> unmarshaller;
 
@@ -69,7 +71,7 @@ public abstract class RESTfulRequestCallback<T>
     */
    private AsyncRequestLoader loader;
 
-   public RESTfulRequestCallback()
+   public RequestCallback()
    {
       this(null);
    }
@@ -81,7 +83,7 @@ public abstract class RESTfulRequestCallback<T>
     * 
     * @param unmarshaller {@link Unmarshallable}
     */
-   public RESTfulRequestCallback(Unmarshallable<T> unmarshaller)
+   public RequestCallback(Unmarshallable<T> unmarshaller)
    {
       this.successCodes = DEFAULT_SUCCESS_CODES;
 
@@ -97,16 +99,23 @@ public abstract class RESTfulRequestCallback<T>
    }
 
    /**
-    * Perform actions when {@link RESTfulResponseMessage} was received.
+    * Perform actions when response message was received.
     * 
-    * @param response received {@link RESTfulResponseMessage}
+    * @param response message
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus.ReplyHandler#onReply(org.exoplatform.ide.client.framework.websocket.Message)
     */
-   public void onResponseReceived(RESTfulResponseMessage response)
+   @Override
+   public void onReply(Message message)
    {
       if (loader != null)
       {
          loader.hide();
       }
+
+      if (!(message instanceof ResponseMessage))
+         throw new IllegalArgumentException("Invalid input message.");
+
+      ResponseMessage response = (ResponseMessage)message;
 
       if (response.getResponseCode() == HTTPStatus.UNAUTHORIZED)
       {
@@ -156,10 +165,10 @@ public abstract class RESTfulRequestCallback<T>
    /**
     * Is response successful?
     * 
-    * @param response {@link RESTfulResponseMessage}
+    * @param response {@link ResponseMessage}
     * @return <code>true</code> if response is successful and <code>false</code> if response is not successful
     */
-   protected final boolean isSuccessful(RESTfulResponseMessage response)
+   protected final boolean isSuccessful(ResponseMessage response)
    {
       if (successCodes == null)
       {

@@ -18,12 +18,12 @@
  *
  */
 
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 
 /**
- * Deserializer for the body of the {@link RESTfulResponseMessage}.
+ * Deserializer for the body of the {@link ResponseMessage}.
  * 
  * By the contract:
  * <code>getPayload()</code> should never return <code>null</code> (should be initialized in impl's constructor
@@ -38,17 +38,17 @@ public interface Unmarshallable<T>
 {
 
    /**
-    * Prepares an object from the incoming {@link RESTfulResponseMessage}.
+    * Prepares an object from the incoming {@link ResponseMessage}.
     * 
-    * @param resopnse {@link RESTfulResponseMessage}
+    * @param resopnse {@link ResponseMessage}
     */
-   void unmarshal(RESTfulResponseMessage response) throws UnmarshallerException;
+   void unmarshal(ResponseMessage response) throws UnmarshallerException;
 
    /**
     * The content of the returned object normally differs before and 
     * after <code>unmarshall()</code> but by the contract it should never be <code>null</code>. 
     * 
-    * @return an object deserialized from the {@link RESTfulResponseMessage} 
+    * @return an object deserialized from the {@link ResponseMessage} 
     */
    T getPayload();
 

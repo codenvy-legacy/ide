@@ -33,6 +33,7 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
+ * @see OpenShiftRESTfulRequestCallback
  */
 public abstract class OpenShiftAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {

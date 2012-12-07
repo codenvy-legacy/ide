@@ -82,7 +82,7 @@ public class OutlineWithOtherTabsInPanelTest extends BaseTest
    @After
    public void tearDown()
    {
-      deleteCookies();
+
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);

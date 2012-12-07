@@ -27,8 +27,8 @@ import com.google.web.bindery.autobean.shared.Splittable;
 import com.google.web.bindery.autobean.shared.impl.StringQuoter;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
 import org.exoplatform.ide.extension.java.jdi.shared.BreakPointEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEvent;
 import org.exoplatform.ide.extension.java.jdi.shared.DebuggerEventList;
@@ -55,10 +55,10 @@ public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerE
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage)
+    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#unmarshal(org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage)
     */
    @Override
-   public void unmarshal(RESTfulResponseMessage response) throws UnmarshallerException
+   public void unmarshal(ResponseMessage response) throws UnmarshallerException
    {
       JSONObject jObj = JSONParser.parseStrict(response.getBody()).isObject();
       if (jObj == null)
@@ -95,7 +95,7 @@ public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerE
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable#getPayload()
+    * @see org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable#getPayload()
     */
    @Override
    public DebuggerEventList getPayload()

@@ -29,12 +29,13 @@ import org.exoplatform.ide.extension.cloudbees.client.login.LoginCanceledHandler
 import org.exoplatform.ide.extension.cloudbees.client.login.LoginEvent;
 
 /**
- * Asynchronous CloudBees request. The {{@link #onFailure(Throwable)} method contains the check for user not authorized exception,
+ * Asynchronous CloudBees request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception,
  * in this case - the {@link LoginEvent} is fired.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: HerokuAsyncRequestCallback.java Jun 24, 2011 2:27:50 PM vereshchaka $
  * 
+ * @see CloudBeesRESTfulRequestCallback
  */
 public abstract class CloudBeesAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {

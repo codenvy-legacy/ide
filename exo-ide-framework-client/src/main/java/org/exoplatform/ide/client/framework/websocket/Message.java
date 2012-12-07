@@ -16,21 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket;
 
 /**
- * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
+ * @version $Id: Message.java Dec 4, 2012 3:07:48 PM azatsarynnyy $
  *
  */
-public interface Pair
+public interface Message
 {
-   String getName();
+   /**
+    * Get message UUID. If specified for request message then response message gets the same UUID.
+    *
+    * @return message unique identifier
+    */
+   String getUuid();
 
-   void setName(String name);
-
-   String getValue();
-
-   void setValue(String value);
+   /**
+    * Set message UUID. If specified for request message then response message gets the same UUID.
+    *
+    * @param uuid
+    *    message unique identifier
+    */
+   void setUuid(String uuid);
 }

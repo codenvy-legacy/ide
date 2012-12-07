@@ -16,29 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.exceptions;
-
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 /**
- * Thrown when there was a HTTP Status-Code 401 (Unauthorized) was received.
+ * RESTful request message.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: UnauthorizedException.java Nov 9, 2012 5:09:29 PM azatsarynnyy $
+ * @version $Id: RequestMessage.java Nov 6, 2012 12:35:20 PM azatsarynnyy $
  *
  */
-@SuppressWarnings("serial")
-public class UnauthorizedException extends Exception
+public interface RequestMessage extends RESTMessage
 {
-   private RESTfulResponseMessage response;
-
-   public UnauthorizedException(RESTfulResponseMessage response)
-   {
-      this.response = response;
-   }
-
-   public int getHTTPStatus()
-   {
-      return response.getResponseCode();
-   }
 }

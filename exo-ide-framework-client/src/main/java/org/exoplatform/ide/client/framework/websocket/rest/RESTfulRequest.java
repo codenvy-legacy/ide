@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 import com.google.gwt.http.client.RequestBuilder.Method;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -26,26 +26,25 @@ import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
- * Builder for constructing {@link RESTfulRequestMessage} objects.
+ * Builder for constructing and sending {@link RequestMessage}.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RESTfulRequestBuilder.java Nov 9, 2012 4:14:46 PM azatsarynnyy $
+ * @version $Id: RESTfulRequest.java Nov 9, 2012 4:14:46 PM azatsarynnyy $
  *
  */
-public class RESTfulRequestBuilder
+public class RESTfulRequest
 {
    /**
     * Message which is constructing and may be send.
     */
-   private final RESTfulRequestMessage requestMessage;
+   private final RequestMessage requestMessage;
 
    /**
     * Handler to show an execution state of operation.
@@ -58,30 +57,30 @@ public class RESTfulRequestBuilder
    protected AsyncRequestLoader loader;
 
    /**
-    * Creates a {@link RESTfulRequestBuilder} using the parameters for configuration.
+    * Creates a {@link RESTfulRequest} using the parameters for configuration.
     * 
     * @param method HTTP method to use for the request
     * @param path URI
     */
-   protected RESTfulRequestBuilder(Method method, String path)
+   protected RESTfulRequest(Method method, String path)
    {
-      requestMessage = WebSocket.AUTO_BEAN_FACTORY.restFulRequestMessage().as();
-      requestMessage.setUuid(generateUuid());
+      requestMessage = RESTMessageBus.AUTO_BEAN_FACTORY.requestMessage().as();
+      requestMessage.setUuid(UUID.uuid());
       requestMessage.setMethod((method == null) ? null : method.toString());
       requestMessage.setPath(path);
       loader = new EmptyLoader();
    }
 
    /**
-    * Creates a {@link RESTfulRequestBuilder} using the parameters for configuration.
+    * Creates a {@link RESTfulRequest} using the parameters for configuration.
     * 
     * @param method HTTP method to use for the request
     * @param path URI
-    * @return a new {@link RESTfulRequestBuilder}
+    * @return a new {@link RESTfulRequest}
     */
-   public static final RESTfulRequestBuilder build(Method method, String path)
+   public static final RESTfulRequest build(Method method, String path)
    {
-      return new RESTfulRequestBuilder(method, path);
+      return new RESTfulRequest(method, path);
    }
 
    /**
@@ -91,9 +90,9 @@ public class RESTfulRequestBuilder
     * 
     * @param name the name of the header
     * @param value the value of the header
-    * @return this {@link RESTfulRequestBuilder}
+    * @return this {@link RESTfulRequest}
     */
-   public final RESTfulRequestBuilder header(String name, String value)
+   public final RESTfulRequest header(String name, String value)
    {
       List<Pair> headers = requestMessage.getHeaders();
       if (headers == null)
@@ -110,7 +109,7 @@ public class RESTfulRequestBuilder
          }
       }
 
-      Pair header = WebSocket.AUTO_BEAN_FACTORY.pair().as();
+      Pair header = RESTMessageBus.AUTO_BEAN_FACTORY.pair().as();
       header.setName(name);
       header.setValue(value);
       headers.add(header);
@@ -122,9 +121,9 @@ public class RESTfulRequestBuilder
     * Sets the data to send as body of this request.
     * 
     * @param requestData the data to send as body of the request
-    * @return this {@link RESTfulRequestBuilder}
+    * @return this {@link RESTfulRequest}
     */
-   public final RESTfulRequestBuilder data(String requestData)
+   public final RESTfulRequest data(String requestData)
    {
       requestMessage.setBody(requestData);
       return this;
@@ -134,9 +133,9 @@ public class RESTfulRequestBuilder
     * Set handler to show an execution state of operation.
     * 
     * @param handler status handler
-    * @return this {@link RESTfulRequestBuilder}
+    * @return this {@link RESTfulRequest}
     */
-   public final RESTfulRequestBuilder requestStatusHandler(RequestStatusHandler handler)
+   public final RESTfulRequest requestStatusHandler(RequestStatusHandler handler)
    {
       this.statusHandler = handler;
       return this;
@@ -146,9 +145,9 @@ public class RESTfulRequestBuilder
     * Set the loader to show while request is calling.
     * 
     * @param loader loader to show
-    * @return this {@link RESTfulRequestBuilder}
+    * @return this {@link RESTfulRequest}
     */
-   public final RESTfulRequestBuilder loader(AsyncRequestLoader loader)
+   public final RESTfulRequest loader(AsyncRequestLoader loader)
    {
       this.loader = loader;
       return this;
@@ -159,9 +158,9 @@ public class RESTfulRequestBuilder
     * 
     * @param callback the response handler to be notified when the request fails or completes
     */
-   public void send(RESTfulRequestCallback<?> callback)
+   public void send(RequestCallback<?> callback)
    {
-      AutoBean<RESTfulRequestMessage> autoBean = AutoBeanUtils.getAutoBean(requestMessage);
+      AutoBean<RequestMessage> autoBean = AutoBeanUtils.getAutoBean(requestMessage);
       String message = AutoBeanCodex.encode(autoBean).getPayload();
       if (callback != null)
       {
@@ -171,7 +170,7 @@ public class RESTfulRequestBuilder
 
       try
       {
-         WebSocket.getInstance().messageBus().send(message, callback, requestMessage.getUuid());
+         IDE.messageBus().send(requestMessage.getUuid(), message, callback);
          if (callback != null)
          {
             loader.show();
@@ -189,29 +188,6 @@ public class RESTfulRequestBuilder
             callback.onFailure(e);
          }
       }
-   }
-
-   /**
-    * Returns randomly generated identifier.
-    * 
-    * @return a randomly generated identifier
-    */
-   private String generateUuid()
-   {
-      Random rand = new Random();
-      String id = "";
-
-      for (int i = 0; i < 12; i++)
-      {
-         int r = rand.nextInt(62);
-         if (r > 35)
-            id += (char)(r + 61);
-         else if (r > 9)
-            id += (char)(r + 55);
-         else
-            id += r;
-      }
-      return id;
    }
 
 }

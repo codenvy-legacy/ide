@@ -858,8 +858,7 @@ public class Debugger implements EventsHandler
    private static void publishWebSocketMessage(Object data, String channel)
    {
       RESTfulOutputMessage message = new RESTfulOutputMessage();
-      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
-                                    new Pair("x-everrest-websocket-channel", channel)});
+      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-channel", channel)});
       message.setResponseCode(200);
       if (data instanceof String)
       {

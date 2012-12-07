@@ -16,14 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket;
+package org.exoplatform.ide.client.framework.websocket.rest;
 
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
-import org.exoplatform.ide.client.framework.websocket.messages.Pair;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.Message;
 
 /**
  * The interface for the {@link AutoBean} generating.
@@ -35,6 +33,13 @@ import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMe
 public interface WebSocketAutoBeanFactory extends AutoBeanFactory
 {
    /**
+    * A factory method for a {@link Message} bean.
+    * 
+    * @return an {@link AutoBean} of type {@link Message}
+    */
+   AutoBean<Message> message();
+
+   /**
     * A factory method for a {@link Pair} bean.
     * 
     * @return an {@link AutoBean} of type {@link Pair}
@@ -42,16 +47,16 @@ public interface WebSocketAutoBeanFactory extends AutoBeanFactory
    AutoBean<Pair> pair();
 
    /**
-    * A factory method for a {@link RESTfulRequestMessage} bean.
+    * A factory method for a {@link RequestMessage} bean.
     * 
-    * @return an {@link AutoBean} of type {@link RESTfulRequestMessage}
+    * @return an {@link AutoBean} of type {@link RequestMessage}
     */
-   AutoBean<RESTfulRequestMessage> restFulRequestMessage();
+   AutoBean<RequestMessage> requestMessage();
 
    /**
-    * A factory method for a {@link RESTfulResponseMessage} bean.
+    * A factory method for a {@link ResponseMessage} bean.
     * 
-    * @return an {@link AutoBean} of type {@link RESTfulResponseMessage}
+    * @return an {@link AutoBean} of type {@link ResponseMessage}
     */
-   AutoBean<RESTfulResponseMessage> restFulResponseMessage();
+   AutoBean<ResponseMessage> responseMessage();
 }

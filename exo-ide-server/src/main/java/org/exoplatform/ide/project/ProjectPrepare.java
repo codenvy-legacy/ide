@@ -69,9 +69,9 @@ public class ProjectPrepare
     * @param sourcePath - absolute project path where sources are stored
     * @throws ProjectPrepareException
     */
-   public void doPrepare(String sourcePath, String folderId) throws ProjectPrepareException, VirtualFileSystemException
+   public void doPrepare(String sourcePath, String folderId, List<Property> otherProperties) throws ProjectPrepareException, VirtualFileSystemException
    {
-      //if pom.xml exist in the surce directory it means that we have java project
+      //if pom.xml exist in the source directory it means that we have java project
       if (new File(sourcePath, "pom.xml").exists())
       {
          try
@@ -81,6 +81,7 @@ public class ProjectPrepare
             List<Property> properties = new ArrayList<Property>(2);
             properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
             properties.add(new PropertyImpl("Maven Module", "true"));
+            properties.addAll(otherProperties);
 
             //Just set for all modules where we find pom.xml that it is maven module and default project type
             for (Map.Entry<String, File> entry : mavenModules.entrySet())

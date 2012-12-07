@@ -38,14 +38,14 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
 import org.exoplatform.ide.extension.heroku.client.HerokuLocalizationConstant;
+import org.exoplatform.ide.extension.heroku.client.HerokuRESTfulRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
@@ -130,9 +130,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    }
 
    /**
-    * Create new Heroku application.
+    * Perform creation of application on Heroku by sending request over WebSocket or HTTP.
     */
-   private void createApplication()
+   protected void createApplication()
    {
       String applicationName =
          (display.getApplicationNameField().getValue() == null || display.getApplicationNameField().getValue()
@@ -141,6 +141,18 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
          (display.getRemoteNameField().getValue() == null || display.getRemoteNameField().getValue().isEmpty()) ? null
             : display.getRemoteNameField().getValue();
       JobManager.get().showJobSeparated();
+
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+         createApplicationWS(applicationName, remoteName);
+      else
+         createApplicationREST(applicationName, remoteName);
+   }
+
+   /**
+    * Perform creation of application on Heroku by sending request over HTTP.
+    */
+   private void createApplicationREST(String applicationName, String remoteName)
+   {
       try
       {
          HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
@@ -150,9 +162,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                @Override
                protected void onSuccess(List<Property> properties)
                {
-                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-                  deployResultHandler.onDeployFinished(true);
+                  onAppCreatedSuccess(properties);
                }
 
                @Override
@@ -167,6 +177,49 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       {
          deployResultHandler.onDeployFinished(false);
       }
+   }
+
+   /**
+    * Perform creation of application on Heroku by sending request over WebSocket.
+    */
+   private void createApplicationWS(String applicationName, String remoteName)
+   {
+      try
+      {
+         HerokuClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
+            remoteName, new HerokuRESTfulRequestCallback(this)
+            {
+
+               @Override
+               protected void onSuccess(List<Property> properties)
+               {
+                  onAppCreatedSuccess(properties);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  super.onFailure(exception);
+                  deployResultHandler.onDeployFinished(false);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         deployResultHandler.onDeployFinished(false);
+      }
+   }
+
+   /**
+    * Performs action when application successfully created.
+    * 
+    * @param properties {@link List} of application's {@link Property}
+    */
+   private void onAppCreatedSuccess(List<Property> properties)
+   {
+      IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+      IDE.fireEvent(new RefreshBrowserEvent(project));
+      deployResultHandler.onDeployFinished(true);
    }
 
    /**
@@ -194,7 +247,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    private void initRepository(final ProjectModel project)
    {
       JobManager.get().showJobSeparated();
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
          initRepositoryWS(project);
       else
          initRepositoryREST(project);
@@ -237,7 +290,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       try
       {
          GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
-            new RESTfulRequestCallback<String>()
+            new RequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)

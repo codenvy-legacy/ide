@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.outline.OutlineItemCreator;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
@@ -48,6 +49,11 @@ public abstract class IDE
    private static List<Extension> extensions = new ArrayList<Extension>();
 
    private static HandlerManager eventBus = new SafeHandlerManager();
+
+   /**
+    * Message bus for communicate over WebSocket.
+    */
+   private static MessageBus wsMessageBus;
 
    /**
     * @return the instance
@@ -118,6 +124,26 @@ public abstract class IDE
    public static void fireEvent(GwtEvent<?> event)
    {
       eventBus.fireEvent(event);
+   }
+
+   /**
+    * Returns EventBus.
+    * 
+    * @return EventBus.
+    */
+   public static void setMessageBus(MessageBus messageBus)
+   {
+      wsMessageBus = messageBus;
+   }
+
+   /**
+    * Returns EventBus.
+    * 
+    * @return EventBus.
+    */
+   public static MessageBus messageBus()
+   {
+      return wsMessageBus;
    }
 
    /**

@@ -785,8 +785,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private static void publishWebSocketMessage(Object data, String channelID)
    {
       RESTfulOutputMessage message = new RESTfulOutputMessage();
-      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
-                                    new Pair("x-everrest-websocket-channel", channelID)});
+      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-channel", channelID)});
       message.setResponseCode(200);
       if (data instanceof String)
       {

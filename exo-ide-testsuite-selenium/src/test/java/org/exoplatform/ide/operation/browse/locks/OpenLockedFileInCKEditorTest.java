@@ -19,6 +19,7 @@
 package org.exoplatform.ide.operation.browse.locks;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -41,7 +42,7 @@ import static org.junit.Assert.assertTrue;
  * @version $Id: Oct 15, 2010 $
  *
  */
-public class OpenLockedFileInCKEditorTest extends LockFileAbstract
+public class OpenLockedFileInCKEditorTest extends BaseTest
 {
 
    private static final String FOLDER_NAME = OpenLockedFileInCKEditorTest.class.getSimpleName();
@@ -138,14 +139,14 @@ public class OpenLockedFileInCKEditorTest extends LockFileAbstract
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
       IDE.CK_EDITOR.waitCkEditorOpened(1);
-//      IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
     
       IDE.CK_EDITOR.deleteFileContentInCKEditor(1);
       IDE.CK_EDITOR.typeTextIntoCkEditor(1, "i try is change content");
-     // assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SAVE));
-     //IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "s");
-   //   IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString()+"s");
       IDE.EDITOR.forcedClosureFile(0);
+      //need for redraw file in project tree
+      Thread.sleep(500);
+      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);

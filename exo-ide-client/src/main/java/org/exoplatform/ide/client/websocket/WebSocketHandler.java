@@ -18,12 +18,19 @@
  */
 package org.exoplatform.ide.client.websocket;
 
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 
 /**
  * Handler that opens WebSocket connection when IDE loaded and close WebSocket on close IDE.
@@ -34,6 +41,25 @@ import org.exoplatform.ide.client.framework.websocket.WebSocket;
  */
 public class WebSocketHandler implements ApplicationSettingsReceivedHandler, ApplicationClosedHandler
 {
+   /**
+    * Period (in milliseconds) to send heartbeat pings.
+    */
+   private static final int HEARTBEAT_PERIOD = 50 * 1000;
+
+   /**
+    * Period (in milliseconds) to reconnect after connection is closed.
+    */
+   private final static int RECONNECTION_PERIOD = 5000;
+
+   /**
+    * Max. number of attempts to reconnect.
+    */
+   private final static int MAX_RECONNECTION_ATTEMPTS = 5;
+
+   /**
+    * Counter of reconnection attempts.
+    */
+   private static int reconnectionAttemptsCounter;
 
    public WebSocketHandler()
    {
@@ -47,11 +73,44 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
-      WebSocket ws = WebSocket.getInstance();
-      if (ws != null)
+      IDE.setMessageBus(new RESTMessageBus(getWebSocketServerURL()));
+      initialize();
+   }
+
+   private void initialize()
+   {
+      IDE.messageBus().setOnOpenHandler(new MessageBus.ConnectionOpenedHandler()
       {
-         ws.connect();
-      }
+         @Override
+         public void onOpen()
+         {
+            if (reconnectionAttemptsCounter > 0)
+            {
+               reconnectionTimer.cancel();
+            }
+            reconnectionAttemptsCounter = 0;
+            heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
+         }
+      });
+
+      IDE.messageBus().setOnCloseHandler(new MessageBus.ConnectionClosedHandler()
+      {
+         @Override
+         public void onClose(WebSocketClosedEvent event)
+         {
+            heartbeatTimer.cancel();
+            reconnectionTimer.scheduleRepeating(RECONNECTION_PERIOD);
+         }
+      });
+
+      IDE.messageBus().setOnErrorHandler(new MessageBus.ConnectionErrorHandler()
+      {
+         @Override
+         public void onError()
+         {
+            IDE.messageBus().close();
+         }
+      });
    }
 
    /**
@@ -60,10 +119,53 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    @Override
    public void onApplicationClosed(ApplicationClosedEvent event)
    {
-      WebSocket ws = WebSocket.getInstance();
-      if (ws != null)
-      {
-         ws.close();
-      }
+      if (IDE.messageBus() != null)
+         IDE.messageBus().close();
    }
+
+   /**
+    * Returns WebSocket server URL.
+    * 
+    * @return WebSocket server URL
+    */
+   private String getWebSocketServerURL()
+   {
+      boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
+      if (isSecureConnection)
+         return "wss://" + Window.Location.getHost() + "/websocket";
+      else
+         return "ws://" + Window.Location.getHost() + "/websocket";
+   }
+
+   /**
+    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
+    */
+   private final Timer heartbeatTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         RESTfulRequest.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping").send(null);
+      }
+   };
+
+   /**
+    * Timer for reconnecting WebSocket.
+    */
+   private Timer reconnectionTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         if (reconnectionAttemptsCounter >= MAX_RECONNECTION_ATTEMPTS)
+         {
+            cancel();
+            return;
+         }
+         reconnectionAttemptsCounter++;
+         ((RESTMessageBus)IDE.messageBus()).initialize();
+         initialize();
+      }
+   };
+
 }

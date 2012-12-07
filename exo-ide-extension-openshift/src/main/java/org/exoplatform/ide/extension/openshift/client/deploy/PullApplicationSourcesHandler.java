@@ -26,10 +26,9 @@ import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -104,10 +103,15 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
 
       JobManager.get().showJobSeparated();
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
          doPullWS(refs, remoteName, remoteUrl);
+      }
       else
+      {
          doPullREST(refs, remoteName, remoteUrl);
+      }
    }
 
    private void doPullREST(String refs, String remoteName, final String remoteUrl)
@@ -139,21 +143,20 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
    {
       try
       {
-         GitClientService.getInstance().pullWS(vfs.getId(), project, refs, remoteName,
-            new RESTfulRequestCallback<String>()
+         GitClientService.getInstance().pullWS(vfs.getId(), project, refs, remoteName, new RequestCallback<String>()
+         {
+            @Override
+            protected void onSuccess(String result)
             {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  onPullSuccess(remoteUrl);
-               }
+               onPullSuccess(remoteUrl);
+            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, remoteUrl);
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               handleError(exception, remoteUrl);
+            }
+         });
       }
       catch (WebSocketException e)
       {
