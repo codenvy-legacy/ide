@@ -1,3 +1,11 @@
+package org.exoplatform.ide.java.client.wizard;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+
 /*
  * Copyright (C) 2012 eXo Platform SAS.
  *
@@ -16,27 +24,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client.inject;
-
-import com.google.gwt.inject.client.AbstractGinModule;
-import org.exoplatform.ide.java.client.wizard.JavaProjectPageView;
-import org.exoplatform.ide.java.client.wizard.JavaProjectPageViewImpl;
-
-/**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- *
- */
-public class JavaGinModule extends AbstractGinModule
+public class JavaProjectPageViewImpl implements JavaProjectPageView
 {
 
-   /**
-    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
-    */
-   @Override
-   protected void configure()
+   interface JavaProjectPageViewImplUiBinder
+      extends UiBinder<Widget, JavaProjectPageViewImpl>
    {
-      bind(JavaProjectPageView.class).to(JavaProjectPageViewImpl.class);
+   }
+
+   private static JavaProjectPageViewImplUiBinder ourUiBinder = GWT.create(JavaProjectPageViewImplUiBinder.class);
+
+   private final Widget widget;
+
+   @UiField
+   TextBox projectName;
+
+   public JavaProjectPageViewImpl()
+   {
+      widget = ourUiBinder.createAndBindUi(this);
+
+   }
+
+   @Override
+   public Widget asWidget()
+   {
+      return widget;
    }
 
 }

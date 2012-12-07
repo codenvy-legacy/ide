@@ -21,17 +21,15 @@ package org.exoplatform.ide.wizard.newproject;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-
 import org.exoplatform.ide.api.ui.wizard.NewProjectWizardAgent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
-
 import javax.inject.Singleton;
 
 /**
  * Implements register wizards and returns all available wizard.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -52,7 +50,7 @@ public class NewProjectWizardAgentImpl implements NewProjectWizardAgent
     * {@inheritDoc}
     */
    public void registerWizard(String title, String description, String primaryNature, ImageResource icon,
-      Provider<WizardPagePresenter> wizardPage, JsonArray<String> natures)
+                              Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures)
    {
       NewProjectWizardData newProjectWizardData =
          new NewProjectWizardData(title, description, primaryNature, icon, wizardPage, natures);
@@ -61,7 +59,7 @@ public class NewProjectWizardAgentImpl implements NewProjectWizardAgent
 
    /**
     * Returns all registered wizards.
-    * 
+    *
     * @return all registered wizards
     */
    public JsonArray<NewProjectWizardData> getWizards()

@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.java.client;
 
-import com.google.web.bindery.event.shared.EventBus;
-
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
-
+import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.wizard.NewProjectWizardAgent;
 import org.exoplatform.ide.core.editor.EditorRegistry;
+import org.exoplatform.ide.extension.Extension;
 import org.exoplatform.ide.java.client.codeassistant.ContentAssistHistory;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.editor.JavaEditorProvider;
@@ -48,9 +49,10 @@ import org.exoplatform.ide.java.client.templates.TemplateStore;
 import org.exoplatform.ide.java.client.templates.TypeResolver;
 import org.exoplatform.ide.java.client.templates.TypeVariableResolver;
 import org.exoplatform.ide.java.client.templates.VarResolver;
+import org.exoplatform.ide.java.client.wizard.NewJavaProjectPagePresenter;
+import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.rest.MimeType;
-
 import java.util.HashMap;
 
 
@@ -59,32 +61,38 @@ import java.util.HashMap;
  * @version $Id:
  *
  */
+@Extension(title = "Java Support : syntax highlighting and autocomplete.", id = "ide.ext.java", version = "2.0.0")
 public class JavaExtension
 {
-   
+
    private static JavaExtension instance;
-   
+
    private HashMap<String, String> options;
 
    private ContextTypeRegistry codeTemplateContextTypeRegistry;
 
    private TemplateStore templateStore;
-   
+
    private ContentAssistHistory contentAssistHistory;
+
    /**
-    * 
+    *
     */
    @Inject
-   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider, EventBus eventBus)
+   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
+                        EventBus eventBus, NewProjectWizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider)
    {
       this();
-      FileType javaFile = new FileType(null, MimeType.APPLICATION_JAVA, "java");
+      FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
       editorRegistry.register(javaFile, javaEditorProvider);
       resourceProvider.registerFileType(javaFile);
       resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
       JavaClientBundle.INSTANCE.css().ensureInjected();
+      wizardAgent.registerWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
+         JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, JsonCollections.<String>createArray());
+
    }
-   
+
    /**
     * For test use only. 
     */
@@ -94,7 +102,14 @@ public class JavaExtension
       instance = this;
       initOptions();
    }
-   
+
+   /**
+    * @return
+    */
+   public static JavaExtension get()
+   {
+      return instance;
+   }
 
    private void initOptions()
    {
@@ -113,13 +128,6 @@ public class JavaExtension
       options.put(CompilerOptions.OPTION_Process_Annotations, JavaCore.DISABLED);
 
    }
-   /**
-    * @return
-    */
-   public static JavaExtension get()
-   {
-      return instance;
-   }
 
    /**
     * @return
@@ -135,7 +143,9 @@ public class JavaExtension
    public TemplateStore getTemplateStore()
    {
       if (templateStore == null)
+      {
          templateStore = new TemplateStore();
+      }
       return templateStore;
    }
 
@@ -208,11 +218,13 @@ public class JavaExtension
       {
          Preferences preferences = GWT.create(Preferences.class);
          contentAssistHistory =
-                  //TODO get user name
+            //TODO get user name
             ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + "todo");
 
          if (contentAssistHistory == null)
+         {
             contentAssistHistory = new ContentAssistHistory();
+         }
       }
 
       return contentAssistHistory;

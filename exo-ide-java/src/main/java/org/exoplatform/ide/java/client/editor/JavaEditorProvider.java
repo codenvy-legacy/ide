@@ -19,7 +19,7 @@
 package org.exoplatform.ide.java.client.editor;
 
 import com.google.inject.Inject;
-
+import com.google.inject.Singleton;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorPartPresenter;
@@ -31,6 +31,7 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
  * @version $Id:
  *
  */
+@Singleton
 public class JavaEditorProvider implements EditorProvider
 {
 
@@ -41,8 +42,8 @@ public class JavaEditorProvider implements EditorProvider
    private final UserActivityManager activityManager;
 
    /**
-    * @param context
-    * @param documentProvider
+    * @param resources
+    * @param activityManager
     */
    @Inject
    public JavaEditorProvider(Resources resources, UserActivityManager activityManager)

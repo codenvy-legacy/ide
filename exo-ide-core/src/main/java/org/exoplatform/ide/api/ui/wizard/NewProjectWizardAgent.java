@@ -20,14 +20,13 @@ package org.exoplatform.ide.api.ui.wizard;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Provider;
-
 import org.exoplatform.ide.extension.SDK;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
  * Provides register wizards for creating new project.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  *
  */
@@ -36,7 +35,7 @@ public interface NewProjectWizardAgent
 {
    /**
     * Registers new wizard.
-    * 
+    *
     * @param title
     * @param description
     * @param primaryNature
@@ -45,5 +44,5 @@ public interface NewProjectWizardAgent
     * @param natures
     */
    void registerWizard(String title, String description, String primaryNature, ImageResource icon,
-      Provider<WizardPagePresenter> wizardPage, JsonArray<String> natures);
+                       Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures);
 }

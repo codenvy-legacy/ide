@@ -16,27 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client.inject;
+package org.exoplatform.ide.java.client.wizard;
 
-import com.google.gwt.inject.client.AbstractGinModule;
-import org.exoplatform.ide.java.client.wizard.JavaProjectPageView;
-import org.exoplatform.ide.java.client.wizard.JavaProjectPageViewImpl;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- *
+ * @version $Id: 
  */
-public class JavaGinModule extends AbstractGinModule
+public interface JavaProjectPageView extends IsWidget
 {
-
-   /**
-    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
-    */
-   @Override
-   protected void configure()
+   public interface ActionDelegate
    {
-      bind(JavaProjectPageView.class).to(JavaProjectPageViewImpl.class);
+      /**
+       * Checks whether project's name is complete or not and updates navigation buttons.
+       */
+      void checkProjectName();
    }
+
 
 }

@@ -25,7 +25,7 @@ import com.google.gwt.resources.client.ImageResource;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
- * 
+ *
  */
 public interface JavaClientBundle extends ClientBundle
 {
@@ -120,10 +120,10 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/java/client/images/outline.png")
    ImageResource outline();
-   
+
    @Source("org/exoplatform/ide/java/client/images/loader.gif")
    ImageResource loader();
-   
+
    @Source("org/exoplatform/ide/java/client/images/template.png")
    ImageResource template();
 
@@ -135,37 +135,37 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/java/client/images/breakpoint.gif")
    ImageResource breakpoint();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/correction_change.gif")
    ImageResource correction_change();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/delete_obj.gif")
    ImageResource delete_obj();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/correction_cast.gif")
    ImageResource correction_cast();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/local.png")
    ImageResource local_var();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/correction_delete_import.gif")
    ImageResource correction_delete_import();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/field_public_obj.gif")
    ImageResource field_public();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/imp_obj.gif")
    ImageResource imp_obj();
 
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/add_obj.gif")
    ImageResource add_obj();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/remove_correction.gif")
    ImageResource remove_correction();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/jexception_obj.gif")
    ImageResource exceptionProp();
-   
+
    @Source("org/exoplatform/ide/java/client/internal/text/correction/proposals/javadoc.gif")
    ImageResource javadoc();
 
@@ -177,4 +177,10 @@ public interface JavaClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/java/client/images/taskmrk.gif")
    ImageResource taskmrk();
+
+   @Source("org/exoplatform/ide/java/client/images/javaProj.png")
+   ImageResource javaProject();
+
+   @Source("org/exoplatform/ide/java/client/images/newProjJava.png")
+   ImageResource newJavaProject();
 }

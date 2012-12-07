@@ -37,7 +37,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
-
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
@@ -55,7 +54,6 @@ import org.exoplatform.ide.command.ProjectOpenedExpression;
 import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
-import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
 import org.exoplatform.ide.java.client.projectmodel.JavaProjectDesctiprion;
 import org.exoplatform.ide.json.JsonArray;
@@ -77,13 +75,12 @@ import org.exoplatform.ide.util.loging.Log;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 import org.exoplatform.ide.wizard.genericproject.GenericProjectPagePresenter;
 import org.exoplatform.ide.wizard.newproject.NewProjectWizardAgentImpl;
-
 import java.util.Date;
 
 /**
  * Root Presenter that implements Workspace logic. Descendant Presenters are injected via
  * constructor and exposed to coresponding UI containers.
- * 
+ *
  * Created by The eXo Platform SAS
  * Author : eXoPlatform
  *          exo@exoplatform.com
@@ -123,9 +120,9 @@ public class WorkspacePresenter implements Presenter
    protected WorkspacePresenter(Display display, final ProjectExplorerPresenter projectExplorerPresenter,
                                 EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
                                 final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-                                JavaExtension javaExtension, ExtensionsPage extensionsPage, ImageBundle imageBundle,
+                                ExtensionsPage extensionsPage, ImageBundle imageBundle,
                                 OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
-                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression, 
+                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression,
                                 NewProjectWizardAgentImpl newProjectWizardAgent)
    {
       super();
@@ -138,7 +135,7 @@ public class WorkspacePresenter implements Presenter
       this.resources = resources;
 
       // FOR DEMO
-      
+
       // CREATE STATIC MENU CONTENT
       menuPresenter.addMenuItem("File/New/new File", null);
       registerWizards(newProjectWizardAgent, resourceProvider);
@@ -169,7 +166,7 @@ public class WorkspacePresenter implements Presenter
 
    /**
     * Registers available wizards.
-    * 
+    *
     * @param newProjectWizardAgent
     * @param resourceProvider
     */
@@ -184,7 +181,7 @@ public class WorkspacePresenter implements Presenter
       };
 
       newProjectWizardAgent.registerWizard("Generic Project", "Creates generic project", "",
-         resources.genericProjectIcon(), genericProjectWizard, JsonCollections.<String> createArray());
+         resources.genericProjectIcon(), genericProjectWizard, JsonCollections.<String>createArray());
    }
 
    /**
@@ -259,7 +256,7 @@ public class WorkspacePresenter implements Presenter
       {
          // DUMMY CREATE DEMO CONTENT
          resourceManager.createProject("Test Project " + (new Date().getTime()), JsonCollections
-            .<Property> createArray(
+            .<Property>createArray(
                //
                new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),//
                new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS, JsonCollections.createArray(
@@ -309,19 +306,19 @@ public class WorkspacePresenter implements Presenter
                                  project.createFile(result, "Test.java",
                                     "package org.exoplatform.ide;\n public class Test\n{\n}",
                                     MimeType.APPLICATION_JAVA, new AsyncCallback<File>()
+                                 {
+
+                                    @Override
+                                    public void onFailure(Throwable caught)
                                     {
+                                       Log.error(getClass(), caught);
+                                    }
 
-                                       @Override
-                                       public void onFailure(Throwable caught)
-                                       {
-                                          Log.error(getClass(), caught);
-                                       }
-
-                                       @Override
-                                       public void onSuccess(File result)
-                                       {
-                                       }
-                                    });
+                                    @Override
+                                    public void onSuccess(File result)
+                                    {
+                                    }
+                                 });
                                  project.createFolder(result, "void", new AsyncCallback<Folder>()
                                  {
 
@@ -369,7 +366,7 @@ public class WorkspacePresenter implements Presenter
 
                               }
                            });
-                           
+
                            project.createFolder(result, "webapp", new AsyncCallback<Folder>()
                            {
 
@@ -413,18 +410,18 @@ public class WorkspacePresenter implements Presenter
                                  project.createFile(result, "TestClass.java",
                                     "package org.exoplatform.ide;\n public class TestClass\n{\n}",
                                     MimeType.APPLICATION_JAVA, new AsyncCallback<File>()
+                                 {
+
+                                    @Override
+                                    public void onFailure(Throwable caught)
                                     {
+                                    }
 
-                                       @Override
-                                       public void onFailure(Throwable caught)
-                                       {
-                                       }
-
-                                       @Override
-                                       public void onSuccess(File result)
-                                       {
-                                       }
-                                    });
+                                    @Override
+                                    public void onSuccess(File result)
+                                    {
+                                    }
+                                 });
                               }
                            });
 
@@ -523,7 +520,7 @@ public class WorkspacePresenter implements Presenter
       };
 
       /**
-       * 
+       *
        */
       @Inject
       public OpenProjectCommand(ResourceProvider resourceProvider)
@@ -537,8 +534,8 @@ public class WorkspacePresenter implements Presenter
       }
 
       /**
-      * {@inheritDoc}
-      */
+       * {@inheritDoc}
+       */
       @Override
       public void execute()
       {

@@ -21,13 +21,12 @@ package org.exoplatform.ide.wizard.newproject;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Provider;
-
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
  * Aggregate information about registered wizard.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class NewProjectWizardData
@@ -40,13 +39,13 @@ public class NewProjectWizardData
 
    private ImageResource icon;
 
-   private Provider<WizardPagePresenter> wizardPage;
+   private Provider<? extends WizardPagePresenter> wizardPage;
 
    private JsonArray<String> natures;
 
    /**
     * Create wizard's data
-    * 
+    *
     * @param title
     * @param description
     * @param primaryNature
@@ -55,7 +54,7 @@ public class NewProjectWizardData
     * @param natures
     */
    public NewProjectWizardData(String title, String description, String primaryNature, ImageResource icon,
-      Provider<WizardPagePresenter> wizardPage, JsonArray<String> natures)
+                               Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures)
    {
       this.title = title;
       this.description = description;
@@ -67,7 +66,7 @@ public class NewProjectWizardData
 
    /**
     * Returns wizard's title.
-    * 
+    *
     * @return
     */
    public String getTitle()
@@ -77,7 +76,7 @@ public class NewProjectWizardData
 
    /**
     * Returns wizard's description.
-    * 
+    *
     * @return
     */
    public String getDescription()
@@ -87,7 +86,7 @@ public class NewProjectWizardData
 
    /**
     * Returns wizard's primary nature.
-    * 
+    *
     * @return
     */
    public String getPrimaryNature()
@@ -97,7 +96,7 @@ public class NewProjectWizardData
 
    /**
     * Returns wizard's page presenter.
-    * 
+    *
     * @return
     */
    public WizardPagePresenter getWizardPage()
@@ -107,7 +106,7 @@ public class NewProjectWizardData
 
    /**
     * Returns wizard's icon.
-    * 
+    *
     * @return the wizard's icon, or <code>null</code> if none
     */
    public Image getIcon()
@@ -117,7 +116,7 @@ public class NewProjectWizardData
 
    /**
     * Returns natures.
-    * 
+    *
     * @return
     */
    public JsonArray<String> getNatures()
