@@ -117,7 +117,7 @@ public class CreateFileFromTemplateTest extends BaseTest
    @Test
    public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
    {
-      selenium.refresh();
+      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       /*
@@ -166,73 +166,7 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.EDITOR.closeFile(2);
    }
 
-   // //TODO fix problem in issue GWTX-100
-   // //@Test
-   // public void testEnablingDisablingElements() throws Exception
-   // {
-   // refresh();
-   // IDE.WORKSPACE.selectRootItem();
-   // IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
-   // IDE.WORKSPACE.waitForItem(WS_URL + FOLDER + "/");
-   // IDE.WORKSPACE.selectItem(WS_URL + FOLDER + "/");
-   //
-   // //---- 1 ----------
-   // //call create file from template form
-   // IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
-   // IDE.TEMPLATES.waitForFileFromTemplateForm();
-   // IDE.TEMPLATES.checkCreateFileFromTemplateWindow();
-   //
-   // //---- 2 ----------
-   // //select template in list
-   // IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
-   //
-   // IDE.TEMPLATES.checkInputFieldState(true);
-   // IDE.TEMPLATES.checkButtonState(Templates.CREATE_BUTTON_ID, true);
-   // IDE.TEMPLATES.checkButtonState(Templates.DELETE_BUTTON_ID, false);
-   //
-   //
-   // String text = selenium().getValue(Templates.FILE_NAME_INPUT_LOCATOR);
-   // assertEquals("Untitled file.html", text);
-   //
-   // //---- 3 ----------
-   // //deselect template
-   // selenium().controlKeyDown();
-   // IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
-   // selenium().controlKeyUp();
-   // Thread.sleep(TestConstants.REDRAW_PERIOD);
-   //
-   // IDE.TEMPLATES.checkInputFieldState(false);
-   // IDE.TEMPLATES.checkButtonState(Templates.CREATE_BUTTON_ID, false);
-   // IDE.TEMPLATES.checkButtonState(Templates.DELETE_BUTTON_ID, false);
-   //
-   // //---- 4 ----------
-   // //select several templates
-   // IDE.TEMPLATES.selectFileTemplate(EMPTY_HTML);
-   // selenium().controlKeyDown();
-   // IDE.TEMPLATES.selectFileTemplate(EMPTY_TEXT);
-   // selenium().controlKeyUp();
-   // Thread.sleep(TestConstants.REDRAW_PERIOD*20);
-   //
-   // IDE.TEMPLATES.checkInputFieldState(false);
-   // IDE.TEMPLATES.checkButtonState(Templates.CREATE_BUTTON_ID, false);
-   // IDE.TEMPLATES.checkButtonState(Templates.DELETE_BUTTON_ID, false);
-   //
-   // //---- 5 ----------
-   // //select one template
-   // IDE.TEMPLATES.selectFileTemplate(EMPTY_XML);
-   // //remove text from name field
-   // IDE.TEMPLATES.typeNameToInputField("");
-   //
-   // IDE.TEMPLATES.checkButtonState(Templates.CREATE_BUTTON_ID, false);
-   //
-   // //---- 6 ----------
-   // //type some text to name field
-   // IDE.TEMPLATES.typeNameToInputField("a");
-   // IDE.TEMPLATES.checkButtonState(Templates.CREATE_BUTTON_ID, true);
-   //
-   // IDE.TEMPLATES.clickCancelButton();
-   // }
-
+  
    private void testTemplate(String templateName, String fileName) throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);

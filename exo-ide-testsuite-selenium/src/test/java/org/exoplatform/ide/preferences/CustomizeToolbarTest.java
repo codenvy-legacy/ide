@@ -44,7 +44,7 @@ public class CustomizeToolbarTest extends BaseTest
    @AfterClass
    public static void restoreDefault()
    {
-      deleteCookies();
+      driver.manage().deleteAllCookies();
       try
       {
          VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);
