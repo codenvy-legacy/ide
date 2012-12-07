@@ -60,6 +60,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         driver.navigate().refresh();
       }
       catch (Exception e)
       {
@@ -72,7 +73,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         refresh();
+         
       }
       catch (Exception e)
       {
