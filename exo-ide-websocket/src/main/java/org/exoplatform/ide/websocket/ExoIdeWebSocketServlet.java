@@ -25,14 +25,13 @@ import org.everrest.core.impl.EverrestProcessor;
 import org.everrest.core.impl.ProviderBinder;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 import org.everrest.websockets.EverrestWebSocketServlet;
-import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 
 import javax.ws.rs.ext.ContextResolver;
 
 /**
  * Servlet used for processing requests to Everrest over WebSocket connections.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ExoIdeWebSocketServlet.java Nov 7, 2012 4:29:51 PM azatsarynnyy $
  *
@@ -40,17 +39,17 @@ import javax.ws.rs.ext.ContextResolver;
 @SuppressWarnings("serial")
 public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet
 {
-   private ExoContainer container;
-
    @Override
    protected EverrestProcessor getEverrestProcessor()
    {
-      ResourceBinder resources = ((ResourceBinder)getContainer().getComponentInstanceOfType(ResourceBinder.class));
+      ResourceBinder resources =
+         ((ResourceBinder)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ResourceBinder.class));
       DependencySupplier dependencies =
-         ((DependencySupplier)getContainer().getComponentInstanceOfType(DependencySupplier.class));
+         ((DependencySupplier)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
+            DependencySupplier.class));
       EverrestConfiguration config = new EverrestConfiguration();
       ProviderBinder providers = ProviderBinder.getInstance();
-      return new EverrestProcessor(resources, providers, dependencies, config, null);
+      return new EverrestProcessor(resources, providers, dependencies, config, new WebSocketFilterApplication());
    }
 
    @Override
@@ -68,14 +67,5 @@ public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet
       }
       throw new IllegalStateException(
          "Unable get web socket connection. Asynchronous jobs feature is not configured properly. ");
-   }
-
-   private ExoContainer getContainer()
-   {
-      if (container == null)
-      {
-         container = ExoContainerContext.getCurrentContainer();
-      }
-      return container;
    }
 }

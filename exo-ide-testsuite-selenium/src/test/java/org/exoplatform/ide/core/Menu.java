@@ -45,7 +45,7 @@ public class Menu extends AbstractTestModule
       String LOCK_LAYER_CLASS = "exo-lockLayer";
 
       String TOP_MENU_ITEM_LOCATOR = "//td[@class='exo-menuBarItem' and text()='%s']";
-      
+
       String TOP_MENU_ITEM_DISABLED_LOCATOR = "//td[@class='exo-menuBarItemDisabled' and text()='%s']";
 
       String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField')]//nobr[text()='%s']";
@@ -75,7 +75,7 @@ public class Menu extends AbstractTestModule
       IDE().LOADER.waitClosed();
       topMenuItem.click();
       waitMenuPopUp();
-      
+
       //for redraw all menus on staging
       Thread.sleep(200);
       //Call command from menu popup:
@@ -126,32 +126,6 @@ public class Menu extends AbstractTestModule
          driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, subCommandName)));
       subMenuItem.click();
       waitMenuPopUpClosed();
-   }
-
-   /**
-    * Check is command in top menu visible or hidden.
-    * 
-    * @param topMenuName mane of menu
-    * @param commandName command name
-    * @param isPresent boolean value
-    * 
-    * use {@link #isCommandVisible(String, String)}
-    */
-   @Deprecated
-   public void checkCommandVisibility(String topMenuName, String commandName, boolean visible) throws Exception
-   {
-      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
-
-      if (visible)
-      {
-         assertTrue(selenium().isElementPresent("//td/nobr[text()='" + commandName + "']"));
-      }
-      else
-      {
-         assertFalse(selenium().isElementPresent("//td/nobr[text()='" + commandName + "']"));
-      }
-      lockLayer.click();
-      Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**
@@ -230,39 +204,6 @@ public class Menu extends AbstractTestModule
             }
          }
       });
-   }
-
-   /**
-    * Check is command in top menu enabled or disabled.
-    * 
-    * @param topMenuName mane of menu
-    * @param commandName command name
-    * @param enabled boolean value
-    */
-   @Deprecated
-   public void checkCommandEnabled(String topMenuName, String commandName, boolean enabled) throws Exception
-   {
-      selenium().mouseDownAt("//td[@class='exo-menuBarItem' and text()='" + topMenuName + "']", "");
-      waitForElementPresent("//table[@class=\"exo-popupMenuTable\"]");
-
-      //Thread.sleep(TestConstants.ANIMATION_PERIOD);
-
-      if (enabled)
-      {
-         assertTrue(selenium().isElementPresent(
-            "//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleField\"]/nobr[text()='"
-               + commandName + "']"));
-      }
-      else
-      {
-         assertTrue(selenium().isElementPresent(
-            "//table[@class=\"exo-popupMenuTable\"]//td[@class=\"exo-popupMenuTitleFieldDisabled\"]/nobr[text()='"
-               + commandName + "']"));
-      }
-
-      selenium().mouseDown("//div[@class='exo-lockLayer']/");
-      waitForElementNotPresent("//table[@class=\"exo-popupMenuTable\"]");
-      //Thread.sleep(TestConstants.ANIMATION_PERIOD);
    }
 
    /**

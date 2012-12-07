@@ -16,21 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.messages;
+package org.exoplatform.ide.client.framework.websocket.events;
 
 /**
+ * Handler for {@link MessageReceivedEvent} event.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
- *
+ * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
+ * @version $Id: MessageReceivedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
+ * 
  */
-public interface Pair
+public interface MessageReceivedHandler
 {
-   String getName();
-
-   void setName(String name);
-
-   String getValue();
-
-   void setValue(String value);
+   /**
+    * Perform actions, when a WebSocket message was received.
+    * 
+    * @param event {@link MessageReceivedEvent}
+    */
+   void onMessageReceived(MessageReceivedEvent event);
 }

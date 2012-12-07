@@ -16,35 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.exceptions;
+package org.exoplatform.ide.websocket;
+
+import java.util.HashSet;
+import java.util.Set;
+import javax.ws.rs.core.Application;
 
 /**
- * Thrown when there was a problem with WebSocket connection.
- * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketException.java Jul 12, 2012 2:44:19 PM azatsarynnyy $
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-@SuppressWarnings("serial")
-public class WebSocketException extends Exception
+public class WebSocketFilterApplication extends Application
 {
+   private final Set<Class<?>> classes = new HashSet<Class<?>>();
 
-   public WebSocketException()
+   private final Set<Object> objects = new HashSet<Object>();
+
+   public WebSocketFilterApplication()
    {
-      super();
+      objects.add(new WebSocketRequestFilter());
+      objects.add(new WebSocketResponseFilter());
    }
 
-   public WebSocketException(String message)
+   @Override
+   public Set<Class<?>> getClasses()
    {
-      super(message);
+      return classes;
    }
 
-   public WebSocketException(Throwable cause)
+   @Override
+   public Set<Object> getSingletons()
    {
-      super(cause);
-   }
-
-   public WebSocketException(String message, Throwable cause)
-   {
-      super(message, cause);
+      return objects;
    }
 }

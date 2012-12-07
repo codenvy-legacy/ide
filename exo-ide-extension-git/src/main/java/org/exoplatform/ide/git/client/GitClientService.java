@@ -21,8 +21,8 @@ package org.exoplatform.ide.git.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.shared.Branch;
@@ -94,7 +94,7 @@ public abstract class GitClientService
     * @throws WebSocketException
     */
    public abstract void addWS(String vfsId, ProjectModel project, boolean update, String[] filePattern,
-      RESTfulRequestCallback<String> callback) throws WebSocketException;
+      RequestCallback<String> callback) throws WebSocketException;
 
    /**
     * Fetch changes from remote repository to local one.
@@ -138,7 +138,7 @@ public abstract class GitClientService
     * @throws WebSocketException
     */
    public abstract void fetchWS(String vfsId, ProjectModel project, String remote, String[] refspec,
-      boolean removeDeletedRefs, RESTfulRequestCallback<String> callback) throws WebSocketException;
+      boolean removeDeletedRefs, RequestCallback<String> callback) throws WebSocketException;
 
    /**
     * Get the list of the branches. For now, all branches cannot be returned at once, so the parameter <code>remote</code> tells
@@ -273,7 +273,7 @@ public abstract class GitClientService
     * @param callback callback
     */
    public abstract void initWS(String vfsId, String projectid, String projectName, boolean bare,
-      RESTfulRequestCallback<String> callback) throws WebSocketException;
+      RequestCallback<String> callback) throws WebSocketException;
 
    /**
     * Pull (fetch and merge) changes from remote repository to local one.
@@ -315,7 +315,7 @@ public abstract class GitClientService
     * @throws WebSocketException
     */
    public abstract void pullWS(String vfsId, ProjectModel project, String refSpec, String remote,
-      RESTfulRequestCallback<String> callback) throws WebSocketException;
+      RequestCallback<String> callback) throws WebSocketException;
 
    /**
     * Push changes from local repository to remote one.
@@ -345,7 +345,7 @@ public abstract class GitClientService
     * @throws WebSocketException
     */
    public abstract void pushWS(String vfsId, ProjectModel project, String[] refSpec, String remote, boolean force,
-      RESTfulRequestCallback<String> callback) throws WebSocketException;
+      RequestCallback<String> callback) throws WebSocketException;
 
    /**
     * Clones one remote repository to local one.
@@ -367,11 +367,11 @@ public abstract class GitClientService
     * @param project project (root of GIT repository)
     * @param remoteUri the location of the remote repository
     * @param remoteName remote name instead of "origin"
-    * @param callback {@link RESTfulRequestCallback}
+    * @param callback callback
     * @throws WebSocketException
     */
    public abstract void cloneRepositoryWS(String vfsId, FolderModel project, String remoteUri, String remoteName,
-      RESTfulRequestCallback<RepoInfo> callback) throws WebSocketException;
+      RequestCallback<RepoInfo> callback) throws WebSocketException;
 
    /**
     * Performs commit changes from index to repository. The result of the commit is represented by {@link Revision}, which is
@@ -399,7 +399,7 @@ public abstract class GitClientService
     * @throws WebSocketException
     */
    public abstract void commitWS(String vfsId, ProjectModel project, String message, boolean all,
-      RESTfulRequestCallback<Revision> callback) throws WebSocketException;
+      RequestCallback<Revision> callback) throws WebSocketException;
 
    /**
     * Compare two commits, get the diff for pointed file(s) or for the whole project in text format.

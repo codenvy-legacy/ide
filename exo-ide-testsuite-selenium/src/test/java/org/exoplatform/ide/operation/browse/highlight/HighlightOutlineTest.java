@@ -65,7 +65,6 @@ public class HighlightOutlineTest extends BaseTest
    @After
    public void tearDown() throws Exception
    {
-      deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);

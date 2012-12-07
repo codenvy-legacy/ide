@@ -18,521 +18,152 @@
  */
 package org.exoplatform.ide.client.framework.websocket;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent;
-import org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorEvent;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorHandler;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEvent;
-import org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestBuilder;
-import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionErrorHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.events.MessageReceivedHandler;
 
 /**
- * Class represents a WebSocket connection. If connection was closed unexpectedly,
- * makes <code>MAX_RECONNECTION_ATTEMPTS</code> attempts to
- * reconnect connection for every <code>HEARTBEAT_PERIOD</code> ms.
- * You should normally only use a single instance of this class.
+ * Class that wraps native JavaScript WebSocket object.
  * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocket.java Jun 7, 2012 12:44:55 PM azatsarynnyy $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: WebSocket.java Dec 4, 2012 4:46:55 PM azatsarynnyy $
+ *
  */
-public class WebSocket
+public class WebSocket extends JavaScriptObject
 {
-   /**
-    * This enumeration used to describe the ready state of the WebSocket connection.
-    */
-   public enum ReadyState {
-
-      /** The WebSocket object is created but connection has not yet been established. */
-      CONNECTING(0),
-
-      /** Connection is established and communication is possible. A WebSocket must
-       * be in the open state in order to send and receive data over the network. */
-      OPEN(1),
-
-      /** Connection is going through the closing handshake. */
-      CLOSING(2),
-
-      /** The connection has been closed or could not be opened. */
-      CLOSED(3);
-
-      private final int value;
-
-      private ReadyState(int value)
-      {
-         this.value = value;
-      }
-
-      @Override
-      public String toString()
-      {
-         return String.valueOf(value);
-      }
-   }
-
-   /**
-    * The native implementation of WebSocket.
-    */
-   private WebSocketImpl socket;
-
-   /**
-    * This WebSocket instance.
-    */
-   private static WebSocket instance;
-
-   /**
-    * WebSocket server URL.
-    */
-   private String url;
-
-   /**
-    * Determines if this connection is secure.
-    */
-   private static boolean isSecureConnection;
-
-   /**
-    * {@link MessageBus} for this {@link WebSocket} instance.
-    */
-   private MessageBus messageBus = new MessageBus();
-
-   public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
-
-   /**
-    * Period (in milliseconds) to send heartbeat pings.
-    */
-   private static final int HEARTBEAT_PERIOD = 50 * 1000;
-
-   /**
-    * Counter of connection attempts.
-    */
-   private static int reconnectionAttemptsCounter;
-
-   /**
-    * Period (in milliseconds) to reconnect after connection is closed.
-    */
-   private final static int RECONNECTION_PERIOD = 5000;
-
-   /**
-    * Max. number of attempts to reconnect.
-    */
-   private final static int MAX_RECONNECTION_ATTEMPTS = 5;
-
-   /**
-    * Creates a new {@link WebSocket} instance.
-    */
    protected WebSocket()
    {
-      instance = this;
-      isSecureConnection = Window.Location.getProtocol().equals("https:");
-      if (isSecureConnection)
-      {
-         url = "wss://" + Window.Location.getHost() + "/websocket";
-      }
-      else
-      {
-         url = "ws://" + Window.Location.getHost() + "/websocket";
-      }
    }
 
    /**
-    * Initialize WebSocket instance.
-    */
-   private void init()
-   {
-      IDE.addHandler(WSMessageReceivedEvent.TYPE, messageBus);
-
-      socket.setOnOpenHandler(new WebSocketOpenedHandler()
-      {
-         @Override
-         public void onWebSocketOpened(WebSocketOpenedEvent event)
-         {
-            IDE.fireEvent(event);
-            if (reconnectionAttemptsCounter > 0)
-            {
-               reconnectWebSocketTimer.cancel();
-            }
-            reconnectionAttemptsCounter = 0;
-            heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
-         }
-      });
-
-      socket.setOnCloseHandler(new WebSocketClosedHandler()
-      {
-         @Override
-         public void onWebSocketClosed(WebSocketClosedEvent event)
-         {
-            socket = null;
-            IDE.fireEvent(event);
-
-            if (!event.wasClean())
-            {
-               reconnectWebSocketTimer.scheduleRepeating(RECONNECTION_PERIOD);
-            }
-         }
-      });
-
-      socket.setOnMessageHandler(new WSMessageReceivedHandler()
-      {
-         @Override
-         public void onWSMessageReceived(WSMessageReceivedEvent event)
-         {
-            IDE.fireEvent(event);
-         }
-      });
-
-      socket.setOnErrorHandler(new WebSocketErrorHandler()
-      {
-         @Override
-         public void onWebSocketError(WebSocketErrorEvent event)
-         {
-            IDE.fireEvent(event);
-            close();
-         }
-      });
-   }
-
-   /**
-    * Returns the instance of the {@link WebSocket}.
+    * Creates a new WebSocket instance.
+    * WebSocket attempt to connect to their URL immediately upon creation.
     * 
-    * @return instance of {@link WebSocket}
+    * @param url WebSocket server URL
+    * @return the created {@link WebSocket} object
     */
-   public static WebSocket getInstance()
-   {
-      if (instance == null)
-      {
-         instance = new WebSocket();
-      }
-      return instance;
-   }
+   public static native WebSocket create(String url)
+   /*-{
+      return new WebSocket(url);
+   }-*/;
 
    /**
-    * Connects to the remote socket location.
-    */
-   public void connect()
-   {
-      socket = WebSocketImpl.create(url);
-      init();
-   }
-
-   /**
-    * Terminates the WebSocket connection and mark it as closed by user.
-    */
-   public void close()
-   {
-      if (getReadyState() == ReadyState.OPEN)
-      {
-         socket.close();
-      }
-   }
-
-   /**
-    * Returns a {@link MessageBus}.
+    * Creates a WebSocket object.
+    * WebSocket attempt to connect to their URL immediately upon creation.
     * 
-    * @return a {@link MessageBus}
+    * @param url WebSocket server URL
+    * @param protocol subprotocol name
+    * @return the created {@link WebSocket} object
     */
-   public MessageBus messageBus()
-   {
-      return messageBus;
-   }
+   public static native WebSocket create(String url, String protocol)
+   /*-{
+      return new WebSocket(url, protocol);
+   }-*/;
 
    /**
-    * Timer for reconnecting WebSocket.
+    * Closes the WebSocket connection. If the connection state
+    * is already {@link ReadyState#CLOSED}, this method does nothing.
     */
-   private Timer reconnectWebSocketTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         if (reconnectionAttemptsCounter >= MAX_RECONNECTION_ATTEMPTS)
-         {
-            cancel();
-            return;
-         }
-         reconnectionAttemptsCounter++;
-         connect();
-      }
-   };
+   public final native void close()
+   /*-{
+      this.close();
+   }-*/;
 
    /**
-    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
-    */
-   private Timer heartbeatTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         RESTfulRequestBuilder.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
-            .send(null);
-      }
-   };
-
-   /**
-    * Checks if the browser has support for native WebSockets.
+    * Method can be used to detect WebSocket support in the current browser.
     * 
-    * @return <code>true</code> if WebSocket is supported;
-    *         <code>false</code> if it's not
+    * @return <code>true</code>  if WebSockets are supported;
+    *         <code>false</code> if they are not.
     */
-   public static boolean isSupported()
-   {
-      return WebSocketImpl.isSupported();
-   }
+   public static native boolean isSupported()
+   /*-{
+      return !!window.WebSocket;
+   }-*/;
 
    /**
     * Returns the state of the WebSocket connection.
     * 
-    * @return {@link ReadyState} value
+    * @return ready-state value
     */
-   public ReadyState getReadyState()
-   {
-      if (socket == null)
-      {
-         return ReadyState.CLOSED;
-      }
-
-      switch (socket.getReadyState())
-      {
-         case 0 :
-            return ReadyState.CONNECTING;
-         case 1 :
-            return ReadyState.OPEN;
-         case 2 :
-            return ReadyState.CLOSING;
-         case 3 :
-            return ReadyState.CLOSED;
-         default :
-            return ReadyState.CLOSED;
-      }
-   }
+   public final native short getReadyState()
+   /*-{
+      return this.readyState;
+   }-*/;
 
    /**
-    * Returns the URL of the WebSocket server.
+    * Represents the number of bytes of UTF-8 text
+    * that have been queued using send() method.
     * 
-    * @return url WebSocket server's URL
+    * @return the number of queued bytes
     */
-   public String getUrl()
-   {
-      return url;
-   }
-
-   /**
-    * Registers a new subscriber which will receive messages on a particular channel.
-    * Upon the first subscribe to a channel, a message is sent to the server to
-    * subscribe the client for that channel. Subsequent subscribes for a channel
-    * already previously subscribed to do not trigger a send of another message
-    * to the server because the client has already a subscription, and merely registers
-    * (client side) the additional handler to be fired for events received on the respective channel.
-    * 
-    * <p><strong>Note:</strong> the method runs asynchronously and does not provide
-    * feedback whether a subscription was successful or not.
-    * 
-    * @param channelID channel identifier
-    * @param handler the {@link SubscriptionHandler} to fire
-    *                   when receiving an event on the subscribed channel
-    */
-   public void subscribe(String channelID, SubscriptionHandler<?> handler)
-   {
-      messageBus.subscribe(channelID, handler);
-   }
-
-   /**
-    * Unregisters existing subscriber to receive messages on a particular channel.
-    * If it's the last unsubscribe to a channel, a message is sent to the server to
-    * unsubscribe the client for that channel.
-    * 
-    * <p><strong>Note:</strong> the method runs asynchronously and does not provide
-    * feedback whether a unsubscription was successful or not.
-    * 
-    * @param channelID channel identifier
-    * @param handler the {@link SubscriptionHandler} for which to remove the subscription
-    */
-   public void unsubscribe(String channelID, SubscriptionHandler<?> handler)
-   {
-      messageBus.unsubscribe(channelID, handler);
-   }
+   public final native int getBufferedAmount()
+   /*-{
+      return this.bufferedAmount;
+   }-*/;
 
    /**
     * Transmits data to the server over the WebSocket connection.
     * 
     * @param data the data to be sent to the server
-    * @throws WebSocketException throws if an error has occurred while sending data
     */
-   void send(String data) throws WebSocketException
-   {
-      if (getReadyState() != ReadyState.OPEN)
-      {
-         throw new WebSocketException("Failed to send data. WebSocket connection closed");
-      }
-
-      try
-      {
-         socket.send(data);
-      }
-      catch (JavaScriptException e)
-      {
-         throw new WebSocketException(e.getMessage());
-      }
-   }
+   public final native void send(String data)
+   /*-{
+      this.send(data);
+   }-*/;
 
    /**
-    * Determines if this connection is secure.
+    * Sets the {@link ConnectionOpenedHandler} to be notified when the WebSocket connection established.
     * 
-    * @return <code>true</code> if this is a secure connection;
-    *          <code>false</code> otherwise
+    * @param handler WebSocket open handler
     */
-   public boolean isSecureConnection()
-   {
-      return isSecureConnection;
-   }
+   public final native void setOnOpenHandler(ConnectionOpenedHandler handler)
+   /*-{
+      this.onopen = $entry(function() {
+         handler.@org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionOpenedHandler::onOpen()();
+      });
+   }-*/;
 
    /**
-    * Class that wraps JavaScript WebSocket object.
+    * Sets the {@link ConnectionClosedHandler} to be notified when the WebSocket close.
+    * 
+    * @param handler WebSocket close handler
     */
-   private final static class WebSocketImpl extends JavaScriptObject
-   {
-      protected WebSocketImpl()
-      {
-      }
+   public final native void setOnCloseHandler(ConnectionClosedHandler handler)
+   /*-{
+      this.onclose = $entry(function() {
+         var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
+         handler.@org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionClosedHandler::onClose(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
+      });
+   }-*/;
 
-      /**
-       * Creates a new WebSocket instance.
-       * WebSocket attempt to connect to their URL immediately upon creation.
-       * 
-       * @param url WebSocket server URL
-       * @return the created {@link WebSocketImpl} object
-       */
-      public static native WebSocketImpl create(String url)
-      /*-{
-         return new WebSocket(url);
-      }-*/;
+   /**
+    * Sets the {@link ConnectionErrorHandler} to be notified when there is any error in communication.
+    * 
+    * @param handler WebSocket error handler
+    */
+   public final native void setOnErrorHandler(ConnectionErrorHandler handler)
+   /*-{
+      this.onerror = $entry(function() {
+         handler.@org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionErrorHandler::onError()();
+      });
+   }-*/;
 
-      /**
-       * Creates a WebSocket object.
-       * WebSocket attempt to connect to their URL immediately upon creation.
-       * 
-       * @param url WebSocket server URL
-       * @param protocol subprotocol name
-       * @return the created {@link WebSocketImpl} object
-       */
-      public static native WebSocketImpl create(String url, String protocol)
-      /*-{
-         return new WebSocket(url, protocol);
-      }-*/;
+   /**
+    * Sets the {@link MessageReceivedHandler} to be notified when
+    * client receives data from the WebSocket server.
+    * 
+    * @param handler WebSocket message handler
+    */
+   public final native void setOnMessageHandler(MessageReceivedHandler handler)
+   /*-{
+      this.onmessage = $entry(function(event) {
+         var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent::new(Ljava/lang/String;)(event.data);
+         handler.@org.exoplatform.ide.client.framework.websocket.events.MessageReceivedHandler::onMessageReceived(Lorg/exoplatform/ide/client/framework/websocket/events/MessageReceivedEvent;)(webSocketMessageEventInstance);
+      });
+   }-*/;
 
-      /**
-       * Closes the WebSocket connection. If the connection state
-       * is already {@link ReadyState#CLOSED}, this method does nothing.
-       */
-      private final native void close()
-      /*-{
-         this.close();
-      }-*/;
-
-      /**
-       * Method can be used to detect WebSocket support in the current browser.
-       * 
-       * @return <code>true</code>  if WebSockets are supported;
-       *         <code>false</code> if they are not.
-       */
-      public static native boolean isSupported()
-      /*-{
-         return !!window.WebSocket;
-      }-*/;
-
-      /**
-       * Returns the state of the WebSocket connection.
-       * 
-       * @return ready-state value
-       */
-      public final native int getReadyState()
-      /*-{
-         return this.readyState;
-      }-*/;
-
-      /**
-       * Represents the number of bytes of UTF-8 text
-       * that have been queued using send() method.
-       * 
-       * @return the number of queued bytes
-       */
-      public final native int getBufferedAmount()
-      /*-{
-         return this.bufferedAmount;
-      }-*/;
-
-      /**
-       * Transmits data to the server over the WebSocket connection.
-       * 
-       * @param data the data to be sent to the server
-       */
-      public final native void send(String data)
-      /*-{
-         this.send(data);
-      }-*/;
-
-      /**
-       * Sets the {@link WebSocketOpenedHandler} to be
-       * notified when the WebSocket connection is established.
-       * 
-       * @param handler WebSocket open handler
-       */
-      public final native void setOnOpenHandler(WebSocketOpenedHandler handler)
-      /*-{
-         this.onopen = $entry(function() {
-            var webSocketOpenedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedEvent::new()();
-            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketOpenedHandler::onWebSocketOpened(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketOpenedEvent;)(webSocketOpenedEventInstance);
-         });
-      }-*/;
-
-      /**
-       * Sets the {@link WebSocketClosedHandler} to be notified when the WebSocket close.
-       * 
-       * @param handler WebSocket close handler
-       */
-      public final native void setOnCloseHandler(WebSocketClosedHandler handler)
-      /*-{
-         this.onclose = $entry(function() {
-            var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
-            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedHandler::onWebSocketClosed(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
-         });
-      }-*/;
-
-      /**
-       * Sets the {@link setOnErrorHandler} to be notified when
-       * there is any error in communication.
-       * 
-       * @param handler WebSocket error handler
-       */
-      public final native void setOnErrorHandler(WebSocketErrorHandler handler)
-      /*-{
-         this.onerror = $entry(function() {
-            var webSocketErrorEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorEvent::new()();
-            handler.@org.exoplatform.ide.client.framework.websocket.events.WebSocketErrorHandler::onWebSocketError(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketErrorEvent;)(webSocketErrorEventInstance);
-         });
-      }-*/;
-
-      /**
-       * Sets the {@link WSMessageReceivedHandler} to be notified when
-       * client receives data from the WebSocket server.
-       * 
-       * @param handler WebSocket message handler
-       */
-      public final native void setOnMessageHandler(WSMessageReceivedHandler handler)
-      /*-{
-         this.onmessage = $entry(function(event) {
-            var webSocketMessageEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedEvent::new(Ljava/lang/String;)(event.data);
-            handler.@org.exoplatform.ide.client.framework.websocket.events.WSMessageReceivedHandler::onWSMessageReceived(Lorg/exoplatform/ide/client/framework/websocket/events/WSMessageReceivedEvent;)(webSocketMessageEventInstance);
-         });
-      }-*/;
-   }
 }

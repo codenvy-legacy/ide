@@ -33,8 +33,9 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -233,11 +234,14 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder)
    {
-      // TODO temporary disabled using WebSocket
-//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-//         cloneRepositoryWS(remoteUri, remoteName, folder);
-//      else
-      cloneRepositoryREST(remoteUri, remoteName, folder);
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         cloneRepositoryWS(remoteUri, remoteName, folder);
+      }
+      else
+      {
+         cloneRepositoryREST(remoteUri, remoteName, folder);
+      }
    }
 
    /**
@@ -285,7 +289,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       try
       {
          GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
-            new RESTfulRequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
+            new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
             {
 
                @Override

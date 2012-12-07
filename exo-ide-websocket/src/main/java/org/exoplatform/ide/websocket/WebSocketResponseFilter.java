@@ -16,23 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.events;
+package org.exoplatform.ide.websocket;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.everrest.core.Filter;
+import org.everrest.core.GenericContainerResponse;
+import org.everrest.core.ResponseFilter;
+import org.exoplatform.services.security.ConversationState;
+import javax.ws.rs.core.MultivaluedMap;
 
 /**
- * Handler for {@link WebSocketClosedEvent} event.
- * 
- * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
- * @version $Id: WebSocketClosedHandler.java Jun 18, 2012 14:44:55 PM azatsarynnyy $
- * 
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public interface WebSocketClosedHandler extends EventHandler
+@Filter
+public class WebSocketResponseFilter implements ResponseFilter
 {
-   /**
-    * Perform actions, when WebSocket connection is closed.
-    * 
-    * @param event
-    */
-   void onWebSocketClosed(WebSocketClosedEvent event);
+   @Override
+   public void doFilter(GenericContainerResponse response)
+   {
+      MultivaluedMap<String, Object> headers = response.getHttpHeaders();
+      if (headers != null && headers.containsKey("x-everrest-protocol") && headers.containsValue("websocket"))
+      {
+         ConversationState.setCurrent(null);
+      }
+   }
 }

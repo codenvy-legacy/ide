@@ -27,6 +27,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -45,10 +46,9 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -359,15 +359,14 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
       }
       JobManager.get().showJobSeparated();
 
-      //Temporary disable websockets for this function because error appear that ssh key not found through websocket
-//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-//      {
-//         cloneFolderWS(repo, folder, remoteUri);
-//      }
-//      else
-//      {
-      cloneFolderREST(repo, folder, remoteUri);
-//      }
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         cloneFolderWS(repo, folder, remoteUri);
+      }
+      else
+      {
+         cloneFolderREST(repo, folder, remoteUri);
+      }
    }
 
    /**
@@ -407,7 +406,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
       try
       {
          GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
-            new RESTfulRequestCallback<RepoInfo>()
+            new RequestCallback<RepoInfo>()
             {
                @Override
                protected void onSuccess(RepoInfo result)

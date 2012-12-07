@@ -21,7 +21,7 @@ package org.exoplatform.ide.miscellaneous;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.preferences.AbstractHotkeysTest;
+import org.exoplatform.ide.preferences.AbstractCustomizeHotkeys;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -41,7 +41,7 @@ import static org.junit.Assert.assertEquals;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  */
-public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
+public class HotkeysInCodeMirrorTest extends AbstractCustomizeHotkeys
 {
    private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName();
 
