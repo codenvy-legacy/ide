@@ -19,25 +19,11 @@
 package org.exoplatform.ide.git.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Random;
 
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
 import org.exoplatform.ide.git.client.add.AddToIndexPresenter;
 import org.exoplatform.ide.git.client.branch.BranchPresenter;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryPresenter;
@@ -65,8 +51,6 @@ import org.exoplatform.ide.git.client.fetch.FetchPresenter;
 import org.exoplatform.ide.git.client.history.HistoryPresenter;
 import org.exoplatform.ide.git.client.init.InitRepositoryPresenter;
 import org.exoplatform.ide.git.client.init.ShowProjectGitReadOnlyUrlPresenter;
-import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
-import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.client.merge.MergePresenter;
 import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
@@ -75,15 +59,6 @@ import org.exoplatform.ide.git.client.remove.RemoveFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
-import org.exoplatform.ide.git.shared.RepoInfo;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.shared.ExitCodes;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Git extension to be added to IDE application.

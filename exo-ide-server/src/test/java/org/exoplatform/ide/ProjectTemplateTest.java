@@ -21,7 +21,7 @@ package org.exoplatform.ide;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
-import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -94,7 +94,7 @@ public class ProjectTemplateTest extends BaseTest
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -116,7 +116,7 @@ public class ProjectTemplateTest extends BaseTest
       String prj = UUID.randomUUID().toString();
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles,  "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
