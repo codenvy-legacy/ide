@@ -56,6 +56,7 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
@@ -137,8 +138,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    {
       resolveDependencies(this.project);
    }
-   
-   
+
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
@@ -169,7 +169,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       resolveDependencies(mvnModules.toArray(new ProjectModel[mvnModules.size()]));
 
    }
-   
+
    /**
     * @see org.eclipse.jdt.client.event.PackageCreatedHandler#onPackageCreated(org.eclipse.jdt.client.event.PackageCreatedEvent)
     */
@@ -209,7 +209,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    {
       project = event.getProject();
    }
-   
+
    private void resolveDependencies(ProjectModel... projects)
    {
       if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
@@ -221,8 +221,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
          resolveDependenciesRest(projects);
       }
    }
-
-
 
    private void resolveDependenciesRest(ProjectModel... projects)
    {
@@ -265,7 +263,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       }
    }
 
-
    private void resolveDependenciesWS(ProjectModel... projects)
    {
       for (ProjectModel project : projects)
@@ -278,26 +275,33 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
          StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
          RequestMessage message = RESTfulRequest.build(RequestBuilder.GET, url).getRequestMessage();
-         IDE.messageBus().send(
-            message,
-            new RequestCallback<StringBuilder>(
-               (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(StringBuilder result)
+         try
+         {
+            IDE.messageBus().send(
+               message,
+               new RequestCallback<StringBuilder>(
+                  (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller)
                {
-                  dependenciesResolvedSuccessed(updateDependencyStatusHandler, projectId, result);
-               }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  updateDependencyStatusHandler.requestError(projectId, exception);
-                  IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
-                  exception.printStackTrace();
-               }
-            });
+                  @Override
+                  protected void onSuccess(StringBuilder result)
+                  {
+                     dependenciesResolvedSuccessed(updateDependencyStatusHandler, projectId, result);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     updateDependencyStatusHandler.requestError(projectId, exception);
+                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
+                     exception.printStackTrace();
+                  }
+               });
+         }
+         catch (WebSocketException e)
+         {
+            e.printStackTrace();
+         }
       }
    }
 
@@ -310,7 +314,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       NameEnvironment.clearFQNBlackList();
    }
 
-  
    /**
     * @param updateDependencyStatusHandler
     * @param projectId
