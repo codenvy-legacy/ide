@@ -24,6 +24,7 @@ import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.Image;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -293,13 +294,12 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void startCheckingStatus(String jobName)
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      try
       {
          jobStatusChannel = JenkinsExtension.JOB_STATUS_CHANNEL + jobName;
          IDE.messageBus().subscribe(jobStatusChannel, jobStatusHandler);
       }
-      else
-      {
+      catch (Exception e) {
          refreshJobStatusTimer.schedule(delay);
       }
    }
@@ -456,7 +456,14 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void onJobFinished(JobStatus status)
    {
-      IDE.messageBus().unsubscribe(jobStatusChannel, jobStatusHandler);
+      try
+      {
+         IDE.messageBus().unsubscribe(jobStatusChannel, jobStatusHandler);
+      }
+      catch (WebSocketException e)
+      {
+         // nothing to do
+      }
       IDE.fireEvent(new ApplicationBuiltEvent(status));
 
       try
@@ -626,7 +633,14 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       protected void onFailure(Throwable exception)
       {
-         IDE.messageBus().unsubscribe(jobStatusChannel, this);
+         try
+         {
+            IDE.messageBus().unsubscribe(jobStatusChannel, this);
+         }
+         catch (WebSocketException e)
+         {
+            // nothing to do
+         }
          buildInProgress = false;
          display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
          IDE.fireEvent(new ExceptionThrownEvent(exception));

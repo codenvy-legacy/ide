@@ -28,8 +28,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
@@ -116,10 +118,16 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
 
    public static final String SUPPORT = "support";
 
-   public CloudFoundryClientServiceImpl(String restContext, Loader loader)
+   /**
+    * WebSocket message bus.
+    */
+   private MessageBus wsMessageBus;
+
+   public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
    }
 
    /**
@@ -184,10 +192,12 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       createApplicationRequest.setWar(war);
 
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+      callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name));
 
-      RESTfulRequest.build(RequestBuilder.POST, CREATE)
-         .requestStatusHandler(new CreateApplicationRequestStatusHandler(name)).data(data)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, CREATE).data(data)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    private String checkServerUrl(String server)

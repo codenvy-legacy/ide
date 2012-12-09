@@ -27,10 +27,14 @@ import org.exoplatform.ide.client.framework.application.event.ApplicationClosedE
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 
 /**
  * Handler that opens WebSocket connection when IDE loaded and close WebSocket on close IDE.
@@ -79,7 +83,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
 
    private void initialize()
    {
-      IDE.messageBus().setOnOpenHandler(new MessageBus.ConnectionOpenedHandler()
+      IDE.messageBus().setOnOpenHandler(new ConnectionOpenedHandler()
       {
          @Override
          public void onOpen()
@@ -93,7 +97,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
          }
       });
 
-      IDE.messageBus().setOnCloseHandler(new MessageBus.ConnectionClosedHandler()
+      IDE.messageBus().setOnCloseHandler(new ConnectionClosedHandler()
       {
          @Override
          public void onClose(WebSocketClosedEvent event)
@@ -103,7 +107,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
          }
       });
 
-      IDE.messageBus().setOnErrorHandler(new MessageBus.ConnectionErrorHandler()
+      IDE.messageBus().setOnErrorHandler(new ConnectionErrorHandler()
       {
          @Override
          public void onError()
@@ -145,7 +149,17 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
       @Override
       public void run()
       {
-         RESTfulRequest.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping").send(null);
+         RequestMessage message =
+            RESTfulRequest.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
+               .getRequestMessage();
+         try
+         {
+            IDE.messageBus().send(message, null);
+         }
+         catch (WebSocketException e)
+         {
+            // nothing to do
+         }
       }
    };
 

@@ -29,6 +29,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Timer;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -46,7 +47,7 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
 import org.exoplatform.ide.extension.maven.client.BuilderClientService;
@@ -259,12 +260,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void startCheckingStatus(String buildId)
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      try
       {
          buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildId;
          IDE.messageBus().subscribe(buildStatusChannel, buildStatusHandler);
       }
-      else
+      catch (WebSocketException e)
       {
          refreshBuildStatusTimer.schedule(delay);
       }
@@ -477,7 +478,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
    };
 
-
    /**
     * Check for status and display necessary messages.
     *
@@ -508,7 +508,15 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
     */
    private void afterBuildFinished(BuildStatus buildStatus)
    {
-      IDE.messageBus().unsubscribe(buildStatusChannel, buildStatusHandler);
+      try
+      {
+         IDE.messageBus().unsubscribe(buildStatusChannel, buildStatusHandler);
+      }
+      catch (WebSocketException e)
+      {
+         // nothing to do
+      }
+
       setBuildInProgress(false);
       previousStatus = buildStatus.getStatus();
 
@@ -794,7 +802,15 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       @Override
       protected void onFailure(Throwable exception)
       {
-         IDE.messageBus().unsubscribe(buildStatusChannel, this);
+         try
+         {
+            IDE.messageBus().unsubscribe(buildStatusChannel, this);
+         }
+         catch (WebSocketException e)
+         {
+            // nothing to do
+         }
+
          setBuildInProgress(false);
          display.stopAnimation();
          IDE.fireEvent(new ExceptionThrownEvent(exception));

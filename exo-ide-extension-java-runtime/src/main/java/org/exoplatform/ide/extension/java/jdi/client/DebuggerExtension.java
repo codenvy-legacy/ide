@@ -80,7 +80,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       FqnResolverFactory resolverFactory = new FqnResolverFactory();
       resolverFactory.addResolver(MimeType.APPLICATION_JAVA, new JavaFqnResolver());
       new DebuggerClientService(event.getApplicationConfiguration().getContext());
-      new ApplicationRunnerClientService(event.getApplicationConfiguration().getContext());
+      new ApplicationRunnerClientService(event.getApplicationConfiguration().getContext(), IDE.messageBus());
       BreakpointsManager breakpointsManager =
          new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
 

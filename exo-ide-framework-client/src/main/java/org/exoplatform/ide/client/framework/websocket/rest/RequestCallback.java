@@ -21,12 +21,13 @@ package org.exoplatform.ide.client.framework.websocket.rest;
 import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
+import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
 import org.exoplatform.ide.client.framework.websocket.Message;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReplyHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
 import org.exoplatform.ide.client.framework.websocket.rest.exceptions.UnauthorizedException;
 
@@ -78,7 +79,7 @@ public abstract class RequestCallback<T> implements ReplyHandler
 
    /**
     * Constructor retrieves unmarshaller with initialized (this is important!) object.
-    * When response comes callback calls <code>Unmarshallable.unmarshal()</code>
+    * When response comes then callback calls <code>Unmarshallable.unmarshal()</code>
     * which populates the object.
     * 
     * @param unmarshaller {@link Unmarshallable}
@@ -86,6 +87,7 @@ public abstract class RequestCallback<T> implements ReplyHandler
    public RequestCallback(Unmarshallable<T> unmarshaller)
    {
       this.successCodes = DEFAULT_SUCCESS_CODES;
+      this.loader = new EmptyLoader();
 
       if (unmarshaller == null)
       {
@@ -102,7 +104,7 @@ public abstract class RequestCallback<T> implements ReplyHandler
     * Perform actions when response message was received.
     * 
     * @param response message
-    * @see org.exoplatform.ide.client.framework.websocket.MessageBus.ReplyHandler#onReply(org.exoplatform.ide.client.framework.websocket.Message)
+    * @see org.exoplatform.ide.client.framework.websocket.events.ReplyHandler#onReply(org.exoplatform.ide.client.framework.websocket.Message)
     */
    @Override
    public void onReply(Message message)
@@ -198,7 +200,15 @@ public abstract class RequestCallback<T> implements ReplyHandler
    }
 
    /**
-    * Set handler to show an execution state of operation.
+    * Get handler to show an execution state of request.
+    */
+   public final RequestStatusHandler getStatusHandler()
+   {
+      return statusHandler;
+   }
+
+   /**
+    * Set handler to show an execution state of request.
     * 
     * @param handler status handler
     */
@@ -208,7 +218,15 @@ public abstract class RequestCallback<T> implements ReplyHandler
    }
 
    /**
-    * Sets the loader to show while request is calling.
+    * Get the loader to show while request is calling.
+    */
+   public final AsyncRequestLoader getLoader()
+   {
+      return loader;
+   }
+
+   /**
+    * Set the loader to show while request is calling.
     * 
     * @param loader loader to show while request is calling
     */

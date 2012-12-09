@@ -55,9 +55,9 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
@@ -136,8 +136,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    {
       resolveDependencies(this.project);
    }
-   
-   
+
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
@@ -168,7 +167,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       resolveDependencies(mvnModules.toArray(new ProjectModel[mvnModules.size()]));
 
    }
-   
+
    /**
     * @see org.eclipse.jdt.client.event.PackageCreatedHandler#onPackageCreated(org.eclipse.jdt.client.event.PackageCreatedEvent)
     */
@@ -208,20 +207,18 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    {
       project = event.getProject();
    }
-   
+
    private void resolveDependencies(ProjectModel... projects)
    {
-//      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-//      {
-//         resolveDependenciesWS(projects);
-//      }
-//      else
-//      {
-         resolveDependenciesRest(projects);
-//      }
+      //      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      //      {
+      //         resolveDependenciesWS(projects);
+      //      }
+      //      else
+      //      {
+      resolveDependenciesRest(projects);
+      //      }
    }
-
-
 
    private void resolveDependenciesRest(ProjectModel... projects)
    {
@@ -264,7 +261,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       }
    }
 
-
    private void resolveDependenciesWS(ProjectModel... projects)
    {
       for (ProjectModel project : projects)
@@ -276,7 +272,9 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
          String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
          StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
-         RESTfulRequest.build(RequestBuilder.GET, url).send(
+         RequestMessage message = RESTfulRequest.build(RequestBuilder.GET, url).getRequestMessage();
+         IDE.messageBus().send(
+            message,
             new RequestCallback<StringBuilder>(
                (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller)
             {
@@ -307,7 +305,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       NameEnvironment.clearFQNBlackList();
    }
 
-  
    /**
     * @param updateDependencyStatusHandler
     * @param projectId

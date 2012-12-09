@@ -18,23 +18,28 @@
  */
 package org.exoplatform.ide.client.framework.websocket.rest;
 
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.ide.client.framework.websocket.DefaultMessageBus;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.Message;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent;
+import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 
 /**
- * Implementation of message bus to communicate with EverREST over WebSocket.
+ * Extension of {@link MessageBus} to communicate with EverREST over WebSocket.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RESTMessageBus.java Dec 5, 2012 2:29:06 PM azatsarynnyy $
  *
  */
-public class RESTMessageBus extends DefaultMessageBus
+public class RESTMessageBus extends MessageBus
 {
    public static final WebSocketAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(WebSocketAutoBeanFactory.class);
 
@@ -51,7 +56,7 @@ public class RESTMessageBus extends DefaultMessageBus
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.DefaultMessageBus#onMessageReceived(org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent)
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#onMessageReceived(org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent)
     */
    @Override
    public void onMessageReceived(MessageReceivedEvent event)
@@ -71,7 +76,7 @@ public class RESTMessageBus extends DefaultMessageBus
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.DefaultMessageBus#parseMessage(java.lang.String)
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#parseMessage(java.lang.String)
     */
    @Override
    protected Message parseMessage(String message)
@@ -80,7 +85,7 @@ public class RESTMessageBus extends DefaultMessageBus
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.DefaultMessageBus#getChannel(org.exoplatform.ide.client.framework.websocket.Message)
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#getChannel(org.exoplatform.ide.client.framework.websocket.Message)
     */
    @Override
    protected String getChannel(Message message)
@@ -97,23 +102,71 @@ public class RESTMessageBus extends DefaultMessageBus
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.DefaultMessageBus#sendSubscribeMessage(java.lang.String)
+    * @throws WebSocketException
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#send(java.lang.String,
+    *       org.exoplatform.ide.client.framework.websocket.Message)
     */
    @Override
-   protected void sendSubscribeMessage(String channel)
+   public void send(String channel, Message message) throws WebSocketException
    {
-      RESTfulRequest.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
-         .data("{\"channel\":\"" + channel + "\"}").send(null);
+      // TODO
+      // serialize message
+      //send(textMessage);
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.websocket.DefaultMessageBus#sendUnsubscribeMessage(java.lang.String)
+    * @throws WebSocketException
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#send(org.exoplatform.ide.client.framework.websocket.Message,
+    *       org.exoplatform.ide.client.framework.websocket.events.ReplyHandler)
     */
    @Override
-   protected void sendUnsubscribeMessage(String channel)
+   public void send(Message message, ReplyHandler callback) throws WebSocketException
    {
-      RESTfulRequest.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
-         .data("{\"channel\":\"" + channel + "\"}").send(null);
+      AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(message);
+      if (autoBean == null)
+         throw new NullPointerException("Failed to marshall message");
+
+      RequestCallback<?> requestCallback = null;
+      if (callback != null)
+         requestCallback = (RequestCallback<?>)callback;
+
+      String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
+      send(message.getUuid(), textMessage, callback);
+
+      if (requestCallback != null)
+      {
+         requestCallback.getLoader().show();
+         if (requestCallback.getStatusHandler() != null)
+         {
+            requestCallback.getStatusHandler().requestInProgress(message.getUuid());
+         }
+      }
+   }
+
+   /**
+    * @throws WebSocketException 
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#sendSubscribeMessage(java.lang.String)
+    */
+   @Override
+   protected void sendSubscribeMessage(String channel) throws WebSocketException
+   {
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
+            .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
+      send(message, null);
+   }
+
+   /**
+    * @throws WebSocketException 
+    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#sendUnsubscribeMessage(java.lang.String)
+    */
+   @Override
+   protected void sendUnsubscribeMessage(String channel) throws WebSocketException
+   {
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
+            .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
+      send(message, null);
    }
 
 }

@@ -19,15 +19,8 @@
 package org.exoplatform.ide.client.framework.websocket.rest;
 
 import com.google.gwt.http.client.RequestBuilder.Method;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 
-import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestLoader;
-import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.util.UUID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,16 +40,6 @@ public class RESTfulRequest
    private final RequestMessage requestMessage;
 
    /**
-    * Handler to show an execution state of operation.
-    */
-   private RequestStatusHandler statusHandler;
-
-   /**
-    * Loader to show while request is calling.
-    */
-   protected AsyncRequestLoader loader;
-
-   /**
     * Creates a {@link RESTfulRequest} using the parameters for configuration.
     * 
     * @param method HTTP method to use for the request
@@ -68,7 +51,6 @@ public class RESTfulRequest
       requestMessage.setUuid(UUID.uuid());
       requestMessage.setMethod((method == null) ? null : method.toString());
       requestMessage.setPath(path);
-      loader = new EmptyLoader();
    }
 
    /**
@@ -129,65 +111,9 @@ public class RESTfulRequest
       return this;
    }
 
-   /**
-    * Set handler to show an execution state of operation.
-    * 
-    * @param handler status handler
-    * @return this {@link RESTfulRequest}
-    */
-   public final RESTfulRequest requestStatusHandler(RequestStatusHandler handler)
+   public RequestMessage getRequestMessage()
    {
-      this.statusHandler = handler;
-      return this;
-   }
-
-   /**
-    * Set the loader to show while request is calling.
-    * 
-    * @param loader loader to show
-    * @return this {@link RESTfulRequest}
-    */
-   public final RESTfulRequest loader(AsyncRequestLoader loader)
-   {
-      this.loader = loader;
-      return this;
-   }
-
-   /**
-    * Sends a request.
-    * 
-    * @param callback the response handler to be notified when the request fails or completes
-    */
-   public void send(RequestCallback<?> callback)
-   {
-      AutoBean<RequestMessage> autoBean = AutoBeanUtils.getAutoBean(requestMessage);
-      String message = AutoBeanCodex.encode(autoBean).getPayload();
-      if (callback != null)
-      {
-         callback.setLoader(loader);
-         callback.setStatusHandler(statusHandler);
-      }
-
-      try
-      {
-         IDE.messageBus().send(requestMessage.getUuid(), message, callback);
-         if (callback != null)
-         {
-            loader.show();
-            if (statusHandler != null)
-            {
-               statusHandler.requestInProgress(requestMessage.getUuid());
-            }
-            
-         }
-      }
-      catch (WebSocketException e)
-      {
-         if (callback != null)
-         {
-            callback.onFailure(e);
-         }
-      }
+      return requestMessage;
    }
 
 }

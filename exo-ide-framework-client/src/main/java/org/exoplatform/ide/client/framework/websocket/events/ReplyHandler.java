@@ -16,22 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.rest;
+package org.exoplatform.ide.client.framework.websocket.events;
+
+import org.exoplatform.ide.client.framework.websocket.Message;
 
 /**
- * Pair that may be used to emulate headers of HTTP request/response.
- * 
- * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
- *
+ * Handler for receiving replies to messages you sent on the message bus.
  */
-public interface Pair
+public interface ReplyHandler
 {
-   String getName();
-
-   void setName(String name);
-
-   String getValue();
-
-   void setValue(String value);
+   void onReply(Message message);
 }

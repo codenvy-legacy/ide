@@ -28,8 +28,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
 import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
@@ -107,6 +109,8 @@ public class AppfogClientService
 
    private String restServiceContext;
 
+   private MessageBus wsMessageBus;
+
    //------------------------------------------------------------------
    private static AppfogClientService instance;
 
@@ -122,10 +126,11 @@ public class AppfogClientService
 
    //------------------------------------------------------------------
 
-   public AppfogClientService(String restContext, Loader loader)
+   public AppfogClientService(String restContext, Loader loader, MessageBus wsMessageBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
       instance = this;
    }
 
@@ -189,10 +194,11 @@ public class AppfogClientService
       createApplicationRequest.setInfra(infra);
 
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
-
-      RESTfulRequest.build(RequestBuilder.POST, CREATE)
-         .requestStatusHandler(new CreateApplicationRequestStatusHandler(name)).data(data)
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+      callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name));
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, CREATE).data(data)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    public void login(String server, String email, String password, AsyncRequestCallback<String> callback)

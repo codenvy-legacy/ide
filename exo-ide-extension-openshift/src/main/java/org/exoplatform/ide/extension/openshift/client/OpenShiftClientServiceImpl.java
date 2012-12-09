@@ -28,9 +28,11 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.openshift.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.Credentials;
@@ -93,14 +95,21 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
    private Loader loader;
 
    /**
+    * WebSocket message bus.
+    */
+   private MessageBus wsMessageBus;
+
+   /**
     * @param eventBus eventBus
     * @param restContext rest context
     * @param loader loader to show on server request
+    * @param wsMessageBus {@link MessageBus to send messages over WebSocket}
     */
-   public OpenShiftClientServiceImpl(String restContext, Loader loader)
+   public OpenShiftClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
    }
 
    /**
@@ -161,8 +170,10 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       RequestCallback<AppInfo> callback) throws WebSocketException
    {
       String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
-      RESTfulRequest.build(RequestBuilder.POST, CREATE_APPLICATION + params)
-         .requestStatusHandler(new CreateRequestHandler(name)).send(callback);
+      callback.setStatusHandler(new CreateRequestHandler(name));
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, CREATE_APPLICATION + params).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**

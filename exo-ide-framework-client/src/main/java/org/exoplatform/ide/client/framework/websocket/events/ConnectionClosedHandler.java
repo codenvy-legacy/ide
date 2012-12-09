@@ -16,22 +16,17 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.framework.websocket.rest;
+package org.exoplatform.ide.client.framework.websocket.events;
+
 
 /**
- * Pair that may be used to emulate headers of HTTP request/response.
+ * Handler closing WebSocket connection.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: Pair.java Nov 6, 2012 12:34:44 PM azatsarynnyy $
+ * @version $Id: ConnectionClosedHandler.java Dec 7, 2012 11:17:44 AM azatsarynnyy $
  *
  */
-public interface Pair
+public interface ConnectionClosedHandler
 {
-   String getName();
-
-   void setName(String name);
-
-   String getValue();
-
-   void setValue(String value);
+   void onClose(WebSocketClosedEvent event);
 }

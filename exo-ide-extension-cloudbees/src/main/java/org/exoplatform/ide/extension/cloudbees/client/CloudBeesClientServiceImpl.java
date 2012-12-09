@@ -28,8 +28,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.CreateApplicationRequestHandler;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
@@ -82,10 +84,16 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     */
    private Loader loader;
 
-   public CloudBeesClientServiceImpl(String restContext, Loader loader)
+   /**
+    * WebSocket message bus.
+    */
+   private MessageBus wsMessageBus;
+
+   public CloudBeesClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
    }
 
    /**
@@ -248,11 +256,15 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       params += "&vfsid=" + vfsId;
       params += (projectId != null) ? "&projectid=" + projectId : "";
       if (message != null && !message.isEmpty())
+      {
          params += "&message=" + message;
+      }
+      callback.setStatusHandler(new CreateApplicationRequestHandler(appId));
 
-      RESTfulRequest.build(RequestBuilder.POST, INITIALIZE + params)
-         .requestStatusHandler(new CreateApplicationRequestHandler(appId))
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+      RequestMessage requestMessage =
+         RESTfulRequest.build(RequestBuilder.POST, INITIALIZE + params)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(requestMessage, callback);
    }
 
    /**

@@ -22,18 +22,16 @@ import com.google.gwt.http.client.Response;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.client.framework.websocket.Message;
-import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
 
 /**
- * Class that implements this interface will receive all
- * messages published to the channels to which class subscribed,
- * and all subscribers to a channel will receive the same messages.
+ * Handler to receive messages by subscription.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: SubscriptionHandler.java Jul 30, 2012 9:54:41 AM azatsarynnyy $
  */
-public abstract class SubscriptionHandler<T> implements MessageBus.MessageHandler
+public abstract class SubscriptionHandler<T> implements MessageHandler
 {
    // http code 207 is "Multi-Status"
    // IE misinterpreting HTTP status code 204 as 1223 (http://www.mail-archive.com/jquery-en@googlegroups.com/msg13093.html)
@@ -86,7 +84,7 @@ public abstract class SubscriptionHandler<T> implements MessageBus.MessageHandle
     * Perform actions when {@link ResponseMessage} was received.
     * 
     * @param response received {@link ResponseMessage}
-    * @see org.exoplatform.ide.client.framework.websocket.MessageBus.MessageHandler#onMessage(org.exoplatform.ide.client.framework.websocket.Message)
+    * @see org.exoplatform.ide.client.framework.websocket.events.MessageHandler#onMessage(org.exoplatform.ide.client.framework.websocket.Message)
     */
    @Override
    public void onMessage(Message message)

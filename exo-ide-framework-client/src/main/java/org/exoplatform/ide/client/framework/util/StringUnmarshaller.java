@@ -35,15 +35,10 @@ import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
 public class StringUnmarshaller implements Unmarshallable<StringBuilder>,
    org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>
 {
-
    protected StringBuilder builder;
 
-   /**
-    * @param callback
-    */
    public StringUnmarshaller(StringBuilder builder)
    {
-      super();
       this.builder = builder;
    }
 
@@ -74,7 +69,6 @@ public class StringUnmarshaller implements Unmarshallable<StringBuilder>,
    {
       if (response.getStatusCode() != HTTPStatus.NO_CONTENT && response.getText() != null)
          builder.append(response.getText());
-
    }
 
 }

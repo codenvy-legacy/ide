@@ -22,15 +22,18 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
 
 /**
@@ -53,10 +56,13 @@ public class ApplicationRunnerClientService
 
    private String restContext;
 
-   public ApplicationRunnerClientService(String restContext)
+   private MessageBus wsMessageBus;
+
+   public ApplicationRunnerClientService(String restContext, MessageBus wsMessageBus)
    {
       this.restContext = restContext;
       BASE_URL = restContext + "/ide/java/runner";
+      this.wsMessageBus = wsMessageBus;
       instance = this;
    }
 
@@ -95,7 +101,7 @@ public class ApplicationRunnerClientService
    public void runApplicationWS(String project, String war, boolean useJRebel,
       RequestCallback<ApplicationInstance> callback) throws WebSocketException
    {
-      String param = "?war=" + war;
+      String params = "?war=" + war;
 
       String data = "";
       if (useJRebel)
@@ -105,9 +111,11 @@ public class ApplicationRunnerClientService
          data = jsonObject.toString();
       }
 
-      RESTfulRequest.build(RequestBuilder.POST, RUN + param)
-         .requestStatusHandler(new RunningAppStatusHandler(project))
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+      callback.setStatusHandler(new RunningAppStatusHandler(project));
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, RUN + params)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    public void debugApplication(String project, String war, boolean useJRebel,
@@ -149,9 +157,11 @@ public class ApplicationRunnerClientService
          data = jsonObject.toString();
       }
 
-      RESTfulRequest.build(RequestBuilder.POST, DEBUG + param)
-         .requestStatusHandler(new RunningAppStatusHandler(project))
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).send(callback);
+      callback.setStatusHandler(new RunningAppStatusHandler(project));
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, DEBUG + param)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    public void getLogs(String name, AsyncRequestCallback<StringBuilder> callback) throws RequestException
@@ -178,7 +188,8 @@ public class ApplicationRunnerClientService
       throws WebSocketException
    {
       StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
-      RESTfulRequest.build(RequestBuilder.GET, PROLONG + params).send(callback);
+      RequestMessage message = RESTfulRequest.build(RequestBuilder.GET, PROLONG + params).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**

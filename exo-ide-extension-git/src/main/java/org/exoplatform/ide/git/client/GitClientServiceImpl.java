@@ -27,9 +27,11 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.git.client.commit.CommitRequestHandler;
@@ -155,15 +157,18 @@ public class GitClientServiceImpl extends GitClientService
 
    private Loader emptyLoader = new EmptyLoader();
 
+   private MessageBus wsMessageBus;
+
    /**
     * @param eventBus eventBus
     * @param restContext rest context
     * @param loader loader to show on server request
     */
-   public GitClientServiceImpl(String restContext, Loader loader)
+   public GitClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
    }
 
    /**
@@ -192,17 +197,19 @@ public class GitClientServiceImpl extends GitClientService
     *       org.exoplatform.ide.client.framework.websocket.rest.RequestCallback)
     */
    @Override
-   public void initWS(String vfsId, String projectid, String projectName, boolean bare,
-      RequestCallback<String> callback) throws WebSocketException
+   public void initWS(String vfsId, String projectid, String projectName, boolean bare, RequestCallback<String> callback)
+      throws WebSocketException
    {
       InitRequest initRequest = new InitRequest(projectid, bare);
       InitRequestMarshaller marshaller = new InitRequestMarshaller(initRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + projectid;
+      callback.setStatusHandler(new InitRequestStatusHandler(projectName));
 
-      RESTfulRequest.build(RequestBuilder.POST, INIT + params).data(marshaller.marshal())
-         .requestStatusHandler(new InitRequestStatusHandler(projectName))
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, INIT + params).data(marshaller.marshal())
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**
@@ -242,11 +249,13 @@ public class GitClientServiceImpl extends GitClientService
       CloneRequestMarshaller marshaller = new CloneRequestMarshaller(cloneRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + folder.getId();
+      callback.setStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri));
 
-      RESTfulRequest.build(RequestBuilder.POST, CLONE + params).data(marshaller.marshal())
-         .requestStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri))
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).send(callback);
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, CLONE + params).data(marshaller.marshal())
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**
@@ -303,10 +312,12 @@ public class GitClientServiceImpl extends GitClientService
       AddRequestMarshaller marshaller = new AddRequestMarshaller(addRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+      callback.setStatusHandler(new AddRequestHandler(project.getName()));
 
-      RESTfulRequest.build(RequestBuilder.POST, ADD + params).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .requestStatusHandler(new AddRequestHandler(project.getName())).send(callback);
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, ADD + params).data(marshaller.marshal())
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**
@@ -343,10 +354,12 @@ public class GitClientServiceImpl extends GitClientService
       CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+      callback.setStatusHandler(new CommitRequestHandler(project.getName()));
 
-      RESTfulRequest.build(RequestBuilder.POST, COMMIT + params).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .requestStatusHandler(new CommitRequestHandler(project.getName())).send(callback);
+      RequestMessage requestMessage =
+         RESTfulRequest.build(RequestBuilder.POST, COMMIT + params).data(marshaller.marshal())
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(requestMessage, callback);
    }
 
    /**
@@ -390,10 +403,12 @@ public class GitClientServiceImpl extends GitClientService
       PushRequestMarshaller marshaller = new PushRequestMarshaller(pushRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+      callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec));
 
-      PushRequestHandler requestHandler = new PushRequestHandler(project.getName(), refSpec);
-      RESTfulRequest.build(RequestBuilder.POST, PUSH + params).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).requestStatusHandler(requestHandler).send(callback);
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, PUSH + params).data(marshaller.marshal())
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**
@@ -664,10 +679,12 @@ public class GitClientServiceImpl extends GitClientService
       FetchRequestMarshaller marshaller = new FetchRequestMarshaller(fetchRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+      callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec));
 
-      RESTfulRequest.build(RequestBuilder.POST, FETCH + params).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .requestStatusHandler(new FetchRequestHandler(project.getName(), refspec)).send(callback);
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, FETCH + params).data(marshaller.marshal())
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**
@@ -703,10 +720,12 @@ public class GitClientServiceImpl extends GitClientService
       PullRequestMarshaller marshaller = new PullRequestMarshaller(pullRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
+      callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec));
 
-      RESTfulRequest.build(RequestBuilder.POST, PULL + params).data(marshaller.marshal())
-         .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .requestStatusHandler(new PullRequestHandler(project.getName(), refSpec)).send(callback);
+      RequestMessage message =
+         RESTfulRequest.build(RequestBuilder.POST, PULL + params).data(marshaller.marshal())
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**

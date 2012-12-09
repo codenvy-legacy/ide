@@ -73,7 +73,7 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new AppfogClientService(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new AppfogClientService(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
    }
 
    @Override

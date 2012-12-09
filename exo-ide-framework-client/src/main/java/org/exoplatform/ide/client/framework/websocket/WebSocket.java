@@ -20,10 +20,10 @@ package org.exoplatform.ide.client.framework.websocket;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionErrorHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageReceivedHandler;
 
 /**
@@ -123,7 +123,7 @@ public class WebSocket extends JavaScriptObject
    public final native void setOnOpenHandler(ConnectionOpenedHandler handler)
    /*-{
       this.onopen = $entry(function() {
-         handler.@org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionOpenedHandler::onOpen()();
+         handler.@org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler::onOpen()();
       });
    }-*/;
 
@@ -136,7 +136,7 @@ public class WebSocket extends JavaScriptObject
    /*-{
       this.onclose = $entry(function() {
          var webSocketClosedEventInstance = @org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
-         handler.@org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionClosedHandler::onClose(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
+         handler.@org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler::onClose(Lorg/exoplatform/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
       });
    }-*/;
 
@@ -148,7 +148,7 @@ public class WebSocket extends JavaScriptObject
    public final native void setOnErrorHandler(ConnectionErrorHandler handler)
    /*-{
       this.onerror = $entry(function() {
-         handler.@org.exoplatform.ide.client.framework.websocket.MessageBus.ConnectionErrorHandler::onError()();
+         handler.@org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler::onError()();
       });
    }-*/;
 
