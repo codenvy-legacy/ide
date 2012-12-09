@@ -70,7 +70,7 @@ public class RenameClosedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         refresh();
+         driver.navigate().refresh();
       }
       catch (Exception e)
       {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,170 +16,171 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.clone;
+package org.exoplatform.ide.git.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import com.google.gwt.user.client.Random;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
+import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
+import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.git.client.GitClientService;
-import org.exoplatform.ide.git.client.GitExtension;
-import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.git.client.github.GitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Presenter for Clone Repository View.
- *
- * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 22, 2011 4:31:12 PM anya $
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: CodeNowHandler.java Dec 6, 2012 vetal $
  *
  */
-public class CloneRepositoryPresenter extends GitPresenter implements CloneRepositoryHandler
+public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHandler
 {
-   public interface Display extends IsView
+
+   private VirtualFileSystemInfo vfs;
+
+   public CodeNowHandler()
    {
-      /**
-       * Returns working directory field.
-       *
-       * @return {@link HasValue<{@link String}>}
-       */
-      HasValue<String> getWorkDirValue();
-
-      /**
-       * Returns remote URI field.
-       *
-       * @return {@link HasValue<{@link String}>}
-       */
-      HasValue<String> getRemoteUriValue();
-
-      /**
-       * Returns remote name field.
-       *
-       * @return {@link HasValue<{@link String}>}
-       */
-      HasValue<String> getRemoteNameValue();
-
-      /**
-       * Returns clone repository button.
-       *
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCloneButton();
-
-      /**
-       * Returns cancel button.
-       *
-       * @return {@link HasClickHandlers}
-       */
-      HasClickHandlers getCancelButton();
-
-      /**
-       * Changes the state of clone button.
-       *
-       * @param enable
-       */
-      void enableCloneButton(boolean enable);
-
-      void focusInRemoteUrlField();
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(StartWithInitParamsEvent.TYPE, this);
    }
 
    /**
-    * Presenter's display.
-    */
-   private Display display;
-
-   private static final String DEFAULT_REPO_NAME = "origin";
-
-   /**
-    * @param eventBus
-    */
-   public CloneRepositoryPresenter()
-   {
-      IDE.addHandler(CloneRepositoryEvent.TYPE, this);
-   }
-
-   /**
-    * @param d
-    */
-   public void bindDisplay(Display d)
-   {
-      this.display = d;
-
-      display.getCancelButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      });
-
-      display.getCloneButton().addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            doClone(display.getRemoteUriValue().getValue(),//
-               display.getRemoteNameValue().getValue(),//
-               display.getWorkDirValue().getValue());
-         }
-      });
-
-      display.getRemoteUriValue().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            String remoteUrl = event.getValue();
-            boolean enable = (remoteUrl != null && remoteUrl.length() > 0);
-            if (remoteUrl.endsWith("/"))
-            {
-               remoteUrl = remoteUrl.substring(0, remoteUrl.length() - 1);
-            }
-            if (remoteUrl.endsWith(".git"))
-            {
-               remoteUrl = remoteUrl.substring(0, remoteUrl.length() - 4);
-               String[] split = remoteUrl.split("/");
-               display.getWorkDirValue().setValue(split[split.length - 1]);
-            }
-            display.enableCloneButton(enable);
-         }
-      });
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryHandler#onCloneRepository(org.exoplatform.ide.git.client.clone.CloneRepositoryEvent)
+    * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
    @Override
-   public void onCloneRepository(CloneRepositoryEvent event)
+   public void onVfsChanged(VfsChangedEvent event)
    {
-      Display d = GWT.create(Display.class);
-      IDE.getInstance().openView(d.asView());
-      bindDisplay(d);
-      display.focusInRemoteUrlField();
-      display.getRemoteNameValue().setValue(DEFAULT_REPO_NAME);
-      display.enableCloneButton(false);
+      this.vfs = event.getVfsInfo();
+   }
+
+   @Override
+   public void onStartWithInitParams(StartWithInitParamsEvent event)
+   {
+      if (isValidParam(event.getParameterMap()))
+      {
+         String giturl = event.getParameterMap().get(CodeNowSpec10.VCS_URL).get(0);
+
+         String prjName = null;
+       
+         if (event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME) != null
+            && !event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).isEmpty())
+         {
+            prjName = event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).get(0);
+         }
+         else
+         {
+            prjName = giturl.substring(giturl.lastIndexOf('/') + 1, giturl.lastIndexOf(".git"));
+         }
+
+         cloneProject(giturl, prjName);
+      }
+
+   }
+
+   /**
+    * @param initParam
+    */
+   private boolean isValidParam(Map<String, List<String>> initParam)
+   {
+      if (initParam == null || initParam.isEmpty())
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VERSION_PARAMETER)
+         || initParam.get(CodeNowSpec10.VERSION_PARAMETER).size() != 1
+         || !initParam.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VCS) || initParam.get(CodeNowSpec10.VCS).isEmpty()
+         || !initParam.get(CodeNowSpec10.VCS).get(0).equalsIgnoreCase(CodeNowSpec10.DEFAULT_VCS))
+      {
+         return false;
+      }
+      if (!initParam.containsKey(CodeNowSpec10.VCS_URL) || initParam.get(CodeNowSpec10.VCS_URL) == null
+         || initParam.get(CodeNowSpec10.VCS_URL).isEmpty())
+      {
+         return false;
+      }
+      return true;
+   }
+
+   private void cloneProject(final String giturl, final String prjName)
+   {
+      try
+      {
+
+         VirtualFileSystem.getInstance().getChildren(vfs.getRoot(), ItemType.PROJECT,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+            {
+
+               @Override
+               protected void onSuccess(List<Item> result)
+               {
+                  boolean itemExist = false;
+                  for (Item item : result)
+                  {
+                     if (item.getName().equals(prjName))
+                     {
+                        itemExist = true;
+                     }
+                     if (item.hasProperty("codenow"))
+                     {
+                        String codenow = item.getPropertyValue("codenow");
+                        if (codenow.equals(giturl))
+                        {
+                           IDE.fireEvent(new OpenProjectEvent((ProjectModel)item));
+                           return;
+                        }
+                     }
+                  }
+                  if (itemExist)
+                  {
+                     doClone(giturl, "origin", prjName + "-" + Random.nextInt(Integer.MAX_VALUE));
+                  }
+                  else
+                  {
+                     doClone(giturl, "origin", prjName);
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  doClone(giturl, "origin", prjName);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -232,16 +233,12 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    /**
     * Clone of the repository by sending request over WebSocket or HTTP.
     */
-   private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder)
+   private void cloneRepository(final String remoteUri, final String remoteName, final FolderModel folder)
    {
       if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-      {
          cloneRepositoryWS(remoteUri, remoteName, folder);
-      }
       else
-      {
          cloneRepositoryREST(remoteUri, remoteName, folder);
-      }
    }
 
    /**
@@ -270,10 +267,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       catch (RequestException e)
       {
          handleError(e);
-      }
-      if (display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
       }
    }
 
@@ -309,7 +302,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       {
          handleError(e);
       }
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -323,7 +315,11 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       //TODO: not good, comment temporary need found other way
       // for inviting collaborators
       // showInvitation(repoInfo.getRemoteUri());
-      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+
+      List<Property> properties = new ArrayList<Property>();
+      properties.add(new PropertyImpl("codenow", repoInfo.getRemoteUri()));
+
+      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), properties));
    }
 
    private void handleError(Throwable e)
@@ -331,70 +327,6 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       String errorMessage =
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.cloneFailed();
       IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
-   }
-
-   /**
-    * Show dialog window with proposal for invite commiters.
-    * In case clone repository from GitHub show Collaborators list (see GitHub REST API http://developer.github.com/v3/repos/collaborators/).
-    * Else on server side we get unique list of commiters: name and email.  
-    *
-    * @param remoteUri
-    */
-   protected void showInvitation(String remoteUri)
-   {
-      String[] userRepo = parseGitHubUrl(remoteUri);
-      if (userRepo != null)
-      {
-         GitHubCollaboratorsHandler collaboratorsHandler = new GitHubCollaboratorsHandler();
-         collaboratorsHandler.showCollaborators(userRepo[0], userRepo[1]);
-      }
-
-   }
-
-   /**
-    * Parse GitHub url. Need extract "user" and "repository" name.
-    * If given Url its GitHub url return array of string first element will be user name, second repository name
-    * else return null.
-    * GitHub url formats:
-    * - https://github.com/user/repo.git
-    * - git@github.com:user/repo.git
-    * - git://github.com/user/repo.git
-    *
-    * @param gitUrl
-    * @return array of string 
-    */
-   private String[] parseGitHubUrl(String gitUrl)
-   {
-      if (gitUrl.endsWith("/"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
-      }
-      if (gitUrl.endsWith(".git"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
-      }
-      if (gitUrl.startsWith("git@github.com:"))
-      {
-         gitUrl = gitUrl.split("git@github.com:")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("git://github.com/"))
-      {
-         gitUrl = gitUrl.split("git://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("https://github.com/"))
-      {
-         gitUrl = gitUrl.split("git://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      return null;
-   }
-
-   @Override
-   protected boolean makeSelectionCheck()
-   {
-      return true;
    }
 
 }

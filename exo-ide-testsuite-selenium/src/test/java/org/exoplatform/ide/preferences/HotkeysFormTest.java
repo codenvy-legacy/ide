@@ -24,7 +24,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.preferences.AbstractHotkeysTest.Commands;
+import org.exoplatform.ide.preferences.AbstractCustomizeHotkeys.Commands;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -53,7 +53,7 @@ public class HotkeysFormTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      deleteCookies();
+      driver.manage().deleteAllCookies();
       try
       {
          VirtualFileSystemUtils.delete(ENTRY_POINT_URL_IDE + PRODUCTION_SERVICE_PREFIX);

@@ -24,7 +24,7 @@ import org.everrest.core.impl.MultivaluedMapImpl;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonValue;
 import org.everrest.core.impl.provider.json.JsonWriter;
-import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.commons.utils.IOUtil;
 import org.exoplatform.ide.conversationstate.IdeUser;
@@ -78,7 +78,7 @@ public class ConfigurationServiceTest extends BaseTest
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -110,7 +110,7 @@ public class ConfigurationServiceTest extends BaseTest
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -133,7 +133,7 @@ public class ConfigurationServiceTest extends BaseTest
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -152,7 +152,7 @@ public class ConfigurationServiceTest extends BaseTest
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -166,7 +166,7 @@ public class ConfigurationServiceTest extends BaseTest
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -182,7 +182,7 @@ public class ConfigurationServiceTest extends BaseTest
 
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();
@@ -206,7 +206,7 @@ public class ConfigurationServiceTest extends BaseTest
    {
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       EnvironmentContext ctx = new EnvironmentContext();
       ctx.put(SecurityContext.class, securityContext);
       MultivaluedMap<String, String> headers = new MultivaluedMapImpl();

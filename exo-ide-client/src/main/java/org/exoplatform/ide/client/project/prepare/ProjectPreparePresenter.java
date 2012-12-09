@@ -40,6 +40,7 @@ import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.vfs.client.JSONSerializer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
@@ -74,6 +75,8 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 
    private String folderId;
 
+   private List<Property> properties;
+
    public ProjectPreparePresenter()
    {
       IDE.addHandler(ConvertToProjectEvent.TYPE, this);
@@ -87,10 +90,16 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
       String url =
          Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId();
 
+      
+      properties = event.getProperties();
+      String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
+      
       try
       {
          AsyncRequest.build(RequestBuilder.POST, url, false)
             .loader(loader)
+            .data(data)
+            .header("Content-Type", "application/json")
             .send(new AsyncRequestCallback<Void>()
             {
                @Override
@@ -184,7 +193,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    {
       final List<Property> properties = new ArrayList<Property>();
       properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-
+      properties.addAll(this.properties);
       if (!"none".equals(projectType))
       {
          properties.add(new PropertyImpl("vfs:projectType", ProjectType.fromValue(projectType).value()));
