@@ -46,7 +46,6 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
@@ -348,7 +347,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
    }
 
    /**
-    * Clone of the repository by sending request over WebSocket or HTTP.
+    * Get the necessary parameters values and call the clone repository method (over WebSocket or HTTP).
     */
    private void cloneFolder(ProjectData repo, final FolderModel folder)
    {
@@ -359,11 +358,25 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
       }
       JobManager.get().showJobSeparated();
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      try
       {
-         cloneFolderWS(repo, folder, remoteUri);
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
+            new RequestCallback<RepoInfo>()
+            {
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onRepositoryCloned();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
       }
-      else
+      catch (WebSocketException e)
       {
          cloneFolderREST(repo, folder, remoteUri);
       }
@@ -393,35 +406,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-   }
-
-   /**
-    * Get the necessary parameters values and call the clone repository method (over WebSocket).
-    */
-   private void cloneFolderWS(ProjectData repo, final FolderModel folder, String remoteUri)
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
-            new RequestCallback<RepoInfo>()
-            {
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  onRepositoryCloned();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }

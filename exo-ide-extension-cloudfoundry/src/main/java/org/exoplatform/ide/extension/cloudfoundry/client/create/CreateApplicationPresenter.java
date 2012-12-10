@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -493,78 +492,14 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             createApplication(appData);
          }
       };
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
+         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-      {
-         createApplicationWS(appData, project, loggedInHandler);
-      }
-      else
-      {
-         createApplicationREST(appData, project, loggedInHandler);
-      }
-   }
-
-   /**
-    * Create application on CloudFoundry by sending request over HTTP.
-    * 
-    * @param appData data to create new application
-    * @param project {@link ProjectModel}
-    * @param loggedInHandler handler that should be called after success login
-    */
-   private void createApplicationREST(final AppData appData, final ProjectModel project, LoggedInHandler loggedInHandler)
-   {
       try
       {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication = CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller = new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-         CloudFoundryClientService.getInstance().create(
-            appData.server,
-            appData.name,
-            appData.type,
-            appData.url,
-            appData.instances,
-            appData.memory,
-            appData.nostart,
-            vfs.getId(),
-            project.getId(),
-            warUrl,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, appData.server)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  onAppCreatedSuccess(result);
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-      }
-   }
-
-   /**
-    * Create application on CloudFoundry by sending request over WebSocket.
-    * 
-    * @param appData data to create new application
-    * @param project {@link ProjectModel}
-    * @param loggedInHandler handler that should be called after success login
-    */
-   private void createApplicationWS(final AppData appData, final ProjectModel project, LoggedInHandler loggedInHandler)
-   {
-      try
-      {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication = CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-         AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller = new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
          CloudFoundryClientService.getInstance().createWS(
             appData.server,
             appData.name,
@@ -576,7 +511,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             vfs.getId(),
             project.getId(),
             warUrl,
-            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, appData.server)
+            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+               appData.server)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -594,6 +530,57 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             });
       }
       catch (WebSocketException e)
+      {
+         createApplicationREST(appData, project, loggedInHandler);
+      }
+   }
+
+   /**
+    * Create application on CloudFoundry by sending request over HTTP.
+    * 
+    * @param appData data to create new application
+    * @param project {@link ProjectModel}
+    * @param loggedInHandler handler that should be called after success login
+    */
+   private void createApplicationREST(final AppData appData, final ProjectModel project, LoggedInHandler loggedInHandler)
+   {
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+         new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+      try
+      {
+         CloudFoundryClientService.getInstance().create(
+            appData.server,
+            appData.name,
+            appData.type,
+            appData.url,
+            appData.instances,
+            appData.memory,
+            appData.nostart,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+               appData.server)
+            {
+               @Override
+               protected void onSuccess(CloudFoundryApplication result)
+               {
+                  onAppCreatedSuccess(result);
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (RequestException e)
       {
          IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
       }

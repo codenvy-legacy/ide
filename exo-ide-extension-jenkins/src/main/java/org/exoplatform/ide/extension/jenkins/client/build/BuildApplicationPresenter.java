@@ -39,7 +39,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -299,7 +298,8 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
          jobStatusChannel = JenkinsExtension.JOB_STATUS_CHANNEL + jobName;
          IDE.messageBus().subscribe(jobStatusChannel, jobStatusHandler);
       }
-      catch (Exception e) {
+      catch (Exception e)
+      {
          refreshJobStatusTimer.schedule(delay);
       }
    }
@@ -504,10 +504,28 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void initRepository(final ProjectModel project)
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         initRepositoryWS(project);
-      else
+      try
+      {
+         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
+            new RequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  onInitSuccess();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          initRepositoryREST(project);
+      }
    }
 
    /**
@@ -534,35 +552,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-   }
-
-   /**
-    * Initialize Git repository (sends request over WebSocket).
-    */
-   private void initRepositoryWS(final ProjectModel project)
-   {
-      try
-      {
-         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
-            new RequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  onInitSuccess();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }

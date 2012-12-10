@@ -50,7 +50,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -833,10 +832,31 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     */
    private void debugApplication(String warUrl)
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         debugApplicationWS(warUrl);
-      else
+      AutoBean<ApplicationInstance> debugApplicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(debugApplicationInstance);
+
+      try
+      {
+         ApplicationRunnerClientService.getInstance().debugApplicationWS(project.getName(), warUrl, isUseJRebel(),
+            new RequestCallback<ApplicationInstance>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(ApplicationInstance result)
+               {
+                  onDebugStarted(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  onApplicationStartFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          debugApplicationREST(warUrl);
+      }
    }
 
    /**
@@ -846,10 +866,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     */
    private void debugApplicationREST(String warUrl)
    {
-      AutoBean<ApplicationInstance> debugApplicationInstance =
-         DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
-      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
-         new AutoBeanUnmarshaller<ApplicationInstance>(debugApplicationInstance);
+      AutoBean<ApplicationInstance> debugApplicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(debugApplicationInstance);
+
       try
       {
          ApplicationRunnerClientService.getInstance().debugApplication(project.getName(), warUrl, isUseJRebel(),
@@ -875,41 +894,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    /**
-    * Run application in debug mode by sending request over WebSocket.
-    * 
-    * @param warUrl location of .war file
-    */
-   private void debugApplicationWS(String warUrl)
-   {
-      AutoBean<ApplicationInstance> debugApplicationInstance =
-         DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
-      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
-         new AutoBeanUnmarshallerWS<ApplicationInstance>(debugApplicationInstance);
-      try
-      {
-         ApplicationRunnerClientService.getInstance().debugApplicationWS(project.getName(), warUrl, isUseJRebel(),
-            new RequestCallback<ApplicationInstance>(unmarshaller)
-            {
-               @Override
-               protected void onSuccess(ApplicationInstance result)
-               {
-                  onDebugStarted(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  onApplicationStartFailure(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         onApplicationStartFailure(null);
-      }
-   }
-
-   /**
     * Run application by sending request over WebSocket or HTTP.
     * 
     * @param warUrl location of .war file
@@ -917,8 +901,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private void runApplication(String warUrl)
    {
       AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
-      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
-         new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
+      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
 
       try
       {
@@ -952,8 +935,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private void runApplicationREST(String warUrl)
    {
       AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
-      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
-         new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
+      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
 
       try
       {

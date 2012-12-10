@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -172,16 +171,38 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
       }
    }
 
+   /**
+    * Perform the commit to repository and process the response (sends request over WebSocket or HTTP).
+    */
    private void doCommit()
    {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       String message = display.getMessage().getValue();
       boolean all = display.getAllField().getValue();
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         doCommitWS(project, message, all);
-      else
+      try
+      {
+         GitClientService.getInstance().commitWS(vfs.getId(), project, message, all,
+            new RequestCallback<Revision>(new RevisionUnmarshallerWS(new Revision(null, message, 0, null)))
+            {
+               @Override
+               protected void onSuccess(Revision result)
+               {
+                  onCommitSuccess(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+      catch (WebSocketException e)
+      {
          doCommitREST(project, message, all);
+      }
    }
 
    /**
@@ -208,36 +229,6 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
             });
       }
       catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Perform the commit to repository and process the response (sends request over WebSocket).
-    */
-   private void doCommitWS(ProjectModel project, String message, boolean all)
-   {
-      try
-      {
-         GitClientService.getInstance().commitWS(vfs.getId(), project, message, all,
-            new RequestCallback<Revision>(new RevisionUnmarshallerWS(new Revision(null, message, 0, null)))
-            {
-               @Override
-               protected void onSuccess(Revision result)
-               {
-                  onCommitSuccess(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }

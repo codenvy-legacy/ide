@@ -32,7 +32,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -217,63 +216,20 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
       }
    }
 
+   /**
+    * Push changes to remote repository (sends request over WebSocket or HTTP).
+    */
    private void doPush()
    {
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      String remote = display.getRemoteValue().getValue();
+      final String remote = display.getRemoteValue().getValue();
       IDE.getInstance().closeView(display.asView().getId());
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         doPushWS(project, remote);
-      else
-         doPushREST(project, remote);
-   }
-
-   /**
-    * Push changes to remote repository (sends request over HTTP).
-    */
-   private void doPushREST(ProjectModel project, final String remote)
-   {
-      try
-      {
-         GitClientService.getInstance().push(vfs.getId(), project, getRefs(), remote, false,
-            new AsyncRequestCallback<String>()
-            {
-
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-                  if (remote != null && remote.startsWith("https://"))
-                  {
-                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.OUTPUT));
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         handleError(e);
-      }
-   }
-
-   /**
-    * Push changes to remote repository (sends request over WebSocket).
-    */
-   private void doPushWS(ProjectModel project, final String remote)
-   {
       try
       {
          GitClientService.getInstance().pushWS(vfs.getId(), project, getRefs(), remote, false,
             new RequestCallback<String>()
             {
-
                @Override
                protected void onSuccess(String result)
                {
@@ -292,6 +248,39 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
             });
       }
       catch (WebSocketException e)
+      {
+         doPushREST(project, remote);
+      }
+   }
+
+   /**
+    * Push changes to remote repository (sends request over HTTP).
+    */
+   private void doPushREST(ProjectModel project, final String remote)
+   {
+      try
+      {
+         GitClientService.getInstance().push(vfs.getId(), project, getRefs(), remote, false,
+            new AsyncRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+                  if (remote != null && remote.startsWith("https://"))
+                  {
+                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.OUTPUT));
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
       {
          handleError(e);
       }

@@ -32,7 +32,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
@@ -213,19 +212,38 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
    }
 
    /**
-    * Perform fetch from remote repository by sending request over WebSocket or HTTP.
+    * Perform fetch from remote repository (sends request over WebSocket or HTTP).
     */
    private void doFetch()
    {
-      String remoteUrl = display.getRemoteName().getValue();
+      final String remoteUrl = display.getRemoteName().getValue();
       String remoteName = display.getRemoteDisplayValue();
       boolean removeDeletedRefs = display.getRemoveDeletedRefs().getValue();
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         doFetchWS(project, remoteName, removeDeletedRefs, remoteUrl);
-      else
+      try
+      {
+         GitClientService.getInstance().fetchWS(vfs.getId(), project, remoteName, getRefs(), removeDeletedRefs,
+            new RequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception, remoteUrl);
+               }
+            });
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+      catch (WebSocketException e)
+      {
          doFetchREST(project, remoteName, removeDeletedRefs, remoteUrl);
+      }
    }
 
    /**
@@ -252,36 +270,6 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
             });
       }
       catch (RequestException e)
-      {
-         handleError(e, remoteUrl);
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Perform fetch from remote repository (sends request over WebSocket).
-    */
-   private void doFetchWS(ProjectModel project, String remoteName, boolean removeDeletedRefs, final String remoteUrl)
-   {
-      try
-      {
-         GitClientService.getInstance().fetchWS(vfs.getId(), project, remoteName, getRefs(), removeDeletedRefs,
-            new RequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, remoteUrl);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e, remoteUrl);
       }

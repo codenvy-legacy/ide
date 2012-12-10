@@ -37,7 +37,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftAsyncRequestCallback;
@@ -240,17 +239,42 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       String applicationName = display.getApplicationNameField().getValue();
       String type = display.getTypeField().getValue();
       String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
+      String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      try
       {
-         doCreateApplicationWS(applicationName, projectId, type);
+         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), projectId, type,
+            new OpenShiftRESTfulRequestCallback<AppInfo>(unmarshaller, new LoggedInHandler()
+            {
+               @Override
+               public void onLoggedIn(LoggedInEvent event)
+               {
+                  doCreateApplication();
+               }
+            }, new LoginCanceledHandler()
+            {
+
+               @Override
+               public void onLoginCanceled(LoginCanceledEvent event)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+            }, errorMessage)
+            {
+               @Override
+               protected void onSuccess(AppInfo result)
+               {
+                  onCreatedSuccess(result);
+               }
+            });
+         IDE.getInstance().closeView(display.asView().getId());
       }
-      else
+      catch (WebSocketException e)
       {
          doCreateApplicationREST(applicationName, projectId, type);
       }
-
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -262,13 +286,12 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
     */
    protected void doCreateApplicationREST(String applicationName, String projectId, String type)
    {
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+      String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
+
       try
       {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
-
-         String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
-
          OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), projectId, type,
             new OpenShiftAsyncRequestCallback<AppInfo>(unmarshaller, new LoggedInHandler()
             {
@@ -299,54 +322,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
             .createApplicationFail(applicationName)));
       }
-   }
-
-   /**
-    * Perform creation of application on OpenShift by sending request over WebSocket.
-    * 
-    * @param applicationName application's name 
-    * @param projectId identifier of the project to deploy
-    * @param type type of the application
-    */
-   protected void doCreateApplicationWS(String applicationName, String projectId, String type)
-   {
-      try
-      {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
-
-         String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
-
-         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), projectId, type,
-            new OpenShiftRESTfulRequestCallback<AppInfo>(unmarshaller, new LoggedInHandler()
-            {
-               @Override
-               public void onLoggedIn(LoggedInEvent event)
-               {
-                  doCreateApplication();
-               }
-            }, new LoginCanceledHandler()
-            {
-
-               @Override
-               public void onLoginCanceled(LoginCanceledEvent event)
-               {
-                  IDE.getInstance().closeView(display.asView().getId());
-               }
-            }, errorMessage)
-            {
-               @Override
-               protected void onSuccess(AppInfo result)
-               {
-                  onCreatedSuccess(result);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
-            .createApplicationFail(applicationName)));
-      }
+      IDE.getInstance().closeView(display.asView().getId());
    }
 
    private void onCreatedSuccess(AppInfo app)

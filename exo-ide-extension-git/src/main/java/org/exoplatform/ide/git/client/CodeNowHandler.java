@@ -33,7 +33,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
@@ -87,7 +86,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
          String giturl = event.getParameterMap().get(CodeNowSpec10.VCS_URL).get(0);
 
          String prjName = null;
-       
+
          if (event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME) != null
             && !event.getParameterMap().get(CodeNowSpec10.PROJECT_NAME).isEmpty())
          {
@@ -232,13 +231,36 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
 
    /**
     * Clone of the repository by sending request over WebSocket or HTTP.
+    *
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param folder folder (root of GIT repository)
     */
    private void cloneRepository(final String remoteUri, final String remoteName, final FolderModel folder)
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         cloneRepositoryWS(remoteUri, remoteName, folder);
-      else
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
+            new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
+            {
+
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onCloneSuccess(folder, result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          cloneRepositoryREST(remoteUri, remoteName, folder);
+      }
    }
 
    /**
@@ -265,40 +287,6 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-   }
-
-   /**
-    * Get the necessary parameters values and clone repository (over WebSocket).
-    *
-    * @param remoteUri the location of the remote repository
-    * @param remoteName remote name instead of "origin"
-    * @param folder folder (root of GIT repository)
-    */
-   private void cloneRepositoryWS(String remoteUri, String remoteName, final FolderModel folder)
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
-            new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
-            {
-
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  onCloneSuccess(folder, result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }

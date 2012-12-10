@@ -46,7 +46,6 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -234,17 +233,34 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    /**
     * Perform creation of application on OpenShift by sending request over WebSocket or HTTP.
     */
-   protected void createApplication()
+   private void createApplication()
    {
       String applicationName = display.getApplicationNameField().getValue();
       String applicationType = display.getTypeField().getValue();
       JobManager.get().showJobSeparated();
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      try
       {
-         createApplicationWS(applicationName, applicationType);
+         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
+            applicationType, new RequestCallback<AppInfo>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(AppInfo result)
+               {
+                  onCreatedSuccess(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
       }
-      else
+      catch (WebSocketException e)
       {
          createApplicationREST(applicationName, applicationType);
       }
@@ -258,10 +274,11 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
     */
    private void createApplicationREST(String applicationName, String applicationType)
    {
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+
       try
       {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
          OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
             applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)
             {
@@ -272,9 +289,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                   onCreatedSuccess(result);
                }
 
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
                @Override
                protected void onFailure(Throwable exception)
                {
@@ -283,45 +297,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             });
       }
       catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
-         deployResultHandler.onDeployFinished(false);
-      }
-   }
-
-   /**
-    * Perform creation of application on OpenShift by sending request over WebSocket.
-    * 
-    * @param applicationName application's name 
-    * @param applicationType type of the application 
-    */
-   private void createApplicationWS(String applicationName, String applicationType)
-   {
-      try
-      {
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
-         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
-            applicationType, new RequestCallback<AppInfo>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(AppInfo result)
-               {
-                  onCreatedSuccess(result);
-               }
-
-               /**
-                * @see org.exoplatform.ide.client.framework.websocketOLD.messages.RESTfulRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
          deployResultHandler.onDeployFinished(false);

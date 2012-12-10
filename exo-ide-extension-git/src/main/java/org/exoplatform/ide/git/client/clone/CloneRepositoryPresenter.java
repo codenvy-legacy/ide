@@ -267,6 +267,10 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
 
    /**
     * Get the necessary parameters values and call the clone repository method (over HTTP).
+    * 
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param folder folder (root of GIT repository)
     */
    private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder)
    {

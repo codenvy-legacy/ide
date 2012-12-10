@@ -44,7 +44,6 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.appfog.client.AppfogAsyncRequestCallback;
@@ -204,8 +203,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
    /**
     * Create application on AppFog by sending request over WebSocket or HTTP.
-    * 
-    * @param appData data to create new application
     */
    private void createApplication()
    {
@@ -219,11 +216,34 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       };
       JobManager.get().showJobSeparated();
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      try
       {
-         createApplicationWS(loggedInHandler);
+         AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
+         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller =
+            new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
+
+         // Application will be started after creation (IDE-1618)
+         boolean noStart = false;
+         AppfogClientService.getInstance().createWS(server, name, null, url, 0, 0, noStart, vfs.getId(),
+            project.getId(), warUrl, currentInfra.getInfra(),
+            new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, server)
+            {
+               @Override
+               protected void onSuccess(AppfogApplication result)
+               {
+                  onAppCreatedSuccess(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  deployResultHandler.onDeployFinished(false);
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
       }
-      else
+      catch (WebSocketException e)
       {
          createApplicationREST(loggedInHandler);
       }
@@ -264,47 +284,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             });
       }
       catch (RequestException e)
-      {
-         deployResultHandler.onDeployFinished(false);
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Create application on AppFog by sending request over WebSocket.
-    * 
-    * @param loggedInHandler handler that should be called after success login
-    */
-   private void createApplicationWS(LoggedInHandler loggedInHandler)
-   {
-      try
-      {
-         AutoBean<AppfogApplication> appfogApplication = AppfogExtension.AUTO_BEAN_FACTORY.appfogApplication();
-         AutoBeanUnmarshallerWS<AppfogApplication> unmarshaller =
-            new AutoBeanUnmarshallerWS<AppfogApplication>(appfogApplication);
-
-         // Application will be started after creation (IDE-1618)
-         boolean noStart = false;
-         AppfogClientService.getInstance().createWS(server, name, null, url, 0, 0, noStart, vfs.getId(),
-            project.getId(), warUrl, currentInfra.getInfra(),
-            new AppfogRESTfulRequestCallback<AppfogApplication>(unmarshaller, loggedInHandler, null, server)
-            {
-               @Override
-               protected void onSuccess(AppfogApplication result)
-               {
-                  onAppCreatedSuccess(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  deployResultHandler.onDeployFinished(false);
-                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          deployResultHandler.onDeployFinished(false);
          IDE.fireEvent(new ExceptionThrownEvent(e));

@@ -33,7 +33,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
@@ -192,61 +191,11 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
     */
    protected void doCreateApplication()
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-      {
-         doCreateApplicationWS();
-      }
-      else
-      {
-         doCreateApplicationREST();
-      }
-   }
-
-   /**
-    * Perform creation of application on Heroku (sends request over HTTP).
-    */
-   protected void doCreateApplicationREST()
-   {
-      try
-      {
-         HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
-            new HerokuAsyncRequestCallback(this)
-            {
-
-               @Override
-               protected void onSuccess(List<Property> properties)
-               {
-                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
-
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.copy.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Perform creation of application on Heroku (sends request over WebSocket).
-    */
-   protected void doCreateApplicationWS()
-   {
       try
       {
          HerokuClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
             remoteName, new HerokuRESTfulRequestCallback(this)
             {
-
                @Override
                protected void onSuccess(List<Property> properties)
                {
@@ -262,6 +211,36 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
             });
       }
       catch (WebSocketException e)
+      {
+         doCreateApplicationREST();
+      }
+   }
+
+   /**
+    * Perform creation of application on Heroku (sends request over HTTP).
+    */
+   protected void doCreateApplicationREST()
+   {
+      try
+      {
+         HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
+            new HerokuAsyncRequestCallback(this)
+            {
+               @Override
+               protected void onSuccess(List<Property> properties)
+               {
+                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }

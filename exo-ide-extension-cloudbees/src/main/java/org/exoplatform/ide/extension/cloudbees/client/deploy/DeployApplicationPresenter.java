@@ -44,7 +44,6 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -209,62 +208,10 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
          }
       };
       JobManager.get().showJobSeparated();
+      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         createApplicationWS(loggedInHandler);
-      else
-         createApplicationREST(loggedInHandler);
-   }
-
-   /**
-    * Create application on Cloud Bees by sending request over HTTP.
-    */
-   private void createApplicationREST(LoggedInHandler loggedInHandler)
-   {
       try
       {
-         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
-         CloudBeesClientService.getInstance().initializeApplication(
-            domain + "/" + name,
-            vfs.getId(),
-            project.getId(),
-            warUrl,
-            null,
-            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
-               loggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(ApplicationInfo appInfo)
-               {
-                  onCreatedSuccess(appInfo);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
-                     .deployApplicationFailureMessage(), Type.INFO));
-                  deployResultHandler.onDeployFinished(false);
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         deployResultHandler.onDeployFinished(false);
-         IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(),
-            Type.INFO));
-      }
-   }
-
-   /**
-    * Create application on Cloud Bees by sending request over WebSocket.
-    */
-   private void createApplicationWS(LoggedInHandler loggedInHandler)
-   {
-      try
-      {
-         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().initializeApplicationWS(
             domain + "/" + name,
             vfs.getId(),
@@ -291,6 +238,45 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
             });
       }
       catch (WebSocketException e)
+      {
+         createApplicationREST(loggedInHandler);
+      }
+   }
+
+   /**
+    * Create application on Cloud Bees by sending request over HTTP.
+    */
+   private void createApplicationREST(LoggedInHandler loggedInHandler)
+   {
+      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+      try
+      {
+         CloudBeesClientService.getInstance().initializeApplication(
+            domain + "/" + name,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            null,
+            new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
+               loggedInHandler, null)
+            {
+               @Override
+               protected void onSuccess(ApplicationInfo appInfo)
+               {
+                  onCreatedSuccess(appInfo);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .deployApplicationFailureMessage(), Type.INFO));
+                  deployResultHandler.onDeployFinished(false);
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (RequestException e)
       {
          deployResultHandler.onDeployFinished(false);
          IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationFailureMessage(),

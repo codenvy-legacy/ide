@@ -37,7 +37,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
@@ -213,16 +212,42 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
 
    /**
     * Deploy application to Cloud Bees by sending request over WebSocket or HTTP.
+    * 
+    * @param project {@link ProjectModel} to deploy
     */
    private void doDeployApplication()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
 
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      try
       {
-         doDeployApplicationWS(project);
+         CloudBeesClientService.getInstance().initializeApplicationWS(
+            applicationId,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            null,
+            new CloudBeesRESTfulRequestCallback<ApplicationInfo>(new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean),
+               deployWarLoggedInHandler, null)
+            {
+               @Override
+               protected void onSuccess(ApplicationInfo appInfo)
+               {
+                  onDeploySuccess(appInfo);
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .deployApplicationFailureMessage(), Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
       }
-      else
+      catch (WebSocketException e)
       {
          doDeployApplicationREST(project);
       }
@@ -235,9 +260,9 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
     */
    private void doDeployApplicationREST(final ProjectModel project)
    {
+      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
       try
       {
-         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
          CloudBeesClientService.getInstance().initializeApplication(
             applicationId,
             vfs.getId(),
@@ -267,47 +292,6 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
             });
       }
       catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Deploy application to Cloud Bees by sending request over WebSocket.
-    * 
-    * @param project {@link ProjectModel} to deploy
-    */
-   private void doDeployApplicationWS(final ProjectModel project)
-   {
-      try
-      {
-         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
-         CloudBeesClientService.getInstance().initializeApplicationWS(
-            applicationId,
-            vfs.getId(),
-            project.getId(),
-            warUrl,
-            null,
-            new CloudBeesRESTfulRequestCallback<ApplicationInfo>(new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean),
-               deployWarLoggedInHandler, null)
-            {
-               @Override
-               protected void onSuccess(ApplicationInfo appInfo)
-               {
-                  onDeploySuccess(appInfo);
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
-                     .deployApplicationFailureMessage(), Type.INFO));
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
