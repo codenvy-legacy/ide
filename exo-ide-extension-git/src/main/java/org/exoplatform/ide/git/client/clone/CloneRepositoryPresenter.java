@@ -262,7 +262,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, result);
+                  onCloneSuccess(result, folder);
                }
 
                @Override
@@ -300,7 +300,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, result);
+                  onCloneSuccess(result, folder);
                }
 
                @Override
@@ -322,13 +322,26 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     *
     * @param folder {@link FolderModel} to clone
     */
-   private void onCloneSuccess(FolderModel folder, RepoInfo repoInfo)
+   private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final FolderModel folder)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
       //TODO: not good, comment temporary need found other way
       // for inviting collaborators
-      // showInvitation(repoInfo.getRemoteUri());
+      // showInvitation(result.getRemoteUri());
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            String[] userRepo = parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
+            if (userRepo != null)
+            {
+               IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
+            }                        
+         }
+      });
    }
 
    private void handleError(Throwable e)

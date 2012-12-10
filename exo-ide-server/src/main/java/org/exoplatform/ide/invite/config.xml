@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+***************************************************************************************
+******************************** Invitations Support **********************************
+***************************************************************************************
+-->
+
+<component>
+  <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
+  <init-params>
+    <properties-param>
+      <name>locations</name>
+    </properties-param>
+  </init-params>
+</component>
+
+<component>
+  <type>org.exoplatform.ide.invite.IdeInviteMessagePropertiesProvider</type>
+</component>
+
+<component>
+  <type>org.exoplatform.ide.invite.ExoMailSender</type>
+</component>
+
+<component>
+  <type>org.exoplatform.ide.invite.InviteService</type>
+</component>
+
+<component>
+  <key>org.exoplatform.ide.invite.HttpResponseExceptionMapper</key>
+  <type>org.exoplatform.ide.invite.HttpResponseExceptionMapper</type>
+</component>
+
+   <!-- TemplateResolver configuration -->
+   <component>
+      <key>org.exoplatform.ide.invite.TemplateResolver</key>
+      <type>org.exoplatform.ide.invite.TemplateResolver</type>
+      <init-params>
+         <value-param>
+            <name>template-mail-invitation</name>
+            <value>/template-invitation-mail.html</value>
+         </value-param>
+         <value-param>
+            <name>template-mail-password-restoring</name>
+            <value>/template-mail-password-restoring.html</value>
+         </value-param>
+         <value-param>
+            <name>template-contact-us-mail</name>
+            <value>/template-contact-us-mail.html</value>
+         </value-param>
+         </init-params>
+   </component>
+
+    <!-- Support for mail sending ability -->
+    <component>
+        <key>org.exoplatform.services.mail.MailService</key>
+        <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
+        <init-params>
+            <properties-param>
+                <name>config</name>
+                <property name="mail.smtp.host" value="smtp.gmail.com"/>
+                <property name="mail.smtp.port" value="465"/>
+                <property name="mail.transport.protocol" value="smtp"/>
+                <property name="mail.smtp.auth" value="true"/>
+                <property name="mail.smtp.auth.username" value="exo.cloud.ide1@gmail.com"/>
+                <property name="mail.smtp.auth.password" value="cloudIDEuAeXo2"/>
+                <property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory"/>
+                <property name="mail.smtp.socketFactory.fallback" value="false"/>
+            </properties-param>
+        </init-params>
+    </component>
+
+<component>
+  <type>org.exoplatform.ide.invite.IdeInviteService</type>
+  <init-params>
+    <value-param>
+      <name>mail-sender</name>
+      <value>gavrikvetal@gmail.com</value>
+    </value-param>
+  </init-params>
+</component>
