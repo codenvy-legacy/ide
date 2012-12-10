@@ -31,7 +31,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
@@ -113,7 +113,7 @@ public class ApplicationRunnerClientService
 
       callback.setStatusHandler(new RunningAppStatusHandler(project));
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, RUN + params)
+         RequestMessageBuilder.build(RequestBuilder.POST, RUN + params)
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
@@ -159,7 +159,7 @@ public class ApplicationRunnerClientService
 
       callback.setStatusHandler(new RunningAppStatusHandler(project));
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, DEBUG + param)
+         RequestMessageBuilder.build(RequestBuilder.POST, DEBUG + param)
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).data(data).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
@@ -188,7 +188,7 @@ public class ApplicationRunnerClientService
       throws WebSocketException
    {
       StringBuilder params = new StringBuilder("?name=").append(name).append("&time=").append(time);
-      RequestMessage message = RESTfulRequest.build(RequestBuilder.GET, PROLONG + params).getRequestMessage();
+      RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, PROLONG + params).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
 

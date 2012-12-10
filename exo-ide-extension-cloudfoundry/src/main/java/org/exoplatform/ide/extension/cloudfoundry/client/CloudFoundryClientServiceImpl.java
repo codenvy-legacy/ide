@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
@@ -195,7 +195,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name));
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, CREATE).data(data)
+         RequestMessageBuilder.build(RequestBuilder.POST, CREATE).data(data)
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);
    }

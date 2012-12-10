@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.heroku.client.create.CreateRequestHandler;
 import org.exoplatform.ide.extension.heroku.shared.Credentials;
@@ -162,7 +162,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       callback.setLoader(loader);
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, CREATE_APPLICATION + '?' + params)
+         RequestMessageBuilder.build(RequestBuilder.POST, CREATE_APPLICATION + '?' + params)
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
             .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);

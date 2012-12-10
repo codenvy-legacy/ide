@@ -57,7 +57,7 @@ import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
@@ -274,7 +274,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
          String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
          StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
 
-         RequestMessage message = RESTfulRequest.build(RequestBuilder.GET, url).getRequestMessage();
+         RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
          try
          {
             IDE.messageBus().send(

@@ -26,13 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builder for constructing and sending {@link RequestMessage}.
+ * Builder for constructing {@link RequestMessage}.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RESTfulRequest.java Nov 9, 2012 4:14:46 PM azatsarynnyy $
+ * @version $Id: RequestMessageBuilder.java Nov 9, 2012 4:14:46 PM azatsarynnyy $
  *
  */
-public class RESTfulRequest
+public class RequestMessageBuilder
 {
    /**
     * Message which is constructing and may be send.
@@ -40,12 +40,12 @@ public class RESTfulRequest
    private final RequestMessage requestMessage;
 
    /**
-    * Creates a {@link RESTfulRequest} using the parameters for configuration.
+    * Creates a {@link RequestMessageBuilder} using the parameters for configuration.
     * 
     * @param method HTTP method to use for the request
     * @param path URI
     */
-   protected RESTfulRequest(Method method, String path)
+   protected RequestMessageBuilder(Method method, String path)
    {
       requestMessage = RESTMessageBus.AUTO_BEAN_FACTORY.requestMessage().as();
       requestMessage.setUuid(UUID.uuid());
@@ -54,15 +54,15 @@ public class RESTfulRequest
    }
 
    /**
-    * Creates a {@link RESTfulRequest} using the parameters for configuration.
+    * Creates a {@link RequestMessageBuilder} using the parameters for configuration.
     * 
     * @param method HTTP method to use for the request
     * @param path URI
-    * @return a new {@link RESTfulRequest}
+    * @return a new {@link RequestMessageBuilder}
     */
-   public static final RESTfulRequest build(Method method, String path)
+   public static final RequestMessageBuilder build(Method method, String path)
    {
-      return new RESTfulRequest(method, path);
+      return new RequestMessageBuilder(method, path);
    }
 
    /**
@@ -72,9 +72,9 @@ public class RESTfulRequest
     * 
     * @param name the name of the header
     * @param value the value of the header
-    * @return this {@link RESTfulRequest}
+    * @return this {@link RequestMessageBuilder}
     */
-   public final RESTfulRequest header(String name, String value)
+   public final RequestMessageBuilder header(String name, String value)
    {
       List<Pair> headers = requestMessage.getHeaders();
       if (headers == null)
@@ -103,9 +103,9 @@ public class RESTfulRequest
     * Sets the data to send as body of this request.
     * 
     * @param requestData the data to send as body of the request
-    * @return this {@link RESTfulRequest}
+    * @return this {@link RequestMessageBuilder}
     */
-   public final RESTfulRequest data(String requestData)
+   public final RequestMessageBuilder data(String requestData)
    {
       requestMessage.setBody(requestData);
       return this;

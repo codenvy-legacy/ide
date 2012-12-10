@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.CreateApplicationRequestHandler;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
@@ -262,7 +262,7 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       callback.setStatusHandler(new CreateApplicationRequestHandler(appId));
 
       RequestMessage requestMessage =
-         RESTfulRequest.build(RequestBuilder.POST, INITIALIZE + params)
+         RequestMessageBuilder.build(RequestBuilder.POST, INITIALIZE + params)
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(requestMessage, callback);
    }

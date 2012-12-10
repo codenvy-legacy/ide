@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHand
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 
 /**
@@ -150,7 +150,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
       public void run()
       {
          RequestMessage message =
-            RESTfulRequest.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
+            RequestMessageBuilder.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
                .getRequestMessage();
          try
          {

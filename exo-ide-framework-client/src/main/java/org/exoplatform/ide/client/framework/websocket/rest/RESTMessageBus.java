@@ -151,7 +151,7 @@ public class RESTMessageBus extends MessageBus
    protected void sendSubscribeMessage(String channel) throws WebSocketException
    {
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
+         RequestMessageBuilder.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "subscribe-channel")
             .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
       send(message, null);
    }
@@ -164,7 +164,7 @@ public class RESTMessageBus extends MessageBus
    protected void sendUnsubscribeMessage(String channel) throws WebSocketException
    {
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
+         RequestMessageBuilder.build(RequestBuilder.POST, null).header(MESSAGE_TYPE_HEADER_NAME, "unsubscribe-channel")
             .data("{\"channel\":\"" + channel + "\"}").getRequestMessage();
       send(message, null);
    }

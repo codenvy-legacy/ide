@@ -30,7 +30,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.openshift.client.create.CreateRequestHandler;
@@ -172,7 +172,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
       String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setStatusHandler(new CreateRequestHandler(name));
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, CREATE_APPLICATION + params).getRequestMessage();
+         RequestMessageBuilder.build(RequestBuilder.POST, CREATE_APPLICATION + params).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
 

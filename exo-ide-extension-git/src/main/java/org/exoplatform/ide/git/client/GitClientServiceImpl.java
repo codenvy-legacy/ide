@@ -29,7 +29,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RESTfulRequest;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
@@ -207,7 +207,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setStatusHandler(new InitRequestStatusHandler(projectName));
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, INIT + params).data(marshaller.marshal())
+         RequestMessageBuilder.build(RequestBuilder.POST, INIT + params).data(marshaller.marshal())
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
@@ -252,7 +252,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setStatusHandler(new CloneRequestStatusHandler(folder.getName(), remoteUri));
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, CLONE + params).data(marshaller.marshal())
+         RequestMessageBuilder.build(RequestBuilder.POST, CLONE + params).data(marshaller.marshal())
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
             .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);
@@ -315,7 +315,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setStatusHandler(new AddRequestHandler(project.getName()));
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, ADD + params).data(marshaller.marshal())
+         RequestMessageBuilder.build(RequestBuilder.POST, ADD + params).data(marshaller.marshal())
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
@@ -357,7 +357,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setStatusHandler(new CommitRequestHandler(project.getName()));
 
       RequestMessage requestMessage =
-         RESTfulRequest.build(RequestBuilder.POST, COMMIT + params).data(marshaller.marshal())
+         RequestMessageBuilder.build(RequestBuilder.POST, COMMIT + params).data(marshaller.marshal())
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(requestMessage, callback);
    }
@@ -406,7 +406,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setStatusHandler(new PushRequestHandler(project.getName(), refSpec));
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, PUSH + params).data(marshaller.marshal())
+         RequestMessageBuilder.build(RequestBuilder.POST, PUSH + params).data(marshaller.marshal())
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
@@ -682,7 +682,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setStatusHandler(new FetchRequestHandler(project.getName(), refspec));
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, FETCH + params).data(marshaller.marshal())
+         RequestMessageBuilder.build(RequestBuilder.POST, FETCH + params).data(marshaller.marshal())
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
@@ -723,7 +723,7 @@ public class GitClientServiceImpl extends GitClientService
       callback.setStatusHandler(new PullRequestHandler(project.getName(), refSpec));
 
       RequestMessage message =
-         RESTfulRequest.build(RequestBuilder.POST, PULL + params).data(marshaller.marshal())
+         RequestMessageBuilder.build(RequestBuilder.POST, PULL + params).data(marshaller.marshal())
             .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
