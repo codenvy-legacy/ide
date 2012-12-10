@@ -52,7 +52,7 @@ import org.mockito.stubbing.Answer;
 @RunWith(MockitoJUnitRunner.class)
 public class TestGenericProjectPagePresenter
 {
-
+   private static final boolean CAN_FINISH = true;
 
    private GenericProjectPageView view;
 
@@ -90,6 +90,7 @@ public class TestGenericProjectPagePresenter
       presenter.checkProjectName();
 
       assertEquals(presenter.getNotice(), "Project with this name already exists.");
+      assertEquals(presenter.isCompleted(), !CAN_FINISH);
    }
 
    /**
@@ -135,6 +136,7 @@ public class TestGenericProjectPagePresenter
       presenter.checkProjectName();
 
       assertEquals(presenter.getNotice(), "Please, enter a project name.");
+      assertEquals(presenter.isCompleted(), !CAN_FINISH);
    }
 
    /**
@@ -153,6 +155,7 @@ public class TestGenericProjectPagePresenter
       presenter.checkProjectName();
 
       assertEquals(presenter.getNotice(), "Incorrect project name.");
+      assertEquals(presenter.isCompleted(), !CAN_FINISH);
    }
 
    /**
@@ -171,6 +174,7 @@ public class TestGenericProjectPagePresenter
       presenter.checkProjectName();
 
       assertEquals(presenter.getNotice(), null);
+      assertEquals(presenter.isCompleted(), CAN_FINISH);
    }
 
    /**
@@ -189,6 +193,7 @@ public class TestGenericProjectPagePresenter
       when(view.getProjectName()).thenReturn(projectName);
 
       assertEquals(presenter.getNotice(), "Please wait, checking project list");
+      assertEquals(presenter.isCompleted(), !CAN_FINISH);
    }
 
    /**

@@ -109,7 +109,7 @@ public class TestWizardPresenter
    @Test
    public void checkVisibledAndEnabledNavigationBtn()
    {
-      when(currentPage.canFinish()).thenReturn(!CAN_FINISH);
+      when(currentPage.canFinish()).thenReturn(CAN_FINISH);
       when(currentPage.isCompleted()).thenReturn(!PAGE_IS_COMPLITED);
       when(currentPage.hasNext()).thenReturn(HAS_NEXT_BUTTON);
       when(currentPage.hasPrevious()).thenReturn(HAS_BACK_BUTTON);
@@ -121,7 +121,7 @@ public class TestWizardPresenter
       verify(view).setBackButtonVisible(HAS_BACK_BUTTON);
       verify(view).setNextButtonVisible(HAS_NEXT_BUTTON);
       verify(view).setNextButtonEnabled(!PAGE_IS_COMPLITED);
-      verify(view).setFinishButtonEnabled(!CAN_FINISH);
+      verify(view).setFinishButtonEnabled(CAN_FINISH && !PAGE_IS_COMPLITED);
    }
 
    /**

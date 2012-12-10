@@ -131,7 +131,7 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
       view.setBackButtonVisible(currentPage.hasPrevious());
       view.setNextButtonVisible(currentPage.hasNext());
       view.setNextButtonEnabled(currentPage.isCompleted());
-      view.setFinishButtonEnabled(currentPage.canFinish());
+      view.setFinishButtonEnabled(currentPage.canFinish() && currentPage.isCompleted());
 
       view.setCaption(currentPage.getCaption());
       view.setNotice(currentPage.getNotice());
