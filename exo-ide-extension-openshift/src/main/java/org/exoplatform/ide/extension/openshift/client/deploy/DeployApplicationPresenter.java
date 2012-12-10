@@ -46,6 +46,9 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftAsyncRequestCallback;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
@@ -227,15 +230,55 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       return types.get(0);
    }
 
+   /**
+    * Perform creation of application on OpenShift by sending request over WebSocket or HTTP.
+    */
    private void createApplication()
    {
-      final String applicationName = display.getApplicationNameField().getValue();
+      String applicationName = display.getApplicationNameField().getValue();
       String applicationType = display.getTypeField().getValue();
+      JobManager.get().showJobSeparated();
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
+
       try
       {
-         JobManager.get().showJobSeparated();
-         AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-         AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
+            applicationType, new RequestCallback<AppInfo>(unmarshaller)
+            {
+
+               @Override
+               protected void onSuccess(AppInfo result)
+               {
+                  onCreatedSuccess(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         createApplicationREST(applicationName, applicationType);
+      }
+   }
+
+   /**
+    * Perform creation of application on OpenShift by sending request over HTTP.
+    * 
+    * @param applicationName application's name 
+    * @param applicationType type of the application 
+    */
+   private void createApplicationREST(String applicationName, String applicationType)
+   {
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+
+      try
+      {
          OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
             applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)
             {
@@ -243,38 +286,13 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                @Override
                protected void onSuccess(AppInfo result)
                {
-                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(result), Type.INFO));
-
-                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
-                  {
-
-                     @Override
-                     public void execute()
-                     {
-                        updateSSHPublicKey();
-                     }
-                  });
+                  onCreatedSuccess(result);
                }
 
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
                @Override
                protected void onFailure(Throwable exception)
                {
-                  if (exception instanceof ServerException)
-                  {
-                     ServerException serverException = (ServerException)exception;
-                     if (HTTPStatus.OK == serverException.getHTTPStatus()
-                        && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
-                     {
-                        IDE.fireEvent(new LoginEvent());
-                        return;
-                     }
-                  }
-
-                  IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, lb.createApplicationFail(applicationName)));
-                  deployResultHandler.onDeployFinished(false);
+                  handleError(exception);
                }
             });
       }
@@ -283,6 +301,47 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
          IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
          deployResultHandler.onDeployFinished(false);
       }
+   }
+
+   /**
+    * Performs actions after application successfully created on OpenShift.
+    * 
+    * @param app {@link AppInfo}
+    */
+   private void onCreatedSuccess(AppInfo app)
+   {
+      IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            updateSSHPublicKey();
+         }
+      });
+   }
+
+   /**
+    * Handle error while creating an application.
+    * 
+    * @param exception {@link Throwable}
+    */
+   private void handleError(Throwable exception)
+   {
+      if (exception instanceof ServerException)
+      {
+         ServerException serverException = (ServerException)exception;
+         if (HTTPStatus.OK == serverException.getHTTPStatus()
+            && "Authentication-required".equals(serverException.getHeader(HTTPHeader.JAXRS_BODY_PROVIDED)))
+         {
+            IDE.fireEvent(new LoginEvent());
+            return;
+         }
+      }
+
+      String applicationName = display.getApplicationNameField().getValue();
+      IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, lb.createApplicationFail(applicationName)));
+      deployResultHandler.onDeployFinished(false);
    }
 
    private void updateSSHPublicKey()

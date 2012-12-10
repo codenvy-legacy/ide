@@ -25,9 +25,11 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.services.jcr.access.PermissionType;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -327,7 +329,7 @@ abstract class ItemData
                v = new ArrayList<String>(1);
                v.add(Long.toString(property.getLong()));
             }
-            return new Property(property.getName(), v);
+            return new PropertyImpl(property.getName(), v);
          }
          case PropertyType.DOUBLE:
          case PropertyType.LONG:
@@ -354,7 +356,7 @@ abstract class ItemData
                v = new ArrayList<String>(1);
                v.add(property.getString());
             }
-            return new Property(property.getName(), v);
+            return new PropertyImpl(property.getName(), v);
          }
       }
    }
@@ -582,7 +584,7 @@ abstract class ItemData
          List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(tmp.size());
          for (String principal : tmp.keySet())
          {
-            AccessControlEntry ace = new AccessControlEntry();
+            AccessControlEntry ace = new AccessControlEntryImpl();
             ace.setPrincipal(principal);
             Set<String> values = tmp.get(principal);
             if (values.size() == PermissionType.ALL.length)

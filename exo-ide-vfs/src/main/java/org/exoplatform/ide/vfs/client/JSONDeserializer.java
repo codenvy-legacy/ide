@@ -25,14 +25,18 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
+import org.exoplatform.ide.vfs.shared.FolderImpl;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.LinkImpl;
 import org.exoplatform.ide.vfs.shared.LockToken;
-import org.exoplatform.ide.vfs.shared.LockTokenBean;
+import org.exoplatform.ide.vfs.shared.LockTokenImpl;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.ACLCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,7 +129,7 @@ public abstract class JSONDeserializer<O>
             JSONObject jsonObject = json.isObject();
             if (jsonObject == null)
                return null;
-            return new AccessControlEntry( //
+            return new AccessControlEntryImpl( //
                STRING_DESERIALIZER.toObject(jsonObject.get("principal")), //
                STRING_DESERIALIZER.toSet(jsonObject.get("permissions")) //
             );
@@ -150,10 +154,10 @@ public abstract class JSONDeserializer<O>
                return null;
             JSONValue jsonValue = jsonObject.get("value");
             if (jsonValue != null && jsonValue.isArray() != null)
-               return new Property(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+               return new PropertyImpl(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
                   STRING_DESERIALIZER.toList(jsonValue));
             // Single String, null or some unexpected type.
-            return new Property(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
+            return new PropertyImpl(STRING_DESERIALIZER.toObject(jsonObject.get("name")),
                STRING_DESERIALIZER.toObject(jsonValue));
          }
 
@@ -175,7 +179,7 @@ public abstract class JSONDeserializer<O>
          if (jsonObject == null)
             return null;
          
-         return new Link( //
+         return new LinkImpl( //
                STRING_DESERIALIZER.toObject(jsonObject.get("href")), //
                STRING_DESERIALIZER.toObject(jsonObject.get("rel")), //
                STRING_DESERIALIZER.toObject(jsonObject.get("type")) //
@@ -199,7 +203,7 @@ public abstract class JSONDeserializer<O>
          JSONObject jsonObject = json.isObject();
          if (jsonObject == null)
             return null;
-         return new LockTokenBean(STRING_DESERIALIZER.toObject(jsonObject.get("token")));
+         return new LockTokenImpl(STRING_DESERIALIZER.toObject(jsonObject.get("token")));
       }
 
       // not used, just to complete impl.
@@ -232,11 +236,11 @@ public abstract class JSONDeserializer<O>
             List properties = JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(root.get("properties"));
             Map links = JSONDeserializer.LINK_DESERIALIZER.toMap(root.get("links"));
 
-            Folder rootFolder =
-               new Folder(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, (List<Property>)properties,
+            FolderImpl rootFolder =
+               new FolderImpl(rootId, rootName, rootMimeType, rootPath, null, rootCreationDate, (List<Property>)properties,
                   (Map<String, Link>)links);
 
-            return new VirtualFileSystemInfo(
+            return new VirtualFileSystemInfoImpl(
                STRING_DESERIALIZER.toObject(jsonObject.get("id")),
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("versioningSupported")), //
                BOOLEAN_DESERIALIZER.toObject(jsonObject.get("lockSupported")), //

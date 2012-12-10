@@ -39,12 +39,10 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.Channels;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
-import org.exoplatform.ide.client.framework.websocket.messages.SubscriptionHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsExtension;
 import org.exoplatform.ide.extension.jenkins.client.JenkinsService;
 import org.exoplatform.ide.extension.jenkins.client.JobResult;
@@ -202,8 +200,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Create new Jenkins job.
-    * 
-    * @param repository repository URL (public location of local repository)
     */
    private void createJob()
    {
@@ -297,12 +293,12 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void startCheckingStatus(String jobName)
    {
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      try
       {
-         jobStatusChannel = Channels.JENKINS_JOB_STATUS + jobName;
-         WebSocket.getInstance().subscribe(jobStatusChannel, jobStatusHandler);
+         jobStatusChannel = JenkinsExtension.JOB_STATUS_CHANNEL + jobName;
+         IDE.messageBus().subscribe(jobStatusChannel, jobStatusHandler);
       }
-      else
+      catch (Exception e)
       {
          refreshJobStatusTimer.schedule(delay);
       }
@@ -460,7 +456,14 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     */
    private void onJobFinished(JobStatus status)
    {
-      WebSocket.getInstance().unsubscribe(jobStatusChannel, jobStatusHandler);
+      try
+      {
+         IDE.messageBus().unsubscribe(jobStatusChannel, jobStatusHandler);
+      }
+      catch (WebSocketException e)
+      {
+         // nothing to do
+      }
       IDE.fireEvent(new ApplicationBuiltEvent(status));
 
       try
@@ -498,21 +501,35 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
 
    /**
     * Initialize of the Git-repository by sending request over WebSocket or HTTP.
-    * 
-    * @param path working directory of the repository
     */
    private void initRepository(final ProjectModel project)
    {
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         initRepositoryWS(project);
-      else
+      try
+      {
+         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
+            new RequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  onInitSuccess();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          initRepositoryREST(project);
+      }
    }
 
    /**
     * Initialize Git repository (sends request over HTTP).
-    * 
-    * @param path working directory of the repository
     */
    private void initRepositoryREST(final ProjectModel project)
    {
@@ -535,37 +552,6 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-   }
-
-   /**
-    * Initialize Git repository (sends request over WebSocket).
-    * 
-    * @param path working directory of the repository
-    */
-   private void initRepositoryWS(final ProjectModel project)
-   {
-      try
-      {
-         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), false,
-            new RESTfulRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  onInitSuccess();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }
@@ -621,8 +607,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
     * Handler for processing Jenkins job status which is received over WebSocket connection.
     */
    private SubscriptionHandler<JobStatus> jobStatusHandler = new SubscriptionHandler<JobStatus>(
-      new org.exoplatform.ide.client.framework.websocket.messages.AutoBeanUnmarshaller<JobStatus>(
-         JenkinsExtension.AUTO_BEAN_FACTORY.create(JobStatus.class)))
+      new AutoBeanUnmarshallerWS<JobStatus>(JenkinsExtension.AUTO_BEAN_FACTORY.create(JobStatus.class)))
    {
       @Override
       protected void onSuccess(JobStatus buildStatus)
@@ -637,7 +622,14 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       @Override
       protected void onFailure(Throwable exception)
       {
-         WebSocket.getInstance().unsubscribe(jobStatusChannel, this);
+         try
+         {
+            IDE.messageBus().unsubscribe(jobStatusChannel, this);
+         }
+         catch (WebSocketException e)
+         {
+            // nothing to do
+         }
          buildInProgress = false;
          display.setBlinkIcon(new Image(JenkinsExtension.RESOURCES.red()), false);
          IDE.fireEvent(new ExceptionThrownEvent(exception));

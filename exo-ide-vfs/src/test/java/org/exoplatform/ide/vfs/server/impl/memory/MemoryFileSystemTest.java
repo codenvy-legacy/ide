@@ -46,7 +46,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -378,7 +378,7 @@ public abstract class MemoryFileSystemTest extends TestCase
             link.getHref());
 
          link = links.get(Link.REL_CREATE_PROJECT);
-         if (item instanceof Project)
+         if (item instanceof ProjectImpl)
          {
             assertNull("'" + Link.REL_CREATE_PROJECT + "' link not allowed for project. ", link);
          }

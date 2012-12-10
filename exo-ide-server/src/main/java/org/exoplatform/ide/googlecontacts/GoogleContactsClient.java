@@ -27,10 +27,7 @@ import com.google.gdata.data.Link;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
-import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
-
-import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
-import org.exoplatform.ide.security.oauth.OAuthAuthenticatorProvider;
+import org.apache.ws.commons.util.Base64;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 

@@ -29,6 +29,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 
 import java.util.Map;
 
@@ -99,7 +100,7 @@ public class BuildSuccessedTest extends BaseTest
       assertEquals("", emptyMessage);
 
       // Close Build project view because Output view is not visible
-      selenium().click("//div[@class='gwt-TabLayoutPanelTabs']//div[@tab-title='Build project']");
+      driver.findElement(By.xpath("//div[@class='gwt-TabLayoutPanelTabs']//div[@tab-title='Build project']")).click();
 
       // Get success message
       IDE.OUTPUT.waitForMessageShow(1, 15);

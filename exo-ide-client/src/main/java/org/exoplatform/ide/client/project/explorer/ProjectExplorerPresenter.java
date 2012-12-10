@@ -18,14 +18,27 @@
  */
 package org.exoplatform.ide.client.project.explorer;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONParser;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanCodex;
+import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -89,7 +102,6 @@ import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent;
-import org.exoplatform.ide.vfs.client.ItemNode;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
@@ -108,31 +120,18 @@ import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
-import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -512,9 +511,9 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          if (i instanceof ItemContext)
          {
-            ItemContext contect = (ItemContext)i;
-            contect.setParent(new FolderModel(folder));
-            contect.setProject(map.get(i.getId()) != null ? map.get(i.getId()) : openedProject);
+            ItemContext context = (ItemContext)i;
+            context.setParent(new FolderModel(folder));
+            context.setProject(map.get(i.getId()) != null ? map.get(i.getId()) : openedProject);
          }
       }
 
@@ -1328,7 +1327,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    private void setTargets(ProjectModel project)
    {
       ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
-      project.getProperties().add(new Property(ProjectProperties.TARGET.value(), targets));
+      project.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), targets));
 
       try
       {
@@ -1359,7 +1358,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
     */
    private void parseProjectTree(ProjectModel model, ItemNode result)
    {
-      ProjectModel curentProject = model;
+      ProjectModel currentProject = model;
       List<ItemNode> children = result.getChildren();
       for (ItemNode itemNode : children)
       {
@@ -1373,10 +1372,10 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          }
          else
          {
-            map.put(itemNode.getItem().getId(), curentProject);
+            map.put(itemNode.getItem().getId(), currentProject);
             if (itemNode.getItem().getItemType().equals(ItemType.FOLDER))
             {
-               parseProjectTree(curentProject, itemNode);
+               parseProjectTree(currentProject, itemNode);
             }
          }
       }

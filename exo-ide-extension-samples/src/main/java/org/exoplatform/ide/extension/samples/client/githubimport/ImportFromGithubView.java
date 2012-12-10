@@ -23,14 +23,11 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.SelectItem;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -39,7 +36,7 @@ import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 
 /**
  * View for importing projects from GitHub.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubView.java Dec 7, 2011 3:37:28 PM vereshchaka $
  */
@@ -57,11 +54,7 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
 
    private static final String NAME_FIELD_ID = "ideImportFromGithubViewNameField";
 
-   private static final String TYPE_FIELD_ID = "ideImportFromGithubViewTypeField";
-
-   private static final String NEXT_BUTTON_ID = "ideImportFromGithubViewNextButton";
-
-   private static final String BACK_BUTTON_ID = "ideImportFromGithubViewBackButton";
+   private static final String FINISH_BUTTON_ID = "ideImportFromGithubViewFinishButton";
 
    private static final String CANCEL_BUTTON_ID = "ideImportFromGithubViewCancelButton";
 
@@ -70,12 +63,6 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
    }
 
    private static ImportFromGithubViewUiBinder uiBinder = GWT.create(ImportFromGithubViewUiBinder.class);
-
-   /**
-    * Select project's type field.
-    */
-   @UiField
-   SelectItem projectTypeField;
 
    /**
     * Cancel button.
@@ -87,7 +74,7 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
     * Next button.
     */
    @UiField
-   ImageButton nextButton;
+   ImageButton finishButton;
 
    /**
     * GitHub repositories grid.
@@ -102,12 +89,6 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
    TextInput projectNameField;
 
    /**
-    * Import step panel.
-    */
-   @UiField
-   DockLayoutPanel importStep;
-
-   /**
     * Read-only mode field.
     */
    @UiField
@@ -118,11 +99,10 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
       super(ID, ViewType.POPUP, TITLE, null, WIDTH, HEIGHT, false);
       add(uiBinder.createAndBindUi(this));
 
-      nextButton.setButtonId(NEXT_BUTTON_ID);
+      finishButton.setButtonId(FINISH_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
 
       projectNameField.setName(NAME_FIELD_ID);
-      projectTypeField.setName(TYPE_FIELD_ID);
       readOnlyModeField.setName(READONLY_MODE_FIELD_ID);
    }
 
@@ -136,30 +116,12 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getProjectTypeField()
+    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getFinishButton()
     */
    @Override
-   public HasValue<String> getProjectTypeField()
+   public HasClickHandlers getFinishButton()
    {
-      return projectTypeField;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setProjectTypeValues(java.lang.String[])
-    */
-   @Override
-   public void setProjectTypeValues(String[] values)
-   {
-      projectTypeField.setValueMap(values);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#getNextButton()
-    */
-   @Override
-   public HasClickHandlers getNextButton()
-   {
-      return nextButton;
+      return finishButton;
    }
 
    /**
@@ -181,21 +143,12 @@ public class ImportFromGithubView extends ViewImpl implements ImportFromGithubPr
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setNextButtonEnabled(boolean)
+    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#setFinishButtonEnabled(boolean)
     */
    @Override
-   public void setNextButtonEnabled(boolean enabled)
+   public void setFinishButtonEnabled(boolean enabled)
    {
-      nextButton.setEnabled(enabled);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter.Display#showImportStep(boolean)
-    */
-   @Override
-   public void showImportStep(boolean show)
-   {
-      importStep.setVisible(show);
+      finishButton.setEnabled(enabled);
    }
 
    /**

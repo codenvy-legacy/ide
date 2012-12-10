@@ -19,7 +19,6 @@
 package org.exoplatform.ide.shell.client.commands;
 
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
 import org.exoplatform.ide.shell.client.Environment;
@@ -44,11 +43,11 @@ import java.util.Set;
 public class CdCommand extends ClientCommand
 {
 
-   private static final Set<String> commads = new HashSet<String>();
+   private static final Set<String> commands = new HashSet<String>();
 
    static
    {
-      commads.add("cd");
+      commands.add("cd");
    }
 
    /**
@@ -56,7 +55,7 @@ public class CdCommand extends ClientCommand
     */
    public CdCommand()
    {
-      super(commads, new Options(), CloudShell.messages.cdHelp());
+      super(commands, new Options(), CloudShell.messages.cdHelp());
    }
 
    /**

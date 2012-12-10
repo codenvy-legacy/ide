@@ -18,10 +18,22 @@
  */
 package org.eclipse.jdt.client.create;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.HasKeyPressHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 import org.eclipse.jdt.client.event.CreateJavaClassEvent;
 import org.eclipse.jdt.client.event.CreateJavaClassHandler;
 import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
@@ -57,22 +69,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.dom.client.HasKeyPressHandlers;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyPressEvent;
-import com.google.gwt.event.dom.client.KeyPressHandler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -390,9 +389,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       }
    }
 
-   /**
-    * @param value
-    */
    private void createAnnotation(String name)
    {
       StringBuilder content = new StringBuilder(getPackage());
@@ -400,9 +396,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       createClassFile(name, content.toString());
    }
 
-   /**
-    * @param value
-    */
    private void createEnum(String name)
    {
       StringBuilder content = new StringBuilder(getPackage());
@@ -411,9 +404,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
    }
 
-   /**
-    * @param value
-    */
    private void createInterface(String name)
    {
       StringBuilder content = new StringBuilder(getPackage());
@@ -421,9 +411,6 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       createClassFile(name, content.toString());
    }
 
-   /**
-    * @param value
-    */
    private void createClass(String name)
    {
       StringBuilder content = new StringBuilder(getPackage());

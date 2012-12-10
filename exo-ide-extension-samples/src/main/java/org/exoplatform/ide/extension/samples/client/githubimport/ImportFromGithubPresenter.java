@@ -32,23 +32,35 @@ import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.paas.PaaS;
-import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
+import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
 import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.git.shared.RepoInfo;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,78 +68,57 @@ import java.util.List;
 
 /**
  * Presenter for importing user's GitHub project to IDE.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
- * 
+ *
  */
 public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler,
-   GithubStep<ProjectData>, UserInfoReceivedHandler
+   UserInfoReceivedHandler, VfsChangedHandler
 {
    public interface Display extends IsView
    {
       /**
-       * Returns project's type field.
-       * 
-       * @return {@link HasValue} project's type field
-       */
-      HasValue<String> getProjectTypeField();
-
-      /**
        * Returns project's name field.
-       * 
+       *
        * @return {@link HasValue} project's name field
        */
       HasValue<String> getProjectNameField();
 
       /**
        * Returns read only mode of the Git repository field.
-       * 
+       *
        * @return {@link HasValue} read only mode of the Git repository
        */
       HasValue<Boolean> getReadOnlyModeField();
 
       /**
        * Returns next button's click handler.
-       * 
+       *
        * @return {@link HasClickHandlers} button's click handler
        */
-      HasClickHandlers getNextButton();
+      HasClickHandlers getFinishButton();
 
       /**
        * Returns cancel button's click handler.
-       * 
+       *
        * @return {@link HasClickHandlers} button's click handler
        */
       HasClickHandlers getCancelButton();
 
       /**
-       * Set the project's types.
-       * 
-       * @param values project's types
-       */
-      void setProjectTypeValues(String[] values);
-
-      /**
        * Returns repositories list grid.
-       * 
+       *
        * @return {@link ListGridItem} repositories list grid
        */
       ListGridItem<ProjectData> getRepositoriesGrid();
 
       /**
        * Set the enabled state of the next button.
-       * 
+       *
        * @param enabled enabled state of the next button
        */
-      void setNextButtonEnabled(boolean enabled);
-
-      /**
-       * Show/hide the import step.
-       * 
-       * @param show
-       */
-      void showImportStep(boolean show);
+      void setFinishButtonEnabled(boolean enabled);
    }
 
    private UserInfo userInfo;
@@ -138,25 +129,20 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    private Display display;
 
    /**
-    * Next step.
-    */
-   private GithubStep<ProjectData> nextStep;
-
-   /**
-    * Selected project (Git repository).
-    */
-   private ProjectData selectedProjectData;
-
-   /**
     * Map of read-only URLs. Key is ssh Git URL - value is read-only Git URL.
     */
    private HashMap<String, String> readonlyUrls = new HashMap<String, String>();
+
+   private ProjectData data;
+
+   private VirtualFileSystemInfo vfs;
 
    public ImportFromGithubPresenter()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ShowImportFromGithubEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
    /**
@@ -181,28 +167,24 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          {
             if (event.getSelectedItem() != null)
             {
-               selectedProjectData = event.getSelectedItem();
+               data = event.getSelectedItem();
                display.getProjectNameField().setValue(event.getSelectedItem().getName());
-               display.setNextButtonEnabled(true);
+               display.setFinishButtonEnabled(true);
             }
          }
       });
 
-      display.getNextButton().addClickHandler(new ClickHandler()
+      display.getFinishButton().addClickHandler(new ClickHandler()
       {
          @Override
          public void onClick(ClickEvent event)
          {
-            moveToNextStep();
+            if (data != null && !display.getProjectNameField().getValue().isEmpty())
+            {
+               createFolder();
+            }
          }
       });
-
-      String[] types = new String[ProjectType.values().length];
-      for (int i = 0; i < ProjectType.values().length; i++)
-      {
-         types[i] = ProjectType.values()[i].value();
-      }
-      display.setProjectTypeValues(types);
    }
 
    /**
@@ -228,6 +210,12 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                      readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
                   }
                   display.getRepositoriesGrid().setValue(projectDataList);
+
+                  if (projectDataList.size() != 0)
+                  {
+                     display.getRepositoriesGrid().selectItem(projectDataList.get(0));
+                     data = projectDataList.get(0);
+                  }
                }
 
                @Override
@@ -280,24 +268,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onOpen(java.lang.Object)
-    */
-   @Override
-   public void onOpen(ProjectData value)
-   {
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onReturn()
-    */
-   @Override
-   public void onReturn()
-   {
-      openView();
-      goToImport();
-   }
-
-   /**
     * Open view.
     */
    private void openView()
@@ -311,70 +281,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          display.getReadOnlyModeField().setValue(true);
          return;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setNextStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
-    */
-   @Override
-   public void setNextStep(GithubStep<ProjectData> step)
-   {
-      nextStep = step;
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setPreviousStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
-    */
-   @Override
-   public void setPreviousStep(GithubStep<ProjectData> step)
-   {
-   }
-
-   /**
-    * Go to import state.
-    */
-   protected void goToImport()
-   {
-      display.showImportStep(true);
-      display.setNextButtonEnabled(false);
-      getUserRepos();
-   }
-
-   /**
-    * Move to next step.
-    */
-   protected void moveToNextStep()
-   {
-      String name = display.getProjectNameField().getValue();
-      if (name != null && !name.isEmpty())
-      {
-         selectedProjectData.setName(name);
-      }
-      selectedProjectData.setType(display.getProjectTypeField().getValue());
-      // Set targets
-      for (PaaS paas : IDE.getInstance().getPaaSes())
-      {
-         try
-         {
-            if (paas.getSupportedProjectTypes().contains(
-               ProjectType.fromValue(display.getProjectTypeField().getValue())))
-            {
-               selectedProjectData.getTargets().add(paas.getId());
-            }
-         }
-         catch (IllegalArgumentException e)
-         {
-         }
-      }
-
-      if (display.getReadOnlyModeField().getValue())
-      {
-         String readonlyUrl = readonlyUrls.get(selectedProjectData.getRepositoryUrl());
-         selectedProjectData.setRepositoryUrl(readonlyUrl);
-      }
-
-      nextStep.onOpen(selectedProjectData);
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -404,7 +310,8 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                   else
                   {
                      openView();
-                     goToImport();
+                     display.setFinishButtonEnabled(false);
+                     getUserRepos();
                   }
                }
 
@@ -424,5 +331,121 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    private void processUnauthorized()
    {
       IDE.fireEvent(new OAuthLoginEvent());
+   }
+
+   private void createFolder()
+   {
+      FolderModel parent = (FolderModel)vfs.getRoot();
+      FolderModel model = new FolderModel();
+      model.setName(display.getProjectNameField().getValue());
+      model.setParent(parent);
+      try
+      {
+         VirtualFileSystem.getInstance().createFolder(parent,
+            new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(model))
+            {
+               @Override
+               protected void onSuccess(FolderModel result)
+               {
+                  cloneFolder(data, result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Exception during creating project"));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e, "Exception during creating project"));
+      }
+   }
+
+   /**
+    * Get the necessary parameters values and call the clone repository method (over WebSocket or HTTP).
+    */
+   private void cloneFolder(ProjectData repo, final FolderModel folder)
+   {
+      String remoteUri = repo.getRepositoryUrl();
+      if (!remoteUri.endsWith(".git"))
+      {
+         remoteUri += ".git";
+      }
+      JobManager.get().showJobSeparated();
+
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
+            new RequestCallback<RepoInfo>()
+            {
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onRepositoryCloned(folder);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+      catch (WebSocketException e)
+      {
+         cloneFolderREST(folder, remoteUri);
+      }
+   }
+
+   private void cloneFolderREST(final FolderModel folder, String remoteUri)
+   {
+      try
+      {
+         GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
+            new AsyncRequestCallback<RepoInfo>()
+            {
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onRepositoryCloned(folder);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         handleError(e);
+      }
+      finally
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+
+   private void onRepositoryCloned(FolderModel folder)
+   {
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), OutputMessage.Type.INFO));
+      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      this.vfs = event.getVfsInfo();
+   }
+
+   private void handleError(Throwable t)
+   {
+      String errorMessage =
+         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
+      IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
    }
 }

@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.appfog.client;
 
-import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -34,6 +34,8 @@ import org.exoplatform.ide.extension.appfog.client.login.LoginEvent;
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
+ * 
+ * @see AppfogRESTfulRequestCallback
  */
 public abstract class AppfogAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {

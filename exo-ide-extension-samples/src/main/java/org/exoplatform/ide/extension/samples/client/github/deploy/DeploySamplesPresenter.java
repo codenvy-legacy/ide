@@ -46,10 +46,8 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -60,7 +58,7 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.LinkedHashMap;
@@ -68,11 +66,15 @@ import java.util.LinkedHashMap;
 /**
  * Presenter for deploying samples imported from GitHub.
  * <p/>
- * 
+ *
+ * !!! Warn: temporary unused because we import repository from github and then automatically detect it type, that's why
+ * we don't know what type of project will be imported and deploy ceases to be impossible. Leave for the consideration
+ * this module in feature.
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeploySamplesPresenter.java Nov 22, 2011 10:35:16 AM vereshchaka $
  */
-public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<ProjectData>, VfsChangedHandler
+public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleStep<ProjectData>, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -103,7 +105,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
 
    private Display display;
 
-   private GithubStep<ProjectData> prevStep;
+   private ImportSampleStep<ProjectData> prevStep;
 
    /**
     * project data received from previous step
@@ -232,7 +234,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onOpen(java.lang.Object)
+    * @see ImportSampleStep#onOpen(java.lang.Object)
     */
    @Override
    public void onOpen(ProjectData value)
@@ -278,7 +280,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#onReturn()
+    * @see ImportSampleStep#onReturn()
     */
    @Override
    public void onReturn()
@@ -287,19 +289,19 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setNextStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
+    * @see ImportSampleStep#setNextStep(ImportSampleStep)
     */
    @Override
-   public void setNextStep(GithubStep<ProjectData> step)
+   public void setNextStep(ImportSampleStep<ProjectData> step)
    {
       // has no step, it is the last step.
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep#setPreviousStep(org.exoplatform.ide.extension.samples.client.github.deploy.GithubStep)
+    * @see ImportSampleStep#setPreviousStep(ImportSampleStep)
     */
    @Override
-   public void setPreviousStep(GithubStep<ProjectData> step)
+   public void setPreviousStep(ImportSampleStep<ProjectData> step)
    {
       this.prevStep = step;
    }
@@ -345,7 +347,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
    }
 
    /**
-    * Clone of the repository by sending request over WebSocket or HTTP.
+    * Get the necessary parameters values and call the clone repository method (over WebSocket or HTTP).
     */
    private void cloneFolder(ProjectData repo, final FolderModel folder)
    {
@@ -356,10 +358,28 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
       JobManager.get().showJobSeparated();
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         cloneFolderWS(repo, folder, remoteUri);
-      else
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
+            new RequestCallback<RepoInfo>()
+            {
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onRepositoryCloned();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          cloneFolderREST(repo, folder, remoteUri);
+      }
    }
 
    /**
@@ -391,44 +411,15 @@ public class DeploySamplesPresenter implements ViewClosedHandler, GithubStep<Pro
       }
    }
 
-   /**
-    * Get the necessary parameters values and call the clone repository method (over WebSocket).
-    */
-   private void cloneFolderWS(ProjectData repo, final FolderModel folder, String remoteUri)
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
-            new RESTfulRequestCallback<RepoInfo>()
-            {
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  onRepositoryCloned();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         handleError(e);
-      }
-   }
-
    private void convertToProject(FolderModel folderModel)
    {
       String projectType = data.getType();
-      folderModel.getProperties().add(new Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      folderModel.getProperties().add(new Property("vfs:projectType", projectType));
+      folderModel.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      folderModel.getProperties().add(new PropertyImpl("vfs:projectType", projectType));
 
       if (!data.getTargets().isEmpty())
       {
-         folderModel.getProperties().add(new Property(ProjectProperties.TARGET.value(), data.getTargets()));
+         folderModel.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), data.getTargets()));
       }
 
       ItemWrapper item = new ItemWrapper(new ProjectModel());

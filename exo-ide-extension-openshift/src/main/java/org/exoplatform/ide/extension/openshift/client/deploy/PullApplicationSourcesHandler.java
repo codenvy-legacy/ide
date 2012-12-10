@@ -26,10 +26,8 @@ import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -91,7 +89,7 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
    private void pullSources()
    {
       String remoteName = remotes.get(0).getName();
-      String remoteUrl = remotes.get(0).getUrl();
+      final String remoteUrl = remotes.get(0).getUrl();
 
       String localBranch =
          localBranches != null && !localBranches.isEmpty() ? localBranches.get(0).getDisplayName() : "master";
@@ -104,13 +102,31 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
             + "refs/remotes/" + remoteName + "/" + remoteBranch;
 
       JobManager.get().showJobSeparated();
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         doPullWS(refs, remoteName, remoteUrl);
-      else
-         doPullREST(refs, remoteName, remoteUrl);
+
+      try
+      {
+         GitClientService.getInstance().pullWS(vfs.getId(), project, refs, remoteName, new RequestCallback<String>()
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               onPullSuccess(remoteUrl);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               handleError(exception, remoteUrl);
+            }
+         });
+      }
+      catch (WebSocketException e)
+      {
+         pullSourcesREST(refs, remoteName, remoteUrl);
+      }
    }
 
-   private void doPullREST(String refs, String remoteName, final String remoteUrl)
+   private void pullSourcesREST(String refs, String remoteName, final String remoteUrl)
    {
       try
       {
@@ -130,32 +146,6 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
          });
       }
       catch (RequestException e)
-      {
-         handleError(e, remoteUrl);
-      }
-   }
-
-   private void doPullWS(String refs, String remoteName, final String remoteUrl)
-   {
-      try
-      {
-         GitClientService.getInstance().pullWS(vfs.getId(), project, refs, remoteName,
-            new RESTfulRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  onPullSuccess(remoteUrl);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, remoteUrl);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e, remoteUrl);
       }

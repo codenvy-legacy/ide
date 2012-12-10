@@ -19,12 +19,12 @@
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.helper.JsonHelper;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -177,7 +177,7 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
          Item fileItem = vfs.createFile(parent.getId(), file, MediaType.TEXT_PLAIN_TYPE, content);
          List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(1);
          String user = ConversationState.getCurrent().getIdentity().getUserId();
-         acl.add(new AccessControlEntry(user, new HashSet<String>(vfs.getInfo().getPermissions())));
+         acl.add(new AccessControlEntryImpl(user, new HashSet<String>(vfs.getInfo().getPermissions())));
          vfs.updateACL(fileItem.getId(), acl, true, null);
       }
    }

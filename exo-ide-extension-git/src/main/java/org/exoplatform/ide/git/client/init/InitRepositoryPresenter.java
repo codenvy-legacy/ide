@@ -32,10 +32,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -140,10 +138,29 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
       String projectName = ((ItemContext)selectedItems.get(0)).getProject().getName();
       boolean bare = display.getBareValue().getValue();
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         initRepositoryWS(projectId, projectName, bare);
-      else
+      try
+      {
+         GitClientService.getInstance().initWS(vfs.getId(), projectId, projectName, bare, new RequestCallback<String>()
+         {
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               handleError(exception);
+            }
+         });
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+      catch (WebSocketException e)
+      {
          initRepositoryREST(projectId, projectName, bare);
+      }
    }
 
    /**
@@ -171,37 +188,6 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Initialize of the repository (sends request over WebSocket).
-    */
-   private void initRepositoryWS(String projectId, String projectName, boolean bare)
-   {
-      try
-      {
-         GitClientService.getInstance().initWS(vfs.getId(), projectId, projectName, bare,
-            new RESTfulRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }

@@ -46,6 +46,9 @@ public class JenkinsExtension extends Extension implements InitializeServicesHan
 
    public static final JenkinsResourceBundle RESOURCES = GWT.create(JenkinsResourceBundle.class);
 
+   /** Channel for the messages containing status of the Jenkins job. */
+   public static final String JOB_STATUS_CHANNEL = "jenkins:jobStatus:";
+
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
     */

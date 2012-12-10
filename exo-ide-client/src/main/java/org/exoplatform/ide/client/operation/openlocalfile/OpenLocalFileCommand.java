@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.openlocalfile;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -38,6 +35,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEv
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.

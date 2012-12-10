@@ -118,7 +118,7 @@ public final class JcrFileSystemInitializer implements Startable
       List<JcrFileSystemConfiguration> configurations = new ArrayList<JcrFileSystemConfiguration>();
       if (initParams != null)
       {
-         // First check 'extended' configuration of Virtual File System 
+         // First check 'extended' configuration of Virtual File System
          List<JcrFileSystemConfiguration> objectParams =
             initParams.getObjectParamValues(JcrFileSystemConfiguration.class);
          if (objectParams != null && objectParams.size() > 0)

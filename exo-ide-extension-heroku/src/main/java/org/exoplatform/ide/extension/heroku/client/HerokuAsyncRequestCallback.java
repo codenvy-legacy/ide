@@ -33,12 +33,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Asynchronous Heroku request. The {{@link #onFailure(Throwable)} method contains the check for user not authorized exception, in
+ * Asynchronous Heroku request. The {@link #onFailure(Throwable)} method contains the check for user not authorized exception, in
  * this case - the {@link LoginEvent} is fired.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 27, 2011 12:17:17 PM anya $
  * 
+ * @see HerokuRESTfulRequestCallback
  */
 public abstract class HerokuAsyncRequestCallback extends AsyncRequestCallback<List<Property>>
 {

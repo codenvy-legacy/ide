@@ -132,32 +132,6 @@ public class Toolbar extends AbstractTestModule
       });
    }
 
-   /**
-    * Check is button present on toolbar and is it enabled or disabled.
-    * 
-    * @param name button name
-    * @param enabled boolean value
-    * 
-    * Use {@link Toolbar.#isButtonEnabled(String)}
-    */
-   @Deprecated
-   public void assertButtonEnabled(String name, boolean enabled)
-   {
-      if (enabled)
-      {
-         String locator =
-            "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"true\" and @title=\"" + name
-               + "\"]";
-         assertTrue(selenium().isElementPresent(locator));
-      }
-      else
-      {
-         String locator =
-            "//div[@id=\"exoIDEToolbar\" and @class=\"exoToolbarPanel\"]//div[@enabled=\"false\" and @title=\"" + name
-               + "\"]";
-         assertTrue(selenium().isElementPresent(locator));
-      }
-   }
 
    /**
     * Returns the enabled state of the Toolbar button.
@@ -225,31 +199,6 @@ public class Toolbar extends AbstractTestModule
             return isButtonEnabled(name);
          }
       });
-   }
-
-   /**
-    * Check is button present on toolbar
-    * 
-    * @param name button name (title in DOM)
-    * @param isPresent is present
-    * use {@link #isButtonPresentAtLeft(String)}
-    */
-   @Deprecated
-   public void assertButtonExistAtLeft(String name, boolean exist)
-   {
-      String locator =
-         "//div[@class=\"exoToolbarPanel\" and @id=\"exoIDEToolbar\"]/div[@class=\"exoToolbarElementLeft\"]"
-            + "/div[contains(@class, \"exoIconButtonPanel\") and @title=\"" + name + "\"]";
-      if (exist)
-      {
-         assertTrue(selenium().isVisible(locator));
-      }
-      else
-      {
-
-         assertTrue(!selenium().isElementPresent(locator) || !selenium().isVisible(locator));
-
-      }
    }
 
    /**

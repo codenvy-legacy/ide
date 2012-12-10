@@ -18,6 +18,16 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.create;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -30,10 +40,13 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
@@ -54,16 +67,6 @@ import org.exoplatform.ide.vfs.shared.ItemType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.ui.HasValue;
-import com.google.web.bindery.autobean.shared.AutoBean;
 
 /**
  * Presenter for creating application on CloudFoundry.
@@ -474,66 +477,98 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       IDE.fireEvent(new BuildProjectEvent());
    }
 
-   private void createApplication(final AppData app)
+   /**
+    * Create application on CloudFoundry by sending request over WebSocket or HTTP.
+    * 
+    * @param appData data to create new application
+    */
+   private void createApplication(final AppData appData)
    {
-      LoggedInHandler createAppHandler = new LoggedInHandler()
+      LoggedInHandler loggedInHandler = new LoggedInHandler()
       {
          @Override
          public void onLoggedIn()
          {
-            createApplication(app);
+            createApplication(appData);
          }
       };
-
       final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
+         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
+
       try
       {
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-         CloudFoundryClientService.getInstance().create(
-            app.server,
-            app.name,
-            app.type,
-            app.url,
-            app.instances,
-            app.memory,
-            app.nostart,
+         CloudFoundryClientService.getInstance().createWS(
+            appData.server,
+            appData.name,
+            appData.type,
+            appData.url,
+            appData.instances,
+            appData.memory,
+            appData.nostart,
             vfs.getId(),
             project.getId(),
             warUrl,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, createAppHandler, null,
-               app.server)
+            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+               appData.server)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
-                  warUrl = null;
+                  onAppCreatedSuccess(result);
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
 
-                  if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances())
-                  {
-                     String msg = lb.applicationCreatedSuccessfully(result.getName());
-                     if (result.getUris().isEmpty())
-                     {
-                        msg += "<br>" + lb.applicationStartedWithNoUrls();
-                     }
-                     else
-                     {
-                        msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
-                     }
-                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  }
-                  else if ("STARTED".equals(result.getState()) && result.getInstances() != result.getRunningInstances())
-                  {
-                     String msg = lb.applicationWasNotStarted(result.getName());
-                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
-                  }
-                  else
-                  {
-                     String msg = lb.applicationCreatedSuccessfully(result.getName());
-                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  }
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         createApplicationREST(appData, project, loggedInHandler);
+      }
+   }
+
+   /**
+    * Create application on CloudFoundry by sending request over HTTP.
+    * 
+    * @param appData data to create new application
+    * @param project {@link ProjectModel}
+    * @param loggedInHandler handler that should be called after success login
+    */
+   private void createApplicationREST(final AppData appData, final ProjectModel project, LoggedInHandler loggedInHandler)
+   {
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+         new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+      try
+      {
+         CloudFoundryClientService.getInstance().create(
+            appData.server,
+            appData.name,
+            appData.type,
+            appData.url,
+            appData.instances,
+            appData.memory,
+            appData.nostart,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+               appData.server)
+            {
+               @Override
+               protected void onSuccess(CloudFoundryApplication result)
+               {
+                  onAppCreatedSuccess(result);
                   IDE.fireEvent(new RefreshBrowserEvent(project));
                }
 
@@ -548,6 +583,40 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
       catch (RequestException e)
       {
          IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      }
+   }
+
+   /**
+    * Performs action when application successfully created.
+    * 
+    * @param app @link CloudFoundryApplication} which is created
+    */
+   private void onAppCreatedSuccess(CloudFoundryApplication app)
+   {
+      warUrl = null;
+
+      if ("STARTED".equals(app.getState()) && app.getInstances() == app.getRunningInstances())
+      {
+         String msg = lb.applicationCreatedSuccessfully(app.getName());
+         if (app.getUris().isEmpty())
+         {
+            msg += "<br>" + lb.applicationStartedWithNoUrls();
+         }
+         else
+         {
+            msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+         }
+         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      }
+      else if ("STARTED".equals(app.getState()) && app.getInstances() != app.getRunningInstances())
+      {
+         String msg = lb.applicationWasNotStarted(app.getName());
+         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+      }
+      else
+      {
+         String msg = lb.applicationCreatedSuccessfully(app.getName());
+         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       }
    }
 

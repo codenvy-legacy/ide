@@ -18,11 +18,14 @@
  */
 package org.eclipse.jdt.client.packaging;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.xml.client.Document;
+import com.google.gwt.xml.client.Element;
+import com.google.gwt.xml.client.Node;
+import com.google.gwt.xml.client.NodeList;
+import com.google.gwt.xml.client.XMLParser;
 import org.eclipse.jdt.client.packaging.model.DependencyListItem;
 import org.eclipse.jdt.client.packaging.model.PackageItem;
 import org.eclipse.jdt.client.packaging.model.ProjectItem;
@@ -37,14 +40,10 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.http.client.RequestException;
-import com.google.gwt.xml.client.Document;
-import com.google.gwt.xml.client.Element;
-import com.google.gwt.xml.client.Node;
-import com.google.gwt.xml.client.NodeList;
-import com.google.gwt.xml.client.XMLParser;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -261,8 +260,6 @@ public class ProjectTreeParser
 
    /**
     * Add project dependencies tree node
-    * 
-    * @param dependencies
     */
    private void addProjectDependencies()
    {

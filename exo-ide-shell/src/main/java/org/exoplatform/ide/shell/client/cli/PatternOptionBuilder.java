@@ -17,11 +17,6 @@
 
 package org.exoplatform.ide.shell.client.cli;
 
-//import java.net.URL;
-import org.exoplatform.ide.shell.client.cli.OptionBuilder;
-import org.exoplatform.ide.shell.client.cli.Options;
-import org.exoplatform.ide.shell.client.cli.PatternOptionBuilder;
-
 import java.util.Date;
 
 /**

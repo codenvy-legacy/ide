@@ -24,7 +24,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -131,9 +130,6 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       IDE.addHandler(ProjectSelectedEvent.TYPE, this);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.event.ApplicationSettingsReceivedEvent)
-    */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       ApplicationSettings applicationSettings = event.getApplicationSettings();

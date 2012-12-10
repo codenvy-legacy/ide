@@ -130,7 +130,9 @@ public class GetItemTest extends JcrFileSystemTest
       List<Property> properties = ((Item)response.getEntity()).getProperties();
       Map<String, List> m = new HashMap<String, List>(properties.size());
       for (Property p : properties)
+      {
          m.put(p.getName(), p.getValue());
+      }
       assertTrue(m.size() >= 6);
       assertTrue(m.containsKey("MyProperty01"));
       assertTrue(m.containsKey("MyProperty02"));
@@ -154,7 +156,9 @@ public class GetItemTest extends JcrFileSystemTest
       m.clear();
       properties = ((Item)response.getEntity()).getProperties();
       for (Property p : properties)
+      {
          m.put(p.getName(), p.getValue());
+      }
       assertEquals(1, m.size());
       assertEquals("to be or not to be", m.get("MyProperty02").get(0));
    }

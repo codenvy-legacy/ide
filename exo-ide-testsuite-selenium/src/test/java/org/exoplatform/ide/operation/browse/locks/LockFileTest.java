@@ -18,24 +18,20 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import com.google.gwt.user.client.Command;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
+
+import static org.junit.Assert.*;
 
 /**
  * Check the work of Lock/Unlock feature.
@@ -49,7 +45,7 @@ import java.util.Map;
  * @version $Id: Sep 21, 2010 $
  *
  */
-public class LockFileTest extends LockFileAbstract
+public class LockFileTest extends BaseTest
 {
 
    private static String PROJECT = LockFileTest.class.getSimpleName();
@@ -164,7 +160,7 @@ public class LockFileTest extends LockFileAbstract
       IDE.EDITOR.closeFile(1);
       IDE.EDITOR.waitTabNotPresent(1);
 
-      //step 8 reopen Html File and check lock 
+      //step 8 reopen Html File and check lock
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
       //this delay needed for correct update content in folder on staging.
       Thread.sleep(500);
@@ -187,55 +183,6 @@ public class LockFileTest extends LockFileAbstract
       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
 
       // after fix issue TODO after IDE-1473 should be pass
-      checkAllLockButtonIsActive();
-
-   }
-
-   @Test
-   public void testLockFileStaysAfterRefresh() throws Exception
-   {
-      //step one refresh an open project
-      createFileViaWebDav(FILE_NAME_1);
-      createFileViaWebDav(FILE_NAME_2);
-
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
-      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + FOLDER_NAME);
-
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
-
-      //close welcome tab
-      IDE.EDITOR.clickCloseEditorButton(0);
-      IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitTabNotPresent("Welcome");
-
-      //step 2 open files
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_1);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
-
-      //step 3 lock first file and check button state
-      IDE.EDITOR.selectTab(FILE_NAME_1);
-      IDE.LOADER.waitClosed();
-      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
-      IDE.LOADER.waitClosed();
-      checkAllUnlockStateButtons();
-
-      //step 4 refresh browser and chek state button of second file
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.EDITOR.waitTabPresent(2);
-      //need for correct click on tab
-      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
-      IDE.EDITOR.selectTab(FILE_NAME_2);
-      IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME_2);
       checkAllLockButtonIsActive();
 
    }
@@ -268,7 +215,6 @@ public class LockFileTest extends LockFileAbstract
       IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.LOCK_FILE);
       assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.LOCK_FILE));
    }
-
    /**
     * check enabled ulock icon and button on toolbar and Edit menu
     * @throws Exception
@@ -281,20 +227,6 @@ public class LockFileTest extends LockFileAbstract
       IDE.LOADER.waitClosed();
       assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
       assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
-   }
-
-   private void createFileViaWebDav(String fileName)
-   {
-      final String filePath = "src/test/resources/org/exoplatform/ide/operation/browse/locks/test.html";
-      try
-      {
-         VirtualFileSystemUtils
-            .put(filePath, MimeType.TEXT_HTML, WS_URL + PROJECT + "/" + FOLDER_NAME + "/" + fileName);
-      }
-      catch (Exception e)
-      {
-         fail("Can't put file to webdav");
-      }
    }
 
 }

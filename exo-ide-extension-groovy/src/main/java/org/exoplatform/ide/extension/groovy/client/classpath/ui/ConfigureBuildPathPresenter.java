@@ -25,7 +25,6 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -59,7 +58,6 @@ import org.exoplatform.ide.vfs.client.marshal.FileUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
@@ -152,9 +150,6 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
 
    private ProjectModel currentProject;
 
-   /**
-    * @param eventBus
-    */
    public ConfigureBuildPathPresenter()
    {
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
@@ -168,8 +163,6 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
 
    /**
     * Bind presenter with pointed display.
-    * 
-    * @param d display
     */
    public void bindDisplay()
    {
@@ -271,7 +264,7 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
     * Get classpath file.
     * 
     * @param projectModel - folder of project (encoded)
-    * @return {@link File} classpath file
+    * @return {@link org.exoplatform.ide.vfs.shared.File} classpath file
     */
    private FileModel formClasspathFile(ProjectModel projectModel)
    {
@@ -476,9 +469,6 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
       new ChooseSourcePathPresenter(vfsInfo);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.module.groovy.classpath.ui.event.AddSourceToBuildPathHandler#onAddSourceToBuildPath(org.exoplatform.ide.client.module.groovy.classpath.ui.event.AddSourceToBuildPathEvent)
-    */
    public void onAddSourceToBuildPath(AddSourceToBuildPathEvent event)
    {
       List<GroovyClassPathEntry> oldClassPathEntries = display.getClassPathEntryListGrid().getValue();
@@ -533,9 +523,6 @@ public class ConfigureBuildPathPresenter implements AddSourceToBuildPathHandler,
       vfsInfo = event.getVfsInfo();
    }
 
-   /**
-    * @param result
-    */
    private void displayClasspath(FileModel file)
    {
       if (display == null)

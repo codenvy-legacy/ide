@@ -31,10 +31,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -88,9 +86,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private Display display;
 
-   /**
-    * @param eventBus events handler
-    */
    public AddToIndexPresenter()
    {
       IDE.addHandler(AddFilesEvent.TYPE, this);
@@ -135,8 +130,8 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          Display d = GWT.create(Display.class);
          IDE.getInstance().openView(d.asView());
          bindDisplay(d);
-         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-         display.getMessage().setValue(formMessage(workdir), true);
+         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         display.getMessage().setValue(formMessage(workDir), true);
       }
    }
 
@@ -170,19 +165,42 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    }
 
    /**
-    * Performs adding to index by sending request over WebSocket or HTTP.
+    * Perform adding to index (sends request over WebSocket or HTTP).
     */
    private void doAdd()
    {
       if (selectedItems == null || selectedItems.size() <= 0)
+      {
          return;
+      }
+
       boolean update = display.getUpdateValue().getValue();
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         doAddWS(project, update);
-      else
+      try
+      {
+         GitClientService.getInstance().addWS(vfs.getId(), project, update, getFilePatterns(),
+            new RequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
+                  IDE.fireEvent(new RefreshBrowserEvent());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+      catch (WebSocketException e)
+      {
          doAddREST(project, update);
+      }
    }
 
    /**
@@ -210,37 +228,6 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
             });
       }
       catch (RequestException e)
-      {
-         handleError(e);
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
-    * Perform adding to index (sends request over WebSocket).
-    */
-   private void doAddWS(ProjectModel project, boolean update)
-   {
-      try
-      {
-         GitClientService.getInstance().addWS(vfs.getId(), project, update, getFilePatterns(),
-            new RESTfulRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.addSuccess()));
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e);
       }

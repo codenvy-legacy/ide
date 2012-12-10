@@ -22,7 +22,12 @@ import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Property;
+
+import java.util.List;
+
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -42,8 +47,10 @@ public class ProjectPrepareService
 
    @Path("prepare")
    @POST
+   @Consumes("application/json")
    public void prepareProject(@QueryParam("folderid") String folderId,
-                              @QueryParam("vfsid") String vfsId)
+                              @QueryParam("vfsid") String vfsId, 
+                              List<Property> properties)
       throws VirtualFileSystemException, ProjectPrepareException
    {
       if (folderId == null || vfsId == null)
@@ -61,6 +68,6 @@ public class ProjectPrepareService
 
       ProjectPrepare project = new ProjectPrepare(vfs);
 
-      project.doPrepare(localPathResolver.resolve(vfs, folderId));
+      project.doPrepare(localPathResolver.resolve(vfs, folderId), folderId, properties);
    }
 }

@@ -20,7 +20,7 @@ package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
-import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -109,7 +109,9 @@ public class SearchTest extends JcrFileSystemTest
       List<Property> properties = result.getProperties();
       Map<String, List> m = new HashMap<String, List>(properties.size());
       for (Property o : properties)
+      {
          m.put(o.getName(), o.getValue());
+      }
       assertEquals("Hello World", m.get("MyProperty").get(0));
    }
 
@@ -136,7 +138,9 @@ public class SearchTest extends JcrFileSystemTest
       List<Property> properties = result.getProperties();
       Map<String, List> m = new HashMap<String, List>(properties.size());
       for (Property o : properties)
+      {
          m.put(o.getName(), o.getValue());
+      }
       assertEquals("Hello World", m.get("MyProperty").get(0));
    }
 
@@ -174,7 +178,7 @@ public class SearchTest extends JcrFileSystemTest
          .append("1") //
          .toString();
       
-      checkPage(path, "POST", h, sql.getBytes(), File.class.getMethod("getId"), all);
+      checkPage(path, "POST", h, sql.getBytes(), FileImpl.class.getMethod("getId"), all);
    }
 
    public void testSearchPagingMaxItems() throws Exception
@@ -208,6 +212,6 @@ public class SearchTest extends JcrFileSystemTest
          .append("2") //
          .toString();
       
-      checkPage(path, "POST", h, sql.getBytes(), File.class.getMethod("getId"), all);
+      checkPage(path, "POST", h, sql.getBytes(), FileImpl.class.getMethod("getId"), all);
    }
 }

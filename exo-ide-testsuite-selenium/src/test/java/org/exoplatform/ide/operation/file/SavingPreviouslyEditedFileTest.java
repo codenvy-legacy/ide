@@ -18,19 +18,16 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * IDE-13:Saving previously edited file.
@@ -63,6 +60,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.createDefaultProject(PROJECT);
+         driver.navigate().refresh();
       }
       catch (Exception e)
       {
@@ -75,7 +73,7 @@ public class SavingPreviouslyEditedFileTest extends BaseTest
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         refresh();
+         
       }
       catch (Exception e)
       {

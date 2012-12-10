@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.workspace.event.SwitchVFSHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.VFSInfoUnmarshaller;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 /**
  * 
@@ -68,7 +69,7 @@ public class VirtualFileSystemSwitcher implements SwitchVFSHandler, Configuratio
       try
       {
          new VirtualFileSystem(workspaceUrl, new GWTLoader()).init(new AsyncRequestCallback<VirtualFileSystemInfo>(
-            new VFSInfoUnmarshaller(new VirtualFileSystemInfo()))
+            new VFSInfoUnmarshaller(new VirtualFileSystemInfoImpl()))
          {
             @Override
             protected void onSuccess(VirtualFileSystemInfo result)

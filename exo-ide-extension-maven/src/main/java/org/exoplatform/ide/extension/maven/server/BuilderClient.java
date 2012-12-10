@@ -21,8 +21,7 @@ package org.exoplatform.ide.extension.maven.server;
 import static org.exoplatform.ide.commons.JsonHelper.toJson;
 
 import org.everrest.websockets.WSConnectionContext;
-import org.everrest.websockets.message.Pair;
-import org.everrest.websockets.message.RESTfulOutputMessage;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
@@ -567,19 +566,18 @@ public class BuilderClient
     * 
     * @param data
     *    the data to be sent to the client
-    * @param channel
-    *    channel name
+    * @param channelID
+    *    channel identifier
     * @param e
     *    exception which has occurred or <code>null</code> if no exception
     */
-   private static void publishWebSocketMessage(Object data, String channel, Exception e)
+   private static void publishWebSocketMessage(Object data, String channelID, Exception e)
    {
-      RESTfulOutputMessage message = new RESTfulOutputMessage();
-      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
-                                    new Pair("x-everrest-websocket-channel", channel)});
+      ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+      message.setChannel(channelID);
       if (e == null)
       {
-         message.setResponseCode(200);
+         message.setType(ChannelBroadcastMessage.Type.NONE);
          if (data instanceof String)
          {
             message.setBody((String)data);
@@ -589,19 +587,16 @@ public class BuilderClient
             message.setBody(toJson(data));
          }
       }
-      else if (e instanceof BuilderException)
-      {
-         message.setResponseCode(((BuilderException)e).getResponseStatus());
-         message.setBody(e.getMessage());
-      }
       else
       {
-         message.setResponseCode(500);
+         message.setType(ChannelBroadcastMessage.Type.ERROR);
+         if (e instanceof BuilderException)
+            message.setBody(e.getMessage());
       }
 
       try
       {
-         WSConnectionContext.sendMessage(channel, message);
+         WSConnectionContext.sendMessage(message);
       }
       catch (Exception ex)
       {

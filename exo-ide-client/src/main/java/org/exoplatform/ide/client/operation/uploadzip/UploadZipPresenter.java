@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.FormPanel.SubmitCompleteHandler;
 import com.google.gwt.user.client.ui.FormPanel.SubmitEvent;
 import com.google.gwt.user.client.ui.FormPanel.SubmitHandler;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -92,7 +91,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
       void setHiddenFields(String location, String mimeType, String nodeType, String jcrContentNodeType);
 
-      void setOverwriteHiddedField(Boolean overwrite);
+      void setOverwriteHiddenField(Boolean overwrite);
 
    }
 
@@ -226,14 +225,12 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
 
    /**
     * Do submit a zip file.
-    * 
-    * @param parentFolder folder for the zip content
     */
    private void doSubmit(Item parent)
    {
       display.getUploadForm().setAction(getUploadUrl(parent));
       // server handle only hidden overwrite field, but not form check box item "Overwrite"
-      display.setOverwriteHiddedField(display.getOverwriteAllField().getValue());
+      display.setOverwriteHiddenField(display.getOverwriteAllField().getValue());
       display.getUploadForm().submit();
    }
 
@@ -279,7 +276,7 @@ public class UploadZipPresenter implements UploadZipHandler, ViewClosedHandler, 
                   }
                   if (value)
                   {
-                     display.setOverwriteHiddedField(true);
+                     display.setOverwriteHiddenField(true);
                      display.getUploadForm().submit();
                   }
                }

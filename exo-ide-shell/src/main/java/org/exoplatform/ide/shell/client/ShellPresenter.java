@@ -32,7 +32,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ClosingEvent;
 import com.google.gwt.user.client.Window.ClosingHandler;
-
 import org.exoplatform.gwtframework.commons.exception.JobNotFoundException;
 import org.exoplatform.gwtframework.commons.exception.UnauthorizedException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -543,7 +542,7 @@ public class ShellPresenter
       if (prefix.isEmpty())
       {
          display.appendBuffer("\n");
-         display.appendBuffer(Utils.fomatItems(childrens));
+         display.appendBuffer(Utils.formatItems(childrens));
          display.submitBuffer();
          display.printPrompt();
          display.appendBuffer(prefix);
@@ -602,7 +601,7 @@ public class ShellPresenter
             {
                String buf = display.getBuffer();
                display.appendBuffer("\n");
-               display.appendBuffer(Utils.fomatItems(items));
+               display.appendBuffer(Utils.formatItems(items));
                display.submitBuffer();
                display.printPrompt();
                display.appendBuffer(buf);

@@ -103,10 +103,8 @@ public abstract class CodeAssistantBaseTest extends BaseTest
 
    public void openProject() throws Exception
    {
-      driver.navigate().refresh();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
-
       IDE.PROJECT.OPEN.openProject(projectName);
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(projectName);

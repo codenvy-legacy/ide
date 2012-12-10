@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.assertEquals;
-
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.preferences.AbstractHotkeysTest;
+import org.exoplatform.ide.preferences.AbstractCustomizeHotkeys;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -31,6 +29,8 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * This test contains Thread.sleep, because we need
@@ -41,7 +41,7 @@ import java.io.IOException;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
  */
-public class HotkeysInCodeMirrorTest extends AbstractHotkeysTest
+public class HotkeysInCodeMirrorTest extends AbstractCustomizeHotkeys
 {
    private static final String PROJECT = HotkeysInCodeMirrorTest.class.getSimpleName();
 

@@ -23,8 +23,9 @@ import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFile;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
@@ -104,13 +105,13 @@ public class CopyTest extends MemoryFileSystemTest
 
    public void testCopyFileDestination_NoPermissions() throws Exception
    {
-      AccessControlEntry adminACE = new AccessControlEntry();
+      AccessControlEntry adminACE = new AccessControlEntryImpl();
       adminACE.setPrincipal("admin");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
 
-      AccessControlEntry userACE = new AccessControlEntry();
+      AccessControlEntry userACE = new AccessControlEntryImpl();
       adminACE.setPrincipal("john");
-      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.READ.value())));
+      adminACE.setPermissions(new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.READ.value())));
 
       copyTestDestinationFolder.updateACL(Arrays.asList(adminACE, userACE), true);
 

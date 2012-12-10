@@ -28,6 +28,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.io.File;
 import java.io.IOException;
@@ -107,7 +108,7 @@ public class ExpressService
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
       // Update VFS properties. Need it to uniform client.
-      Property p = new Property("openshift-express-application", application.getName());
+      Property p = new PropertyImpl("openshift-express-application", application.getName());
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
@@ -147,7 +148,7 @@ public class ExpressService
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         Property p = new Property("openshift-express-application", Collections.<String> emptyList());
+         Property p = new PropertyImpl("openshift-express-application", Collections.<String> emptyList());
          List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);

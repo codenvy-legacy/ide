@@ -19,7 +19,6 @@
 package org.exoplatform.ide.shell.client.commands;
 
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
 import org.exoplatform.ide.shell.client.Environment;
@@ -46,11 +45,11 @@ import java.util.Set;
 public class CatCommand extends ClientCommand
 {
 
-   private static final Set<String> commads = new HashSet<String>();
+   private static final Set<String> commands = new HashSet<String>();
 
    static
    {
-      commads.add("cat");
+      commands.add("cat");
    }
 
    private List<String> files;
@@ -62,7 +61,7 @@ public class CatCommand extends ClientCommand
     */
    public CatCommand()
    {
-      super(commads, new Options(), CloudShell.messages.catHelp());
+      super(commands, new Options(), CloudShell.messages.catHelp());
    }
 
    /**
@@ -76,13 +75,13 @@ public class CatCommand extends ClientCommand
       args.remove(0);
       if (commandLine.hasOption("h"))
       {
-         printHelp(CloudShell.messages.catUsage(commads.iterator().next()));
+         printHelp(CloudShell.messages.catUsage(commands.iterator().next()));
          return;
       }
 
       if (args.isEmpty())
       {
-         printHelp(CloudShell.messages.catUsage(commads.iterator().next()));
+         printHelp(CloudShell.messages.catUsage(commands.iterator().next()));
       }
       else
       {
@@ -94,11 +93,11 @@ public class CatCommand extends ClientCommand
 
    private void getNextContent()
    {
-      Folder workdir = Environment.get().getCurrentFolder();
+      Folder workDir = Environment.get().getCurrentFolder();
       if (files.size() != 0)
       {
 
-         String newPath = Utils.getPath(workdir, files.get(0));
+         String newPath = Utils.getPath(workDir, files.get(0));
          try
          {
             VirtualFileSystem.getInstance().getItemByPath(newPath,

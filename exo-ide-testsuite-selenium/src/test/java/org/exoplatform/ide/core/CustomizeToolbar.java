@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -30,6 +28,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author <a href="mailto:mmusienko@exoplatform.com">Musienko Maxim</a>
@@ -370,32 +370,30 @@ public class CustomizeToolbar extends AbstractTestModule
             "New Data Object", "New Package", "New Java Class", "New JSP File", "New Ruby File", "New PHP File",
             "New Python File", "New YAML File", "Create File From Template...", "Project / New", "Create Project...",
             "Import a Sample Project...", "Import from GitHub...", "Project", "Open...", "Close", "Properties...",
-            "Open Resource...",  "Configure Classpath...", "Build", "Project / PaaS", "CloudBees",
-            "CloudFoundry", "Heroku", "OpenShift", "Google App Engine", "Edit", "Cut Item(s)", "Copy Item(s)",
-            "Paste Item(s)", "Undo Typing", "Redo Typing", "Format", "Organize Imports", "Add Block Comment",
-            "Remove Block Comment", "Find-Replace...", "Show / Hide Line Numbers", "Delete Current Line",
-            "Go to Line...", "Lock / Unlock File", "Delete", "Select All", "Toggle Comment", "Move Line Up",
-            "Move Line Down", "Do Autocomplete...", "Quick Fix", "Edit / Source", "Generate Getters and Setters",
+            "Open Resource...", "Configure Classpath...", "Build", "Project / PaaS", "CloudBees", "CloudFoundry",
+            "Heroku", "OpenShift", "Google App Engine", "Edit", "Cut Item(s)", "Copy Item(s)", "Paste Item(s)",
+            "Undo Typing", "Redo Typing", "Format", "Organize Imports", "Add Block Comment", "Remove Block Comment",
+            "Find-Replace...", "Show / Hide Line Numbers", "Delete Current Line", "Go to Line...",
+            "Lock / Unlock File", "Delete", "Select All", "Toggle Comment", "Move Line Up", "Move Line Down",
+            "Do Autocomplete...", "Quick Fix", "Edit / Source", "Generate Getters and Setters",
             "Generate Constructor using Fields", "View", "Properties", "Show / Hide Outline",
-            "Show / Hide Documentation", "Go to Folder", "Get URL...", "Progress", "Output", "Log",
-            "Show / Hide Hidden Files", "Quick Outline", "Run", "Show Preview", "Set / Unset Autoload", "Validate",
-            "Deploy", "Undeploy", "Run in Sandbox", "Deploy to Sandbox", "Undeploy from Sandbox",
-            "Launch REST Service", "Show Template Preview", "Show Gadget Preview", "Preview node type",
-            "Deploy node type", "Debug", "Run", "Stop", "Java Logs", "Run Python Application",
-            "Stop Python Application", "Python Logs", "Git", "Initialize Repository", "Clone Repository...",
-            "Delete Repository...", "Add...", "Reset Files...", "Reset...", "Remove...", "Commit...", "Branches...",
-            "Merge...", "Show History...", "Status", "Git URL (Read-Only)...", "Git / Remote", "Push...", "Fetch...",
-            "Pull...", "Remotes...", "PaaS / CloudBees", "CreateApplication", "AppList", "Switch Account",
-            "PaaS / CloudFoundry", "CreateApp", "Applications", "SwitchAccount", "PaaS / Heroku",
-            "Create application...", "Applications", "Deploy public key", "Switch account...", "PaaS / OpenShift",
-            "Create domain...", "Create application...", "User info...", "Update SSH public key...",
-            "Switch account...", "PaaS / Google App Engine", "Deploy", "Create", "Login", "Logout",
-            "Window / Show View", "Navigator", "Project Explorer", "Window / Navigation", "Next Editor",
-            "Previous Editor", "Window", "Preferences", "Formatter", "Help", "About...", "REST Services Discovery",
-            "Show Keyboard Shortcuts...", "Show Available Dependencies...", "Welcome");
+            "Show / Hide Documentation", "Go to Folder", "Progress", "Output", "Log", "Show / Hide Hidden Files",
+            "Quick Outline", "Run", "Show Preview", "Set / Unset Autoload", "Validate", "Deploy", "Undeploy",
+            "Run in Sandbox", "Deploy to Sandbox", "Undeploy from Sandbox", "Launch REST Service",
+            "Show Template Preview", "Show Gadget Preview", "Preview node type", "Deploy node type", "Debug", "Run",
+            "Stop", "Java Logs", "Run Python Application", "Stop Python Application", "Python Logs", "Git",
+            "Initialize Repository", "Clone Repository...", "Delete Repository...", "Add...", "Reset Files...",
+            "Reset...", "Remove...", "Commit...", "Branches...", "Merge...", "Show History...", "Status",
+            "Git URL (Read-Only)...", "Git / Remote", "Push...", "Fetch...", "Pull...", "Remotes...",
+            "PaaS / CloudBees", "CreateApplication", "AppList", "Switch Account", "PaaS / CloudFoundry", "CreateApp",
+            "Applications", "SwitchAccount", "PaaS / Heroku", "Create application...", "Applications",
+            "Deploy public key", "Switch account...", "PaaS / OpenShift", "Create domain...", "Create application...",
+            "User info...", "Update SSH public key...", "Switch account...", "PaaS / Google App Engine", "Deploy",
+            "Create", "Login", "Logout", "Window / Show View", "Navigator", "Project Explorer", "Window / Navigation",
+            "Next Editor", "Previous Editor", "Window", "Preferences", "Formatter", "Help", "About...",
+            "REST Services Discovery", "Show Keyboard Shortcuts...", "Show Available Dependencies...", "Welcome");
       for (String chkName : defaultSet)
       {
-         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<:"+chkName.toString());
          assertTrue(getSet.contains(chkName.toString()));
       }
    }
