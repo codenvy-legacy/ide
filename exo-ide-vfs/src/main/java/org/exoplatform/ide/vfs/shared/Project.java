@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,39 +18,15 @@
  */
 package org.exoplatform.ide.vfs.shared;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * The Project - folder w/ special meaning.
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-public class Project extends Folder
+public interface Project extends Folder
 {
-   public static final String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
+   String PROJECT_MIME_TYPE = "text/vnd.ideproject+directory";
 
-   protected String projectType;
+   String getProjectType();
 
-   @SuppressWarnings("rawtypes")
-   public Project(String id, String name, String mimeType, String path, String parentId, long creationDate,
-      List<Property> properties, Map<String, Link> links, String projectType)
-   {
-      super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
-      this.projectType = projectType;
-   }
-
-   public Project()
-   {
-      super(ItemType.PROJECT);
-      mimeType = PROJECT_MIME_TYPE;
-   }
-
-   public String getProjectType()
-   {
-      return projectType;
-   }
-
-   public void setProjectType(String projectType)
-   {
-      this.projectType = projectType;
-   }
+   void setProjectType(String projectType);
 }

@@ -87,36 +87,6 @@ public final class TaskLogger implements InvocationOutputHandler
       return new FileReader(file);
    }
 
-   /**
-    * Get build log as String.
-    *
-    * @return build log as String
-    * @throws java.io.IOException if any i/o errors occur
-    */
-   public String getLogAsString() throws IOException
-   {
-      Reader reader = null;
-      try
-      {
-         reader = getLogReader();
-         char[] buff = new char[8192];
-         int r;
-         StringBuilder builder = new StringBuilder();
-         while ((r = reader.read(buff)) > 0)
-         {
-            builder.append(buff, 0, r);
-         }
-         return builder.toString();
-      }
-      finally
-      {
-         if (reader != null)
-         {
-            reader.close();
-         }
-      }
-   }
-
    /** @see org.codehaus.plexus.util.cli.StreamConsumer#consumeLine(java.lang.String) */
    @Override
    public void consumeLine(String line)

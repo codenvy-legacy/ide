@@ -20,10 +20,13 @@ package org.exoplatform.ide.vfs.server.impl.memory.context;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +60,7 @@ public abstract class MemoryItem
       this.name = name;
       this.permissionsMap = new HashMap<String, Set<String>>();
       permissionsMap.put(VirtualFileSystemInfo.ANY_PRINCIPAL,
-         new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+         new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
       this.properties = new HashMap<String, List<String>>();
       this.creationDate = this.lastModificationDate = System.currentTimeMillis();
    }
@@ -109,7 +112,7 @@ public abstract class MemoryItem
 
    public final void setMediaType(String mediaType)
    {
-      updateProperties(Arrays.asList(new Property("vfs:mimeType", mediaType)));
+      updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:mimeType", mediaType)));
       lastModificationDate = System.currentTimeMillis();
    }
 
@@ -156,7 +159,7 @@ public abstract class MemoryItem
       {
          for (Map.Entry<String, Set<String>> e : permissionsMap.entrySet())
          {
-            acl.add(new AccessControlEntry(e.getKey(), new HashSet<String>(e.getValue())));
+            acl.add(new AccessControlEntryImpl(e.getKey(), new HashSet<String>(e.getValue())));
          }
       }
       return acl;
@@ -180,7 +183,7 @@ public abstract class MemoryItem
       if (override && update.isEmpty())
       {
          update.put(VirtualFileSystemInfo.ANY_PRINCIPAL,
-            new HashSet<String>(Arrays.asList(VirtualFileSystemInfo.BasicPermissions.ALL.value())));
+            new HashSet<String>(Arrays.asList(VirtualFileSystemInfoImpl.BasicPermissions.ALL.value())));
       }
 
       synchronized (permissionsMap)
@@ -222,11 +225,11 @@ public abstract class MemoryItem
                {
                   List<String> copy = new ArrayList<String>(value.size());
                   copy.addAll(value);
-                  result.add(new Property(name, copy));
+                  result.add(new PropertyImpl(name, copy));
                }
                else
                {
-                  result.add(new Property(name, (String)null));
+                  result.add(new PropertyImpl(name, (String)null));
                }
             }
          }

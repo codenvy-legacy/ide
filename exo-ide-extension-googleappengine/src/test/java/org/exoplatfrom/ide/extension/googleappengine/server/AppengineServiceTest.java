@@ -62,9 +62,6 @@ public class AppengineServiceTest
 
    protected StandaloneContainer container;
 
-   /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemTest#setUp()
-    */
    @Before
    public void setUp() throws Exception
    {

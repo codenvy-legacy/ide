@@ -28,6 +28,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -48,10 +49,9 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * GitHub authenticator.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Mar 28, 2012 9:42:06 AM anya $
- * 
  */
 public class GitHubAuthenticator
 {
@@ -86,9 +86,11 @@ public class GitHubAuthenticator
 
    /**
     * Read value of the parameter.
-    * 
-    * @param initParams initial parameters
-    * @param paramName parameter name
+    *
+    * @param initParams
+    *    initial parameters
+    * @param paramName
+    *    parameter name
     * @return {@link String} value
     */
    private static String readValueParam(InitParams initParams, String paramName)
@@ -106,7 +108,7 @@ public class GitHubAuthenticator
 
    /**
     * Read user's credentials.
-    * 
+    *
     * @return {@link GitHubCredentials} GitHub user's credentials
     * @throws VirtualFileSystemException
     * @throws IOException
@@ -147,8 +149,9 @@ public class GitHubAuthenticator
 
    /**
     * Write GitHub user's credentials.
-    * 
-    * @param credentials credentials
+    *
+    * @param credentials
+    *    credentials
     * @throws VirtualFileSystemException
     * @throws IOException
     */
@@ -172,14 +175,14 @@ public class GitHubAuthenticator
             vfs.createFile(gitHub.getId(), "github-credentials", MediaType.TEXT_PLAIN_TYPE, content);
          List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
          String user = ConversationState.getCurrent().getIdentity().getUserId();
-         acl.add(new AccessControlEntry(user, new HashSet<String>(vfs.getInfo().getPermissions())));
+         acl.add(new AccessControlEntryImpl(user, new HashSet<String>(vfs.getInfo().getPermissions())));
          vfs.updateACL(credentialsFile.getId(), acl, true, null);
       }
    }
 
    /**
     * Remove GitHub user's credentials.
-    * 
+    *
     * @throws VirtualFileSystemException
     */
    public void removeCredentials() throws VirtualFileSystemException

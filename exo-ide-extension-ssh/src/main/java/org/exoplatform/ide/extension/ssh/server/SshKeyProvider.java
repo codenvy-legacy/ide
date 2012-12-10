@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.ssh.server;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
-
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.ContentStream;
@@ -30,6 +29,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -108,7 +108,7 @@ public class SshKeyProvider
          this.config = config;
          if (!this.config.endsWith("/"))
          {
-            this.config += "/";
+            this.config += '/';
          }
       }
       genJsch = new JSch();
@@ -132,7 +132,7 @@ public class SshKeyProvider
          vfs.getItemByPath(privateKeyPath, null, PropertyFilter.NONE_FILTER);
          throw new RuntimeException("Private key for host: '" + host + "' already exists. ");
       }
-      catch (ItemNotFoundException e)
+      catch (ItemNotFoundException ignored)
       {
       }
       writeKey(vfs, sshKeys, privateKeyName, key);
@@ -261,7 +261,7 @@ public class SshKeyProvider
          vfs.getItemByPath(sshKeys.createPath(privateKeyName), null, PropertyFilter.NONE_FILTER);
          throw new RuntimeException("Private key for host: '" + host + "' already exists. ");
       }
-      catch (ItemNotFoundException e)
+      catch (ItemNotFoundException ignored)
       {
       }
 
@@ -270,7 +270,7 @@ public class SshKeyProvider
          vfs.getItemByPath(sshKeys.createPath(publicKeyName), null, PropertyFilter.NONE_FILTER);
          throw new RuntimeException("Public key for host: '" + host + "' already exists. ");
       }
-      catch (ItemNotFoundException e)
+      catch (ItemNotFoundException ignored)
       {
       }
 
@@ -292,7 +292,7 @@ public class SshKeyProvider
       Item keyFile = vfs.createFile(sshKeys.getId(), keyName, MediaType.TEXT_PLAIN_TYPE, content);
       List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(3);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
-      acl.add(new AccessControlEntry(user, new HashSet<String>(vfs.getInfo().getPermissions())));
+      acl.add(new AccessControlEntryImpl(user, new HashSet<String>(vfs.getInfo().getPermissions())));
       vfs.updateACL(keyFile.getId(), acl, true, null);
    }
 
@@ -300,7 +300,6 @@ public class SshKeyProvider
     * Remove both private and public (if any) keys.
     * 
     * @param host host name
-    * @throws IOException if any i/o error occurs
     * @throws VirtualFileSystemException
     */
    public void removeKeys(String host) throws VirtualFileSystemException
@@ -315,7 +314,7 @@ public class SshKeyProvider
             Item item = vfs.getItemByPath(remove[i], null, PropertyFilter.NONE_FILTER);
             vfs.delete(item.getId(), null);
          }
-         catch (ItemNotFoundException e)
+         catch (ItemNotFoundException ignored)
          {
          }
       }

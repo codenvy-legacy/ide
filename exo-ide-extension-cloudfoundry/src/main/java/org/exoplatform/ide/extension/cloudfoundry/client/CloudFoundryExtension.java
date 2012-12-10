@@ -82,7 +82,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
    @Override
    public void onInitializeServices(InitializeServicesEvent event)
    {
-      new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
+      new CloudFoundryClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader(), IDE.messageBus());
    }
 
    /**

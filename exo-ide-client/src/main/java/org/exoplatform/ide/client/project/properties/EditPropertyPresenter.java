@@ -24,13 +24,13 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.user.client.ui.HasValue;
-
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -175,7 +175,7 @@ public class EditPropertyPresenter implements ViewClosedHandler
          }
       }
 
-      Property property = new Property(propertyName, propertyValue);
+      Property property = new PropertyImpl(propertyName, propertyValue);
       propertyList.add(property);
    }
 
@@ -205,7 +205,7 @@ public class EditPropertyPresenter implements ViewClosedHandler
             return;
          }
 
-         property = new Property(name, value);
+         property = new PropertyImpl(name, value);
          propertyList.add(property);
       }
       else
@@ -223,7 +223,7 @@ public class EditPropertyPresenter implements ViewClosedHandler
             }
 
             property.setValue(null);
-            Property newProperty = new Property(name, value);
+            Property newProperty = new PropertyImpl(name, value);
             propertyList.add(newProperty);
          }
          else

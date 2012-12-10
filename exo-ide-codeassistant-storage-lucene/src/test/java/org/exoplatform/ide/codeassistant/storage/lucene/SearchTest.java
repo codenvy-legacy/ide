@@ -18,14 +18,9 @@
  */
 package org.exoplatform.ide.codeassistant.storage.lucene;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 import test.ClassManager;
-
 import org.apache.lucene.store.RAMDirectory;
 import org.exoplatform.ide.codeassistant.jvm.CodeAssistantException;
-import org.exoplatform.ide.codeassistant.jvm.shared.MethodInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.ShortTypeInfo;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
 import org.exoplatform.ide.codeassistant.storage.lucene.writer.DataIndexer;
@@ -33,8 +28,10 @@ import org.exoplatform.ide.codeassistant.storage.lucene.writer.LuceneDataWriter;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test Searching in Lucene TypeInfo Storage

@@ -44,10 +44,13 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.CloudBeesLocalizationConstant;
+import org.exoplatform.ide.extension.cloudbees.client.CloudBeesRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.client.marshaller.DomainsUnmarshaller;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
@@ -191,9 +194,12 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       }
    }
 
+   /**
+    * Create application on Cloud Bees by sending request over WebSocket or HTTP.
+    */
    private void createApplication()
    {
-      LoggedInHandler createAppHandler = new LoggedInHandler()
+      LoggedInHandler loggedInHandler = new LoggedInHandler()
       {
          @Override
          public void onLoggedIn()
@@ -201,11 +207,50 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
             createApplication();
          }
       };
-
       JobManager.get().showJobSeparated();
+      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+
       try
       {
-         AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+         CloudBeesClientService.getInstance().initializeApplicationWS(
+            domain + "/" + name,
+            vfs.getId(),
+            project.getId(),
+            warUrl,
+            null,
+            new CloudBeesRESTfulRequestCallback<ApplicationInfo>(new AutoBeanUnmarshallerWS<ApplicationInfo>(autoBean),
+               loggedInHandler, null)
+            {
+               @Override
+               protected void onSuccess(ApplicationInfo appInfo)
+               {
+                  onCreatedSuccess(appInfo);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new OutputEvent(CloudBeesExtension.LOCALIZATION_CONSTANT
+                     .deployApplicationFailureMessage(), Type.INFO));
+                  deployResultHandler.onDeployFinished(false);
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         createApplicationREST(loggedInHandler);
+      }
+   }
+
+   /**
+    * Create application on Cloud Bees by sending request over HTTP.
+    */
+   private void createApplicationREST(LoggedInHandler loggedInHandler)
+   {
+      AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
+      try
+      {
          CloudBeesClientService.getInstance().initializeApplication(
             domain + "/" + name,
             vfs.getId(),
@@ -213,41 +258,12 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
             warUrl,
             null,
             new CloudBeesAsyncRequestCallback<ApplicationInfo>(new AutoBeanUnmarshaller<ApplicationInfo>(autoBean),
-               createAppHandler, null)
+               loggedInHandler, null)
             {
                @Override
                protected void onSuccess(ApplicationInfo appInfo)
                {
-                  StringBuilder output =
-                     new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess())
-                        .append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
-
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
-                     .append(appInfo.getId()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
-                     .append(appInfo.getTitle()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool())
-                     .append(" : ").append(appInfo.getServerPool()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
-                     .append(appInfo.getStatus()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer())
-                     .append(" : ").append(appInfo.getContainer()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout())
-                     .append(" : ").append(appInfo.getIdleTimeout()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory())
-                     .append(" : ").append(appInfo.getMaxMemory()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode())
-                     .append(" : ").append(appInfo.getSecurityMode()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize())
-                     .append(" : ").append(appInfo.getClusterSize()).append("<br>");
-                  output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
-                     .append("<a href='").append(appInfo.getUrl()).append("' target='_blank'>")
-                     .append(appInfo.getUrl()).append("</a>").append("<br>");
-
-                  IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
-                  deployResultHandler.onDeployFinished(true);
+                  onCreatedSuccess(appInfo);
                }
 
                @Override
@@ -268,6 +284,38 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       }
    }
 
+   private void onCreatedSuccess(ApplicationInfo appInfo)
+   {
+      StringBuilder output =
+         new StringBuilder(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationSuccess()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.deployApplicationInfo()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridId()).append(" : ")
+         .append(appInfo.getId()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridTitle()).append(" : ")
+         .append(appInfo.getTitle()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridServerPool()).append(" : ")
+         .append(appInfo.getServerPool()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridStatus()).append(" : ")
+         .append(appInfo.getStatus()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridContainer()).append(" : ")
+         .append(appInfo.getContainer()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridIdleTimeout()).append(" : ")
+         .append(appInfo.getIdleTimeout()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridMaxMemory()).append(" : ")
+         .append(appInfo.getMaxMemory()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridSecurityMode()).append(" : ")
+         .append(appInfo.getSecurityMode()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridClusterSize()).append(" : ")
+         .append(appInfo.getClusterSize()).append("<br>");
+      output.append(CloudBeesExtension.LOCALIZATION_CONSTANT.applicationInfoListGridUrl()).append(" : ")
+         .append("<a href='").append(appInfo.getUrl()).append("' target='_blank'>").append(appInfo.getUrl())
+         .append("</a>").append("<br>");
+
+      IDE.fireEvent(new OutputEvent(output.toString(), Type.INFO));
+      IDE.fireEvent(new RefreshBrowserEvent(project));
+      deployResultHandler.onDeployFinished(true);
+   }
+
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)
     */
@@ -277,10 +325,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       this.vfs = event.getVfsInfo();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
@@ -296,10 +340,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
-    *      org.exoplatform.ide.client.framework.project.ProjectType)
-    */
    @Override
    public Composite getDeployView(String projectName, ProjectType projectType)
    {
@@ -349,10 +389,6 @@ public class DeployApplicationPresenter implements ApplicationBuiltHandler, HasP
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
    {

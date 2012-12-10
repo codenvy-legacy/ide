@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.navigation.handler;
 
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -106,8 +105,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
 
    /**
     * Add handlers Open Save As Dialog
-    * 
-    * @see org.exoplatform.ide.client.module.navigation.event.SaveFileAsHandler#onSaveFileAs(org.exoplatform.ide.client.module.navigation.event.SaveFileAsEvent)
     */
    public void onSaveFileAs(SaveFileAsEvent event)
    {
@@ -132,8 +129,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
 
    /**
     * Open Save As Dialog
-    * 
-    * @param file
     */
    private void askForNewFileName(SaveFileAsEvent.SaveDialogType type)
    {
@@ -231,9 +226,6 @@ public class SaveFileAsCommandHandler implements SaveFileAsHandler, ItemsSelecte
       activeFile = event.getFile();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.model.settings.event.ApplicationSettingsReceivedEvent)
-    */
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)

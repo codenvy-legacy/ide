@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.operation.deleteitem;
 
-import java.util.List;
-
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -40,6 +38,8 @@ import org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+
+import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .

@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudfoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -66,10 +67,10 @@ public abstract class CloudFoundryClientService
     * @param name application name. This parameter is mandatory.
     * @param type the type of application (name of framework). Can be <code>null</code> (will try to detect automatically)
     * @param url the url (can be null - than will use default)
-    * @param instances the number of instanses of application
+    * @param instances the number of instances of application
     * @param memory memory (in MB) allocated for application (optional). If less of equals zero then use default value which is
     *           dependents to framework type
-    * @param nostart is start application after creationg
+    * @param nostart is start application after creating
     * @param vfsId current virtual file system id
     * @param projectId id of the project with the source code or compiled and packed java web application
     * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
@@ -78,6 +79,26 @@ public abstract class CloudFoundryClientService
    public abstract void create(String server, String name, String type, String url, int instances, int memory,
       boolean nostart, String vfsId, String projectId, String war,
       CloudFoundryAsyncRequestCallback<CloudFoundryApplication> callback) throws RequestException;
+
+   /**
+    * Create application on CloudFoundry. Sends request over WebSocket.
+    * 
+    * @param server location of Cloud Foundry instance where application must be created, e.g. http://api.cloudfoundry.com
+    * @param name application name. This parameter is mandatory.
+    * @param type the type of application (name of framework). Can be <code>null</code> (will try to detect automatically)
+    * @param url the url (can be null - than will use default)
+    * @param instances the number of instances of application
+    * @param memory memory (in MB) allocated for application (optional). If less of equals zero then use default value which is
+    *           dependents to framework type
+    * @param nostart is start application after creating
+    * @param vfsId current virtual file system id
+    * @param projectId id of the project with the source code or compiled and packed java web application
+    * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
+    * @param callback callback, that client has to implement to receive response
+    */
+   public abstract void createWS(String server, String name, String type, String url, int instances, int memory,
+      boolean nostart, String vfsId, String projectId, String war,
+      CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException;
 
    /**
     * Log in CloudFoundry account.

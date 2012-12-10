@@ -30,6 +30,7 @@ public enum ProjectType {
    JSP("Servlet/JSP"), //
    JAVA("Java"), //
    JAR("Jar"), //
+   WAR("War"), //
    JAVASCRIPT("JavaScript"), //
    NODE_JS("nodejs"), //
    PYTHON("Python"), //

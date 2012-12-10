@@ -19,8 +19,12 @@
 package org.exoplatform.ide.client.project.prepare;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
@@ -33,12 +37,19 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.vfs.client.JSONSerializer;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
@@ -48,13 +59,23 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
 {
    public interface Display extends IsView
    {
+      HasClickHandlers getOkButton();
 
+      HasClickHandlers getCancelButton();
+
+      HasValue<String> getProjectTypeField();
+
+      void setProjectTypeValues(String[] types);
    }
 
    /**
     * Instance of opened {@link Display}.
     */
    private Display display;
+
+   private String folderId;
+
+   private List<Property> properties;
 
    public ProjectPreparePresenter()
    {
@@ -64,14 +85,21 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    @Override
    public void onConvertToProject(final ConvertToProjectEvent event)
    {
+      folderId = event.getFolderId();
       Loader loader = new GWTLoader();
       String url =
          Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId();
 
+      
+      properties = event.getProperties();
+      String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
+      
       try
       {
          AsyncRequest.build(RequestBuilder.POST, url, false)
             .loader(loader)
+            .data(data)
+            .header("Content-Type", "application/json")
             .send(new AsyncRequestCallback<Void>()
             {
                @Override
@@ -85,16 +113,8 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                @Override
                protected void onFailure(Throwable e)
                {
-                  if ("autodetection_failed".equals(e.getLocalizedMessage()))
-                  {
-                     //TODO review this
-                     IDE.fireEvent(new ExceptionThrownEvent("Please select project type."));
-                  }
-                  else
-                  {
-                     //if some other error appear
-                     IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-                  }
+                  //Show user selection menu
+                  createAndBindDisplay();
                }
             });
       }
@@ -143,6 +163,98 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    private void createAndBindDisplay()
    {
       display = GWT.create(Display.class);
+
+      String[] types = new String[]{"Jar", "War", "Spring", "JavaScript", "Rails", "Python", "PHP"};
+
+      display.setProjectTypeValues(types);
       org.exoplatform.ide.client.framework.module.IDE.getInstance().openView(display.asView());
+      display.getProjectTypeField().setValue(types[0]);
+
+      display.getOkButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            setUserProjectType(display.getProjectTypeField().getValue());
+         }
+      });
+
+      display.getCancelButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            setUserProjectType("none");
+         }
+      });
+   }
+
+   private void setUserProjectType(String projectType)
+   {
+      final List<Property> properties = new ArrayList<Property>();
+      properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      properties.addAll(this.properties);
+      if (!"none".equals(projectType))
+      {
+         properties.add(new PropertyImpl("vfs:projectType", ProjectType.fromValue(projectType).value()));
+      }
+
+      try
+      {
+         ProjectModel project = new ProjectModel();
+         ItemWrapper item = new ItemWrapper(project);
+         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+         VirtualFileSystem.getInstance().getItemById(folderId,
+            new AsyncRequestCallback<ItemWrapper>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  Item item = result.getItem();
+                  item.getProperties().addAll(properties);
+                  writeUserPropertiesToProject(item);
+               }
+
+               @Override
+               protected void onFailure(Throwable e)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(e));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void writeUserPropertiesToProject(Item item)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(item, null, new AsyncRequestCallback<ItemWrapper>()
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               IDE.fireEvent(new OutputEvent("Project type updated.", OutputMessage.Type.INFO));
+               openPreparedProject(folderId);
+            }
+
+            @Override
+            protected void onFailure(Throwable e)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(e));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+      finally
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 }

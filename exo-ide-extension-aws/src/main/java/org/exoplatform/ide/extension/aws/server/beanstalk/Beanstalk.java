@@ -84,6 +84,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -1986,7 +1987,7 @@ public class Beanstalk extends AWSClient
    private void writeApplicationName(VirtualFileSystem vfs, String projectId, String applicationName)
       throws VirtualFileSystemException
    {
-      Property p = new Property("aws-application", applicationName);
+      Property p = new PropertyImpl("aws-application", applicationName);
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);

@@ -24,7 +24,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
-
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDE;
@@ -112,7 +111,7 @@ public class NavigatorView extends ViewImpl implements NavigatorDisplay
    @Override
    public void setLockTokens(Map<String, String> locktokens)
    {
-      treeGrid.setLocktokens(locktokens);
+      treeGrid.setLockTokens(locktokens);
    }
 
    @Override

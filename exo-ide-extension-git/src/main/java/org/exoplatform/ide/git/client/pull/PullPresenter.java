@@ -33,10 +33,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
@@ -258,14 +256,33 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
    private void doPull()
    {
       String remoteName = display.getRemoteDisplayValue();
-      String remoteUrl = display.getRemoteName().getValue();
+      final String remoteUrl = display.getRemoteName().getValue();
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       IDE.getInstance().closeView(display.asView().getId());
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         doPullWS(project, remoteUrl, remoteName);
-      else
+      try
+      {
+         GitClientService.getInstance().pullWS(vfs.getId(), project, getRefs(), remoteName,
+            new RequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception, remoteUrl);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          doPullREST(project, remoteUrl, remoteName);
+      }
    }
 
    /**
@@ -294,37 +311,6 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
             });
       }
       catch (RequestException e)
-      {
-         handleError(e, remoteUrl);
-      }
-   }
-
-   /**
-    * Perform pull from pointed by user remote repository, from pointed remote branch to local one.
-    * Local branch may not be pointed. Sends request over WebSocket.
-    */
-   private void doPullWS(ProjectModel project, final String remoteUrl, String remoteName)
-   {
-      try
-      {
-         GitClientService.getInstance().pullWS(vfs.getId(), project, getRefs(), remoteName,
-            new RESTfulRequestCallback<String>()
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception, remoteUrl);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          handleError(e, remoteUrl);
       }

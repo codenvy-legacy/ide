@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.properties;
 
+import com.google.gwt.core.client.GWT;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -29,8 +30,6 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * Created by The eXo Platform SAS .

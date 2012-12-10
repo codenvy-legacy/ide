@@ -18,16 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
-import com.google.gwt.user.client.Command;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -38,6 +30,9 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 /**
  * Created by The eXo Platform SAS.
@@ -170,24 +165,5 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 
       IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "y");
       assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1,2,3");
-
    }
-
-   /**
-    * @throws Exception
-    */
-   private void checkNoFileOpened() throws Exception
-   {
-      String divIndex = "0";
-
-      //check Code Editor is not present in tab 0
-      assertFalse(selenium().isElementPresent(
-         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//div[@class='CodeMirror-wrapping']/iframe"));
-      //check CK editor is not present in tab 0
-      assertFalse(selenium().isElementPresent(
-         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//div[@class='CodeMirror-wrapping']/iframe"));
-   }
-
 }

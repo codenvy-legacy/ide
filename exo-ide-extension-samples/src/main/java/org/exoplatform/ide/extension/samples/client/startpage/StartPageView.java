@@ -88,14 +88,6 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    {
       super(ID, "editor", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()));
       add(uiBinder.createAndBindUi(this));
-      supportLink.addClickHandler(new ClickHandler()
-      {
-         @Override
-         public void onClick(ClickEvent event)
-         {
-            supportAndFeedback();
-         }
-      });
    }
 
    /**
@@ -125,8 +117,5 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
       return importLink;
    }
 
-   private static native void supportAndFeedback() /*-{
-      $wnd.showContactUsForm();
-   }-*/;
 
 }

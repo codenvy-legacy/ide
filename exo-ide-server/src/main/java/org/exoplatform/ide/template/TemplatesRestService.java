@@ -42,17 +42,19 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -106,7 +108,7 @@ public class TemplatesRestService
    private static FilenameFilter projectsZipFilter = new FilenameFilter()
    {
       @Override
-      public boolean accept(File dir, String name)
+      public boolean accept(java.io.File dir, String name)
       {
          return name.endsWith(".zip");
       }
@@ -370,8 +372,8 @@ public class TemplatesRestService
          try
          {
             String path2pom = projectFolder.getPath() + "/pom.xml";
-            org.exoplatform.ide.vfs.shared.File pom =
-               (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(path2pom, null, PropertyFilter.NONE_FILTER);
+            File pom =
+               (File)vfs.getItemByPath(path2pom, null, PropertyFilter.NONE_FILTER);
             String content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
             String host = uriInfo.getAbsolutePath().getHost();
             String groupId = null;
@@ -399,7 +401,7 @@ public class TemplatesRestService
             //Goto change groupId & artifactId for child project for MultiModule project IDE-2025
             //TODO: need fix it remove hardcode
             pom =
-               (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(projectFolder.getPath() + "/my-lib/pom.xml", null, PropertyFilter.NONE_FILTER);
+               (File)vfs.getItemByPath(projectFolder.getPath() + "/my-lib/pom.xml", null, PropertyFilter.NONE_FILTER);
             content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
             newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
             newContent = PATTERN_ARTIFACT_ID_OF_PARENT.matcher(newContent).replaceFirst("<artifactId>" + name + "</artifactId>");
@@ -408,7 +410,7 @@ public class TemplatesRestService
             
              //TODO: need fix it remove hardcode
             pom =
-               (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(projectFolder.getPath() + "/my-webapp/pom.xml", null, PropertyFilter.NONE_FILTER);
+               (File)vfs.getItemByPath(projectFolder.getPath() + "/my-webapp/pom.xml", null, PropertyFilter.NONE_FILTER);
             content = StringUtils.toString(vfs.getContent(pom.getId()).getStream());
             newContent = PATTERN_GROUP_ID_OF_PARENT.matcher(content).replaceFirst("<groupId>" + groupId + "</groupId>");
             newContent = PATTERN_GROUP_ID.matcher(newContent).replaceFirst("<groupId>" + groupId + "</groupId>");//change dependency
@@ -435,7 +437,7 @@ public class TemplatesRestService
             templateStream.close();
       }
       org.exoplatform.ide.vfs.shared.Item projectItem = vfs.getItem(projectFolder.getId(), PropertyFilter.ALL_FILTER);
-      if (projectItem instanceof Project)
+      if (projectItem instanceof ProjectImpl)
       {
          return (Project)projectItem;
       }
@@ -525,9 +527,9 @@ public class TemplatesRestService
       URL url = Thread.currentThread().getContextClassLoader().getResource("projects");
       if (url != null)
       {
-         File projectsFolder = new File(url.toURI());
-         File[] projects = projectsFolder.listFiles(projectsZipFilter);
-         for (File f : projects)
+         java.io.File projectsFolder = new java.io.File(url.toURI());
+         java.io.File[] projects = projectsFolder.listFiles(projectsZipFilter);
+         for (java.io.File f : projects)
          {
             ZipFile zip = null;
             InputStream prjDescrStream = null;
@@ -541,7 +543,7 @@ public class TemplatesRestService
                JsonParser jp = new JsonParser();
                prjDescrStream = zip.getInputStream(entry);
                jp.parse(prjDescrStream);
-               Property[] array = (Property[])ObjectBuilder.createArray(Property[].class, jp.getJsonObject());
+               Property[] array = (Property[])ObjectBuilder.createArray(PropertyImpl[].class, jp.getJsonObject());
                List<Property> properties = Arrays.asList(array);
                String name = f.getName();
                name = name.substring(0, name.lastIndexOf(".zip"));

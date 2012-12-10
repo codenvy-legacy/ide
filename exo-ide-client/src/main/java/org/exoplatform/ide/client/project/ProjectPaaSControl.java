@@ -110,6 +110,11 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
     */
    private boolean isDeployed(ProjectModel project)
    {
+      if (project == null)
+      {
+         return false;
+      }
+         
       List<String> targets = project.getPropertyValues(ProjectProperties.TARGET.value());
 
       return project.getPropertyValue("cloudbees-application") != null

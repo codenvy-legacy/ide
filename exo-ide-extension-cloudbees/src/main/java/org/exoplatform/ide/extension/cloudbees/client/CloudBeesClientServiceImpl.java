@@ -28,6 +28,10 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.extension.cloudbees.client.initialize.CreateApplicationRequestHandler;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
@@ -80,10 +84,16 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
     */
    private Loader loader;
 
-   public CloudBeesClientServiceImpl(String restContext, Loader loader)
+   /**
+    * WebSocket message bus.
+    */
+   private MessageBus wsMessageBus;
+
+   public CloudBeesClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
    }
 
    /**
@@ -230,6 +240,31 @@ public class CloudBeesClientServiceImpl extends CloudBeesClientService
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true)
          .requestStatusHandler(new CreateApplicationRequestHandler(appId))
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
+   }
+
+   /**
+    * @throws WebSocketException
+    * @see org.exoplatform.ide.extension.cloudbees.client.CloudBeesClientService#initializeApplicationWS(java.lang.String, java.lang.String,
+    *       java.lang.String, java.lang.String, java.lang.String, org.exoplatform.ide.extension.cloudbees.client.CloudBeesRESTfulRequestCallback)
+    */
+   @Override
+   public void initializeApplicationWS(String appId, String vfsId, String projectId, String warFile, String message,
+      CloudBeesRESTfulRequestCallback<ApplicationInfo> callback) throws WebSocketException
+   {
+      String params = "?appid=" + appId + "&";
+      params += "war=" + warFile;
+      params += "&vfsid=" + vfsId;
+      params += (projectId != null) ? "&projectid=" + projectId : "";
+      if (message != null && !message.isEmpty())
+      {
+         params += "&message=" + message;
+      }
+      callback.setStatusHandler(new CreateApplicationRequestHandler(appId));
+
+      RequestMessage requestMessage =
+         RequestMessageBuilder.build(RequestBuilder.POST, INITIALIZE + params)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(requestMessage, callback);
    }
 
    /**

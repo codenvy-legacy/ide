@@ -86,10 +86,12 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-            IDE.fireEvent(new ShowImportFromGithubEvent());
+           IDE.fireEvent(new ShowImportFromGithubEvent());
          }
       });
    }
+   
+
 
    /**
     * @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client.OpenStartPageEvent.OpenWelcomeEvent)

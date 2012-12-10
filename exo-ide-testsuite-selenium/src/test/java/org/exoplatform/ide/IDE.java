@@ -47,7 +47,6 @@ import org.exoplatform.ide.core.LockFile;
 import org.exoplatform.ide.core.LogReader;
 import org.exoplatform.ide.core.Login;
 import org.exoplatform.ide.core.Menu;
-import org.exoplatform.ide.core.Navigation;
 import org.exoplatform.ide.core.OpenFileByPath;
 import org.exoplatform.ide.core.OpenFileByURL;
 import org.exoplatform.ide.core.Outline;
@@ -71,10 +70,8 @@ import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Templates;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.Upload;
-import org.exoplatform.ide.core.Versions;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.WelcomePage;
-import org.exoplatform.ide.core.Workspace;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.exoplatform.ide.debug.DebugChangeVariable;
@@ -126,7 +123,6 @@ public class IDE
 
    public Outline OUTLINE;
 
-   public Navigation NAVIGATION = new Navigation();
 
    public Perspective PERSPECTIVE;
 
@@ -145,9 +141,6 @@ public class IDE
    public Statusbar STATUSBAR;
 
    public SelectWorkspace SELECT_WORKSPACE;
-
-   @Deprecated
-   public Workspace WORKSPACE = new Workspace();
 
    public GoToLine GOTOLINE;
 
@@ -172,8 +165,6 @@ public class IDE
    public Properties PROPERTIES;
 
    public PreviewNodeType PREVIEW_NODE_TYPE;
-
-   public Versions VERSIONS = new Versions();
 
    public Folder FOLDER;
 

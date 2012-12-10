@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.heroku.client;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 
 /**
  * Heroku client service.
@@ -77,6 +78,18 @@ public abstract class HerokuClientService
     */
    public abstract void createApplication(String applicationName, String vfsId, String projectid, String remoteName,
       HerokuAsyncRequestCallback callback) throws RequestException;
+
+   /**
+    * Creates new application on Heroku. Sends request over WebSocket.
+    * 
+    * @param applicationName application's name
+    * @param vfsId virtual file system id
+    * @param projectid GIT workdir's projectid
+    * @param remoteName name of Git remote repository
+    * @param callback callback
+    */
+   public abstract void createApplicationWS(String applicationName, String vfsId, String projectid, String remoteName,
+      HerokuRESTfulRequestCallback callback) throws WebSocketException;
 
    /**
     * Deletes application pointed by it's name or Git location.

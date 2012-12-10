@@ -33,16 +33,19 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
- * Base class for JVM based programming languages(Java, Groovy) codeassitant. Class contains some basic methods for using
+ * Base class for JVM based programming languages(Java, Groovy) codeassitant. 
+ * Class contains some basic methods for using
  * {@link CodeAssistantStorage}. All abstract methods is languages and project specific(Java, Groovy).
  * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -129,14 +132,21 @@ public abstract class CodeAssistant
    protected Set<String> getProjectDependencys(String projectId, String vfsId) throws VirtualFileSystemException,
       CodeAssistantException
    {
+      if (projectId == null)
+      {
+         return Collections.emptySet();
+      }
+      Set<String> set = new HashSet<String>();
+      ProjectImpl project = getProject(projectId, vfsRegistry.getProvider(vfsId).newInstance(null, null));
+      return getProjectDependencys(project);
+   }
+   
+   
+   public Set<String> getProjectDependencys(Project project) throws CodeAssistantException
+   {
       Set<String> set = new HashSet<String>();
       //add rt.jar as dependency
       set.add("java:rt:1.6:jar");
-      if (projectId == null)
-      {
-         return set;
-      }
-      Project project = getProject(projectId, vfsRegistry.getProvider(vfsId).newInstance(null, null));
       if (project.hasProperty("exoide:classpath"))
       {
          String classpath = (String)project.getPropertyValue("exoide:classpath");
@@ -152,7 +162,7 @@ public abstract class CodeAssistant
          catch (JsonException e)
          {
 
-            throw new CodeAssistantException(500, "Can't parse dependencys for project: " + projectId);
+            throw new CodeAssistantException(500, "Can't parse dependencys for project: " + project.getPath());
          }
       }
       return set;
@@ -167,13 +177,13 @@ public abstract class CodeAssistant
     * @throws VirtualFileSystemException
     * @throws CodeAssistantException
     */
-   protected Project getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
+   protected ProjectImpl getProject(String projectId, VirtualFileSystem vfs) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
    {
       Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-      Project project = null;
-      if (item instanceof Project)
-         project = (Project)item;
+      ProjectImpl project = null;
+      if (item instanceof ProjectImpl)
+         project = (ProjectImpl)item;
       else
          throw new CodeAssistantException(400, "'projectId' is not project Id");
       return project;
@@ -312,7 +322,6 @@ public abstract class CodeAssistant
     * </pre>
     * 
     * @param prefix the string for matching FQNs
-    * @param where the string that indicate where find (must be "className" or "fqn")
     * @param projectId Id of the project
     * @param vfsId Id of the VirtualFileSystem
     * @return
@@ -461,11 +470,27 @@ public abstract class CodeAssistant
    public List<String> getAllPackages(String projectId, String vfsId) throws CodeAssistantException,
       VirtualFileSystemException
    {
-      List<String> packages = storage.getAllPackages(getProjectDependencys(projectId, vfsId));
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      Project project = getProject(projectId, vfs);
+      return getAllPackages(project, vfs);            
+   }
+   
+   /**
+    * Return sets of Strings, associated with the package names
+    * @param projectId Id of current project
+    * @param vfsId Id of current project
+    * @return {@link List} of package names
+    * @throws CodeAssistantException
+    * @throws VirtualFileSystemException
+    */
+   public List<String> getAllPackages(Project project, VirtualFileSystem vfs) throws CodeAssistantException,
+      VirtualFileSystemException
+   {
+      List<String> packages = storage.getAllPackages(getProjectDependencys(project));
       List<String> result = new ArrayList<String>();
       try
       {
-         List<String> packagesFromProject = getAllPackagesFromProject(projectId, vfsId);
+         List<String> packagesFromProject = getAllPackagesFromProject(project, vfs);
          if (packagesFromProject != null)
          {
             result.addAll(packagesFromProject);
@@ -484,15 +509,29 @@ public abstract class CodeAssistant
       return result;
    }
 
+   
+   
+
    /**
     *  Return sets of Strings, associated with the package names
     * @param projectId Id of current project
-    * @param vfsId Id of current project
+    * @param vfsId Id of current virtual file system
     * @return {@link List} of package names
     * @throws VirtualFileSystemException 
     * @throws CodeAssistantException 
     */
    protected abstract List<String> getAllPackagesFromProject(String projectId, String vfsId)
+      throws VirtualFileSystemException, CodeAssistantException;
+   
+   /**
+    *  Return sets of Strings, associated with the package names
+    * @param project current project
+    * @param vfs current virtual file system
+    * @return {@link List} of package names
+    * @throws VirtualFileSystemException 
+    * @throws CodeAssistantException 
+    */
+   protected abstract List<String> getAllPackagesFromProject(Project project, VirtualFileSystem fileSystem)
       throws VirtualFileSystemException, CodeAssistantException;
 
    /**
@@ -570,7 +609,6 @@ public abstract class CodeAssistant
     * Returns set of FQNs matched to prefix (means FQN begin on {prefix} or Class simple name)<br>
     * 
     * @param prefix the string for matching FQNs
-    * @param where Where find FQN or CLASSNAME
     * @param projectId Id of the project
     * @param vfsId Id of the VirtualFileSystem
     * @return

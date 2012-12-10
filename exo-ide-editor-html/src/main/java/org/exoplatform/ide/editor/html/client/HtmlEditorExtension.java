@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.editor.html.client;
 
+import com.google.gwt.core.client.GWT;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
@@ -34,8 +35,6 @@ import org.exoplatform.ide.editor.html.client.codeassistant.HtmlCodeAssistant;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlAutocompleteHelper;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlOutlineItemCreator;
 import org.exoplatform.ide.editor.html.client.codemirror.HtmlParser;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

@@ -25,7 +25,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.exoplatform.ide.git.server.GitConnection;
-import org.exoplatform.ide.git.server.jgit.JGitConnection;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.GitUser;
 

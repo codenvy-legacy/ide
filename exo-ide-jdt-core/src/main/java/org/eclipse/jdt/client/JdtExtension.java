@@ -149,6 +149,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       projectTypes.add(ProjectType.JSP.value());
       projectTypes.add(ProjectType.AWS.value());
       projectTypes.add(ProjectType.JAR.value());
+      projectTypes.add(ProjectType.WAR.value());
    }
 
    /**
@@ -213,7 +214,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new JavaCodeController(this);
       new OutlinePresenter();
       new TypeInfoUpdater();
-      new CleanProjectCommandHandler();
+      new JavaClasspathResolver(this);
       new OrganizeImportsPresenter(IDE.eventBus());
       IDE.getInstance().addControl(new CleanProjectControl());
       IDE.getInstance().addControl(new FormatterProfilesControl());
@@ -236,7 +237,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       injector.getSetterGetterPresenter();
       TypeInfoStorage.get().clear();
       resources.hover().ensureInjected();
-      new PackagesUpdater(IDE.eventBus(), this, TypeInfoStorage.get());
+//      new PackagesUpdater(IDE.eventBus(), this, TypeInfoStorage.get());
       new JavadocPresenter(IDE.eventBus(), resources);      
    }
 

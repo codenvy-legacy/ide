@@ -18,14 +18,10 @@
  */
 package org.exoplatform.ide.extension.groovy.server;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
-import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockPrincipal;
 import org.exoplatform.container.ConcurrentPicoContainer;
 import org.exoplatform.ide.vfs.server.ContentStream;
@@ -52,6 +48,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.SecurityContext;
 
+import static org.junit.Assert.*;
+
 /**
  * Created by The eXo Platform SAS.
  * 
@@ -62,9 +60,9 @@ public class TestGroovyRestDeployer extends Base
 {
    private File script;
 
-   private DummySecurityContext adminSecurityContext;
+   private SimpleSecurityContext adminSecurityContext;
 
-   private DummySecurityContext devSecurityContext;
+   private SimpleSecurityContext devSecurityContext;
 
    private ConcurrentPicoContainer restfulContainer;
 
@@ -82,8 +80,8 @@ public class TestGroovyRestDeployer extends Base
       Set<String> devRoles = new HashSet<String>();
       devRoles.add("developers");
 
-      adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
-      devSecurityContext = new DummySecurityContext(new MockPrincipal("dev"), devRoles);
+      adminSecurityContext = new SimpleSecurityContext(new MockPrincipal("root"), adminRoles, "BASIC", false);
+      devSecurityContext = new SimpleSecurityContext(new MockPrincipal("dev"), devRoles, "BASIC", false);
 
       Provider provider = (Provider)container.getComponentInstance("RestfulContainerProvider");
       assertNotNull(provider);

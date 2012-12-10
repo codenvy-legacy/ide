@@ -28,6 +28,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPMethod;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -98,7 +99,7 @@ public class VfsUtils
          JsonParser parser = new JsonParser();
          parser.parse(connection.getInputStream());
          connection.getInputStream().close();
-         vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfo.class, parser.getJsonObject());
+         vfsInfo = ObjectBuilder.createObject(VirtualFileSystemInfoImpl.class, parser.getJsonObject());
          JsonValue element = parser.getJsonObject().getElement("root").getElement("links");
 
          Field field = VfsUtils.class.getDeclaredField("rootLinks");

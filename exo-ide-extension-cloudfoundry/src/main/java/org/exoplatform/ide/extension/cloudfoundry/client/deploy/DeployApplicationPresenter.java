@@ -43,10 +43,13 @@ import org.exoplatform.ide.client.framework.paas.HasPaaSActions;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
 import org.exoplatform.ide.client.framework.template.TemplateService;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -182,9 +185,12 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       IDE.fireEvent(new BuildProjectEvent(project));
    }
 
+   /**
+    * Create application on CloudFoundry by sending request over WebSocket or HTTP.
+    */
    private void createApplication()
    {
-      LoggedInHandler createAppHandler = new LoggedInHandler()
+      LoggedInHandler loggedInHandler = new LoggedInHandler()
       {
          @Override
          public void onLoggedIn()
@@ -192,40 +198,76 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             createApplication();
          }
       };
+      JobManager.get().showJobSeparated();
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
+         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
       try
       {
-         JobManager.get().showJobSeparated();
-         AutoBean<CloudFoundryApplication> cloudFoundryApplication =
-            CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
-
          // Application will be started after creation (IDE-1618)
-         CloudFoundryClientService.getInstance().create(server, name, null, url, 0, 0, false, vfs.getId(),
+         boolean noStart = false;
+         CloudFoundryClientService.getInstance()
+            .createWS(
+               server,
+               name,
+               null,
+               url,
+               0,
+               0,
+               noStart,
+               vfs.getId(),
+               project.getId(),
+               warUrl,
+               new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+                  server)
+               {
+                  @Override
+                  protected void onSuccess(CloudFoundryApplication result)
+                  {
+                     onAppCreatedSuccess(result);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     deployResultHandler.onDeployFinished(false);
+                     IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                     super.onFailure(exception);
+                  }
+               });
+      }
+      catch (WebSocketException e)
+      {
+         createApplicationREST(loggedInHandler);
+      }
+   }
+
+   /**
+    * Create application on CloudFoundry by sending request over HTTP.
+    * 
+    * @param loggedInHandler handler that should be called after success login
+    */
+   private void createApplicationREST(LoggedInHandler loggedInHandler)
+   {
+      AutoBean<CloudFoundryApplication> cloudFoundryApplication =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
+      AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+         new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
+
+      try
+      {
+         // Application will be started after creation (IDE-1618)
+         boolean noStart = false;
+         CloudFoundryClientService.getInstance().create(server, name, null, url, 0, 0, noStart, vfs.getId(),
             project.getId(), warUrl,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, createAppHandler, null, server)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, server)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
-                  warUrl = null;
-                  String msg = lb.applicationCreatedSuccessfully(result.getName());
-                  if ("STARTED".equals(result.getState()))
-                  {
-                     if (result.getUris().isEmpty())
-                     {
-                        msg += "<br>" + lb.applicationStartedWithNoUrls();
-                     }
-                     else
-                     {
-                        msg += "<br>" + lb.applicationStartedOnUrls(result.getName(), getAppUrlsAsString(result));
-                     }
-                  }
-                  deployResultHandler.onDeployFinished(true);
-                  IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                  IDE.fireEvent(new RefreshBrowserEvent(project));
+                  onAppCreatedSuccess(result);
                }
 
                @Override
@@ -242,6 +284,31 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
          deployResultHandler.onDeployFinished(false);
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Performs action when application successfully created.
+    * 
+    * @param app @link CloudFoundryApplication} which is created
+    */
+   private void onAppCreatedSuccess(CloudFoundryApplication app)
+   {
+      warUrl = null;
+      String msg = lb.applicationCreatedSuccessfully(app.getName());
+      if ("STARTED".equals(app.getState()))
+      {
+         if (app.getUris().isEmpty())
+         {
+            msg += "<br>" + lb.applicationStartedWithNoUrls();
+         }
+         else
+         {
+            msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+         }
+      }
+      deployResultHandler.onDeployFinished(true);
+      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+      IDE.fireEvent(new RefreshBrowserEvent(project));
    }
 
    /**
@@ -354,10 +421,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       this.vfs = event.getVfsInfo();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
    {
@@ -403,10 +466,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
-    *      org.exoplatform.ide.client.framework.project.ProjectType)
-    */
    @Override
    public Composite getDeployView(String projectName, ProjectType projectType)
    {
@@ -456,10 +515,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
-    */
    @Override
    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)
    {

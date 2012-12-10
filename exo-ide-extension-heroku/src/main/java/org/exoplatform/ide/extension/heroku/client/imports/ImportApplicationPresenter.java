@@ -39,10 +39,8 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -56,6 +54,7 @@ import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -280,10 +279,28 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
     */
    private void cloneRepository()
    {
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-         cloneRepositoryWS();
-      else
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), project, gitLocation, null,
+            new RequestCallback<RepoInfo>()
+            {
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  updateProperties();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          cloneRepositoryREST();
+      }
    }
 
    /**
@@ -310,35 +327,6 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
             });
       }
       catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-   
-   /**
-    * Clone repository (over WebSocket). Remote repository is Heroku application.
-    */
-   private void cloneRepositoryWS()
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), project, gitLocation, null,
-            new RESTfulRequestCallback<RepoInfo>()
-            {
-            @Override
-            protected void onSuccess(RepoInfo result)
-            {
-               updateProperties();
-            }
-            
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-            });
-      }
-      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
@@ -372,11 +360,9 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
     */
    private void updateProperties()
    {
-      project.getProperties().add(new org.exoplatform.ide.vfs.shared.Property("heroku-application", herokuApplication));
-      project.getProperties().add(
-         new org.exoplatform.ide.vfs.shared.Property("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      project.getProperties()
-         .add(new org.exoplatform.ide.vfs.shared.Property("vfs:projectType", ProjectResolver.RAILS));
+      project.getProperties().add(new PropertyImpl("heroku-application", herokuApplication));
+      project.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      project.getProperties().add(new PropertyImpl("vfs:projectType", ProjectResolver.RAILS));
 
       try
       {

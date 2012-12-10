@@ -31,7 +31,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ToggleButton;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -60,7 +59,7 @@ import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -110,9 +109,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       /**
        * Toggle up all buttons from the <code>buttonsList</code> except the <code>currentButton</code>.
-       * 
-       * @param projectTypeButtonsList list of buttons which shall be toggled down
-       * @param projectTypeButton button to except
        */
       void toggleUpAllButtons(List<ToggleButton> buttonsList, ToggleButton currentButton);
 
@@ -654,7 +650,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
     */
    private void writeUseJRebelProperty(ProjectModel project)
    {
-      project.getProperties().add(new Property(JREBEL, "true"));
+      project.getProperties().add(new PropertyImpl(JREBEL, "true"));
       try
       {
          VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.shell.client.commands;
 
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.shell.client.CloudShell;
 import org.exoplatform.ide.shell.client.Environment;
@@ -127,7 +126,7 @@ public class LsCommand extends ClientCommand
                @Override
                protected void onSuccess(List<Item> result)
                {
-                  CloudShell.console().print(Utils.fomatItems(result));
+                  CloudShell.console().print(Utils.formatItems(result));
                }
 
                /**

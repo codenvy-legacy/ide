@@ -19,6 +19,8 @@
 package org.exoplatform.ide.git.client.clone;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -27,19 +29,14 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
-import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -49,11 +46,7 @@ import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Property;
 
 /**
  * Presenter for Clone Repository View.
@@ -238,19 +231,46 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    }
 
    /**
-    * Clone of the repository by sending request over WebSocket or HTTP.
+    * Get the necessary parameters values and clone repository (over WebSocket or HTTP).
+    *
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param folder folder (root of GIT repository)
     */
    private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder)
    {
-      // TODO temporary disabled using WebSocket
-//      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
-//         cloneRepositoryWS(remoteUri, remoteName, folder);
-//      else
-      cloneRepositoryREST(remoteUri, remoteName, folder);
+      try
+      {
+         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
+            new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
+            {
+
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  onCloneSuccess(result, folder);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  handleError(exception);
+               }
+            });
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+      catch (WebSocketException e)
+      {
+         cloneRepositoryREST(remoteUri, remoteName, folder);
+      }
    }
 
    /**
     * Get the necessary parameters values and call the clone repository method (over HTTP).
+    * 
+    * @param remoteUri the location of the remote repository
+    * @param remoteName remote name instead of "origin"
+    * @param folder folder (root of GIT repository)
     */
    private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder)
    {
@@ -262,7 +282,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder);
+                  onCloneSuccess(result, folder);
                }
 
                @Override
@@ -283,52 +303,30 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
    }
 
    /**
-    * Get the necessary parameters values and clone repository (over WebSocket).
-    *
-    * @param remoteUri the location of the remote repository
-    * @param remoteName remote name instead of "origin"
-    * @param folder folder (root of GIT repository)
-    */
-   private void cloneRepositoryWS(String remoteUri, String remoteName, final FolderModel folder)
-   {
-      try
-      {
-         GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, remoteName,
-            new RESTfulRequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
-            {
-
-               @Override
-               protected void onSuccess(RepoInfo result)
-               {
-                  onCloneSuccess(folder);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         handleError(e);
-      }
-      IDE.getInstance().closeView(display.asView().getId());
-   }
-
-   /**
     * Perform actions when repository was successfully cloned.
     *
     * @param folder {@link FolderModel} to clone
     */
-   private void onCloneSuccess(FolderModel folder)
+   private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final FolderModel folder)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
       //TODO: not good, comment temporary need found other way
       // for inviting collaborators
       // showInvitation(result.getRemoteUri());
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            String[] userRepo = parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
+            if (userRepo != null)
+            {
+               IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
+            }                        
+         }
+      });
    }
 
    private void handleError(Throwable e)

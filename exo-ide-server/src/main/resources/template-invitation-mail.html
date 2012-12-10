@@ -1,0 +1,111 @@
+   <table border="0" cellpadding="0" cellspacing="0" width="636" bgcolor="#FFFFFF" align="center" style="font-size: 12px;color:#666666;line-height:20px;font-family:verdana,arial,tahoma;">
+      <tr bgcolor="#FFFFFF">
+         <td align="center"  valign="middle" bgcolor="#FFFFFF" style="border:1px solid #E1E1E1;border-bottom:none;">
+            <table border="0" cellpadding="0" cellspacing="0" width="92%"  bgcolor="#FFFFFF" align="center" style="font-size: 12px;color:#666666;line-height:20px;font-family:'HelveticaNeue Light',verdana,arial,tahoma">
+               <tr>
+                  <td align="left">
+                     <h1  style="margin:20px 0 15px 0;padding:0"  >
+                        <a href="http://${tenant.masterhost}"
+                        target="_blank"
+                        style="font-family:'HelveticaNeue Light',arial,tahoma,serif;color:#222222;font-size:24px;text-decoration:none;font-weight:normal;"
+                        title="Invitation">You've been invited to Exo IDE!</a>
+                     </h1>
+                  </td>
+               </tr>
+            </table>
+         </td>
+      </tr>
+
+   <!--- body -->
+
+   <!--end header area-->
+   <tr bgcolor="#FFFFFF">
+      <td align="center" bgcolor="#FFFFFF"
+         style="border: 1px solid #E1E1E1; border-top: none; border-bottom: none;">
+         <table border="0" cellpadding="0" cellspacing="0" width="92%"
+            bgcolor="#FFFFFF" align="center"
+            style="font-size: 12px; color: #666666; line-height: 20px; font-family: verdana, arial, tahoma">
+            <tr>
+
+               <td align="left">
+                  <p style="font-family: LucidaGrande,verdana,arial,tahoma;font-size:12px;color:#222222">
+                     ${inviter.email} has invited you to code in the cloud with him.
+                     <br />Click here to accept the invitation and login your IDE:
+                  </p>
+                  <center>
+                     <a href="http://${tenant.repository.name}.${tenant.masterhost}/invites/accept?id=${id}"
+                           target="_blank"
+                           style="font-family: Myriad Pro, arial, tahoma, serif; color: #fff; font-size: 14px; text-decoration: none; font-weight: bold;"
+                           title="Accept invitation">
+                        <div style="font-family: 'Lucida Grande', sans-serif; box-shadow: inset 0px 0px 2px #FFFFFF; -moz-box-shadow: inset 0px 0px 2px #FFFFFF; khtml-box-shadow: inset 0px 0px 2px #FFFFFF; webkit-box-shadow: inset 0px 0px 2px #FFFFFF; ms-box-shadow: inset 0px 0px 2px #FFFFFF; border-radius: 5px; moz-border-radius: 5px; khtml-border-radius: 5px; o-border-radius: 5px; webkit-border-radius: 5px; ms-border-radius: 5px; width: 210px; height: 40px; line-height: 40px; border: 1px solid #577e15; color: #fff; text-align: center; background: #e77431; margin: 15px 0 15px">
+                           Accept Invitation
+                        </div>
+                     </a>
+                  </center>
+                  <p style="font-family: LucidaGrande,verdana,arial,tahoma;font-size:12px;color:#222222">You
+                     can access the IDE at any time using the following
+                     credentials:</p>
+                  <p style="font-family: LucidaGrande,verdana,arial,tahoma;font-size:12px;color:#222222">
+                     Username: ${user.name}
+                     <br>
+                     Password: ${user.password}
+                  </p>
+
+                  <p style="font-family: LucidaGrande,verdana,arial,tahoma;font-size:12px;color:#222222">Once
+                     logged in, you can try one of our sample apps or browse other users' projects.</p>
+
+                  <p style="font-family: LucidaGrande,verdana,arial,tahoma;font-size:12px;color:#222222">Have
+                     fun coding in the cloud.</p>
+
+                  <p style="font-family:'HelveticaNeue Light',verdana,arial,tahoma;font-size:14px;margin:10px 0 15px 0;line-height:20px;color:#222222">
+                     <strong>The Exo IDE Team</strong>
+                  </p>
+
+               </td>
+            </tr>
+         </table>
+      </td>
+   </tr>
+   <!--end content area-->
+
+   <tr>
+      <td bgcolor="#F7F7F7" style="border: 1px solid #E1E1E1; border-top: 1px solid #DADADA; border-bottom: none; background-color: #F7F7F7;">
+         <div>
+            <table border="0" cellpadding="0" cellspacing="0" width="92%" bgcolor="#f7f7f7" align="center"
+               style="font-size: 12px; color: #666666; line-height: 20px; font-family: verdana, arial, tahoma">
+               <tr style="font-family: verdana, arial, tahoma; font-size: 12px; margin: 10px 0; line-height: 20px">
+                  ${personal-message}
+               </tr>
+            </table>
+         </div>
+      </td>
+   </tr>
+
+
+    <!-- footer -->
+   
+   <tr>
+      <td bgcolor="#4a6881" height="160">
+         <table border="0" cellpadding="0" cellspacing="0" width="100%"  style="font-size: 12px;color:#666666;line-height:20px;font-family:verdana,arial,tahoma">
+            <tr>
+               <td align="left" valign="top" style="font-family:Verdana,arial,tahoma,serif;color:#FFFFFF;font-size:12px;padding:20px 0 20px 30px;width: 294px">
+                  <h3>
+                     <a href="http://${tenant.masterhost}"
+                        target="_blank"
+                        style="font-family:'HelveticaNeue Light',arial,tahoma,serif;color:#FFFFFF;font-size:18px;text-decoration:none;font-weight:normal;"
+                        title="What is Exo IDE?">What is Exo IDE?</a>
+                  </h3>
+                  <div style="font-family:'LucidaGrande bold',verdana,arial,tahoma;font-size:12px;line-height:22px;">
+                     Exo IDE is a cloud environment for coding, building, and debugging apps.
+                     We use cloud's infinite resources to make your development tasks shorter.
+                  </div>
+               </td>
+               <td align="right">
+                  <img src="http://${tenant.masterhost}/images/email/invitation/exo-cloud-ide.png" alt="Exo IDE" />
+               </td>
+
+            </tr>
+         </table>
+      </td>
+   </tr>
+</table>

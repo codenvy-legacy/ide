@@ -35,6 +35,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
@@ -177,7 +178,7 @@ public class GroovyCodeAssistant extends CodeAssistant
       Item p = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
 
       Project project = null;
-      if (p instanceof Project)
+      if (p instanceof ProjectImpl)
          project = (Project)p;
       else
          throw new InvalidArgumentException("Unable find Classes. Item " + p.getName() + " is not a project. ");
@@ -201,8 +202,8 @@ public class GroovyCodeAssistant extends CodeAssistant
    /**
     * Find classes in package
     * 
-    * @param fileId
-    * @param vfsId
+    * @param file
+    * @param vfs
     * @return
     * @throws CodeAssistantException
     * @throws VirtualFileSystemException
@@ -264,6 +265,15 @@ public class GroovyCodeAssistant extends CodeAssistant
     */
    @Override
    protected List<String> getAllPackagesFromProject(String projectId, String vfsId)
+   {
+      // not used in Groovy code assistant, so always return null
+      return null;
+   }
+   
+   
+   @Override
+   protected List<String> getAllPackagesFromProject(Project project, VirtualFileSystem fileSystem)
+      throws VirtualFileSystemException, CodeAssistantException
    {
       // not used in Groovy code assistant, so always return null
       return null;

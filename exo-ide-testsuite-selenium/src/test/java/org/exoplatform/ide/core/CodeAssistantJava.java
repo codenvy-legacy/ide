@@ -53,7 +53,7 @@ public class CodeAssistantJava extends AbstractTestModule
    private static final String ELEMENT_LOCATOR = PANEL + "//div[text()='%s']";
 
    private static final String SUBSTITUTE_ELEMENT = PANEL + "//div[text()='%s']";
-   
+
    private static final String AUTOCOMPLETE_PROPOSAL = "//div[@class='gwt-HTML' and text()='%s']";
 
    /**
@@ -102,18 +102,6 @@ public class CodeAssistantJava extends AbstractTestModule
       typeToInput(text);
    }
 
-   // /**
-   // * Check, that element <code>elementTitle</code> is present in autocomplete panel.
-   // *
-   // * @param elementTitle - the title of element
-   // */
-   // @Deprecated
-   // public void checkElementPresent(String elementTitle)
-   // {
-   //
-   // assertTrue(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
-   // }
-
    public boolean isElementPresent(String elementTitle)
    {
       try
@@ -149,7 +137,8 @@ public class CodeAssistantJava extends AbstractTestModule
 
    public void checkElementNotPresent(String elementTitle)
    {
-      assertFalse(selenium().isElementPresent(PANEL + "//div[text()='" + elementTitle + "']"));
+
+      assertFalse(driver().findElement(By.xpath(PANEL + "//div[text()='" + elementTitle + "']")).isDisplayed());
    }
 
    /**
@@ -169,8 +158,6 @@ public class CodeAssistantJava extends AbstractTestModule
       }
    }
 
-   
-   
    /**
     * Move cursor down
     * 
@@ -187,9 +174,7 @@ public class CodeAssistantJava extends AbstractTestModule
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
-   
-   
-   
+
    /**
     * Clear input field of Autocompletion form
     */
@@ -241,13 +226,9 @@ public class CodeAssistantJava extends AbstractTestModule
       // RETURN key is used instead of ENTER because
       // of issue http://code.google.com/p/selenium/issues/detail?id=2180
       new Actions(driver()).sendKeys(Keys.RETURN.toString()).build().perform();
-      //input.sendKeys(Keys.RETURN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
-   
-
-   
    /**
     * double click on selected item
     * in java autocomplete form
@@ -258,16 +239,13 @@ public class CodeAssistantJava extends AbstractTestModule
    {
       // RETURN key is used instead of ENTER because
       // of issue http://code.google.com/p/selenium/issues/detail?id=2180
-      
+
       WebElement prop = driver().findElement(By.xpath(String.format(AUTOCOMPLETE_PROPOSAL, parameter)));
-      new Actions (driver()).doubleClick(prop).build().perform();
+      new Actions(driver()).doubleClick(prop).build().perform();
       //input.sendKeys(Keys.RETURN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
-   
-   
-   
-   
+
    /**
     * Open Autocompletion Form
     * 
@@ -299,27 +277,23 @@ public class CodeAssistantJava extends AbstractTestModule
       });
 
    }
-   
-   
+
    /** wait import with specific name
     * @param nameImport
     */
-   public void waitFromImportContent (final String nameImport)
+   public void waitFromImportContent(final String nameImport)
    {
       (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver d)
          {
-            WebElement elem =driver().findElement(By.xpath(String.format(ELEMENT_LOCATOR, nameImport)));
+            WebElement elem = driver().findElement(By.xpath(String.format(ELEMENT_LOCATOR, nameImport)));
             return elem.isDisplayed();
          }
       });
 
    }
-   
-   
-   
 
    public String getDocPanelText()
    {
@@ -328,7 +302,8 @@ public class CodeAssistantJava extends AbstractTestModule
 
    public void checkDocFormPresent()
    {
-      assertTrue(selenium().isElementPresent(JAVADOC_DIV));
+
+      assertTrue(driver().findElement(By.xpath(JAVADOC_DIV)).isDisplayed());
    }
 
    public void clickOnLineNumer(int num)

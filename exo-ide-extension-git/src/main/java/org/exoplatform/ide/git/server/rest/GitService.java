@@ -63,9 +63,9 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.security.ConversationState;
 
 import java.net.URISyntaxException;
-import java.security.Principal;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -79,7 +79,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -103,9 +102,6 @@ public class GitService
 
    @QueryParam("projectid")
    private String projectId;
-
-   @Context
-   private SecurityContext sctx;
 
    @Path("add")
    @POST
@@ -568,14 +564,11 @@ public class GitService
       VirtualFileSystemException
    {
       GitUser gituser = null;
-      // We used SecurityContext instead of ConversationState to be able to
-      // determine user name when request comes over WebSocket.
-      Principal principal = sctx.getUserPrincipal();
-      if (principal != null)
+      ConversationState user = ConversationState.getCurrent();
+      if (user != null)
       {
-         gituser = new GitUser(principal.getName());
+         gituser = new GitUser(user.getIdentity().getUserId());
       }
-
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (vfs == null)
       {

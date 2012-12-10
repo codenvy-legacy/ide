@@ -38,12 +38,11 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  * 
  */
 public class CleanProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, EditorActiveFileChangedHandler, ActiveProjectChangedHandler
+   ProjectClosedHandler, ActiveProjectChangedHandler
 {
 
    private boolean isJavaProject = false;
 
-   private boolean isJavaFile = false;
 
    /**
     * 
@@ -65,7 +64,6 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
    {
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       setVisible(false);
       setEnabled(false);
@@ -104,22 +102,8 @@ public class CleanProjectControl extends SimpleControl implements IDEControl, Pr
    private void updateEnabling()
    {
       setVisible(isJavaProject);
-      setEnabled(isJavaFile);
+      setEnabled(isJavaProject);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      if (event.getFile() != null)
-      {
-         isJavaFile = event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA);
-      }
-      else
-         isJavaFile = false;
-      updateEnabling();
-   }
-
+  
 }
