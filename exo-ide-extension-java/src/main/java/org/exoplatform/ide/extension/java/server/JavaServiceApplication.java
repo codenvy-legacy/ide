@@ -34,9 +34,8 @@ public class JavaServiceApplication extends Application
 
    public JavaServiceApplication()
    {
-      classes = new HashSet<Class<?>>(2);
+      classes = new HashSet<Class<?>>(1);
       classes.add(RestCodeAssistantJava.class);
-      classes.add(RestClasspath.class);
    }
 
    /**

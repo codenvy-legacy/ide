@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.core.client.ScriptInjector;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -198,7 +200,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       }
       controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.formatControls();
-
 
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).

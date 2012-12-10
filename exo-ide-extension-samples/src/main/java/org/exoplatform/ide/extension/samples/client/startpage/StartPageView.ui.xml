@@ -228,7 +228,7 @@
                               <!-- g:Button ui:field="supportLink" text="{locale.supportTitle}" styleName="{style.button-link}"></g:Button-->
                               <g:Anchor ui:field="supportLink" text="{locale.supportTitle}" target="_blank"
                                         styleName="{style.a}"
-                                        href="http://community.exoplatform.org/portal/public/classic/forum/cloud-ide/ForumService"></g:Anchor>
+                                        href="javascript:UserVoice.showPopupWidget();"></g:Anchor>
                               <g:Label text="{locale.supportText}"
                                        styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
                            </g:FlowPanel>
