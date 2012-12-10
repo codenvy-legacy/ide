@@ -103,19 +103,6 @@ public class RESTMessageBus extends MessageBus
 
    /**
     * @throws WebSocketException
-    * @see org.exoplatform.ide.client.framework.websocket.MessageBus#send(java.lang.String,
-    *       org.exoplatform.ide.client.framework.websocket.Message)
-    */
-   @Override
-   public void send(String channel, Message message) throws WebSocketException
-   {
-      // TODO
-      // serialize message
-      //send(textMessage);
-   }
-
-   /**
-    * @throws WebSocketException
     * @see org.exoplatform.ide.client.framework.websocket.MessageBus#send(org.exoplatform.ide.client.framework.websocket.Message,
     *       org.exoplatform.ide.client.framework.websocket.events.ReplyHandler)
     */

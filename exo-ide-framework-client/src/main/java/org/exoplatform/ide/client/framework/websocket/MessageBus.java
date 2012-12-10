@@ -152,19 +152,10 @@ public abstract class MessageBus implements MessageReceivedHandler
    }
 
    /**
-    * Send (publish) message to the specified channel.
-    * 
-    * @param channel a channel identifier
-    * @param message {@link Message} to send
-    * @throws WebSocketException throws if an any error has occurred while sending data
-    */
-   public abstract void send(String channel, Message message) throws WebSocketException;
-
-   /**
     * Send {@link Message}.
     * 
     * @param message {@link Message} to send
-    * @param callback callback for receiving reply to message
+    * @param callback callback for receiving reply to message. May be <code>null</code>.
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
    public abstract void send(Message message, ReplyHandler callback) throws WebSocketException;
