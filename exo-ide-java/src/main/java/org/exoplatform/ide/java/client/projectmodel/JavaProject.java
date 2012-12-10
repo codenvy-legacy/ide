@@ -20,7 +20,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.web.bindery.event.shared.EventBus;
-
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.java.client.core.JavaConventions;
 import org.exoplatform.ide.java.client.core.JavaCore;
@@ -207,7 +206,7 @@ public class JavaProject extends Project
     * @param callback
     */
    public void createCompilationUnit(final Folder parent, String name, String content,
-      final AsyncCallback<CompilationUnit> callback)
+                                     final AsyncCallback<CompilationUnit> callback)
    {
       try
       {
@@ -289,7 +288,12 @@ public class JavaProject extends Project
    @Override
    public void createFolder(Folder parent, String name, AsyncCallback<Folder> callback)
    {
-      if (checkPackageName(name))
+      if (parent instanceof JavaProject && description.getSourceFolders().contains(name))
+      {
+         createSourceFolder((JavaProject)parent, name, callback);
+         return;
+      }
+      else if (checkPackageName(name))
       {
          if (parent instanceof SourceFolder)
          {
@@ -306,12 +310,50 @@ public class JavaProject extends Project
       super.createFolder(parent, name, callback);
    }
 
+   private void createSourceFolder(final JavaProject parent, String name, final AsyncCallback<Folder> callback)
+   {
+      try
+      {
+         // create internal wrapping Request Callback with proper Unmarshaller
+         AsyncRequestCallback<SourceFolder> internalCallback =
+            new AsyncRequestCallback<SourceFolder>(new SourceFolderUnmarshaller(new SourceFolder(), parent.getPath()))
+            {
+               @Override
+               protected void onSuccess(SourceFolder srcFolder)
+               {
+                  // add to the list of items
+                  parent.addChild(srcFolder);
+                  // set proper parent project
+                  srcFolder.setProject(JavaProject.this);
+                  eventBus.fireEvent(ResourceChangedEvent.createResourceCreatedEvent(srcFolder));
+                  callback.onSuccess(srcFolder);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  callback.onFailure(exception);
+               }
+            };
+
+         String url = parent.getLinkByRelation(Link.REL_CREATE_FOLDER).getHref();
+         String urlString = URL.decode(url).replace("[name]", name);
+         urlString = URL.encode(urlString);
+         loader.setMessage("Creating new source folder...");
+         AsyncRequest.build(RequestBuilder.POST, urlString).loader(loader).send(internalCallback);
+      }
+      catch (Exception e)
+      {
+         callback.onFailure(e);
+      }
+   }
+
    /**
     * {@inheritDoc}
     */
    @Override
    public void createFile(Folder parent, String name, String content, String mimeType,
-      final AsyncCallback<File> callback)
+                          final AsyncCallback<File> callback)
    {
       if (parent instanceof SourceFolder || parent instanceof Package)
       {
@@ -341,7 +383,7 @@ public class JavaProject extends Project
    }
 
    /**
-    * 
+    *
     * @param parent
     * @param name
     * @param callback
@@ -402,8 +444,7 @@ public class JavaProject extends Project
     * A compilation unit name must obey the following rules:
     * <ul>
     * <li> it must not be null
-    * <li> it must be suffixed by a dot ('.') followed by one of the
-    *       {@link JavaCore#getJavaLikeExtensions() Java-like extensions}
+    * <li> it must be suffixed by a dot ('.') followed by one of the java like extension
     * <li> its prefix must be a valid identifier
     * </ul>
     * </p>

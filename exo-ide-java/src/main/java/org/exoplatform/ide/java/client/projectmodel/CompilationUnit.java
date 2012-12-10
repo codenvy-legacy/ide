@@ -17,7 +17,6 @@
 package org.exoplatform.ide.java.client.projectmodel;
 
 import com.google.gwt.json.client.JSONObject;
-
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 
@@ -40,7 +39,7 @@ public class CompilationUnit extends File
 
    /**
     * Constructor for unmarshalling
-    * 
+    *
     * @param itemObject
     */
    protected CompilationUnit(JSONObject itemObject)
@@ -51,7 +50,7 @@ public class CompilationUnit extends File
 
    /**
     * Get Package containing this {@link CompilationUnit}.
-    * 
+    *
     * @return Parent Package
     */
    public Package getPackage()
@@ -66,7 +65,7 @@ public class CompilationUnit extends File
 
    /**
     * Set Parent Package
-    * 
+    *
     * @param parentPackage the parentPackage to set
     */
    public void setPackage(Package parentPackage)
@@ -88,14 +87,14 @@ public class CompilationUnit extends File
 
    /**
     * Check that given parent is an instance of {@link Package}
-    * 
+    *
     * @param parent
     */
    protected void checkValidParent(Folder parent)
    {
-      if (!(parent instanceof Package))
+      if (!(parent instanceof Package) && !(parent instanceof SourceFolder))
       {
-         throw new IllegalArgumentException("Invalid CompilationUnit parent. It must be an instance of Package class");
+         throw new IllegalArgumentException("Invalid CompilationUnit parent. It must be an instance of Package or SourceFolder class");
       }
    }
 }

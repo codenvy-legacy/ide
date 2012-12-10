@@ -1,8 +1,10 @@
 package org.exoplatform.ide.java.client.wizard;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -39,16 +41,44 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
    @UiField
    TextBox projectName;
 
+   @UiField
+   TextBox sourceFolder;
+
+   private ActionDelegate delegate;
+
    public JavaProjectPageViewImpl()
    {
       widget = ourUiBinder.createAndBindUi(this);
-
    }
 
    @Override
    public Widget asWidget()
    {
       return widget;
+   }
+
+   @Override
+   public String getProjectName()
+   {
+      return projectName.getValue();
+   }
+
+   @Override
+   public String getResourceFolder()
+   {
+      return sourceFolder.getValue();
+   }
+
+   @Override
+   public void setActionDelegate(ActionDelegate delegate)
+   {
+      this.delegate = delegate;
+   }
+
+   @UiHandler(value = {"projectName", "sourceFolder"})
+   void handleKeyUpEvent(KeyUpEvent event)
+   {
+      delegate.checkProjectInput();
    }
 
 }

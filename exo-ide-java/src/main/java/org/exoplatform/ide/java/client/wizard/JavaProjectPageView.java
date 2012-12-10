@@ -31,8 +31,27 @@ public interface JavaProjectPageView extends IsWidget
       /**
        * Checks whether project's name is complete or not and updates navigation buttons.
        */
-      void checkProjectName();
+      void checkProjectInput();
    }
+
+
+   /**
+    * Get new Project name
+    * @return
+    */
+   String getProjectName();
+
+   /**
+    * Get Resource folder name
+    * @return
+    */
+   String getResourceFolder();
+
+   /**
+    *
+    * @param delegate
+    */
+   void setActionDelegate(ActionDelegate delegate);
 
 
 }

@@ -17,7 +17,6 @@
 package org.exoplatform.ide.java.client.projectmodel;
 
 import com.google.gwt.json.client.JSONObject;
-
 import org.exoplatform.ide.resources.model.Folder;
 
 /**
@@ -27,11 +26,11 @@ import org.exoplatform.ide.resources.model.Folder;
 public class SourceFolder extends Folder
 {
    public static final String TYPE = "java.sourcefolder";
-   
+
    private String sourceFolderName;
 
    /**
-    * 
+    *
     */
    protected SourceFolder()
    {
@@ -40,7 +39,7 @@ public class SourceFolder extends Folder
 
    /**
     * Init Java Source Folder from JSon Object
-    * 
+    *
     * @param itemObject
     */
    protected SourceFolder(JSONObject itemObject, String name)
@@ -49,7 +48,7 @@ public class SourceFolder extends Folder
       init(itemObject);
       sourceFolderName = name;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -58,7 +57,7 @@ public class SourceFolder extends Folder
    {
       return sourceFolderName;
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -66,5 +65,12 @@ public class SourceFolder extends Folder
    public String getPath()
    {
       return parent.getPath() + "/" + getName();
+   }
+
+   public void init(JSONObject object, String projectPath)
+   {
+      init(object);
+      String path = object.get("path").isString().stringValue();
+      sourceFolderName = path.substring(projectPath.length() + 1);
    }
 }
