@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -96,6 +97,7 @@ public class GitHubCollaboratorsHandler
       {
          System.out.println("GetCollaboratorsHandler.doInvite()" + gitHubUser.getEmail());
       }
+      
       IDE.getInstance().closeView(display.asView().getId());
    }
 
@@ -108,6 +110,9 @@ public class GitHubCollaboratorsHandler
     */
    public void showCollaborators(String user, String repository)
    {
+      Window.alert("User > " + user);
+      Window.alert("Repository > " + repository);
+      
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
       try

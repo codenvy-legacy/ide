@@ -19,6 +19,8 @@
 package org.exoplatform.ide.git.client.clone;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -246,7 +248,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, result);
+                  onCloneSuccess(result, folder);
                }
 
                @Override
@@ -276,7 +278,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onCloneSuccess(folder, result);
+                  onCloneSuccess(result, folder);
                }
 
                @Override
@@ -301,13 +303,26 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     *
     * @param folder {@link FolderModel} to clone
     */
-   private void onCloneSuccess(FolderModel folder, RepoInfo repoInfo)
+   private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final FolderModel folder)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
       //TODO: not good, comment temporary need found other way
       // for inviting collaborators
-      // showInvitation(repoInfo.getRemoteUri());
+      // showInvitation(result.getRemoteUri());
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            String[] userRepo = parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
+            if (userRepo != null)
+            {
+               IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
+            }                        
+         }
+      });
    }
 
    private void handleError(Throwable e)

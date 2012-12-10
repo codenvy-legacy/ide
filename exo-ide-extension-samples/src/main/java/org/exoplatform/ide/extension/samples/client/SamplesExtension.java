@@ -33,6 +33,9 @@ import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesContr
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
+import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
+import org.exoplatform.ide.extension.samples.client.inviting.InviteDevelopersPresenter;
+import org.exoplatform.ide.extension.samples.client.inviting.InviteGitHubDevelopersPresenter;
 import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter;
 import org.exoplatform.ide.extension.samples.client.startpage.OpenStartPageEvent;
 import org.exoplatform.ide.extension.samples.client.startpage.StartPagePresenter;
@@ -65,6 +68,10 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
    {
       new GitHubClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       IDE.fireEvent(new OpenStartPageEvent());
+      
+      InviteClientService inviteClientService = new InviteClientService(event.getApplicationConfiguration().getContext());
+      new InviteDevelopersPresenter();
+      new InviteGitHubDevelopersPresenter(inviteClientService);      
    }
 
    /**
