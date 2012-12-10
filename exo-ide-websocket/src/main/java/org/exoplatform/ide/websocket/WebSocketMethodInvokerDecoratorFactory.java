@@ -18,35 +18,22 @@
  */
 package org.exoplatform.ide.websocket;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.ws.rs.core.Application;
+import org.everrest.core.impl.method.MethodInvokerDecorator;
+import org.everrest.core.impl.method.MethodInvokerDecoratorFactory;
+import org.everrest.core.method.MethodInvoker;
 
 /**
- * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * Create new instance of WebSocketMethodInvokerDecorator.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see WebSocketMethodInvokerDecorator
  */
-public class WebSocketFilterApplication extends Application
+public class WebSocketMethodInvokerDecoratorFactory implements MethodInvokerDecoratorFactory
 {
-   private final Set<Class<?>> classes = new HashSet<Class<?>>();
-
-   private final Set<Object> objects = new HashSet<Object>();
-
-   public WebSocketFilterApplication()
-   {
-      objects.add(new WebSocketRequestFilter());
-      objects.add(new WebSocketResponseFilter());
-   }
-
    @Override
-   public Set<Class<?>> getClasses()
+   public MethodInvokerDecorator makeDecorator(MethodInvoker invoker)
    {
-      return classes;
-   }
-
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return objects;
+      return new WebSocketMethodInvokerDecorator(invoker);
    }
 }
