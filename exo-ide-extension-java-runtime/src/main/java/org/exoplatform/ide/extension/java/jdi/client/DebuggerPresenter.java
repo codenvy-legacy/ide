@@ -916,10 +916,32 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     */
    private void runApplication(String warUrl)
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
-         runApplicationWS(warUrl);
-      else
+      AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
+      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
+
+      try
+      {
+         ApplicationRunnerClientService.getInstance().runApplicationWS(project.getName(), warUrl, isUseJRebel(),
+            new RequestCallback<ApplicationInstance>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(ApplicationInstance result)
+               {
+                  onApplicationStarted(result);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  onApplicationStartFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
          runApplicationREST(warUrl);
+      }
    }
 
    /**
@@ -952,41 +974,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             });
       }
       catch (RequestException e)
-      {
-         onApplicationStartFailure(null);
-      }
-   }
-
-   /**
-    * Run application by sending request over WebSocket.
-    * 
-    * @param warUrl location of .war file
-    */
-   private void runApplicationWS(String warUrl)
-   {
-      AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
-      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
-         new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
-
-      try
-      {
-         ApplicationRunnerClientService.getInstance().runApplicationWS(project.getName(), warUrl, isUseJRebel(),
-            new RequestCallback<ApplicationInstance>(unmarshaller)
-            {
-               @Override
-               protected void onSuccess(ApplicationInstance result)
-               {
-                  onApplicationStarted(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  onApplicationStartFailure(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
       {
          onApplicationStartFailure(null);
       }

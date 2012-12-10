@@ -212,13 +212,43 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
 
    private void resolveDependencies(ProjectModel... projects)
    {
-      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      for (ProjectModel project : projects)
       {
-         resolveDependenciesWS(projects);
-      }
-      else
-      {
-         resolveDependenciesRest(projects);
+         final UpdateDependencyStatusHandler updateDependencyStatusHandler =
+            new UpdateDependencyStatusHandler(project.getName());
+         final String projectId = project.getId();
+         updateDependencyStatusHandler.requestInProgress(projectId);
+         String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
+         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+
+         RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
+         try
+         {
+            IDE.messageBus().send(
+               message,
+               new RequestCallback<StringBuilder>(
+                  (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller)
+               {
+
+                  @Override
+                  protected void onSuccess(StringBuilder result)
+                  {
+                     dependenciesResolvedSuccessed(updateDependencyStatusHandler, projectId, result);
+                  }
+
+                  @Override
+                  protected void onFailure(Throwable exception)
+                  {
+                     updateDependencyStatusHandler.requestError(projectId, exception);
+                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
+                     exception.printStackTrace();
+                  }
+               });
+         }
+         catch (WebSocketException e)
+         {
+            resolveDependenciesRest(projects);
+         }
       }
    }
 
@@ -257,48 +287,6 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                });
          }
          catch (RequestException e)
-         {
-            e.printStackTrace();
-         }
-      }
-   }
-
-   private void resolveDependenciesWS(ProjectModel... projects)
-   {
-      for (ProjectModel project : projects)
-      {
-         final UpdateDependencyStatusHandler updateDependencyStatusHandler =
-            new UpdateDependencyStatusHandler(project.getName());
-         final String projectId = project.getId();
-         updateDependencyStatusHandler.requestInProgress(projectId);
-         String url = "/ide/code-assistant/java/update-dependencies?projectid=" + projectId + "&vfsid=" + vfsId;
-         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
-
-         RequestMessage message = RequestMessageBuilder.build(RequestBuilder.GET, url).getRequestMessage();
-         try
-         {
-            IDE.messageBus().send(
-               message,
-               new RequestCallback<StringBuilder>(
-                  (org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable<StringBuilder>)unmarshaller)
-               {
-
-                  @Override
-                  protected void onSuccess(StringBuilder result)
-                  {
-                     dependenciesResolvedSuccessed(updateDependencyStatusHandler, projectId, result);
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     updateDependencyStatusHandler.requestError(projectId, exception);
-                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
-                     exception.printStackTrace();
-                  }
-               });
-         }
-         catch (WebSocketException e)
          {
             e.printStackTrace();
          }
