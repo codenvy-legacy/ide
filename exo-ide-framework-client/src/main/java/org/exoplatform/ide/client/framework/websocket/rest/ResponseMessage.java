@@ -27,7 +27,6 @@ package org.exoplatform.ide.client.framework.websocket.rest;
  */
 public interface ResponseMessage extends RESTMessage
 {
-
    /**
     * Get response code.
     *

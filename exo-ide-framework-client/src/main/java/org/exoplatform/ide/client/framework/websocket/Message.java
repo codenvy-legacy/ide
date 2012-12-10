@@ -39,4 +39,19 @@ public interface Message
     *    message unique identifier
     */
    void setUuid(String uuid);
+
+   /**
+    * Get message body.
+    *
+    * @return message body
+    */
+   String getBody();
+
+   /**
+    * Set message body.
+    *
+    * @param body
+    *    message body
+    */
+   void setBody(String body);
 }

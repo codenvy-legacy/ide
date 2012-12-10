@@ -104,7 +104,8 @@ public abstract class MessageBus implements MessageReceivedHandler
    public MessageBus(String url)
    {
       this.url = url;
-      initialize();
+      if (isSupported())
+         initialize();
    }
 
    /**
@@ -116,6 +117,17 @@ public abstract class MessageBus implements MessageReceivedHandler
       ws.setOnMessageHandler(this);
       callbackMap = new HashMap<String, ReplyHandler>();
       channelToSubscribersMap = new HashMap<String, Set<MessageHandler>>();
+   }
+
+   /**
+    * Checks if the browser has support for WebSockets.
+    * 
+    * @return <code>true</code> if WebSocket is supported;
+    *         <code>false</code> if it's not
+    */
+   public static boolean isSupported()
+   {
+      return WebSocket.isSupported();
    }
 
    /**
@@ -201,8 +213,7 @@ public abstract class MessageBus implements MessageReceivedHandler
    public void onMessageReceived(MessageReceivedEvent event)
    {
       Message message = parseMessage(event.getMessage());
-      String channel = getChannel(message);
-      if (channel != null)
+      if (getChannel(message) != null)
       {
          // this is a message received by subscription
          processSubscriptionMessage(message);

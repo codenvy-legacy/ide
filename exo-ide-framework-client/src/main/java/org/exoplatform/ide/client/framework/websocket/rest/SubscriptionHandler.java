@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.websocket.rest;
 
-import com.google.gwt.http.client.Response;
-
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.client.framework.websocket.Message;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
@@ -33,16 +31,6 @@ import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerExce
  */
 public abstract class SubscriptionHandler<T> implements MessageHandler
 {
-   // http code 207 is "Multi-Status"
-   // IE misinterpreting HTTP status code 204 as 1223 (http://www.mail-archive.com/jquery-en@googlegroups.com/msg13093.html)
-   private static final int[] DEFAULT_SUCCESS_CODES = {Response.SC_OK, Response.SC_CREATED, Response.SC_NO_CONTENT,
-      207, 1223};
-
-   /**
-    * Status codes of the successful responses.
-    */
-   private int[] successCodes;
-
    /**
     * Deserializer for the body of the {@link ResponseMessage}.
     */
@@ -67,8 +55,6 @@ public abstract class SubscriptionHandler<T> implements MessageHandler
     */
    public SubscriptionHandler(Unmarshallable<T> unmarshaller)
    {
-      this.successCodes = DEFAULT_SUCCESS_CODES;
-
       if (unmarshaller == null)
       {
          this.payload = null;
@@ -123,26 +109,15 @@ public abstract class SubscriptionHandler<T> implements MessageHandler
     */
    protected final boolean isSuccessful(ResponseMessage response)
    {
-      if (successCodes == null)
+      for (Pair header : response.getHeaders())
       {
-         successCodes = DEFAULT_SUCCESS_CODES;
+         if ("x-everrest-websocket-message-type".equals(header.getName()) && "none".equals(header.getValue()))
+         {
+            return true;
+         }
       }
 
-      for (int code : successCodes)
-         if (response.getResponseCode() == code)
-            return true;
-
       return false;
-   }
-
-   /**
-    * Set the array of successful HTTP status codes.
-    * 
-    * @param successCodes the successCodes to set
-    */
-   public void setSuccessCodes(int[] successCodes)
-   {
-      this.successCodes = successCodes;
    }
 
    /**

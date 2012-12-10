@@ -31,8 +31,7 @@ import static org.exoplatform.ide.commons.ZipUtils.unzip;
 import static org.exoplatform.ide.commons.ZipUtils.zipDir;
 
 import org.everrest.websockets.WSConnectionContext;
-import org.everrest.websockets.message.Pair;
-import org.everrest.websockets.message.RESTfulOutputMessage;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
@@ -780,13 +779,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
     * @param data
     *    the data to be sent to the client
     * @param channelID
-    *    channelID channel identifier
+    *    channel identifier
     */
    private static void publishWebSocketMessage(Object data, String channelID)
    {
-      RESTfulOutputMessage message = new RESTfulOutputMessage();
-      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-channel", channelID)});
-      message.setResponseCode(200);
+      ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+      message.setChannel(channelID);
       if (data instanceof String)
       {
          message.setBody((String)data);
@@ -798,7 +796,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
 
       try
       {
-         WSConnectionContext.sendMessage(channelID, message);
+         WSConnectionContext.sendMessage(message);
       }
       catch (Exception e)
       {

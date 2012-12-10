@@ -75,19 +75,4 @@ public interface RESTMessage extends Message
     *    HTTP headers
     */
    void setHeaders(List<Pair> headers);
-
-   /**
-    * Get message body.
-    *
-    * @return message body
-    */
-   String getBody();
-
-   /**
-    * Set message body.
-    *
-    * @param body
-    *    message body
-    */
-   void setBody(String body);
 }
