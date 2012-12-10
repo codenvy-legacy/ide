@@ -858,6 +858,7 @@ public class Debugger implements EventsHandler
    {
       ChannelBroadcastMessage message = new ChannelBroadcastMessage();
       message.setChannel(channelID);
+      message.setType(ChannelBroadcastMessage.Type.NONE);
       if (data instanceof String)
       {
          message.setBody((String)data);

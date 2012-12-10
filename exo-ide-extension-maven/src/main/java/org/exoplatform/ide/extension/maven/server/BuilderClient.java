@@ -587,14 +587,11 @@ public class BuilderClient
             message.setBody(toJson(data));
          }
       }
-      else if (e instanceof BuilderException)
-      {
-         message.setType(ChannelBroadcastMessage.Type.ERROR);
-         message.setBody(e.getMessage());
-      }
       else
       {
          message.setType(ChannelBroadcastMessage.Type.ERROR);
+         if (e instanceof BuilderException)
+            message.setBody(e.getMessage());
       }
 
       try

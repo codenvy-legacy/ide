@@ -89,12 +89,12 @@ public abstract class MessageBus implements MessageReceivedHandler
    /**
     * Map of the message identifier to the {@link ReplyHandler}.
     */
-   private Map<String, ReplyHandler> callbackMap;
+   private Map<String, ReplyHandler> callbackMap = new HashMap<String, ReplyHandler>();
 
    /**
     * Map of the channel to the subscribers.
     */
-   private Map<String, Set<MessageHandler>> channelToSubscribersMap;
+   private Map<String, Set<MessageHandler>> channelToSubscribersMap = new HashMap<String, Set<MessageHandler>>();
 
    /**
     * Create new {@link MessageBus} instance.
@@ -115,8 +115,8 @@ public abstract class MessageBus implements MessageReceivedHandler
    {
       ws = WebSocket.create(url);
       ws.setOnMessageHandler(this);
-      callbackMap = new HashMap<String, ReplyHandler>();
-      channelToSubscribersMap = new HashMap<String, Set<MessageHandler>>();
+      callbackMap.clear();
+      channelToSubscribersMap.clear();
    }
 
    /**
@@ -142,6 +142,7 @@ public abstract class MessageBus implements MessageReceivedHandler
     * Return the ready state of the WebSocket connection.
     * 
     * @return ready state of the WebSocket
+    * @throws IllegalStateException when WebSocket is not initialized
     */
    public ReadyState getReadyState()
    {

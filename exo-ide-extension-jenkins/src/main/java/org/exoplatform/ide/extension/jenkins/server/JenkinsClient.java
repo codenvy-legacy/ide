@@ -820,14 +820,11 @@ public abstract class JenkinsClient
             message.setBody(toJson(data));
          }
       }
-      else if (e instanceof JenkinsException)
-      {
-         message.setType(ChannelBroadcastMessage.Type.ERROR);
-         message.setBody(e.getMessage());
-      }
       else
       {
          message.setType(ChannelBroadcastMessage.Type.ERROR);
+         if (e instanceof JenkinsException)
+            message.setBody(e.getMessage());
       }
 
       try

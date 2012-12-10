@@ -102,14 +102,14 @@ public abstract class SubscriptionHandler<T> implements MessageHandler
    }
 
    /**
-    * Is response successful?
+    * Is message successful?
     * 
-    * @param response {@link ResponseMessage}
-    * @return <code>true</code> if response is successful and <code>false</code> if response is not successful
+    * @param message {@link ResponseMessage}
+    * @return <code>true</code> if message is successful and <code>false</code> if not
     */
-   protected final boolean isSuccessful(ResponseMessage response)
+   protected final boolean isSuccessful(ResponseMessage message)
    {
-      for (Pair header : response.getHeaders())
+      for (Pair header : message.getHeaders())
       {
          if ("x-everrest-websocket-message-type".equals(header.getName()) && "none".equals(header.getValue()))
          {

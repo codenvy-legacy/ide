@@ -785,6 +785,7 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    {
       ChannelBroadcastMessage message = new ChannelBroadcastMessage();
       message.setChannel(channelID);
+      message.setType(ChannelBroadcastMessage.Type.NONE);
       if (data instanceof String)
       {
          message.setBody((String)data);
