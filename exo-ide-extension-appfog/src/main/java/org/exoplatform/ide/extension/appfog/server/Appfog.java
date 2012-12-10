@@ -367,6 +367,12 @@ public class Appfog
             framework = getFramework(systemInfo, frameworkName);
          }
 
+         //Need this because appfog has a problem with deploying rails apps with version 1.8
+         if ("rails3".equals(frameworkName))
+         {
+            runtime = "ruby192";
+         }
+
          if (instances <= 0)
          {
             instances = 1;

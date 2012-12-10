@@ -23,8 +23,8 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulResponseMessage;
-import org.exoplatform.ide.client.framework.websocket.messages.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.ResponseMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
 import org.exoplatform.ide.git.shared.RepoInfo;
 
 /**
@@ -33,7 +33,6 @@ import org.exoplatform.ide.git.shared.RepoInfo;
  */
 public class RepoInfoUnmarshallerWS implements Unmarshallable<RepoInfo>
 {
-
    private final RepoInfo repoInfo;
 
    public RepoInfoUnmarshallerWS(RepoInfo repoInfo)
@@ -42,7 +41,7 @@ public class RepoInfoUnmarshallerWS implements Unmarshallable<RepoInfo>
    }
 
    @Override
-   public void unmarshal(RESTfulResponseMessage response) throws UnmarshallerException
+   public void unmarshal(ResponseMessage response) throws UnmarshallerException
    {
       JSONObject jsonObject = JSONParser.parseLenient(response.getBody()).isObject();
       JSONString jsonString = jsonObject.get("remoteUri").isString();

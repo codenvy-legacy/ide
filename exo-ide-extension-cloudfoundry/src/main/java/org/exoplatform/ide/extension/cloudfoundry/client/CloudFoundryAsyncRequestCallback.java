@@ -30,11 +30,13 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHand
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 
 /**
- * Asynchronous CloudFoundry request. The {{@link #onFailure(Throwable)} method contains the check for user not authorized
+ * Asynchronous CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
  * exception, in this case - the {@link LoginEvent} is fired.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryAsyncRequestCallback.java Jul 8, 2011 3:36:01 PM vereshchaka $
+ * 
+ * @see CloudFoundryRESTfulRequestCallback
  */
 public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T>
 {

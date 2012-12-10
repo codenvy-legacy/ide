@@ -39,8 +39,7 @@ import com.sun.jdi.request.InvalidRequestStateException;
 import com.sun.jdi.request.StepRequest;
 
 import org.everrest.websockets.WSConnectionContext;
-import org.everrest.websockets.message.Pair;
-import org.everrest.websockets.message.RESTfulOutputMessage;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.extension.java.jdi.server.expression.Evaluator;
 import org.exoplatform.ide.extension.java.jdi.server.expression.ExpressionParser;
 import org.exoplatform.ide.extension.java.jdi.server.model.BreakPointEventImpl;
@@ -852,15 +851,14 @@ public class Debugger implements EventsHandler
     * 
     * @param data
     *    the data to be sent to the client
-    * @param channel
-    *    channel name
+    * @param channelID
+    *    channel identifier
     */
-   private static void publishWebSocketMessage(Object data, String channel)
+   private static void publishWebSocketMessage(Object data, String channelID)
    {
-      RESTfulOutputMessage message = new RESTfulOutputMessage();
-      message.setHeaders(new Pair[]{new Pair("x-everrest-websocket-message-type", "subscribed-message"),
-                                    new Pair("x-everrest-websocket-channel", channel)});
-      message.setResponseCode(200);
+      ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+      message.setChannel(channelID);
+      message.setType(ChannelBroadcastMessage.Type.NONE);
       if (data instanceof String)
       {
          message.setBody((String)data);
@@ -872,7 +870,7 @@ public class Debugger implements EventsHandler
 
       try
       {
-         WSConnectionContext.sendMessage(channel, message);
+         WSConnectionContext.sendMessage(message);
       }
       catch (Exception e)
       {

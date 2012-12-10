@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.preferences;
 
+import static org.junit.Assert.assertFalse;
+
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -27,10 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.interactions.Actions;
-
-import java.io.IOException;
-
-import static org.junit.Assert.assertFalse;
 
 /**
  * IDE-156:HotKeys customization.

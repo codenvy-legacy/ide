@@ -25,6 +25,7 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Outline.TokenType;
+import org.openqa.selenium.By;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -216,7 +217,7 @@ public class OutlineTreeHelper extends BaseTest
          Entry<Integer, OutlineItemInfo> item = iterator.next();
          OutlineItemInfo outlineItem = item.getValue();
          checkOutlineItemFromOutlinePanel(item.getKey(), outlineItem.getLabel(), outlineItem.getFileLineNumber());
-         
+
       }
 
       // test outline item from file
@@ -284,10 +285,10 @@ public class OutlineTreeHelper extends BaseTest
       throws Exception
    {
       System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<line_number_first_cycle:" + itemRowNumber);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD*5);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD * 5);
       assertEquals(itemLabel, IDE.OUTLINE.getItemLabel(itemRowNumber));
       IDE.OUTLINE.selectRow(itemRowNumber);
-      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD*5);
+      Thread.sleep(TestConstants.TYPE_DELAY_PERIOD * 5);
       assertEquals("Verify if is selected a line in editor", fileLineNumber + " : 1", IDE.STATUSBAR.getCursorPosition());
    }
 
@@ -306,7 +307,7 @@ public class OutlineTreeHelper extends BaseTest
       IDE.GOTOLINE.goToLine(fileLineNumber);
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       assertTrue("Verifing if is selected an outline item with row number = " + itemRowNumber,
-      IDE.OUTLINE.isItemSelected(itemRowNumber));
+         IDE.OUTLINE.isItemSelected(itemRowNumber));
    }
 
    /**
@@ -321,15 +322,18 @@ public class OutlineTreeHelper extends BaseTest
       String divIndex = String.valueOf(rowNumber + 1);
       if (isSelected)
       {
-         assertTrue(selenium().isElementPresent(
-            "//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex
-               + "]//table[@class='treeCellSelected']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
+         assertTrue(driver.findElement(
+            By.xpath("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex
+               + "]//table[@class='treeCellSelected']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"))
+            .isDisplayed());
+
       }
       else
       {
-         assertTrue(selenium().isElementPresent(
-            "//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex
-               + "]//table[@class='treeCell']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"));
+         assertTrue(driver.findElement(
+            By.xpath("//div[@eventproxy='ideOutlineTreeGrid_body']//table[@class='listTable']/tbody/tr[" + divIndex
+               + "]//table[@class='treeCell']/tbody/tr/td[2]/img[2 and contains(@src, '" + iconText + "')]"))
+            .isDisplayed());
       }
    }
 
@@ -341,9 +345,8 @@ public class OutlineTreeHelper extends BaseTest
     */
    protected void clickNode(int rowNumber) throws Exception
    {
-      selenium().click(
-         "scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(rowNumber) + "]/col[1]");
-      Thread.sleep(TestConstants.SLEEP);
+     driver.findElement(By.xpath("scLocator=//TreeGrid[ID=\"ideOutlineTreeGrid\"]/body/row[" + String.valueOf(rowNumber) + "]/col[1]")).click();
+     Thread.sleep(TestConstants.SLEEP);
    }
 
 }

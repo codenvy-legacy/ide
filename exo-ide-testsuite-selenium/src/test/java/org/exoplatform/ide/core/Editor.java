@@ -50,7 +50,7 @@ public class Editor extends AbstractTestModule
    {
 
       String CODE_MIRROR_EDITOR = "//body[@class='editbox']";
-      
+
       String EDITOR_TABSET_LOCATOR = "//div[@id='editor']";
 
       String TAB_LOCATOR = "//div[@tab-bar-index='%s']";
@@ -104,11 +104,9 @@ public class Editor extends AbstractTestModule
 
    @FindBy(tagName = Locators.IFRAME)
    private WebElement iframe;
-   
+
    @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
    private WebElement editorCodemirr;
-   
-   
 
    /**
     * Returns the title of the tab with the pointed index.
@@ -536,18 +534,6 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Determines whether the file with specified URL is opened in Editor.
-    * 
-    * @param fileURL
-    * @return
-    */
-   @Deprecated
-   public boolean isFileOpened(String fileURL)
-   {
-      return false;
-   }
-
-   /**
     * Delete pointed number of lines in editor.
     * 
     * @param count number of lines to delete
@@ -713,7 +699,6 @@ public class Editor extends AbstractTestModule
       return text;
    }
 
-
    /**
     * Wait while tab appears in editor
     * 
@@ -865,7 +850,9 @@ public class Editor extends AbstractTestModule
    public void clickDesignButton() throws Exception
    {
       driver().findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
+      Thread.sleep(500);
       driver().findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
+      Thread.sleep(500);
       driver().findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
    }
 

@@ -26,6 +26,7 @@ import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
@@ -38,10 +39,9 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
@@ -280,10 +280,14 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
     */
    private void cloneRepository()
    {
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
          cloneRepositoryWS();
+      }
       else
+      {
          cloneRepositoryREST();
+      }
    }
 
    /**
@@ -314,7 +318,7 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
+
    /**
     * Clone repository (over WebSocket). Remote repository is Heroku application.
     */
@@ -323,19 +327,19 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
       try
       {
          GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), project, gitLocation, null,
-            new RESTfulRequestCallback<RepoInfo>()
+            new RequestCallback<RepoInfo>()
             {
-            @Override
-            protected void onSuccess(RepoInfo result)
-            {
-               updateProperties();
-            }
-            
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
+               @Override
+               protected void onSuccess(RepoInfo result)
+               {
+                  updateProperties();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
             });
       }
       catch (WebSocketException e)
@@ -373,10 +377,8 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
    private void updateProperties()
    {
       project.getProperties().add(new PropertyImpl("heroku-application", herokuApplication));
-      project.getProperties().add(
-         new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
-      project.getProperties()
-         .add(new PropertyImpl("vfs:projectType", ProjectResolver.RAILS));
+      project.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+      project.getProperties().add(new PropertyImpl("vfs:projectType", ProjectResolver.RAILS));
 
       try
       {

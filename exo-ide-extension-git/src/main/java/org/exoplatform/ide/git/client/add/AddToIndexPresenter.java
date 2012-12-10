@@ -24,16 +24,16 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.websocket.WebSocket;
-import org.exoplatform.ide.client.framework.websocket.WebSocket.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.exceptions.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.messages.RESTfulRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
@@ -175,7 +175,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       boolean update = display.getUpdateValue().getValue();
       ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
-      if (WebSocket.getInstance().getReadyState() == ReadyState.OPEN)
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
          doAddWS(project, update);
       else
          doAddREST(project, update);
@@ -220,7 +220,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
       try
       {
          GitClientService.getInstance().addWS(vfs.getId(), project, update, getFilePatterns(),
-            new RESTfulRequestCallback<String>()
+            new RequestCallback<String>()
             {
                @Override
                protected void onSuccess(String result)

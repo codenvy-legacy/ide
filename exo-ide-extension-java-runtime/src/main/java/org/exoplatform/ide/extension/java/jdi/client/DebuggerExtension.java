@@ -49,11 +49,18 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
 
    public static final DebuggerAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(DebuggerAutoBeanFactory.class);
 
-   /**
-    * 
-    */
    public static final DebuggerLocalizationConstant LOCALIZATION_CONSTANT = GWT
       .create(DebuggerLocalizationConstant.class);
+
+   /** Channel for the messages containing debugger events. */
+   public static final String EVENTS_CHANNEL = "debugger:events:";
+
+   /** Channel for the messages containing the application names which may be stopped soon. */
+   public static final String EXPIRE_SOON_APP_CHANNEL = "debugger:expireSoonApp:";
+
+   /** Channel for the messages containing message which informs about debugger is disconnected. */
+   public static final String DISCONNECT_CHANNEL = "debugger:disconnected:";
+   
 
    @Override
    public void initialize()
@@ -73,7 +80,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       FqnResolverFactory resolverFactory = new FqnResolverFactory();
       resolverFactory.addResolver(MimeType.APPLICATION_JAVA, new JavaFqnResolver());
       new DebuggerClientService(event.getApplicationConfiguration().getContext());
-      new ApplicationRunnerClientService(event.getApplicationConfiguration().getContext());
+      new ApplicationRunnerClientService(event.getApplicationConfiguration().getContext(), IDE.messageBus());
       BreakpointsManager breakpointsManager =
          new BreakpointsManager(IDE.eventBus(), DebuggerClientService.getInstance(), AUTO_BEAN_FACTORY, resolverFactory);
 

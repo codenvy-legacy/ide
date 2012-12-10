@@ -80,7 +80,7 @@ public class ClosingAndSaveAsFileTest extends BaseTest
    {
       try
       {
-         refresh();
+        driver.navigate().refresh();
       }
       catch (Exception e)
       {
@@ -120,9 +120,10 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       assertEquals(FILE, IDE.EDITOR.getTabTitle(1));
 
       IDE.EDITOR.closeFile(1);
+      IDE.EDITOR.forcedClosureFile(1);
    }
 
-   @Test
+  @Test
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
       if (!IDE.PROJECT.EXPLORER.isItemPresent(PROJECT)) //project already open

@@ -24,7 +24,7 @@ import org.everrest.core.RequestHandler;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
-import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.core.tools.ResourceLauncher;
 import org.everrest.test.mock.MockHttpServletRequest;
 import org.everrest.test.mock.MockPrincipal;
@@ -101,7 +101,7 @@ public class KeyServiceTest
       EnvironmentContext ctx = new EnvironmentContext();
       Set<String> userRoles = new HashSet<String>();
       userRoles.add("users");
-      DummySecurityContext securityContext = new DummySecurityContext(new MockPrincipal("root"), userRoles);
+      SimpleSecurityContext securityContext = new SimpleSecurityContext(new MockPrincipal("root"), userRoles, "BASIC", false);
       ctx.put(SecurityContext.class, securityContext);
       HttpServletRequest httpRequest =
          new MockHttpServletRequest("http://localhost/ide/ssh-keys/add?host=exoplatform.com", new ByteArrayInputStream(

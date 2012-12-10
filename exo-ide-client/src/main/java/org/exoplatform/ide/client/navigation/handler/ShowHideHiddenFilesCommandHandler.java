@@ -74,7 +74,6 @@ public class ShowHideHiddenFilesCommandHandler implements ShowHideHiddenFilesHan
    {
       if (event.isFilesShown())
       {
-         // set pattern is empty for show hidden files
          DirectoryFilter.get().setPattern("");
       }
       else

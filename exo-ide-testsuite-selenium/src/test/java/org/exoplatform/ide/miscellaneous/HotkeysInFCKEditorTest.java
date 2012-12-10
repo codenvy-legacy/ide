@@ -76,7 +76,6 @@ public class HotkeysInFCKEditorTest extends BaseTest
    @AfterClass
    public static void tearDown()
    {
-      deleteCookies();
       try
       {
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
@@ -105,6 +104,8 @@ public class HotkeysInFCKEditorTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(1);
+      //need for redraw design button 
+      Thread.sleep(1000);
       IDE.CK_EDITOR.clickDesignButton(0);
       IDE.CK_EDITOR.waitToolsCkEditor(1);
       IDE.CK_EDITOR.waitIsTextPresent("Hello, world!", 1 );

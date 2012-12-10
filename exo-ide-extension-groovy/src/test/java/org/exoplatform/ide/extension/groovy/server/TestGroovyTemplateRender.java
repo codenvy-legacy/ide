@@ -21,7 +21,7 @@ package org.exoplatform.ide.extension.groovy.server;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.impl.EnvironmentContext;
 import org.everrest.core.impl.MultivaluedMapImpl;
-import org.everrest.core.tools.DummySecurityContext;
+import org.everrest.core.tools.SimpleSecurityContext;
 import org.everrest.test.mock.MockHttpServletRequest;
 import org.everrest.test.mock.MockHttpServletResponse;
 import org.everrest.test.mock.MockPrincipal;
@@ -61,7 +61,7 @@ public class TestGroovyTemplateRender extends Base
       + " if (curentState != null){ Identity identity = curentState.getIdentity();\n"
       + " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";
 
-   private DummySecurityContext adminSecurityContext;
+   private SimpleSecurityContext adminSecurityContext;
 
    private File script;
 
@@ -75,7 +75,7 @@ public class TestGroovyTemplateRender extends Base
       source.close();
       Set<String> adminRoles = new HashSet<String>();
       adminRoles.add("administrators");
-      adminSecurityContext = new DummySecurityContext(new MockPrincipal("root"), adminRoles);
+      adminSecurityContext = new SimpleSecurityContext(new MockPrincipal("root"), adminRoles, "BASIC", false);
       ConversationState.setCurrent(new ConversationState(new Identity(
          adminSecurityContext.getUserPrincipal().getName(), Collections.<MembershipEntry> emptySet(),
          adminSecurityContext.getUserRoles())));

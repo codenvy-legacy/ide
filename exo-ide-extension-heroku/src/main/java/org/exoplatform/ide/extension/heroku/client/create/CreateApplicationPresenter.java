@@ -33,9 +33,12 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.extension.heroku.client.HerokuAsyncRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.HerokuClientService;
 import org.exoplatform.ide.extension.heroku.client.HerokuExtension;
+import org.exoplatform.ide.extension.heroku.client.HerokuRESTfulRequestCallback;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
@@ -185,9 +188,24 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    }
 
    /**
-    * Perform creation of application on Heroku.
+    * Perform creation of application on Heroku by sending request over WebSocket or HTTP.
     */
    protected void doCreateApplication()
+   {
+      if (IDE.messageBus().getReadyState() == ReadyState.OPEN)
+      {
+         doCreateApplicationWS();
+      }
+      else
+      {
+         doCreateApplicationREST();
+      }
+   }
+
+   /**
+    * Perform creation of application on Heroku (sends request over HTTP).
+    */
+   protected void doCreateApplicationREST()
    {
       try
       {
@@ -213,6 +231,37 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
             });
       }
       catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Perform creation of application on Heroku (sends request over WebSocket).
+    */
+   protected void doCreateApplicationWS()
+   {
+      try
+      {
+         HerokuClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
+            remoteName, new HerokuRESTfulRequestCallback(this)
+            {
+
+               @Override
+               protected void onSuccess(List<Property> properties)
+               {
+                  IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(properties), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
