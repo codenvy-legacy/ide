@@ -14,7 +14,7 @@
 
 package com.google.collide.shared.util;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.shared.GWT;  // TODO
 
 import com.google.collide.json.server.JsonIntegerMapAdapter;
 

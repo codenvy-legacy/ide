@@ -12,6 +12,12 @@
    <name>eXo IDE :: CollabEditor :: Editor</name>
    <dependencies>
 
+            <dependency>
+         <groupId>org.everrest</groupId>
+        <artifactId>everrest-websockets</artifactId>
+      </dependency>
+
+
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
         <artifactId>exo-ide-editor-api</artifactId>
@@ -46,23 +52,47 @@
          <version>12.0.1</version>
          <scope>provided</scope>
       </dependency>
+
       <dependency>
          <groupId>com.google.guava</groupId>
          <artifactId>guava-gwt</artifactId>
          <version>12.0.1</version>
          <scope>provided</scope>
       </dependency>
+
+      <dependency>
+         <groupId>com.google.code.gson</groupId>
+         <artifactId>gson</artifactId>
+         <version>2.1</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>com.google.protobuf</groupId>
+         <artifactId>protobuf-java</artifactId>
+         <version>2.4.1</version>
+         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+         <groupId>org.eclipse.jgit</groupId>
+         <artifactId>org.eclipse.jgit</artifactId>
+         <scope>provided</scope>
+      </dependency>
+
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <scope>test</scope>
       </dependency>
+
       <dependency>
          <groupId>org.easymock</groupId>
          <artifactId>easymock</artifactId>
          <version>3.1</version>
          <scope>test</scope>
       </dependency>
+
    </dependencies>
    <build>
       <resources>
