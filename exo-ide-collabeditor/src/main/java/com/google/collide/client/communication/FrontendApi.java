@@ -162,20 +162,20 @@ public class FrontendApi {
    */
 
   public final RequestResponseApi<ClientToServerDocOp, ServerToClientDocOps> MUTATE_FILE =
-      makeApi("documents/mutate");
+      makeApi("ide/collab_editor/documents/mutate");
 
   /**
    * Lets a client re-synchronize with the server's version of a file after being offline or missing
    * a doc op broadcast.
    */
   public final RequestResponseApi<RecoverFromMissedDocOps, RecoverFromMissedDocOpsResponse>
-      RECOVER_FROM_MISSED_DOC_OPS = makeApi("documents/recoverMissedDocop");
+      RECOVER_FROM_MISSED_DOC_OPS = makeApi("ide/collab_editor/documents/recoverMissedDocop");
 
   /**
    * Get the contents of a file and provisions an edit session so that it can be edited.
    */
   public final RequestResponseApi<GetFileContents, GetFileContentsResponse> GET_FILE_CONTENTS =
-      makeApi("documents/createEditSession");
+      makeApi("ide/collab_editor/documents/open");
 
   /**
    * Get a subdirectory. Just the subtree rooted at that path. No associated meta data.

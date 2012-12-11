@@ -27,8 +27,8 @@ import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import com.google.collide.shared.util.ListenerRegistrar;
 
 /**
  * Manager for documents and editors.
@@ -37,7 +37,8 @@ import com.google.collide.shared.util.ListenerManager.Dispatcher;
  * in an editor!
  *
  */
-public class DocumentManager {
+public class DocumentManager
+{
 
   public static DocumentManager create(AppContext appContext) {
     return new DocumentManager(appContext);
@@ -92,10 +93,7 @@ public class DocumentManager {
 
   private static final int MAX_CACHED_DOCUMENTS = 4;
 
-//  private final FileTreeModel fileTreeModel;
-
-//  private final DocumentManagerNetworkController networkController;
-//  private final DocumentManagerFileTreeModelListener fileTreeModelListener;
+  private final DocumentManagerNetworkController networkController;
 
   /**
    * All of the documents, ordered by least-recently used documents (index 0 is
@@ -113,15 +111,12 @@ public class DocumentManager {
    */
   private Editor editor;
 
-  private DocumentManager(AppContext appContext) {
-//    this.fileTreeModel = fileTreeModel;
-//    networkController = new DocumentManagerNetworkController(this, appContext);
-//    fileTreeModelListener = new DocumentManagerFileTreeModelListener(this, fileTreeModel);
+  private DocumentManager( AppContext appContext) {
+    networkController = new DocumentManagerNetworkController(this, appContext);
   }
 
   public void cleanup() {
-//    fileTreeModelListener.teardown();
-//    networkController.teardown();
+    networkController.teardown();
 
     while (documents.size() > 0) {
       garbageCollectDocument(documents.get(0));
@@ -142,7 +137,7 @@ public class DocumentManager {
   public Document getDocumentByFileEditSessionKey(String fileEditSessionKey) {
     return documentsByFileEditSessionKey.get(fileEditSessionKey);
   }
-  
+
   public void attachToEditor(final Document document, final Editor editor) {
     final Document oldDocument = editor.getDocument();
     if (oldDocument != null) {
@@ -182,7 +177,7 @@ public class DocumentManager {
     for (Line line = document.getFirstLine(); line != null; line = line.getNextLine()) {
       line.clearTags();
     }
-    
+
     // Column anchors exist on the line via a tag, so those get cleared above
     document.getAnchorManager().clearLineAnchors();
   }
@@ -200,8 +195,8 @@ public class DocumentManager {
 //        }
 //      }
 //    }
-//
-//    networkController.load(path, callback);
+
+    networkController.load(path, callback);
     // handleEditableFileReceived will be called async
   }
 
@@ -224,7 +219,7 @@ public class DocumentManager {
        * this matters is if a file is renamed, we will have had the old path --
        * this logic will update its path.
        */
-//      DocumentMetadata.putPath(document, new PathUtil(fileContents.getPath()));
+      DocumentMetadata.putPath(document, new PathUtil(fileContents.getPath()));
     }
 
     for (int i = 0, n = callbacks.size(); i < n; i++) {
@@ -232,38 +227,6 @@ public class DocumentManager {
     }
   }
 
-  public void documentOpened(final Document document, String fileEditSessionKey)
-  {
-     documents.add(document);
-     boolean isLinkedToFile = fileEditSessionKey != null;
-     if (isLinkedToFile) {
-       documentsByFileEditSessionKey.put(fileEditSessionKey, document);
-       DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
-       DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
-     DocumentMetadata.putPath(document, null);
-     //TODO
-     DocumentMetadata.putBeginCcRevision(document, 0);
-     DocumentMetadata.putConflicts(document, JsonCollections.<ConflictChunk>createArray());
-//     DocumentMetadata.putConflictHandle(document, conflictHandle);
-     }
-     
-     lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-        @Override
-        public void dispatch(LifecycleListener listener) {
-          listener.onDocumentCreated(document);
-        }
-      });
-
-      if (isLinkedToFile) {
-        lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
-          @Override
-          public void dispatch(LifecycleListener listener) {
-            listener.onDocumentLinkedToFile(document, new FileContentsImpl());
-          }
-        });
-      }
-  }
-  
   /**
    * @param conflicts only required for documents that are in a conflicted state
    * @param conflictHandle only required for documents that are in a conflicted state
@@ -281,13 +244,13 @@ public class DocumentManager {
       documentsByFileEditSessionKey.put(fileEditSessionKey, document);
     }
 
-//    DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
-//    DocumentMetadata.putPath(document, path);
+    DocumentMetadata.putLinkedToFile(document, isLinkedToFile);
+    DocumentMetadata.putPath(document, path);
     DocumentMetadata.putFileEditSessionKey(document, fileEditSessionKey);
-//    DocumentMetadata.putBeginCcRevision(document, ccRevision);
-//    DocumentMetadata.putConflicts(document, conflicts);
-//    DocumentMetadata.putConflictHandle(document, conflictHandle);
-    
+    DocumentMetadata.putBeginCcRevision(document, ccRevision);
+    DocumentMetadata.putConflicts(document, conflicts);
+    DocumentMetadata.putConflictHandle(document, conflictHandle);
+
     lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
       @Override
       public void dispatch(LifecycleListener listener) {
@@ -304,7 +267,7 @@ public class DocumentManager {
       });
     }
 
-//    // Save the fileEditSessionKey into the tree node.
+    // Save the fileEditSessionKey into the tree node.
 //    if (fileTreeModel.getWorkspaceRoot() != null) {
 //      FileTreeNode node = fileTreeModel.getWorkspaceRoot().findChildNode(path);
 //      if (node != null) {
@@ -316,11 +279,6 @@ public class DocumentManager {
   }
 
   private void markAsActive(Document document) {
-     if(documents.isEmpty())
-     {
-        documents.add(document);
-        return;
-     }
     if (documents.peek() != document) {
       // Ensure it is at the top
       documents.remove(document);
@@ -345,9 +303,9 @@ public class DocumentManager {
   }
 
   void garbageCollectDocument(final Document document) {
-//    if (DocumentMetadata.isLinkedToFile(document)) {
-//      unlinkFromFile(document);
-//    }
+    if (DocumentMetadata.isLinkedToFile(document)) {
+      unlinkFromFile(document);
+    }
 
     documents.remove(document);
 
@@ -360,15 +318,15 @@ public class DocumentManager {
   }
 
   public void unlinkFromFile(final Document document) {
-    lifecycleListenerManager.dispatch(new Dispatcher<DocumentManager.LifecycleListener>() {
+    lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
       @Override
       public void dispatch(LifecycleListener listener) {
         listener.onDocumentUnlinkingFromFile(document);
       }
     });
 
-//    documentsByFileEditSessionKey.remove(DocumentMetadata.getFileEditSessionKey(document));
-//    DocumentMetadata.putLinkedToFile(document, false);
+    documentsByFileEditSessionKey.remove(DocumentMetadata.getFileEditSessionKey(document));
+    DocumentMetadata.putLinkedToFile(document, false);
   }
 
   Document getMostRecentlyActiveDocument() {
@@ -400,91 +358,5 @@ public class DocumentManager {
     }
     
     return null;
-  }
-  
-  class FileContentsImpl implements FileContents
-  {
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getCcRevision()
-   {
-      return 0;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getContents()
-   {
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ContentType getContentType()
-   {
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getMimeType()
-   {
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getFileEditSessionKey()
-   {
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String getPath()
-   {
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonArray<ConflictChunk> getConflicts()
-   {
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ConflictHandle getConflictHandle()
-   {
-      return null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public JsonArray<String> getSelections()
-   {
-      return JsonCollections.createArray("[0,0]");
-   }
-     
   }
 }

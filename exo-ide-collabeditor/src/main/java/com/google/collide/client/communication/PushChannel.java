@@ -54,7 +54,7 @@ public class PushChannel {
       return null;
     }
 
-    VertxBus eventBus = VertxBusWebsoketImpl.create();
+    VertxBus eventBus = VertxBusWebsoketImpl.get();
     PushChannel pushChannel = new PushChannel(eventBus, messageFilter, statusManager);
     pushChannel.init();
     return pushChannel;
