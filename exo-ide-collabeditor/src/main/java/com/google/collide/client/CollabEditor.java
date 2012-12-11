@@ -105,8 +105,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
    private boolean caseSensitive;
 
-   private String fileId;
-
    private final class TextListenerImpl implements TextListener
    {
       /**
@@ -219,7 +217,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          {
             initialized = true;
             Document editorDocument = Document.createFromString(text);
-            CollabEditorExtension.get().getManager().documentOpened(editorDocument, fileId);
             editorDocument.putTag("IDocument", document);
             editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
             editorBundle.setDocument(editorDocument, mimeType, "");
@@ -847,14 +844,5 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void onResize()
    {
       editor.getBuffer().onResize();
-   }
-
-   /**
-    * @param id2
-    */
-   public void setFileId(String fileId)
-   {
-      this.fileId = fileId;
-
    }
 }

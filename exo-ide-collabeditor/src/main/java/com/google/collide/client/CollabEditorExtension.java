@@ -28,11 +28,15 @@ import com.google.collide.client.collaboration.CollaborationManager;
 
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
 
+import com.google.collide.client.communication.VertxBus;
+import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.gwt.dom.client.StyleInjector;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.DOM;
 import elemental.dom.Node;
 
@@ -91,12 +95,24 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
       init();
-      ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
-      IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
-      CollaborationManager collaborationManager =
-         CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
 
-      DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+      VertxBusWebsoketImpl.get().send("ide/collab_editor/participants/add","{}", new VertxBus.ReplyHandler()
+      {
+         @Override
+         public void onReply(String message)
+         {
+            JSONObject object = JSONParser.parseLenient(message).isObject();
+            BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
+            BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());
+            context.initializeCollaboration();
+            ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+            IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
+            CollaborationManager collaborationManager =
+               CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
+
+            DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+         }
+      });
    }
 
    /**

@@ -41,7 +41,7 @@ public class AppContext {
   /**
    * Object for making calls to the frontend api.
    */
-  private final FrontendApi frontendApi;
+  private FrontendApi frontendApi;
   private final Resources resources = GWT.create(Resources.class);
 //  /**
 //   * For directly handling messages/data sent to the client from the frontend.
@@ -53,7 +53,7 @@ public class AppContext {
 //  private final AwesomeBoxComponentHostModel awesomeBoxComponentHostModel;
   private final UserActivityManager userActivityManager;
   private final WindowUnloadingController windowUnloadingController;
-  private final PushChannel pushChannel;
+  private PushChannel pushChannel;
 
   public AppContext() {
 
@@ -67,8 +67,6 @@ public class AppContext {
     this.windowUnloadingController = new WindowUnloadingController();
 //
 //    // Things that depend on message filter/frontendApi/statusManager
-    this.pushChannel = PushChannel.create(messageFilter, statusManager);
-    this.frontendApi = FrontendApi.create(pushChannel, statusManager);
 //    this.uncaughtExceptionHandler = new ExceptionHandler(messageFilter, frontendApi, statusManager);
   }
 
@@ -84,6 +82,13 @@ public class AppContext {
 //    return awesomeBoxComponentHostModel;
 //  }
 //
+
+  void initializeCollaboration()
+  {
+     this.pushChannel = PushChannel.create(messageFilter, statusManager);
+     this.frontendApi = FrontendApi.create(pushChannel, statusManager);
+  }
+
   public UserActivityManager getUserActivityManager() {
     return userActivityManager;
   }

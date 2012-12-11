@@ -31,6 +31,10 @@ public final class BootstrapSession
 
    private static BootstrapSession instance;
 
+   private String userId;
+
+   private String activeClientId;
+
    /**
     * Use this method to obtain an instance of the Session object.
     */
@@ -71,4 +75,17 @@ public final class BootstrapSession
       return IDE.userId;
    }
 
+   /**
+    *
+    * @param userId
+    */
+   public void setUserId(String userId)
+   {
+      this.userId = userId;
+   }
+
+   public void setActiveClientId(String activeClientId)
+   {
+      this.activeClientId = activeClientId;
+   }
 }
