@@ -88,6 +88,10 @@
                   <li>Quick Assistant(Ctrl+1) for Java errors and warnings</li>
                </ul>
             </li>
+            <li>
+               <b>Wizard API : </b>
+               New Project Wizard, New File/Folder Wizards
+            </li>
          </ul>
       </div>
       <div class="{style.botleft}">
