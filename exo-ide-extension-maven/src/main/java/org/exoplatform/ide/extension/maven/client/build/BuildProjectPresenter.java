@@ -534,8 +534,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             writeBuildInfo(buildStatus);
             startWatchingProjectChanges();
          }
-         message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
-            .append("\">here</a>");
 
          if (publishAfterBuild)
          {
