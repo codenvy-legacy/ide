@@ -16,11 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+
 @sprite .welcomeHeader {
 	width: 100%;
 	height: 100px;
 	gwt-image: "welcomePageBgHeader";
 	background-repeat: repeat-x;
+}
+
+@sprite .inviteHeader {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	width:100%;
+	height:100%;
+	gwt-image: "invitePageHeaderBackground";
+	background-repeat: repeat-x;
+	background-color: #FFFFFF;
+	border: #999999 1px solid;
+	overflow: hidden;
 }
 
 .welcomeHeaderLogo {

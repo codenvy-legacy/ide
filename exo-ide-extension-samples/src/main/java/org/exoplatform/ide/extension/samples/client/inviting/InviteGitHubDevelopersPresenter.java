@@ -40,7 +40,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.samples.client.inviting.test.InviteGitHubCollaboratorsControl;
 import org.exoplatform.ide.extension.samples.client.inviting.test.InviteGitHubCollaboratorsEvent;
 import org.exoplatform.ide.extension.samples.client.inviting.test.InviteGitHubCollaboratorsHandler;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -93,8 +92,8 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       IDE.addHandler(CloneRepositoryCompleteEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
-      IDE.getInstance().addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);
+//      IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
+//      IDE.getInstance().addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);
    }
 
    @Override

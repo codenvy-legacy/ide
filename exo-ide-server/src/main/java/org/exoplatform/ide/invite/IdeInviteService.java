@@ -24,12 +24,17 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import java.util.List;
+
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
@@ -42,30 +47,22 @@ public class IdeInviteService
 {
    private static final Log LOG = ExoLogger.getLogger(IdeInviteService.class);
    
-   //   private final TenantDeterminant tenantResolver;
-
    private final String sender;
 
    private final InviteService inviteService;
+   
+   private DSASignatureChecker dsaSignatureChecker;
 
-   public IdeInviteService(InviteService inviteService, InitParams params) throws ConfigurationException
+   public IdeInviteService(InviteService inviteService, InitParams params, DSASignatureChecker dsaSignatureChecker) throws ConfigurationException
    {
-      this(inviteService, getParameterValue(params, "mail-sender"));
+      this(inviteService, getParameterValue(params, "mail-sender"), dsaSignatureChecker);
    }
 
-   public IdeInviteService(InviteService inviteService, String sender)
+   public IdeInviteService(InviteService inviteService, String sender, DSASignatureChecker dsaSignatureChecker)
    {
-      //      this.tenantResolver = TenantDeterminatFactory.getTenantDeterminant();
       this.inviteService = inviteService;
       this.sender = sender;
    }
-
-   //   public IdeInviteService(TenantDeterminant tenantResolver, InviteService inviteService, String sender)
-   //   {
-   //      this.tenantResolver = tenantResolver;
-   //      this.inviteService = inviteService;
-   //      this.sender = sender;
-   //   }
 
    /**
     * Sends email message to invited person and creates record about sent invite
@@ -124,14 +121,6 @@ public class IdeInviteService
    public Response sendInvite(@PathParam("mailrecipient") String mailRecipient,
       @QueryParam("mailsender") String mailsender, String mailBody) throws SendingIdeMailException, InviteException
    {
-      /*
-      // check that request comes from not default tenant
-      if (tenantResolver.getCurrentTenantName() == null)
-      {
-         throw new InviteException(403, "This service is not available for default tenant");
-      }
-      */
-
       String from = (mailsender == null || mailsender.isEmpty()) ? sender : mailsender;
       inviteService.sendInviteByMail(from, mailRecipient, mailBody);
       return Response.ok().entity("Invitation mail sent successfully").build();
@@ -193,30 +182,24 @@ public class IdeInviteService
     * @throws com.exoplatform.cloudide.mail.SendingIdeMailException
     */
 
-   /*
    @POST
    @Path("signed/{mailrecipient}")
    @Consumes("text/*")
    public Response sendSignedInvite(@PathParam("mailrecipient") String mailRecipient, @QueryParam("signature") String signature,
       @QueryParam("mailsender") String mailsender, String mailBody) throws SendingIdeMailException, InviteException
    {
-      // check that request comes from not default tenant
-      if (tenantResolver.getCurrentTenantName() == null)
-      {
-         throw new InviteException(403, "This service is not available for default tenant");
-      }
-      
       try
       {
-         if (SignatureDSA.isSignatureValid(mailsender, signature))
-         {
-            LOG.debug("Signature verification for {} successful.", mailsender);
-         }
-         else
-         {
-            LOG.error("Signature verification for {} failed ", mailsender);
-            throw new InviteException(403, "Signature verification for " + mailsender + " failed.");
-         }
+         dsaSignatureChecker.checkSignature(mailsender, signature);
+//         if (SignatureDSA.isSignatureValid(mailsender, signature))
+//         {
+//            LOG.debug("Signature verification for {} successful.", mailsender);
+//         }
+//         else
+//         {
+//            LOG.error("Signature verification for {} failed ", mailsender);
+//            throw new InviteException(403, "Signature verification for " + mailsender + " failed.");
+//         }
       }
       catch (Exception e)
       {
@@ -226,27 +209,21 @@ public class IdeInviteService
 
       String from = (mailsender == null || mailsender.isEmpty()) ? sender : mailsender;
 
-      inviteService.sendInviteByMail(from, mailRecipient, tenantResolver.getCurrentTenantName(), mailBody);
+      inviteService.sendInviteByMail(from, mailRecipient, mailBody);
       return Response.ok().entity("Invitation mail sent successfully").build();
    }
-   */
 
-   /*
+
    @POST
    @Path("accept/{id}")
    @Produces(MediaType.APPLICATION_JSON)
    public Response acceptInvite(@PathParam("id") String id) throws InviteException
    {
-      // check that request comes from not default tenant
-      if (tenantResolver.getCurrentTenantName() == null)
-      {
-         throw new InviteException(403, "This service is not available for default tenant");
-      }
+    
 
       Invite invite = inviteService.acceptInvite(id);
       return Response.ok().entity(invite).build();
    }
-   */
 
    /**
     * Gets list of registered invited messages sent by users from current
@@ -274,17 +251,11 @@ public class IdeInviteService
     * 
     * @return the Response with corresponded status (200)
     */
-   /*
    @GET
    @RolesAllowed("users")
    @Produces(MediaType.APPLICATION_JSON)
    public List<Invite> getListOfInvitedUsers() throws InviteException
    {
-      // check that request comes not from default tenant
-      if (tenantResolver.getCurrentTenantName() == null)
-      {
-         throw new InviteException(403, "This service is not available for default tenant");
-      }
       return inviteService.getInvites(false);
    }
 
@@ -320,17 +291,10 @@ public class IdeInviteService
     * @return the Response with corresponded status (200)
     * @throws com.exoplatform.cloudide.mail.SendingIdeMailException
     */
-   /*
    @GET
    @Path("find-non-confirmed/{username}")
    public Response findInvite(@PathParam("username") String userName) throws InviteException
    {
-      // check that request comes not from default tenant
-      if (tenantResolver.getCurrentTenantName() == null)
-      {
-         throw new InviteException(403, "This service is not available for default tenant");
-      }
-
       Invite invite = inviteService.getInviteByUserName(userName);
 
       if (invite.isActivated())
@@ -341,7 +305,6 @@ public class IdeInviteService
       return Response.ok("User " + userName + " is invited but did not confirm invitation the system.",
          MediaType.TEXT_PLAIN).build();
    }
-   */
 
    private static String getParameterValue(InitParams params, String parameterName) throws ConfigurationException
    {
