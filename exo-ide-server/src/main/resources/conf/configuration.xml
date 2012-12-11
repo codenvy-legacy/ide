@@ -29,6 +29,10 @@
 ***************************************************************************************
 -->
 
+  <component>
+     <type>org.exoplatform.ide.googlecontacts.GoogleContactsClient</type>
+   </component>
+
 <component>
   <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
   <init-params>

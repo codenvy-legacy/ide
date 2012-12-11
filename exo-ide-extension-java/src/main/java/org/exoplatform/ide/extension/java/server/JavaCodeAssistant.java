@@ -95,7 +95,7 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
     * @throws VirtualFileSystemException
     * @throws CodeAssistantException
     */
-   private Folder getSourceFolder(VirtualFileSystem vfs, ProjectImpl project) throws ItemNotFoundException,
+   private Folder getSourceFolder(VirtualFileSystem vfs, Project project) throws ItemNotFoundException,
       PermissionDeniedException, VirtualFileSystemException, CodeAssistantException
    {
       String sourcePath = null;
@@ -398,20 +398,12 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
       }
       return pakages;
    }
-
-   /**
-    * @throws VirtualFileSystemException 
-    * @throws CodeAssistantException 
-    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getAllPackagesFromProject(java.lang.String, java.lang.String)
-    */
+   
    @Override
-   protected List<String> getAllPackagesFromProject(String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException
+   protected List<String> getAllPackagesFromProject(Project project, VirtualFileSystem vfs) throws VirtualFileSystemException,
+      CodeAssistantException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
-
-      ProjectImpl project = getProject(projectId, vfs);
       Folder sourceFolder = getSourceFolder(vfs, project);
-
       FolderScanner scanner = new FolderScanner(sourceFolder, vfs);
       scanner.addFilter(new FolderFilter());
       List<Item> list = scanner.scan();
@@ -423,5 +415,18 @@ public class JavaCodeAssistant extends org.exoplatform.ide.codeassistant.jvm.Cod
          pakages.add(substring.replaceAll("/", "."));
       }
       return pakages;
+   }
+
+   /**
+    * @throws VirtualFileSystemException 
+    * @throws CodeAssistantException 
+    * @see org.exoplatform.ide.codeassistant.jvm.CodeAssistant#getAllPackagesFromProject(java.lang.String, java.lang.String)
+    */
+   @Override
+   protected List<String> getAllPackagesFromProject(String projectId, String vfsId) throws VirtualFileSystemException, CodeAssistantException
+   {
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      ProjectImpl project = getProject(projectId, vfs);
+      return getAllPackagesFromProject(project, vfs);
    }
 }
