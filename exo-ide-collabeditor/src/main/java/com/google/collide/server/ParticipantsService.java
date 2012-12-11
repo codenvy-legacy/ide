@@ -22,15 +22,16 @@ import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResp
 import com.google.collide.server.participants.LoggedInUser;
 import com.google.collide.server.participants.Participants;
 
+import java.security.Principal;
+import java.util.UUID;
+
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 @Path("ide/collab_editor/participants")
 public class ParticipantsService
@@ -49,9 +50,11 @@ public class ParticipantsService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Path("add")
-   public String addParticipant(@Context HttpServletRequest req)
+   public String addParticipant(@Context SecurityContext securityContext)
    {
-      LoggedInUser user = new LoggedInUser(req.getRemoteUser(), req.getSession().getId());
+      Principal principal = securityContext.getUserPrincipal();
+      LoggedInUser user = new LoggedInUser(principal != null ? principal.getName() : "anonymous",
+         UUID.randomUUID().toString());
       participants.addParticipant(user);
       return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getId(), user.getId());
    }
@@ -59,12 +62,13 @@ public class ParticipantsService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Path("delete")
-   public void removeParticipant(@Context HttpServletRequest req)
+   public void removeParticipant()
    {
-      if (!participants.removeParticipant(req.getSession().getId()))
-      {
-         throw new WebApplicationException(
-            Response.status(400).entity("Not logged in").type(MediaType.TEXT_PLAIN).build());
-      }
+      // TODO : pass activeClientId here to be able remove participant
+//      if (!participants.removeParticipant(activeClientId))
+//      {
+//         throw new WebApplicationException(
+//            Response.status(400).entity("Not logged in").type(MediaType.TEXT_PLAIN).build());
+//      }
    }
 }

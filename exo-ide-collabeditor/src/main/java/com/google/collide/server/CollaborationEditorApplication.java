@@ -26,18 +26,6 @@ import javax.ws.rs.core.Application;
 
 public class CollaborationEditorApplication extends Application
 {
-
-//   <!-- End OAuth Support -->
-//
-//   <!--
-//   ***************************************************************************************
-//   ********************************** Collaboration Editor *************************************
-//   ***************************************************************************************
-//   -->
-//   <component>
-//   <type>com.google.collide.server.CollaborationEditorApplication</type>
-//   </component>
-
    @Override
    public Set<Object> getSingletons()
    {
