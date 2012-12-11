@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.google.gdata.client.Query.CustomParameter;
+
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gdata.client.Query;
@@ -52,11 +54,6 @@ public class GoogleContactsClient
    private ContactsService service;
 
    /**
-    * {@link GoogleContactsClient} instance.
-    */
-   private static GoogleContactsClient instance;
-
-   /**
     * Read/write access to Contacts and Contact Groups.
     */
    private static final String SCOPE = "https://www.google.com/m8/feeds/";
@@ -71,6 +68,8 @@ public class GoogleContactsClient
     */
    private static final String USER_NAME = "default";
 
+   private final OAuthTokenProvider oAuthTokenProvider;
+
    /**
     * Constructs new {@link GoogleContactsClient} instance.
     *
@@ -81,10 +80,8 @@ public class GoogleContactsClient
     */
    public GoogleContactsClient(OAuthTokenProvider oAuthTokenProvider) throws IOException
    {
+      this.oAuthTokenProvider = oAuthTokenProvider;
       service = new ContactsService("exo.ide");
-      Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod());
-      credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
-      service.setOAuth2Credentials(credentials);
    }
 
 
@@ -120,8 +117,12 @@ public class GoogleContactsClient
     */
    public List<ContactEntry> getAllContacts() throws IOException, ServiceException
    {
+      Credential credentials = new Credential(BearerToken.authorizationHeaderAccessMethod());
+      credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
+      service.setOAuth2Credentials(credentials);
       ContactFeed feed;
       Query query = new Query(new URL(DEFAULT_FEED + USER_NAME + "/full"));
+      query.addCustomParameter(new CustomParameter("xoauth_requestor_id", getUserId()));
       List<ContactEntry> googleContacts = new ArrayList<ContactEntry>();
 
       // Loop used because the feed may not contain all of the user's contacts,
