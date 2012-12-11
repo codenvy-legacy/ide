@@ -292,7 +292,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
                   display.startAnimation();
                   previousStatus = null;
-                  refreshBuildStatusTimer.schedule(delay);
+                  startCheckingStatus(buildID);
                }
 
                @Override
