@@ -89,6 +89,7 @@ class DocumentManagerNetworkController {
     
     // Fetch the file's contents
     GetFileContentsImpl getFileContents = GetFileContentsImpl.make().setPath(path.getPathString());
+     getFileContents.setWorkspaceId(path.getWorkspaceId());
     appContext.getFrontendApi().GET_FILE_CONTENTS.send(getFileContents, 
         new ApiCallback<GetFileContentsResponse>() {
 

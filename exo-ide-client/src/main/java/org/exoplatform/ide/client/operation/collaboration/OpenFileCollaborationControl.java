@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.google.collide.client.openfile;
+package org.exoplatform.ide.client.operation.collaboration;
 
-import com.google.collide.client.CollabEditor;
-import com.google.collide.client.CollabEditorExtension;
-import com.google.gwt.event.shared.HandlerManager;
+import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
+import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.shared.File;
@@ -30,28 +31,24 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public class OpenFileHandler implements OpenFileCollaborationEventHandler, ItemsSelectedHandler
+public class OpenFileCollaborationControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
 
-   private File selectedFile;
-
-   public OpenFileHandler(HandlerManager eventBus)
+   public OpenFileCollaborationControl()
    {
-      eventBus.addHandler(OpenFileCollaborationEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      super("File/OpenCollaboration");
+      setEnabled(true);
+      setVisible(true);
+      setEvent(new OpenFileCollaborationEvent());
+      setTitle("Open File Collaboration");
+      setPrompt("Open File in Collaboration mode");
+      setImages(IDEImageBundle.INSTANCE.openLocalFile(),IDEImageBundle.INSTANCE.openLocalFileDisabled());
    }
 
    @Override
-   public void onOpenFileCollaboration(OpenFileCollaborationEvent event)
+   public void initialize()
    {
-      if(selectedFile == null)
-      {
-         //TODO
-         return;
-      }
-
-//      CollabEditor editor = new CollabEditor(selectedFile.getMimeType());
-
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    @Override
@@ -60,12 +57,12 @@ public class OpenFileHandler implements OpenFileCollaborationEventHandler, Items
       if (!event.getSelectedItems().isEmpty())
       {
          Item item = event.getSelectedItems().get(0);
-         if(item instanceof File)
+         if (item instanceof File)
          {
-            selectedFile = (File)item;
+            setEnabled(true);
             return;
          }
       }
-      selectedFile = null;
+      setEnabled(false);
    }
 }

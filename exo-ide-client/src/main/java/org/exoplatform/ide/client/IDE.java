@@ -23,7 +23,6 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
-
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.application.ApplicationStateSnapshotListener;
 import org.exoplatform.ide.client.application.ControlsRegistration;
@@ -43,7 +42,6 @@ import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -64,18 +62,19 @@ import org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeUploadLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeVersionsLocalizationConstant;
 import org.exoplatform.ide.client.navigation.NavigationModule;
+import org.exoplatform.ide.client.operation.collaboration.OpenFileCollaboration;
+import org.exoplatform.ide.client.operation.collaboration.OpenFileCollaborationControl;
 import org.exoplatform.ide.client.outline.OutlineItemCreatorFactory;
 import org.exoplatform.ide.client.outline.OutlinePresenter;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
-import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
+import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler;
 import org.exoplatform.ide.client.websocket.WebSocketHandler;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,12 +86,6 @@ import java.util.List;
  */
 public class IDE extends org.exoplatform.ide.client.framework.module.IDE
 {
-
-   private ControlsRegistration controlsRegistration;
-
-   private List<PaaS> registeredPaaS;
-
-   private IDEPresenter presenter;
 
    /**
     * The generator of an {@link AutoBean}.
@@ -129,6 +122,12 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       .create(IdeOperationLocalizationConstant.class);
 
    public static final IdeLocalizationMessages IDE_LOCALIZATION_MESSAGES = GWT.create(IdeLocalizationMessages.class);
+
+   private ControlsRegistration controlsRegistration;
+
+   private List<PaaS> registeredPaaS;
+
+   private IDEPresenter presenter;
 
    private FileTypeRegistry fileTypeRegistry = new IDEFileTypeRegistry();
 
@@ -199,6 +198,8 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       controlsRegistration.addControlsFormatter(new MainMenuControlsFormatter());
       controlsRegistration.formatControls();
 
+      new OpenFileCollaboration(eventBus());
+      addControl(new OpenFileCollaborationControl(), Docking.TOOLBAR);
 
       /*
        * Find a method to disable selection of text and elements on the page ( exclude text fields ).

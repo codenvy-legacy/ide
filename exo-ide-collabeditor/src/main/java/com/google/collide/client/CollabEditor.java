@@ -845,4 +845,43 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       editor.getBuffer().onResize();
    }
+
+   public void setDocument(final Document document)
+   {
+      this.document = new org.exoplatform.ide.editor.text.Document(document.asText());
+      this.document.addDocumentListener(documentAdaptor);
+      hoverPresenter = new HoverPresenter(this, editor, this.document);
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+
+         @Override
+         public void execute()
+         {
+            initialized = true;
+            document.putTag("IDocument", document);
+            document.getTextListenerRegistrar().add(new TextListenerImpl());
+            editorBundle.setDocument(document, mimeType, "");
+            documentAdaptor.setDocument(document, editor.getEditorDocumentMutator());
+            editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
+            {
+
+               @Override
+               public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
+               {
+                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() + 1, column + 1));
+               }
+            });
+            editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
+            {
+
+               @Override
+               public void onContextMenu(int x, int y)
+               {
+                  fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
+               }
+            });
+
+         }
+      });
+   }
 }

@@ -19,20 +19,13 @@
 package com.google.collide.client;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
-
 import com.google.collide.client.code.ParticipantModel;
-
-import com.google.collide.client.collaboration.DocOpsSavedNotifier;
-
 import com.google.collide.client.collaboration.CollaborationManager;
-
+import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
-
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
-import com.google.collide.client.openfile.OpenFileCollaborationControl;
-import com.google.collide.client.openfile.OpenFileHandler;
 import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
 import com.google.collide.codemirror2.CodeMirror2;
@@ -41,10 +34,6 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.DOM;
 import elemental.dom.Node;
-
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
-import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
@@ -58,7 +47,9 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 {
 
    private static CollabEditorExtension instance;
+
    private AppContext context;
+
    private DocumentManager documentManager;
 
    public static CollabEditorExtension get()
@@ -77,8 +68,6 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 //    XhrWarden.watch();
 //
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
-      new OpenFileHandler(IDE.eventBus());
-      IDE.getInstance().addControl(new OpenFileCollaborationControl(), Docking.TOOLBAR);
    }
 
    public AppContext getContext()
@@ -138,7 +127,7 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
    }
 
    /**
-    * 
+    *
     */
    private void init()
    {

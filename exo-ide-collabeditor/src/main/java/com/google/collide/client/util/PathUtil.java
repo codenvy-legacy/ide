@@ -35,7 +35,9 @@ public class PathUtil implements Comparable<PathUtil> {
 
   public static final PathUtil WORKSPACE_ROOT = new PathUtil(SEP);
 
-  /**
+   private String workspaceId;
+
+   /**
    * Creates a PathUtil composed of the components of <code>first</code>
    * followed by the components of <code>second>.
    */
@@ -143,7 +145,16 @@ public class PathUtil implements Comparable<PathUtil> {
     return pathComponentsList.get(index);
   }
 
-  /**
+   public String getWorkspaceId(){
+      return workspaceId;
+   }
+
+   public void setWorkspaceId(String workspaceId)
+   {
+      this.workspaceId = workspaceId;
+   }
+
+   /**
    * Returns whether the given {@code path} is a child of this path (or is
    * the same as this path). For example, a path "/tmp" contains "/tmp" and
    * it also contains "/tmp/something".

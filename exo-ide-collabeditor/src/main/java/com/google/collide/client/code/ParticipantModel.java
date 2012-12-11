@@ -74,7 +74,7 @@ public class ParticipantModel {
   public static ParticipantModel create(FrontendApi frontendApi, MessageFilter messageFilter) {
     ParticipantModel model = new ParticipantModel(frontendApi);
     model.registerForInvalidations(messageFilter);
-    model.requestAllParticipants();
+//    model.requestAllParticipants();
     return model;
   }
 
