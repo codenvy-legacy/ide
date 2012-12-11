@@ -43,7 +43,7 @@ public class InviteClientService
 
    public void inviteUser(String email, String message, AsyncRequestCallback<String> callback) throws RequestException
    {
-      String url = restServiceContext + "/ide/invite/" + email;      
+      String url = restServiceContext + "/invite/" + email;      
       AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
          .header(HTTPHeader.CONTENTTYPE, "text/html; charset=utf-8").data(message).send(callback);
    }
