@@ -269,4 +269,13 @@ public class GroovyCodeAssistant extends CodeAssistant
       // not used in Groovy code assistant, so always return null
       return null;
    }
+   
+   
+   @Override
+   protected List<String> getAllPackagesFromProject(Project project, VirtualFileSystem fileSystem)
+      throws VirtualFileSystemException, CodeAssistantException
+   {
+      // not used in Groovy code assistant, so always return null
+      return null;
+   }
 }

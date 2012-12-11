@@ -203,7 +203,7 @@ public class Storage
     * Get list of package names
     */
    @POST
-   @Path("/fing-packages")
+   @Path("/find-packages")
    @Produces(MediaType.APPLICATION_JSON)
    public List<String> getPackages(@QueryParam("package") String packagePrefix, Set<String> dependencys)
    {

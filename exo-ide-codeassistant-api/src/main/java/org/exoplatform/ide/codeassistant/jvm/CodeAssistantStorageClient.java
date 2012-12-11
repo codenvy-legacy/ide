@@ -397,7 +397,7 @@ public class CodeAssistantStorageClient implements CodeAssistantStorage
       HttpURLConnection in = null;
       try
       {
-         URL url = new URL(baseURL + STOGAGE_BASE + "/fing-packages?package=" + packagePrefix);
+         URL url = new URL(baseURL + STOGAGE_BASE + "/find-packages?package=" + packagePrefix);
          in = run(url, dependencys);
          if (in == null)
             return null;

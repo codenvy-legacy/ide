@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * Abstract WebSocket message bus, that provides two asynchronous
  * messaging patterns: RPC and list-based PubSub.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: MessageBus.java Dec 4, 2012 2:50:32 PM azatsarynnyy $
  *
@@ -98,7 +98,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Create new {@link MessageBus} instance.
-    * 
+    *
     * @param url WebSocket server URL
     */
    public MessageBus(String url)
@@ -121,7 +121,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Checks if the browser has support for WebSockets.
-    * 
+    *
     * @return <code>true</code> if WebSocket is supported;
     *         <code>false</code> if it's not
     */
@@ -140,7 +140,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Return the ready state of the WebSocket connection.
-    * 
+    *
     * @return ready state of the WebSocket
     * @throws IllegalStateException when WebSocket is not initialized
     */
@@ -166,7 +166,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Send {@link Message}.
-    * 
+    *
     * @param message {@link Message} to send
     * @param callback callback for receiving reply to message. May be <code>null</code>.
     * @throws WebSocketException throws if an any error has occurred while sending data
@@ -175,7 +175,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Send text message.
-    * 
+    *
     * @param uuid a message identifier
     * @param message message to send
     * @param callback callback for receiving reply to message
@@ -191,7 +191,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Transmit text data over WebSocket.
-    * 
+    *
     * @param message text message
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
@@ -229,7 +229,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Parse text message to {@link Message} object.
-    * 
+    *
     * @param message text message
     * @return {@link Message}
     */
@@ -237,7 +237,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Process the {@link Message} that received by subscription.
-    * 
+    *
     * @param message {@link Message}
     */
    private void processSubscriptionMessage(Message message)
@@ -259,7 +259,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Get channel from which {@link Message} was received.
-    * 
+    *
     * @param message {@link Message}
     * @return channel identifier or <code>null</code> if message is invalid.
     */
@@ -267,7 +267,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Sets the {@link ConnectionOpenedHandler} to be notified when the {@link MessageBus} opened.
-    * 
+    *
     * @param handler {@link ConnectionOpenedHandler}
     */
    public void setOnOpenHandler(ConnectionOpenedHandler handler)
@@ -277,7 +277,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Sets the {@link ConnectionClosedHandler} to be notified when the {@link MessageBus} closed.
-    * 
+    *
     * @param handler {@link ConnectionClosedHandler}
     */
    public void setOnCloseHandler(ConnectionClosedHandler handler)
@@ -287,7 +287,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Sets the {@link ConnectionErrorHandler} to be notified when there is any error in communication over WebSocket.
-    * 
+    *
     * @param handler {@link ConnectionErrorHandler}
     */
    public void setOnErrorHandler(ConnectionErrorHandler handler)
@@ -302,7 +302,7 @@ public abstract class MessageBus implements MessageReceivedHandler
     * already previously subscribed to do not trigger a send of another message
     * to the server because the client has already a subscription, and merely registers
     * (client side) the additional handler to be fired for events received on the respective channel.
-    * 
+    *
     * @param channel channel identifier
     * @param handler {@link MessageHandler} to subscribe
     * @throws WebSocketException throws if an any error has occurred while subscribing
@@ -323,7 +323,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Send message with subscription info.
-    * 
+    *
     * @param channel channel identifier
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
@@ -333,7 +333,7 @@ public abstract class MessageBus implements MessageReceivedHandler
     * Unsubscribes a previously subscribed handler listening on the specified channel.
     * If it's the last unsubscribe to a channel, a message is sent to the server to
     * unsubscribe the client for that channel.
-    * 
+    *
     * @param channel channel identifier
     * @param handler {@link MessageHandler} to unsubscribe
     * @throws WebSocketException throws if an any error has occurred while unsubscribing
@@ -354,7 +354,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Send message with unsubscription info.
-    * 
+    *
     * @param channel channel identifier
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
@@ -362,7 +362,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Check if a provided handler is subscribed to a provided channel or not.
-    * 
+    *
     * @param handler {@link MessageHandler} to check
     * @param channel channel to check
     * @return <code>true</code> if handler subscribed to channel and <code>false</code> if not
@@ -377,7 +377,7 @@ public abstract class MessageBus implements MessageReceivedHandler
 
    /**
     * Get the WebSocket server URL.
-    * 
+    *
     * @return URL of the WebSocket server
     */
    public String getURL()

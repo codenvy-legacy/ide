@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,34 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.java.server;
+package com.google.collide.server;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import javax.ws.rs.core.Application;
 
-/**
- * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
- * @version $Id: JavaServiceApplication Mar 30, 2011 10:34:04 AM evgen $
- */
-public class JavaServiceApplication extends Application
+public class CollaborationEditorApplication extends Application
 {
-
-   private final Set<Class<?>> classes;
-
-   public JavaServiceApplication()
+   @Override
+   public Set<Object> getSingletons()
    {
-      classes = new HashSet<Class<?>>(1);
-      classes.add(RestCodeAssistantJava.class);
+      return Collections.emptySet();
    }
 
-   /**
-    * @see javax.ws.rs.core.Application#getClasses()
-    */
    @Override
    public Set<Class<?>> getClasses()
    {
+      Set<Class<?>> classes = new HashSet<Class<?>>(2);
+      classes.add(ParticipantsService.class);
+      classes.add(EditSessionsService.class);
       return classes;
    }
 }

@@ -34,17 +34,15 @@ import org.exoplatform.ide.extension.maven.shared.BuildStatus.Status;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
-import org.exoplatform.services.security.Identity;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -68,7 +66,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+
 
 /**
  * Service provide Autocomplete of source code is also known as code completion feature. In a source code editor autocomplete is
@@ -98,10 +96,6 @@ public class RestCodeAssistantJava
    /** Logger. */
    private static final Log LOG = ExoLogger.getLogger(RestCodeAssistantJava.class);
 
-   public RestCodeAssistantJava()
-   {
-   }
-
    /**
     * Returns the Class object associated with the class or interface with the given string name.
     * 
@@ -127,7 +121,7 @@ public class RestCodeAssistantJava
    }
 
    /**
-    * Returns the Classs objects associated with the class or interface with the given simple name prefix.
+    * Returns the class objects associated with the class or interface with the given simple name prefix.
     * 
     * @param fqn the Full Qualified Name
     * @return {@link TypeInfo}
@@ -147,7 +141,7 @@ public class RestCodeAssistantJava
          return infos;
 
       if (LOG.isDebugEnabled())
-         LOG.error("Class witn name prefix '" + namePrefix + "' not found");
+         LOG.error("Class with name prefix '" + namePrefix + "' not found");
       return null;
    }
 
@@ -230,15 +224,14 @@ public class RestCodeAssistantJava
    }
 
    /**
-    * Find all classes in project
-    * 
-    * @param uriInfo
-    * @param location
-    * @return set of FQNs matched to project at file location
+    * Find all classes in package
+    *
+    * @param fileId current file id (editing class)
+    * @param vfsId id of virtual file system
+    * @param projectId
+    * @return
     * @throws CodeAssistantException
     * @throws VirtualFileSystemException
-    * @throws PermissionDeniedException
-    * @throws ItemNotFoundException
     */
    @GET
    @Path("/find-in-package")
@@ -289,7 +282,7 @@ public class RestCodeAssistantJava
     * @throws VirtualFileSystemException
     */
    @GET
-   @Path("/fing-packages")
+   @Path("/find-packages")
    @Produces(MediaType.APPLICATION_JSON)
    public List<String> getPackages(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId,
       @QueryParam("package") String packagePrefix) throws CodeAssistantException, VirtualFileSystemException
@@ -336,27 +329,33 @@ public class RestCodeAssistantJava
    @GET
    @Path("/update-dependencies")
    @Produces(MediaType.APPLICATION_JSON)
-   public List<String> updateDepndency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
+   public List<String> updateDependency(@QueryParam("vfsid") String vfsId, @QueryParam("projectid") String projectId)
       throws CodeAssistantException, VirtualFileSystemException, IOException, BuilderException, JsonException
    {
       final VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+      Project project = null; 
+      if (item.getItemType().equals(ItemType.PROJECT))
+         project = (Project)item;
+      else 
+      {
+         LOG.warn("Getting item not a project ");
+         throw new CodeAssistantException(500, "Getting item not a project");
+      }
       String buildId = builderClient.dependenciesList(vfs, projectId);
-      String dependencys = null;
-
+      String dependencies = null;
       BuildStatus buildStatus = waitBuildTaskFinish(buildId);
       if (Status.SUCCESSFUL == buildStatus.getStatus())
       {
          if (buildStatus.getDownloadUrl() != null && !buildStatus.getDownloadUrl().isEmpty())
          {
-            dependencys = makeRequest(buildStatus.getDownloadUrl());
-            ConversationState.setCurrent(new ConversationState(new Identity("__system")));
-            Item item = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
-            if (item.hasProperty("exoide:classpath") && item.getPropertyValue("exoide:classpath").equals(dependencys))
+            dependencies = makeRequest(buildStatus.getDownloadUrl());
+            if (project.hasProperty("exoide:classpath") && project.getPropertyValue("exoide:classpath").equals(dependencies))
             {
-               return getAllPackages(vfsId, projectId);
+               return codeAssistant.getAllPackages(project, vfs);
             }
             List<Property> properties =
-               Arrays.<Property> asList(new PropertyImpl("exoide:classpath", dependencys), new PropertyImpl(
+               Arrays.<Property> asList(new PropertyImpl("exoide:classpath", dependencies), new PropertyImpl(
                   "exoide:build_error", (String)null));
             vfs.updateItem(projectId, properties, null);
          }
@@ -364,25 +363,25 @@ public class RestCodeAssistantJava
       else
       {
          LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
+         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
       }
       buildId = builderClient.dependenciesCopy(vfs, projectId, null);
       buildStatus = waitBuildTaskFinish(buildId);
       if (Status.FAILED == buildStatus.getStatus())
       {
          LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
+         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
       }
-      String statusUrl = storageClient.updateTypeIndex(dependencys, buildStatus.getDownloadUrl());
+      String statusUrl = storageClient.updateTypeIndex(dependencies, buildStatus.getDownloadUrl());
       waitStorageTaskFinish(statusUrl);
       buildId = builderClient.dependenciesCopy(vfs, projectId, "sources");
       buildStatus = waitBuildTaskFinish(buildId);
       if (Status.FAILED == buildStatus.getStatus())
       {
          LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
-         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text.plain");
+         throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
       }
-      statusUrl = storageClient.updateDockIndex(dependencys, buildStatus.getDownloadUrl());
+      statusUrl = storageClient.updateDockIndex(dependencies, buildStatus.getDownloadUrl());
       try
       {
          waitStorageTaskFinish(statusUrl);
@@ -392,11 +391,11 @@ public class RestCodeAssistantJava
          LOG.debug("Adding sources artifact fail : " + statusUrl, e );
       }
 
-      return getAllPackages(vfsId, projectId);
+      return codeAssistant.getAllPackages(project, vfs);
    }
 
    /**
-    * @param dependencys
+    * @param dependencies
     * @param buildStatus  
     * @return
     */
@@ -412,7 +411,7 @@ public class RestCodeAssistantJava
          int responseCode = http.getResponseCode();
          if (responseCode != 200)
          {
-            LOG.error("Can't dowload dependency list from: " + requestUrl);
+            LOG.error("Can't download dependency list from: " + requestUrl);
          }
          InputStream data = http.getInputStream();
          response = readBody(data, http.getContentLength());

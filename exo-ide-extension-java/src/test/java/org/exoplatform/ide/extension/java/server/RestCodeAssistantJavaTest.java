@@ -147,7 +147,7 @@
 //   public void findPackage() throws Exception
 //   {
 //      ContainerResponse cres =
-//               launcher.service("GET", "/ide/code-assistant/java/fing-packages?projectid="
+//               launcher.service("GET", "/ide/code-assistant/java/find-packages?projectid="
 //                  + project.getId() + "&vfsid=ws" + "&package=org.exoplatform.ide", "", null, null, null, null);
 //      assertEquals(HTTPStatus.OK, cres.getStatus());
 //      List<String> packages = (List<String>)cres.getEntity();

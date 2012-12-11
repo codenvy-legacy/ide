@@ -21,6 +21,7 @@ package org.exoplatform.ide.extension.heroku.server;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 import org.eclipse.jgit.transport.URIish;
+import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
@@ -1020,7 +1021,7 @@ public class Heroku
          URL url = new URL(HEROKU_API + "/apps");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
-         http.setRequestProperty("Accept", "application/xml, */*");
+         http.setRequestProperty("Accept", "application/xml");
          authenticate(herokuCredentials, http);
 
          if (http.getResponseCode() != 200)

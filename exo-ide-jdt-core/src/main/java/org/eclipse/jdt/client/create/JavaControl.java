@@ -26,6 +26,9 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -35,8 +38,10 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @version $Id:
  *
  */
-public class JavaControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
+public class JavaControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewVisibilityChangedHandler
 {
+
+   private View currnetView;
 
    /**
     * @param id
@@ -59,15 +64,6 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
          ProjectModel project = ((ItemContext)item).getProject();
          if (project != null)
          {
-//            String sourcePath =
-//               project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
-//                  : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
-//            sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
-//            if (item.getPath().startsWith(sourcePath))
-//               setEnabled(true);
-//            else
-//               setEnabled(false);
-            
             boolean enabled = isInResourceDirectory(item);
             setEnabled(enabled);
          }
@@ -82,6 +78,18 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
    
    private boolean isInResourceDirectory(Item item)
    {
+      
+//      String sourcePath =
+//             project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
+//                : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
+//          sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
+//          if (item.getPath().startsWith(sourcePath))
+//             setEnabled(true);
+//          else
+//             setEnabled(false);
+      
+      
+      
       ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
       if (projectItem == null)
       {
@@ -107,6 +115,14 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
    {
       setVisible(true);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
+   }
+
+   @Override
+   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   {
+      currnetView = event.getView();
+      
    }
 
 }
