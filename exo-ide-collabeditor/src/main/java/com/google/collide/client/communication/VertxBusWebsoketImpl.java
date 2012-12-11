@@ -42,8 +42,6 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder
 public class VertxBusWebsoketImpl implements VertxBus
 {
 
-   private static VertxBusWebsoketImpl instance;
-
    private RESTMessageBus messageBus;
 
    private JsonStringMap<org.exoplatform.ide.client.framework.websocket.events.MessageHandler> handlers = JsonCollections.createMap();
@@ -53,24 +51,21 @@ public class VertxBusWebsoketImpl implements VertxBus
       messageBus = new RESTMessageBus(url);
    }
 
-   public static VertxBus get()
+   public static VertxBus create()
    {
-      if (instance == null)
+      String url;
+      boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
+      if (isSecureConnection)
       {
-         String url;
-         boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
-         if (isSecureConnection)
-         {
-            url = "wss://" + Window.Location.getHost() + "/collaboration";
-         }
-         else
-         {
-            url = "ws://" + Window.Location.getHost() + "/collaboration";
-         }
-         instance = new VertxBusWebsoketImpl(url);
+         url = "wss://" + Window.Location.getHost() + "/collaboration";
       }
+      else
+      {
+         url = "ws://" + Window.Location.getHost() + "/collaboration";
+      }
+      return new VertxBusWebsoketImpl(url);
 
-      return instance;
+
    }
 
    @Override

@@ -31,6 +31,8 @@ import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
+import com.google.collide.client.openfile.OpenFileCollaborationControl;
+import com.google.collide.client.openfile.OpenFileHandler;
 import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
 import com.google.collide.codemirror2.CodeMirror2;
@@ -42,6 +44,7 @@ import elemental.dom.Node;
 
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
@@ -74,6 +77,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 //    XhrWarden.watch();
 //
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      new OpenFileHandler(IDE.eventBus());
+      IDE.getInstance().addControl(new OpenFileCollaborationControl(), Docking.TOOLBAR);
    }
 
    public AppContext getContext()
@@ -96,23 +101,40 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       documentManager = DocumentManager.create(context);
       init();
 
-      VertxBusWebsoketImpl.get().send("ide/collab_editor/participants/add","{}", new VertxBus.ReplyHandler()
+      //TODO refactor this
+      //This code use new socket connection for receiving user session id.
+      final VertxBus bus = VertxBusWebsoketImpl.create();
+      bus.setOnOpenCallback(new VertxBus.ConnectionListener()
       {
          @Override
-         public void onReply(String message)
+         public void onOpen()
          {
-            JSONObject object = JSONParser.parseLenient(message).isObject();
-            BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
-            BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());
-            context.initializeCollaboration();
-            ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
-            IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
-            CollaborationManager collaborationManager =
-               CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
+            bus.send("ide/collab_editor/participants/add", "{}", new VertxBus.ReplyHandler()
+            {
+               @Override
+               public void onReply(String message)
+               {
+                  JSONObject object = JSONParser.parseLenient(message).isObject();
+                  BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
+                  BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());
+                  context.initializeCollaboration();
+                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+                  IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
+                  CollaborationManager collaborationManager =
+                     CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
 
-            DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+                  DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+                  bus.close();
+               }
+            });
+         }
+
+         @Override
+         public void onClose()
+         {
          }
       });
+
    }
 
    /**
