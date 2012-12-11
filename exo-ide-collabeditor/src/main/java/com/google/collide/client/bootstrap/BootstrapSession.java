@@ -56,7 +56,7 @@ public final class BootstrapSession
     */
    public String getActiveClientId()
    {
-      return IDE.userId;
+      return userId;
    }
 
    /**
@@ -72,7 +72,7 @@ public final class BootstrapSession
     */
    public String getUserId()
    {
-      return IDE.userId;
+      return userId;
    }
 
    /**

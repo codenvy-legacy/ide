@@ -62,7 +62,7 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
       final CollabEditor editor = new CollabEditor(selectedFile.getMimeType());
       PathUtil pathUtil = new PathUtil(selectedFile.getId());
       pathUtil.setWorkspaceId(VirtualFileSystem.getInstance().getInfo().getId());
-      CollabEditorExtension.get().getManager().getDocument(PathUtil.EMPTY_PATH, new DocumentManager.GetDocumentCallback()
+      CollabEditorExtension.get().getManager().getDocument(pathUtil, new DocumentManager.GetDocumentCallback()
       {
          @Override
          public void onDocumentReceived(Document document)
