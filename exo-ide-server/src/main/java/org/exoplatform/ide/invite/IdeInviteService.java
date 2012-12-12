@@ -42,7 +42,7 @@ import javax.ws.rs.core.Response;
  * eXo Cloud + IDE
  */
 
-@Path("/ide/invite")
+@Path("/invite")
 public class IdeInviteService
 {
    private static final Log LOG = ExoLogger.getLogger(IdeInviteService.class);
@@ -219,8 +219,6 @@ public class IdeInviteService
    @Produces(MediaType.APPLICATION_JSON)
    public Response acceptInvite(@PathParam("id") String id) throws InviteException
    {
-    
-
       Invite invite = inviteService.acceptInvite(id);
       return Response.ok().entity(invite).build();
    }
