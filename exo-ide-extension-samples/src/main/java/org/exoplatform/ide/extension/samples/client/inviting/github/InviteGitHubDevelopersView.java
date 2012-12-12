@@ -16,29 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting;
-
-import com.google.gwt.dom.client.TextAreaElement;
-
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.user.client.ui.CheckBox;
-
-import com.google.gwt.user.client.Element;
-
-import com.google.gwt.user.client.DOM;
-
-import com.google.gwt.user.client.ui.ComplexPanel;
-
-import com.google.gwt.user.client.ui.FlowPanel;
-
-import com.google.gwt.dom.client.DivElement;
-
-import com.google.gwt.uibinder.client.UiField;
+package org.exoplatform.ide.extension.samples.client.inviting.github;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.TextAreaElement;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,7 +37,6 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.git.shared.GitHubUser;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +46,7 @@ import java.util.Map;
  * 
  */
 public class InviteGitHubDevelopersView extends ViewImpl implements
-   org.exoplatform.ide.extension.samples.client.inviting.InviteGitHubDevelopersPresenter.Display
+   org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter.Display
 {
 
    private static final String ID = "ide.inviteGitHubDevelopersView";

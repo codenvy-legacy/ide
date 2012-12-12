@@ -39,6 +39,21 @@
 	overflow: hidden;
 }
 
+@sprite .inviteHeader48 {
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	width:100%;
+	height:100%;
+	gwt-image: "invitePageHeaderBackground48";
+	background-repeat: repeat-x;
+	background-color: #FFFFFF;
+	border: #999999 1px solid;
+	overflow: hidden;
+}
+
 .welcomeHeaderLogo {
 	margin-top: 12px;
 	margin-left: 12px;
