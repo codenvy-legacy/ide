@@ -134,8 +134,7 @@ public class PathUtil implements Comparable<PathUtil> {
     if (this == EMPTY_PATH || pathComponentsList.size() == 0) {
       return "";
     }
-//    return SEP + pathComponentsList.join(SEP);
-    return pathComponentsList.join(SEP);
+    return SEP + pathComponentsList.join(SEP);
   }
 
   public int getPathComponentsCount() {
