@@ -107,7 +107,7 @@
   <init-params>
     <value-param>
       <name>mail-sender</name>
-      <value>gavrikvetal@gmail.com</value>
+      <value><![CDATA[Cloud-IDE <noreply@cloud-ide.com>]]></value>
     </value-param>
   </init-params>
 </component>
