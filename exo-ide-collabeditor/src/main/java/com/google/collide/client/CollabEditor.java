@@ -113,7 +113,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       @Override
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
-         fireEvent(new EditorContentChangedEvent(CollabEditor.this));
+//         fireEvent(new EditorContentChangedEvent(CollabEditor.this));
          updateDocument();
       }
 
@@ -129,7 +129,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             EditorErrorListener.NOOP_ERROR_RECEIVER, this);
 //      contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
-      //editor.getTextListenerRegistrar().add(new TextListenerImpl());
+//      editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
          new EditableContentArea.View(CollabEditorExtension.get().getContext().getResources());
       EditableContentArea contentArea =
@@ -859,7 +859,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          {
             initialized = true;
             document.putTag("IDocument", CollabEditor.this.document);
-            //document.getTextListenerRegistrar().add(new TextListenerImpl());
+            document.getTextListenerRegistrar().add(new TextListenerImpl());
             editorBundle.setDocument(document, mimeType, "");
             documentAdaptor.setDocument(document, editor.getEditorDocumentMutator());
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()

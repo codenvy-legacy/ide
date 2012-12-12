@@ -68,7 +68,7 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
          @Override
          public void onDocumentReceived(Document document)
          {
-            EditorView view = new EditorView((FileModel)selectedFile,false, new Editor[]{editor},0);
+            CollaborationEditorView view = new CollaborationEditorView(editor, selectedFile);
             editor.setDocument(document);
             IDE.getInstance().openView(view);
          }
