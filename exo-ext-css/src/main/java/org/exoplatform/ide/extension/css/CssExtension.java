@@ -17,12 +17,16 @@
 package org.exoplatform.ide.extension.css;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.wizard.WizardAgent;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.extension.Extension;
 import org.exoplatform.ide.extension.css.editor.CssEditorProvider;
+import org.exoplatform.ide.extension.css.wizard.NewCSSFilePagePresenter;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.texteditor.TextEditorView;
 
@@ -48,11 +52,13 @@ public class CssExtension
     */
    @Inject
    public CssExtension(ResourceProvider resourceProvider, CssEditorProvider cssEditorProvider,
-      EditorRegistry editorRegistry)
+      EditorRegistry editorRegistry, WizardAgent wizardAgent, Provider<NewCSSFilePagePresenter> provider,
+      Resources resources)
    {
       // Create and register new File type
       FileType cssFile = new FileType(null, "text/css", "css");
       resourceProvider.registerFileType(cssFile);
+      wizardAgent.registerNewResourceWizard("General", "Css file", resources.file(), provider);
 
       // register Editor Provider
       editorRegistry.register(cssFile, cssEditorProvider);

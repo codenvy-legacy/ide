@@ -16,33 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.api.ui.wizard;
+package org.exoplatform.ide.wizard.newresource;
 
+import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.inject.Provider;
-import org.exoplatform.ide.extension.SDK;
-import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
- * Provides register wizards for creating new project.
- *
+ * Contains of resource for new resource wizard page view.
+ * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
-@SDK(title = "ide.api.ui.wizard.newproject")
-public interface NewProjectWizardAgent
+public interface NewResourceWizardResources extends ClientBundle
 {
-   /**
-    * Registers new wizard.
-    *
-    * @param title
-    * @param description
-    * @param primaryNature
-    * @param icon
-    * @param wizardPage first wizard page
-    * @param natures
-    */
-   void registerWizard(String title, String description, String primaryNature, ImageResource icon,
-                       Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures);
+   @Source("org/exoplatform/ide/wizard/images/NewResourceIcon.png")
+   ImageResource newResourceIcon();
 }

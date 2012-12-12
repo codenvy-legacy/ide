@@ -32,15 +32,14 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
+
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
-import org.exoplatform.ide.api.ui.wizard.NewProjectWizardAgent;
 import org.exoplatform.ide.client.ImageBundle;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
@@ -51,7 +50,6 @@ import org.exoplatform.ide.client.welcome.WelcomePage;
 import org.exoplatform.ide.command.EditorActiveExpression;
 import org.exoplatform.ide.command.NoProjectOpenedExpression;
 import org.exoplatform.ide.command.ProjectOpenedExpression;
-import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
@@ -72,9 +70,8 @@ import org.exoplatform.ide.ui.list.SimpleList;
 import org.exoplatform.ide.ui.list.SimpleList.View;
 import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.loging.Log;
-import org.exoplatform.ide.wizard.WizardPagePresenter;
-import org.exoplatform.ide.wizard.genericproject.GenericProjectPagePresenter;
-import org.exoplatform.ide.wizard.newproject.NewProjectWizardAgentImpl;
+import org.exoplatform.ide.wizard.WizardAgentImpl;
+
 import java.util.Date;
 
 /**
@@ -123,7 +120,7 @@ public class WorkspacePresenter implements Presenter
                                 ExtensionsPage extensionsPage, ImageBundle imageBundle,
                                 OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
                                 EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression,
-                                NewProjectWizardAgentImpl newProjectWizardAgent)
+                                WizardAgentImpl newProjectWizardAgent)
    {
       super();
       this.display = display;
@@ -137,10 +134,6 @@ public class WorkspacePresenter implements Presenter
       // FOR DEMO
 
       // CREATE STATIC MENU CONTENT
-      menuPresenter.addMenuItem("File/New/new File", null);
-      registerWizards(newProjectWizardAgent, resourceProvider);
-      menuPresenter.addMenuItem("File/New/new Project", new ShowNewProjectWizardCommand(newProjectWizardAgent,
-         resources));
       menuPresenter.addMenuItem("File/Open Project", null, new OpenProjectCommand(resourceProvider), null,
          noProjectOpenedExpression);
 
@@ -162,26 +155,6 @@ public class WorkspacePresenter implements Presenter
       partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
       partAgent.addPart(projectExplorerPresenter, PartStackType.NAVIGATION);
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
-   }
-
-   /**
-    * Registers available wizards.
-    *
-    * @param newProjectWizardAgent
-    * @param resourceProvider
-    */
-   private void registerWizards(NewProjectWizardAgent newProjectWizardAgent, final ResourceProvider resourceProvider)
-   {
-      Provider<WizardPagePresenter> genericProjectWizard = new Provider<WizardPagePresenter>()
-      {
-         public WizardPagePresenter get()
-         {
-            return new GenericProjectPagePresenter(resources, resourceProvider);
-         }
-      };
-
-      newProjectWizardAgent.registerWizard("Generic Project", "Creates generic project", "",
-         resources.genericProjectIcon(), genericProjectWizard, JsonCollections.<String>createArray());
    }
 
    /**

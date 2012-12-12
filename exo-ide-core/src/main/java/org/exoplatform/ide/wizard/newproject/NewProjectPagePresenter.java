@@ -20,7 +20,9 @@ package org.exoplatform.ide.wizard.newproject;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
+import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
+import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
@@ -36,7 +38,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
 
    private NewProjectPageView view;
 
-   private NewProjectWizardAgentImpl wizardAgent;
+   private JsonArray<NewProjectWizardData> wizards;
 
    /**
     * Create presenter
@@ -44,9 +46,9 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     * @param wizardAgent
     * @param resources
     */
-   public NewProjectPagePresenter(NewProjectWizardAgentImpl wizardAgent, NewProjectWizardResource resources)
+   public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources)
    {
-      this(wizardAgent, resources, new NewProjectPageViewImpl(wizardAgent.getWizards(), resources));
+      this(wizardAgent, resources, new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards(), resources));
    }
 
    /**
@@ -58,13 +60,13 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     * @param resources
     * @param view
     */
-   protected NewProjectPagePresenter(NewProjectWizardAgentImpl wizardAgent, NewProjectWizardResource resources,
+   protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources,
       NewProjectPageView view)
    {
       super("Select a wizard", resources.newProjectIcon());
-      this.wizardAgent = wizardAgent;
       this.view = view;
       view.setBtnPressedDelegate(this);
+      this.wizards = wizardAgent.getNewProjectWizards();
    }
 
    /**
@@ -146,7 +148,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     */
    public void onButtonPressed(int id)
    {
-      next = wizardAgent.getWizards().get(id).getWizardPage();
+      next = wizards.get(id).getWizardPage();
       delegate.updateControls();
    }
 }

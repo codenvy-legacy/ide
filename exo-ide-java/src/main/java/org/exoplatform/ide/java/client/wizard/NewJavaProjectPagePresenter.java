@@ -21,7 +21,7 @@ package org.exoplatform.ide.java.client.wizard;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-import com.google.inject.Singleton;
+
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.java.client.JavaClientBundle;
 import org.exoplatform.ide.java.client.projectmodel.CompilationUnit;
@@ -44,12 +44,9 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-@Singleton
 public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter
    implements JavaProjectPageView.ActionDelegate
 {
-
-
    private WizardPagePresenter previous;
 
    private JavaProjectPageView view;

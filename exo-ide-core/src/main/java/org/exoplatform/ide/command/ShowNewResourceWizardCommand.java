@@ -18,38 +18,45 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPresenter;
-import org.exoplatform.ide.wizard.newproject.NewProjectPagePresenter;
+import org.exoplatform.ide.wizard.newresource.NewResourcePagePresenter;
 
 /**
- * Open New project wizard dialog.
+ * Command for "New/File" action.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowNewProjectWizardCommand implements Command
+public class ShowNewResourceWizardCommand implements ExtendedCommand
 {
-   private final WizardAgentImpl wizardAgent;
-
    private final Resources resources;
 
+   private final WizardAgentImpl wizardAgent;
+
+   private final ProjectOpenedExpression expression;
+
    /**
-    * Create command
+    * Create command.
     * 
-    * @param wizardAgent
     * @param resources
+    * @param wizardAgent
+    * @param expression
     */
    @Inject
-   public ShowNewProjectWizardCommand(WizardAgentImpl wizardAgent, Resources resources)
+   public ShowNewResourceWizardCommand(Resources resources, WizardAgentImpl wizardAgent,
+      ProjectOpenedExpression expression)
    {
-      this.wizardAgent = wizardAgent;
       this.resources = resources;
+      this.wizardAgent = wizardAgent;
+      this.expression = expression;
    }
 
    /**
@@ -57,8 +64,34 @@ public class ShowNewProjectWizardCommand implements Command
     */
    public void execute()
    {
-      NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources);
-      WizardPresenter wizardDialog = new WizardPresenter(firstPage, resources, "Create project");
+      NewResourcePagePresenter page = new NewResourcePagePresenter(resources, wizardAgent);
+      WizardPresenter wizardDialog = new WizardPresenter(page, resources, "Create resource");
       wizardDialog.showWizard();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Image getIcon()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Expression visibleWhen()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Expression enabledWhen()
+   {
+      return expression;
    }
 }

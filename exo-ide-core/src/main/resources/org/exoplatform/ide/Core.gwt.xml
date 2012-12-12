@@ -14,5 +14,6 @@
    <inherits name="com.google.gwt.inject.Inject" />
 
    <source path="ui" />
+   <source path="wizard" />
    <source path="" />
 </module>
