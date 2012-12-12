@@ -22,6 +22,7 @@ import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.util.PathUtil;
+import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.FileContents;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.event.shared.HandlerManager;
@@ -60,7 +61,7 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
       }
 
       final CollabEditor editor = new CollabEditor(selectedFile.getMimeType());
-      PathUtil pathUtil = new PathUtil(selectedFile.getId());
+      PathUtil pathUtil = new PathUtil(selectedFile.getPath());
       pathUtil.setWorkspaceId(VirtualFileSystem.getInstance().getInfo().getId());
       CollabEditorExtension.get().getManager().getDocument(pathUtil, new DocumentManager.GetDocumentCallback()
       {
@@ -76,14 +77,13 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
          public void onUneditableFileContentsReceived(FileContents contents)
          {
             //TODO
-
+            Log.error(OpenFileCollaboration.class, "UnEditable File received " + contents.getPath());
          }
 
          @Override
          public void onFileNotFoundReceived()
          {
-            //TODO
-
+            Log.error(OpenFileCollaboration.class, "File not found " + selectedFile.getPath());
          }
       });
 
