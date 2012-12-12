@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client;
 
-import com.google.gwt.core.client.ScriptInjector;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
@@ -45,7 +43,6 @@ import org.exoplatform.ide.client.edit.TextEditModule;
 import org.exoplatform.ide.client.editor.EditorController;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedEvent;
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosingEvent;
-import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -55,6 +52,7 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
+import org.exoplatform.ide.client.framework.util.IDEAutoBeanFactory;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
@@ -71,8 +69,8 @@ import org.exoplatform.ide.client.outline.OutlinePresenter;
 import org.exoplatform.ide.client.output.OutputPresenter;
 import org.exoplatform.ide.client.preferences.PreferencesModule;
 import org.exoplatform.ide.client.preview.PreviewHTMLPresenter;
-import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.project.ProjectSupportingModule;
+import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
 import org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler;

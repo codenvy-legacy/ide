@@ -16,62 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting.test;
+package org.exoplatform.ide.extension.samples.client.inviting.google;
 
-import com.google.gwt.http.client.Header;
-
-import com.google.gwt.http.client.Response;
+import org.exoplatform.ide.client.framework.invite.GoogleContact;
 
 /**
- * @deprecated class uses only for testing
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class DummyResponse extends Response
+public interface UserSelectionChangedHandler
 {
    
-   private String text;
-
-   public DummyResponse(String text)
-   {
-      this.text = text;
-   }
-   
-   @Override
-   public String getHeader(String header)
-   {
-      return null;
-   }
-
-   @Override
-   public Header[] getHeaders()
-   {
-      return null;
-   }
-
-   @Override
-   public String getHeadersAsString()
-   {
-      return null;
-   }
-
-   @Override
-   public int getStatusCode()
-   {
-      return 200;
-   }
-
-   @Override
-   public String getStatusText()
-   {
-      return null;
-   }
-
-   @Override
-   public String getText()
-   {
-      return text;
-   }
+   void onUserSelectionChanged(GoogleContact user, boolean selected);
 
 }

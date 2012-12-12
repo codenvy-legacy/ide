@@ -29,9 +29,17 @@
 ***************************************************************************************
 -->
 
-  <component>
-     <type>org.exoplatform.ide.googlecontacts.GoogleContactsClient</type>
-   </component>
+<component>
+  <type>org.exoplatform.ide.invite.IdeInviteMessagePropertiesProvider</type>
+</component>
+
+<component>
+  <type>org.exoplatform.ide.invite.DummyDSASignatureChecker</type>
+</component>
+
+<component>
+   <type>org.exoplatform.ide.googlecontacts.GoogleContactsClient</type>
+</component>
 
 <component>
   <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
@@ -40,10 +48,6 @@
       <name>locations</name>
     </properties-param>
   </init-params>
-</component>
-
-<component>
-  <type>org.exoplatform.ide.invite.IdeInviteMessagePropertiesProvider</type>
 </component>
 
 <component>
@@ -103,7 +107,7 @@
   <init-params>
     <value-param>
       <name>mail-sender</name>
-      <value>gavrikvetal@gmail.com</value>
+      <value><![CDATA[Cloud-IDE <noreply@cloud-ide.com>]]></value>
     </value-param>
   </init-params>
 </component>

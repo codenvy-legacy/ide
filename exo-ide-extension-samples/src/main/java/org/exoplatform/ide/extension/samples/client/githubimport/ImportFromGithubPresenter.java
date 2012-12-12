@@ -19,6 +19,8 @@
 package org.exoplatform.ide.extension.samples.client.githubimport;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -53,6 +55,7 @@ import org.exoplatform.ide.extension.samples.client.marshal.RepositoriesUnmarsha
 import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
 import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.git.shared.GitHubRepository;
@@ -383,7 +386,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onRepositoryCloned(folder);
+                  onRepositoryCloned(result, folder);
                }
 
                @Override
@@ -410,7 +413,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                @Override
                protected void onSuccess(RepoInfo result)
                {
-                  onRepositoryCloned(folder);
+                  onRepositoryCloned(result, folder);
                }
 
                @Override
@@ -430,12 +433,71 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       }
    }
 
-   private void onRepositoryCloned(FolderModel folder)
+   /**
+    * Perform actions when repository was successfully cloned.
+    *
+    * @param gitRepositoryInfo {@link RepoInfo} repository info
+    * @param folder {@link FolderModel} in which repository was cloned
+    */
+   private void onRepositoryCloned(final RepoInfo gitRepositoryInfo, final FolderModel folder)
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), OutputMessage.Type.INFO));
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            String[] userRepo = parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
+            if (userRepo != null)
+            {
+               IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
+            }                        
+         }
+      });      
    }
 
+   /**
+    * Parse GitHub url. Need extract "user" and "repository" name.
+    * If given Url its GitHub url return array of string first element will be user name, second repository name
+    * else return null.
+    * GitHub url formats:
+    * - https://github.com/user/repo.git
+    * - git@github.com:user/repo.git
+    * - git://github.com/user/repo.git
+    *
+    * @param gitUrl
+    * @return array of string 
+    */
+   private String[] parseGitHubUrl(String gitUrl)
+   {
+      if (gitUrl.endsWith("/"))
+      {
+         gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
+      }
+      if (gitUrl.endsWith(".git"))
+      {
+         gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
+      }
+      if (gitUrl.startsWith("git@github.com:"))
+      {
+         gitUrl = gitUrl.split("git@github.com:")[1];
+         return gitUrl.split("/");
+      }
+      else if (gitUrl.startsWith("git://github.com/"))
+      {
+         gitUrl = gitUrl.split("git://github.com/")[1];
+         return gitUrl.split("/");
+      }
+      else if (gitUrl.startsWith("https://github.com/"))
+      {
+         gitUrl = gitUrl.split("git://github.com/")[1];
+         return gitUrl.split("/");
+      }
+      return null;
+   }   
+   
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {

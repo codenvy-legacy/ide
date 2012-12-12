@@ -51,6 +51,7 @@ import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -366,22 +367,23 @@ public class ImportApplicationPresenter implements ImportApplicationHandler, Vie
 
       try
       {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-         {
-            @Override
-            protected void onSuccess(ItemWrapper result)
+         VirtualFileSystem.getInstance().updateItem(project, null,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
             {
-               IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT
-                  .importApplicationSuccess(herokuApplication), Type.INFO));
-               IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
-            }
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  IDE.fireEvent(new OutputEvent(HerokuExtension.LOCALIZATION_CONSTANT
+                     .importApplicationSuccess(herokuApplication), Type.INFO));
+                  IDE.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
+               }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
 
       }
       catch (Exception e)

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting;
+package org.exoplatform.ide.extension.samples.client.inviting.github;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -40,9 +40,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.extension.samples.client.inviting.test.InviteGitHubCollaboratorsControl;
-import org.exoplatform.ide.extension.samples.client.inviting.test.InviteGitHubCollaboratorsEvent;
-import org.exoplatform.ide.extension.samples.client.inviting.test.InviteGitHubCollaboratorsHandler;
+import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteHandler;
@@ -93,8 +91,8 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       IDE.addHandler(CloneRepositoryCompleteEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-      IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
-      IDE.getInstance().addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);
+//      IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
+//      IDE.getInstance().addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);
    }
 
    @Override

@@ -16,19 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting.test;
-
-import com.google.gwt.event.shared.EventHandler;
+package org.exoplatform.ide.invite;
 
 /**
- * @deprecated class uses only for testing
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public interface InviteGitHubCollaboratorsHandler extends EventHandler
+public interface DSASignatureChecker
 {
-   
-   void onInviteGitHubCollaborators(InviteGitHubCollaboratorsEvent event);
 
+   boolean checkSignature(String mailsender, String signature);
+   
 }

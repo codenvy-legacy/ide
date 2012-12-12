@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.invite;
 
-import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.registry.RegistryEntry;

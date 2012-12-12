@@ -292,7 +292,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
                   display.startAnimation();
                   previousStatus = null;
-                  refreshBuildStatusTimer.schedule(delay);
+                  startCheckingStatus(buildID);
                }
 
                @Override
@@ -534,8 +534,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             writeBuildInfo(buildStatus);
             startWatchingProjectChanges();
          }
-         message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
-            .append("\">here</a>");
 
          if (publishAfterBuild)
          {

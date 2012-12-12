@@ -187,7 +187,9 @@ public class BuilderClient
       VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/builder/maven/deploy");
-      return run(url, vfs.exportZip(projectId));
+      String buildId = run(url, vfs.exportZip(projectId));
+      startCheckingBuildStatus(buildId);
+      return buildId;
    }
 
    private String run(URL url, ContentStream zippedProject) throws IOException, BuilderException,
