@@ -34,6 +34,7 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -203,7 +204,7 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       
       Map<String, List<String>> parameterMap = Location.getParameterMap();
       
-      if (parameterMap != null && parameterMap.size() > 1)
+      if (parameterMap != null && parameterMap.containsValue(CodeNowSpec10.CURRENT_VERSION))
       {
          IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
       }
