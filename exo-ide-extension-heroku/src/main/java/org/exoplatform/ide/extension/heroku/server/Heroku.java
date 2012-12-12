@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.heroku.server;
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 import org.eclipse.jgit.transport.URIish;
-import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.extension.heroku.shared.HerokuKey;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
@@ -1179,7 +1178,7 @@ public class Heroku
 
          XPath xpath = XPathFactory.newInstance().newXPath();
 
-         String rendezvousUrl = (String)xpath.evaluate("/process/rendezvous_url", xmlDoc, XPathConstants.STRING);
+         String rendezvousUrl = (String)xpath.evaluate("/process/rendezvous-url", xmlDoc, XPathConstants.STRING);
          return rendezvousUrl;
       }
       catch (ParserConfigurationException pce)

@@ -180,9 +180,6 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    @Override
    public void onRakeCommand(RakeCommandEvent event)
    {
-      // if (makeSelectionCheck())
-      // {
-
       if (display == null)
       {
          display = GWT.create(Display.class);
@@ -191,7 +188,6 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
          display.enableRunButton(false);
          display.focusInCommandField();
       }
-      // }
    }
 
    /**
