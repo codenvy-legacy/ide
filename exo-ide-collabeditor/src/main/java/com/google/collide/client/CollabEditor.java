@@ -139,16 +139,16 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       notificationManager.setErrorListener(editorBundle.getErrorListener());
       setElement((Element)v.getElement());
       documentAdaptor = new DocumentAdaptor();
-      editor.getFocusManager().getFocusListenerRegistrar().add(new FocusListener()
-      {
-
-         @Override
-         public void onFocusChange(boolean hasFocus)
-         {
-            if (hasFocus)
-               fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
-         }
-      });
+//      editor.getFocusManager().getFocusListenerRegistrar().add(new FocusListener()
+//      {
+//
+//         @Override
+//         public void onFocusChange(boolean hasFocus)
+//         {
+//            if (hasFocus)
+//               fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
+//         }
+//      });
 
    }
 
@@ -169,7 +169,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    protected void onLoad()
    {
-      fireEvent(new EditorInitializedEvent(this));
+//      fireEvent(new EditorInitializedEvent(this));
       super.onLoad();
    }
 

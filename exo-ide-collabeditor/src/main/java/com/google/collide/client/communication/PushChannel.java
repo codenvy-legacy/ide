@@ -111,7 +111,7 @@ public class PushChannel {
           }
         };
         eventBus.register(
-            "client." + BootstrapSession.getBootstrapSession().getActiveClientId(), messageHandler);
+            "collab_editor." + BootstrapSession.getBootstrapSession().getActiveClientId(), messageHandler);
       }
 
       // Notify listeners who handle reconnections.

@@ -386,7 +386,7 @@ public class Autocompleter implements ContentAssistant
       stop();
 
 //      LanguageSpecificAutocompleter autocompleter = getAutocompleter(parser.getSyntaxType());
-      autocompleters.attach(parser);
+//      autocompleters.attach(parser);
    }
 
 //   protected LanguageSpecificAutocompleter getLanguageSpecificAutocompleter(String contentType)
