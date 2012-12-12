@@ -327,27 +327,28 @@ public class Autocompleter implements ContentAssistant
       }
 
 //      LanguageSpecificAutocompleter autocompleter = getLanguageSpecificAutocompleter(contentType);
-      ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
-
-      switch (action.getType())
-      {
-         case EXPLICIT_COMPLETE :
-            boxTrigger = null;
-            performExplicitCompletion(action.getExplicitAutocompletion());
-            return true;
-
-         case DEFERRED_COMPLETE :
-            boxTrigger = trigger;
-            scheduleRequestAutocomplete();
+//      ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
+//
+//      switch (action.getType())
+//      {
+//         case EXPLICIT_COMPLETE :
+//            boxTrigger = null;
+//            performExplicitCompletion(action.getExplicitAutocompletion());
+//            return true;
+//
+//         case DEFERRED_COMPLETE :
+//            boxTrigger = trigger;
+//            scheduleRequestAutocomplete();
+//            return false;
+//
+//         case CLOSE_POPUP :
+//            dismissAutocompleteBox();
+//            return false;
+//
+//         default :
+//            return false;
+//      }
             return false;
-
-         case CLOSE_POPUP :
-            dismissAutocompleteBox();
-            return false;
-
-         default :
-            return false;
-      }
    }
 
    private static boolean isActionSpace(SignalEventEssence trigger)
