@@ -181,10 +181,10 @@ final class FileEditSessionImpl implements FileEditSession {
    * @param initialContents the initial contents of the file
    * @param mergeResult if non-null the merge info related to the out of date
    */
-  FileEditSessionImpl(String resourceId, String initialContents, @Nullable MergeResult mergeResult) {
+  FileEditSessionImpl(String resourceId, String path, String initialContents, @Nullable MergeResult mergeResult) {
     this.resourceId = resourceId;
     this.contents = new VersionedDocument(initialContents);
-
+    this.lastSavedPath = path;
      // TODO : get with parameter
     vfs = new MemoryFileSystem(URI.create(""), new EventListenerList(), "memory-vfs", new MemoryFileSystemContext());
     try {

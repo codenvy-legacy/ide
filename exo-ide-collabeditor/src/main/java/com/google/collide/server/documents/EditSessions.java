@@ -18,11 +18,14 @@ import com.google.collide.dto.ClientToServerDocOp;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileContents;
+import com.google.collide.dto.RecoverFromMissedDocOps;
+import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.ServerToClientDocOps;
 import com.google.collide.dto.server.DtoServerImpls.DocOpComponentImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocumentSelectionImpl;
 import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
+import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
 import com.google.collide.json.server.JsonArrayListAdapter;
@@ -121,7 +124,7 @@ public class EditSessions
             }
          }
 
-         FileEditSession newEditSession = new FileEditSessionImpl(resourceId, text, null);
+         FileEditSession newEditSession = new FileEditSessionImpl(resourceId, path, text, null);
          editSession = editSessions.putIfAbsent(resourceId, newEditSession);
          if (editSession == null)
          {
@@ -229,51 +232,45 @@ public class EditSessions
       selectionTracker.selectionChanged(clientId, resourceId, document, documentSelection);
    }
 
-//   /**
-//    * Replies with the DocOps that were missed by the requesting client.
-//    */
-//   @POST
-//   //@Consumes(MediaType.APPLICATION_JSON)
-//   @Produces(MediaType.APPLICATION_JSON)
-//   public String handle2(String message) {
-//      DtoServerImpls.RecoverFromMissedDocOpsImpl req = DtoServerImpls.RecoverFromMissedDocOpsImpl.fromJsonString(message);
-//
-//      String resourceId = req.getFileEditSessionKey();
-//      FileEditSession editSession = editSessions.get(resourceId);
-//
-//      if (editSession == null) {
-//         System.out.println("No edit session for resourceId " + resourceId); // TODO error
-//
-//         // TODO: This is going to leave the reply handler hanging.
-//         return "";   // TODO
-//      }
-//
-//      List<String> docOps = ((JsonArrayListAdapter<String>) req.getDocOps2()).asList();
-//
-//      // If the client is re-sending any unacked doc ops, apply them first
-//      if (req.getDocOps2().size() > 0) {
-//         applyMutation(
-//            docOps, req.getClientId(), req.getCurrentCcRevision(), null, resourceId, editSession);
-//      }
-//
-//      // Get all the applied doc ops the client doesn't know about
-//      SortedMap<Integer, VersionedDocument.AppliedDocOp> appliedDocOps =
-//         editSession.getDocument().getAppliedDocOps(req.getCurrentCcRevision() + 1);
-//
-//      List<DtoServerImpls.ServerToClientDocOpImpl> appliedDocOpsList = new ArrayList<DtoServerImpls.ServerToClientDocOpImpl>();
-//      for (Map.Entry<Integer, VersionedDocument.AppliedDocOp> entry : appliedDocOps.entrySet()) {
-//         DtoServerImpls.DocOpImpl docOp = (DtoServerImpls.DocOpImpl) entry.getValue().docOp;
-//         DtoServerImpls.ServerToClientDocOpImpl wrappedBroadcastDocOp = DtoServerImpls.ServerToClientDocOpImpl.make()
-//            .setClientId(req.getClientId()).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp)
-//            .setFileEditSessionKey(resourceId)
-//            .setFilePath(editSession.getSavedPath());
-//         appliedDocOpsList.add(wrappedBroadcastDocOp);
-//      }
-//
-//      DtoServerImpls.RecoverFromMissedDocOpsResponseImpl resp =
-//         DtoServerImpls.RecoverFromMissedDocOpsResponseImpl.make().setDocOps(appliedDocOpsList);
-//      return resp.toJson();
-//   }
+   public RecoverFromMissedDocOpsResponse recoverDocOps(RecoverFromMissedDocOps missedDocOps)
+   {
+      String resourceId = missedDocOps.getFileEditSessionKey();
+      FileEditSession editSession = editSessions.get(resourceId);
+
+      if (editSession == null)
+      {
+         System.out.println("No edit session for resourceId " + resourceId); // TODO error
+
+         // TODO: This is going to leave the reply handler hanging.
+         return null;   // TODO
+      }
+
+      List<String> docOps = ((JsonArrayListAdapter<String>)missedDocOps.getDocOps2()).asList();
+
+      // If the client is re-sending any unacked doc ops, apply them first
+      if (missedDocOps.getDocOps2().size() > 0)
+      {
+         applyMutation(docOps, missedDocOps.getClientId(), missedDocOps.getCurrentCcRevision(), null, resourceId,
+            editSession);
+      }
+
+      // Get all the applied doc ops the client doesn't know about
+      SortedMap<Integer, VersionedDocument.AppliedDocOp> appliedDocOps =
+         editSession.getDocument().getAppliedDocOps(missedDocOps.getCurrentCcRevision() + 1);
+
+      List<ServerToClientDocOpImpl> appliedDocOpsList = new ArrayList<ServerToClientDocOpImpl>();
+      for (Map.Entry<Integer, VersionedDocument.AppliedDocOp> entry : appliedDocOps.entrySet())
+      {
+         DocOpImpl docOp = (DocOpImpl)entry.getValue().docOp;
+         ServerToClientDocOpImpl wrappedBroadcastDocOp = ServerToClientDocOpImpl.make()
+            .setClientId(missedDocOps.getClientId()).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp)
+            .setFileEditSessionKey(resourceId)
+            .setFilePath(editSession.getSavedPath());
+         appliedDocOpsList.add(wrappedBroadcastDocOp);
+      }
+
+      return RecoverFromMissedDocOpsResponseImpl.make().setDocOps(appliedDocOpsList);
+   }
 
 
 //  /**

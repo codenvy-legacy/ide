@@ -23,12 +23,17 @@ import com.google.collide.dto.server.DtoServerImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
+import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsImpl;
+import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
 import com.google.collide.server.documents.EditSessions;
 
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
 @Path("ide/collab_editor/documents")
 public class EditSessionsService
@@ -38,17 +43,28 @@ public class EditSessionsService
 
    @POST
    @Path("open")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public String openSession(String message)
    {
       GetFileContentsImpl request = GetFileContentsImpl.fromJsonString(message);
-      final String vfsId = request.getWorkspaceId();
-      final String path = request.getPath();
-      FileContents fileContents = editSessions.openSession(vfsId, path);
+      FileContents fileContents = editSessions.openSession(request.getWorkspaceId(), request.getPath());
       return GetFileContentsResponseImpl.make()
          .setFileExists(fileContents != null)
          .setFileContents((FileContentsImpl)fileContents)
          .toJson();
    }
+
+   @POST
+   @Path("recoverMissedDocop")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
+   public String recoverDocOps(String message)
+   {
+      RecoverFromMissedDocOpsImpl request = RecoverFromMissedDocOpsImpl.fromJsonString(message);
+      return ((RecoverFromMissedDocOpsResponseImpl)editSessions.recoverDocOps(request)).toJson();
+   }
+
 
    @POST
    @Path("mutate")
