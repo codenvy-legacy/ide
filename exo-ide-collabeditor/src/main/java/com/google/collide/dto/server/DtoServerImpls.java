@@ -23,7 +23,7 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "34f870d83f4631acb98ebbae473df0a034dc4cb3";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "bca179ae3917468565f0178049f263e405e02437";
 
   public static class AddMembersResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.AddMembersResponse, JsonSerializable {
 
@@ -2193,10 +2193,6 @@ public class DtoServerImpls {
       return _hasMessage;
     }
 
-     public boolean isError() {
-        return true;
-     }
-
     @Override
     public java.lang.String getMessage() {
       return message;
@@ -2236,6 +2232,10 @@ public class DtoServerImpls {
       _hasErrorEnd = true;
       errorEnd = v;
       return this;
+    }
+
+    public boolean isError() {
+      return true;
     }
 
     @Override
@@ -3363,10 +3363,10 @@ public class DtoServerImpls {
 
     protected java.lang.String workspaceId;
     private boolean _hasWorkspaceId;
-    protected CodeGraphFreshnessImpl freshness;
-    private boolean _hasFreshness;
     protected java.lang.String filePath;
     private boolean _hasFilePath;
+    protected CodeGraphFreshnessImpl freshness;
+    private boolean _hasFreshness;
 
     public boolean hasWorkspaceId() {
       return _hasWorkspaceId;
@@ -3383,21 +3383,6 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasFreshness() {
-      return _hasFreshness;
-    }
-
-    @Override
-    public com.google.collide.dto.CodeGraphFreshness getFreshness() {
-      return freshness;
-    }
-
-    public CodeGraphRequestImpl setFreshness(CodeGraphFreshnessImpl v) {
-      _hasFreshness = true;
-      freshness = v;
-      return this;
-    }
-
     public boolean hasFilePath() {
       return _hasFilePath;
     }
@@ -3410,6 +3395,21 @@ public class DtoServerImpls {
     public CodeGraphRequestImpl setFilePath(java.lang.String v) {
       _hasFilePath = true;
       filePath = v;
+      return this;
+    }
+
+    public boolean hasFreshness() {
+      return _hasFreshness;
+    }
+
+    @Override
+    public com.google.collide.dto.CodeGraphFreshness getFreshness() {
+      return freshness;
+    }
+
+    public CodeGraphRequestImpl setFreshness(CodeGraphFreshnessImpl v) {
+      _hasFreshness = true;
+      freshness = v;
       return this;
     }
 
@@ -3430,19 +3430,19 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasFreshness != other._hasFreshness) {
-        return false;
-      }
-      if (this._hasFreshness) {
-        if (!this.freshness.equals(other.freshness)) {
-          return false;
-        }
-      }
       if (this._hasFilePath != other._hasFilePath) {
         return false;
       }
       if (this._hasFilePath) {
         if (!this.filePath.equals(other.filePath)) {
+          return false;
+        }
+      }
+      if (this._hasFreshness != other._hasFreshness) {
+        return false;
+      }
+      if (this._hasFreshness) {
+        if (!this.freshness.equals(other.freshness)) {
           return false;
         }
       }
@@ -3453,8 +3453,8 @@ public class DtoServerImpls {
     public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasWorkspaceId ? workspaceId.hashCode() : 0);
-      hash = hash * 31 + (_hasFreshness ? freshness.hashCode() : 0);
       hash = hash * 31 + (_hasFilePath ? filePath.hashCode() : 0);
+      hash = hash * 31 + (_hasFreshness ? freshness.hashCode() : 0);
       return hash;
     }
 
@@ -3465,11 +3465,11 @@ public class DtoServerImpls {
       JsonElement workspaceIdOut = (workspaceId == null) ? JsonNull.INSTANCE : new JsonPrimitive(workspaceId);
       result.add("workspaceId", workspaceIdOut);
 
-      JsonElement freshnessOut = freshness == null ? JsonNull.INSTANCE : freshness.toJsonElement();
-      result.add("freshness", freshnessOut);
-
       JsonElement filePathOut = (filePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(filePath);
       result.add("filePath", filePathOut);
+
+      JsonElement freshnessOut = freshness == null ? JsonNull.INSTANCE : freshness.toJsonElement();
+      result.add("freshness", freshnessOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -3498,16 +3498,16 @@ public class DtoServerImpls {
         dto.setWorkspaceId(workspaceIdOut);
       }
 
-      if (json.has("freshness")) {
-        JsonElement freshnessIn = json.get("freshness");
-        CodeGraphFreshnessImpl freshnessOut = CodeGraphFreshnessImpl.fromJsonElement(freshnessIn);
-        dto.setFreshness(freshnessOut);
-      }
-
       if (json.has("filePath")) {
         JsonElement filePathIn = json.get("filePath");
         java.lang.String filePathOut = gson.fromJson(filePathIn, java.lang.String.class);
         dto.setFilePath(filePathOut);
+      }
+
+      if (json.has("freshness")) {
+        JsonElement freshnessIn = json.get("freshness");
+        CodeGraphFreshnessImpl freshnessOut = CodeGraphFreshnessImpl.fromJsonElement(freshnessIn);
+        dto.setFreshness(freshnessOut);
       }
 
       return dto;
@@ -3544,8 +3544,6 @@ public class DtoServerImpls {
       return new CodeGraphResponseImpl();
     }
 
-    protected CodeGraphFreshnessImpl freshness;
-    private boolean _hasFreshness;
     protected java.lang.String libsSubgraphJson;
     private boolean _hasLibsSubgraphJson;
     protected java.lang.String fileTreeJson;
@@ -3558,21 +3556,8 @@ public class DtoServerImpls {
     private boolean _hasFullGraphJson;
     protected java.lang.String fileReferencesJson;
     private boolean _hasFileReferencesJson;
-
-    public boolean hasFreshness() {
-      return _hasFreshness;
-    }
-
-    @Override
-    public com.google.collide.dto.CodeGraphFreshness getFreshness() {
-      return freshness;
-    }
-
-    public CodeGraphResponseImpl setFreshness(CodeGraphFreshnessImpl v) {
-      _hasFreshness = true;
-      freshness = v;
-      return this;
-    }
+    protected CodeGraphFreshnessImpl freshness;
+    private boolean _hasFreshness;
 
     public boolean hasLibsSubgraphJson() {
       return _hasLibsSubgraphJson;
@@ -3664,6 +3649,21 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasFreshness() {
+      return _hasFreshness;
+    }
+
+    @Override
+    public com.google.collide.dto.CodeGraphFreshness getFreshness() {
+      return freshness;
+    }
+
+    public CodeGraphResponseImpl setFreshness(CodeGraphFreshnessImpl v) {
+      _hasFreshness = true;
+      freshness = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -3673,14 +3673,6 @@ public class DtoServerImpls {
         return false;
       }
       CodeGraphResponseImpl other = (CodeGraphResponseImpl) o;
-      if (this._hasFreshness != other._hasFreshness) {
-        return false;
-      }
-      if (this._hasFreshness) {
-        if (!this.freshness.equals(other.freshness)) {
-          return false;
-        }
-      }
       if (this._hasLibsSubgraphJson != other._hasLibsSubgraphJson) {
         return false;
       }
@@ -3729,28 +3721,33 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasFreshness != other._hasFreshness) {
+        return false;
+      }
+      if (this._hasFreshness) {
+        if (!this.freshness.equals(other.freshness)) {
+          return false;
+        }
+      }
       return true;
     }
 
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasFreshness ? freshness.hashCode() : 0);
       hash = hash * 31 + (_hasLibsSubgraphJson ? libsSubgraphJson.hashCode() : 0);
       hash = hash * 31 + (_hasFileTreeJson ? fileTreeJson.hashCode() : 0);
       hash = hash * 31 + (_hasWorkspaceTreeJson ? workspaceTreeJson.hashCode() : 0);
       hash = hash * 31 + (_hasWorkspaceLinksJson ? workspaceLinksJson.hashCode() : 0);
       hash = hash * 31 + (_hasFullGraphJson ? fullGraphJson.hashCode() : 0);
       hash = hash * 31 + (_hasFileReferencesJson ? fileReferencesJson.hashCode() : 0);
+      hash = hash * 31 + (_hasFreshness ? freshness.hashCode() : 0);
       return hash;
     }
 
     @Override
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
-
-      JsonElement freshnessOut = freshness == null ? JsonNull.INSTANCE : freshness.toJsonElement();
-      result.add("freshness", freshnessOut);
 
       JsonElement libsSubgraphJsonOut = (libsSubgraphJson == null) ? JsonNull.INSTANCE : new JsonPrimitive(libsSubgraphJson);
       result.add("libsSubgraphJson", libsSubgraphJsonOut);
@@ -3769,6 +3766,9 @@ public class DtoServerImpls {
 
       JsonElement fileReferencesJsonOut = (fileReferencesJson == null) ? JsonNull.INSTANCE : new JsonPrimitive(fileReferencesJson);
       result.add("fileReferencesJson", fileReferencesJsonOut);
+
+      JsonElement freshnessOut = freshness == null ? JsonNull.INSTANCE : freshness.toJsonElement();
+      result.add("freshness", freshnessOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -3790,12 +3790,6 @@ public class DtoServerImpls {
 
       CodeGraphResponseImpl dto = new CodeGraphResponseImpl();
       JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("freshness")) {
-        JsonElement freshnessIn = json.get("freshness");
-        CodeGraphFreshnessImpl freshnessOut = CodeGraphFreshnessImpl.fromJsonElement(freshnessIn);
-        dto.setFreshness(freshnessOut);
-      }
 
       if (json.has("libsSubgraphJson")) {
         JsonElement libsSubgraphJsonIn = json.get("libsSubgraphJson");
@@ -3831,6 +3825,12 @@ public class DtoServerImpls {
         JsonElement fileReferencesJsonIn = json.get("fileReferencesJson");
         java.lang.String fileReferencesJsonOut = gson.fromJson(fileReferencesJsonIn, java.lang.String.class);
         dto.setFileReferencesJson(fileReferencesJsonOut);
+      }
+
+      if (json.has("freshness")) {
+        JsonElement freshnessIn = json.get("freshness");
+        CodeGraphFreshnessImpl freshnessOut = CodeGraphFreshnessImpl.fromJsonElement(freshnessIn);
+        dto.setFreshness(freshnessOut);
       }
 
       return dto;
@@ -7355,27 +7355,12 @@ public class DtoServerImpls {
       return new DocumentSelectionImpl();
     }
 
-    protected java.lang.String userId;
-    private boolean _hasUserId;
     protected FilePositionImpl basePosition;
     private boolean _hasBasePosition;
     protected FilePositionImpl cursorPosition;
     private boolean _hasCursorPosition;
-
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
-
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
-
-    public DocumentSelectionImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
+    protected java.lang.String userId;
+    private boolean _hasUserId;
 
     public boolean hasBasePosition() {
       return _hasBasePosition;
@@ -7407,20 +7392,27 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasUserId() {
+      return _hasUserId;
+    }
+
+    @Override
+    public java.lang.String getUserId() {
+      return userId;
+    }
+
+    public DocumentSelectionImpl setUserId(java.lang.String v) {
+      _hasUserId = true;
+      userId = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!(o instanceof DocumentSelectionImpl)) {
         return false;
       }
       DocumentSelectionImpl other = (DocumentSelectionImpl) o;
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
       if (this._hasBasePosition != other._hasBasePosition) {
         return false;
       }
@@ -7437,15 +7429,23 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasUserId != other._hasUserId) {
+        return false;
+      }
+      if (this._hasUserId) {
+        if (!this.userId.equals(other.userId)) {
+          return false;
+        }
+      }
       return true;
     }
 
     @Override
     public int hashCode() {
       int hash = 1;
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       hash = hash * 31 + (_hasBasePosition ? basePosition.hashCode() : 0);
       hash = hash * 31 + (_hasCursorPosition ? cursorPosition.hashCode() : 0);
+      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -7453,14 +7453,14 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-
       JsonElement basePositionOut = basePosition == null ? JsonNull.INSTANCE : basePosition.toJsonElement();
       result.add("basePosition", basePositionOut);
 
       JsonElement cursorPositionOut = cursorPosition == null ? JsonNull.INSTANCE : cursorPosition.toJsonElement();
       result.add("cursorPosition", cursorPositionOut);
+
+      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+      result.add("userId", userIdOut);
       return result;
     }
 
@@ -7482,12 +7482,6 @@ public class DtoServerImpls {
       DocumentSelectionImpl dto = new DocumentSelectionImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
       if (json.has("basePosition")) {
         JsonElement basePositionIn = json.get("basePosition");
         FilePositionImpl basePositionOut = FilePositionImpl.fromJsonElement(basePositionIn);
@@ -7498,6 +7492,12 @@ public class DtoServerImpls {
         JsonElement cursorPositionIn = json.get("cursorPosition");
         FilePositionImpl cursorPositionOut = FilePositionImpl.fromJsonElement(cursorPositionIn);
         dto.setCursorPosition(cursorPositionOut);
+      }
+
+      if (json.has("userId")) {
+        JsonElement userIdIn = json.get("userId");
+        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+        dto.setUserId(userIdOut);
       }
 
       return dto;
@@ -7748,25 +7748,10 @@ public class DtoServerImpls {
       return new UnzipFailureImpl();
     }
 
-    protected java.lang.String zipWorkspacePath;
-    private boolean _hasZipWorkspacePath;
     protected java.util.List<java.lang.String> displayFailedWorkspacePaths;
     private boolean _hasDisplayFailedWorkspacePaths;
-
-    public boolean hasZipWorkspacePath() {
-      return _hasZipWorkspacePath;
-    }
-
-    @Override
-    public java.lang.String getZipWorkspacePath() {
-      return zipWorkspacePath;
-    }
-
-    public UnzipFailureImpl setZipWorkspacePath(java.lang.String v) {
-      _hasZipWorkspacePath = true;
-      zipWorkspacePath = v;
-      return this;
-    }
+    protected java.lang.String zipWorkspacePath;
+    private boolean _hasZipWorkspacePath;
 
     public boolean hasDisplayFailedWorkspacePaths() {
       return _hasDisplayFailedWorkspacePaths;
@@ -7800,25 +7785,40 @@ public class DtoServerImpls {
       }
     }
 
+    public boolean hasZipWorkspacePath() {
+      return _hasZipWorkspacePath;
+    }
+
+    @Override
+    public java.lang.String getZipWorkspacePath() {
+      return zipWorkspacePath;
+    }
+
+    public UnzipFailureImpl setZipWorkspacePath(java.lang.String v) {
+      _hasZipWorkspacePath = true;
+      zipWorkspacePath = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!(o instanceof UnzipFailureImpl)) {
         return false;
       }
       UnzipFailureImpl other = (UnzipFailureImpl) o;
-      if (this._hasZipWorkspacePath != other._hasZipWorkspacePath) {
-        return false;
-      }
-      if (this._hasZipWorkspacePath) {
-        if (!this.zipWorkspacePath.equals(other.zipWorkspacePath)) {
-          return false;
-        }
-      }
       if (this._hasDisplayFailedWorkspacePaths != other._hasDisplayFailedWorkspacePaths) {
         return false;
       }
       if (this._hasDisplayFailedWorkspacePaths) {
         if (!this.displayFailedWorkspacePaths.equals(other.displayFailedWorkspacePaths)) {
+          return false;
+        }
+      }
+      if (this._hasZipWorkspacePath != other._hasZipWorkspacePath) {
+        return false;
+      }
+      if (this._hasZipWorkspacePath) {
+        if (!this.zipWorkspacePath.equals(other.zipWorkspacePath)) {
           return false;
         }
       }
@@ -7828,17 +7828,14 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = 1;
-      hash = hash * 31 + (_hasZipWorkspacePath ? zipWorkspacePath.hashCode() : 0);
       hash = hash * 31 + (_hasDisplayFailedWorkspacePaths ? displayFailedWorkspacePaths.hashCode() : 0);
+      hash = hash * 31 + (_hasZipWorkspacePath ? zipWorkspacePath.hashCode() : 0);
       return hash;
     }
 
     @Override
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
-
-      JsonElement zipWorkspacePathOut = (zipWorkspacePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(zipWorkspacePath);
-      result.add("zipWorkspacePath", zipWorkspacePathOut);
 
       JsonArray displayFailedWorkspacePathsOut = new JsonArray();
       ensureDisplayFailedWorkspacePaths();
@@ -7847,6 +7844,9 @@ public class DtoServerImpls {
         displayFailedWorkspacePathsOut.add(displayFailedWorkspacePathsOut_);
       }
       result.add("displayFailedWorkspacePaths", displayFailedWorkspacePathsOut);
+
+      JsonElement zipWorkspacePathOut = (zipWorkspacePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(zipWorkspacePath);
+      result.add("zipWorkspacePath", zipWorkspacePathOut);
       return result;
     }
 
@@ -7868,12 +7868,6 @@ public class DtoServerImpls {
       UnzipFailureImpl dto = new UnzipFailureImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("zipWorkspacePath")) {
-        JsonElement zipWorkspacePathIn = json.get("zipWorkspacePath");
-        java.lang.String zipWorkspacePathOut = gson.fromJson(zipWorkspacePathIn, java.lang.String.class);
-        dto.setZipWorkspacePath(zipWorkspacePathOut);
-      }
-
       if (json.has("displayFailedWorkspacePaths")) {
         JsonElement displayFailedWorkspacePathsIn = json.get("displayFailedWorkspacePaths");
         java.util.ArrayList<java.lang.String> displayFailedWorkspacePathsOut = null;
@@ -7887,6 +7881,12 @@ public class DtoServerImpls {
           }
         }
         dto.setDisplayFailedWorkspacePaths(displayFailedWorkspacePathsOut);
+      }
+
+      if (json.has("zipWorkspacePath")) {
+        JsonElement zipWorkspacePathIn = json.get("zipWorkspacePath");
+        java.lang.String zipWorkspacePathOut = gson.fromJson(zipWorkspacePathIn, java.lang.String.class);
+        dto.setZipWorkspacePath(zipWorkspacePathOut);
       }
 
       return dto;
@@ -8386,10 +8386,10 @@ public class DtoServerImpls {
     private boolean _hasFileTree;
     protected com.google.collide.dto.GetSyncStateResponse.SyncState syncState;
     private boolean _hasSyncState;
-    protected java.util.List<ParticipantUserDetailsImpl> participants;
-    private boolean _hasParticipants;
     protected java.lang.String participantsNextVersion;
     private boolean _hasParticipantsNextVersion;
+    protected java.util.List<ParticipantUserDetailsImpl> participants;
+    private boolean _hasParticipants;
     protected GetWorkspaceMetaDataResponseImpl userWorkspaceMetadata;
     private boolean _hasUserWorkspaceMetadata;
     protected int keepAliveTimerIntervalMs;
@@ -8459,6 +8459,21 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasParticipantsNextVersion() {
+      return _hasParticipantsNextVersion;
+    }
+
+    @Override
+    public java.lang.String getParticipantsNextVersion() {
+      return participantsNextVersion;
+    }
+
+    public EnterWorkspaceResponseImpl setParticipantsNextVersion(java.lang.String v) {
+      _hasParticipantsNextVersion = true;
+      participantsNextVersion = v;
+      return this;
+    }
+
     public boolean hasParticipants() {
       return _hasParticipants;
     }
@@ -8489,21 +8504,6 @@ public class DtoServerImpls {
       if (!_hasParticipants) {
         setParticipants(participants != null ? participants : new java.util.ArrayList<ParticipantUserDetailsImpl>());
       }
-    }
-
-    public boolean hasParticipantsNextVersion() {
-      return _hasParticipantsNextVersion;
-    }
-
-    @Override
-    public java.lang.String getParticipantsNextVersion() {
-      return participantsNextVersion;
-    }
-
-    public EnterWorkspaceResponseImpl setParticipantsNextVersion(java.lang.String v) {
-      _hasParticipantsNextVersion = true;
-      participantsNextVersion = v;
-      return this;
     }
 
     public boolean hasUserWorkspaceMetadata() {
@@ -8607,19 +8607,19 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasParticipants != other._hasParticipants) {
-        return false;
-      }
-      if (this._hasParticipants) {
-        if (!this.participants.equals(other.participants)) {
-          return false;
-        }
-      }
       if (this._hasParticipantsNextVersion != other._hasParticipantsNextVersion) {
         return false;
       }
       if (this._hasParticipantsNextVersion) {
         if (!this.participantsNextVersion.equals(other.participantsNextVersion)) {
+          return false;
+        }
+      }
+      if (this._hasParticipants != other._hasParticipants) {
+        return false;
+      }
+      if (this._hasParticipants) {
+        if (!this.participants.equals(other.participants)) {
           return false;
         }
       }
@@ -8665,8 +8665,8 @@ public class DtoServerImpls {
       hash = hash * 31 + (_hasWorkspaceId ? workspaceId.hashCode() : 0);
       hash = hash * 31 + (_hasFileTree ? fileTree.hashCode() : 0);
       hash = hash * 31 + (_hasSyncState ? syncState.hashCode() : 0);
-      hash = hash * 31 + (_hasParticipants ? participants.hashCode() : 0);
       hash = hash * 31 + (_hasParticipantsNextVersion ? participantsNextVersion.hashCode() : 0);
+      hash = hash * 31 + (_hasParticipants ? participants.hashCode() : 0);
       hash = hash * 31 + (_hasUserWorkspaceMetadata ? userWorkspaceMetadata.hashCode() : 0);
       hash = hash * 31 + (_hasKeepAliveTimerIntervalMs ? java.lang.Integer.valueOf(keepAliveTimerIntervalMs).hashCode() : 0);
       hash = hash * 31 + (_hasWorkspaceInfo ? workspaceInfo.hashCode() : 0);
@@ -8690,6 +8690,9 @@ public class DtoServerImpls {
       JsonElement syncStateOut = (syncState == null) ? JsonNull.INSTANCE : new JsonPrimitive(syncState.name());
       result.add("syncState", syncStateOut);
 
+      JsonElement participantsNextVersionOut = (participantsNextVersion == null) ? JsonNull.INSTANCE : new JsonPrimitive(participantsNextVersion);
+      result.add("participantsNextVersion", participantsNextVersionOut);
+
       JsonArray participantsOut = new JsonArray();
       ensureParticipants();
       for (ParticipantUserDetailsImpl participants_ : participants) {
@@ -8697,9 +8700,6 @@ public class DtoServerImpls {
         participantsOut.add(participantsOut_);
       }
       result.add("participants", participantsOut);
-
-      JsonElement participantsNextVersionOut = (participantsNextVersion == null) ? JsonNull.INSTANCE : new JsonPrimitive(participantsNextVersion);
-      result.add("participantsNextVersion", participantsNextVersionOut);
 
       JsonElement userWorkspaceMetadataOut = userWorkspaceMetadata == null ? JsonNull.INSTANCE : userWorkspaceMetadata.toJsonElement();
       result.add("userWorkspaceMetadata", userWorkspaceMetadataOut);
@@ -8758,6 +8758,12 @@ public class DtoServerImpls {
         dto.setSyncState(syncStateOut);
       }
 
+      if (json.has("participantsNextVersion")) {
+        JsonElement participantsNextVersionIn = json.get("participantsNextVersion");
+        java.lang.String participantsNextVersionOut = gson.fromJson(participantsNextVersionIn, java.lang.String.class);
+        dto.setParticipantsNextVersion(participantsNextVersionOut);
+      }
+
       if (json.has("participants")) {
         JsonElement participantsIn = json.get("participants");
         java.util.ArrayList<ParticipantUserDetailsImpl> participantsOut = null;
@@ -8771,12 +8777,6 @@ public class DtoServerImpls {
           }
         }
         dto.setParticipants(participantsOut);
-      }
-
-      if (json.has("participantsNextVersion")) {
-        JsonElement participantsNextVersionIn = json.get("participantsNextVersion");
-        java.lang.String participantsNextVersionOut = gson.fromJson(participantsNextVersionIn, java.lang.String.class);
-        dto.setParticipantsNextVersion(participantsNextVersionOut);
       }
 
       if (json.has("userWorkspaceMetadata")) {
@@ -10474,6 +10474,263 @@ public class DtoServerImpls {
 
   }
 
+  public static class GetEditSessionParticipantsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionParticipants, JsonSerializable {
+
+    private GetEditSessionParticipantsImpl() {
+      super(123);
+    }
+
+    protected GetEditSessionParticipantsImpl(int type) {
+      super(type);
+    }
+
+    public static GetEditSessionParticipantsImpl make() {
+      return new GetEditSessionParticipantsImpl();
+    }
+
+    protected java.lang.String editSessionId;
+    private boolean _hasEditSessionId;
+
+    public boolean hasEditSessionId() {
+      return _hasEditSessionId;
+    }
+
+    @Override
+    public java.lang.String getEditSessionId() {
+      return editSessionId;
+    }
+
+    public GetEditSessionParticipantsImpl setEditSessionId(java.lang.String v) {
+      _hasEditSessionId = true;
+      editSessionId = v;
+      return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!super.equals(o)) {
+        return false;
+      }
+      if (!(o instanceof GetEditSessionParticipantsImpl)) {
+        return false;
+      }
+      GetEditSessionParticipantsImpl other = (GetEditSessionParticipantsImpl) o;
+      if (this._hasEditSessionId != other._hasEditSessionId) {
+        return false;
+      }
+      if (this._hasEditSessionId) {
+        if (!this.editSessionId.equals(other.editSessionId)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = super.hashCode();
+      hash = hash * 31 + (_hasEditSessionId ? editSessionId.hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+
+      JsonElement editSessionIdOut = (editSessionId == null) ? JsonNull.INSTANCE : new JsonPrimitive(editSessionId);
+      result.add("editSessionId", editSessionIdOut);
+      result.add("_type", new JsonPrimitive(getType()));
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static GetEditSessionParticipantsImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      GetEditSessionParticipantsImpl dto = new GetEditSessionParticipantsImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("editSessionId")) {
+        JsonElement editSessionIdIn = json.get("editSessionId");
+        java.lang.String editSessionIdOut = gson.fromJson(editSessionIdIn, java.lang.String.class);
+        dto.setEditSessionId(editSessionIdOut);
+      }
+
+      return dto;
+    }
+    public static GetEditSessionParticipantsImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
+  public static class MockGetEditSessionParticipantsImpl extends GetEditSessionParticipantsImpl {
+    protected MockGetEditSessionParticipantsImpl() {}
+
+    public static GetEditSessionParticipantsImpl make() {
+      return new GetEditSessionParticipantsImpl();
+    }
+
+  }
+
+  public static class GetEditSessionParticipantsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionParticipantsResponse, JsonSerializable {
+
+    private GetEditSessionParticipantsResponseImpl() {
+      super(124);
+    }
+
+    protected GetEditSessionParticipantsResponseImpl(int type) {
+      super(type);
+    }
+
+    public static GetEditSessionParticipantsResponseImpl make() {
+      return new GetEditSessionParticipantsResponseImpl();
+    }
+
+    protected java.util.List<ParticipantUserDetailsImpl> participants;
+    private boolean _hasParticipants;
+
+    public boolean hasParticipants() {
+      return _hasParticipants;
+    }
+
+    @Override
+    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
+      ensureParticipants();
+      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(participants);
+    }
+
+    public GetEditSessionParticipantsResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
+      _hasParticipants = true;
+      participants = v;
+      return this;
+    }
+
+    public void addParticipants(ParticipantUserDetailsImpl v) {
+      ensureParticipants();
+      participants.add(v);
+    }
+
+    public void clearParticipants() {
+      ensureParticipants();
+      participants.clear();
+    }
+
+    private void ensureParticipants() {
+      if (!_hasParticipants) {
+        setParticipants(participants != null ? participants : new java.util.ArrayList<ParticipantUserDetailsImpl>());
+      }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!super.equals(o)) {
+        return false;
+      }
+      if (!(o instanceof GetEditSessionParticipantsResponseImpl)) {
+        return false;
+      }
+      GetEditSessionParticipantsResponseImpl other = (GetEditSessionParticipantsResponseImpl) o;
+      if (this._hasParticipants != other._hasParticipants) {
+        return false;
+      }
+      if (this._hasParticipants) {
+        if (!this.participants.equals(other.participants)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = super.hashCode();
+      hash = hash * 31 + (_hasParticipants ? participants.hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+
+      JsonArray participantsOut = new JsonArray();
+      ensureParticipants();
+      for (ParticipantUserDetailsImpl participants_ : participants) {
+        JsonElement participantsOut_ = participants_ == null ? JsonNull.INSTANCE : participants_.toJsonElement();
+        participantsOut.add(participantsOut_);
+      }
+      result.add("participants", participantsOut);
+      result.add("_type", new JsonPrimitive(getType()));
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static GetEditSessionParticipantsResponseImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      GetEditSessionParticipantsResponseImpl dto = new GetEditSessionParticipantsResponseImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("participants")) {
+        JsonElement participantsIn = json.get("participants");
+        java.util.ArrayList<ParticipantUserDetailsImpl> participantsOut = null;
+        if (participantsIn != null && !participantsIn.isJsonNull()) {
+          participantsOut = new java.util.ArrayList<ParticipantUserDetailsImpl>();
+          java.util.Iterator<JsonElement> participantsInIterator = participantsIn.getAsJsonArray().iterator();
+          while (participantsInIterator.hasNext()) {
+            JsonElement participantsIn_ = participantsInIterator.next();
+            ParticipantUserDetailsImpl participantsOut_ = ParticipantUserDetailsImpl.fromJsonElement(participantsIn_);
+            participantsOut.add(participantsOut_);
+          }
+        }
+        dto.setParticipants(participantsOut);
+      }
+
+      return dto;
+    }
+    public static GetEditSessionParticipantsResponseImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
+  public static class MockGetEditSessionParticipantsResponseImpl extends GetEditSessionParticipantsResponseImpl {
+    protected MockGetEditSessionParticipantsResponseImpl() {}
+
+    public static GetEditSessionParticipantsResponseImpl make() {
+      return new GetEditSessionParticipantsResponseImpl();
+    }
+
+  }
+
   public static class GetFileContentsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileContents, JsonSerializable {
 
     private GetFileContentsImpl() {
@@ -11352,14 +11609,14 @@ public class DtoServerImpls {
     private boolean _hasClientId;
     protected java.lang.String rootId;
     private boolean _hasRootId;
-    protected java.lang.String pathRootId;
-    private boolean _hasPathRootId;
-    protected boolean filtering;
-    private boolean _hasFiltering;
-    protected int numOfRevisions;
-    private boolean _hasNumOfRevisions;
     protected java.lang.String minId;
     private boolean _hasMinId;
+    protected boolean filtering;
+    private boolean _hasFiltering;
+    protected java.lang.String pathRootId;
+    private boolean _hasPathRootId;
+    protected int numOfRevisions;
+    private boolean _hasNumOfRevisions;
     protected boolean includeBranchRevision;
     private boolean _hasIncludeBranchRevision;
     protected boolean includeMostRecentRevision;
@@ -11425,18 +11682,18 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasPathRootId() {
-      return _hasPathRootId;
+    public boolean hasMinId() {
+      return _hasMinId;
     }
 
     @Override
-    public java.lang.String getPathRootId() {
-      return pathRootId;
+    public java.lang.String getMinId() {
+      return minId;
     }
 
-    public GetFileRevisionsImpl setPathRootId(java.lang.String v) {
-      _hasPathRootId = true;
-      pathRootId = v;
+    public GetFileRevisionsImpl setMinId(java.lang.String v) {
+      _hasMinId = true;
+      minId = v;
       return this;
     }
 
@@ -11455,6 +11712,21 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasPathRootId() {
+      return _hasPathRootId;
+    }
+
+    @Override
+    public java.lang.String getPathRootId() {
+      return pathRootId;
+    }
+
+    public GetFileRevisionsImpl setPathRootId(java.lang.String v) {
+      _hasPathRootId = true;
+      pathRootId = v;
+      return this;
+    }
+
     public boolean hasNumOfRevisions() {
       return _hasNumOfRevisions;
     }
@@ -11467,21 +11739,6 @@ public class DtoServerImpls {
     public GetFileRevisionsImpl setNumOfRevisions(int v) {
       _hasNumOfRevisions = true;
       numOfRevisions = v;
-      return this;
-    }
-
-    public boolean hasMinId() {
-      return _hasMinId;
-    }
-
-    @Override
-    public java.lang.String getMinId() {
-      return minId;
-    }
-
-    public GetFileRevisionsImpl setMinId(java.lang.String v) {
-      _hasMinId = true;
-      minId = v;
       return this;
     }
 
@@ -11556,11 +11813,11 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasPathRootId != other._hasPathRootId) {
+      if (this._hasMinId != other._hasMinId) {
         return false;
       }
-      if (this._hasPathRootId) {
-        if (!this.pathRootId.equals(other.pathRootId)) {
+      if (this._hasMinId) {
+        if (!this.minId.equals(other.minId)) {
           return false;
         }
       }
@@ -11572,19 +11829,19 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasPathRootId != other._hasPathRootId) {
+        return false;
+      }
+      if (this._hasPathRootId) {
+        if (!this.pathRootId.equals(other.pathRootId)) {
+          return false;
+        }
+      }
       if (this._hasNumOfRevisions != other._hasNumOfRevisions) {
         return false;
       }
       if (this._hasNumOfRevisions) {
         if (this.numOfRevisions != other.numOfRevisions) {
-          return false;
-        }
-      }
-      if (this._hasMinId != other._hasMinId) {
-        return false;
-      }
-      if (this._hasMinId) {
-        if (!this.minId.equals(other.minId)) {
           return false;
         }
       }
@@ -11614,10 +11871,10 @@ public class DtoServerImpls {
       hash = hash * 31 + (_hasWorkspaceId ? workspaceId.hashCode() : 0);
       hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
       hash = hash * 31 + (_hasRootId ? rootId.hashCode() : 0);
-      hash = hash * 31 + (_hasPathRootId ? pathRootId.hashCode() : 0);
-      hash = hash * 31 + (_hasFiltering ? java.lang.Boolean.valueOf(filtering).hashCode() : 0);
-      hash = hash * 31 + (_hasNumOfRevisions ? java.lang.Integer.valueOf(numOfRevisions).hashCode() : 0);
       hash = hash * 31 + (_hasMinId ? minId.hashCode() : 0);
+      hash = hash * 31 + (_hasFiltering ? java.lang.Boolean.valueOf(filtering).hashCode() : 0);
+      hash = hash * 31 + (_hasPathRootId ? pathRootId.hashCode() : 0);
+      hash = hash * 31 + (_hasNumOfRevisions ? java.lang.Integer.valueOf(numOfRevisions).hashCode() : 0);
       hash = hash * 31 + (_hasIncludeBranchRevision ? java.lang.Boolean.valueOf(includeBranchRevision).hashCode() : 0);
       hash = hash * 31 + (_hasIncludeMostRecentRevision ? java.lang.Boolean.valueOf(includeMostRecentRevision).hashCode() : 0);
       return hash;
@@ -11639,17 +11896,17 @@ public class DtoServerImpls {
       JsonElement rootIdOut = (rootId == null) ? JsonNull.INSTANCE : new JsonPrimitive(rootId);
       result.add("rootId", rootIdOut);
 
-      JsonElement pathRootIdOut = (pathRootId == null) ? JsonNull.INSTANCE : new JsonPrimitive(pathRootId);
-      result.add("pathRootId", pathRootIdOut);
+      JsonElement minIdOut = (minId == null) ? JsonNull.INSTANCE : new JsonPrimitive(minId);
+      result.add("minId", minIdOut);
 
       JsonPrimitive filteringOut = new JsonPrimitive(filtering);
       result.add("filtering", filteringOut);
 
+      JsonElement pathRootIdOut = (pathRootId == null) ? JsonNull.INSTANCE : new JsonPrimitive(pathRootId);
+      result.add("pathRootId", pathRootIdOut);
+
       JsonPrimitive numOfRevisionsOut = new JsonPrimitive(numOfRevisions);
       result.add("numOfRevisions", numOfRevisionsOut);
-
-      JsonElement minIdOut = (minId == null) ? JsonNull.INSTANCE : new JsonPrimitive(minId);
-      result.add("minId", minIdOut);
 
       JsonPrimitive includeBranchRevisionOut = new JsonPrimitive(includeBranchRevision);
       result.add("includeBranchRevision", includeBranchRevisionOut);
@@ -11702,10 +11959,10 @@ public class DtoServerImpls {
         dto.setRootId(rootIdOut);
       }
 
-      if (json.has("pathRootId")) {
-        JsonElement pathRootIdIn = json.get("pathRootId");
-        java.lang.String pathRootIdOut = gson.fromJson(pathRootIdIn, java.lang.String.class);
-        dto.setPathRootId(pathRootIdOut);
+      if (json.has("minId")) {
+        JsonElement minIdIn = json.get("minId");
+        java.lang.String minIdOut = gson.fromJson(minIdIn, java.lang.String.class);
+        dto.setMinId(minIdOut);
       }
 
       if (json.has("filtering")) {
@@ -11714,16 +11971,16 @@ public class DtoServerImpls {
         dto.setFiltering(filteringOut);
       }
 
+      if (json.has("pathRootId")) {
+        JsonElement pathRootIdIn = json.get("pathRootId");
+        java.lang.String pathRootIdOut = gson.fromJson(pathRootIdIn, java.lang.String.class);
+        dto.setPathRootId(pathRootIdOut);
+      }
+
       if (json.has("numOfRevisions")) {
         JsonElement numOfRevisionsIn = json.get("numOfRevisions");
         int numOfRevisionsOut = numOfRevisionsIn.getAsInt();
         dto.setNumOfRevisions(numOfRevisionsOut);
-      }
-
-      if (json.has("minId")) {
-        JsonElement minIdIn = json.get("minId");
-        java.lang.String minIdOut = gson.fromJson(minIdIn, java.lang.String.class);
-        dto.setMinId(minIdOut);
       }
 
       if (json.has("includeBranchRevision")) {
@@ -12097,10 +12354,10 @@ public class DtoServerImpls {
 
     protected WorkspaceInfoImpl workspace;
     private boolean _hasWorkspace;
-    protected ProjectMembersInfoImpl projectMembersInfo;
-    private boolean _hasProjectMembersInfo;
     protected ProjectInfoImpl owningProject;
     private boolean _hasOwningProject;
+    protected ProjectMembersInfoImpl projectMembersInfo;
+    private boolean _hasProjectMembersInfo;
 
     public boolean hasWorkspace() {
       return _hasWorkspace;
@@ -12117,21 +12374,6 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasProjectMembersInfo() {
-      return _hasProjectMembersInfo;
-    }
-
-    @Override
-    public com.google.collide.dto.ProjectMembersInfo getProjectMembersInfo() {
-      return projectMembersInfo;
-    }
-
-    public GetOwningProjectResponseImpl setProjectMembersInfo(ProjectMembersInfoImpl v) {
-      _hasProjectMembersInfo = true;
-      projectMembersInfo = v;
-      return this;
-    }
-
     public boolean hasOwningProject() {
       return _hasOwningProject;
     }
@@ -12144,6 +12386,21 @@ public class DtoServerImpls {
     public GetOwningProjectResponseImpl setOwningProject(ProjectInfoImpl v) {
       _hasOwningProject = true;
       owningProject = v;
+      return this;
+    }
+
+    public boolean hasProjectMembersInfo() {
+      return _hasProjectMembersInfo;
+    }
+
+    @Override
+    public com.google.collide.dto.ProjectMembersInfo getProjectMembersInfo() {
+      return projectMembersInfo;
+    }
+
+    public GetOwningProjectResponseImpl setProjectMembersInfo(ProjectMembersInfoImpl v) {
+      _hasProjectMembersInfo = true;
+      projectMembersInfo = v;
       return this;
     }
 
@@ -12164,19 +12421,19 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasProjectMembersInfo != other._hasProjectMembersInfo) {
-        return false;
-      }
-      if (this._hasProjectMembersInfo) {
-        if (!this.projectMembersInfo.equals(other.projectMembersInfo)) {
-          return false;
-        }
-      }
       if (this._hasOwningProject != other._hasOwningProject) {
         return false;
       }
       if (this._hasOwningProject) {
         if (!this.owningProject.equals(other.owningProject)) {
+          return false;
+        }
+      }
+      if (this._hasProjectMembersInfo != other._hasProjectMembersInfo) {
+        return false;
+      }
+      if (this._hasProjectMembersInfo) {
+        if (!this.projectMembersInfo.equals(other.projectMembersInfo)) {
           return false;
         }
       }
@@ -12187,8 +12444,8 @@ public class DtoServerImpls {
     public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasWorkspace ? workspace.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectMembersInfo ? projectMembersInfo.hashCode() : 0);
       hash = hash * 31 + (_hasOwningProject ? owningProject.hashCode() : 0);
+      hash = hash * 31 + (_hasProjectMembersInfo ? projectMembersInfo.hashCode() : 0);
       return hash;
     }
 
@@ -12199,11 +12456,11 @@ public class DtoServerImpls {
       JsonElement workspaceOut = workspace == null ? JsonNull.INSTANCE : workspace.toJsonElement();
       result.add("workspace", workspaceOut);
 
-      JsonElement projectMembersInfoOut = projectMembersInfo == null ? JsonNull.INSTANCE : projectMembersInfo.toJsonElement();
-      result.add("projectMembersInfo", projectMembersInfoOut);
-
       JsonElement owningProjectOut = owningProject == null ? JsonNull.INSTANCE : owningProject.toJsonElement();
       result.add("owningProject", owningProjectOut);
+
+      JsonElement projectMembersInfoOut = projectMembersInfo == null ? JsonNull.INSTANCE : projectMembersInfo.toJsonElement();
+      result.add("projectMembersInfo", projectMembersInfoOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -12232,16 +12489,16 @@ public class DtoServerImpls {
         dto.setWorkspace(workspaceOut);
       }
 
-      if (json.has("projectMembersInfo")) {
-        JsonElement projectMembersInfoIn = json.get("projectMembersInfo");
-        ProjectMembersInfoImpl projectMembersInfoOut = ProjectMembersInfoImpl.fromJsonElement(projectMembersInfoIn);
-        dto.setProjectMembersInfo(projectMembersInfoOut);
-      }
-
       if (json.has("owningProject")) {
         JsonElement owningProjectIn = json.get("owningProject");
         ProjectInfoImpl owningProjectOut = ProjectInfoImpl.fromJsonElement(owningProjectIn);
         dto.setOwningProject(owningProjectOut);
+      }
+
+      if (json.has("projectMembersInfo")) {
+        JsonElement projectMembersInfoIn = json.get("projectMembersInfo");
+        ProjectMembersInfoImpl projectMembersInfoOut = ProjectMembersInfoImpl.fromJsonElement(projectMembersInfoIn);
+        dto.setProjectMembersInfo(projectMembersInfoOut);
       }
 
       return dto;
@@ -13060,45 +13317,43 @@ public class DtoServerImpls {
       return new GetProjectsResponseImpl();
     }
 
-    protected java.util.List<ProjectInfoImpl> projects;
-    private boolean _hasProjects;
-    protected java.util.List<java.lang.String> hiddenProjectIds;
-    private boolean _hasHiddenProjectIds;
     protected java.lang.String activeProjectId;
     private boolean _hasActiveProjectId;
     protected java.lang.String userMembershipChangeNextVersion;
     private boolean _hasUserMembershipChangeNextVersion;
+    protected java.util.List<java.lang.String> hiddenProjectIds;
+    private boolean _hasHiddenProjectIds;
+    protected java.util.List<ProjectInfoImpl> projects;
+    private boolean _hasProjects;
 
-    public boolean hasProjects() {
-      return _hasProjects;
+    public boolean hasActiveProjectId() {
+      return _hasActiveProjectId;
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() {
-      ensureProjects();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(projects);
+    public java.lang.String getActiveProjectId() {
+      return activeProjectId;
     }
 
-    public GetProjectsResponseImpl setProjects(java.util.List<ProjectInfoImpl> v) {
-      _hasProjects = true;
-      projects = v;
+    public GetProjectsResponseImpl setActiveProjectId(java.lang.String v) {
+      _hasActiveProjectId = true;
+      activeProjectId = v;
       return this;
     }
 
-    public void addProjects(ProjectInfoImpl v) {
-      ensureProjects();
-      projects.add(v);
+    public boolean hasUserMembershipChangeNextVersion() {
+      return _hasUserMembershipChangeNextVersion;
     }
 
-    public void clearProjects() {
-      ensureProjects();
-      projects.clear();
+    @Override
+    public java.lang.String getUserMembershipChangeNextVersion() {
+      return userMembershipChangeNextVersion;
     }
 
-    private void ensureProjects() {
-      if (!_hasProjects) {
-        setProjects(projects != null ? projects : new java.util.ArrayList<ProjectInfoImpl>());
-      }
+    public GetProjectsResponseImpl setUserMembershipChangeNextVersion(java.lang.String v) {
+      _hasUserMembershipChangeNextVersion = true;
+      userMembershipChangeNextVersion = v;
+      return this;
     }
 
     public boolean hasHiddenProjectIds() {
@@ -13133,34 +13388,36 @@ public class DtoServerImpls {
       }
     }
 
-    public boolean hasActiveProjectId() {
-      return _hasActiveProjectId;
+    public boolean hasProjects() {
+      return _hasProjects;
     }
 
     @Override
-    public java.lang.String getActiveProjectId() {
-      return activeProjectId;
+    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() {
+      ensureProjects();
+      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(projects);
     }
 
-    public GetProjectsResponseImpl setActiveProjectId(java.lang.String v) {
-      _hasActiveProjectId = true;
-      activeProjectId = v;
+    public GetProjectsResponseImpl setProjects(java.util.List<ProjectInfoImpl> v) {
+      _hasProjects = true;
+      projects = v;
       return this;
     }
 
-    public boolean hasUserMembershipChangeNextVersion() {
-      return _hasUserMembershipChangeNextVersion;
+    public void addProjects(ProjectInfoImpl v) {
+      ensureProjects();
+      projects.add(v);
     }
 
-    @Override
-    public java.lang.String getUserMembershipChangeNextVersion() {
-      return userMembershipChangeNextVersion;
+    public void clearProjects() {
+      ensureProjects();
+      projects.clear();
     }
 
-    public GetProjectsResponseImpl setUserMembershipChangeNextVersion(java.lang.String v) {
-      _hasUserMembershipChangeNextVersion = true;
-      userMembershipChangeNextVersion = v;
-      return this;
+    private void ensureProjects() {
+      if (!_hasProjects) {
+        setProjects(projects != null ? projects : new java.util.ArrayList<ProjectInfoImpl>());
+      }
     }
 
     @Override
@@ -13172,22 +13429,6 @@ public class DtoServerImpls {
         return false;
       }
       GetProjectsResponseImpl other = (GetProjectsResponseImpl) o;
-      if (this._hasProjects != other._hasProjects) {
-        return false;
-      }
-      if (this._hasProjects) {
-        if (!this.projects.equals(other.projects)) {
-          return false;
-        }
-      }
-      if (this._hasHiddenProjectIds != other._hasHiddenProjectIds) {
-        return false;
-      }
-      if (this._hasHiddenProjectIds) {
-        if (!this.hiddenProjectIds.equals(other.hiddenProjectIds)) {
-          return false;
-        }
-      }
       if (this._hasActiveProjectId != other._hasActiveProjectId) {
         return false;
       }
@@ -13204,16 +13445,32 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasHiddenProjectIds != other._hasHiddenProjectIds) {
+        return false;
+      }
+      if (this._hasHiddenProjectIds) {
+        if (!this.hiddenProjectIds.equals(other.hiddenProjectIds)) {
+          return false;
+        }
+      }
+      if (this._hasProjects != other._hasProjects) {
+        return false;
+      }
+      if (this._hasProjects) {
+        if (!this.projects.equals(other.projects)) {
+          return false;
+        }
+      }
       return true;
     }
 
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasProjects ? projects.hashCode() : 0);
-      hash = hash * 31 + (_hasHiddenProjectIds ? hiddenProjectIds.hashCode() : 0);
       hash = hash * 31 + (_hasActiveProjectId ? activeProjectId.hashCode() : 0);
       hash = hash * 31 + (_hasUserMembershipChangeNextVersion ? userMembershipChangeNextVersion.hashCode() : 0);
+      hash = hash * 31 + (_hasHiddenProjectIds ? hiddenProjectIds.hashCode() : 0);
+      hash = hash * 31 + (_hasProjects ? projects.hashCode() : 0);
       return hash;
     }
 
@@ -13221,13 +13478,11 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonArray projectsOut = new JsonArray();
-      ensureProjects();
-      for (ProjectInfoImpl projects_ : projects) {
-        JsonElement projectsOut_ = projects_ == null ? JsonNull.INSTANCE : projects_.toJsonElement();
-        projectsOut.add(projectsOut_);
-      }
-      result.add("projects", projectsOut);
+      JsonElement activeProjectIdOut = (activeProjectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(activeProjectId);
+      result.add("activeProjectId", activeProjectIdOut);
+
+      JsonElement userMembershipChangeNextVersionOut = (userMembershipChangeNextVersion == null) ? JsonNull.INSTANCE : new JsonPrimitive(userMembershipChangeNextVersion);
+      result.add("userMembershipChangeNextVersion", userMembershipChangeNextVersionOut);
 
       JsonArray hiddenProjectIdsOut = new JsonArray();
       ensureHiddenProjectIds();
@@ -13237,11 +13492,13 @@ public class DtoServerImpls {
       }
       result.add("hiddenProjectIds", hiddenProjectIdsOut);
 
-      JsonElement activeProjectIdOut = (activeProjectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(activeProjectId);
-      result.add("activeProjectId", activeProjectIdOut);
-
-      JsonElement userMembershipChangeNextVersionOut = (userMembershipChangeNextVersion == null) ? JsonNull.INSTANCE : new JsonPrimitive(userMembershipChangeNextVersion);
-      result.add("userMembershipChangeNextVersion", userMembershipChangeNextVersionOut);
+      JsonArray projectsOut = new JsonArray();
+      ensureProjects();
+      for (ProjectInfoImpl projects_ : projects) {
+        JsonElement projectsOut_ = projects_ == null ? JsonNull.INSTANCE : projects_.toJsonElement();
+        projectsOut.add(projectsOut_);
+      }
+      result.add("projects", projectsOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -13264,19 +13521,16 @@ public class DtoServerImpls {
       GetProjectsResponseImpl dto = new GetProjectsResponseImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("projects")) {
-        JsonElement projectsIn = json.get("projects");
-        java.util.ArrayList<ProjectInfoImpl> projectsOut = null;
-        if (projectsIn != null && !projectsIn.isJsonNull()) {
-          projectsOut = new java.util.ArrayList<ProjectInfoImpl>();
-          java.util.Iterator<JsonElement> projectsInIterator = projectsIn.getAsJsonArray().iterator();
-          while (projectsInIterator.hasNext()) {
-            JsonElement projectsIn_ = projectsInIterator.next();
-            ProjectInfoImpl projectsOut_ = ProjectInfoImpl.fromJsonElement(projectsIn_);
-            projectsOut.add(projectsOut_);
-          }
-        }
-        dto.setProjects(projectsOut);
+      if (json.has("activeProjectId")) {
+        JsonElement activeProjectIdIn = json.get("activeProjectId");
+        java.lang.String activeProjectIdOut = gson.fromJson(activeProjectIdIn, java.lang.String.class);
+        dto.setActiveProjectId(activeProjectIdOut);
+      }
+
+      if (json.has("userMembershipChangeNextVersion")) {
+        JsonElement userMembershipChangeNextVersionIn = json.get("userMembershipChangeNextVersion");
+        java.lang.String userMembershipChangeNextVersionOut = gson.fromJson(userMembershipChangeNextVersionIn, java.lang.String.class);
+        dto.setUserMembershipChangeNextVersion(userMembershipChangeNextVersionOut);
       }
 
       if (json.has("hiddenProjectIds")) {
@@ -13294,16 +13548,19 @@ public class DtoServerImpls {
         dto.setHiddenProjectIds(hiddenProjectIdsOut);
       }
 
-      if (json.has("activeProjectId")) {
-        JsonElement activeProjectIdIn = json.get("activeProjectId");
-        java.lang.String activeProjectIdOut = gson.fromJson(activeProjectIdIn, java.lang.String.class);
-        dto.setActiveProjectId(activeProjectIdOut);
-      }
-
-      if (json.has("userMembershipChangeNextVersion")) {
-        JsonElement userMembershipChangeNextVersionIn = json.get("userMembershipChangeNextVersion");
-        java.lang.String userMembershipChangeNextVersionOut = gson.fromJson(userMembershipChangeNextVersionIn, java.lang.String.class);
-        dto.setUserMembershipChangeNextVersion(userMembershipChangeNextVersionOut);
+      if (json.has("projects")) {
+        JsonElement projectsIn = json.get("projects");
+        java.util.ArrayList<ProjectInfoImpl> projectsOut = null;
+        if (projectsIn != null && !projectsIn.isJsonNull()) {
+          projectsOut = new java.util.ArrayList<ProjectInfoImpl>();
+          java.util.Iterator<JsonElement> projectsInIterator = projectsIn.getAsJsonArray().iterator();
+          while (projectsInIterator.hasNext()) {
+            JsonElement projectsIn_ = projectsInIterator.next();
+            ProjectInfoImpl projectsOut_ = ProjectInfoImpl.fromJsonElement(projectsIn_);
+            projectsOut.add(projectsOut_);
+          }
+        }
+        dto.setProjects(projectsOut);
       }
 
       return dto;
@@ -16067,11 +16324,11 @@ public class DtoServerImpls {
       JsonElement newXsrfTokenOut = (newXsrfToken == null) ? JsonNull.INSTANCE : new JsonPrimitive(newXsrfToken);
       result.add("newXsrfToken", newXsrfTokenOut);
 
-      JsonElement failureReasonOut = (failureReason == null) ? JsonNull.INSTANCE : new JsonPrimitive(failureReason.name());
-      result.add("failureReason", failureReasonOut);
-
       JsonElement detailsOut = (details == null) ? JsonNull.INSTANCE : new JsonPrimitive(details);
       result.add("details", detailsOut);
+
+      JsonElement failureReasonOut = (failureReason == null) ? JsonNull.INSTANCE : new JsonPrimitive(failureReason.name());
+      result.add("failureReason", failureReasonOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -16100,16 +16357,16 @@ public class DtoServerImpls {
         dto.setNewXsrfToken(newXsrfTokenOut);
       }
 
-      if (json.has("failureReason")) {
-        JsonElement failureReasonIn = json.get("failureReason");
-        com.google.collide.dto.ServerError.FailureReason failureReasonOut = gson.fromJson(failureReasonIn, com.google.collide.dto.ServerError.FailureReason.class);
-        dto.setFailureReason(failureReasonOut);
-      }
-
       if (json.has("details")) {
         JsonElement detailsIn = json.get("details");
         java.lang.String detailsOut = gson.fromJson(detailsIn, java.lang.String.class);
         dto.setDetails(detailsOut);
+      }
+
+      if (json.has("failureReason")) {
+        JsonElement failureReasonIn = json.get("failureReason");
+        com.google.collide.dto.ServerError.FailureReason failureReasonOut = gson.fromJson(failureReasonIn, com.google.collide.dto.ServerError.FailureReason.class);
+        dto.setFailureReason(failureReasonOut);
       }
 
       return dto;
@@ -22800,29 +23057,14 @@ public class DtoServerImpls {
       return new SearchResponseImpl();
     }
 
-    protected int page;
-    private boolean _hasPage;
     protected int resultCount;
     private boolean _hasResultCount;
     protected int pageCount;
     private boolean _hasPageCount;
+    protected int page;
+    private boolean _hasPage;
     protected java.util.List<SearchResultImpl> results;
     private boolean _hasResults;
-
-    public boolean hasPage() {
-      return _hasPage;
-    }
-
-    @Override
-    public int getPage() {
-      return page;
-    }
-
-    public SearchResponseImpl setPage(int v) {
-      _hasPage = true;
-      page = v;
-      return this;
-    }
 
     public boolean hasResultCount() {
       return _hasResultCount;
@@ -22851,6 +23093,21 @@ public class DtoServerImpls {
     public SearchResponseImpl setPageCount(int v) {
       _hasPageCount = true;
       pageCount = v;
+      return this;
+    }
+
+    public boolean hasPage() {
+      return _hasPage;
+    }
+
+    @Override
+    public int getPage() {
+      return page;
+    }
+
+    public SearchResponseImpl setPage(int v) {
+      _hasPage = true;
+      page = v;
       return this;
     }
 
@@ -22895,14 +23152,6 @@ public class DtoServerImpls {
         return false;
       }
       SearchResponseImpl other = (SearchResponseImpl) o;
-      if (this._hasPage != other._hasPage) {
-        return false;
-      }
-      if (this._hasPage) {
-        if (this.page != other.page) {
-          return false;
-        }
-      }
       if (this._hasResultCount != other._hasResultCount) {
         return false;
       }
@@ -22916,6 +23165,14 @@ public class DtoServerImpls {
       }
       if (this._hasPageCount) {
         if (this.pageCount != other.pageCount) {
+          return false;
+        }
+      }
+      if (this._hasPage != other._hasPage) {
+        return false;
+      }
+      if (this._hasPage) {
+        if (this.page != other.page) {
           return false;
         }
       }
@@ -22933,9 +23190,9 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasPage ? java.lang.Integer.valueOf(page).hashCode() : 0);
       hash = hash * 31 + (_hasResultCount ? java.lang.Integer.valueOf(resultCount).hashCode() : 0);
       hash = hash * 31 + (_hasPageCount ? java.lang.Integer.valueOf(pageCount).hashCode() : 0);
+      hash = hash * 31 + (_hasPage ? java.lang.Integer.valueOf(page).hashCode() : 0);
       hash = hash * 31 + (_hasResults ? results.hashCode() : 0);
       return hash;
     }
@@ -22944,14 +23201,14 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonPrimitive pageOut = new JsonPrimitive(page);
-      result.add("page", pageOut);
-
       JsonPrimitive resultCountOut = new JsonPrimitive(resultCount);
       result.add("resultCount", resultCountOut);
 
       JsonPrimitive pageCountOut = new JsonPrimitive(pageCount);
       result.add("pageCount", pageCountOut);
+
+      JsonPrimitive pageOut = new JsonPrimitive(page);
+      result.add("page", pageOut);
 
       JsonArray resultsOut = new JsonArray();
       ensureResults();
@@ -22982,12 +23239,6 @@ public class DtoServerImpls {
       SearchResponseImpl dto = new SearchResponseImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("page")) {
-        JsonElement pageIn = json.get("page");
-        int pageOut = pageIn.getAsInt();
-        dto.setPage(pageOut);
-      }
-
       if (json.has("resultCount")) {
         JsonElement resultCountIn = json.get("resultCount");
         int resultCountOut = resultCountIn.getAsInt();
@@ -22998,6 +23249,12 @@ public class DtoServerImpls {
         JsonElement pageCountIn = json.get("pageCount");
         int pageCountOut = pageCountIn.getAsInt();
         dto.setPageCount(pageCountOut);
+      }
+
+      if (json.has("page")) {
+        JsonElement pageIn = json.get("page");
+        int pageOut = pageIn.getAsInt();
+        dto.setPage(pageOut);
       }
 
       if (json.has("results")) {
@@ -23251,25 +23508,10 @@ public class DtoServerImpls {
       return new ServerErrorImpl();
     }
 
-    protected com.google.collide.dto.ServerError.FailureReason failureReason;
-    private boolean _hasFailureReason;
     protected java.lang.String details;
     private boolean _hasDetails;
-
-    public boolean hasFailureReason() {
-      return _hasFailureReason;
-    }
-
-    @Override
-    public com.google.collide.dto.ServerError.FailureReason getFailureReason() {
-      return failureReason;
-    }
-
-    public ServerErrorImpl setFailureReason(com.google.collide.dto.ServerError.FailureReason v) {
-      _hasFailureReason = true;
-      failureReason = v;
-      return this;
-    }
+    protected com.google.collide.dto.ServerError.FailureReason failureReason;
+    private boolean _hasFailureReason;
 
     public boolean hasDetails() {
       return _hasDetails;
@@ -23286,6 +23528,21 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasFailureReason() {
+      return _hasFailureReason;
+    }
+
+    @Override
+    public com.google.collide.dto.ServerError.FailureReason getFailureReason() {
+      return failureReason;
+    }
+
+    public ServerErrorImpl setFailureReason(com.google.collide.dto.ServerError.FailureReason v) {
+      _hasFailureReason = true;
+      failureReason = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -23295,19 +23552,19 @@ public class DtoServerImpls {
         return false;
       }
       ServerErrorImpl other = (ServerErrorImpl) o;
-      if (this._hasFailureReason != other._hasFailureReason) {
-        return false;
-      }
-      if (this._hasFailureReason) {
-        if (!this.failureReason.equals(other.failureReason)) {
-          return false;
-        }
-      }
       if (this._hasDetails != other._hasDetails) {
         return false;
       }
       if (this._hasDetails) {
         if (!this.details.equals(other.details)) {
+          return false;
+        }
+      }
+      if (this._hasFailureReason != other._hasFailureReason) {
+        return false;
+      }
+      if (this._hasFailureReason) {
+        if (!this.failureReason.equals(other.failureReason)) {
           return false;
         }
       }
@@ -23317,8 +23574,8 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasFailureReason ? failureReason.hashCode() : 0);
       hash = hash * 31 + (_hasDetails ? details.hashCode() : 0);
+      hash = hash * 31 + (_hasFailureReason ? failureReason.hashCode() : 0);
       return hash;
     }
 
@@ -23326,11 +23583,11 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonElement failureReasonOut = (failureReason == null) ? JsonNull.INSTANCE : new JsonPrimitive(failureReason.name());
-      result.add("failureReason", failureReasonOut);
-
       JsonElement detailsOut = (details == null) ? JsonNull.INSTANCE : new JsonPrimitive(details);
       result.add("details", detailsOut);
+
+      JsonElement failureReasonOut = (failureReason == null) ? JsonNull.INSTANCE : new JsonPrimitive(failureReason.name());
+      result.add("failureReason", failureReasonOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -23353,16 +23610,16 @@ public class DtoServerImpls {
       ServerErrorImpl dto = new ServerErrorImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("failureReason")) {
-        JsonElement failureReasonIn = json.get("failureReason");
-        com.google.collide.dto.ServerError.FailureReason failureReasonOut = gson.fromJson(failureReasonIn, com.google.collide.dto.ServerError.FailureReason.class);
-        dto.setFailureReason(failureReasonOut);
-      }
-
       if (json.has("details")) {
         JsonElement detailsIn = json.get("details");
         java.lang.String detailsOut = gson.fromJson(detailsIn, java.lang.String.class);
         dto.setDetails(detailsOut);
+      }
+
+      if (json.has("failureReason")) {
+        JsonElement failureReasonIn = json.get("failureReason");
+        com.google.collide.dto.ServerError.FailureReason failureReasonOut = gson.fromJson(failureReasonIn, com.google.collide.dto.ServerError.FailureReason.class);
+        dto.setFailureReason(failureReasonOut);
       }
 
       return dto;
@@ -23848,6 +24105,154 @@ public class DtoServerImpls {
 
     public static ServerToClientDocOpsImpl make() {
       return new ServerToClientDocOpsImpl();
+    }
+
+  }
+
+  public static class ServerToClientNewParticipantsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ServerToClientNewParticipants, JsonSerializable {
+
+    private ServerToClientNewParticipantsImpl() {
+      super(125);
+    }
+
+    protected ServerToClientNewParticipantsImpl(int type) {
+      super(type);
+    }
+
+    public static ServerToClientNewParticipantsImpl make() {
+      return new ServerToClientNewParticipantsImpl();
+    }
+
+    protected java.lang.String path;
+    private boolean _hasPath;
+    protected ParticipantUserDetailsImpl participant;
+    private boolean _hasParticipant;
+
+    public boolean hasPath() {
+      return _hasPath;
+    }
+
+    @Override
+    public java.lang.String getPath() {
+      return path;
+    }
+
+    public ServerToClientNewParticipantsImpl setPath(java.lang.String v) {
+      _hasPath = true;
+      path = v;
+      return this;
+    }
+
+    public boolean hasParticipant() {
+      return _hasParticipant;
+    }
+
+    @Override
+    public com.google.collide.dto.ParticipantUserDetails getParticipant() {
+      return participant;
+    }
+
+    public ServerToClientNewParticipantsImpl setParticipant(ParticipantUserDetailsImpl v) {
+      _hasParticipant = true;
+      participant = v;
+      return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (!super.equals(o)) {
+        return false;
+      }
+      if (!(o instanceof ServerToClientNewParticipantsImpl)) {
+        return false;
+      }
+      ServerToClientNewParticipantsImpl other = (ServerToClientNewParticipantsImpl) o;
+      if (this._hasPath != other._hasPath) {
+        return false;
+      }
+      if (this._hasPath) {
+        if (!this.path.equals(other.path)) {
+          return false;
+        }
+      }
+      if (this._hasParticipant != other._hasParticipant) {
+        return false;
+      }
+      if (this._hasParticipant) {
+        if (!this.participant.equals(other.participant)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hash = super.hashCode();
+      hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
+      hash = hash * 31 + (_hasParticipant ? participant.hashCode() : 0);
+      return hash;
+    }
+
+    @Override
+    public JsonElement toJsonElement() {
+      JsonObject result = new JsonObject();
+
+      JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
+      result.add("path", pathOut);
+
+      JsonElement participantOut = participant == null ? JsonNull.INSTANCE : participant.toJsonElement();
+      result.add("participant", participantOut);
+      result.add("_type", new JsonPrimitive(getType()));
+      return result;
+    }
+
+    @Override
+    public String toJson() {
+      return gson.toJson(toJsonElement());
+    }
+
+    @Override
+    public String toString() {
+      return toJson();
+    }
+
+    public static ServerToClientNewParticipantsImpl fromJsonElement(JsonElement jsonElem) {
+      if (jsonElem == null || jsonElem.isJsonNull()) {
+        return null;
+      }
+
+      ServerToClientNewParticipantsImpl dto = new ServerToClientNewParticipantsImpl();
+      JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("path")) {
+        JsonElement pathIn = json.get("path");
+        java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
+        dto.setPath(pathOut);
+      }
+
+      if (json.has("participant")) {
+        JsonElement participantIn = json.get("participant");
+        ParticipantUserDetailsImpl participantOut = ParticipantUserDetailsImpl.fromJsonElement(participantIn);
+        dto.setParticipant(participantOut);
+      }
+
+      return dto;
+    }
+    public static ServerToClientNewParticipantsImpl fromJsonString(String jsonString) {
+      if (jsonString == null) {
+        return null;
+      }
+
+      return fromJsonElement(new JsonParser().parse(jsonString));
+    }
+  }
+
+  public static class MockServerToClientNewParticipantsImpl extends ServerToClientNewParticipantsImpl {
+    protected MockServerToClientNewParticipantsImpl() {}
+
+    public static ServerToClientNewParticipantsImpl make() {
+      return new ServerToClientNewParticipantsImpl();
     }
 
   }
@@ -24845,10 +25250,10 @@ public class DtoServerImpls {
 
     protected ChangeRoleInfoImpl changeRoleInfo;
     private boolean _hasChangeRoleInfo;
-    protected java.lang.String userId;
-    private boolean _hasUserId;
     protected java.lang.String workspaceId;
     private boolean _hasWorkspaceId;
+    protected java.lang.String userId;
+    private boolean _hasUserId;
     protected java.lang.String projectId;
     private boolean _hasProjectId;
 
@@ -24867,21 +25272,6 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasUserId() {
-      return _hasUserId;
-    }
-
-    @Override
-    public java.lang.String getUserId() {
-      return userId;
-    }
-
-    public SetWorkspaceRoleImpl setUserId(java.lang.String v) {
-      _hasUserId = true;
-      userId = v;
-      return this;
-    }
-
     public boolean hasWorkspaceId() {
       return _hasWorkspaceId;
     }
@@ -24894,6 +25284,21 @@ public class DtoServerImpls {
     public SetWorkspaceRoleImpl setWorkspaceId(java.lang.String v) {
       _hasWorkspaceId = true;
       workspaceId = v;
+      return this;
+    }
+
+    public boolean hasUserId() {
+      return _hasUserId;
+    }
+
+    @Override
+    public java.lang.String getUserId() {
+      return userId;
+    }
+
+    public SetWorkspaceRoleImpl setUserId(java.lang.String v) {
+      _hasUserId = true;
+      userId = v;
       return this;
     }
 
@@ -24929,19 +25334,19 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasUserId != other._hasUserId) {
-        return false;
-      }
-      if (this._hasUserId) {
-        if (!this.userId.equals(other.userId)) {
-          return false;
-        }
-      }
       if (this._hasWorkspaceId != other._hasWorkspaceId) {
         return false;
       }
       if (this._hasWorkspaceId) {
         if (!this.workspaceId.equals(other.workspaceId)) {
+          return false;
+        }
+      }
+      if (this._hasUserId != other._hasUserId) {
+        return false;
+      }
+      if (this._hasUserId) {
+        if (!this.userId.equals(other.userId)) {
           return false;
         }
       }
@@ -24960,8 +25365,8 @@ public class DtoServerImpls {
     public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasChangeRoleInfo ? changeRoleInfo.hashCode() : 0);
-      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       hash = hash * 31 + (_hasWorkspaceId ? workspaceId.hashCode() : 0);
+      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       return hash;
     }
@@ -24973,11 +25378,11 @@ public class DtoServerImpls {
       JsonElement changeRoleInfoOut = changeRoleInfo == null ? JsonNull.INSTANCE : changeRoleInfo.toJsonElement();
       result.add("changeRoleInfo", changeRoleInfoOut);
 
-      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
-      result.add("userId", userIdOut);
-
       JsonElement workspaceIdOut = (workspaceId == null) ? JsonNull.INSTANCE : new JsonPrimitive(workspaceId);
       result.add("workspaceId", workspaceIdOut);
+
+      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+      result.add("userId", userIdOut);
 
       JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
       result.add("projectId", projectIdOut);
@@ -25009,16 +25414,16 @@ public class DtoServerImpls {
         dto.setChangeRoleInfo(changeRoleInfoOut);
       }
 
-      if (json.has("userId")) {
-        JsonElement userIdIn = json.get("userId");
-        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
-        dto.setUserId(userIdOut);
-      }
-
       if (json.has("workspaceId")) {
         JsonElement workspaceIdIn = json.get("workspaceId");
         java.lang.String workspaceIdOut = gson.fromJson(workspaceIdIn, java.lang.String.class);
         dto.setWorkspaceId(workspaceIdOut);
+      }
+
+      if (json.has("userId")) {
+        JsonElement userIdIn = json.get("userId");
+        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+        dto.setUserId(userIdOut);
       }
 
       if (json.has("projectId")) {
@@ -28632,25 +29037,10 @@ public class DtoServerImpls {
       super(type);
     }
 
-    protected java.lang.String authorClientId;
-    private boolean _hasAuthorClientId;
     protected java.util.List<MutationImpl> mutations;
     private boolean _hasMutations;
-
-    public boolean hasAuthorClientId() {
-      return _hasAuthorClientId;
-    }
-
-    @Override
-    public java.lang.String getAuthorClientId() {
-      return authorClientId;
-    }
-
-    public WorkspaceTreeUpdateImpl setAuthorClientId(java.lang.String v) {
-      _hasAuthorClientId = true;
-      authorClientId = v;
-      return this;
-    }
+    protected java.lang.String authorClientId;
+    private boolean _hasAuthorClientId;
 
     public boolean hasMutations() {
       return _hasMutations;
@@ -28684,6 +29074,21 @@ public class DtoServerImpls {
       }
     }
 
+    public boolean hasAuthorClientId() {
+      return _hasAuthorClientId;
+    }
+
+    @Override
+    public java.lang.String getAuthorClientId() {
+      return authorClientId;
+    }
+
+    public WorkspaceTreeUpdateImpl setAuthorClientId(java.lang.String v) {
+      _hasAuthorClientId = true;
+      authorClientId = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -28693,19 +29098,19 @@ public class DtoServerImpls {
         return false;
       }
       WorkspaceTreeUpdateImpl other = (WorkspaceTreeUpdateImpl) o;
-      if (this._hasAuthorClientId != other._hasAuthorClientId) {
-        return false;
-      }
-      if (this._hasAuthorClientId) {
-        if (!this.authorClientId.equals(other.authorClientId)) {
-          return false;
-        }
-      }
       if (this._hasMutations != other._hasMutations) {
         return false;
       }
       if (this._hasMutations) {
         if (!this.mutations.equals(other.mutations)) {
+          return false;
+        }
+      }
+      if (this._hasAuthorClientId != other._hasAuthorClientId) {
+        return false;
+      }
+      if (this._hasAuthorClientId) {
+        if (!this.authorClientId.equals(other.authorClientId)) {
           return false;
         }
       }
@@ -28715,17 +29120,14 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasAuthorClientId ? authorClientId.hashCode() : 0);
       hash = hash * 31 + (_hasMutations ? mutations.hashCode() : 0);
+      hash = hash * 31 + (_hasAuthorClientId ? authorClientId.hashCode() : 0);
       return hash;
     }
 
     @Override
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
-
-      JsonElement authorClientIdOut = (authorClientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(authorClientId);
-      result.add("authorClientId", authorClientIdOut);
 
       JsonArray mutationsOut = new JsonArray();
       ensureMutations();
@@ -28734,6 +29136,9 @@ public class DtoServerImpls {
         mutationsOut.add(mutationsOut_);
       }
       result.add("mutations", mutationsOut);
+
+      JsonElement authorClientIdOut = (authorClientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(authorClientId);
+      result.add("authorClientId", authorClientIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -28756,12 +29161,6 @@ public class DtoServerImpls {
       WorkspaceTreeUpdateImpl dto = new WorkspaceTreeUpdateImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("authorClientId")) {
-        JsonElement authorClientIdIn = json.get("authorClientId");
-        java.lang.String authorClientIdOut = gson.fromJson(authorClientIdIn, java.lang.String.class);
-        dto.setAuthorClientId(authorClientIdOut);
-      }
-
       if (json.has("mutations")) {
         JsonElement mutationsIn = json.get("mutations");
         java.util.ArrayList<MutationImpl> mutationsOut = null;
@@ -28775,6 +29174,12 @@ public class DtoServerImpls {
           }
         }
         dto.setMutations(mutationsOut);
+      }
+
+      if (json.has("authorClientId")) {
+        JsonElement authorClientIdIn = json.get("authorClientId");
+        java.lang.String authorClientIdOut = gson.fromJson(authorClientIdIn, java.lang.String.class);
+        dto.setAuthorClientId(authorClientIdOut);
       }
 
       return dto;

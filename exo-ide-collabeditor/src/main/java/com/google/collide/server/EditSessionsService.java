@@ -18,9 +18,7 @@
  */
 package com.google.collide.server;
 
-import com.google.collide.dto.FileContents;
 import com.google.collide.dto.server.DtoServerImpls.ClientToServerDocOpImpl;
-import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsImpl;
@@ -47,12 +45,8 @@ public class EditSessionsService
    @Produces(MediaType.APPLICATION_JSON)
    public String openSession(String message)
    {
-      GetFileContentsImpl request = GetFileContentsImpl.fromJsonString(message);
-      FileContents fileContents = editSessions.openSession(request.getWorkspaceId(), request.getPath());
-      return GetFileContentsResponseImpl.make()
-         .setFileExists(fileContents != null)
-         .setFileContents((FileContentsImpl)fileContents)
-         .toJson();
+      return ((GetFileContentsResponseImpl)editSessions.openSession(
+         GetFileContentsImpl.fromJsonString(message))).toJson();
    }
 
    @POST

@@ -18,6 +18,10 @@ import com.google.collide.dto.ClientToServerDocOp;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileContents;
+import com.google.collide.dto.GetEditSessionParticipants;
+import com.google.collide.dto.GetEditSessionParticipantsResponse;
+import com.google.collide.dto.GetFileContents;
+import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.ServerToClientDocOps;
@@ -25,6 +29,7 @@ import com.google.collide.dto.server.DtoServerImpls.DocOpComponentImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocumentSelectionImpl;
 import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
+import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
@@ -70,10 +75,14 @@ public class EditSessions
       this.vfsRegistry = vfsRegistry;
    }
 
-   public FileContents openSession(String vfsId, String path)
+   public GetFileContentsResponse openSession(GetFileContents contentsRequest)
    {
+      final String vfsId = contentsRequest.getWorkspaceId();
+      final String path = contentsRequest.getPath();
+
       FileEditSession editSession;
       final String resourceId;
+
       try
       {
          VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
@@ -81,75 +90,76 @@ public class EditSessions
             (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(path, null, PropertyFilter.NONE_FILTER);
          resourceId = file.getId();
          editSession = editSessions.get(resourceId);
+         if (editSession == null)
+         {
+            String text = loadFileContext(vfs, resourceId);
+            FileEditSession newEditSession = new FileEditSessionImpl(resourceId, path, text, null);
+            editSession = editSessions.putIfAbsent(resourceId, newEditSession);
+            if (editSession == null)
+            {
+               editSession = newEditSession;
+            }
+         }
       }
       catch (VirtualFileSystemException e)
       {
          // TODO
          e.printStackTrace();
-         return null;
+         return GetFileContentsResponseImpl.make().setFileExists(false);
       }
-      if (editSession == null)
+      catch (IOException e)
       {
-         InputStream input = null;
-         String text = "";
-         try
-         {
-            ContentStream content = vfsRegistry.getProvider(vfsId).newInstance(null, null).getContent(resourceId);
-            input = content.getStream();
-            text = StringUtils.toString(input);
-         }
-         catch (VirtualFileSystemException e)
-         {
-            // TODO
-            e.printStackTrace();
-            return null;
-         }
-         catch (IOException e)
-         {
-            // TODO
-            e.printStackTrace();
-            return null;
-         }
-         finally
-         {
-            if (input != null)
-            {
-               try
-               {
-                  input.close();
-               }
-               catch (IOException ignored)
-               {
-               }
-            }
-         }
-
-         FileEditSession newEditSession = new FileEditSessionImpl(resourceId, path, text, null);
-         editSession = editSessions.putIfAbsent(resourceId, newEditSession);
-         if (editSession == null)
-         {
-            editSession = newEditSession;
-         }
+         // TODO
+         e.printStackTrace();
+         return GetFileContentsResponseImpl.make().setFileExists(false);
       }
 
-      return FileContentsImpl.make()
+      FileContentsImpl fileContents = FileContentsImpl.make()
          .setPath(path)
          .setFileEditSessionKey(resourceId)
          .setCcRevision(editSession.getDocument().getCcRevision())
          .setContents(editSession.getContents())
          .setContentType(FileContents.ContentType.TEXT);
+      return GetFileContentsResponseImpl.make().setFileExists(true).setFileContents(fileContents);
    }
 
-   public ServerToClientDocOps mutate(ClientToServerDocOp docOp)
+   private String loadFileContext(VirtualFileSystem vfs, String resourceId)
+      throws VirtualFileSystemException, IOException
    {
-      String resourceId = docOp.getFileEditSessionKey();
+      InputStream input = null;
+      try
+      {
+         ContentStream content = vfs.getContent(resourceId);
+         input = content.getStream();
+         return StringUtils.toString(input);
+      }
+      finally
+      {
+         // TODO : create util method which able to close Closeable without throwing i/o exception.
+         if (input != null)
+         {
+            try
+            {
+               input.close();
+            }
+            catch (IOException ignored)
+            {
+            }
+         }
+      }
+   }
+
+   public ServerToClientDocOps mutate(ClientToServerDocOp docOpRequest)
+   {
+      String resourceId = docOpRequest.getFileEditSessionKey();
       FileEditSession editSession = editSessions.get(resourceId);
-      List<String> docOps = ((JsonArrayListAdapter<String>)docOp.getDocOps2()).asList();
+      List<String> docOps = ((JsonArrayListAdapter<String>)docOpRequest.getDocOps2()).asList();
       return applyMutation(
          docOps,
-         docOp.getClientId(),
-         docOp.getCcRevision(),
-         docOp.getSelection(),
+         docOpRequest.getClientId(),
+         docOpRequest.getCcRevision(),
+         docOpRequest.getSelection(),
+         docOpRequest.getWorkspaceId(),
          resourceId,
          editSession
       );
@@ -169,6 +179,7 @@ public class EditSessions
                                                   String authorId,
                                                   int ccRevision,
                                                   DocumentSelection selection,
+                                                  String workspaceId,
                                                   String resourceId,
                                                   FileEditSession editSession)
    {
@@ -190,8 +201,7 @@ public class EditSessions
 
          // Construct the Applied DocOp that we want to broadcast.
          SortedMap<Integer, VersionedDocument.AppliedDocOp> appliedDocOps = result.appliedDocOps;
-         List<ServerToClientDocOpImpl> appliedDocOpsList =
-            new ArrayList<ServerToClientDocOpImpl>();
+         List<ServerToClientDocOpImpl> appliedDocOpsList = new ArrayList<ServerToClientDocOpImpl>();
          for (Map.Entry<Integer, VersionedDocument.AppliedDocOp> entry : appliedDocOps.entrySet())
          {
             DocOpImpl docOp = (DocOpImpl)entry.getValue().docOp;
@@ -232,9 +242,9 @@ public class EditSessions
       selectionTracker.selectionChanged(clientId, resourceId, document, documentSelection);
    }
 
-   public RecoverFromMissedDocOpsResponse recoverDocOps(RecoverFromMissedDocOps missedDocOps)
+   public RecoverFromMissedDocOpsResponse recoverDocOps(RecoverFromMissedDocOps missedDocOpsRequest)
    {
-      String resourceId = missedDocOps.getFileEditSessionKey();
+      String resourceId = missedDocOpsRequest.getFileEditSessionKey();
       FileEditSession editSession = editSessions.get(resourceId);
 
       if (editSession == null)
@@ -245,32 +255,51 @@ public class EditSessions
          return null;   // TODO
       }
 
-      List<String> docOps = ((JsonArrayListAdapter<String>)missedDocOps.getDocOps2()).asList();
+      List<String> docOps = ((JsonArrayListAdapter<String>)missedDocOpsRequest.getDocOps2()).asList();
 
       // If the client is re-sending any unacked doc ops, apply them first
-      if (missedDocOps.getDocOps2().size() > 0)
+      if (missedDocOpsRequest.getDocOps2().size() > 0)
       {
-         applyMutation(docOps, missedDocOps.getClientId(), missedDocOps.getCurrentCcRevision(), null, resourceId,
-            editSession);
+         applyMutation(docOps,
+            missedDocOpsRequest.getClientId(),
+            missedDocOpsRequest.getCurrentCcRevision(),
+            null,
+            missedDocOpsRequest.getWorkspaceId(),
+            resourceId,
+            editSession
+         );
       }
 
       // Get all the applied doc ops the client doesn't know about
       SortedMap<Integer, VersionedDocument.AppliedDocOp> appliedDocOps =
-         editSession.getDocument().getAppliedDocOps(missedDocOps.getCurrentCcRevision() + 1);
+         editSession.getDocument().getAppliedDocOps(missedDocOpsRequest.getCurrentCcRevision() + 1);
 
       List<ServerToClientDocOpImpl> appliedDocOpsList = new ArrayList<ServerToClientDocOpImpl>();
       for (Map.Entry<Integer, VersionedDocument.AppliedDocOp> entry : appliedDocOps.entrySet())
       {
          DocOpImpl docOp = (DocOpImpl)entry.getValue().docOp;
          ServerToClientDocOpImpl wrappedBroadcastDocOp = ServerToClientDocOpImpl.make()
-            .setClientId(missedDocOps.getClientId()).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp)
+            .setClientId(missedDocOpsRequest.getClientId()).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp)
             .setFileEditSessionKey(resourceId)
             .setFilePath(editSession.getSavedPath());
          appliedDocOpsList.add(wrappedBroadcastDocOp);
       }
 
-      return RecoverFromMissedDocOpsResponseImpl.make().setDocOps(appliedDocOpsList);
+      return RecoverFromMissedDocOpsResponseImpl.make()
+         .setDocOps(appliedDocOpsList)
+         .setWorkspaceId(missedDocOpsRequest.getWorkspaceId());
    }
+
+//   public GetEditSessionParticipantsResponse getEditSessionParticipants(
+//      GetEditSessionParticipants sessionParticipantsRequest)
+//   {
+//      FileEditSession editSession = editSessions.get(sessionParticipantsRequest.getEditSessionId());
+//      if (editSession == null)
+//      {
+//         // TODO : throw exception instead ??
+//         return null;
+//      }
+//   }
 
 
 //  /**
