@@ -19,7 +19,6 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileContents;
 import com.google.collide.dto.ServerToClientDocOps;
-import com.google.collide.dto.server.DtoServerImpls;
 import com.google.collide.dto.server.DtoServerImpls.DocOpComponentImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocumentSelectionImpl;
@@ -32,8 +31,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,10 +44,6 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 public class EditSessions
 {
@@ -70,16 +67,30 @@ public class EditSessions
       this.vfsRegistry = vfsRegistry;
    }
 
-   public FileContents openSession(String vfsId, String resourceId)
+   public FileContents openSession(String vfsId, String path)
    {
-      FileEditSession editSession = editSessions.get(resourceId);
+      FileEditSession editSession;
+      final String resourceId;
+      try
+      {
+         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+         org.exoplatform.ide.vfs.shared.File file =
+            (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(path, null, PropertyFilter.NONE_FILTER);
+         resourceId = file.getId();
+         editSession = editSessions.get(resourceId);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         // TODO
+         e.printStackTrace();
+         return null;
+      }
       if (editSession == null)
       {
          InputStream input = null;
          String text = "";
          try
          {
-
             ContentStream content = vfsRegistry.getProvider(vfsId).newInstance(null, null).getContent(resourceId);
             input = content.getStream();
             text = StringUtils.toString(input);
@@ -119,6 +130,7 @@ public class EditSessions
       }
 
       return FileContentsImpl.make()
+         .setPath(path)
          .setFileEditSessionKey(resourceId)
          .setCcRevision(editSession.getDocument().getCcRevision())
          .setContents(editSession.getContents())

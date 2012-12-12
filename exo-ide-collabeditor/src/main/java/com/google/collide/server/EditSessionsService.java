@@ -42,9 +42,8 @@ public class EditSessionsService
    {
       GetFileContentsImpl request = GetFileContentsImpl.fromJsonString(message);
       final String vfsId = request.getWorkspaceId();
-      // TODO : expect for 'id' even value name is 'path'. Add value with correct name to DTO.
-      final String resourceId = request.getPath();
-      FileContents fileContents = editSessions.openSession(vfsId, resourceId);
+      final String path = request.getPath();
+      FileContents fileContents = editSessions.openSession(vfsId, path);
       return GetFileContentsResponseImpl.make()
          .setFileExists(fileContents != null)
          .setFileContents((FileContentsImpl)fileContents)
