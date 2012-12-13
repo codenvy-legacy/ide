@@ -884,4 +884,9 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          }
       });
    }
+
+   public com.google.collide.client.editor.Editor getEditor()
+   {
+      return editor;
+   }
 }

@@ -40,13 +40,13 @@ import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 public class CollaborationManager {
 
   public static CollaborationManager create(AppContext appContext, DocumentManager documentManager,
-      ParticipantModel participantModel, IncomingDocOpDemultiplexer docOpRecipient) {
+      IncomingDocOpDemultiplexer docOpRecipient) {
     /*
      * Ideally this whole stack wouldn't be stuck on passing around a workspace id but it is too
      * much work right now to refactor it out so here it stays.
      */
     return new CollaborationManager(appContext, documentManager,
-        participantModel, docOpRecipient);
+       docOpRecipient);
   }
 
   private final LifecycleListener lifecycleListener = new LifecycleListener() {
@@ -98,16 +98,14 @@ public class CollaborationManager {
   };
 
   private final AppContext appContext;
-  private final ParticipantModel participantModel;
   private final RemoverManager removerManager = new RemoverManager();
   private final JsIntegerMap<DocumentCollaborationController> docCollabControllersByDocumentId =
       JsIntegerMap.create();
   private final IncomingDocOpDemultiplexer docOpRecipient;
 
   private CollaborationManager(AppContext appContext, DocumentManager documentManager,
-      ParticipantModel participantModel, IncomingDocOpDemultiplexer docOpRecipient) {
+       IncomingDocOpDemultiplexer docOpRecipient) {
     this.appContext = appContext;
-    this.participantModel = participantModel;
     this.docOpRecipient = docOpRecipient;
     removerManager.track(documentManager.getLifecycleListenerRegistrar().add(lifecycleListener));
     removerManager.track(
@@ -126,9 +124,10 @@ public class CollaborationManager {
   private void handleDocumentLinkedToFile(
       Document document, JsonArray<DocumentSelection> selections) {
 
+     String fileEditSessionKey = DocumentMetadata.getFileEditSessionKey(document);
     DocumentCollaborationController docCollabController = new DocumentCollaborationController(
-        appContext, participantModel, docOpRecipient, document, selections);
-    docCollabController.initialize(DocumentMetadata.getFileEditSessionKey(document),
+        appContext, ParticipantModel.create(appContext.getFrontendApi(),appContext.getMessageFilter(),fileEditSessionKey), docOpRecipient, document, selections);
+     docCollabController.initialize(fileEditSessionKey,
         DocumentMetadata.getBeginCcRevision(document));
 
     docCollabControllersByDocumentId.put(document.getId(), docCollabController);

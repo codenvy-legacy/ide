@@ -16,9 +16,11 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.collaboration;
+package com.google.collide.client.collaboration;
 
 import com.google.collide.client.CollabEditor;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.shared.File;
@@ -29,10 +31,17 @@ import org.exoplatform.ide.vfs.shared.File;
  */
 public class CollaborationEditorView extends ViewImpl
 {
+   private CollabEditor editor;
+
+   private DockLayoutPanel dockLayoutPanel;
+
    public CollaborationEditorView(CollabEditor editor, File file)
    {
       super("collaborationEditor","editor", getFileTitle(file));
-      add(editor);
+      this.editor = editor;
+      dockLayoutPanel = new DockLayoutPanel(Style.Unit.PX);
+      add(dockLayoutPanel);
+      dockLayoutPanel.add(editor);
    }
 
    private static String getFileTitle(File file)
@@ -40,4 +49,8 @@ public class CollaborationEditorView extends ViewImpl
       return Utils.unescape(file.getName()) + " [Collaboration Mode]";
    }
 
+   public CollabEditor getEditor()
+   {
+      return editor;
+   }
 }

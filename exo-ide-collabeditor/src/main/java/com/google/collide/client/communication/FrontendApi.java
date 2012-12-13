@@ -14,13 +14,13 @@
 
 package com.google.collide.client.communication;
 
-import com.google.collide.client.communication.VertxBus.ReplyHandler;
-
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.communication.MessageFilter.MessageRecipient;
+import com.google.collide.client.communication.VertxBus.ReplyHandler;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.ClientToServerDocOp;
+import com.google.collide.dto.CloseEditor;
 import com.google.collide.dto.CodeErrors;
 import com.google.collide.dto.CodeErrorsRequest;
 import com.google.collide.dto.CodeGraphRequest;
@@ -28,6 +28,8 @@ import com.google.collide.dto.CodeGraphResponse;
 import com.google.collide.dto.EmptyMessage;
 import com.google.collide.dto.GetDirectory;
 import com.google.collide.dto.GetDirectoryResponse;
+import com.google.collide.dto.GetEditSessionCollaborators;
+import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetFileContents;
 import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.GetWorkspaceMetaData;
@@ -177,6 +179,9 @@ public class FrontendApi {
   public final RequestResponseApi<GetFileContents, GetFileContentsResponse> GET_FILE_CONTENTS =
       makeApi("ide/collab_editor/documents/open");
 
+   public final RequestResponseApi<GetEditSessionCollaborators, GetEditSessionCollaboratorsResponse> GET_FILE_COLLABORATORS =
+      makeApi("ide/collab_editor/documents/collaborators");
+
   /**
    * Get a subdirectory. Just the subtree rooted at that path. No associated meta data.
    */
@@ -191,6 +196,11 @@ public class FrontendApi {
    * Send a keep-alive for the client in a workspace.
    */
   public final SendApi<KeepAlive> KEEP_ALIVE = makeApi("participants/keepAlive");
+
+   /**
+   * Send a keep-alive for the client in a workspace.
+   */
+  public final SendApi<CloseEditor> CLOSE_EDITOR = makeApi("ide/collab_editor/documents/close");
 
   /**
    * Gets the list of workspace participants.

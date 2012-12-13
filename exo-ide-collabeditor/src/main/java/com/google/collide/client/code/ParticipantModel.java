@@ -16,17 +16,16 @@ package com.google.collide.client.code;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.communication.FrontendApi;
-import com.google.collide.client.communication.FrontendApi.ApiCallback;
 import com.google.collide.client.communication.MessageFilter;
 import com.google.collide.client.communication.MessageFilter.MessageRecipient;
 import com.google.collide.client.util.QueryCallbacks.SimpleCallback;
-import com.google.collide.dto.GetWorkspaceParticipants;
+import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
-import com.google.collide.dto.ServerError.FailureReason;
+import com.google.collide.dto.ServerError;
 import com.google.collide.dto.UserDetails;
-import com.google.collide.dto.client.DtoClientImpls.GetWorkspaceParticipantsImpl;
+import com.google.collide.dto.client.DtoClientImpls;
 import com.google.collide.json.client.JsoArray;
 import com.google.collide.json.client.JsoStringMap;
 import com.google.collide.json.client.JsoStringSet;
@@ -71,10 +70,10 @@ public class ParticipantModel {
     }
   }
 
-  public static ParticipantModel create(FrontendApi frontendApi, MessageFilter messageFilter) {
-    ParticipantModel model = new ParticipantModel(frontendApi);
+  public static ParticipantModel create(FrontendApi frontendApi, MessageFilter messageFilter, String fileEditSessionKey) {
+    ParticipantModel model = new ParticipantModel(frontendApi, fileEditSessionKey);
     model.registerForInvalidations(messageFilter);
-//    model.requestAllParticipants();
+    model.requestAllParticipants();
     return model;
   }
 
@@ -113,9 +112,12 @@ public class ParticipantModel {
   private Participant self;
   private final FrontendApi frontendApi;
 
-  private ParticipantModel(FrontendApi frontendApi) {
+   private String fileEditSessionKey;
+
+   private ParticipantModel(FrontendApi frontendApi, String fileEditSessionKey) {
     this.frontendApi = frontendApi;
-    colorGenerator = new ColorGenerator();
+      this.fileEditSessionKey = fileEditSessionKey;
+      colorGenerator = new ColorGenerator();
     listeners = JsoArray.create();
   }
 
@@ -221,21 +223,22 @@ public class ParticipantModel {
         handleParticipantUserDetails(result, replaceAll);
       }
     };
+     DtoClientImpls.GetEditSessionCollaboratorsImpl req = DtoClientImpls.GetEditSessionCollaboratorsImpl.make();
+     req.setEditSessionId(fileEditSessionKey);
+     frontendApi.GET_FILE_COLLABORATORS.send(req, new FrontendApi.ApiCallback<GetEditSessionCollaboratorsResponse>()
+     {
+        @Override
+        public void onFail(ServerError.FailureReason reason)
+        {
+           // Do nothing.
+        }
 
-    GetWorkspaceParticipants req = GetWorkspaceParticipantsImpl.make();
-    frontendApi.GET_WORKSPACE_PARTICIPANTS.send(
-        req, new ApiCallback<GetWorkspaceParticipantsResponse>() {
-
-          @Override
-          public void onMessageReceived(GetWorkspaceParticipantsResponse message) {
-            lastRequestAllCallback.onQuerySuccess(message.getParticipants());
-          }
-
-          @Override
-          public void onFail(FailureReason reason) {
-            // Do nothing.
-          }
-        });
+        @Override
+        public void onMessageReceived(GetEditSessionCollaboratorsResponse message)
+        {
+           lastRequestAllCallback.onQuerySuccess(message.getParticipants());
+        }
+     });
   }
 
   /**

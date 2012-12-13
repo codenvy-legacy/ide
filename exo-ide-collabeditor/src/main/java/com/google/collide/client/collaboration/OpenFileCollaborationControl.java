@@ -16,10 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.collaboration;
+package com.google.collide.client.collaboration;
 
+import com.google.collide.client.Resources;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
-import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -34,7 +34,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 public class OpenFileCollaborationControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
 
-   public OpenFileCollaborationControl()
+   public OpenFileCollaborationControl(Resources resource)
    {
       super("File/OpenCollaboration");
       setEnabled(true);
@@ -42,7 +42,7 @@ public class OpenFileCollaborationControl extends SimpleControl implements IDECo
       setEvent(new OpenFileCollaborationEvent());
       setTitle("Open File Collaboration");
       setPrompt("Open File in Collaboration mode");
-      setImages(IDEImageBundle.INSTANCE.openLocalFile(),IDEImageBundle.INSTANCE.openLocalFileDisabled());
+      setImages(resource.getCollaborationImage(),resource.getCollaborationImage());
    }
 
    @Override

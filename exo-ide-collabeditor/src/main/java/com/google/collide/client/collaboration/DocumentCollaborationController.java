@@ -15,14 +15,17 @@
 package com.google.collide.client.collaboration;
 
 import com.google.collide.client.AppContext;
+import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.collaboration.FileConcurrencyController.CollaboratorDocOpSink;
+import com.google.collide.client.communication.FrontendApi;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.client.ClientDocOpFactory;
+import com.google.collide.dto.client.DtoClientImpls;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.Document;
@@ -121,7 +124,9 @@ public class DocumentCollaborationController implements DocOpRecoveryInitiator {
     }
   };
 
-  /**
+   private String fileEditSessionKey;
+
+   /**
    * Creates an instance of the {@link com.google.collide.client.collaboration.DocumentCollaborationController}.
    */
   public DocumentCollaborationController(AppContext appContext, ParticipantModel participantModel,
@@ -139,7 +144,8 @@ public class DocumentCollaborationController implements DocOpRecoveryInitiator {
   }
 
   public void initialize(String fileEditSessionKey, int ccRevision) {
-    ackWatchdog = new AckWatchdog(
+     this.fileEditSessionKey = fileEditSessionKey;
+     ackWatchdog = new AckWatchdog(
         appContext.getStatusManager(), appContext.getWindowUnloadingController(), this);
 
     fileConcurrencyController = FileConcurrencyController.create(appContext,
@@ -198,7 +204,11 @@ public class DocumentCollaborationController implements DocOpRecoveryInitiator {
      * torndown before the document is detached from the editor.
      */
 
-fileConcurrencyController.setDocOpCreationParticipant(null);
+     DtoClientImpls.CloseEditorImpl closeEditor = DtoClientImpls.CloseEditorImpl.make();
+     closeEditor.setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
+     closeEditor.setFileEditSessionKey(fileEditSessionKey);
+     appContext.getFrontendApi().CLOSE_EDITOR.send(closeEditor);
+    fileConcurrencyController.setDocOpCreationParticipant(null);
 
     if (collaboratorCursorController != null) {
       collaboratorSelections = collaboratorCursorController.getSelectionsMap();

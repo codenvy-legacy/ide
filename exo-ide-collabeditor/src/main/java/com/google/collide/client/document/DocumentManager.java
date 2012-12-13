@@ -158,7 +158,7 @@ public class DocumentManager
     });
   }
 
-  private void detachFromEditor(final Editor editor, final Document document) {
+  public void detachFromEditor(final Editor editor, final Document document) {
     lifecycleListenerManager.dispatch(new Dispatcher<LifecycleListener>() {
       @Override
       public void dispatch(LifecycleListener listener) {

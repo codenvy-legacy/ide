@@ -14,6 +14,7 @@
 
 package com.google.collide.client;
 
+import com.google.collide.client.code.ParticipantList;
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.gutter.GutterNotificationResources;
@@ -21,11 +22,11 @@ import com.google.collide.client.editor.renderer.LineNumberRenderer;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 import com.google.collide.client.ui.popup.Popup;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Interface for resources, e.g., css, images, text files, etc. Make sure you
- * add your resource to
- * {@link com.google.collide.client.Collide#onModuleLoad()}.
+ * add your resource to  {@link CollabEditorExtension}
  */
 public interface Resources extends
     BaseResources.Resources,
@@ -36,6 +37,7 @@ public interface Resources extends
     com.google.collide.client.syntaxhighlighter.SyntaxHighlighterRenderer.Resources,
     GutterNotificationResources,
     com.google.collide.client.code.autocomplete.integration.AutocompleteUiController.Resources,
+    ParticipantList.Resources,
     // TODO: Once we have actual consumers of the Tooltip class, we
     // can just have them extend it instead of doing it on the base interface.
 //    Tooltip.Resources,
@@ -51,4 +53,7 @@ public interface Resources extends
   @Source({"app.css", "com/google/collide/client/common/constants.css"})
   @NotStrict
   AppCss appCss();
+
+  @Source("com/google/collide/client/collaboration/delta_icon.png")
+  ImageResource getCollaborationImage();
 }

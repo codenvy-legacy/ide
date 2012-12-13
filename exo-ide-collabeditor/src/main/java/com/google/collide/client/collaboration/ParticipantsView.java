@@ -16,21 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.collaboration;
+package com.google.collide.client;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.ui.SimplePanel;
 
-public class OpenFileCollaborationEvent extends GwtEvent<OpenFileCollaborationEventHandler>
+import com.google.collide.client.code.ParticipantList;
+
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+
+/**
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
+ */
+public class ParticipantsView extends ViewImpl
 {
-   public static Type<OpenFileCollaborationEventHandler> TYPE = new Type<OpenFileCollaborationEventHandler>();
 
-   public Type<OpenFileCollaborationEventHandler> getAssociatedType()
+   public ParticipantsView(ParticipantList list)
    {
-      return TYPE;
+      super("ideCollabParticipants", ViewType.OPERATION, "Participants");
+      setCanBeClosed(false);
+      SimplePanel p = new SimplePanel();
+      p.getElement().appendChild((Node)list.getView().getElement());
+      add(p);
    }
 
-   protected void dispatch(OpenFileCollaborationEventHandler handler)
-   {
-      handler.onOpenFileCollaboration(this);
-   }
 }

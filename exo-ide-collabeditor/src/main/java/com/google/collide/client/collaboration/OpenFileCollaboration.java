@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.operation.collaboration;
+package com.google.collide.client.collaboration;
 
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
@@ -26,13 +26,12 @@ import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.FileContents;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.event.shared.HandlerManager;
-import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.client.editor.EditorView;
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -40,15 +39,19 @@ import org.exoplatform.ide.vfs.shared.Item;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public class OpenFileCollaboration implements OpenFileCollaborationEventHandler, ItemsSelectedHandler
+public class OpenFileCollaboration implements OpenFileCollaborationEventHandler, ItemsSelectedHandler, ViewClosedHandler
 {
 
    private File selectedFile;
 
-   public OpenFileCollaboration(HandlerManager eventBus)
+   private DocumentManager documentManager;
+
+   public OpenFileCollaboration(HandlerManager eventBus, DocumentManager documentManager)
    {
+      this.documentManager = documentManager;
       eventBus.addHandler(OpenFileCollaborationEvent.TYPE, this);
       eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
+      eventBus.addHandler(ViewClosedEvent.TYPE, this);
    }
 
    @Override
@@ -103,5 +106,16 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
          }
       }
       selectedFile = null;
+   }
+
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if(event.getView() instanceof  CollaborationEditorView)
+      {
+         CollaborationEditorView view = (CollaborationEditorView)event.getView();
+         CollabEditor editor = view.getEditor();
+         documentManager.detachFromEditor(editor.getEditor(),editor.getEditor().getDocument());
+      }
    }
 }

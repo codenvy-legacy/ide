@@ -23,6 +23,8 @@ import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
+import com.google.collide.client.collaboration.OpenFileCollaboration;
+import com.google.collide.client.collaboration.OpenFileCollaborationControl;
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
@@ -34,6 +36,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.DOM;
 import elemental.dom.Node;
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
@@ -63,11 +66,12 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       instance = this;
       ClientImplementationsInjector.inject();
 
-      //
-//    GWT.setUncaughtExceptionHandler(appContext.getUncaughtExceptionHandler());
-//    XhrWarden.watch();
-//
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      context = AppContext.create();
+      documentManager = DocumentManager.create(context);
+      new OpenFileCollaboration(IDE.eventBus(), documentManager);
+      IDE.getInstance().addControl(new OpenFileCollaborationControl(context.getResources()), Docking.TOOLBAR);
+
    }
 
    public AppContext getContext()
@@ -86,8 +90,6 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
    @Override
    public void onUserInfoReceived(UserInfoReceivedEvent event)
    {
-      context = AppContext.create();
-      documentManager = DocumentManager.create(context);
       init();
 
       //TODO refactor this
@@ -107,10 +109,10 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
                   BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
                   BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());
                   context.initializeCollaboration();
-                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+//                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
                   IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
                   CollaborationManager collaborationManager =
-                     CollaborationManager.create(context, documentManager, participantModel, docOpRecipient);
+                     CollaborationManager.create(context, documentManager, docOpRecipient);
 
                   DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
                   bus.close();
@@ -175,7 +177,7 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 //    styleBuilder.append(resources.workspaceNavigationToolBarCss().getText());
 //    styleBuilder.append(resources.workspaceNavigationFileTreeNodeRendererCss().getText());
 //    styleBuilder.append(resources.workspaceNavigationOutlineNodeRendererCss().getText());
-//    styleBuilder.append(resources.workspaceNavigationParticipantListCss().getText());
+      styleBuilder.append(resources.workspaceNavigationParticipantListCss().getText());
 //    styleBuilder.append(resources.searchContainerCss().getText());
 //    styleBuilder.append(resources.statusPresenterCss().getText());
 //    styleBuilder.append(resources.noFileSelectedPanelCss().getText());
