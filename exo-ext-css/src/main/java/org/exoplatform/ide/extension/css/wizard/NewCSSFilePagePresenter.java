@@ -80,7 +80,7 @@ public class NewCSSFilePagePresenter extends AbstractNewFilePagePresenter
          public void onFailure(Throwable caught)
          {
             // TODO : Handle error to be able to display message to the User
-            Log.error(NewCSSFilePagePresenter.class, "...");
+            Log.error(NewCSSFilePagePresenter.class, caught);
          }
       });
    }

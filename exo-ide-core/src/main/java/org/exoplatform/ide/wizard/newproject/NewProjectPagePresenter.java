@@ -32,8 +32,6 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  */
 public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate
 {
-   private WizardPagePresenter previous;
-
    private WizardPagePresenter next;
 
    private NewProjectPageView view;
@@ -82,22 +80,6 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
-   public WizardPagePresenter flipToPrevious()
-   {
-      return previous;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void setPrevious(WizardPagePresenter previous)
-   {
-      this.previous = previous;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
    public boolean canFinish()
    {
       return false;
@@ -109,14 +91,6 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    public boolean hasNext()
    {
       return next != null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public boolean hasPrevious()
-   {
-      return previous != null;
    }
 
    /**

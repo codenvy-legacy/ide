@@ -47,8 +47,6 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
 public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter
    implements JavaProjectPageView.ActionDelegate
 {
-   private WizardPagePresenter previous;
-
    private JavaProjectPageView view;
 
    private ResourceProvider resourceProvider;
@@ -92,18 +90,6 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter
    }
 
    @Override
-   public WizardPagePresenter flipToPrevious()
-   {
-      return previous;
-   }
-
-   @Override
-   public void setPrevious(WizardPagePresenter previous)
-   {
-      this.previous = previous;
-   }
-
-   @Override
    public boolean canFinish()
    {
       return isCompleted();
@@ -113,12 +99,6 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter
    public boolean hasNext()
    {
       return false;
-   }
-
-   @Override
-   public boolean hasPrevious()
-   {
-      return previous != null;
    }
 
    @Override

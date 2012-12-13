@@ -31,6 +31,7 @@ import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Property;
 import org.exoplatform.ide.rest.MimeType;
 import org.exoplatform.ide.util.StringUtils;
+import org.exoplatform.ide.util.loging.Log;
 import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 
@@ -43,8 +44,6 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    NewGenericProjectPageView.ActionDelegate
 {
    private NewGenericProjectPageView view;
-
-   private WizardPagePresenter previous;
 
    private WizardPagePresenter next;
 
@@ -98,7 +97,7 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
          
          public void onFailure(Throwable caught)
          {
-            // TODO Auto-generated method stub
+            Log.error(NewGenericProjectPagePresenter.class, caught);
          }
       });
    }
@@ -109,22 +108,6 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    public WizardPagePresenter flipToNext()
    {
       return next;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public WizardPagePresenter flipToPrevious()
-   {
-      return previous;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void setPrevious(WizardPagePresenter previous)
-   {
-      this.previous = previous;
    }
 
    /**
@@ -141,14 +124,6 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    public boolean hasNext()
    {
       return false;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public boolean hasPrevious()
-   {
-      return previous != null;
    }
 
    /**
@@ -230,6 +205,7 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
                   {
                      public void onFailure(Throwable caught)
                      {
+                        Log.error(NewGenericProjectPagePresenter.class, caught);
                      }
 
                      public void onSuccess(File result)
@@ -240,6 +216,7 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
 
             public void onFailure(Throwable caught)
             {
+               Log.error(NewGenericProjectPagePresenter.class, caught);
             }
          });
    }

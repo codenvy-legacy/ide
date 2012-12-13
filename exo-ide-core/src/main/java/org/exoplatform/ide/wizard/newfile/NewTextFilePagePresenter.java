@@ -78,7 +78,7 @@ public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter
          public void onFailure(Throwable caught)
          {
             // TODO : Handle error to be able to display message to the User
-            Log.error(NewTextFilePagePresenter.class, "...");
+            Log.error(NewTextFilePagePresenter.class, caught);
          }
       });
    }

@@ -30,6 +30,7 @@ import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.resources.model.ResourceNameValidator;
+import org.exoplatform.ide.util.loging.Log;
 import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 import org.exoplatform.ide.wizard.newfolder.NewFolderPageView.ActionDelegate;
@@ -131,6 +132,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
 
          public void onFailure(Throwable caught)
          {
+            Log.error(NewFolderPagePresenter.class, caught);
          }
       });
    }
