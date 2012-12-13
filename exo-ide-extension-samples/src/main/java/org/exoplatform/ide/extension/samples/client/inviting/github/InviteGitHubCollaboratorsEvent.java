@@ -21,7 +21,6 @@ package org.exoplatform.ide.extension.samples.client.inviting.github;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @deprecated class uses only for testing
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 

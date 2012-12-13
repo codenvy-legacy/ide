@@ -24,7 +24,6 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 
 /**
- * @deprecated class uses only for testing
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 

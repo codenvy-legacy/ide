@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting;
+package org.exoplatform.ide.extension.samples.client.inviting.google;
 
 import com.google.gwt.event.shared.GwtEvent;
 
@@ -25,21 +25,21 @@ import com.google.gwt.event.shared.GwtEvent;
  * @version $
  * 
  */
-public class InviteDevelopersEvent extends GwtEvent<InviteDevelopersHandler>
+public class InviteGoogleDevelopersEvent extends GwtEvent<InviteGoogleDevelopersHandler>
 {
 
-   public static final GwtEvent.Type<InviteDevelopersHandler> TYPE = new GwtEvent.Type<InviteDevelopersHandler>();
+   public static final GwtEvent.Type<InviteGoogleDevelopersHandler> TYPE = new GwtEvent.Type<InviteGoogleDevelopersHandler>();
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<InviteDevelopersHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<InviteGoogleDevelopersHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(InviteDevelopersHandler handler)
+   protected void dispatch(InviteGoogleDevelopersHandler handler)
    {
-      handler.onInviteDevelopers(this);
+      handler.onInviteGoogleDevelopers(this);
    }
 
 }

@@ -32,7 +32,6 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.TextField;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
@@ -128,10 +127,10 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
       setCloseOnEscape(true);
    }
    
-   private Map<GoogleContact, UserCard> cards = new HashMap<GoogleContact, UserCard>();
+   private Map<GoogleContact, GoogleContactTile> cards = new HashMap<GoogleContact, GoogleContactTile>();
    
    @Override
-   public void setDevelopers(List<GoogleContact> contacts, UserSelectionChangedHandler selectionChangedHandler)
+   public void setDevelopers(List<GoogleContact> contacts, GoogleContactSelectionChangedHandler selectionChangedHandler)
    {
       if (userListWidget != null)
       {
@@ -142,7 +141,7 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
       cards.clear();
       for (GoogleContact contact : contacts)
       {
-         UserCard card = new UserCard(contact);
+         GoogleContactTile card = new GoogleContactTile(contact);
          card.setSelectionChangedHandler(selectionChangedHandler);
          userListWidget.add(card);
          cards.put(contact, card);

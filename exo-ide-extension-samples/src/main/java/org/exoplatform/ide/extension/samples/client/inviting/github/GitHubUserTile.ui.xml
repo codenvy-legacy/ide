@@ -2,8 +2,8 @@
 <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-	<ui:style type='org.exoplatform.ide.extension.samples.client.inviting.github.UserCard.UserCardStyle'>
-	
+	<ui:style type='org.exoplatform.ide.extension.samples.client.inviting.github.GitHubUserTile.Style'>
+
 		.userField
 		{
 			width:300px;

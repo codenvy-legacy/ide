@@ -25,9 +25,9 @@ import org.exoplatform.ide.git.shared.GitHubUser;
  * @version $
  * 
  */
-public interface UserSelectionChangedHandler
+public interface GitHubUserSelectionChangedHandler
 {
    
-   void onUserSelectionChanged(GitHubUser user, boolean selected);
+   void onGitHubUserSelectionChanged(GitHubUser user, boolean selected);
 
 }

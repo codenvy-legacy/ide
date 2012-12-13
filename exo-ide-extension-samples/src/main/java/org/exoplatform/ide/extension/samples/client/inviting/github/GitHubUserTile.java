@@ -38,23 +38,23 @@ import org.exoplatform.ide.git.shared.GitHubUser;
  * @version $
  * 
  */
-public class UserCard extends Composite
+public class GitHubUserTile extends Composite
 {
 
-   private static UserCardUiBinder uiBinder = GWT.create(UserCardUiBinder.class);
+   private static GitHubUserTileUiBinder uiBinder = GWT.create(GitHubUserTileUiBinder.class);
 
-   interface UserCardUiBinder extends UiBinder<Widget, UserCard>
+   interface GitHubUserTileUiBinder extends UiBinder<Widget, GitHubUserTile>
    {
    }
 
-   interface UserCardStyle extends CssResource
+   interface Style extends CssResource
    {
       String userFieldBody();
 
       String userFieldBodySelected();
    }
    
-   @UiField UserCardStyle style;
+   @UiField Style style;
 
    @UiField
    FlowPanel userFieldBody;
@@ -70,9 +70,9 @@ public class UserCard extends Composite
    
    private GitHubUser gitUser;
    
-   private UserSelectionChangedHandler selectionChangedHandler;
+   private GitHubUserSelectionChangedHandler selectionChangedHandler;
 
-   public UserCard(GitHubUser user)
+   public GitHubUserTile(GitHubUser user)
    {
       gitUser = user;
       
@@ -91,7 +91,7 @@ public class UserCard extends Composite
             setSelected(checkBox.getValue());
             if (selectionChangedHandler != null)
             {
-               selectionChangedHandler.onUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+               selectionChangedHandler.onGitHubUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
             }
          }
       });
@@ -104,13 +104,13 @@ public class UserCard extends Composite
             setSelected(!checkBox.getValue());
             if (selectionChangedHandler != null)
             {
-               selectionChangedHandler.onUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+               selectionChangedHandler.onGitHubUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
             }
          }
       });
    }
 
-   public void setSelectionChangedHandler(UserSelectionChangedHandler selectionChangedHandler)
+   public void setSelectionChangedHandler(GitHubUserSelectionChangedHandler selectionChangedHandler)
    {
       this.selectionChangedHandler = selectionChangedHandler;
    }
