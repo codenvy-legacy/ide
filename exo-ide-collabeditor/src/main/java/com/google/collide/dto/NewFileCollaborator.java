@@ -21,7 +21,7 @@ package com.google.collide.dto;
 import com.google.collide.dtogen.shared.RoutingType;
 import com.google.collide.dtogen.shared.ServerToClientDto;
 
-@RoutingType(type = RoutingTypes.SERVERTOCLIENTNEWPARTICIPANT)
+@RoutingType(type = RoutingTypes.NEWFILECOLLABORATOR)
 public interface NewFileCollaborator extends ServerToClientDto
 {
    String getPath();

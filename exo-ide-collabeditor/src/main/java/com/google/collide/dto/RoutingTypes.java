@@ -147,8 +147,8 @@ public class RoutingTypes {
   public static final int ENDUPLOADSESSIONFINISHED = 120;
   public static final int RETRYALREADYTRANSFERREDUPLOAD = 121;
   public static final int GETWORKSPACEMETADATA = 122;
-  public static final int GETEDITSESSIONPARTICIPANTS = 123;
-  public static final int GETEDITSESSIONPARTICIPANTSRESPONSE = 124;
-  public static final int SERVERTOCLIENTNEWPARTICIPANT = 125;
+  public static final int GETEDITSESSIONCOLLABORATORS = 123;
+  public static final int GETEDITSESSIONCOLLABORATORSRESPONSE = 124;
+  public static final int NEWFILECOLLABORATOR = 125;
   public static final int CLOSEEDITOR = 126;
 }

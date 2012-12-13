@@ -22,7 +22,7 @@ import com.google.collide.dtogen.shared.RoutingType;
 import com.google.collide.dtogen.shared.ServerToClientDto;
 import com.google.collide.json.shared.JsonArray;
 
-@RoutingType(type = RoutingTypes.GETEDITSESSIONPARTICIPANTSRESPONSE)
+@RoutingType(type = RoutingTypes.GETEDITSESSIONCOLLABORATORSRESPONSE)
 public interface GetEditSessionCollaboratorsResponse extends ServerToClientDto
 {
    JsonArray<ParticipantUserDetails> getParticipants();

@@ -21,7 +21,7 @@ package com.google.collide.dto;
 import com.google.collide.dtogen.shared.ClientToServerDto;
 import com.google.collide.dtogen.shared.RoutingType;
 
-@RoutingType(type = RoutingTypes.GETEDITSESSIONPARTICIPANTS)
+@RoutingType(type = RoutingTypes.GETEDITSESSIONCOLLABORATORS)
 public interface GetEditSessionCollaborators extends ClientToServerDto
 {
    String getEditSessionId();
