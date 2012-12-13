@@ -28,8 +28,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowLogsEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowLogsHandler;
 import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
@@ -39,7 +39,7 @@ import org.exoplatform.ide.extension.java.jdi.shared.ApplicationInstance;
  * @version $Id: Jun 22, 2012 2:57:45 PM anya $
  * 
  */
-public class LogsHandler implements ShowLogsHandler, AppStartedHandler, AppStopedHandler
+public class LogsHandler implements ShowLogsHandler, AppStartedHandler, AppStoppedHandler
 {
    private ApplicationInstance application;
 
@@ -49,7 +49,7 @@ public class LogsHandler implements ShowLogsHandler, AppStartedHandler, AppStope
 
       IDE.addHandler(ShowLogsEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
-      IDE.addHandler(AppStopedEvent.TYPE, this);
+      IDE.addHandler(AppStoppedEvent.TYPE, this);
    }
 
    /**
@@ -95,10 +95,10 @@ public class LogsHandler implements ShowLogsHandler, AppStartedHandler, AppStope
    }
 
    /**
-    * @see org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler#onAppStoped(org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent)
+    * @see org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler#onAppStopped(org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent)
     */
    @Override
-   public void onAppStoped(AppStopedEvent appStopedEvent)
+   public void onAppStopped(AppStoppedEvent appStopedEvent)
    {
       this.application = null;
    }

@@ -48,23 +48,19 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 public class ProjectTreeParser
 {
 
    public interface ParsingCompleteListener
    {
-
-      void onParseComplete();
-
+      void onParseComplete(ProjectItem resultItem);
    }
 
    public interface FolderUpdateCompleteListener
    {
-
       void onUpdateComplete(Object item);
-
    }
 
    private ParsingCompleteListener parsingCompleteListener;
@@ -72,7 +68,7 @@ public class ProjectTreeParser
    private ProjectModel project;
 
    private ProjectItem projectItem;
-   
+
    private List<String> projectDependencies;
 
    public ProjectTreeParser(ProjectModel project, ProjectItem projectItem)
@@ -94,7 +90,7 @@ public class ProjectTreeParser
    public void parseProjectStructure(ParsingCompleteListener parsingCompleteListener)
    {
       this.parsingCompleteListener = parsingCompleteListener;
-      
+
       projectItem.getResourceDirectories().clear();
       projectItem.getDependencies().clear();
       projectItem.getFolders().clear();
@@ -106,7 +102,7 @@ public class ProjectTreeParser
       }
 
       if (projectDependencies == null)
-      {         
+      {
          loadPomXML();
       }
       else
@@ -165,7 +161,7 @@ public class ProjectTreeParser
 
    /**
     * Get list of maven properties
-    * 
+    *
     * @param projectElement
     * @return
     */
@@ -206,7 +202,7 @@ public class ProjectTreeParser
 
    /**
     * Parse pom.xml file
-    * 
+    *
     * @param pomXML
     */
    private void parsePomXML(FileModel pomXML)
@@ -254,7 +250,7 @@ public class ProjectTreeParser
       {
          //e.printStackTrace();
       }
-      
+
       addProjectDependencies();
    }
 
@@ -299,7 +295,6 @@ public class ProjectTreeParser
       }
 
       // sort files and folders here
-      
 
       // add files and folders to ProjectItem
       projectItem.getFolders().addAll(folders);
@@ -319,7 +314,7 @@ public class ProjectTreeParser
          {
             if (parsingCompleteListener != null)
             {
-               parsingCompleteListener.onParseComplete();
+               parsingCompleteListener.onParseComplete(projectItem);
             }
          }
       });
@@ -341,7 +336,7 @@ public class ProjectTreeParser
    }
 
    private void updatePackagesInResourceDirectory(String resourceDirectory, FolderModel resourceFolder,
-      ResourceDirectoryItem resourceDirectoryItem)
+                                                  ResourceDirectoryItem resourceDirectoryItem)
    {
       List<FolderModel> resourceFolders = new ArrayList<FolderModel>();
       resourceFolders.addAll(searchFoldersRecursively(resourceFolder));
@@ -488,7 +483,7 @@ public class ProjectTreeParser
 
       return null;
    }
-   
+
    private void searchItemInPackages(List<Object> navigateItems, ResourceDirectoryItem resourceDirectoryItem, Item itemToNavigate)
    {
       // search for item in packages
@@ -499,12 +494,12 @@ public class ProjectTreeParser
             navigateItems.add(packageItem);
             return;
          }
-         
+
          if (itemToNavigate instanceof FileModel)
          {
             String itemFolderPath = itemToNavigate.getPath();
             itemFolderPath = itemFolderPath.substring(0, itemFolderPath.lastIndexOf("/") + 1);
-            
+
             if (itemFolderPath.equals(packageItem.getPackageFolder().getPath() + "/"))
             {
                navigateItems.add(packageItem);
@@ -516,12 +511,12 @@ public class ProjectTreeParser
                      return;
                   }
                }
-               
+
             }
-            
+
          }
       }
-      
+
       // search for item in root of resource directory
       for (FileModel file : resourceDirectoryItem.getFiles())
       {
@@ -532,7 +527,7 @@ public class ProjectTreeParser
          }
       }
    }
-   
+
    private boolean searchItemInResourceFolders(List<Object> navigateItems, Item itemToNavigate)
    {
       for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
@@ -542,7 +537,7 @@ public class ProjectTreeParser
             navigateItems.add(resourceDirectoryItem);
             return true;
          }
-         
+
          if (itemToNavigate.getPath().startsWith(resourceDirectoryItem.getFolder().getPath() + "/"))
          {
             navigateItems.add(resourceDirectoryItem);
@@ -550,10 +545,10 @@ public class ProjectTreeParser
             return true;
          }
       }
-      
+
       return false;
    }
-   
+
    private boolean searchItemInTreeOfItems(List<Object> navigateItems, List<Item> items, Item itemToNavigate)
    {
       for (Item item : items)
@@ -561,23 +556,23 @@ public class ProjectTreeParser
          if (item instanceof FolderModel)
          {
             FolderModel folder = (FolderModel)item;
-            
+
             if (itemToNavigate.getPath().equals(folder.getPath()))
             {
                navigateItems.add(folder);
                return true;
             }
-            
+
             if (itemToNavigate.getPath().startsWith(folder.getPath() + "/"))
             {
                navigateItems.add(folder);
                searchItemInTreeOfItems(navigateItems, folder.getChildren().getItems(), itemToNavigate);
                return true;
             }
-            
+
             continue;
          }
-         
+
          if (item instanceof FileModel)
          {
             FileModel file = (FileModel)item;
@@ -588,17 +583,17 @@ public class ProjectTreeParser
             }
          }
       }
-      
+
       return false;
    }
 
    public List<Object> getItemList(Item itemToNavigate)
-   {      
+   {
       List<Object> navigateItems = new ArrayList<Object>();
       if (itemToNavigate == null)
       {
          return navigateItems;
-      }      
+      }
 
       if (itemToNavigate.getPath().equals(project.getPath()))
       {

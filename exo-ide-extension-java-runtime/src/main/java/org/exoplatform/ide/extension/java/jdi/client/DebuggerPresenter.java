@@ -55,8 +55,8 @@ import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerW
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent;
@@ -112,7 +112,7 @@ import java.util.Set;
  */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, UpdateAppHandler,
-   AppStopedHandler, ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler,
+   AppStoppedHandler, ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler,
    UpdateVariableValueInTreeHandler, ActiveProjectChangedHandler
 {
 
@@ -546,7 +546,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                            {
                               IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT
                                  .debuggeDisconnected(), Type.WARNING));
-                              IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+                              IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
                               return;
                            }
                         }
@@ -1101,7 +1101,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new AppStopedEvent(runningApp.getName(), true));
+                  IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), true));
                }
 
                @Override
@@ -1118,7 +1118,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                      if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
                         && serverException.getMessage() != null && serverException.getMessage().contains("not found"))
                      {
-                        IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+                        IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
                      }
                   }
                }
@@ -1132,7 +1132,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    }
 
    @Override
-   public void onAppStoped(AppStopedEvent appStopedEvent)
+   public void onAppStopped(AppStoppedEvent appStopedEvent)
    {
       if (appStopedEvent.isManually())
       {
@@ -1362,7 +1362,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          if (runningApp != null)
          {
             IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(), Type.WARNING));
-            IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+            IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
          }
       }
 
@@ -1417,7 +1417,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                {
                   IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(),
                      Type.WARNING));
-                  IDE.fireEvent(new AppStopedEvent(runningApp.getName(), false));
+                  IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
                   return;
                }
             }

@@ -82,7 +82,7 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 public class PackageExplorerPresenter implements ShowPackageExplorerHandler, ViewOpenedHandler, ViewClosedHandler,
    ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler, EditorActiveFileChangedHandler,
@@ -90,13 +90,13 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 {
 
    private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
-   
+
    private static final String RECEIVE_CHILDREN_ERROR_MSG = "Service is not deployed.<br>Parent folder not found.";
-   
+
    private static final String MESSAGE_LOAD_PROJECT = "Loading project structure...";
-   
+
    private static final String MESSAGE_UPDATE_PROJECT = "Updating project structure...";
-   
+
    private PackageExplorerDisplay display;
 
    private ProjectModel openedProject;
@@ -108,15 +108,15 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    private Item itemToSelect;
 
    private ProjectTreeParser treeParser;
-   
+
    private static PackageExplorerPresenter instance;
-   
+
    private boolean linkWithEditor = false;
-   
+
    private FileModel editorActiveFile;
-   
+
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
-   
+
    public static PackageExplorerPresenter getInstance()
    {
       return instance;
@@ -125,7 +125,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    public PackageExplorerPresenter()
    {
       instance = this;
-      
+
       IDE.getInstance().addControl(new ShowPackageExplorerControl(), Docking.TOOLBAR);
 
       IDE.addHandler(ShowPackageExplorerEvent.TYPE, this);
@@ -138,13 +138,13 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(SelectItemEvent.TYPE, this);
-      
+
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
    }
-   
+
    public ProjectItem getProjectItem()
    {
       return projectItem;
@@ -159,12 +159,12 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          {
             return;
          }
-         
+
          if (!ProjectTypes.contains(openedProject))
          {
             return;
          }
-         
+
          display = GWT.create(PackageExplorerDisplay.class);
          bindDisplay();
          IDE.getInstance().openView(display.asView());
@@ -216,7 +216,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             });
          }
       });
-      
+
       display.getLinkWithEditorButton().addClickHandler(new ClickHandler()
       {
          @Override
@@ -225,10 +225,10 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             linkWithEditorButtonClicked();
          }
       });
-      
+
       display.setLinkWithEditorButtonSelected(linkWithEditor);
    }
-   
+
    private void treeItemSelected()
    {
       Object selectedObject = display.getSelectedObject();
@@ -260,27 +260,29 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       List<Item> selectedItems = new ArrayList<Item>();
       if (selectedItem != null)
       {
-         selectedItems.add(selectedItem);         
+         selectedItems.add(selectedItem);
       }
-      
+
       changeActiveFile(selectedItem);
-      
+
       IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
    }
 
    /**
     * Switch Editor to selected file.
-    * 
+    *
     * @param item
     */
    private void changeActiveFile(final Item item)
    {
       if (!linkWithEditor ||
-               item == null ||
-               !(item instanceof FileModel) || 
-               !openedFiles.containsKey(item.getId()) ||
-               editorActiveFile.getId().equals(item.getId()))
+         item == null ||
+         !(item instanceof FileModel) ||
+         !openedFiles.containsKey(item.getId()) ||
+         editorActiveFile.getId().equals(item.getId()))
+      {
          return;
+      }
 
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
@@ -289,7 +291,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          {
             IDE.fireEvent(new EditorChangeActiveFileEvent((FileModel)item));
          }
-      });      
+      });
    }
 
    @Override
@@ -408,21 +410,21 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       treeParser.parseProjectStructure(new ParsingCompleteListener()
       {
          @Override
-         public void onParseComplete()
+         public void onParseComplete(ProjectItem resultItem)
          {
             display.getBrowserTree().setValue(null);
             display.getBrowserTree().setValue(projectItem);
-            
+
             if (itemToSelect == null && linkWithEditor)
             {
                itemToSelect = editorActiveFile;
             }
-            
+
             if (itemToSelect == null)
             {
                itemToSelect = openedProject;
             }
-            
+
             goToItem(itemToSelect, true);
          }
       });
@@ -435,7 +437,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          return;
       }
-      
+
       itemToSelect = event.getItemToSelect();
       if (itemToSelect == null)
       {
@@ -451,7 +453,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          itemToSelect = openedProject;
       }
-      
+
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
@@ -473,7 +475,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       System.out.println(">> select item " + event.getItemId());
    }
-   
+
    /**
     * Handle click on "Link with Editor" button.
     */
@@ -481,9 +483,9 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       linkWithEditor = !linkWithEditor;
       display.setLinkWithEditorButtonSelected(linkWithEditor);
-      
+
       applicationSettings.setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, new Boolean(linkWithEditor), Store.COOKIES);
-      
+
       //SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
       IDE.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
       
@@ -491,7 +493,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
        * fire event for show-hide line numbers command be able to update state.
        */
       IDE.fireEvent(new ApplicationSettingsSavedEvent(applicationSettings, SaveType.COOKIES));
-      
+
       if (linkWithEditor && editorActiveFile != null)
       {
          goToItem(editorActiveFile, false);
@@ -505,7 +507,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       editorActiveFile = event.getFile();
-      
+
       if (display == null || !linkWithEditor || editorActiveFile == null)
       {
          return;
@@ -513,10 +515,10 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       goToItem(event.getFile(), false);
    }
-   
+
    /**
     * Navigate to item in the project tree.
-    * 
+    *
     * @param item item to navigate
     * @param collapseBranches is need to collapse tree branches
     */
@@ -531,16 +533,16 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             {
                Object selectedObject = display.getSelectedObject();
                if (selectedObject instanceof FileModel && item instanceof FileModel &&
-                        ((FileModel)selectedObject).getId().equals(((FileModel)item).getId()))
+                  ((FileModel)selectedObject).getId().equals(((FileModel)item).getId()))
                {
                   return;
-               }               
+               }
             }
-            
+
             List<Object> itemList = treeParser.getItemList(item);
-            display.goToItem(itemList, collapseBranches);            
+            display.goToItem(itemList, collapseBranches);
          }
-      });      
+      });
    }
 
    @Override
@@ -554,10 +556,10 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       openedFiles = event.getOpenedFiles();
    }
-   
+
    private ApplicationSettings applicationSettings;
-   
-   
+
+
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       applicationSettings = event.getApplicationSettings();
@@ -569,7 +571,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       else
       {
          linkWithEditor = applicationSettings.getValueAsBoolean(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG);
-      }      
+      }
    }
 
 }

@@ -229,7 +229,7 @@
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
                               <!-- g:Button ui:field="supportLink" text="{locale.supportTitle}" styleName="{style.button-link}"></g:Button-->
-                              <g:Anchor ui:field="supportLink" text="{locale.supportTitle}" target="_blank"
+                              <g:Anchor ui:field="supportLink" text="{locale.supportTitle}"
                                         styleName="{style.a}"
                                         href="javascript:UserVoice.showPopupWidget();"></g:Anchor>
                               <g:Label text="{locale.supportText}"

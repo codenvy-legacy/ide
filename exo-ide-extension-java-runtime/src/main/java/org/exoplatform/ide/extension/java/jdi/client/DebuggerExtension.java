@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
@@ -97,7 +97,7 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
       IDE.addHandler(DebugAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(StopAppEvent.TYPE, debuggerPresenter);
       IDE.addHandler(UpdateAppEvent.TYPE, debuggerPresenter);
-      IDE.addHandler(AppStopedEvent.TYPE, debuggerPresenter);
+      IDE.addHandler(AppStoppedEvent.TYPE, debuggerPresenter);
       IDE.addHandler(UpdateVariableValueInTreeEvent.TYPE, debuggerPresenter);
 
       IDE.addHandler(ProjectClosedEvent.TYPE, debuggerPresenter);

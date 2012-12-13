@@ -88,7 +88,9 @@ public abstract class BuildProjectControlAbstract extends SimpleControl implemen
    {
       return ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
          || ProjectResolver.SPRING.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType) || ProjectType.JAR.value().equals(projectType) || ProjectType.MultiModule.value().equals(projectType);
+         || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType)
+         || ProjectType.WAR.value().equals(projectType) || ProjectType.JAR.value().equals(projectType)
+         || ProjectType.MultiModule.value().equals(projectType);
    }
    
    @Override
