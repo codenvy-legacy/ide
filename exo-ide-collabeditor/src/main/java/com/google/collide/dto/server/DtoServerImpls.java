@@ -1534,6 +1534,150 @@ public class DtoServerImpls {
 
   }
 
+   public static class CloseEditorImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CloseEditor, JsonSerializable {
+
+      private CloseEditorImpl() {
+         super(126);
+      }
+
+      protected CloseEditorImpl(int type) {
+         super(type);
+      }
+
+      protected java.lang.String fileEditSessionKey;
+      private boolean _hasFileEditSessionKey;
+      protected java.lang.String clientId;
+      private boolean _hasClientId;
+
+      public boolean hasFileEditSessionKey() {
+         return _hasFileEditSessionKey;
+      }
+
+      @Override
+      public java.lang.String getFileEditSessionKey() {
+         return fileEditSessionKey;
+      }
+
+      public CloseEditorImpl setFileEditSessionKey(java.lang.String v) {
+         _hasFileEditSessionKey = true;
+         fileEditSessionKey = v;
+         return this;
+      }
+
+      public boolean hasClientId() {
+         return _hasClientId;
+      }
+
+      @Override
+      public java.lang.String getClientId() {
+         return clientId;
+      }
+
+      public CloseEditorImpl setClientId(java.lang.String v) {
+         _hasClientId = true;
+         clientId = v;
+         return this;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof CloseEditorImpl)) {
+            return false;
+         }
+         CloseEditorImpl other = (CloseEditorImpl) o;
+         if (this._hasFileEditSessionKey != other._hasFileEditSessionKey) {
+            return false;
+         }
+         if (this._hasFileEditSessionKey) {
+            if (!this.fileEditSessionKey.equals(other.fileEditSessionKey)) {
+               return false;
+            }
+         }
+         if (this._hasClientId != other._hasClientId) {
+            return false;
+         }
+         if (this._hasClientId) {
+            if (!this.clientId.equals(other.clientId)) {
+               return false;
+            }
+         }
+         return true;
+      }
+
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         hash = hash * 31 + (_hasFileEditSessionKey ? fileEditSessionKey.hashCode() : 0);
+         hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
+         return hash;
+      }
+
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
+
+         JsonElement fileEditSessionKeyOut = (fileEditSessionKey == null) ? JsonNull.INSTANCE : new JsonPrimitive(fileEditSessionKey);
+         result.add("fileEditSessionKey", fileEditSessionKeyOut);
+
+         JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+         result.add("clientId", clientIdOut);
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static CloseEditorImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         CloseEditorImpl dto = new CloseEditorImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         if (json.has("fileEditSessionKey")) {
+            JsonElement fileEditSessionKeyIn = json.get("fileEditSessionKey");
+            java.lang.String fileEditSessionKeyOut = gson.fromJson(fileEditSessionKeyIn, java.lang.String.class);
+            dto.setFileEditSessionKey(fileEditSessionKeyOut);
+         }
+
+         if (json.has("clientId")) {
+            JsonElement clientIdIn = json.get("clientId");
+            java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+            dto.setClientId(clientIdOut);
+         }
+
+         return dto;
+      }
+      public static CloseEditorImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
+
+   public static class MockCloseEditorImpl extends CloseEditorImpl {
+      protected MockCloseEditorImpl() {}
+
+      public static CloseEditorImpl make() {
+         return new CloseEditorImpl();
+      }
+
+   }
+
   public static class CodeBlockImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeBlock, JsonSerializable {
 
     private CodeBlockImpl() {

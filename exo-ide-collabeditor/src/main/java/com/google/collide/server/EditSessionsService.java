@@ -19,6 +19,7 @@
 package com.google.collide.server;
 
 import com.google.collide.dto.server.DtoServerImpls.ClientToServerDocOpImpl;
+import com.google.collide.dto.server.DtoServerImpls.CloseEditorImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetEditSessionParticipantsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetEditSessionParticipantsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsImpl;
@@ -52,6 +53,14 @@ public class EditSessionsService
    }
 
    @POST
+   @Path("close")
+   @Consumes(MediaType.APPLICATION_JSON)
+   public void closeSession(String message)
+   {
+      editSessions.closeSession(CloseEditorImpl.fromJsonString(message));
+   }
+
+   @POST
    @Path("recoverMissedDocop")
    @Consumes(MediaType.APPLICATION_JSON)
    @Produces(MediaType.APPLICATION_JSON)
@@ -63,6 +72,8 @@ public class EditSessionsService
 
    @POST
    @Path("mutate")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public String mutate(String message)
    {
       return ((ServerToClientDocOpsImpl)editSessions.mutate(ClientToServerDocOpImpl.fromJsonString(message))).toJson();
@@ -70,6 +81,8 @@ public class EditSessionsService
 
    @POST
    @Path("collaborators")
+   @Consumes(MediaType.APPLICATION_JSON)
+   @Produces(MediaType.APPLICATION_JSON)
    public String getEditSessionCollaborators(String message)
    {
       return ((GetEditSessionParticipantsResponseImpl)editSessions.getEditSessionCollaborators(

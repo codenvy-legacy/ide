@@ -150,4 +150,5 @@ public class RoutingTypes {
   public static final int GETEDITSESSIONPARTICIPANTS = 123;
   public static final int GETEDITSESSIONPARTICIPANTSRESPONSE = 124;
   public static final int SERVERTOCLIENTNEWPARTICIPANT = 125;
+  public static final int CLOSEEDITOR = 126;
 }

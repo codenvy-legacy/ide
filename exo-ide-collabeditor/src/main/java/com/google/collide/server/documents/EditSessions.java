@@ -15,6 +15,7 @@
 package com.google.collide.server.documents;
 
 import com.google.collide.dto.ClientToServerDocOp;
+import com.google.collide.dto.CloseEditor;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileContents;
@@ -127,6 +128,17 @@ public class EditSessions
          .setContents(editSession.getContents())
          .setContentType(FileContents.ContentType.TEXT);
       return GetFileContentsResponseImpl.make().setFileExists(true).setFileContents(fileContents);
+   }
+
+   public void closeSession(CloseEditor closeMessage)
+   {
+      FileEditSession editSession = editSessions.get(closeMessage.getFileEditSessionKey());
+      if (editSession != null)
+      {
+         editSession.removeCollaborator(closeMessage.getClientId());
+         // TODO : logger debug
+         System.out.printf("Close edit session %s, user %s\n", closeMessage.getFileEditSessionKey(), closeMessage.getClientId());
+      }
    }
 
    private String loadFileContext(VirtualFileSystem vfs, String resourceId)

@@ -427,6 +427,42 @@ public class DtoClientImpls {
       };
     }-*/;  }
 
+   public static class CloseEditorImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CloseEditor {
+      protected CloseEditorImpl() {}
+
+      @Override
+      public final native java.lang.String getFileEditSessionKey() /*-{
+      return this["fileEditSessionKey"];
+    }-*/;
+
+      public final native CloseEditorImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
+      this["fileEditSessionKey"] = fileEditSessionKey;
+      return this;
+    }-*/;
+
+      public final native boolean hasFileEditSessionKey() /*-{
+      return this.hasOwnProperty("fileEditSessionKey");
+    }-*/;
+
+      @Override
+      public final native java.lang.String getClientId() /*-{
+      return this["clientId"];
+    }-*/;
+
+      public final native CloseEditorImpl setClientId(java.lang.String clientId) /*-{
+      this["clientId"] = clientId;
+      return this;
+    }-*/;
+
+      public final native boolean hasClientId() /*-{
+      return this.hasOwnProperty("clientId");
+    }-*/;
+
+      public static native CloseEditorImpl make() /*-{
+      return {
+        _type: 126
+      };
+    }-*/;  }
 
   public static class CodeBlockImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeBlock {
     protected CodeBlockImpl() {}
