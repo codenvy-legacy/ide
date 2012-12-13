@@ -15,6 +15,7 @@
 package com.google.collide.client.document;
 
 import com.google.collide.client.AppContext;
+import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.communication.FrontendApi.ApiCallback;
 import com.google.collide.client.document.DocumentManager.GetDocumentCallback;
 import com.google.collide.client.status.StatusMessage;
@@ -90,6 +91,7 @@ class DocumentManagerNetworkController {
     // Fetch the file's contents
     GetFileContentsImpl getFileContents = GetFileContentsImpl.make().setPath(path.getPathString());
      getFileContents.setWorkspaceId(path.getWorkspaceId());
+     getFileContents.setClientId(BootstrapSession.getBootstrapSession().getActiveClientId());
     appContext.getFrontendApi().GET_FILE_CONTENTS.send(getFileContents, 
         new ApiCallback<GetFileContentsResponse>() {
 
