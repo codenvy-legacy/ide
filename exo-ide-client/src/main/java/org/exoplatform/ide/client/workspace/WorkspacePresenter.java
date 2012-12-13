@@ -70,7 +70,6 @@ import org.exoplatform.ide.ui.list.SimpleList;
 import org.exoplatform.ide.ui.list.SimpleList.View;
 import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.loging.Log;
-import org.exoplatform.ide.wizard.WizardAgentImpl;
 
 import java.util.Date;
 
@@ -119,8 +118,7 @@ public class WorkspacePresenter implements Presenter
                                 final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
                                 ExtensionsPage extensionsPage, ImageBundle imageBundle,
                                 OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
-                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression,
-                                WizardAgentImpl newProjectWizardAgent)
+                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
    {
       super();
       this.display = display;

@@ -43,7 +43,7 @@ public class WizardAgentImpl implements WizardAgent
    private final JsonArray<NewResourceWizardData> newResourceWizardDatas;
 
    /**
-    * Create NewProjectWizardAgent
+    * Create WizardAgent
     */
    @Inject
    public WizardAgentImpl()
