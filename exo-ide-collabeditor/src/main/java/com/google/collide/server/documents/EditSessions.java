@@ -47,16 +47,23 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class EditSessions
 {
@@ -65,6 +72,7 @@ public class EditSessions
 
    private final Participants participants;
    private final VirtualFileSystemRegistry vfsRegistry;
+   private final ScheduledExecutorService saveScheduler = Executors.newSingleThreadScheduledExecutor();
 
    /**
     * Receives Document operations and applies them to the corresponding FileEditSession.
@@ -78,6 +86,46 @@ public class EditSessions
    {
       this.participants = participants;
       this.vfsRegistry = vfsRegistry;
+      saveScheduler.scheduleAtFixedRate(new SaveTask(), 2500, 2500, TimeUnit.MILLISECONDS);
+   }
+
+   private class SaveTask implements Runnable
+   {
+      // Use system credentials to save file content.
+      final ConversationState state = new ConversationState(new Identity(IdentityConstants.SYSTEM));
+
+      @Override
+      public void run()
+      {
+         try
+         {
+            ConversationState.setCurrent(state);
+            for (FileEditSession editSession : editSessions.values())
+            {
+               try
+               {
+                  editSession.save();
+               }
+               catch (Exception e)
+               {
+                  System.out.printf("Failed to save file [%s] : %s\n", editSession.getSavedPath(), e);
+               }
+            }
+         }
+         finally
+         {
+            ConversationState.setCurrent(null);
+         }
+         // After save content may remove FileEditSession without collaborators.
+         for (Iterator<FileEditSession> iterator = editSessions.values().iterator(); iterator.hasNext(); )
+         {
+            FileEditSession editSession = iterator.next();
+            if (editSession.getCollaborators().isEmpty())
+            {
+               iterator.remove();
+            }
+         }
+      }
    }
 
    public GetFileContentsResponse openSession(GetFileContents contentsRequest)
@@ -99,7 +147,8 @@ public class EditSessions
          if (editSession == null)
          {
             String text = loadFileContext(vfs, resourceId);
-            FileEditSession newEditSession = new FileEditSessionImpl(resourceId, path, text, null);
+            FileEditSession newEditSession =
+               new FileEditSessionImpl(vfs, resourceId, path, file.getMimeType(), text, null);
             editSession = editSessions.putIfAbsent(resourceId, newEditSession);
             if (editSession == null)
             {
@@ -132,7 +181,8 @@ public class EditSessions
 
    public void closeSession(CloseEditor closeMessage)
    {
-      FileEditSession editSession = editSessions.get(closeMessage.getFileEditSessionKey());
+      final String editSessionId = closeMessage.getFileEditSessionKey();
+      FileEditSession editSession = editSessions.get(editSessionId);
       if (editSession != null)
       {
          editSession.removeCollaborator(closeMessage.getClientId());

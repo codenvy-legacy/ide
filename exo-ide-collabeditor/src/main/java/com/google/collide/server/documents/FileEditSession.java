@@ -103,7 +103,7 @@ public interface FileEditSession extends ImmutableFileEditSession
     *
     * @throws java.io.IOException
     */
-   void save(String currentPath) throws IOException;
+   void save() throws IOException;
 
    /** @return the text and any conflict chunks, along with a revision */
    VersionedTextAndConflictChunks getContentsAndConflictChunks();

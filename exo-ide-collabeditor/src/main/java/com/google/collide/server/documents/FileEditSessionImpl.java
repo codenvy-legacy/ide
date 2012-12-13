@@ -31,6 +31,10 @@ import com.google.common.collect.Lists;
 import com.google.common.hash.Hashing;
 import com.google.protobuf.ByteString;
 
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Collections;
@@ -39,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.annotation.Nullable;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Default implementation of {@link FileEditSession}.
@@ -168,10 +173,13 @@ final class FileEditSessionImpl implements FileEditSession
    /** The ID of the resource this edit session is opened for. */
    private final String resourceId;
 
-   protected String lastSavedPath;
+   private final String path;
+
+   private final MediaType mediaType;
 
    private final Set<String> editSessionParticipants = new CopyOnWriteArraySet<String>();
    private final Set<String> editSessionParticipantsReadOnly = Collections.unmodifiableSet(editSessionParticipants);
+   private final VirtualFileSystem vfs;
 
    /**
     * Constructs a {@link com.google.collide.server.documents.FileEditSessionImpl} for a file.
@@ -183,11 +191,18 @@ final class FileEditSessionImpl implements FileEditSession
     * @param mergeResult
     *    if non-null the merge info related to the out of date
     */
-   FileEditSessionImpl(String resourceId, String path, String initialContents, @Nullable MergeResult mergeResult)
+   FileEditSessionImpl(VirtualFileSystem vfs,
+                       String resourceId,
+                       String path,
+                       String mediaType,
+                       String initialContents,
+                       @Nullable MergeResult mergeResult)
    {
+      this.vfs = vfs;
       this.resourceId = resourceId;
+      this.mediaType = MediaType.valueOf(mediaType);
       this.contents = new VersionedDocument(initialContents);
-      this.lastSavedPath = path;
+      this.path = path;
 
       if (mergeResult != null)
       {
@@ -355,7 +370,7 @@ final class FileEditSessionImpl implements FileEditSession
 
 
    @Override
-   public void save(String currentPath) throws IOException
+   public void save() throws IOException
    {
       checkNotClosed();
 
@@ -367,7 +382,7 @@ final class FileEditSessionImpl implements FileEditSession
       if (hasUnresolvedConflictChunks(conflictChunks))
       {
          // TODO: There are conflict chunks in this file that need resolving.
-         saveConflictChunks(currentPath, text, conflictChunks);
+         saveConflictChunks(text, conflictChunks);
       }
       else
       {
@@ -380,20 +395,25 @@ final class FileEditSessionImpl implements FileEditSession
          conflictChunks.clear();
       }
 
-      saveChanges(currentPath, text);
+      saveChanges(text);
 
       lastSavedCcRevision = snapshot.getVersionedText().ccRevision;
-      lastSavedPath = currentPath;
-      //System.out.println(String.format("Saved file [%s]", this));
    }
 
-   private void saveChanges(String path, String text) throws IOException
+   private void saveChanges(String text) throws IOException
    {
       System.out.println(String.format("Saving file [%s]", path));
-      // TODO : implement
+      try
+      {
+         vfs.updateContent(resourceId, mediaType, new ByteArrayInputStream(text.getBytes()), null);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new IOException(e.getMessage(), e);
+      }
    }
 
-   private void saveConflictChunks(String path, String text, List<AnchoredConflictChunk> conflictChunks)
+   private void saveConflictChunks(String text, List<AnchoredConflictChunk> conflictChunks)
    {
       // TODO: Write the conflict chunks to some out of band location.
    }
@@ -435,7 +455,7 @@ final class FileEditSessionImpl implements FileEditSession
      * TODO: how to store chunk resolution?
      */
       // TODO: Resolve path prior to calling save.
-      save(getSavedPath());
+      save();
       return true;
    }
 
@@ -466,7 +486,7 @@ final class FileEditSessionImpl implements FileEditSession
    @Override
    public String getSavedPath()
    {
-      return lastSavedPath;
+      return path;
    }
 
    @Override
