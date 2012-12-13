@@ -51,19 +51,35 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    private static final int HEARTBEAT_PERIOD = 50 * 1000;
 
    /**
-    * Period (in milliseconds) to reconnect after connection is closed.
+    * Period (in milliseconds) between reconnection attempts after connection has been closed.
     */
-   private final static int RECONNECTION_PERIOD = 5000;
+   private final static int FREQUENTLY_RECONNECTION_PERIOD = 1 * 1000;
 
    /**
-    * Max. number of attempts to reconnect.
+    * Period (in milliseconds) between reconnection attempts after all previous
+    * <code>MAX_FREQUENTLY_RECONNECTION_ATTEMPTS</code> attempts is failed.
     */
-   private final static int MAX_RECONNECTION_ATTEMPTS = 5;
+   private final static int SELDOM_RECONNECTION_PERIOD = 60 * 1000;
 
    /**
-    * Counter of reconnection attempts.
+    * Max. number of attempts to reconnect for every <code>FREQUENTLY_RECONNECTION_PERIOD</code> ms.
     */
-   private static int reconnectionAttemptsCounter;
+   private final static int MAX_FREQUENTLY_RECONNECTION_ATTEMPTS = 5;
+
+   /**
+    * Max. number of attempts to reconnect for every <code>SELDOM_RECONNECTION_PERIOD</code> ms.
+    */
+   private final static int MAX_SELDOM_RECONNECTION_ATTEMPTS = 5;
+
+   /**
+    * Counter of attempts to reconnect.
+    */
+   private static int frequentlyReconnectionAttemptsCounter;
+
+   /**
+    * Counter of attempts to reconnect.
+    */
+   private static int seldomReconnectionAttemptsCounter;
 
    public WebSocketHandler()
    {
@@ -88,11 +104,14 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
          @Override
          public void onOpen()
          {
-            if (reconnectionAttemptsCounter > 0)
-            {
-               reconnectionTimer.cancel();
-            }
-            reconnectionAttemptsCounter = 0;
+            // If the any timer has been started then stop it.
+            if (frequentlyReconnectionAttemptsCounter > 0)
+               frequentlyReconnectionTimer.cancel();
+            if (seldomReconnectionAttemptsCounter > 0)
+               seldomReconnectionTimer.cancel();
+
+            frequentlyReconnectionAttemptsCounter = 0;
+            seldomReconnectionAttemptsCounter = 0;
             heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
          }
       });
@@ -103,7 +122,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
          public void onClose(WebSocketClosedEvent event)
          {
             heartbeatTimer.cancel();
-            reconnectionTimer.scheduleRepeating(RECONNECTION_PERIOD);
+            frequentlyReconnectionTimer.scheduleRepeating(FREQUENTLY_RECONNECTION_PERIOD);
          }
       });
 
@@ -166,17 +185,38 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    /**
     * Timer for reconnecting WebSocket.
     */
-   private Timer reconnectionTimer = new Timer()
+   private Timer frequentlyReconnectionTimer = new Timer()
    {
       @Override
       public void run()
       {
-         if (reconnectionAttemptsCounter >= MAX_RECONNECTION_ATTEMPTS)
+         if (frequentlyReconnectionAttemptsCounter == MAX_FREQUENTLY_RECONNECTION_ATTEMPTS)
+         {
+            cancel();
+            seldomReconnectionTimer.scheduleRepeating(SELDOM_RECONNECTION_PERIOD);
+            return;
+         }
+         frequentlyReconnectionAttemptsCounter++;
+         IDE.messageBus().initialize();
+         initialize();
+      }
+   };
+
+
+   /**
+    * Timer for reconnecting WebSocket.
+    */
+   private Timer seldomReconnectionTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         if (seldomReconnectionAttemptsCounter == MAX_SELDOM_RECONNECTION_ATTEMPTS)
          {
             cancel();
             return;
          }
-         reconnectionAttemptsCounter++;
+         seldomReconnectionAttemptsCounter++;
          IDE.messageBus().initialize();
          initialize();
       }
