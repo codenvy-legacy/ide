@@ -484,7 +484,7 @@ final class FileEditSessionImpl implements FileEditSession
    }
 
    @Override
-   public String getSavedPath()
+   public String getPath()
    {
       return path;
    }

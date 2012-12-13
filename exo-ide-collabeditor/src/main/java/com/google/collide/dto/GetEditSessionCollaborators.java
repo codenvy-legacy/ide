@@ -18,12 +18,11 @@
  */
 package com.google.collide.dto;
 
+import com.google.collide.dtogen.shared.ClientToServerDto;
 import com.google.collide.dtogen.shared.RoutingType;
-import com.google.collide.dtogen.shared.ServerToClientDto;
-import com.google.collide.json.shared.JsonArray;
 
-@RoutingType(type = RoutingTypes.GETEDITSESSIONPARTICIPANTSRESPONSE)
-public interface GetEditSessionParticipantsResponse extends ServerToClientDto
+@RoutingType(type = RoutingTypes.GETEDITSESSIONPARTICIPANTS)
+public interface GetEditSessionCollaborators extends ClientToServerDto
 {
-   JsonArray<ParticipantUserDetails> getParticipants();
+   String getEditSessionId();
 }

@@ -31,7 +31,7 @@ public interface ImmutableFileEditSession
    boolean hasChanges();
 
    /** @return last known saved full path of the file */
-   String getSavedPath();
+   String getPath();
 
    boolean hasUnresolvedConflictChunks();
 }

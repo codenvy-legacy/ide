@@ -2,7 +2,6 @@
 package com.google.collide.dto.client;
 
 
-
 @SuppressWarnings({"unchecked", "cast"})
 public class DtoClientImpls {
 
@@ -3018,45 +3017,40 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetEditSessionParticipantsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionParticipants {
-    protected GetEditSessionParticipantsImpl() {}
+   public static class GetEditSessionCollaboratorsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionCollaborators {
+      protected GetEditSessionCollaboratorsImpl() {}
 
-    @Override
-    public final native java.lang.String getEditSessionId() /*-{
+      @Override
+      public final native java.lang.String getEditSessionId() /*-{
       return this["editSessionId"];
     }-*/;
 
-    public final native GetEditSessionParticipantsImpl setEditSessionId(java.lang.String editSessionId) /*-{
+      public final native GetEditSessionCollaboratorsImpl setEditSessionId(java.lang.String editSessionId) /*-{
       this["editSessionId"] = editSessionId;
       return this;
     }-*/;
 
-    public final native boolean hasEditSessionId() /*-{
+      public final native boolean hasEditSessionId() /*-{
       return this.hasOwnProperty("editSessionId");
     }-*/;
 
-  }
-
-
-  public static class MockGetEditSessionParticipantsImpl extends GetEditSessionParticipantsImpl {
-    protected MockGetEditSessionParticipantsImpl() {}
-
-    public static native GetEditSessionParticipantsImpl make() /*-{
+      public static native GetEditSessionCollaboratorsImpl make() /*-{
       return {
         _type: 123
       };
     }-*/;  }
 
 
-  public static class GetEditSessionParticipantsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionParticipantsResponse {
-    protected GetEditSessionParticipantsResponseImpl() {}
+  public static class GetEditSessionCollaboratorsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionCollaboratorsResponse
+  {
+    protected GetEditSessionCollaboratorsResponseImpl() {}
 
     @Override
     public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
       return this["participants"];
     }-*/;
 
-    public final native GetEditSessionParticipantsResponseImpl setParticipants(com.google.collide.json.client.JsoArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+    public final native GetEditSessionCollaboratorsResponseImpl setParticipants(com.google.collide.json.client.JsoArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
       this["participants"] = participants;
       return this;
     }-*/;
@@ -3068,10 +3062,11 @@ public class DtoClientImpls {
   }
 
 
-  public static class MockGetEditSessionParticipantsResponseImpl extends GetEditSessionParticipantsResponseImpl {
-    protected MockGetEditSessionParticipantsResponseImpl() {}
+  public static class MockGetEditSessionCollaboratorsResponseImpl extends GetEditSessionCollaboratorsResponseImpl
+  {
+    protected MockGetEditSessionCollaboratorsResponseImpl() {}
 
-    public static native GetEditSessionParticipantsResponseImpl make() /*-{
+    public static native GetEditSessionCollaboratorsResponseImpl make() /*-{
       return {
         _type: 124
       };
@@ -6818,15 +6813,17 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ServerToClientNewParticipantsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ServerToClientNewParticipants {
-    protected ServerToClientNewParticipantsImpl() {}
+  public static class NewFileCollaboratorImpl
+     extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.NewFileCollaborator
+  {
+    protected NewFileCollaboratorImpl() {}
 
     @Override
     public final native java.lang.String getPath() /*-{
       return this["path"];
     }-*/;
 
-    public final native ServerToClientNewParticipantsImpl setPath(java.lang.String path) /*-{
+    public final native NewFileCollaboratorImpl setPath(java.lang.String path) /*-{
       this["path"] = path;
       return this;
     }-*/;
@@ -6840,7 +6837,7 @@ public class DtoClientImpls {
       return this["participant"];
     }-*/;
 
-    public final native ServerToClientNewParticipantsImpl setParticipant(com.google.collide.dto.ParticipantUserDetails participant) /*-{
+    public final native NewFileCollaboratorImpl setParticipant(com.google.collide.dto.ParticipantUserDetails participant) /*-{
       this["participant"] = participant;
       return this;
     }-*/;
@@ -6852,10 +6849,11 @@ public class DtoClientImpls {
   }
 
 
-  public static class MockServerToClientNewParticipantsImpl extends ServerToClientNewParticipantsImpl {
-    protected MockServerToClientNewParticipantsImpl() {}
+  public static class MockNewFileCollaboratorImpl extends NewFileCollaboratorImpl
+  {
+    protected MockNewFileCollaboratorImpl() {}
 
-    public static native ServerToClientNewParticipantsImpl make() /*-{
+    public static native NewFileCollaboratorImpl make() /*-{
       return {
         _type: 125
       };

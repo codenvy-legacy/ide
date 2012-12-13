@@ -12,7 +12,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -10618,131 +10617,127 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetEditSessionParticipantsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionParticipants, JsonSerializable {
+   public static class GetEditSessionCollaboratorsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionCollaborators, JsonSerializable {
 
-    private GetEditSessionParticipantsImpl() {
-      super(123);
-    }
-
-    protected GetEditSessionParticipantsImpl(int type) {
-      super(type);
-    }
-
-    public static GetEditSessionParticipantsImpl make() {
-      return new GetEditSessionParticipantsImpl();
-    }
-
-    protected java.lang.String editSessionId;
-    private boolean _hasEditSessionId;
-
-    public boolean hasEditSessionId() {
-      return _hasEditSessionId;
-    }
-
-    @Override
-    public java.lang.String getEditSessionId() {
-      return editSessionId;
-    }
-
-    public GetEditSessionParticipantsImpl setEditSessionId(java.lang.String v) {
-      _hasEditSessionId = true;
-      editSessionId = v;
-      return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-      if (!super.equals(o)) {
-        return false;
-      }
-      if (!(o instanceof GetEditSessionParticipantsImpl)) {
-        return false;
-      }
-      GetEditSessionParticipantsImpl other = (GetEditSessionParticipantsImpl) o;
-      if (this._hasEditSessionId != other._hasEditSessionId) {
-        return false;
-      }
-      if (this._hasEditSessionId) {
-        if (!this.editSessionId.equals(other.editSessionId)) {
-          return false;
-        }
-      }
-      return true;
-    }
-
-    @Override
-    public int hashCode() {
-      int hash = super.hashCode();
-      hash = hash * 31 + (_hasEditSessionId ? editSessionId.hashCode() : 0);
-      return hash;
-    }
-
-    @Override
-    public JsonElement toJsonElement() {
-      JsonObject result = new JsonObject();
-
-      JsonElement editSessionIdOut = (editSessionId == null) ? JsonNull.INSTANCE : new JsonPrimitive(editSessionId);
-      result.add("editSessionId", editSessionIdOut);
-      result.add("_type", new JsonPrimitive(getType()));
-      return result;
-    }
-
-    @Override
-    public String toJson() {
-      return gson.toJson(toJsonElement());
-    }
-
-    @Override
-    public String toString() {
-      return toJson();
-    }
-
-    public static GetEditSessionParticipantsImpl fromJsonElement(JsonElement jsonElem) {
-      if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
+      private GetEditSessionCollaboratorsImpl() {
+         super(123);
       }
 
-      GetEditSessionParticipantsImpl dto = new GetEditSessionParticipantsImpl();
-      JsonObject json = jsonElem.getAsJsonObject();
-
-      if (json.has("editSessionId")) {
-        JsonElement editSessionIdIn = json.get("editSessionId");
-        java.lang.String editSessionIdOut = gson.fromJson(editSessionIdIn, java.lang.String.class);
-        dto.setEditSessionId(editSessionIdOut);
+      protected GetEditSessionCollaboratorsImpl(int type) {
+         super(type);
       }
 
-      return dto;
-    }
-    public static GetEditSessionParticipantsImpl fromJsonString(String jsonString) {
-      if (jsonString == null) {
-        return null;
+      protected java.lang.String editSessionId;
+      private boolean _hasEditSessionId;
+
+      public boolean hasEditSessionId() {
+         return _hasEditSessionId;
       }
 
-      return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
+      @Override
+      public java.lang.String getEditSessionId() {
+         return editSessionId;
+      }
 
-  public static class MockGetEditSessionParticipantsImpl extends GetEditSessionParticipantsImpl {
-    protected MockGetEditSessionParticipantsImpl() {}
+      public GetEditSessionCollaboratorsImpl setEditSessionId(java.lang.String v) {
+         _hasEditSessionId = true;
+         editSessionId = v;
+         return this;
+      }
 
-    public static GetEditSessionParticipantsImpl make() {
-      return new GetEditSessionParticipantsImpl();
-    }
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof GetEditSessionCollaboratorsImpl)) {
+            return false;
+         }
+         GetEditSessionCollaboratorsImpl other = (GetEditSessionCollaboratorsImpl) o;
+         if (this._hasEditSessionId != other._hasEditSessionId) {
+            return false;
+         }
+         if (this._hasEditSessionId) {
+            if (!this.editSessionId.equals(other.editSessionId)) {
+               return false;
+            }
+         }
+         return true;
+      }
 
-  }
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         hash = hash * 31 + (_hasEditSessionId ? editSessionId.hashCode() : 0);
+         return hash;
+      }
 
-  public static class GetEditSessionParticipantsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionParticipantsResponse, JsonSerializable {
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
 
-    private GetEditSessionParticipantsResponseImpl() {
+         JsonElement editSessionIdOut = (editSessionId == null) ? JsonNull.INSTANCE : new JsonPrimitive(editSessionId);
+         result.add("editSessionId", editSessionIdOut);
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static GetEditSessionCollaboratorsImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         GetEditSessionCollaboratorsImpl dto = new GetEditSessionCollaboratorsImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         if (json.has("editSessionId")) {
+            JsonElement editSessionIdIn = json.get("editSessionId");
+            java.lang.String editSessionIdOut = gson.fromJson(editSessionIdIn, java.lang.String.class);
+            dto.setEditSessionId(editSessionIdOut);
+         }
+
+         return dto;
+      }
+      public static GetEditSessionCollaboratorsImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
+
+   public static class MockGetEditSessionCollaboratorsImpl extends GetEditSessionCollaboratorsImpl {
+      protected MockGetEditSessionCollaboratorsImpl() {}
+
+      public static GetEditSessionCollaboratorsImpl make() {
+         return new GetEditSessionCollaboratorsImpl();
+      }
+
+   }
+
+  public static class GetEditSessionCollaboratorsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionCollaboratorsResponse, JsonSerializable {
+
+    private GetEditSessionCollaboratorsResponseImpl() {
       super(124);
     }
 
-    protected GetEditSessionParticipantsResponseImpl(int type) {
+    protected GetEditSessionCollaboratorsResponseImpl(int type) {
       super(type);
     }
 
-    public static GetEditSessionParticipantsResponseImpl make() {
-      return new GetEditSessionParticipantsResponseImpl();
+    public static GetEditSessionCollaboratorsResponseImpl make() {
+      return new GetEditSessionCollaboratorsResponseImpl();
     }
 
     protected java.util.List<ParticipantUserDetailsImpl> participants;
@@ -10758,7 +10753,7 @@ public class DtoServerImpls {
       return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(participants);
     }
 
-    public GetEditSessionParticipantsResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
+    public GetEditSessionCollaboratorsResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
       _hasParticipants = true;
       participants = v;
       return this;
@@ -10785,10 +10780,10 @@ public class DtoServerImpls {
       if (!super.equals(o)) {
         return false;
       }
-      if (!(o instanceof GetEditSessionParticipantsResponseImpl)) {
+      if (!(o instanceof GetEditSessionCollaboratorsResponseImpl)) {
         return false;
       }
-      GetEditSessionParticipantsResponseImpl other = (GetEditSessionParticipantsResponseImpl) o;
+      GetEditSessionCollaboratorsResponseImpl other = (GetEditSessionCollaboratorsResponseImpl) o;
       if (this._hasParticipants != other._hasParticipants) {
         return false;
       }
@@ -10832,12 +10827,12 @@ public class DtoServerImpls {
       return toJson();
     }
 
-    public static GetEditSessionParticipantsResponseImpl fromJsonElement(JsonElement jsonElem) {
+    public static GetEditSessionCollaboratorsResponseImpl fromJsonElement(JsonElement jsonElem) {
       if (jsonElem == null || jsonElem.isJsonNull()) {
         return null;
       }
 
-      GetEditSessionParticipantsResponseImpl dto = new GetEditSessionParticipantsResponseImpl();
+      GetEditSessionCollaboratorsResponseImpl dto = new GetEditSessionCollaboratorsResponseImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
       if (json.has("participants")) {
@@ -10857,7 +10852,7 @@ public class DtoServerImpls {
 
       return dto;
     }
-    public static GetEditSessionParticipantsResponseImpl fromJsonString(String jsonString) {
+    public static GetEditSessionCollaboratorsResponseImpl fromJsonString(String jsonString) {
       if (jsonString == null) {
         return null;
       }
@@ -10866,11 +10861,12 @@ public class DtoServerImpls {
     }
   }
 
-  public static class MockGetEditSessionParticipantsResponseImpl extends GetEditSessionParticipantsResponseImpl {
-    protected MockGetEditSessionParticipantsResponseImpl() {}
+  public static class MockGetEditSessionCollaboratorsResponseImpl extends GetEditSessionCollaboratorsResponseImpl
+  {
+    protected MockGetEditSessionCollaboratorsResponseImpl() {}
 
-    public static GetEditSessionParticipantsResponseImpl make() {
-      return new GetEditSessionParticipantsResponseImpl();
+    public static GetEditSessionCollaboratorsResponseImpl make() {
+      return new GetEditSessionCollaboratorsResponseImpl();
     }
 
   }
@@ -24279,18 +24275,19 @@ public class DtoServerImpls {
 
   }
 
-  public static class ServerToClientNewParticipantsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ServerToClientNewParticipants, JsonSerializable {
+  public static class NewFileCollaboratorImpl
+     extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.NewFileCollaborator, JsonSerializable {
 
-    private ServerToClientNewParticipantsImpl() {
+    private NewFileCollaboratorImpl() {
       super(125);
     }
 
-    protected ServerToClientNewParticipantsImpl(int type) {
+    protected NewFileCollaboratorImpl(int type) {
       super(type);
     }
 
-    public static ServerToClientNewParticipantsImpl make() {
-      return new ServerToClientNewParticipantsImpl();
+    public static NewFileCollaboratorImpl make() {
+      return new NewFileCollaboratorImpl();
     }
 
     protected java.lang.String path;
@@ -24307,7 +24304,7 @@ public class DtoServerImpls {
       return path;
     }
 
-    public ServerToClientNewParticipantsImpl setPath(java.lang.String v) {
+    public NewFileCollaboratorImpl setPath(java.lang.String v) {
       _hasPath = true;
       path = v;
       return this;
@@ -24322,7 +24319,7 @@ public class DtoServerImpls {
       return participant;
     }
 
-    public ServerToClientNewParticipantsImpl setParticipant(ParticipantUserDetailsImpl v) {
+    public NewFileCollaboratorImpl setParticipant(ParticipantUserDetailsImpl v) {
       _hasParticipant = true;
       participant = v;
       return this;
@@ -24333,10 +24330,10 @@ public class DtoServerImpls {
       if (!super.equals(o)) {
         return false;
       }
-      if (!(o instanceof ServerToClientNewParticipantsImpl)) {
+      if (!(o instanceof NewFileCollaboratorImpl)) {
         return false;
       }
-      ServerToClientNewParticipantsImpl other = (ServerToClientNewParticipantsImpl) o;
+      NewFileCollaboratorImpl other = (NewFileCollaboratorImpl) o;
       if (this._hasPath != other._hasPath) {
         return false;
       }
@@ -24387,12 +24384,12 @@ public class DtoServerImpls {
       return toJson();
     }
 
-    public static ServerToClientNewParticipantsImpl fromJsonElement(JsonElement jsonElem) {
+    public static NewFileCollaboratorImpl fromJsonElement(JsonElement jsonElem) {
       if (jsonElem == null || jsonElem.isJsonNull()) {
         return null;
       }
 
-      ServerToClientNewParticipantsImpl dto = new ServerToClientNewParticipantsImpl();
+      NewFileCollaboratorImpl dto = new NewFileCollaboratorImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
       if (json.has("path")) {
@@ -24409,7 +24406,7 @@ public class DtoServerImpls {
 
       return dto;
     }
-    public static ServerToClientNewParticipantsImpl fromJsonString(String jsonString) {
+    public static NewFileCollaboratorImpl fromJsonString(String jsonString) {
       if (jsonString == null) {
         return null;
       }
@@ -24418,11 +24415,12 @@ public class DtoServerImpls {
     }
   }
 
-  public static class MockServerToClientNewParticipantsImpl extends ServerToClientNewParticipantsImpl {
-    protected MockServerToClientNewParticipantsImpl() {}
+  public static class MockNewFileCollaboratorImpl extends NewFileCollaboratorImpl
+  {
+    protected MockNewFileCollaboratorImpl() {}
 
-    public static ServerToClientNewParticipantsImpl make() {
-      return new ServerToClientNewParticipantsImpl();
+    public static NewFileCollaboratorImpl make() {
+      return new NewFileCollaboratorImpl();
     }
 
   }

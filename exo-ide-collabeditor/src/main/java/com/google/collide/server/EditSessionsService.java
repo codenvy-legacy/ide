@@ -18,10 +18,10 @@
  */
 package com.google.collide.server;
 
+import com.google.collide.dto.server.DtoServerImpls;
 import com.google.collide.dto.server.DtoServerImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.CloseEditorImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetEditSessionParticipantsImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetEditSessionParticipantsResponseImpl;
+import com.google.collide.dto.server.DtoServerImpls.GetEditSessionCollaboratorsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsImpl;
@@ -85,7 +85,7 @@ public class EditSessionsService
    @Produces(MediaType.APPLICATION_JSON)
    public String getEditSessionCollaborators(String message)
    {
-      return ((GetEditSessionParticipantsResponseImpl)editSessions.getEditSessionCollaborators(
-         GetEditSessionParticipantsImpl.fromJsonString(message))).toJson();
+      return ((DtoServerImpls.GetEditSessionCollaboratorsResponseImpl)editSessions.getEditSessionCollaborators(
+         GetEditSessionCollaboratorsImpl.fromJsonString(message))).toJson();
    }
 }

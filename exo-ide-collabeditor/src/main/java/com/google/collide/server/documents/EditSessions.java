@@ -19,19 +19,21 @@ import com.google.collide.dto.CloseEditor;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileContents;
-import com.google.collide.dto.GetEditSessionParticipants;
-import com.google.collide.dto.GetEditSessionParticipantsResponse;
+import com.google.collide.dto.GetEditSessionCollaborators;
+import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetFileContents;
 import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.ServerToClientDocOps;
+import com.google.collide.dto.server.DtoServerImpls;
 import com.google.collide.dto.server.DtoServerImpls.DocOpComponentImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocumentSelectionImpl;
 import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetEditSessionParticipantsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
+import com.google.collide.dto.server.DtoServerImpls.NewFileCollaboratorImpl;
+import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
@@ -50,6 +52,7 @@ import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
+import org.picocontainer.Startable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -65,7 +68,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class EditSessions
+public class EditSessions implements Startable
 {
    private static final Gson gson = new GsonBuilder().registerTypeAdapter(
       DocOpComponentImpl.class, new DocOpComponentDeserializer()).serializeNulls().create();
@@ -86,7 +89,6 @@ public class EditSessions
    {
       this.participants = participants;
       this.vfsRegistry = vfsRegistry;
-      saveScheduler.scheduleAtFixedRate(new SaveTask(), 2500, 2500, TimeUnit.MILLISECONDS);
    }
 
    private class SaveTask implements Runnable
@@ -108,7 +110,7 @@ public class EditSessions
                }
                catch (Exception e)
                {
-                  System.out.printf("Failed to save file [%s] : %s\n", editSession.getSavedPath(), e);
+                  System.out.printf("Failed to save file [%s] : %s\n", editSession.getPath(), e);
                }
             }
          }
@@ -126,6 +128,18 @@ public class EditSessions
             }
          }
       }
+   }
+
+   @Override
+   public void start()
+   {
+      saveScheduler.scheduleAtFixedRate(new SaveTask(), 2500, 2500, TimeUnit.MILLISECONDS);
+   }
+
+   @Override
+   public void stop()
+   {
+      saveScheduler.shutdownNow();
    }
 
    public GetFileContentsResponse openSession(GetFileContents contentsRequest)
@@ -169,7 +183,11 @@ public class EditSessions
          return GetFileContentsResponseImpl.make().setFileExists(false);
       }
 
-      editSession.addCollaborator(clientId);
+      if (!editSession.getCollaborators().contains(clientId))
+      {
+         editSession.addCollaborator(clientId);
+         broadcastNewCollaborator(editSession.getPath(), participants.getParticipant(clientId), editSession.getCollaborators());
+      }
       FileContentsImpl fileContents = FileContentsImpl.make()
          .setPath(path)
          .setFileEditSessionKey(resourceId)
@@ -177,6 +195,31 @@ public class EditSessions
          .setContents(editSession.getContents())
          .setContentType(FileContents.ContentType.TEXT);
       return GetFileContentsResponseImpl.make().setFileExists(true).setFileContents(fileContents);
+   }
+
+   private void broadcastNewCollaborator(String path,
+                                         ParticipantUserDetailsImpl newCollaborator,
+                                         Set<String> collaborators)
+   {
+      final String body = NewFileCollaboratorImpl.make().setPath(path).setParticipant(newCollaborator).toJson();
+      for (String collaborator : collaborators)
+      {
+         if (!collaborator.equals(newCollaborator.getUserDetails().getUserId()))
+         {
+            ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+            message.setChannel("collab_editor." + collaborator);
+            message.setBody(body);
+            try
+            {
+               WSConnectionContext.sendMessage(message);
+            }
+            catch (Exception e)
+            {
+               // TODO
+               e.printStackTrace();
+            }
+         }
+      }
    }
 
    public void closeSession(CloseEditor closeMessage)
@@ -278,7 +321,7 @@ public class EditSessions
                .setDocOp2(docOp)
                .setWorkspaceId(workspaceId)
                .setFileEditSessionKey(resourceId)
-               .setFilePath(editSession.getSavedPath());
+               .setFilePath(editSession.getPath());
             appliedDocOpsList.add(wrappedBroadcastDocOp);
          }
 
@@ -291,7 +334,7 @@ public class EditSessions
 
          // Broadcast the applied DocOp all the participants, ignoring the sender.
          broadcastedDocOps.setDocOps(appliedDocOpsList);
-         doBroadcast(authorId, broadcastedDocOps, editSession.getCollaborators());
+         broadcastFileMutation(authorId, broadcastedDocOps, editSession.getCollaborators());
          return broadcastedDocOps;
       }
       catch (VersionedDocument.DocumentOperationException e)
@@ -302,7 +345,7 @@ public class EditSessions
       return broadcastedDocOps;
    }
 
-   private void doBroadcast(String authorId, ServerToClientDocOps oprts, Set<String> collaborators)
+   private void broadcastFileMutation(String authorId, ServerToClientDocOps oprts, Set<String> collaborators)
    {
       final String body = ((ServerToClientDocOpsImpl)oprts).toJson();
       for (String collaborator : collaborators)
@@ -366,7 +409,7 @@ public class EditSessions
          ServerToClientDocOpImpl wrappedBroadcastDocOp = ServerToClientDocOpImpl.make()
             .setClientId(missedDocOpsRequest.getClientId()).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp)
             .setFileEditSessionKey(resourceId)
-            .setFilePath(editSession.getSavedPath());
+            .setFilePath(editSession.getPath());
          appliedDocOpsList.add(wrappedBroadcastDocOp);
       }
 
@@ -375,11 +418,11 @@ public class EditSessions
          .setWorkspaceId(missedDocOpsRequest.getWorkspaceId());
    }
 
-   public GetEditSessionParticipantsResponse getEditSessionCollaborators(
-      GetEditSessionParticipants sessionParticipantsRequest)
+   public GetEditSessionCollaboratorsResponse getEditSessionCollaborators(
+      GetEditSessionCollaborators sessionParticipantsRequest)
    {
       FileEditSession editSession = editSessions.get(sessionParticipantsRequest.getEditSessionId());
-      return GetEditSessionParticipantsResponseImpl.make()
+      return DtoServerImpls.GetEditSessionCollaboratorsResponseImpl.make()
          .setParticipants(participants.getParticipants(editSession.getCollaborators()));
    }
 

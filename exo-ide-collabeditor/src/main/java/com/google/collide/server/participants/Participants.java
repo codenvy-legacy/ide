@@ -57,14 +57,14 @@ public class Participants
       return resp;
    }
 
-   public List<ParticipantUserDetailsImpl> getParticipants(Set<String> clientIds)
+   public List<ParticipantUserDetailsImpl> getParticipants(Set<String> userIds)
    {
       List<ParticipantUserDetailsImpl> result = new ArrayList<ParticipantUserDetailsImpl>();
 
       for (LoggedInUser user : loggedInUsers.values())
       {
          final String userId = user.getId();
-         if (clientIds.contains(userId))
+         if (userIds.contains(userId))
          {
             final String username = user.getName();
             ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
@@ -82,6 +82,25 @@ public class Participants
       }
 
       return result;
+   }
+
+   public ParticipantUserDetailsImpl getParticipant(String userId)
+   {
+      LoggedInUser user = loggedInUsers.get(userId);
+      if (user != null)
+      {
+         ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
+         ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
+         UserDetailsImpl userDetails = UserDetailsImpl.make()
+            .setUserId(userId)
+            .setDisplayEmail(user.getName())
+            .setDisplayName(user.getName())
+            .setGivenName(user.getName());
+         participantDetails.setParticipant(participant);
+         participantDetails.setUserDetails(userDetails);
+         return participantDetails;
+      }
+      return null;
    }
 
    public boolean removeParticipant(String userId)
