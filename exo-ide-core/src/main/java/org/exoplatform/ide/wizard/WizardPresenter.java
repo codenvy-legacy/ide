@@ -39,15 +39,14 @@ public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate
    private boolean isFirstFlipToNext;
 
    /**
-    * Creates WizardPresenter with given current wizard page, resources, wizard's title
+    * Creates WizardPresenter with given current wizard page and wizard's title
     * 
     * @param currentPage
-    * @param resources
     * @param title
     */
-   public WizardPresenter(WizardPagePresenter currentPage, WizardResource resources, String title)
+   public WizardPresenter(WizardPagePresenter currentPage, String title)
    {
-      this(currentPage, new WizardViewImpl(resources, title));
+      this(currentPage, new WizardViewImpl(title));
    }
 
    /**

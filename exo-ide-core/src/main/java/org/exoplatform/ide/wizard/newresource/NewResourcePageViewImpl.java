@@ -66,7 +66,6 @@ public class NewResourcePageViewImpl implements NewResourcePageView
             SafeHtmlBuilder sb = new SafeHtmlBuilder();
             // Add icon
             sb.appendHtmlConstant("<table><tr><td>");
-            //            Image icon = itemData.getIcon();
             ImageResource icon = itemData.getIcon();
             if (icon != null)
             {

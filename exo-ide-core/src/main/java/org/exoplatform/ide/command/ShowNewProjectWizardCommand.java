@@ -58,7 +58,7 @@ public class ShowNewProjectWizardCommand implements Command
    public void execute()
    {
       NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources);
-      WizardPresenter wizardDialog = new WizardPresenter(firstPage, resources, "Create project");
+      WizardPresenter wizardDialog = new WizardPresenter(firstPage, "Create project");
       wizardDialog.showWizard();
    }
 }

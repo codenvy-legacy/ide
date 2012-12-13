@@ -19,7 +19,7 @@
 package org.exoplatform.ide.wizard;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Image;
 
 
 /**
@@ -87,7 +87,7 @@ public interface WizardView
     * 
     * @param image
     */
-   void setImage(IsWidget image);
+   void setImage(Image image);
 
    /**
     * Close wizard
