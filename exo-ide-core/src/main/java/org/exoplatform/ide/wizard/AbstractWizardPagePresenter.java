@@ -29,6 +29,8 @@ public abstract class AbstractWizardPagePresenter implements WizardPagePresenter
 {
    protected WizardUpdateDelegate delegate;
 
+   private WizardPagePresenter previous;
+
    private final String caption;
 
    private final ImageResource image;
@@ -94,5 +96,29 @@ public abstract class AbstractWizardPagePresenter implements WizardPagePresenter
    public void setUpdateDelegate(WizardUpdateDelegate delegate)
    {
       this.delegate = delegate;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public WizardPagePresenter flipToPrevious()
+   {
+      return previous;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void setPrevious(WizardPagePresenter previous)
+   {
+      this.previous = previous;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public boolean hasPrevious()
+   {
+      return previous != null;
    }
 }

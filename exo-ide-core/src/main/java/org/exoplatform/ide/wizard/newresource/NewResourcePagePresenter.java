@@ -16,55 +16,78 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.newproject;
+package org.exoplatform.ide.wizard.newresource;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
+import org.exoplatform.ide.wizard.newresource.NewResourcePageView.ActionDelegate;
 
 /**
- * Provides selecting kind of project which user wish to create.
+ * Provides selecting kind of file which user wish to create.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewProjectPagePresenter extends AbstractWizardPagePresenter implements NewProjectPageView.ActionDelegate
+@Singleton
+public class NewResourcePagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
 {
+   private NewResourcePageView view;
+
    private WizardPagePresenter next;
 
-   private NewProjectPageView view;
-
-   private JsonArray<NewProjectWizardData> wizards;
-
    /**
-    * Create presenter
+    * Create presenter.
     * 
-    * @param wizardAgent
     * @param resources
+    * @param wizardAgent
+    * @param project
     */
-   public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources)
+   @Inject
+   public NewResourcePagePresenter(Resources resources, WizardAgentImpl wizardAgent)
    {
-      this(wizardAgent, resources, new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards(), resources));
+      this("Create a new resource", resources.newResourceIcon(), wizardAgent, new NewResourcePageViewImpl(resources,
+         wizardAgent.getNewResourceWizards()));
    }
 
    /**
-    * Create presenter
+    * Create presenter.
     * 
     * For tests
     * 
+    * @param caption
+    * @param image
     * @param wizardAgent
-    * @param resources
+    * @param project
     * @param view
     */
-   protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources,
-      NewProjectPageView view)
+   protected NewResourcePagePresenter(String caption, ImageResource image, WizardAgentImpl wizardAgent,
+      NewResourcePageView view)
    {
-      super("Select a wizard", resources.newProjectIcon());
+      super(caption, image);
       this.view = view;
-      view.setBtnPressedDelegate(this);
-      this.wizards = wizardAgent.getNewProjectWizards();
+      view.setDelegate(this);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public boolean isCompleted()
+   {
+      return next != null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public boolean hasNext()
+   {
+      return next != null;
    }
 
    /**
@@ -80,33 +103,14 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
-   public boolean canFinish()
-   {
-      return false;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public boolean hasNext()
-   {
-      return next != null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public boolean isCompleted()
-   {
-      return next != null;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
    public String getNotice()
    {
-      return isCompleted() ? null : "Please, choose technology";
+      if (next == null)
+      {
+         return "Please, select resource type.";
+      }
+
+      return null;
    }
 
    /**
@@ -120,9 +124,17 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
-   public void onButtonPressed(int id)
+   public void selectedFileType(NewResourceWizardData newResourceWizard)
    {
-      next = wizards.get(id).getWizardPage();
+      next = newResourceWizard.getWizardPage();
       delegate.updateControls();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public boolean canFinish()
+   {
+      return false;
    }
 }

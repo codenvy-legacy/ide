@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
 import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.api.ui.wizard.NewProjectWizardAgent;
+import org.exoplatform.ide.api.ui.wizard.WizardAgent;
 import org.exoplatform.ide.core.editor.EditorRegistry;
 import org.exoplatform.ide.extension.Extension;
 import org.exoplatform.ide.java.client.codeassistant.ContentAssistHistory;
@@ -80,7 +80,7 @@ public class JavaExtension
     */
    @Inject
    public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
-                        EventBus eventBus, NewProjectWizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider)
+                        EventBus eventBus, WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider)
    {
       this();
       FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -88,7 +88,7 @@ public class JavaExtension
       resourceProvider.registerFileType(javaFile);
       resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
       JavaClientBundle.INSTANCE.css().ensureInjected();
-      wizardAgent.registerWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
+      wizardAgent.registerNewProjectWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
          JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, JsonCollections.<String>createArray());
 
    }

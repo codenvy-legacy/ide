@@ -19,9 +19,20 @@
 package org.exoplatform.ide.core;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
+
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.command.SaveAllCommand;
 import org.exoplatform.ide.command.SaveCommand;
+import org.exoplatform.ide.command.ShowNewFolderWizardCommand;
+import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
+import org.exoplatform.ide.command.ShowNewResourceWizardCommand;
+import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.wizard.WizardAgentImpl;
+import org.exoplatform.ide.wizard.newfile.NewTextFilePagePresenter;
+import org.exoplatform.ide.wizard.newfolder.NewFolderPagePresenter;
+import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc) 
@@ -36,8 +47,23 @@ public class StandardComponentInitializer
     *
     */
    @Inject
-   public StandardComponentInitializer(MainMenuPresenter menuPresenter, SaveCommand saveCommand, SaveAllCommand saveAllCommand)
+   public StandardComponentInitializer(MainMenuPresenter menuPresenter, SaveCommand saveCommand,
+      SaveAllCommand saveAllCommand, ShowNewResourceWizardCommand newFileCommand,
+      ShowNewFolderWizardCommand newFolderCommand, ShowNewProjectWizardCommand newProjectCommand,
+      WizardAgentImpl wizardAgent, Provider<NewGenericProjectPagePresenter> genericProjectProvider,
+      Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
+      Resources resources)
    {
+      wizardAgent.registerNewProjectWizard("Generic Project", "Create generic project", "",
+         resources.genericProjectIcon(), genericProjectProvider, JsonCollections.<String> createArray());
+      // TODO change icon
+      wizardAgent.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
+      wizardAgent.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
+
+      menuPresenter.addMenuItem("File/New/Project", newProjectCommand);
+      menuPresenter.addMenuItem("File/New/Folder", newFolderCommand);
+      menuPresenter.addMenuItem("File/New/Other", newFileCommand);
+
       menuPresenter.addMenuItem("File/Save", saveCommand);
       menuPresenter.addMenuItem("File/Save All", saveAllCommand);
    }

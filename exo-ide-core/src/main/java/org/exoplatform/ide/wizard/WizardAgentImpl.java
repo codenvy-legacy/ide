@@ -16,15 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.newproject;
+package org.exoplatform.ide.wizard;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import org.exoplatform.ide.api.ui.wizard.NewProjectWizardAgent;
+
+import org.exoplatform.ide.api.ui.wizard.WizardAgent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.wizard.WizardPagePresenter;
+import org.exoplatform.ide.wizard.newproject.NewProjectWizardData;
+import org.exoplatform.ide.wizard.newresource.NewResourceWizardData;
+
 import javax.inject.Singleton;
 
 /**
@@ -33,23 +36,26 @@ import javax.inject.Singleton;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class NewProjectWizardAgentImpl implements NewProjectWizardAgent
+public class WizardAgentImpl implements WizardAgent
 {
    private final JsonArray<NewProjectWizardData> newProjectWizardDatas;
 
+   private final JsonArray<NewResourceWizardData> newResourceWizardDatas;
+
    /**
-    * Create NewProjectWizardContainer
+    * Create WizardAgent
     */
    @Inject
-   public NewProjectWizardAgentImpl()
+   public WizardAgentImpl()
    {
       newProjectWizardDatas = JsonCollections.createArray();
+      newResourceWizardDatas = JsonCollections.createArray();
    }
 
    /**
     * {@inheritDoc}
     */
-   public void registerWizard(String title, String description, String primaryNature, ImageResource icon,
+   public void registerNewProjectWizard(String title, String description, String primaryNature, ImageResource icon,
                               Provider<? extends WizardPagePresenter> wizardPage, JsonArray<String> natures)
    {
       NewProjectWizardData newProjectWizardData =
@@ -58,12 +64,32 @@ public class NewProjectWizardAgentImpl implements NewProjectWizardAgent
    }
 
    /**
-    * Returns all registered wizards.
+    * Returns all registered wizards for creating new project.
     *
-    * @return all registered wizards
+    * @return
     */
-   public JsonArray<NewProjectWizardData> getWizards()
+   public JsonArray<NewProjectWizardData> getNewProjectWizards()
    {
       return newProjectWizardDatas;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void registerNewResourceWizard(String category, String title, ImageResource icon,
+      Provider<? extends WizardPagePresenter> wizardPage)
+   {
+      NewResourceWizardData newResourceWizardData = new NewResourceWizardData(title, category, icon, wizardPage);
+      newResourceWizardDatas.add(newResourceWizardData);
+   }
+
+   /**
+    * Returns all registered wizards for creating new resource.
+    * 
+    * @return
+    */
+   public JsonArray<NewResourceWizardData> getNewResourceWizards()
+   {
+      return newResourceWizardDatas;
    }
 }

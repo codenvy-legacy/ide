@@ -20,7 +20,6 @@ package org.exoplatform.ide.wizard.newproject;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.google.gwt.junit.GWTMockUtilities;
@@ -28,6 +27,7 @@ import com.google.inject.Provider;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
 import org.junit.After;
@@ -45,28 +45,37 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class TestNewProjectPagePresenter
 {
 
-   private NewProjectWizardAgentImpl wizardAgent;
+   private WizardAgentImpl wizardAgent;
 
    private NewProjectPageView view;
 
    private NewProjectPagePresenter presenter;
+
+   private WizardPagePresenter newPage;
 
    @Before
    public void disarm()
    {
       // don't throw an exception if GWT.create() invoked
       GWTMockUtilities.disarm();
-
-      setUp();
    }
 
    /**
     * Create general components for all test.
     */
+   @SuppressWarnings("unchecked")
    private void setUp()
    {
+      newPage = mock(WizardPagePresenter.class);
+      Provider<WizardPagePresenter> nextPage = mock(Provider.class);
+      when(nextPage.get()).thenReturn(newPage);
+
+      JsonArray<NewProjectWizardData> wizards = JsonCollections.createArray();
+      wizards.add(new NewProjectWizardData("Title", "Description", "PrimaryType", null, nextPage, null));
+
       view = mock(NewProjectPageView.class);
-      wizardAgent = mock(NewProjectWizardAgentImpl.class);
+      wizardAgent = mock(WizardAgentImpl.class);
+      when(wizardAgent.getNewProjectWizards()).thenReturn(wizards);
 
       presenter = new NewProjectPagePresenter(wizardAgent, mock(NewProjectWizardResource.class), view);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
@@ -84,24 +93,11 @@ public class TestNewProjectPagePresenter
    @Test
    public void shouldBeFlipToChosenPage()
    {
-      // create registered wizard
-      final WizardPagePresenter newPage = mock(WizardPagePresenter.class);
-      Provider<WizardPagePresenter> nextPage = new Provider<WizardPagePresenter>()
-      {
-         public WizardPagePresenter get()
-         {
-            return newPage;
-         }
-      };
-      JsonArray<NewProjectWizardData> wizards = JsonCollections.createArray();
-      wizards.add(new NewProjectWizardData("Title", "Description", "PrimaryType", null, nextPage, null));
-
-      when(wizardAgent.getWizards()).thenReturn(wizards);
+      setUp();
 
       //selected registered technology
       presenter.onButtonPressed(0);
       
-      verify(wizardAgent).getWizards();
       assertEquals(presenter.flipToNext(), newPage);
    }
 }

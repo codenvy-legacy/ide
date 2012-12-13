@@ -16,31 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.genericproject;
+package org.exoplatform.ide.wizard.newresource;
 
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Contains of resource for generic project's page view.
+ * Contains of resource for new resource wizard page view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface GenericProjectWizardResource extends ClientBundle
+public interface NewResourceWizardResources extends ClientBundle
 {
-   public interface GenericProjectWizardCss extends CssResource
-   {
-      @ClassName("ide-GenericProjectWizard")
-      String genericProjectWizard();
-
-      @ClassName("component")
-      String component();
-   }
-
-   @Source("org/exoplatform/ide/wizard/GenericProjectWizard.css")
-   GenericProjectWizardCss genericProjectWizardCss();
-
-   @Source("org/exoplatform/ide/wizard/images/GenericProjectIcon.png")
-   ImageResource genericProjectIcon();
+   @Source("org/exoplatform/ide/wizard/images/NewResourceIcon.png")
+   ImageResource newResourceIcon();
 }
