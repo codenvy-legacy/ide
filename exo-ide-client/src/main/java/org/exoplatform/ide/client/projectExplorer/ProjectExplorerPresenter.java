@@ -22,7 +22,7 @@ import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.client.ImageBundle;
+import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
@@ -61,14 +61,14 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
 
    EventBus eventBus;
 
-   ImageBundle imageBundle;
+   PageResources resources;
 
    @Inject
-   public ProjectExplorerPresenter(Display display, EventBus eventBus, ImageBundle imageBundle)
+   public ProjectExplorerPresenter(Display display, EventBus eventBus, PageResources resources)
    {
       this.display = display;
       this.eventBus = eventBus;
-      this.imageBundle = imageBundle;
+      this.resources = resources;
       bind();
    }
 
@@ -169,7 +169,7 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      return imageBundle.projectExplorerIcon();
+      return resources.projectExplorerIcon();
    }
 
    /**

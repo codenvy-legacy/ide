@@ -22,14 +22,12 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * The class provides access to images. These images is used into title's image for tabs.
+ * The class provides access to resources. These resources is used for tabs.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- * @version $Id: ImageBundle.java 34360 Nov 12, 2012 aplotnikov $
  */
-public interface ImageBundle extends ClientBundle
+public interface PageResources extends ClientBundle
 {
-
    @Source("org/exoplatform/ide/client/images/welcome.png")
    ImageResource welcomePageIcon();
 

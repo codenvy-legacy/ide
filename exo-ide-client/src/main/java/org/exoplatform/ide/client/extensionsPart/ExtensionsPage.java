@@ -23,7 +23,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.client.ExtensionManager;
-import org.exoplatform.ide.client.ImageBundle;
+import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.extension.DependencyDescription;
 import org.exoplatform.ide.extension.ExtensionDescription;
 import org.exoplatform.ide.json.JsonArray;
@@ -41,13 +41,13 @@ public class ExtensionsPage implements PartPresenter
 
    private final ExtensionManager manager;
 
-   private ImageBundle imageBundle;
+   private PageResources resources;
 
    @Inject
-   public ExtensionsPage(ExtensionManager manager, ImageBundle imageBundle)
+   public ExtensionsPage(ExtensionManager manager, PageResources resources)
    {
       this.manager = manager;
-      this.imageBundle = imageBundle;
+      this.resources = resources;
    }
 
    /**
@@ -132,7 +132,7 @@ public class ExtensionsPage implements PartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      return imageBundle.extentionPageIcon();
+      return resources.extentionPageIcon();
    }
 
    /**

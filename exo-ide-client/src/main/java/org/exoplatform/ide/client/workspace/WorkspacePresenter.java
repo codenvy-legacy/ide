@@ -40,7 +40,7 @@ import elemental.html.TableElement;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
-import org.exoplatform.ide.client.ImageBundle;
+import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
@@ -116,7 +116,7 @@ public class WorkspacePresenter implements Presenter
    protected WorkspacePresenter(Display display, final ProjectExplorerPresenter projectExplorerPresenter,
                                 EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
                                 final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-                                ExtensionsPage extensionsPage, ImageBundle imageBundle,
+                                ExtensionsPage extensionsPage, PageResources pageResources,
                                 OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
                                 EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
    {
@@ -150,7 +150,7 @@ public class WorkspacePresenter implements Presenter
       //XXX DEMO
 
       partAgent.addPart(extensionsPage, PartStackType.EDITING);
-      partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
+      partAgent.addPart(new WelcomePage(pageResources), PartStackType.EDITING);
       partAgent.addPart(projectExplorerPresenter, PartStackType.NAVIGATION);
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
