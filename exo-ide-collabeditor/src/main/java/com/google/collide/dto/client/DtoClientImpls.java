@@ -3042,38 +3042,52 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetFileContentsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileContents {
-    protected GetFileContentsImpl() {}
+   public static class GetFileContentsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileContents {
+      protected GetFileContentsImpl() {}
 
-    @Override
-    public final native java.lang.String getPath() /*-{
+      @Override
+      public final native java.lang.String getPath() /*-{
       return this["path"];
     }-*/;
 
-    public final native GetFileContentsImpl setPath(java.lang.String path) /*-{
+      public final native GetFileContentsImpl setPath(java.lang.String path) /*-{
       this["path"] = path;
       return this;
     }-*/;
 
-    public final native boolean hasPath() /*-{
+      public final native boolean hasPath() /*-{
       return this.hasOwnProperty("path");
     }-*/;
 
-    @Override
-    public final native java.lang.String getWorkspaceId() /*-{
+      @Override
+      public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
 
-    public final native GetFileContentsImpl setWorkspaceId(java.lang.String workspaceId) /*-{
+      public final native GetFileContentsImpl setWorkspaceId(java.lang.String workspaceId) /*-{
       this["workspaceId"] = workspaceId;
       return this;
     }-*/;
 
-    public final native boolean hasWorkspaceId() /*-{
+      public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
     }-*/;
 
-    public static native GetFileContentsImpl make() /*-{
+      @Override
+      public final native java.lang.String getClientId() /*-{
+      return this["clientId"];
+    }-*/;
+
+      public final native GetFileContentsImpl setClientId(java.lang.String clientId) /*-{
+      this["clientId"] = clientId;
+      return this;
+    }-*/;
+
+      public final native boolean hasClientId() /*-{
+      return this.hasOwnProperty("clientId");
+    }-*/;
+
+      public static native GetFileContentsImpl make() /*-{
       return {
         _type: 35
       };

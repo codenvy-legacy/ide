@@ -10745,6 +10745,8 @@ public class DtoServerImpls {
     private boolean _hasPath;
     protected java.lang.String workspaceId;
     private boolean _hasWorkspaceId;
+    protected java.lang.String clientId;
+    private boolean _hasClientId;
 
     public boolean hasPath() {
       return _hasPath;
@@ -10761,59 +10763,83 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasWorkspaceId() {
+   public boolean hasWorkspaceId() {
       return _hasWorkspaceId;
-    }
+   }
 
-    @Override
-    public java.lang.String getWorkspaceId() {
+   @Override
+   public java.lang.String getWorkspaceId() {
       return workspaceId;
-    }
+   }
 
-    public GetFileContentsImpl setWorkspaceId(java.lang.String v) {
+   public GetFileContentsImpl setWorkspaceId(java.lang.String v) {
       _hasWorkspaceId = true;
       workspaceId = v;
       return this;
-    }
+   }
 
-    @Override
-    public boolean equals(Object o) {
+   public boolean hasClientId() {
+      return _hasClientId;
+   }
+
+   @Override
+   public java.lang.String getClientId() {
+      return clientId;
+   }
+
+   public GetFileContentsImpl setClientId(java.lang.String v) {
+      _hasClientId = true;
+      clientId = v;
+      return this;
+   }
+
+   @Override
+   public boolean equals(Object o) {
       if (!super.equals(o)) {
-        return false;
+         return false;
       }
       if (!(o instanceof GetFileContentsImpl)) {
-        return false;
+         return false;
       }
       GetFileContentsImpl other = (GetFileContentsImpl) o;
       if (this._hasPath != other._hasPath) {
-        return false;
+         return false;
       }
       if (this._hasPath) {
-        if (!this.path.equals(other.path)) {
-          return false;
-        }
+         if (!this.path.equals(other.path)) {
+            return false;
+         }
       }
       if (this._hasWorkspaceId != other._hasWorkspaceId) {
-        return false;
+         return false;
       }
       if (this._hasWorkspaceId) {
-        if (!this.workspaceId.equals(other.workspaceId)) {
-          return false;
-        }
+         if (!this.workspaceId.equals(other.workspaceId)) {
+            return false;
+         }
+      }
+      if (this._hasClientId != other._hasClientId) {
+         return false;
+      }
+      if (this._hasClientId) {
+         if (!this.clientId.equals(other.clientId)) {
+            return false;
+         }
       }
       return true;
-    }
+   }
 
-    @Override
-    public int hashCode() {
+   @Override
+   public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
       hash = hash * 31 + (_hasWorkspaceId ? workspaceId.hashCode() : 0);
+      hash = hash * 31 + (_hasClientId ? clientId.hashCode() : 0);
       return hash;
-    }
+   }
 
-    @Override
-    public JsonElement toJsonElement() {
+   @Override
+   public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
       JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
@@ -10821,59 +10847,59 @@ public class DtoServerImpls {
 
       JsonElement workspaceIdOut = (workspaceId == null) ? JsonNull.INSTANCE : new JsonPrimitive(workspaceId);
       result.add("workspaceId", workspaceIdOut);
+
+      JsonElement clientIdOut = (clientId == null) ? JsonNull.INSTANCE : new JsonPrimitive(clientId);
+      result.add("clientId", clientIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
-    }
+   }
 
-    @Override
-    public String toJson() {
+   @Override
+   public String toJson() {
       return gson.toJson(toJsonElement());
-    }
+   }
 
-    @Override
-    public String toString() {
+   @Override
+   public String toString() {
       return toJson();
-    }
+   }
 
-    public static GetFileContentsImpl fromJsonElement(JsonElement jsonElem) {
+   public static GetFileContentsImpl fromJsonElement(JsonElement jsonElem) {
       if (jsonElem == null || jsonElem.isJsonNull()) {
-        return null;
+         return null;
       }
 
       GetFileContentsImpl dto = new GetFileContentsImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
       if (json.has("path")) {
-        JsonElement pathIn = json.get("path");
-        java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
-        dto.setPath(pathOut);
+         JsonElement pathIn = json.get("path");
+         java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
+         dto.setPath(pathOut);
       }
 
       if (json.has("workspaceId")) {
-        JsonElement workspaceIdIn = json.get("workspaceId");
-        java.lang.String workspaceIdOut = gson.fromJson(workspaceIdIn, java.lang.String.class);
-        dto.setWorkspaceId(workspaceIdOut);
+         JsonElement workspaceIdIn = json.get("workspaceId");
+         java.lang.String workspaceIdOut = gson.fromJson(workspaceIdIn, java.lang.String.class);
+         dto.setWorkspaceId(workspaceIdOut);
+      }
+
+      if (json.has("clientId")) {
+         JsonElement clientIdIn = json.get("clientId");
+         java.lang.String clientIdOut = gson.fromJson(clientIdIn, java.lang.String.class);
+         dto.setClientId(clientIdOut);
       }
 
       return dto;
-    }
-    public static GetFileContentsImpl fromJsonString(String jsonString) {
+   }
+   public static GetFileContentsImpl fromJsonString(String jsonString) {
       if (jsonString == null) {
-        return null;
+         return null;
       }
 
       return fromJsonElement(new JsonParser().parse(jsonString));
-    }
-  }
-
-  public static class MockGetFileContentsImpl extends GetFileContentsImpl {
-    protected MockGetFileContentsImpl() {}
-
-    public static GetFileContentsImpl make() {
-      return new GetFileContentsImpl();
-    }
-
-  }
+   }
+}
 
   public static class GetFileContentsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileContentsResponse, JsonSerializable {
 

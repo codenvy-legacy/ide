@@ -27,4 +27,6 @@ public interface GetFileContents extends ClientToServerDto {
 
   // TODO: Make this a resource ID/EditSessionKey.
   String getPath();
+
+  String getClientId();
 }
