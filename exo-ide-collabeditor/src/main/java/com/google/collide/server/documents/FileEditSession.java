@@ -14,7 +14,6 @@
 
 package com.google.collide.server.documents;
 
-import com.google.collide.dto.ClientToServerDocOp;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.server.documents.VersionedDocument.DocumentOperationException;
@@ -23,85 +22,104 @@ import com.google.collide.server.shared.merge.ConflictChunk;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A single workspace file, backed by a {@link com.google.collide.server.documents.VersionedDocument}. Its contents
  * can be accessed as plain text. However, it can be mutated <em>only</em> via
  * the application of doc ops passed to
- * {@link com.google.collide.server.documents.FileEditSession#consume(java.util.List, String, int, com.google.collide.dto.DocumentSelection)}.
- *
+ * {@link com.google.collide.server.documents.FileEditSession#consume(java.util.List, String, int,
+ * com.google.collide.dto.DocumentSelection)}.
  */
-public interface FileEditSession extends ImmutableFileEditSession {
+public interface FileEditSession extends ImmutableFileEditSession
+{
+   public class FileEditSessionClosedException extends IllegalStateException
+   {
+      public FileEditSessionClosedException(String resourceId, long closedTimeMs)
+      {
+         super(String.format(
+            "Operation not allowed on closed FileEditSession [%s], closed [%d] ms ago", resourceId,
+            System.currentTimeMillis() - closedTimeMs));
+      }
+   }
 
-  public class FileEditSessionClosedException extends IllegalStateException {
-    public FileEditSessionClosedException(String resourceId, long closedTimeMs) {
-      super(String.format(
-          "Operation not allowed on closed FileEditSession [%s], closed [%d] ms ago", resourceId,
-          System.currentTimeMillis() - closedTimeMs));
-    }
-  }
+   public interface VersionedTextAndConflictChunks
+   {
+      VersionedText getVersionedText();
 
-  public interface VersionedTextAndConflictChunks {
-    VersionedText getVersionedText();
+      List<? extends ConflictChunk> getConflictChunks();
+   }
 
-    List<? extends ConflictChunk> getConflictChunks();
-  }
+   interface OnCloseListener
+   {
+      void onClosed();
+   }
 
-  interface OnCloseListener {
-    void onClosed();
-  }
+   /**
+    * Releases the resources for this {@code FileEditSession}. Many methods will
+    * throw IllegalStateException if called on a closed session object. However,
+    * this method can return before outstanding calls to those methods finish
+    * executing.
+    */
+   void close();
 
-  /**
-   * Releases the resources for this {@code FileEditSession}. Many methods will
-   * throw IllegalStateException if called on a closed session object. However,
-   * this method can return before outstanding calls to those methods finish
-   * executing.
-   */
-  void close();
+   /**
+    * Sets a listener that is called when this file edit session is closed.
+    * Only one listener can be set.
+    *
+    * @param onCloseListener
+    *    listener to call when file edit session is closed.
+    * @throws IllegalStateException
+    *    if there is already a listener attached
+    */
+   void setOnCloseListener(OnCloseListener onCloseListener);
 
-  /**
-   * Sets a listener that is called when this file edit session is closed.
-   * Only one listener can be set.
-   *
-   * @param onCloseListener listener to call when file edit session is closed.
-   * @throws IllegalStateException if there is already a listener attached
-   */
-  void setOnCloseListener(OnCloseListener onCloseListener);
+   /**
+    * Applies a list of doc ops to the backing document.
+    *
+    * @param docOps
+    *    the list of doc ops being applied
+    * @param authorClientId
+    *    clientId who sent the doc ops
+    * @param intendedCcRevision
+    *    the revision of the document that the doc ops are
+    *    intended to be applied to
+    * @param selection
+    *    see {@link com.google.collide.dto.ClientToServerDocOp#getSelection()}
+    * @return the result of the consume operation
+    * @throws com.google.collide.server.documents.VersionedDocument.DocumentOperationException
+    *    if there was a problem with consuming
+    *    the document operation
+    */
+   VersionedDocument.ConsumeResult consume(List<DocOp> docOps,
+                                           String authorClientId,
+                                           int intendedCcRevision,
+                                           DocumentSelection selection) throws DocumentOperationException;
 
-  /**
-   * Applies a list of doc ops to the backing document.
-   *
-   * @param docOps the list of doc ops being applied
-   * @param authorClientId clientId who sent the doc ops
-   * @param intendedCcRevision the revision of the document that the doc ops are
-   *        intended to be applied to
-   * @param selection see {@link com.google.collide.dto.ClientToServerDocOp#getSelection()}
-   * @return the result of the consume operation
-   * @throws com.google.collide.server.documents.VersionedDocument.DocumentOperationException if there was a problem with consuming
-   *         the document operation
-   */
-  VersionedDocument.ConsumeResult consume(List<DocOp> docOps, String authorClientId,
-                                          int intendedCcRevision, DocumentSelection selection) throws DocumentOperationException;
+   VersionedDocument getDocument();
 
-  VersionedDocument getDocument();
+   /**
+    * Saves the file.
+    *
+    * @throws java.io.IOException
+    */
+   void save(String currentPath) throws IOException;
 
-  /**
-   * Saves the file.
-   * @throws java.io.IOException
-   */
-  void save(String currentPath) throws IOException;
+   /** @return the text and any conflict chunks, along with a revision */
+   VersionedTextAndConflictChunks getContentsAndConflictChunks();
 
-  /**
-   * @return the text and any conflict chunks, along with a revision
-   */
-  VersionedTextAndConflictChunks getContentsAndConflictChunks();
+   List<ConflictChunk> getConflictChunks();
 
-  List<ConflictChunk> getConflictChunks();
+   /**
+    * @return true if the conflict chunk is now resolved. false if the chunk was already resolved
+    *         (e.g., a collaborator raced for the resolution and won).
+    * @throws java.io.IOException
+    */
+   boolean resolveConflictChunk(int chunkIndex) throws IOException;
 
-  /**
-   * @return true if the conflict chunk is now resolved. false if the chunk was already resolved
-   *         (e.g., a collaborator raced for the resolution and won).
-   * @throws java.io.IOException
-   */
-  boolean resolveConflictChunk(int chunkIndex) throws IOException;
+   Set<String> getCollaborators();
+
+   boolean addCollaborator(String clientId);
+
+   boolean removeCollaborator(String clientId);
 }

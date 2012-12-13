@@ -29,6 +29,7 @@ import com.google.collide.dto.server.DtoServerImpls.DocOpComponentImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocumentSelectionImpl;
 import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
+import com.google.collide.dto.server.DtoServerImpls.GetEditSessionParticipantsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
@@ -37,6 +38,8 @@ import com.google.collide.json.server.JsonArrayListAdapter;
 import com.google.collide.server.participants.Participants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -49,6 +52,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -79,6 +83,7 @@ public class EditSessions
    {
       final String vfsId = contentsRequest.getWorkspaceId();
       final String path = contentsRequest.getPath();
+      final String clientId = contentsRequest.getClientId();
 
       FileEditSession editSession;
       final String resourceId;
@@ -114,6 +119,7 @@ public class EditSessions
          return GetFileContentsResponseImpl.make().setFileExists(false);
       }
 
+      editSession.addCollaborator(clientId);
       FileContentsImpl fileContents = FileContentsImpl.make()
          .setPath(path)
          .setFileEditSessionKey(resourceId)
@@ -192,7 +198,6 @@ public class EditSessions
 
          if (result == null)
          {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NULL <<<<<<<<<<<<<<<<<<<<<<<<<<<");
             return broadcastedDocOps;
          }
 
@@ -206,7 +211,10 @@ public class EditSessions
          {
             DocOpImpl docOp = (DocOpImpl)entry.getValue().docOp;
             ServerToClientDocOpImpl wrappedBroadcastDocOp = ServerToClientDocOpImpl.make()
-               .setClientId(authorId).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp)
+               .setClientId(authorId)
+               .setAppliedCcRevision(entry.getKey())
+               .setDocOp2(docOp)
+               .setWorkspaceId(workspaceId)
                .setFileEditSessionKey(resourceId)
                .setFilePath(editSession.getSavedPath());
             appliedDocOpsList.add(wrappedBroadcastDocOp);
@@ -221,7 +229,7 @@ public class EditSessions
 
          // Broadcast the applied DocOp all the participants, ignoring the sender.
          broadcastedDocOps.setDocOps(appliedDocOpsList);
-         participants.doBroadcast(authorId, broadcastedDocOps);
+         doBroadcast(authorId, broadcastedDocOps, editSession.getCollaborators());
          return broadcastedDocOps;
       }
       catch (VersionedDocument.DocumentOperationException e)
@@ -230,6 +238,30 @@ public class EditSessions
          e.printStackTrace();
       }
       return broadcastedDocOps;
+   }
+
+   private void doBroadcast(String authorId, ServerToClientDocOps oprts, Set<String> collaborators)
+   {
+      final String body = ((ServerToClientDocOpsImpl)oprts).toJson();
+      for (String collaborator : collaborators)
+      {
+         final String channel = "collab_editor." + collaborator;
+         if (!channel.equals(authorId))
+         {
+            ChannelBroadcastMessage message = new ChannelBroadcastMessage();
+            message.setChannel(channel);
+            message.setBody(body);
+            try
+            {
+               WSConnectionContext.sendMessage(message);
+            }
+            catch (Exception e)
+            {
+               // TODO
+               e.printStackTrace();
+            }
+         }
+      }
    }
 
    private void checkForSelectionChange(String clientId, String resourceId,
@@ -246,15 +278,6 @@ public class EditSessions
    {
       String resourceId = missedDocOpsRequest.getFileEditSessionKey();
       FileEditSession editSession = editSessions.get(resourceId);
-
-      if (editSession == null)
-      {
-         System.out.println("No edit session for resourceId " + resourceId); // TODO error
-
-         // TODO: This is going to leave the reply handler hanging.
-         return null;   // TODO
-      }
-
       List<String> docOps = ((JsonArrayListAdapter<String>)missedDocOpsRequest.getDocOps2()).asList();
 
       // If the client is re-sending any unacked doc ops, apply them first
@@ -290,107 +313,13 @@ public class EditSessions
          .setWorkspaceId(missedDocOpsRequest.getWorkspaceId());
    }
 
-//   public GetEditSessionParticipantsResponse getEditSessionParticipants(
-//      GetEditSessionParticipants sessionParticipantsRequest)
-//   {
-//      FileEditSession editSession = editSessions.get(sessionParticipantsRequest.getEditSessionId());
-//      if (editSession == null)
-//      {
-//         // TODO : throw exception instead ??
-//         return null;
-//      }
-//   }
-
-
-//  /**
-//   * Creates a FileEditSession if there is not one already present and
-//   */
-//    public void handle3(String message) {
-//      final DtoServerImpls.GetFileContentsImpl request = DtoServerImpls.GetFileContentsImpl.fromJsonString(message);
-//
-//      // Resolve the resource IDs from the requested path.
-//      vertx.eventBus().send("tree.getResourceIds",
-//          new JsonObject().putArray("paths", new JsonArray().addString(request.getPath())),
-//          new Handler<Message<JsonObject>>() {
-//
-//            /**
-//             * Sends the contents of a file to the requester. The files will be served out of the
-//             * FileEditSession if the contents are being edited, otherwise they will simply be
-//             * served from disk.
-//             */
-//              @Override
-//            public void handle(Message<JsonObject> event) {
-//              JsonArray resourceIdArr = event.body.getArray("resourceIds");
-//              Object[] resourceIds = resourceIdArr.toArray();
-//              String resourceId = (String) resourceIds[0];
-//
-//              String currentPath = stripLeadingSlash(request.getPath());
-//              FileEditSession editSession = editSessions.get(resourceId);
-//
-//              // Create the DTO for the file contents response. We will build it up later in the
-//              // method.
-//              String mimeType = MimeTypes.guessMimeType(currentPath, false);
-//              FileContentsImpl fileContentsDto =
-//                  FileContentsImpl.make().setMimeType(mimeType).setPath(currentPath);
-//
-//              if (editSession == null) {
-//                // We need to start a new edit session.
-//                String text = "";
-////                File file = new File(currentPath);
-//                try {
-//                   Object vfs = getVfs();
-//                   Object file = method.invoke(vfs, currentPath, null);
-//                   Method method2 = file.getClass().getMethod("getStream");
-//                   Object stream = method2.invoke(file);
-//                  text= org.exoplatform.ide.commons.StringUtils.toString((InputStream)stream);
-//                } catch (Exception e) {
-//                  logger.error(
-//                      String.format("Failed to read text contents for path [%s]", currentPath), e);
-//
-//                  // Send back a no file indicating that file does not exist.
-//                  sendContent(message, currentPath, null, false);
-//                  return;
-//                }
-//
-//                if (provisionEditSession) {
-//
-//                  // Provision a new edit session and fall through.
-//                  editSession =
-//                      new FileEditSessionImpl(vfs, resourceId, currentPath, text, null, logger);
-//                  editSessions.put(resourceId, editSession);
-//
-//                  // Update the last opened file.
-//                  vertx.eventBus().send("workspace.setLastOpenedFile",
-//                      new JsonObject().putString("resourceId", resourceId));
-//                } else {
-//
-//                  // Just send the contents as they were read from disk and return.
-//                  String dataBase64 = MimeTypes.looksLikeImage(mimeType) ? StringUtils
-//                      .newStringUtf8(Base64.encodeBase64(text.getBytes())) : null;
-//                  fileContentsDto.setContents(dataBase64).setContentType(
-//                      dataBase64 == null ? ContentType.UNKNOWN_BINARY : ContentType.IMAGE);
-//                  sendContent(message, currentPath, fileContentsDto, true);
-//                  return;
-//                }
-//              }
-//
-//              // Populate file contents response Dto with information from the edit session.
-//              fileContentsDto.setFileEditSessionKey(resourceId)
-//                  .setCcRevision(editSession.getDocument().getCcRevision())
-//                  .setContents(editSession.getContents()).setContentType(ContentType.TEXT);
-//
-//              // Extract the contents from the edit session before sending.
-//              sendContent(message, currentPath, fileContentsDto, true);
-//            }
-//          });
-//    }
-
-//  void sendContent(
-//      Message<JsonObject> event, String path, FileContents fileContents, boolean fileExists) {
-//    GetFileContentsResponseImpl response = GetFileContentsResponseImpl.make()
-//        .setFileExists(fileExists).setFileContents((FileContentsImpl) fileContents);
-//    event.reply(Dto.wrap(response.toJson()));
-//  }
+   public GetEditSessionParticipantsResponse getEditSessionCollaborators(
+      GetEditSessionParticipants sessionParticipantsRequest)
+   {
+      FileEditSession editSession = editSessions.get(sessionParticipantsRequest.getEditSessionId());
+      return GetEditSessionParticipantsResponseImpl.make()
+         .setParticipants(participants.getParticipants(editSession.getCollaborators()));
+   }
 
 //  /**
 //   * Iterates through all open, dirty edit sessions and saves them to disk.

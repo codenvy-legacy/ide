@@ -15,17 +15,14 @@
 package com.google.collide.server.participants;
 
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
-import com.google.collide.dto.ServerToClientDocOps;
 import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ParticipantImpl;
 import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
-import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserDetailsImpl;
-import org.everrest.websockets.WSConnectionContext;
-import org.everrest.websockets.message.ChannelBroadcastMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -33,30 +30,6 @@ public class Participants
 {
    /** Map of per-user session IDs LoggedInUsers. */
    private final ConcurrentMap<String, LoggedInUser> loggedInUsers = new ConcurrentHashMap<String, LoggedInUser>();
-
-   public void doBroadcast(String authorId, ServerToClientDocOps oprts)
-   {
-      final String body = ((ServerToClientDocOpsImpl)oprts).toJson();
-      for (LoggedInUser user : loggedInUsers.values())
-      {
-         final String channel = "collab_editor." + user.getId();
-         if (!channel.equals(authorId))
-         {
-            ChannelBroadcastMessage message = new ChannelBroadcastMessage();
-            message.setChannel(channel);
-            message.setBody(body);
-            try
-            {
-               WSConnectionContext.sendMessage(message);
-            }
-            catch (Exception e)
-            {
-               // TODO
-               e.printStackTrace();
-            }
-         }
-      }
-   }
 
    public GetWorkspaceParticipantsResponse getParticipants()
    {
@@ -82,6 +55,33 @@ public class Participants
 
       resp.setParticipants(collaboratorsArr);
       return resp;
+   }
+
+   public List<ParticipantUserDetailsImpl> getParticipants(Set<String> clientIds)
+   {
+      List<ParticipantUserDetailsImpl> result = new ArrayList<ParticipantUserDetailsImpl>();
+
+      for (LoggedInUser user : loggedInUsers.values())
+      {
+         final String userId = user.getId();
+         if (clientIds.contains(userId))
+         {
+            final String username = user.getName();
+            ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
+            ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
+            UserDetailsImpl userDetails = UserDetailsImpl.make()
+               .setUserId(userId)
+               .setDisplayEmail(username)
+               .setDisplayName(username)
+               .setGivenName(username);
+
+            participantDetails.setParticipant(participant);
+            participantDetails.setUserDetails(userDetails);
+            result.add(participantDetails);
+         }
+      }
+
+      return result;
    }
 
    public boolean removeParticipant(String userId)
