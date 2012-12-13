@@ -27,6 +27,7 @@ import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEven
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
@@ -60,26 +61,26 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    /**
     * Current workspace's href.
     */
-   private VirtualFileSystemInfo workspace;
+   protected VirtualFileSystemInfo workspace;
 
    /**
     * Variable, which indicated, when control must be enabled: before initializing the git repository or after.
     * 
     * IDE-1252
     */
-   private EnableState enableState = EnableState.AFTER_INIT;
+   protected EnableState enableState = EnableState.AFTER_INIT;
 
    /**
     * Current selected project.
     */
-   private ProjectModel selectedProject;
+   protected ProjectModel selectedProject;
 
-   private boolean isProjectExplorerVisible;
+   protected boolean isProjectExplorerVisible;
 
    /**
     * Current selected item in project explorer or in workspace navigator.
     */
-   private Item selectedItem;
+   protected Item selectedItem;
 
    /**
     * @param id control's id
@@ -237,7 +238,7 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
    {
       View view = event.getView();
 
-      if (view instanceof ProjectExplorerDisplay)
+      if (view instanceof ProjectExplorerDisplay || view instanceof PackageExplorerDisplay)
       {
          isProjectExplorerVisible = view.isViewVisible();
       }
