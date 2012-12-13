@@ -68,11 +68,7 @@
    <replace-with class="org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginPresenter.Display"/>
    </replace-with>
-   
-   <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.InviteDevelopersView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.InviteDevelopersPresenter.Display" />
-   </replace-with>
-   
+      
    <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersView">
       <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter.Display" />
    </replace-with>

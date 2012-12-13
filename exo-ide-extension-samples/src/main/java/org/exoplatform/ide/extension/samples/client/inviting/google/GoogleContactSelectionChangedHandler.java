@@ -16,18 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting;
+package org.exoplatform.ide.extension.samples.client.inviting.google;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.exoplatform.ide.client.framework.invite.GoogleContact;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public interface InviteDevelopersHandler extends EventHandler
+public interface GoogleContactSelectionChangedHandler
 {
-
-   void onInviteDevelopers(InviteDevelopersEvent event);
    
+   void onGoogleContactSelectionChanged(GoogleContact contact, boolean selected);
+
 }

@@ -123,10 +123,10 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
       setCloseOnEscape(true);
    }
    
-   private Map<GitHubUser, UserCard> cards = new HashMap<GitHubUser, UserCard>();
+   private Map<GitHubUser, GitHubUserTile> cards = new HashMap<GitHubUser, GitHubUserTile>();
    
    @Override
-   public void setDevelopers(List<GitHubUser> userList, UserSelectionChangedHandler selectionChangedHandler)
+   public void setDevelopers(List<GitHubUser> userList, GitHubUserSelectionChangedHandler selectionChangedHandler)
    {
       if (userListWidget != null)
       {
@@ -137,7 +137,7 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
       cards.clear();
       for (GitHubUser user : userList)
       {
-         UserCard card = new UserCard(user);
+         GitHubUserTile card = new GitHubUserTile(user);
          card.setSelectionChangedHandler(selectionChangedHandler);
          userListWidget.add(card);
          cards.put(user, card);

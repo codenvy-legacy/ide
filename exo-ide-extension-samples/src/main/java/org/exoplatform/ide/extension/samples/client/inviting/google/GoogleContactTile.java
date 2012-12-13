@@ -39,16 +39,16 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * @version $
  * 
  */
-public class UserCard extends Composite
+public class GoogleContactTile extends Composite
 {
 
-   private static UserCardUiBinder uiBinder = GWT.create(UserCardUiBinder.class);
+   private static GoogleContactTileUiBinder uiBinder = GWT.create(GoogleContactTileUiBinder.class);
 
-   interface UserCardUiBinder extends UiBinder<Widget, UserCard>
+   interface GoogleContactTileUiBinder extends UiBinder<Widget, GoogleContactTile>
    {
    }
 
-   interface UserCardStyle extends CssResource
+   interface Style extends CssResource
    {
       String userFieldBody();
 
@@ -56,7 +56,7 @@ public class UserCard extends Composite
    }
 
    @UiField
-   UserCardStyle style;
+   Style style;
 
    @UiField
    FlowPanel userFieldBody;
@@ -72,9 +72,9 @@ public class UserCard extends Composite
 
    private GoogleContact googleContact;
 
-   private UserSelectionChangedHandler selectionChangedHandler;
+   private GoogleContactSelectionChangedHandler selectionChangedHandler;
 
-   public UserCard(GoogleContact contact)
+   public GoogleContactTile(GoogleContact contact)
    {
       googleContact = contact;
 
@@ -107,7 +107,7 @@ public class UserCard extends Composite
             setSelected(checkBox.getValue());
             if (selectionChangedHandler != null)
             {
-               selectionChangedHandler.onUserSelectionChanged(googleContact, checkBox.getValue().booleanValue());
+               selectionChangedHandler.onGoogleContactSelectionChanged(googleContact, checkBox.getValue().booleanValue());
             }
          }
       });
@@ -120,13 +120,13 @@ public class UserCard extends Composite
             setSelected(!checkBox.getValue());
             if (selectionChangedHandler != null)
             {
-               selectionChangedHandler.onUserSelectionChanged(googleContact, checkBox.getValue().booleanValue());
+               selectionChangedHandler.onGoogleContactSelectionChanged(googleContact, checkBox.getValue().booleanValue());
             }
          }
       });
    }
 
-   public void setSelectionChangedHandler(UserSelectionChangedHandler selectionChangedHandler)
+   public void setSelectionChangedHandler(GoogleContactSelectionChangedHandler selectionChangedHandler)
    {
       this.selectionChangedHandler = selectionChangedHandler;
    }

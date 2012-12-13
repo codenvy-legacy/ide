@@ -33,6 +33,8 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
  */
 public class InviteClientService
 {
+   
+   public static final boolean DEBUG_MODE = false;
 
    private String restServiceContext;
 

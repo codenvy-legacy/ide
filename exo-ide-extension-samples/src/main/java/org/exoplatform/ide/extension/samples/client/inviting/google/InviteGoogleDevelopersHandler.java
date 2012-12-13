@@ -18,16 +18,16 @@
  */
 package org.exoplatform.ide.extension.samples.client.inviting.google;
 
-import org.exoplatform.ide.client.framework.invite.GoogleContact;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public interface UserSelectionChangedHandler
+public interface InviteGoogleDevelopersHandler extends EventHandler
 {
-   
-   void onUserSelectionChanged(GoogleContact user, boolean selected);
 
+   void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event);
+   
 }

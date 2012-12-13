@@ -37,6 +37,8 @@ import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -57,13 +59,13 @@ import java.util.List;
  * 
  */
 public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteHandler, ViewClosedHandler,
-   InviteGitHubCollaboratorsHandler
+   InviteGitHubCollaboratorsHandler, GitHubUserSelectionChangedHandler, ProjectOpenedHandler
 {
 
    public interface Display extends IsView
    {
 
-      void setDevelopers(List<GitHubUser> userList, UserSelectionChangedHandler selectionChangedHandler);
+      void setDevelopers(List<GitHubUser> userList, GitHubUserSelectionChangedHandler selectionChangedHandler);
 
       boolean isSelected(GitHubUser user);
 
@@ -83,6 +85,8 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
    private Display display;
 
    private InviteClientService inviteClientService;
+   
+   private List<GitHubUser> collaborators;   
 
    public InviteGitHubDevelopersPresenter(InviteClientService inviteClientService)
    {
@@ -91,12 +95,44 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       IDE.addHandler(CloneRepositoryCompleteEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
 
-//      IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
-//      IDE.getInstance().addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);
+      if (InviteClientService.DEBUG_MODE)
+      {
+         IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
+         IDE.addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);         
+      }
+      
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
    }
 
    @Override
    public void onInviteGitHubCollaborators(InviteGitHubCollaboratorsEvent event)
+   {
+      if (InviteClientService.DEBUG_MODE)
+      {
+         loadStaticGitHubCollaborators();         
+      }
+      else
+      {
+//         String user = "";
+//         String repository = "";
+//         loadGitHubCollaborators();         
+      }
+   }
+
+   @Override
+   public void onCloneRepositoryComplete(CloneRepositoryCompleteEvent event)
+   {
+      if (InviteClientService.DEBUG_MODE)
+      {
+         loadStaticGitHubCollaborators();         
+      }
+      else
+      {
+         loadGitHubCollaborators(event.getUser(), event.getRepositoryName());         
+      }
+   }
+   
+   private void loadStaticGitHubCollaborators()
    {
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
@@ -125,17 +161,16 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
-      }
+      }      
    }
 
-   @Override
-   public void onCloneRepositoryComplete(CloneRepositoryCompleteEvent event)
+   private void loadGitHubCollaborators(String user, String repository)
    {
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
       try
       {
-         GitHubClientService.getInstance().getCollaborators(event.getUser(), event.getRepositoryName(),
+         GitHubClientService.getInstance().getCollaborators(user, repository,
             new AsyncRequestCallback<Collaborators>(unmarshaller)
             {
 
@@ -157,10 +192,8 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
-      }
+      }      
    }
-
-   private List<GitHubUser> collaborators;
 
    private void collaboratorsReceived(Collaborators result)
    {
@@ -182,8 +215,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
          }
       }
 
-      //collaborators = result.getCollaborators();
-      display.setDevelopers(collaborators, selectionChangedHandler);
+      display.setDevelopers(collaborators, this);
       display.setInviteButtonEnabled(false);
    }
    
@@ -199,15 +231,13 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       
       return false;
    }
-
-   private UserSelectionChangedHandler selectionChangedHandler = new UserSelectionChangedHandler()
+   
+   @Override
+   public void onGitHubUserSelectionChanged(GitHubUser user, boolean selected)
    {
-      @Override
-      public void onUserSelectionChanged(GitHubUser user, boolean selected)
-      {
-         display.setInviteButtonEnabled(hasSelectedUsers());
-      }
-   };
+      display.setInviteButtonEnabled(hasSelectedUsers());
+   }
+   
 
    private void bindDisplay()
    {
@@ -324,6 +354,12 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
          IDE.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
       }
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+//      System.out.println("project opened");
    }
 
 }

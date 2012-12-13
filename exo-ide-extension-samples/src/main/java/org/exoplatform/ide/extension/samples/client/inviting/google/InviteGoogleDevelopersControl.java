@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting;
+package org.exoplatform.ide.extension.samples.client.inviting.google;
 
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
@@ -29,7 +29,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
  * 
  */
 @RolesAllowed({"administrators", "developers"})
-public class InviteDevelopersControl extends SimpleControl implements IDEControl
+public class InviteGoogleDevelopersControl extends SimpleControl implements IDEControl
 {
 
    private static final String ID = "Share/Invite Developers...";
@@ -38,13 +38,13 @@ public class InviteDevelopersControl extends SimpleControl implements IDEControl
 
    private static final String PROMPT = "Invite Developers...";
 
-   public InviteDevelopersControl()
+   public InviteGoogleDevelopersControl()
    {
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
-      setEvent(new InviteDevelopersEvent());      
+      setEvent(new InviteGoogleDevelopersEvent());      
       setEnabled(true);
       setVisible(true);
    }
