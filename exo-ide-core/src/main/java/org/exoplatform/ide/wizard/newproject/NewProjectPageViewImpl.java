@@ -18,9 +18,11 @@
  */
 package org.exoplatform.ide.wizard.newproject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -31,7 +33,6 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.json.JsonArray;
 
-
 /**
  * NewProjectPageViewImpl is the view of new project page wizard.
  * Provides selecting type of technology for creating new project.
@@ -40,29 +41,43 @@ import org.exoplatform.ide.json.JsonArray;
  */
 public class NewProjectPageViewImpl implements NewProjectPageView
 {
-   private FlowPanel mainPanel;
+   private static NewProjectViewImplUiBinder uiBinder = GWT.create(NewProjectViewImplUiBinder.class);
+
+   @UiField(provided = true)
+   Grid technologies;
+
+   private final Widget widget;
 
    private ActionDelegate delegate;
 
    private ToggleButton selectedButton;
 
+   interface NewProjectViewImplUiBinder extends UiBinder<Widget, NewProjectPageViewImpl>
+   {
+   }
+
    /**
     * Create view with given instance of resources and list of wizard's data
     * 
     * @param wizardDatas aggregate information about available wizards
-    * @param resources
     */
-   public NewProjectPageViewImpl(JsonArray<NewProjectWizardData> wizardDatas, final NewProjectWizardResource resources)
+   public NewProjectPageViewImpl(JsonArray<NewProjectWizardData> wizardDatas)
    {
-      mainPanel = new FlowPanel();
+      createTechnologiesTable(wizardDatas);
 
-      Label label = new Label("Choosen a Technology");
-      mainPanel.add(label);
+      widget = uiBinder.createAndBindUi(this);
+   }
 
+   /**
+    * Create table with available technologies.
+    * 
+    * @param wizardDatas available technologies
+    */
+   private void createTechnologiesTable(JsonArray<NewProjectWizardData> wizardDatas)
+   {
       //create table where contains kind of technology
-      Grid technologies = new Grid(2, wizardDatas.size());
+      technologies = new Grid(2, wizardDatas.size());
       HTMLTable.CellFormatter formatter = technologies.getCellFormatter();
-      mainPanel.add(technologies);
 
       //create button for each available wizard
       for (int i = 0; i < wizardDatas.size(); i++)
@@ -118,7 +133,7 @@ public class NewProjectPageViewImpl implements NewProjectPageView
     */
    public Widget asWidget()
    {
-      return mainPanel;
+      return widget;
    }
 
    /**
@@ -128,4 +143,5 @@ public class NewProjectPageViewImpl implements NewProjectPageView
    {
       this.delegate = delegate;
    }
+
 }

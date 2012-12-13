@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.wizard.newproject;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.exoplatform.ide.json.JsonArray;
@@ -46,7 +47,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     */
    public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources)
    {
-      this(wizardAgent, resources, new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards(), resources));
+      this(wizardAgent, resources.newProjectIcon(), new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards()));
    }
 
    /**
@@ -55,13 +56,12 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     * For tests
     * 
     * @param wizardAgent
-    * @param resources
+    * @param image
     * @param view
     */
-   protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources,
-      NewProjectPageView view)
+   protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, ImageResource image, NewProjectPageView view)
    {
-      super("Select a wizard", resources.newProjectIcon());
+      super("Select a wizard", image);
       this.view = view;
       view.setBtnPressedDelegate(this);
       this.wizards = wizardAgent.getNewProjectWizards();
