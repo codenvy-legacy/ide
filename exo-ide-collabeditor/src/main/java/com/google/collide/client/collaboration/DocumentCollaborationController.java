@@ -255,4 +255,9 @@ public class DocumentCollaborationController implements DocOpRecoveryInitiator {
   void handleTransportReconnectedSuccessfully() {
     recover();
   }
+
+   public ParticipantModel getParticipantModel()
+   {
+      return participantModel;
+   }
 }

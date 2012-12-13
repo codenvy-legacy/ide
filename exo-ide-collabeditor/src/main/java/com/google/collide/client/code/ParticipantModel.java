@@ -305,4 +305,32 @@ public class ParticipantModel {
       }
     }
   }
+
+   public void addParticipant(boolean isAllParticipants, ParticipantUserDetails item)
+   {
+      UserDetails userDetails = item.getUserDetails();
+      String userId = userDetails.getUserId();
+
+      // Cache the participants' user details.
+      participantUserDetails.put(userId, userDetails);
+      clientIdToUserId.put(item.getParticipant().getId(), userId);
+
+      if (isAllParticipants) {
+         presentParticipantsTracker.add(userId);
+         if (!participantsByUserId.containsKey(userId)) {
+            createAndAddParticipant(item.getParticipant(), userDetails);
+         }
+      } else {
+     /*
+      * Add the participant to the list. If the user is not in presentParticipantsTracker set,
+      * then the participant has since disconnected. If the user is in the participants map, then
+      * the user was already added to the view.
+      */
+         if (presentParticipantsTracker.contains(userId)
+            && !participantsByUserId.containsKey(userId)) {
+            createAndAddParticipant(item.getParticipant(), userDetails);
+         }
+      }
+   }
+
 }

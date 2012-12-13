@@ -138,6 +138,19 @@ public class DocumentManager
     return documentsByFileEditSessionKey.get(fileEditSessionKey);
   }
 
+   public Document getDocumentByFilePath(String filePath)
+   {
+      for (Document d: documents.asIterable())
+      {
+         if (filePath.equals(DocumentMetadata.getPath(d).getPathString()))
+         {
+            return d;
+         }
+      }
+      return null;
+   }
+
+
   public void attachToEditor(final Document document, final Editor editor) {
     final Document oldDocument = editor.getDocument();
     if (oldDocument != null) {
