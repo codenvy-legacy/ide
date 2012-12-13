@@ -16,12 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.genericproject;
+package org.exoplatform.ide.wizard.newgenericproject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -31,40 +33,33 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class GenericProjectPageViewImpl implements GenericProjectPageView
+public class NewGenericProjectPageViewImpl implements NewGenericProjectPageView
 {
-   private FlowPanel mainPanel;
-
-   private TextBox projectName;
+   private final Widget widget;
 
    private ActionDelegate delegate;
 
-   /**
-    * Create generic project page view
-    * 
-    * @param resources
-    */
-   public GenericProjectPageViewImpl(GenericProjectWizardResource resources)
-   {
-      mainPanel = new FlowPanel();
-      mainPanel.setStyleName(resources.genericProjectWizardCss().genericProjectWizard());
-      
-      Label projNameText = new Label("Project name:");
-      projNameText.setStyleName(resources.genericProjectWizardCss().component());
-      mainPanel.add(projNameText);
+   private static NewGenericPrPageViewImplUiBinder uiBinder = GWT.create(NewGenericPrPageViewImplUiBinder.class);
 
-      projectName = new TextBox();
-      projectName.setStyleName(resources.genericProjectWizardCss().component());
-      //checks entered project's name and updates navigation buttons
-      projectName.addKeyUpHandler(new KeyUpHandler()
-      {        
-         public void onKeyUp(KeyUpEvent event)
-         {
-            delegate.checkProjectName();
-         }
-      });
-      
-      mainPanel.add(projectName);
+   @UiField
+   FlowPanel mainPanel;
+
+   @UiField
+   TextBox projectName;
+
+   interface NewGenericPrPageViewImplUiBinder extends UiBinder<Widget, NewGenericProjectPageViewImpl>
+   {
+   }
+
+   public NewGenericProjectPageViewImpl()
+   {
+      widget = uiBinder.createAndBindUi(this);
+   }
+
+   @UiHandler("projectName")
+   void onProjectNameKeyUp(KeyUpEvent event)
+   {
+      delegate.checkProjectName();
    }
 
    /**
@@ -72,7 +67,7 @@ public class GenericProjectPageViewImpl implements GenericProjectPageView
     */
    public Widget asWidget()
    {
-      return mainPanel;
+      return widget;
    }
 
    /**

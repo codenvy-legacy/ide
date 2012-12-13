@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.genericproject;
+package org.exoplatform.ide.wizard.newgenericproject;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -36,6 +36,8 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Property;
 import org.exoplatform.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
+import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPageView;
+import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,20 +47,20 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
 /**
- * Testing {@link GenericProjectPagePresenter} functionality
+ * Testing {@link NewGenericProjectPagePresenter} functionality
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @RunWith(MockitoJUnitRunner.class)
-public class TestGenericProjectPagePresenter
+public class TestNewGenericProjectPagePresenter
 {
    private static final boolean CAN_FINISH = true;
 
-   private GenericProjectPageView view;
+   private NewGenericProjectPageView view;
 
    private ResourceProvider resourceProvider;
 
-   private GenericProjectPagePresenter presenter;
+   private NewGenericProjectPagePresenter presenter;
 
    @Before
    public void disarm()
@@ -101,7 +103,7 @@ public class TestGenericProjectPagePresenter
    @SuppressWarnings("unchecked")
    private void createPresenter(final JsonArray<String> projects)
    {
-      view = mock(GenericProjectPageView.class);
+      view = mock(NewGenericProjectPageView.class);
       resourceProvider = mock(ResourceProvider.class);
 
       // create answer in response for calls get all available projects.
@@ -116,7 +118,7 @@ public class TestGenericProjectPagePresenter
          }
       }).when(resourceProvider).listProjects((AsyncCallback<JsonArray<String>>)any());
 
-      presenter = new GenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
+      presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
    }
 
@@ -186,9 +188,9 @@ public class TestGenericProjectPagePresenter
       String projectName = "Test";
 
       // create presenter
-      view = mock(GenericProjectPageView.class);
+      view = mock(NewGenericProjectPageView.class);
       resourceProvider = mock(ResourceProvider.class);
-      presenter = new GenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
+      presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
 
       when(view.getProjectName()).thenReturn(projectName);
 
@@ -204,9 +206,9 @@ public class TestGenericProjectPagePresenter
    public void shouldBeCallCreateProject()
    {
       // create presenter
-      view = mock(GenericProjectPageView.class);
+      view = mock(NewGenericProjectPageView.class);
       resourceProvider = mock(ResourceProvider.class);
-      presenter = new GenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
+      presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
 
       presenter.doFinish();
 

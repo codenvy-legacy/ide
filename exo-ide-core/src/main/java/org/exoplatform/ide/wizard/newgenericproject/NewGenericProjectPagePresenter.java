@@ -16,11 +16,12 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.genericproject;
+package org.exoplatform.ide.wizard.newgenericproject;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.inject.Inject;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.json.JsonArray;
@@ -38,10 +39,10 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class GenericProjectPagePresenter extends AbstractWizardPagePresenter implements
-   GenericProjectPageView.ActionDelegate
+public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements
+   NewGenericProjectPageView.ActionDelegate
 {
-   private GenericProjectPageView view;
+   private NewGenericProjectPageView view;
 
    private WizardPagePresenter previous;
 
@@ -63,10 +64,11 @@ public class GenericProjectPagePresenter extends AbstractWizardPagePresenter imp
     * @param resources 
     * @param resourceProvider
     */
-   public GenericProjectPagePresenter(GenericProjectWizardResource resources,
+   @Inject
+   public NewGenericProjectPagePresenter(NewGenericProjectWizardResource resources,
       ResourceProvider resourceProvider)
    {
-      this(resources.genericProjectIcon(), new GenericProjectPageViewImpl(resources), resourceProvider);
+      this(resources.genericProjectIcon(), new NewGenericProjectPageViewImpl(), resourceProvider);
    }
 
    /**
@@ -78,7 +80,7 @@ public class GenericProjectPagePresenter extends AbstractWizardPagePresenter imp
     * @param view
     * @param resourceProvider
     */
-   protected GenericProjectPagePresenter(ImageResource image, GenericProjectPageView view,
+   protected NewGenericProjectPagePresenter(ImageResource image, NewGenericProjectPageView view,
       ResourceProvider resourceProvider)
    {
       super("New generic project wizard", image);
@@ -166,24 +168,20 @@ public class GenericProjectPagePresenter extends AbstractWizardPagePresenter imp
       {
          return "Please, enter a project name.";
       }
-      else
+      else if (!hasProjectList)
       {
-         if (hasProjectList)
-         {
-            if (hasSameProject)
-            {
-               return "Project with this name already exists.";
-            }
-            else
-            {
-               return hasIncorrectSymbol ? "Incorrect project name." : null;
-            }
-         }
-         else
-         {
-            return "Please wait, checking project list";
-         }
+         return "Please wait, checking project list";
       }
+      else if (hasSameProject)
+      {
+         return "Project with this name already exists.";
+      }
+      else if (hasIncorrectSymbol)
+      {
+         return "Incorrect project name.";
+      }
+
+      return null;
    }
 
    /**

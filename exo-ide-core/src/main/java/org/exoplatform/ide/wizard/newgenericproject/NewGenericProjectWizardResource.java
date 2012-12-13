@@ -16,39 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.genericproject;
+package org.exoplatform.ide.wizard.newgenericproject;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
- * Interface of new generic project wizard view.
+ * Contains of resource for generic project's page view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface GenericProjectPageView extends IsWidget
+public interface NewGenericProjectWizardResource extends ClientBundle
 {
-   /**
-    * Returns entered project's name.
-    * 
-    * @return
-    */
-   String getProjectName();
-   
-   /**
-    * Sets new delegate
-    * 
-    * @param delegate
-    */
-   void setCheckProjNameDelegate(ActionDelegate delegate);
-
-   /**
-    * Needs for delegate some function into GenericProjectPage view.
-    */
-   public interface ActionDelegate
-   {
-      /**
-       * Checks whether project's name is complete or not and updates navigation buttons.
-       */
-      void checkProjectName();
-   }
+   @Source("org/exoplatform/ide/wizard/images/GenericProjectIcon.png")
+   ImageResource genericProjectIcon();
 }
