@@ -26,10 +26,10 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class AppStopedEvent extends GwtEvent<AppStopedHandler>
+public class AppStoppedEvent extends GwtEvent<AppStoppedHandler>
 {
 
-   public static final GwtEvent.Type<AppStopedHandler> TYPE = new GwtEvent.Type<AppStopedHandler>();
+   public static final GwtEvent.Type<AppStoppedHandler> TYPE = new GwtEvent.Type<AppStoppedHandler>();
 
    private String appName;
 
@@ -42,22 +42,22 @@ public class AppStopedEvent extends GwtEvent<AppStopedHandler>
     * @param name name of the stopped application
     * @param manually application was stopped manually
     */
-   public AppStopedEvent(String name, boolean manually)
+   public AppStoppedEvent(String name, boolean manually)
    {
       this.appName = name;
       this.manually = manually;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<AppStopedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<AppStoppedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(AppStopedHandler handler)
+   protected void dispatch(AppStoppedHandler handler)
    {
-      handler.onAppStoped(this);
+      handler.onAppStopped(this);
    }
 
    public String getAppName()

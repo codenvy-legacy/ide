@@ -66,7 +66,7 @@ import java.util.Map;
  * 
  */
 public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, VfsChangedHandler
-   
+
 {
 
    private IDEConfiguration applicationConfiguration;
@@ -201,10 +201,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       {
          promptToSelectEntryPoint();
       }
-      
+
       Map<String, List<String>> parameterMap = Location.getParameterMap();
-      
-      if (parameterMap != null && parameterMap.containsValue(CodeNowSpec10.CURRENT_VERSION))
+
+      if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
+         && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
       {
          IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
       }
@@ -247,12 +248,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
       initServices();
    }
-   
-   
 
    private void initServices()
    {
-     
+
       IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.get()));
 
       /*
@@ -271,6 +270,5 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
          .getRegisteredControls()));
    }
-
 
 }

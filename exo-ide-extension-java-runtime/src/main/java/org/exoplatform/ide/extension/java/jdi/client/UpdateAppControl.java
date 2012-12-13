@@ -32,8 +32,8 @@ import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedEvent;
-import org.exoplatform.ide.extension.java.jdi.client.events.AppStopedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -48,7 +48,7 @@ import java.util.List;
  *
  */
 public class UpdateAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStopedHandler, ActiveProjectChangedHandler
+   AppStartedHandler, AppStoppedHandler, ActiveProjectChangedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
@@ -80,7 +80,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
-      IDE.addHandler(AppStopedEvent.TYPE, this);
+      IDE.addHandler(AppStoppedEvent.TYPE, this);
       IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
@@ -113,7 +113,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
             || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-            || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType);
+            || ProjectType.WAR.value().equals(projectType) || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType);
 
       boolean useJRebel = isUseJRebel(project);
 
@@ -129,7 +129,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
    }
 
    @Override
-   public void onAppStoped(AppStopedEvent appStopedEvent)
+   public void onAppStopped(AppStoppedEvent appStopedEvent)
    {
       setEnabled(false);
    }
