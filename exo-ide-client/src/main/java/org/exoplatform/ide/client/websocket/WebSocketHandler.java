@@ -177,7 +177,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
             return;
          }
          reconnectionAttemptsCounter++;
-         ((RESTMessageBus)IDE.messageBus()).initialize();
+         IDE.messageBus().initialize();
          initialize();
       }
    };
