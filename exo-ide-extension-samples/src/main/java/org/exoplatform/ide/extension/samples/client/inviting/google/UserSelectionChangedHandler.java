@@ -16,9 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting;
+package org.exoplatform.ide.extension.samples.client.inviting.google;
 
-import org.exoplatform.ide.git.shared.GitHubUser;
+import org.exoplatform.ide.client.framework.invite.GoogleContact;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -28,6 +28,6 @@ import org.exoplatform.ide.git.shared.GitHubUser;
 public interface UserSelectionChangedHandler
 {
    
-   void onUserSelectionChanged(GitHubUser user, boolean selected);
+   void onUserSelectionChanged(GoogleContact user, boolean selected);
 
 }

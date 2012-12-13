@@ -43,6 +43,12 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background.png")
    ImageResource invitePageHeaderBackground();   
    
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background-48.png")
+   ImageResource invitePageHeaderBackground48();  
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/user-default-photo.png")
+   ImageResource userDefaultPhoto();  
+
    /*
     * Buttons
     */
@@ -148,6 +154,8 @@ public interface SamplesClientBundle extends ClientBundle
    public interface Style extends CssResource
    {
       String inviteHeader();
+      
+      String inviteHeader48();
       
       String table();
 

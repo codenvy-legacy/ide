@@ -73,8 +73,12 @@
       <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.InviteDevelopersPresenter.Display" />
    </replace-with>
    
-   <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.InviteGitHubDevelopersView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.InviteGitHubDevelopersPresenter.Display" />
+   <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter.Display" />
+   </replace-with>
+
+   <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display" />
    </replace-with>
 
 </module>

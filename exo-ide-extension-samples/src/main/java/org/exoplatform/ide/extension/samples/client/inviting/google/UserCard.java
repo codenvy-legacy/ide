@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.inviting;
+package org.exoplatform.ide.extension.samples.client.inviting.google;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,7 +31,8 @@ import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.ide.git.shared.GitHubUser;
+import org.exoplatform.ide.client.framework.invite.GoogleContact;
+import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -53,12 +54,13 @@ public class UserCard extends Composite
 
       String userFieldBodySelected();
    }
-   
-   @UiField UserCardStyle style;
+
+   @UiField
+   UserCardStyle style;
 
    @UiField
    FlowPanel userFieldBody;
-   
+
    @UiField
    CheckBox checkBox;
 
@@ -67,21 +69,35 @@ public class UserCard extends Composite
 
    @UiField
    Label name, company, email;
-   
-   private GitHubUser gitUser;
-   
+
+   private GoogleContact googleContact;
+
    private UserSelectionChangedHandler selectionChangedHandler;
 
-   public UserCard(GitHubUser user)
+   public UserCard(GoogleContact contact)
    {
-      gitUser = user;
-      
+      googleContact = contact;
+
       initWidget(uiBinder.createAndBindUi(this));
 
-      avatarImage.setUrl(user.getAvatarUrl());
-      name.setText(user.getName());
-      company.setText(user.getCompany());
-      email.setText(user.getEmail());
+      //avatarImage.setUrl(user.getAvatarUrl());
+
+      if (contact.getPhotoBase64() != null)
+      {
+         String url = "data:image/jpg;base64," + contact.getPhotoBase64();
+         avatarImage.setUrl(url);
+      }
+      else
+      {
+         avatarImage.setUrl(SamplesClientBundle.INSTANCE.userDefaultPhoto().getSafeUri());
+      }
+
+      name.setText(contact.getName());
+      //company.setText(user. getCompany());
+      if (!contact.getEmailAddresses().isEmpty())
+      {
+         email.setText(contact.getEmailAddresses().get(0));
+      }
 
       checkBox.addClickHandler(new ClickHandler()
       {
@@ -91,7 +107,7 @@ public class UserCard extends Composite
             setSelected(checkBox.getValue());
             if (selectionChangedHandler != null)
             {
-               selectionChangedHandler.onUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+               selectionChangedHandler.onUserSelectionChanged(googleContact, checkBox.getValue().booleanValue());
             }
          }
       });
@@ -104,12 +120,12 @@ public class UserCard extends Composite
             setSelected(!checkBox.getValue());
             if (selectionChangedHandler != null)
             {
-               selectionChangedHandler.onUserSelectionChanged(gitUser, checkBox.getValue().booleanValue());
+               selectionChangedHandler.onUserSelectionChanged(googleContact, checkBox.getValue().booleanValue());
             }
          }
       });
    }
-   
+
    public void setSelectionChangedHandler(UserSelectionChangedHandler selectionChangedHandler)
    {
       this.selectionChangedHandler = selectionChangedHandler;
