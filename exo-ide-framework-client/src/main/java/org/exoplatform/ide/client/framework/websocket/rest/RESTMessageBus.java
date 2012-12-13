@@ -109,6 +109,8 @@ public class RESTMessageBus extends MessageBus
    @Override
    public void send(Message message, ReplyHandler callback) throws WebSocketException
    {
+      checkWebSocketConnectionState();
+
       AutoBean<?> autoBean = AutoBeanUtils.getAutoBean(message);
       if (autoBean == null)
          throw new NullPointerException("Failed to marshall message");

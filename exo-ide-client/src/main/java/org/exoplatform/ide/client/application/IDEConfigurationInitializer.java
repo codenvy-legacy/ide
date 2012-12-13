@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.core.shared.GWT;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.json.client.JSONObject;
