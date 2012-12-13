@@ -33,6 +33,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
@@ -51,12 +52,15 @@ import java.util.List;
  * @version $
  * 
  */
-public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHandler, ViewClosedHandler, GoogleContactSelectionChangedHandler
+public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHandler, ViewClosedHandler,
+   GoogleContactSelectionChangedHandler
 {
-   
+
+   public static final String CONTACTS_FAILED = "Error loading the list of Google contacts.";
+
    public interface Display extends IsView
    {
-      
+
       void setDevelopers(List<GoogleContact> developers, GoogleContactSelectionChangedHandler selectionChangedHandler);
 
       boolean isSelected(GoogleContact contact);
@@ -70,35 +74,31 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       HasClickHandlers getInviteButton();
 
       HasClickHandlers getCloseButton();
-      
+
       void setInviteButtonEnabled(boolean enabled);
-      
+
       void setInviteButtonTitle(String title);
-      
+
       HasValue<String> getEmailsTextField();
-      
+
    }
 
-   private InviteClientService inviteClientService;
-   
    private Display display;
-   
+
    private List<GoogleContact> contacts;
-   
+
    private List<String> customEmailsList = new ArrayList<String>();
-   
+
    private List<String> selectedEmailsList = new ArrayList<String>();
-   
+
    private List<String> emailsToInvite = new ArrayList<String>();
-   
+
    private int invitations = 0;
-   
-   public InviteGoogleDevelopersPresenter(InviteClientService inviteClientService)
+
+   public InviteGoogleDevelopersPresenter()
    {
-      this.inviteClientService = inviteClientService;
-      
       IDE.getInstance().addControl(new InviteGoogleDevelopersControl());
-      
+
       IDE.addHandler(InviteGoogleDevelopersEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
    }
@@ -106,25 +106,28 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    @Override
    public void onInviteGoogleDevelopers(InviteGoogleDevelopersEvent event)
    {
-      if (InviteClientService.DEBUG_MODE)
+      if (display != null)
       {
-         loadStaticGoogleContacts();         
+         return;
       }
-      else
-      {
-         loadGoogleContacts();         
-      }
+
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
+
+      contacts = new ArrayList<GoogleContact>();      
+      //lazyLoadGoogleContacts();
+      loadGoogleContacts();
    }
-   
+
    /**
-    * For testing only
-    * 
-    * @param url
+    * Load list of Google contacts from prepared JSON file.
+    * This method uses only for testing.
     */
-   private void loadStaticGoogleContacts()
+   private void lazyLoadGoogleContacts()
    {
       IDELoader.show("Loading contacts...");
-      
+
       new Timer()
       {
          @Override
@@ -133,43 +136,46 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             try
             {
                String url = "/IDE/google-contacts.json";
-               AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(IDELoader.get())
-               .send(new AsyncRequestCallback<List<GoogleContact>>(
-                        new InviteGoogleContactsUnmarshaller(new ArrayList<GoogleContact>()))
-               {
-                  @Override
-                  protected void onSuccess(List<GoogleContact> result)
-                  {
-                     IDELoader.hide();
-                     googleContactsReceived(result);
-                  }
+               AsyncRequest
+                  .build(RequestBuilder.GET, URL.encode(url))
+                  .loader(IDELoader.get())
+                  .send(
+                     new AsyncRequestCallback<List<GoogleContact>>(new InviteGoogleContactsUnmarshaller(
+                        new ArrayList<GoogleContact>()))
+                     {
+                        @Override
+                        protected void onSuccess(List<GoogleContact> result)
+                        {
+                           IDELoader.hide();
+                           googleContactsReceived(result);
+                        }
 
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDELoader.hide();
-                     IDE.fireEvent(new ExceptionThrownEvent(exception));
-                     exception.printStackTrace();
-                  }
-               });         
+                        @Override
+                        protected void onFailure(Throwable exception)
+                        {
+                           IDELoader.hide();
+                           IDE.fireEvent(new ExceptionThrownEvent(exception));
+                           exception.printStackTrace();
+                        }
+                     });
             }
             catch (RequestException e)
             {
                IDELoader.hide();
                IDE.fireEvent(new ExceptionThrownEvent(e));
                e.printStackTrace();
-            }         
+            }
          }
       }.schedule(500);
-   }   
-   
+   }
+
    private void loadGoogleContacts()
    {
       try
       {
          GoogleContactsServiceImpl.getInstance().getContacts(
-            new AsyncRequestCallback<List<GoogleContact>>(
-               new InviteGoogleContactsUnmarshaller(new ArrayList<GoogleContact>()))
+            new AsyncRequestCallback<List<GoogleContact>>(new InviteGoogleContactsUnmarshaller(
+               new ArrayList<GoogleContact>()))
             {
                @Override
                protected void onSuccess(List<GoogleContact> result)
@@ -180,28 +186,20 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  String message = exception.getMessage() != null ? exception.getMessage() : CONTACTS_FAILED;
+                  Dialogs.getInstance().showError(message);
                }
             });
       }
-      catch (RequestException e)
+      catch (RequestException exception)
       {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }      
+         String message = exception.getMessage() != null ? exception.getMessage() : CONTACTS_FAILED;
+         Dialogs.getInstance().showError(message);
+      }
    }
-      
+
    private void googleContactsReceived(List<GoogleContact> contacts)
    {
-      if (display != null)
-      {
-         return;
-      }
-      
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
-      
-      this.contacts = new ArrayList<GoogleContact>();
       for (GoogleContact contact : contacts)
       {
          if (contact.getEmailAddresses() != null && !contact.getEmailAddresses().isEmpty())
@@ -209,21 +207,21 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             this.contacts.add(contact);
          }
       }
-      
+
       display.setDevelopers(contacts, this);
    }
-   
+
    @Override
    public void onGoogleContactSelectionChanged(GoogleContact contact, boolean selected)
    {
       updateSelectedEmailsList();
       updateInviteButton();
-   }   
-   
+   }
+
    private void updateSelectedEmailsList()
    {
       selectedEmailsList.clear();
-      
+
       for (GoogleContact contact : contacts)
       {
          if (display.isSelected(contact))
@@ -231,8 +229,8 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             selectedEmailsList.add(contact.getEmailAddresses().get(0));
          }
       }
-   }   
-   
+   }
+
    private void bindDisplay()
    {
       display.getCloseButton().addClickHandler(new ClickHandler()
@@ -267,12 +265,12 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             {
                display.setSelected(contact, selectAll);
             }
-            
+
             updateSelectedEmailsList();
             updateInviteButton();
          }
       });
-      
+
       display.getEmailsTextField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -282,22 +280,22 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          }
       });
    }
-   
+
    private void parseCustomEmails(String customEmails)
    {
       customEmailsList.clear();
-      
+
       if (customEmails == null || customEmails.trim().isEmpty())
       {
          updateInviteButton();
          return;
       }
-      
-      String []mails = customEmails.split(",");
+
+      String[] mails = customEmails.split(",");
       for (String email : mails)
       {
          email = email.trim();
-         String []mailParts = email.split("@");
+         String[] mailParts = email.split("@");
          if (mailParts.length != 2)
          {
             continue;
@@ -305,10 +303,10 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
          customEmailsList.add(email);
       }
-      
+
       updateInviteButton();
    }
-   
+
    @Override
    public void onViewClosed(ViewClosedEvent event)
    {
@@ -320,11 +318,11 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
    private void updateInviteButton()
    {
-      int emails = selectedEmailsList.size() + customEmailsList.size();      
-      display.setInviteButtonEnabled(emails > 0);      
+      int emails = selectedEmailsList.size() + customEmailsList.size();
+      display.setInviteButtonEnabled(emails > 0);
       display.setInviteButtonTitle("Invite" + (emails > 0 ? " " + emails + " " : "") + "developers");
    }
-   
+
    public void sendNextEmail()
    {
       if (emailsToInvite.size() == 0)
@@ -341,14 +339,14 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          }
          return;
       }
-      
+
       final String emailToInvite = emailsToInvite.remove(0);
       String inviteMessage = display.getInviteMessge();
 
       IDELoader.show("Inviting " + emailToInvite);
       try
       {
-         inviteClientService.inviteUser(emailToInvite, inviteMessage, new AsyncRequestCallback<String>()
+         InviteClientService.getInstance().inviteUser(emailToInvite, inviteMessage, new AsyncRequestCallback<String>()
          {
             @Override
             protected void onSuccess(String result)
@@ -371,7 +369,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          IDELoader.hide();
          IDE.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
-      }      
+      }
    }
 
 }
