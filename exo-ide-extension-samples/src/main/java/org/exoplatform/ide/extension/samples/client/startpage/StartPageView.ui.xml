@@ -203,12 +203,12 @@
                </g:DockLayoutPanel>
 
                <g:DockLayoutPanel unit="PCT" height="90px" width="100%" stylePrimaryName="{style.hPanel}">
+                  
                   <g:west size="50">
                      <!-- Import Sample Project -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"
-                                    stylePrimaryName="{style.img}"></g:Image>
+                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}" stylePrimaryName="{style.img}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
@@ -220,6 +220,7 @@
                         </g:center>
                      </g:DockLayoutPanel>
                   </g:west>
+                  
                   <g:center>
                      <!-- Support -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
@@ -241,6 +242,22 @@
                </g:DockLayoutPanel>
 
                <g:DockLayoutPanel unit="PCT" height="90px" width="100%" stylePrimaryName="{style.hPanel}">
+               
+                  <g:west size="50">
+                     <!-- Invitation -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="130">
+                           <g:Image resource="{resource.invitation}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:Button ui:field="invitationsLink" text="{locale.invitationTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.invitationText}" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:west>               
+               
                   <g:center>
                      <!-- Survey -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">

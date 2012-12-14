@@ -57,6 +57,9 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    Image tutorialImage;
 
    @UiField
+   Button invitationsLink;
+   
+   @UiField
    Button samplesLink;
 
    @UiField
@@ -115,5 +118,10 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
       return importLink;
    }
 
+   @Override
+   public HasClickHandlers getInvitationsLink()
+   {
+      return invitationsLink;
+   }
 
 }
