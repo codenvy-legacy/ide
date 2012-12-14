@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client.packaging;
 
+import com.google.gwt.user.client.Timer;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -173,7 +175,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          IDE.getInstance().closeView(display.asView().getId());
       }
-   }
+   }   
 
    private void bindDisplay()
    {
@@ -327,6 +329,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       if (display == null)
       {
+         if (ProjectTypes.contains(openedProject))
+         {
+            scheduledOpenPackageExplorer();            
+         }
+         
          return;
       }
 
@@ -338,7 +345,21 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       openProject();
    }
-
+   
+   private void scheduledOpenPackageExplorer()
+   {
+      new Timer()
+      {
+         @Override
+         public void run()
+         {
+            display = GWT.create(PackageExplorerDisplay.class);
+            bindDisplay();
+            IDE.getInstance().openView(display.asView());            
+         }
+      }.schedule(500);      
+   }
+   
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
