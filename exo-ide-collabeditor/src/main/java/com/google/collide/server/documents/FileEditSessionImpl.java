@@ -33,6 +33,8 @@ import com.google.protobuf.ByteString;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -53,6 +55,7 @@ import javax.ws.rs.core.MediaType;
  */
 final class FileEditSessionImpl implements FileEditSession
 {
+   private static final Log LOG = ExoLogger.getLogger(FileEditSessionImpl.class);
 
    /** Bundles together a snapshot of the text of this file with any conflict chunks. */
    private static class VersionedTextAndConflictChunksImpl implements VersionedTextAndConflictChunks
@@ -211,9 +214,8 @@ final class FileEditSessionImpl implements FileEditSession
          this.contents = new VersionedDocument(mergeResult.getMergedText());
          if (chunks.size() == 0)
          {
-            // TODO : log error
-            System.out.println(String.format("Non-null MergeResult passed to FileEditSession for file that"
-               + " should have merged cleanly: [%s]", this));
+            LOG.error(String.format(
+               "Non-null MergeResult passed to FileEditSession for file that should have merged cleanly: [%s]", this));
          }
 
          for (ConflictChunk chunk : chunks)
@@ -222,10 +224,11 @@ final class FileEditSessionImpl implements FileEditSession
          }
       }
 
+      final long createdAt = System.currentTimeMillis();
       this.lastSavedCcRevision = contents.getCcRevision();
       this.lastMutationCcRevision = 0;
 
-      //System.out.println(String.format("FileEditSession [%s] was created at [%d]", this, createdAt));
+      LOG.debug("FileEditSession {} was created at {}", this, createdAt);
    }
 
    private void checkNotClosed()
@@ -252,8 +255,7 @@ final class FileEditSessionImpl implements FileEditSession
 
       if (hasChanges())
       {
-         // TODO : log warn
-         System.out.println(String.format("FileEditSession [%s] closed while dirty", this));
+         LOG.warn(String.format("FileEditSession [%s] closed while dirty", this));
       }
 
       if (onCloseListener != null)
@@ -402,7 +404,7 @@ final class FileEditSessionImpl implements FileEditSession
 
    private void saveChanges(String text) throws IOException
    {
-      System.out.println(String.format("Saving file [%s]", path));
+      LOG.debug("Saving file: {}", path);
       try
       {
          vfs.updateContent(resourceId, mediaType, new ByteArrayInputStream(text.getBytes()), null);
@@ -454,7 +456,6 @@ final class FileEditSessionImpl implements FileEditSession
      * 
      * TODO: how to store chunk resolution?
      */
-      // TODO: Resolve path prior to calling save.
       save();
       return true;
    }
