@@ -1,6 +1,12 @@
 /* Annotated CSS for the ParticipantList presenter. */
 
 .root {
+   right: 5px;
+   width: 200px;
+   top: 5px;
+   height: 200px;
+   z-index: -1;
+   position: absolute;
 }
 
 .row {

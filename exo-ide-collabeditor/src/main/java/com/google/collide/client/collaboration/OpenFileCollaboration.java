@@ -24,7 +24,9 @@ import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.FileContents;
+import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.Document;
+import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.event.shared.HandlerManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -46,6 +48,8 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
 
    private DocumentManager documentManager;
 
+   private JsonStringMap<CollaborationEditorView> openedFiles = JsonCollections.createMap();
+
    public OpenFileCollaboration(HandlerManager eventBus, DocumentManager documentManager)
    {
       this.documentManager = documentManager;
@@ -63,6 +67,11 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
          return;
       }
 
+      if (openedFiles.containsKey(selectedFile.getId()))
+      {
+         openedFiles.get(selectedFile.getId()).activate();
+         return;
+      }
       final CollabEditor editor = new CollabEditor(selectedFile.getMimeType());
       PathUtil pathUtil = new PathUtil(selectedFile.getPath());
       pathUtil.setWorkspaceId(VirtualFileSystem.getInstance().getInfo().getId());
@@ -74,6 +83,7 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
             CollaborationEditorView view = new CollaborationEditorView(editor, selectedFile);
             editor.setDocument(document);
             IDE.getInstance().openView(view);
+            openedFiles.put(selectedFile.getId(), view);
          }
 
          @Override
@@ -116,6 +126,7 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
          CollaborationEditorView view = (CollaborationEditorView)event.getView();
          CollabEditor editor = view.getEditor();
          documentManager.detachFromEditor(editor.getEditor(),editor.getEditor().getDocument());
+         openedFiles.remove(view.getFile().getId());
       }
    }
 }

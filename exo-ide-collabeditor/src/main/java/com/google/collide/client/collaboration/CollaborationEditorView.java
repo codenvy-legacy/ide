@@ -33,12 +33,15 @@ public class CollaborationEditorView extends ViewImpl
 {
    private CollabEditor editor;
 
+   private File file;
+
    private DockLayoutPanel dockLayoutPanel;
 
    public CollaborationEditorView(CollabEditor editor, File file)
    {
       super("collaborationEditor","editor", getFileTitle(file));
       this.editor = editor;
+      this.file = file;
       dockLayoutPanel = new DockLayoutPanel(Style.Unit.PX);
       add(dockLayoutPanel);
       dockLayoutPanel.add(editor);
@@ -52,5 +55,10 @@ public class CollaborationEditorView extends ViewImpl
    public CollabEditor getEditor()
    {
       return editor;
+   }
+
+   public File getFile()
+   {
+      return file;
    }
 }

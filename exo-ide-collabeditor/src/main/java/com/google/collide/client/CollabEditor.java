@@ -23,6 +23,7 @@ import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
 import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
 import com.google.collide.client.code.popup.EditorPopupController.Remover;
+import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.client.editor.Buffer.ContextMenuListener;
 import com.google.collide.client.editor.FocusManager.FocusListener;
 import com.google.collide.client.editor.gutter.NotificationManager;
@@ -206,42 +207,43 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void setText(final String text)
    {
-//      document = new org.exoplatform.ide.editor.text.Document(text);
-//      document.addDocumentListener(documentAdaptor);
-////      hoverPresenter = new HoverPresenter(this, editor, document);
-//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//      {
-//
-//         @Override
-//         public void execute()
-//         {
-//            initialized = true;
-//            Document editorDocument = Document.createFromString(text);
-//            editorDocument.putTag("IDocument", document);
-//            editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
-//            editorBundle.setDocument(editorDocument, mimeType, "");
-//            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
-//            editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
-//            {
-//
-//               @Override
-//               public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
-//               {
-//                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() + 1, column + 1));
-//               }
-//            });
-//            editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
-//            {
-//
-//               @Override
-//               public void onContextMenu(int x, int y)
-//               {
-//                  fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
-//               }
-//            });
-//
-//         }
-//      });
+      document = new org.exoplatform.ide.editor.text.Document(text);
+      document.addDocumentListener(documentAdaptor);
+//      hoverPresenter = new HoverPresenter(this, editor, document);
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+
+         @Override
+         public void execute()
+         {
+            initialized = true;
+            Document editorDocument = Document.createFromString(text);
+            editorDocument.putTag("IDocument", document);
+            editorDocument.getTextListenerRegistrar().add(new TextListenerImpl());
+            CollabEditorExtension.get().getManager().addDocument(editorDocument);
+            editorBundle.setDocument(editorDocument, mimeType, "");
+            documentAdaptor.setDocument(editorDocument, editor.getEditorDocumentMutator());
+            editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
+            {
+
+               @Override
+               public void onCursorChange(LineInfo lineInfo, int column, boolean isExplicitChange)
+               {
+                  fireEvent(new EditorCursorActivityEvent(CollabEditor.this, lineInfo.number() + 1, column + 1));
+               }
+            });
+            editor.getBuffer().getContenxtMenuListenerRegistrar().add(new ContextMenuListener()
+            {
+
+               @Override
+               public void onContextMenu(int x, int y)
+               {
+                  fireEvent(new EditorContextMenuEvent(CollabEditor.this, x, y));
+               }
+            });
+
+         }
+      });
    }
 
    /**
@@ -860,7 +862,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
             initialized = true;
             document.putTag("IDocument", CollabEditor.this.document);
             document.getTextListenerRegistrar().add(new TextListenerImpl());
-            editorBundle.setDocument(document, mimeType, "");
+            editorBundle.setDocument(document, mimeType, DocumentMetadata.getFileEditSessionKey(document));
             documentAdaptor.setDocument(document, editor.getEditorDocumentMutator());
             editor.getSelection().getCursorListenerRegistrar().add(new CursorListener()
             {

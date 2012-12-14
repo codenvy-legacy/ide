@@ -213,6 +213,12 @@ public class DocumentManager
     // handleEditableFileReceived will be called async
   }
 
+  public void addDocument(Document document)
+  {
+     documents.add(document);
+  }
+
+
   void handleEditableFileReceived(
       FileContents fileContents, JsonArray<GetDocumentCallback> callbacks) {
 
