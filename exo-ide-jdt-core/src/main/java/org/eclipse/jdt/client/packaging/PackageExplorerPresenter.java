@@ -18,14 +18,21 @@
  */
 package org.eclipse.jdt.client.packaging;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.DoubleClickEvent;
+import com.google.gwt.event.dom.client.DoubleClickHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Timer;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.eclipse.jdt.client.packaging.ProjectTreeParser.ParsingCompleteListener;
+import org.eclipse.jdt.client.packaging.model.DependencyListItem;
 import org.eclipse.jdt.client.packaging.model.PackageItem;
 import org.eclipse.jdt.client.packaging.model.ProjectItem;
 import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
@@ -40,6 +47,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
@@ -63,23 +72,17 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
+import org.exoplatform.ide.editor.api.Editor;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
-import com.google.gwt.event.logical.shared.OpenEvent;
-import com.google.gwt.event.logical.shared.OpenHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -87,8 +90,9 @@ import com.google.gwt.event.logical.shared.SelectionHandler;
  *
  */
 public class PackageExplorerPresenter implements ShowPackageExplorerHandler, ViewOpenedHandler, ViewClosedHandler,
-   ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler, EditorActiveFileChangedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler
+   ProjectOpenedHandler, ProjectClosedHandler, RefreshBrowserHandler, SelectItemHandler,
+   EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
+   ApplicationSettingsReceivedHandler, FileSavedHandler
 {
 
    private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
@@ -118,6 +122,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    private FileModel editorActiveFile;
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+   
+   private Map<String, Editor> openedEditors = new HashMap<String, Editor>();
 
    public static PackageExplorerPresenter getInstance()
    {
@@ -145,6 +151,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
    }
 
    public ProjectItem getProjectItem()
@@ -175,7 +182,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          IDE.getInstance().closeView(display.asView().getId());
       }
-   }   
+   }
 
    private void bindDisplay()
    {
@@ -234,6 +241,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    private void treeItemSelected()
    {
       Object selectedObject = display.getSelectedObject();
+      
       if (selectedObject instanceof ProjectItem)
       {
          selectedItem = ((ProjectItem)selectedObject).getProject();
@@ -277,11 +285,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
     */
    private void changeActiveFile(final Item item)
    {
-      if (!linkWithEditor ||
-         item == null ||
-         !(item instanceof FileModel) ||
-         !openedFiles.containsKey(item.getId()) ||
-         editorActiveFile.getId().equals(item.getId()))
+      if (!linkWithEditor || item == null || !(item instanceof FileModel) || !openedFiles.containsKey(item.getId())
+         || editorActiveFile.getId().equals(item.getId()))
       {
          return;
       }
@@ -331,9 +336,9 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          if (ProjectTypes.contains(openedProject))
          {
-            scheduledOpenPackageExplorer();            
+            scheduledOpenPackageExplorer();
          }
-         
+
          return;
       }
 
@@ -345,7 +350,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
       openProject();
    }
-   
+
    private void scheduledOpenPackageExplorer()
    {
       new Timer()
@@ -355,11 +360,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          {
             display = GWT.create(PackageExplorerDisplay.class);
             bindDisplay();
-            IDE.getInstance().openView(display.asView());            
+            IDE.getInstance().openView(display.asView());
          }
-      }.schedule(500);      
+      }.schedule(500);
    }
-   
+
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
@@ -465,7 +470,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          itemToSelect = selectedItem;
       }
 
-      if (itemToSelect == null)
+      if (itemToSelect == null && !event.getFolders().isEmpty())
       {
          itemToSelect = event.getFolders().get(0);
       }
@@ -483,7 +488,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             updateProjectTree(MESSAGE_UPDATE_PROJECT);
          }
       });
-
    }
 
    @Override
@@ -494,7 +498,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          return;
       }
 
-      System.out.println(">> select item " + event.getItemId());
    }
 
    /**
@@ -505,11 +508,12 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       linkWithEditor = !linkWithEditor;
       display.setLinkWithEditorButtonSelected(linkWithEditor);
 
-      applicationSettings.setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, new Boolean(linkWithEditor), Store.COOKIES);
+      applicationSettings
+         .setValue(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG, new Boolean(linkWithEditor), Store.COOKIES);
 
       //SettingsService.getInstance().saveSettingsToCookies(applicationSettings);
       IDE.fireEvent(new SaveApplicationSettingsEvent(applicationSettings, SaveType.COOKIES));
-      
+
       /*
        * fire event for show-hide line numbers command be able to update state.
        */
@@ -553,8 +557,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
             if (!collapseBranches)
             {
                Object selectedObject = display.getSelectedObject();
-               if (selectedObject instanceof FileModel && item instanceof FileModel &&
-                  ((FileModel)selectedObject).getId().equals(((FileModel)item).getId()))
+               if (selectedObject instanceof FileModel && item instanceof FileModel
+                  && ((FileModel)selectedObject).getId().equals(((FileModel)item).getId()))
                {
                   return;
                }
@@ -570,16 +574,17 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+      openedEditors.remove(event.getFile());
    }
 
    @Override
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+      openedEditors.put(event.getFile().getId(), event.getEditor());
    }
 
    private ApplicationSettings applicationSettings;
-
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
@@ -593,6 +598,39 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
          linkWithEditor = applicationSettings.getValueAsBoolean(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG);
       }
+   }
+
+   @Override
+   public void onFileSaved(final FileSavedEvent event)
+   {
+      if (openedProject == null || !"pom.xml".equals(event.getFile().getName()) || event.getFile().getProject() == null)
+      {
+         return;
+      }
+      
+      if (!event.getFile().getProject().getId().equals(openedProject.getId()))
+      {
+         return;
+      }
+      
+      if (!openedEditors.containsKey(event.getFile().getId()))
+      {
+         return;
+      }
+      
+      final String pomXmlFileContent = openedEditors.get(event.getFile().getId()).getText();
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            DependencyListItem dependencyListItem = treeParser.updateProjectDependencies(pomXmlFileContent);
+            if (dependencyListItem != null)
+            {
+               display.getBrowserTree().setValue(dependencyListItem);         
+            }
+         }
+      });
    }
 
 }
