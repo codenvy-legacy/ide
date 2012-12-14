@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.output;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -111,6 +113,15 @@ public class OutputView extends ViewImpl implements org.exoplatform.ide.client.o
       odd = !odd;
       contentPanel.add(record);
       scrollPanel.scrollToBottom();
+
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            scrollPanel.scrollToBottom();
+         }
+      });
    }
 
    @Override
