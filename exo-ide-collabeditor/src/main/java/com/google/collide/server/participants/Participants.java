@@ -20,6 +20,9 @@ import com.google.collide.dto.server.DtoServerImpls.ParticipantImpl;
 import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserDetailsImpl;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +31,8 @@ import java.util.concurrent.ConcurrentMap;
 
 public class Participants
 {
+   private static final Log LOG = ExoLogger.getLogger(Participants.class);
+
    /** Map of per-user session IDs LoggedInUsers. */
    private final ConcurrentMap<String, LoggedInUser> loggedInUsers = new ConcurrentHashMap<String, LoggedInUser>();
 
@@ -105,11 +110,13 @@ public class Participants
 
    public boolean removeParticipant(String userId)
    {
+      LOG.debug("Remove participant: {} ", userId);
       return loggedInUsers.remove(userId) != null;
    }
 
    public void addParticipant(LoggedInUser user)
    {
+      LOG.debug("Add participant: name={}, id={} ", user.getName(), user.getId());
       loggedInUsers.putIfAbsent(user.getId(), user);
    }
 }

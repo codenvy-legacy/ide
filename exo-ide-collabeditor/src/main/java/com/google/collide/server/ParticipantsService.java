@@ -21,9 +21,9 @@ package com.google.collide.server;
 import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResponseImpl;
 import com.google.collide.server.participants.LoggedInUser;
 import com.google.collide.server.participants.Participants;
+import org.everrest.websockets.WSConnection;
 
 import java.security.Principal;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -50,25 +50,12 @@ public class ParticipantsService
    @POST
    @Produces(MediaType.APPLICATION_JSON)
    @Path("add")
-   public String addParticipant(@Context SecurityContext securityContext)
+   public String addParticipant(@Context SecurityContext securityContext, @Context WSConnection connection)
    {
       Principal principal = securityContext.getUserPrincipal();
       LoggedInUser user = new LoggedInUser(principal != null ? principal.getName() : "anonymous",
-         UUID.randomUUID().toString());
+         connection.getHttpSession().getId()); // HTTP session ID is easiest way to identify users with the same name, if they use different browsers.
       participants.addParticipant(user);
       return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getId(), user.getId());
-   }
-
-   @POST
-   @Produces(MediaType.APPLICATION_JSON)
-   @Path("delete")
-   public void removeParticipant()
-   {
-      // TODO : pass activeClientId here to be able remove participant
-//      if (!participants.removeParticipant(activeClientId))
-//      {
-//         throw new WebApplicationException(
-//            Response.status(400).entity("Not logged in").type(MediaType.TEXT_PLAIN).build());
-//      }
    }
 }

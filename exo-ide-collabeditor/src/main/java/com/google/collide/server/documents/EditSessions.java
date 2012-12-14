@@ -49,6 +49,8 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;
@@ -70,6 +72,8 @@ import java.util.concurrent.TimeUnit;
 
 public class EditSessions implements Startable
 {
+   private static final Log LOG = ExoLogger.getLogger(EditSessions.class);
+
    private static final Gson gson = new GsonBuilder().registerTypeAdapter(
       DocOpComponentImpl.class, new DocOpComponentDeserializer()).serializeNulls().create();
 
@@ -106,11 +110,14 @@ public class EditSessions implements Startable
             {
                try
                {
-                  editSession.save();
+                  if (editSession.hasChanges())
+                  {
+                     editSession.save();
+                  }
                }
                catch (Exception e)
                {
-                  System.out.printf("Failed to save file [%s] : %s\n", editSession.getPath(), e);
+                  LOG.error(e.getMessage(), e);
                }
             }
          }
@@ -122,6 +129,7 @@ public class EditSessions implements Startable
          for (Iterator<FileEditSession> iterator = editSessions.values().iterator(); iterator.hasNext(); )
          {
             FileEditSession editSession = iterator.next();
+            LOG.debug("Active collaborators of file {} : {}", editSession.getPath(), editSession.getCollaborators());
             if (editSession.getCollaborators().isEmpty())
             {
                iterator.remove();
@@ -172,14 +180,12 @@ public class EditSessions implements Startable
       }
       catch (VirtualFileSystemException e)
       {
-         // TODO
-         e.printStackTrace();
+         LOG.error(e.getMessage(), e);
          return GetFileContentsResponseImpl.make().setFileExists(false);
       }
       catch (IOException e)
       {
-         // TODO
-         e.printStackTrace();
+         LOG.error(e.getMessage(), e);
          return GetFileContentsResponseImpl.make().setFileExists(false);
       }
 
@@ -215,8 +221,7 @@ public class EditSessions implements Startable
             }
             catch (Exception e)
             {
-               // TODO
-               e.printStackTrace();
+               LOG.error(e.getMessage(), e);
             }
          }
       }
@@ -229,9 +234,21 @@ public class EditSessions implements Startable
       if (editSession != null)
       {
          editSession.removeCollaborator(closeMessage.getClientId());
-         // TODO : logger debug
-         System.out.printf("Close edit session %s, user %s\n", closeMessage.getFileEditSessionKey(), closeMessage.getClientId());
+         LOG.debug("Close edit session {}, user {} ", closeMessage.getFileEditSessionKey(), closeMessage.getClientId());
       }
+   }
+
+   public List<String> closeAllSessions(String userId)
+   {
+      List<String> result = new ArrayList<String>();
+      for (Map.Entry<String, FileEditSession> e : editSessions.entrySet())
+      {
+         if (e.getValue().removeCollaborator(userId))
+         {
+            result.add(e.getKey());
+         }
+      }
+      return result;
    }
 
    private String loadFileContext(VirtualFileSystem vfs, String resourceId)
@@ -246,7 +263,6 @@ public class EditSessions implements Startable
       }
       finally
       {
-         // TODO : create util method which able to close Closeable without throwing i/o exception.
          if (input != null)
          {
             try
@@ -339,8 +355,7 @@ public class EditSessions implements Startable
       }
       catch (VersionedDocument.DocumentOperationException e)
       {
-         // TODO
-         e.printStackTrace();
+         LOG.error(e.getMessage(), e);
       }
       return broadcastedDocOps;
    }
@@ -362,8 +377,7 @@ public class EditSessions implements Startable
             }
             catch (Exception e)
             {
-               // TODO
-               e.printStackTrace();
+               LOG.error(e.getMessage(), e);
             }
          }
       }
@@ -425,132 +439,4 @@ public class EditSessions implements Startable
       return DtoServerImpls.GetEditSessionCollaboratorsResponseImpl.make()
          .setParticipants(participants.getParticipants(editSession.getCollaborators()));
    }
-
-//  /**
-//   * Iterates through all open, dirty edit sessions and saves them to disk.
-//   */
-//  class FileSaver implements Handler<Message<JsonObject>> {
-//    @Override
-//    public void handle(Message<JsonObject> message) {
-//      saveAll();
-//    }
-//
-//    void saveAll() {
-//      Set<Entry<String, FileEditSession>> entries = editSessions.entrySet();
-//      Iterator<Entry<String, FileEditSession>> entryIter = entries.iterator();
-//      final JsonArray resourceIds = new JsonArray();
-//      while (entryIter.hasNext()) {
-//        Entry<String, FileEditSession> entry = entryIter.next();
-//        String resourceId = entry.getKey();
-//        FileEditSession editSession = entry.getValue();
-//        if (editSession.hasChanges()) {
-//          resourceIds.addString(resourceId);
-//        }
-//      }
-//
-//      // Resolve the current paths of opened files in case they have been moved.
-//      eb.send("tree.getCurrentPaths", new JsonObject().putArray("resourceIds", resourceIds),
-//          new Handler<Message<JsonObject>>() {
-//              @Override
-//            public void handle(Message<JsonObject> event) {
-//              JsonArray currentPaths = event.body.getArray("paths");
-//              Iterator<Object> pathIter = currentPaths.iterator();
-//              Iterator<Object> resourceIter = resourceIds.iterator();
-//
-//              if (currentPaths.size() != resourceIds.size()) {
-//                logger.error(String.format(
-//                    "Received [%d] paths in response to a request specifying [%d] resourceIds",
-//                    currentPaths.size(), resourceIds.size()));
-//              }
-//
-//              // Iterate through all the resolved paths and save the files to disk.
-//              while (pathIter.hasNext()) {
-//                String path = (String) pathIter.next();
-//                String resourceId = (String) resourceIter.next();
-//
-//                if (path != null) {
-//                  FileEditSession editSession = editSessions.get(resourceId);
-//                  if (editSession != null) {
-//                    try {
-//                      editSession.save(stripLeadingSlash(path));
-//                    } catch (IOException e) {
-//                      logger.error(String.format("Failed to save file [%s]", path), e);
-//                    }
-//                  }
-//                }
-//              }
-//            }
-//          });
-//    }
-//  }
-
-//  /**
-//   * Removes an edit session, and notifies clients that they should reload their opened document.
-//   */
-//  class EditSessionRemover implements Handler<Message<JsonObject>> {
-//    @Override
-//    public void handle(Message<JsonObject> message) {
-//      String resourceId = message.body.getString("resourceId");
-//      if (resourceId != null) {
-//        editSessions.remove(resourceId);
-//      }
-//      // TODO: Notify clients to reload their opened document.
-//    }
-//  }
-
-//  private final FileSaver fileSaver = new FileSaver();
-//  private final DocumentMutator documentMutator = new DocumentMutator();
-//  private String addressBase;
-//
-//
-//   private Method method;
-//
-//   private Object vfs;
-//
-//
-//   public Object getVfs()
-//   {
-//      if (vfs!=null)
-//         return vfs;
-//
-//      try {
-//         Field f = vertx.getClass().getDeclaredField("shared");
-//         Map m = (Map)f.get(vertx);
-//         vfs = m.get("vfs");
-//         method = vfs.getClass().getMethod("getContent", String.class, String.class);
-//return vfs;
-//      }catch (Exception e) {
-//        e.printStackTrace();
-//         return null;
-//      }
-//   }
-
-//         @Override
-//  public void start() {
-//    super.start();
-//
-//      RuntimeDelegate.setInstance(new RuntimeDelegateImpl());
-//
-//     this.addressBase = getOptionalStringConfig("address", "documents");
-//    vertx.eventBus().registerHandler(addressBase + ".mutate", documentMutator);
-//    vertx.eventBus().registerHandler(
-//        addressBase + ".createEditSession", new EditSessionCreator(true));
-//    vertx.eventBus().registerHandler(
-//        addressBase + ".getFileContents", new EditSessionCreator(false));
-//    vertx.eventBus().registerHandler(addressBase + ".saveAll", fileSaver);
-//    vertx.eventBus().registerHandler(addressBase + ".removeEditSession", new EditSessionRemover());
-//    vertx.eventBus().registerHandler(addressBase + ".recoverMissedDocop", new DocOpRecoverer());
-//
-//    // TODO: Handle content changes on disk and synthesize a docop to apply to the in-memory edit
-//    // session, and broadcast to all clients.
-//
-//    // Set up a regular save interval to flush to disk.
-//    vertx.setPeriodic(1500, new Handler<Long>() {
-//        @Override
-//      public void handle(Long event) {
-//        fileSaver.saveAll();
-//      }
-//    });
-//  }
-
 }
