@@ -55,11 +55,13 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    GoogleContactSelectionChangedHandler
 {
 
-   public static final String CONTACTS_FAILED = "Error loading the list of Google contacts.";
+   //public static final String CONTACTS_FAILED = "Error loading the list of Google contacts.";
 
    public interface Display extends IsView
    {
 
+      void setDevelopersListVisible(boolean visible);
+      
       void setDevelopers(List<GoogleContact> developers, GoogleContactSelectionChangedHandler selectionChangedHandler);
 
       boolean isSelected(GoogleContact contact);
@@ -113,8 +115,9 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
-
-      contacts = new ArrayList<GoogleContact>();      
+      
+      contacts = new ArrayList<GoogleContact>();
+      display.setDevelopersListVisible(true);
       //lazyLoadGoogleContacts();
       loadGoogleContacts();
    }
@@ -125,7 +128,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
     */
    private void lazyLoadGoogleContacts()
    {
-      IDELoader.show("Loading contacts...");
+      IDELoader.show("Loading Google contacts...");
 
       new Timer()
       {
@@ -153,16 +156,15 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                         protected void onFailure(Throwable exception)
                         {
                            IDELoader.hide();
-                           IDE.fireEvent(new ExceptionThrownEvent(exception));
-                           exception.printStackTrace();
+                           loadContactsFailed(exception);
                         }
                      });
+               IDELoader.show("Loading Google contacts...");
             }
-            catch (RequestException e)
+            catch (RequestException exception)
             {
                IDELoader.hide();
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-               e.printStackTrace();
+               loadContactsFailed(exception);
             }
          }
       }.schedule(500);
@@ -185,16 +187,22 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                @Override
                protected void onFailure(Throwable exception)
                {
-                  String message = exception.getMessage() != null ? exception.getMessage() : CONTACTS_FAILED;
-                  Dialogs.getInstance().showError(message);
+                  loadContactsFailed(exception);
                }
             });
+         IDELoader.show("Loading Google contacts...");
       }
       catch (RequestException exception)
       {
-         String message = exception.getMessage() != null ? exception.getMessage() : CONTACTS_FAILED;
-         Dialogs.getInstance().showError(message);
+         loadContactsFailed(exception);
       }
+   }
+   
+   private void loadContactsFailed(Throwable exception)
+   {
+      display.setDevelopersListVisible(false);
+      //String message = exception.getMessage() != null ? exception.getMessage() : CONTACTS_FAILED;
+      //Dialogs.getInstance().showError(message);      
    }
 
    private void googleContactsReceived(List<GoogleContact> contacts)

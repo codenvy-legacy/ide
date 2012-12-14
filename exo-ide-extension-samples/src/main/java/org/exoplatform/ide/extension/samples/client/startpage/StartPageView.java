@@ -24,7 +24,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -54,25 +53,16 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    Anchor tutorialLink;
 
    @UiField
-   Image tutorialImage;
-
-   @UiField
    Button invitationsLink;
    
    @UiField
    Button samplesLink;
 
    @UiField
-   Image samplesImage;
-
-   @UiField
    Button projectLink;
 
    @UiField
    Button importLink;
-
-   @UiField
-   Image documentationImage;
 
    @UiField
    Anchor documentationLink;
@@ -82,8 +72,6 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
 
    @UiField
    Anchor surveyLink;
-
-   FlowPanel flowPanel;
 
    public StartPageView()
    {

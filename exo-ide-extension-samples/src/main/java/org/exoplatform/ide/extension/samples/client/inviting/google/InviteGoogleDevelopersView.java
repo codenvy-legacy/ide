@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.samples.client.inviting.google;
 
+import com.google.gwt.dom.client.Style.Display;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
 import com.google.gwt.dom.client.TextAreaElement;
@@ -109,6 +111,9 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
    DivElement userListElement;
    
    @UiField
+   DivElement userListErrorMessage;
+   
+   @UiField
    CheckBox checkAll;
    
    @UiField
@@ -136,6 +141,7 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
       {
          userListWidget.removeFromParent();
       }
+      
       userListWidget = new UserListWidget((Element)userListElement.cast());
       
       cards.clear();
@@ -200,6 +206,21 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
    public HasValue<String> getEmailsTextField()
    {
       return emailsTextField;
+   }
+
+   @Override
+   public void setDevelopersListVisible(boolean visible)
+   {
+      if (visible)
+      {
+         userListElement.getStyle().setDisplay(Display.BLOCK);
+         userListErrorMessage.getStyle().setDisplay(Display.NONE);
+      }
+      else
+      {
+         userListElement.getStyle().setDisplay(Display.NONE);
+         userListErrorMessage.getStyle().setDisplay(Display.BLOCK);         
+      }
    }
 
 }
