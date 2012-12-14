@@ -126,6 +126,23 @@
 			overflow: auto;
 		}
 		
+		.inviteUserListError
+		{
+			color: #AAAAAA;
+			position: absolute;
+			left:10px;
+			right:10px;
+			top:50%;
+			margin-top: -9px;
+			text-align: center;
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			font-size: 14px;
+			font-weight: normal;
+			font-style: normal;
+			line-height: 18px;
+			vertical-align: middle;			
+		}
+		
 		.inviteMessageTitle
 		{
 			position: absolute;
@@ -190,12 +207,13 @@
 		</div>
 
 		<div class="{style.inviteToolbar}">
+			<div class="{style.left}">Google contacts</div>
 			<div class="{style.right}">Invite all</div>
 			<div class="{style.right}"><g:CheckBox ui:field="checkAll" styleName="{style.check}"></g:CheckBox></div>
 		</div>
 		<div class="{style.inviteUserList}">
-			<div class="{style.inviteUserListBody}" ui:field="userListElement">
-			</div>
+			<div class="{style.inviteUserListBody}" ui:field="userListElement" style="display:none;"></div>
+			<div class="{style.inviteUserListError}" ui:field="userListErrorMessage" style="display:none;">Exo IDE failed to get information on your Google contacts</div>
 		</div>
 		<div class="{style.inviteMessageTitle}">Write a personal message:</div>
 		<div class="{style.inviteMessage}">

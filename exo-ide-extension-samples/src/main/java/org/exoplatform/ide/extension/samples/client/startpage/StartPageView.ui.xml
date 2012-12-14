@@ -146,7 +146,7 @@
                      <!-- Documentation -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="documentationImage" resource="{resource.documentation}"
+                           <g:Image resource="{resource.documentation}"
                                     stylePrimaryName="{style.img}"></g:Image>
                         </g:west>
                         <g:center>
@@ -185,7 +185,7 @@
                      <!-- Tutorial link -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="tutorialImage" resource="{resource.welcomeTutorial}"
+                           <g:Image resource="{resource.welcomeTutorial}"
                                     stylePrimaryName="{style.img} {style.img2}"></g:Image>
                         </g:west>
                         <g:center>
@@ -208,7 +208,7 @@
                      <!-- Import Sample Project -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}" stylePrimaryName="{style.img}"></g:Image>
+                           <g:Image resource="{resource.welcomeSamples}" stylePrimaryName="{style.img}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">

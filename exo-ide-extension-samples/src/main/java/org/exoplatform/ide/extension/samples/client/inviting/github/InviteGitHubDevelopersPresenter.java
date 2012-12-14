@@ -73,7 +73,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
    VfsChangedHandler
 {
    
-   public static final String COLLABORATORS_FAILED = "Error loading the list of collaborators.";
+   public static final String COLLABORATORS_FAILED = "Exo IDE failed to get the list of collaborators.";
 
    public interface Display extends IsView
    {
