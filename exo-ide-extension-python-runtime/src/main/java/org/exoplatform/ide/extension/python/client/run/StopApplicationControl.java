@@ -26,6 +26,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.python.client.PythonExtensionClientBundle;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
@@ -93,7 +94,7 @@ public class StopApplicationControl extends SimpleControl implements IDEControl,
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       String projectType = event.getProject().getProjectType();
-      boolean isPythonProject = (ProjectResolver.APP_ENGINE_PYTHON.equals(projectType));
+      boolean isPythonProject = ProjectResolver.APP_ENGINE_PYTHON.equals(projectType) || ProjectType.PYTHON.value().equals(projectType);
       setVisible(isPythonProject);
       setEnabled(false);
       setShowInContextMenu(isPythonProject);

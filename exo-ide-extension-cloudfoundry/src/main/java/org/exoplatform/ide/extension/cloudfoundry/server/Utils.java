@@ -186,6 +186,72 @@ class Utils
          }
          return "java_web";
       }
+      else if (path.isDirectory())
+      {
+         if (new java.io.File(path, "config/environment.rb").exists())
+         {
+            return "rails3";
+         }
+         java.io.File[] children = path.listFiles();
+         if (children == null)
+         {
+            throw new IOException("Unable read content of directory " + path);
+         }
+         for (java.io.File file : children)
+         {
+            if (RUBY_FILTER.accept(file.getName()))
+            {
+               InputStream in = null;
+               BufferedReader reader = null;
+               // Check each ruby file to include "sinatra" import.
+               Matcher sinatraMatcher = null;
+               try
+               {
+                  in = new FileInputStream(file);
+                  reader = new BufferedReader(new InputStreamReader(in));
+                  String line;
+                  while ((line = reader.readLine()) != null)
+                  {
+                     sinatraMatcher = sinatraMatcher == null ? SINATRA.matcher(line) : sinatraMatcher.reset(line);
+                     if (sinatraMatcher.matches())
+                     {
+                        return "sinatra";
+                     }
+                  }
+               }
+               finally
+               {
+                  if (reader != null)
+                  {
+                     reader.close();
+                  }
+                  if (in != null)
+                  {
+                     in.close();
+                  }
+               }
+            }
+            else if ("server.js".equals(file.getName())
+               || "app.js".equals(file.getName())
+               || "index.js".equals(file.getName())
+               || "main.js".equals(file.getName()))
+            {
+               return "node";
+            }
+            else if (PHP_FILTER.accept(file.getName()))
+            {
+               return "php";
+            }
+            else if ("manage.py".equals(file.getName()) || "settings.py".equals(file.getName()))
+            {
+               return "django";
+            }
+            else if ("wsgi.py".equals(file.getName()))
+            {
+               return "wsgi";
+            }
+         }
+      }
       return "standalone";
    }
 

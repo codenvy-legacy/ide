@@ -26,13 +26,13 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ConvertToProjectEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
 import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent;
+import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersEvent;
 
 /**
  * Presenter for welcome view.
@@ -50,6 +50,8 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
       HasClickHandlers getProjectLink();
 
       HasClickHandlers getImportLink();
+      
+      HasClickHandlers getInvitationsLink();
    }
 
    private Display display;
@@ -89,9 +91,16 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
            IDE.fireEvent(new ShowImportFromGithubEvent());
          }
       });
+      
+      display.getInvitationsLink().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new InviteGoogleDevelopersEvent());
+         }
+      });
    }
-   
-
 
    /**
     * @see org.exoplatform.ide.client.OpenStartPageHandler.OpenWelcomeHandler#onOpenStartPage(org.exoplatform.ide.client.OpenStartPageEvent.OpenWelcomeEvent)

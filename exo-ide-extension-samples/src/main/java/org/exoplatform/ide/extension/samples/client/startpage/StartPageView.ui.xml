@@ -146,7 +146,7 @@
                      <!-- Documentation -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="documentationImage" resource="{resource.documentation}"
+                           <g:Image resource="{resource.documentation}"
                                     stylePrimaryName="{style.img}"></g:Image>
                         </g:west>
                         <g:center>
@@ -185,7 +185,7 @@
                      <!-- Tutorial link -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="tutorialImage" resource="{resource.welcomeTutorial}"
+                           <g:Image resource="{resource.welcomeTutorial}"
                                     stylePrimaryName="{style.img} {style.img2}"></g:Image>
                         </g:west>
                         <g:center>
@@ -203,12 +203,12 @@
                </g:DockLayoutPanel>
 
                <g:DockLayoutPanel unit="PCT" height="90px" width="100%" stylePrimaryName="{style.hPanel}">
+                  
                   <g:west size="50">
                      <!-- Import Sample Project -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
                         <g:west size="130">
-                           <g:Image ui:field="samplesImage" resource="{resource.welcomeSamples}"
-                                    stylePrimaryName="{style.img}"></g:Image>
+                           <g:Image resource="{resource.welcomeSamples}" stylePrimaryName="{style.img}"></g:Image>
                         </g:west>
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
@@ -220,6 +220,7 @@
                         </g:center>
                      </g:DockLayoutPanel>
                   </g:west>
+                  
                   <g:center>
                      <!-- Support -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">
@@ -229,7 +230,7 @@
                         <g:center>
                            <g:FlowPanel height="100%" width="100%">
                               <!-- g:Button ui:field="supportLink" text="{locale.supportTitle}" styleName="{style.button-link}"></g:Button-->
-                              <g:Anchor ui:field="supportLink" text="{locale.supportTitle}" target="_blank"
+                              <g:Anchor ui:field="supportLink" text="{locale.supportTitle}"
                                         styleName="{style.a}"
                                         href="javascript:UserVoice.showPopupWidget();"></g:Anchor>
                               <g:Label text="{locale.supportText}"
@@ -241,6 +242,22 @@
                </g:DockLayoutPanel>
 
                <g:DockLayoutPanel unit="PCT" height="90px" width="100%" stylePrimaryName="{style.hPanel}">
+               
+                  <g:west size="50">
+                     <!-- Invitation -->
+                     <g:DockLayoutPanel unit="PX" height="100%" width="100%">
+                        <g:west size="130">
+                           <g:Image resource="{resource.invitation}" stylePrimaryName="{style.img}"></g:Image>
+                        </g:west>
+                        <g:center>
+                           <g:FlowPanel height="100%" width="100%">
+                              <g:Button ui:field="invitationsLink" text="{locale.invitationTitle}" styleName="{style.button-link}"></g:Button>
+                              <g:Label text="{locale.invitationText}" styleName="{style.linkText} {style.welcomaLabel}"></g:Label>
+                           </g:FlowPanel>
+                        </g:center>
+                     </g:DockLayoutPanel>
+                  </g:west>               
+               
                   <g:center>
                      <!-- Survey -->
                      <g:DockLayoutPanel unit="PX" height="100%" width="100%">

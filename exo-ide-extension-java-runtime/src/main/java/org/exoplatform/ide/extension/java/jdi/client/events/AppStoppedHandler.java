@@ -25,7 +25,7 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
 */
-public interface AppStopedHandler extends EventHandler
+public interface AppStoppedHandler extends EventHandler
 {
-   void onAppStoped(AppStopedEvent appStopedEvent);
+   void onAppStopped(AppStoppedEvent appStoppedEvent);
 }

@@ -56,6 +56,7 @@ import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
+import org.exoplatform.ide.git.client.clone.GitURLParser;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
 import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.git.shared.GitHubRepository;
@@ -449,7 +450,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          @Override
          public void execute()
          {
-            String[] userRepo = parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
+            String[] userRepo = GitURLParser.parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
             if (userRepo != null)
             {
                IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
@@ -458,46 +459,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       });      
    }
 
-   /**
-    * Parse GitHub url. Need extract "user" and "repository" name.
-    * If given Url its GitHub url return array of string first element will be user name, second repository name
-    * else return null.
-    * GitHub url formats:
-    * - https://github.com/user/repo.git
-    * - git@github.com:user/repo.git
-    * - git://github.com/user/repo.git
-    *
-    * @param gitUrl
-    * @return array of string 
-    */
-   private String[] parseGitHubUrl(String gitUrl)
-   {
-      if (gitUrl.endsWith("/"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
-      }
-      if (gitUrl.endsWith(".git"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
-      }
-      if (gitUrl.startsWith("git@github.com:"))
-      {
-         gitUrl = gitUrl.split("git@github.com:")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("git://github.com/"))
-      {
-         gitUrl = gitUrl.split("git://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("https://github.com/"))
-      {
-         gitUrl = gitUrl.split("git://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      return null;
-   }   
-   
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {

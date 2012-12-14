@@ -136,6 +136,9 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/survey.png")
    ImageResource survey();
 
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/invitation.png")
+   ImageResource invitation();
+
    /*
     * Controls
     */

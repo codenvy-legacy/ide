@@ -69,9 +69,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new GitHubClientServiceImpl(event.getApplicationConfiguration().getContext(), event.getLoader());
       IDE.fireEvent(new OpenStartPageEvent());
       
-      InviteClientService inviteClientService = new InviteClientService(event.getApplicationConfiguration().getContext());
-      new InviteGoogleDevelopersPresenter(inviteClientService);
-      new InviteGitHubDevelopersPresenter(inviteClientService);      
+      new InviteClientService(event.getApplicationConfiguration().getContext());
    }
 
    /**
@@ -96,6 +94,9 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       secondStep.setPreviousStep(firstStep);
 
       new ImportFromGithubPresenter();
+      
+      new InviteGoogleDevelopersPresenter();
+      new InviteGitHubDevelopersPresenter();
    }
    
 }

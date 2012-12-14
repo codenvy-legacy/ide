@@ -36,19 +36,29 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
+import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
+import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteHandler;
+import org.exoplatform.ide.git.client.clone.GitURLParser;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
+import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.GitHubUser;
+import org.exoplatform.ide.git.shared.Remote;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +69,11 @@ import java.util.List;
  * 
  */
 public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteHandler, ViewClosedHandler,
-   InviteGitHubCollaboratorsHandler, GitHubUserSelectionChangedHandler, ProjectOpenedHandler
+   InviteGitHubCollaboratorsHandler, GitHubUserSelectionChangedHandler, ProjectOpenedHandler, ProjectClosedHandler,
+   VfsChangedHandler
 {
+   
+   public static final String COLLABORATORS_FAILED = "Exo IDE failed to get the list of collaborators.";
 
    public interface Display extends IsView
    {
@@ -84,55 +97,127 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
    private Display display;
 
-   private InviteClientService inviteClientService;
-   
-   private List<GitHubUser> collaborators;   
+   private VirtualFileSystemInfo vfs;
 
-   public InviteGitHubDevelopersPresenter(InviteClientService inviteClientService)
+   private List<GitHubUser> collaborators;
+
+   private ProjectModel project;
+
+   public InviteGitHubDevelopersPresenter()
    {
-      this.inviteClientService = inviteClientService;
+      IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
+      IDE.addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);
 
       IDE.addHandler(CloneRepositoryCompleteEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-
-      if (InviteClientService.DEBUG_MODE)
-      {
-         IDE.getInstance().addControl(new InviteGitHubCollaboratorsControl());
-         IDE.addHandler(InviteGitHubCollaboratorsEvent.TYPE, this);         
-      }
-      
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubCollaboratorsHandler#onInviteGitHubCollaborators(org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubCollaboratorsEvent)
+    */
    @Override
    public void onInviteGitHubCollaborators(InviteGitHubCollaboratorsEvent event)
    {
-      if (InviteClientService.DEBUG_MODE)
+      if (project == null || vfs == null || display != null)
       {
-         loadStaticGitHubCollaborators();         
+         return;
       }
-      else
+
+      try
       {
-//         String user = "";
-//         String repository = "";
-//         loadGitHubCollaborators();         
+         GitClientService.getInstance().remoteList(vfs.getId(), project.getId(), null, true,
+            new AsyncRequestCallback<List<Remote>>(new RemoteListUnmarshaller(new ArrayList<Remote>()))
+            {
+               @Override
+               protected void onSuccess(List<Remote> result)
+               {
+                  if (result.size() == 0)
+                  {
+                     Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
+                     return;
+                  }
+
+                  Remote origin = getRemoteOrigin(result);
+                  String[] repo = GitURLParser.parseGitHubUrl(origin.getUrl());
+                  if (repo == null)
+                  {
+                     Dialogs.getInstance().showError(GitExtension.MESSAGES.remoteListFailed());
+                     return;
+                  }
+
+                  loadGitHubCollaborators(repo[0], repo[1]);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String errorMessage =
+                     exception.getMessage() != null ? exception.getMessage() : GitExtension.MESSAGES.remoteListFailed();
+                  Dialogs.getInstance().showError(errorMessage);
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.remoteListFailed();
+         Dialogs.getInstance().showError(errorMessage);
       }
    }
 
+   /**
+    * Search "origin" repository
+    * 
+    * @param remotes
+    * @return
+    */
+   private Remote getRemoteOrigin(List<Remote> remotes)
+   {
+      if (remotes.size() == 1)
+      {
+         return remotes.get(0);
+      }
+
+      for (Remote remote : remotes)
+      {
+         if ("origin".equals(remote.getName()))
+         {
+            return remote;
+         }
+      }
+
+      return remotes.get(0);
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteHandler#onCloneRepositoryComplete(org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent)
+    */
    @Override
    public void onCloneRepositoryComplete(CloneRepositoryCompleteEvent event)
    {
-      if (InviteClientService.DEBUG_MODE)
-      {
-         loadStaticGitHubCollaborators();         
-      }
-      else
-      {
-         loadGitHubCollaborators(event.getUser(), event.getRepositoryName());         
-      }
+      //loadStaticGitHubCollaborators();
+      loadGitHubCollaborators(event.getUser(), event.getRepositoryName());
    }
-   
-   private void loadStaticGitHubCollaborators()
+
+   /**
+    * Load list of GitHub collaborators from prepared JSON file.
+    * This method uses only for testing.
+    */
+   private void lazyLoadCollaboratorList()
    {
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
@@ -152,16 +237,16 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
                @Override
                protected void onFailure(Throwable exception)
                {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-                  exception.printStackTrace();
+                  String message = exception.getMessage() != null ? exception.getMessage() : COLLABORATORS_FAILED;
+                  Dialogs.getInstance().showError(message);
                }
             });
       }
-      catch (RequestException e)
+      catch (RequestException exception)
       {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-         e.printStackTrace();
-      }      
+         String message = exception.getMessage() != null ? exception.getMessage() : COLLABORATORS_FAILED;
+         Dialogs.getInstance().showError(message);
+      }
    }
 
    private void loadGitHubCollaborators(String user, String repository)
@@ -192,7 +277,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
          e.printStackTrace();
-      }      
+      }
    }
 
    private void collaboratorsReceived(Collaborators result)
@@ -218,7 +303,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       display.setDevelopers(collaborators, this);
       display.setInviteButtonEnabled(false);
    }
-   
+
    private boolean hasSelectedUsers()
    {
       for (GitHubUser user : collaborators)
@@ -228,16 +313,15 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
             return true;
          }
       }
-      
+
       return false;
    }
-   
+
    @Override
    public void onGitHubUserSelectionChanged(GitHubUser user, boolean selected)
    {
       display.setInviteButtonEnabled(hasSelectedUsers());
    }
-   
 
    private void bindDisplay()
    {
@@ -269,8 +353,8 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
             {
                display.setSelected(user, selectAll);
             }
-            
-            display.setInviteButtonEnabled(hasSelectedUsers());            
+
+            display.setInviteButtonEnabled(hasSelectedUsers());
          }
       });
    }
@@ -298,15 +382,6 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       }
    }
 
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
    private void sendNextEmail()
    {
       if (emailsToSend.size() == 0)
@@ -330,7 +405,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       IDELoader.show("Inviting " + email);
       try
       {
-         inviteClientService.inviteUser(email, inviteMessage, new AsyncRequestCallback<String>()
+         InviteClientService.getInstance().inviteUser(email, inviteMessage, new AsyncRequestCallback<String>()
          {
             @Override
             protected void onSuccess(String result)
@@ -359,7 +434,19 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-//      System.out.println("project opened");
+      project = event.getProject();
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      project = null;
+   }
+
+   @Override
+   public void onVfsChanged(VfsChangedEvent event)
+   {
+      vfs = event.getVfsInfo();
    }
 
 }

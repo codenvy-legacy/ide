@@ -34,13 +34,19 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 public class InviteClientService
 {
    
-   public static final boolean DEBUG_MODE = false;
-
+   private static InviteClientService instance;
+   
+   public static InviteClientService getInstance()
+   {
+      return instance;
+   }
+   
    private String restServiceContext;
 
    public InviteClientService(String restServiceContext)
    {
       this.restServiceContext = restServiceContext;
+      instance = this;
    }
 
    public void inviteUser(String email, String message, AsyncRequestCallback<String> callback) throws RequestException
