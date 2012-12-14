@@ -26,6 +26,8 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+
+import org.eclipse.jdt.client.packaging.model.DependencyItem;
 import org.eclipse.jdt.client.packaging.model.DependencyListItem;
 import org.eclipse.jdt.client.packaging.model.PackageItem;
 import org.eclipse.jdt.client.packaging.model.ProjectItem;
@@ -33,6 +35,8 @@ import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -59,6 +63,11 @@ public class ProjectTreeParser
    }
 
    public interface FolderUpdateCompleteListener
+   {
+      void onUpdateComplete(Object item);
+   }
+   
+   public interface ProjectDependenciesUpdateCompleteListener
    {
       void onUpdateComplete(Object item);
    }
@@ -111,6 +120,18 @@ public class ProjectTreeParser
       }
    }
 
+   public DependencyListItem updateProjectDependencies(String pomXmlFileContent)
+   {
+      List<DependencyItem> dependencyList = getDependenciesFromPomXml(pomXmlFileContent);
+      if (dependencyList == null)
+      {
+         return null;
+      }
+      
+      DependencyListItem dependencies = setProjectDependencies(dependencyList);
+      return dependencies;
+   }
+
    /**
     * Load content of pom.xml file
     */
@@ -140,7 +161,9 @@ public class ProjectTreeParser
                @Override
                protected void onSuccess(FileModel result)
                {
-                  parsePomXML(result);
+                  List<DependencyItem> dependencies = getDependenciesFromPomXml(result.getContent());
+                  setProjectDependencies(dependencies);                  
+                  addFilesAndFoldersToProjectItem();
                }
 
                @Override
@@ -200,18 +223,14 @@ public class ProjectTreeParser
       return properties;
    }
 
-   /**
-    * Parse pom.xml file
-    *
-    * @param pomXML
-    */
-   private void parsePomXML(FileModel pomXML)
+   private List<DependencyItem> getDependenciesFromPomXml(String pomXmlFileContent)
    {
-      projectDependencies = new ArrayList<String>();
+      List<DependencyItem> projectDependencies = new ArrayList<DependencyItem>();
 
-      Document dom = XMLParser.parse(pomXML.getContent());
       try
       {
+         Document dom = XMLParser.parse(pomXmlFileContent);
+         
          Element projectElement = (Element)dom.getElementsByTagName("project").item(0);
 
          Map<String, String> properties = getPomProperties(projectElement);
@@ -242,41 +261,72 @@ public class ProjectTreeParser
                }
 
                String dependency = artifact + "-" + version + ".jar";
-               projectDependencies.add(dependency);
+               projectDependencies.add(new DependencyItem(dependency));
             }
          }
       }
       catch (Exception e)
       {
-         //e.printStackTrace();
+         e.printStackTrace();
+         IDE.fireEvent(new OutputEvent("Error parsing pom.xml.", OutputMessage.Type.ERROR));
+         return null;
       }
-
-      addProjectDependencies();
+      
+      return projectDependencies;
    }
-
-   /**
-    * Add project dependencies tree node
-    */
-   private void addProjectDependencies()
+   
+   private DependencyListItem setProjectDependencies(List<DependencyItem> dependencies)
    {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      DependencyListItem referencedLibraries = null;
+      for (DependencyListItem dl : projectItem.getDependencies())
       {
-         @Override
-         public void execute()
+         if ("Referenced Libraries".equals(dl.getName()))
          {
-            DependencyListItem referencedLibraries = new DependencyListItem("Referenced Libraries");
-            projectItem.getDependencies().add(referencedLibraries);
-
-            for (String dependency : projectDependencies)
-            {
-               referencedLibraries.getDependencies().add(dependency);
-            }
-
-            addFilesAndFoldersToProjectItem();
+            referencedLibraries = dl;
          }
-      });
+      }
+      
+      if (referencedLibraries == null)
+      {
+         referencedLibraries = new DependencyListItem("Referenced Libraries");
+         projectItem.getDependencies().add(referencedLibraries);
+      }
+      else
+      {
+         referencedLibraries.getDependencies().clear();
+      }
+      
+      if (dependencies != null)
+      {
+         referencedLibraries.getDependencies().addAll(dependencies);         
+      }
+      
+      return referencedLibraries;
    }
 
+//   /**
+//    * Add project dependencies tree node
+//    */
+//   private void addProjectDependencies()
+//   {
+//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//      {
+//         @Override
+//         public void execute()
+//         {
+//            DependencyListItem referencedLibraries = new DependencyListItem("Referenced Libraries");
+//            projectItem.getDependencies().add(referencedLibraries);
+//
+//            for (String dependency : projectDependencies)
+//            {
+//               referencedLibraries.getDependencies().add(new DependencyItem(dependency));
+//            }
+//
+//            addFilesAndFoldersToProjectItem();
+//         }
+//      });
+//   }
+   
    private void addFilesAndFoldersToProjectItem()
    {
       List<FolderModel> folders = new ArrayList<FolderModel>();

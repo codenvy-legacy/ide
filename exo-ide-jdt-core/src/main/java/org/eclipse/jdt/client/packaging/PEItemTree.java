@@ -376,13 +376,13 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             if (clearChildren)
                treeItem.removeItems();
 
-            for (String dependency : dependencyListItem.getDependencies())
+            for (DependencyItem dependency : dependencyListItem.getDependencies())
             {
                if (!clearChildren && childExist(treeItem, dependency))
                   continue;
                
                TreeIcon icon = new TreeIcon(JdtClientBundle.INSTANCE.jarReference());
-               Widget itemWidget = createItemWidget(icon, dependency);
+               Widget itemWidget = createItemWidget(icon, dependency.getName());
                TreeItem node = new TreeItem(itemWidget);
                node.setUserObject(dependency);
                treeItem.addItem(node);

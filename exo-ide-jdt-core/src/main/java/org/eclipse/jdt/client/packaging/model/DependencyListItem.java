@@ -31,7 +31,7 @@ public class DependencyListItem
 
    private String name;
 
-   private List<String> dependencies = new ArrayList<String>();
+   private List<DependencyItem> dependencies = new ArrayList<DependencyItem>();
 
    public DependencyListItem(String name)
    {
@@ -48,12 +48,12 @@ public class DependencyListItem
       this.name = name;
    }
 
-   public List<String> getDependencies()
+   public List<DependencyItem> getDependencies()
    {
       return dependencies;
    }
 
-   public void setDependencies(List<String> dependencies)
+   public void setDependencies(List<DependencyItem> dependencies)
    {
       this.dependencies = dependencies;
    }
