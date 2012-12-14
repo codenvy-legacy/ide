@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
+import com.google.gdata.data.DateTime;
+
 import com.google.gdata.client.Query.CustomParameter;
 
 import com.google.api.client.auth.oauth2.BearerToken;
@@ -121,19 +123,18 @@ public class GoogleContactsClient
       credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
       service.setOAuth2Credentials(credentials);
       ContactFeed feed;
-      Query query = new Query(new URL(DEFAULT_FEED + USER_NAME + "/full"));
+      Query query = new Query(new URL("https://www.google.com/m8/feeds/contacts/default/full"));
       query.addCustomParameter(new CustomParameter("xoauth_requestor_id", getUserId()));
-      List<ContactEntry> googleContacts = new ArrayList<ContactEntry>();
+      DateTime startTime = new DateTime(0);
+      query.setUpdatedMin(startTime);
+      int maxResult = 50;
+      query.setMaxResults(maxResult);
+      List<ContactEntry> googleContacts = new ArrayList<ContactEntry>(maxResult);
+      feed = service.query(query, ContactFeed.class);
+      googleContacts.addAll(feed.getEntries());
 
-      // Loop used because the feed may not contain all of the user's contacts,
-      // because there's a default limit on the number of results returned. Default limit is 25 entries.
-      do
-      {
-         feed = service.query(query, ContactFeed.class);
-         googleContacts.addAll(feed.getEntries());
-         query.setStartIndex(feed.getEntries().size() + query.getStartIndex());
-      }
-      while (feed.getTotalResults() > query.getStartIndex());
+
+
 
       return googleContacts;
    }
