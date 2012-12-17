@@ -8966,6 +8966,154 @@ public class DtoServerImpls {
 
   }
 
+   public static class FileCollaboratorGoneImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.FileCollaboratorGone, JsonSerializable {
+
+      private FileCollaboratorGoneImpl() {
+         super(125);
+      }
+
+      protected FileCollaboratorGoneImpl(int type) {
+         super(type);
+      }
+
+      public static FileCollaboratorGoneImpl make() {
+         return new FileCollaboratorGoneImpl();
+      }
+
+      protected java.lang.String path;
+      private boolean _hasPath;
+      protected ParticipantUserDetailsImpl participant;
+      private boolean _hasParticipant;
+
+      public boolean hasPath() {
+         return _hasPath;
+      }
+
+      @Override
+      public java.lang.String getPath() {
+         return path;
+      }
+
+      public FileCollaboratorGoneImpl setPath(java.lang.String v) {
+         _hasPath = true;
+         path = v;
+         return this;
+      }
+
+      public boolean hasParticipant() {
+         return _hasParticipant;
+      }
+
+      @Override
+      public com.google.collide.dto.ParticipantUserDetails getParticipant() {
+         return participant;
+      }
+
+      public FileCollaboratorGoneImpl setParticipant(ParticipantUserDetailsImpl v) {
+         _hasParticipant = true;
+         participant = v;
+         return this;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof FileCollaboratorGoneImpl)) {
+            return false;
+         }
+         FileCollaboratorGoneImpl other = (FileCollaboratorGoneImpl) o;
+         if (this._hasPath != other._hasPath) {
+            return false;
+         }
+         if (this._hasPath) {
+            if (!this.path.equals(other.path)) {
+               return false;
+            }
+         }
+         if (this._hasParticipant != other._hasParticipant) {
+            return false;
+         }
+         if (this._hasParticipant) {
+            if (!this.participant.equals(other.participant)) {
+               return false;
+            }
+         }
+         return true;
+      }
+
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
+         hash = hash * 31 + (_hasParticipant ? participant.hashCode() : 0);
+         return hash;
+      }
+
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
+
+         JsonElement pathOut = (path == null) ? JsonNull.INSTANCE : new JsonPrimitive(path);
+         result.add("path", pathOut);
+
+         JsonElement participantOut = participant == null ? JsonNull.INSTANCE : participant.toJsonElement();
+         result.add("participant", participantOut);
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static FileCollaboratorGoneImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         FileCollaboratorGoneImpl dto = new FileCollaboratorGoneImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         if (json.has("path")) {
+            JsonElement pathIn = json.get("path");
+            java.lang.String pathOut = gson.fromJson(pathIn, java.lang.String.class);
+            dto.setPath(pathOut);
+         }
+
+         if (json.has("participant")) {
+            JsonElement participantIn = json.get("participant");
+            ParticipantUserDetailsImpl participantOut = ParticipantUserDetailsImpl.fromJsonElement(participantIn);
+            dto.setParticipant(participantOut);
+         }
+
+         return dto;
+      }
+      public static FileCollaboratorGoneImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
+
+   public static class MockFileCollaboratorGoneImpl extends FileCollaboratorGoneImpl {
+      protected MockFileCollaboratorGoneImpl() {}
+
+      public static FileCollaboratorGoneImpl make() {
+         return new FileCollaboratorGoneImpl();
+      }
+
+   }
+
   public static class FileContentsImpl implements com.google.collide.dto.FileContents, JsonSerializable {
 
     public static FileContentsImpl make() {

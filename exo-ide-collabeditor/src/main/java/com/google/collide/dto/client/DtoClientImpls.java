@@ -2564,6 +2564,48 @@ public class DtoClientImpls {
       };
     }-*/;  }
 
+   public static class FileCollaboratorGoneImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.FileCollaboratorGone {
+      protected FileCollaboratorGoneImpl() {}
+
+      @Override
+      public final native java.lang.String getPath() /*-{
+      return this["path"];
+    }-*/;
+
+      public final native FileCollaboratorGoneImpl setPath(java.lang.String path) /*-{
+      this["path"] = path;
+      return this;
+    }-*/;
+
+      public final native boolean hasPath() /*-{
+      return this.hasOwnProperty("path");
+    }-*/;
+
+      @Override
+      public final native com.google.collide.dto.ParticipantUserDetails getParticipant() /*-{
+      return this["participant"];
+    }-*/;
+
+      public final native FileCollaboratorGoneImpl setParticipant(com.google.collide.dto.ParticipantUserDetails participant) /*-{
+      this["participant"] = participant;
+      return this;
+    }-*/;
+
+      public final native boolean hasParticipant() /*-{
+      return this.hasOwnProperty("participant");
+    }-*/;
+
+   }
+
+
+   public static class MockFileCollaboratorGoneImpl extends FileCollaboratorGoneImpl {
+      protected MockFileCollaboratorGoneImpl() {}
+
+      public static native FileCollaboratorGoneImpl make() /*-{
+      return {
+        _type: 125
+      };
+    }-*/;  }
 
   public static class FileContentsImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.FileContents {
     protected FileContentsImpl() {}

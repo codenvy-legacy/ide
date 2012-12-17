@@ -151,4 +151,5 @@ public class RoutingTypes {
   public static final int GETEDITSESSIONCOLLABORATORSRESPONSE = 124;
   public static final int NEWFILECOLLABORATOR = 125;
   public static final int CLOSEEDITOR = 126;
+  public static final int FILECOLLABORATORGONE = 127;
 }

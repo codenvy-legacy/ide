@@ -26,14 +26,14 @@ import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.ServerToClientDocOps;
-import com.google.collide.dto.server.DtoServerImpls;
 import com.google.collide.dto.server.DtoServerImpls.DocOpComponentImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.DocumentSelectionImpl;
+import com.google.collide.dto.server.DtoServerImpls.FileCollaboratorGoneImpl;
 import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
+import com.google.collide.dto.server.DtoServerImpls.GetEditSessionCollaboratorsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.NewFileCollaboratorImpl;
-import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
@@ -60,6 +60,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -154,7 +155,7 @@ public class EditSessions implements Startable
    {
       final String vfsId = contentsRequest.getWorkspaceId();
       final String path = contentsRequest.getPath();
-      final String clientId = contentsRequest.getClientId();
+      final String userId = contentsRequest.getClientId();
 
       FileEditSession editSession;
       final String resourceId;
@@ -189,10 +190,19 @@ public class EditSessions implements Startable
          return GetFileContentsResponseImpl.make().setFileExists(false);
       }
 
-      if (!editSession.getCollaborators().contains(clientId))
+      if (!editSession.getCollaborators().contains(userId))
       {
-         editSession.addCollaborator(clientId);
-         broadcastNewCollaborator(editSession.getPath(), participants.getParticipant(clientId), editSession.getCollaborators());
+         editSession.addCollaborator(userId);
+         Set<String> sendTo = new LinkedHashSet<String>();
+         sendTo.addAll(editSession.getCollaborators());
+         sendTo.remove(userId);
+         if (!sendTo.isEmpty())
+         {
+            broadcastToClients(
+               NewFileCollaboratorImpl.make().setPath(path).setParticipant(participants.getParticipant(userId)).toJson(),
+               sendTo
+            );
+         }
       }
       FileContentsImpl fileContents = FileContentsImpl.make()
          .setPath(path)
@@ -203,38 +213,46 @@ public class EditSessions implements Startable
       return GetFileContentsResponseImpl.make().setFileExists(true).setFileContents(fileContents);
    }
 
-   private void broadcastNewCollaborator(String path,
-                                         ParticipantUserDetailsImpl newCollaborator,
-                                         Set<String> collaborators)
+   public void closeSession(CloseEditor closeMessage)
    {
-      final String body = NewFileCollaboratorImpl.make().setPath(path).setParticipant(newCollaborator).toJson();
-      for (String collaborator : collaborators)
+      final String editSessionId = closeMessage.getFileEditSessionKey();
+      final String userId = closeMessage.getClientId();
+      FileEditSession editSession = editSessions.get(editSessionId);
+      if (editSession != null)
       {
-         if (!collaborator.equals(newCollaborator.getUserDetails().getUserId()))
+         if (editSession.removeCollaborator(userId))
          {
-            ChannelBroadcastMessage message = new ChannelBroadcastMessage();
-            message.setChannel("collab_editor." + collaborator);
-            message.setBody(body);
-            try
+            Set<String> sendTo = new LinkedHashSet<String>();
+            sendTo.addAll(editSession.getCollaborators());
+            sendTo.remove(userId);
+            if (!sendTo.isEmpty())
             {
-               WSConnectionContext.sendMessage(message);
+               broadcastToClients(
+                  FileCollaboratorGoneImpl.make().setPath(editSession.getPath())
+                     .setParticipant(participants.getParticipant(userId)).toJson(),
+                  sendTo
+               );
             }
-            catch (Exception e)
-            {
-               LOG.error(e.getMessage(), e);
-            }
+            LOG.debug("Close edit session {}, user {} ", closeMessage.getFileEditSessionKey(), closeMessage.getClientId());
          }
       }
    }
 
-   public void closeSession(CloseEditor closeMessage)
+   private void broadcastToClients(String message, Set<String> collaborators)
    {
-      final String editSessionId = closeMessage.getFileEditSessionKey();
-      FileEditSession editSession = editSessions.get(editSessionId);
-      if (editSession != null)
+      for (String collaborator : collaborators)
       {
-         editSession.removeCollaborator(closeMessage.getClientId());
-         LOG.debug("Close edit session {}, user {} ", closeMessage.getFileEditSessionKey(), closeMessage.getClientId());
+         ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
+         broadcastMessage.setChannel("collab_editor." + collaborator);
+         broadcastMessage.setBody(message);
+         try
+         {
+            WSConnectionContext.sendMessage(broadcastMessage);
+         }
+         catch (Exception e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
       }
    }
 
@@ -350,7 +368,14 @@ public class EditSessions implements Startable
 
          // Broadcast the applied DocOp all the participants, ignoring the sender.
          broadcastedDocOps.setDocOps(appliedDocOpsList);
-         broadcastFileMutation(authorId, broadcastedDocOps, editSession.getCollaborators());
+
+         Set<String> sendTo = new LinkedHashSet<String>();
+         sendTo.addAll(editSession.getCollaborators());
+         sendTo.remove(authorId);
+         if (!sendTo.isEmpty())
+         {
+            broadcastToClients(broadcastedDocOps.toJson(), sendTo);
+         }
          return broadcastedDocOps;
       }
       catch (VersionedDocument.DocumentOperationException e)
@@ -358,29 +383,6 @@ public class EditSessions implements Startable
          LOG.error(e.getMessage(), e);
       }
       return broadcastedDocOps;
-   }
-
-   private void broadcastFileMutation(String authorId, ServerToClientDocOps oprts, Set<String> collaborators)
-   {
-      final String body = ((ServerToClientDocOpsImpl)oprts).toJson();
-      for (String collaborator : collaborators)
-      {
-         final String channel = "collab_editor." + collaborator;
-         if (!channel.equals(authorId))
-         {
-            ChannelBroadcastMessage message = new ChannelBroadcastMessage();
-            message.setChannel(channel);
-            message.setBody(body);
-            try
-            {
-               WSConnectionContext.sendMessage(message);
-            }
-            catch (Exception e)
-            {
-               LOG.error(e.getMessage(), e);
-            }
-         }
-      }
    }
 
    private void checkForSelectionChange(String clientId, String resourceId,
@@ -436,7 +438,7 @@ public class EditSessions implements Startable
       GetEditSessionCollaborators sessionParticipantsRequest)
    {
       FileEditSession editSession = editSessions.get(sessionParticipantsRequest.getEditSessionId());
-      return DtoServerImpls.GetEditSessionCollaboratorsResponseImpl.make()
+      return GetEditSessionCollaboratorsResponseImpl.make()
          .setParticipants(participants.getParticipants(editSession.getCollaborators()));
    }
 }
