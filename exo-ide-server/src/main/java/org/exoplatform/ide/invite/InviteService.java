@@ -235,7 +235,7 @@ public class InviteService
                + mailBody + "</p></td>");
          }
 
-         mailSender.sendMail(from, to, null, "You've been invited to use Cloud IDE", "text/html; charset=utf-8",
+         mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
             "template-mail-invitation", inviteMessageProperties);
       }
       catch (SendingIdeMailException e)
