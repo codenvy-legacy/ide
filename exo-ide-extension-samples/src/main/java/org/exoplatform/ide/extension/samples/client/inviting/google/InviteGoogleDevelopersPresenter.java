@@ -19,8 +19,12 @@
 package org.exoplatform.ide.extension.samples.client.inviting.google;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
@@ -28,9 +32,11 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -47,6 +53,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -64,7 +71,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    {
 
       void setDevelopersListVisible(boolean visible);
-
+      
       void setDevelopers(List<GoogleContact> developers, GoogleContactSelectionChangedHandler selectionChangedHandler);
 
       boolean isSelected(GoogleContact contact);
@@ -85,6 +92,12 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
       HasValue<String> getEmailsTextField();
 
+      FocusWidget getEmailsFocusWidget();
+
+      void showEmailsHint();
+
+      void hideEmailsHint();
+
    }
 
    private Display display;
@@ -98,6 +111,11 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    private List<String> emailsToInvite = new ArrayList<String>();
 
    private int invitations = 0;
+
+   /**
+    * Comparator for ordering Google contacts list alphabetically, by first e-mail.
+    */
+   private static Comparator<GoogleContact> googleContactsComparator = new GoogleContactsComparator();
 
    public InviteGoogleDevelopersPresenter()
    {
@@ -118,60 +136,60 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
-
+      display.showEmailsHint();
       contacts = new ArrayList<GoogleContact>();
       display.setDevelopersListVisible(true);
       //lazyLoadGoogleContacts();
       loadContacts();
    }
 
-   /**
-    * Load list of Google contacts from prepared JSON file.
-    * This method uses only for testing.
-    */
-   private void lazyLoadGoogleContacts()
-   {
-      IDELoader.show("Loading Google contacts...");
-
-      new Timer()
-      {
-         @Override
-         public void run()
-         {
-            try
-            {
-               String url = "/IDE/google-contacts.json";
-               AsyncRequest
-                  .build(RequestBuilder.GET, URL.encode(url))
-                  .loader(IDELoader.get())
-                  .send(
-                     new AsyncRequestCallback<List<GoogleContact>>(new InviteGoogleContactsUnmarshaller(
-                        new ArrayList<GoogleContact>()))
-                     {
-                        @Override
-                        protected void onSuccess(List<GoogleContact> result)
-                        {
-                           IDELoader.hide();
-                           googleContactsReceived(result);
-                        }
-
-                        @Override
-                        protected void onFailure(Throwable exception)
-                        {
-                           IDELoader.hide();
-                           loadContactsFailed(exception);
-                        }
-                     });
-               IDELoader.show("Loading Google contacts...");
-            }
-            catch (RequestException exception)
-            {
-               IDELoader.hide();
-               loadContactsFailed(exception);
-            }
-         }
-      }.schedule(500);
-   }
+//   /**
+//    * Load list of Google contacts from prepared JSON file.
+//    * This method uses only for testing.
+//    */
+//   private void lazyLoadGoogleContacts()
+//   {
+//      IDELoader.show("Loading Google contacts...");
+//
+//      new Timer()
+//      {
+//         @Override
+//         public void run()
+//         {
+//            try
+//            {
+//               String url = "/IDE/google-contacts.json";
+//               AsyncRequest
+//                  .build(RequestBuilder.GET, URL.encode(url))
+//                  .loader(IDELoader.get())
+//                  .send(
+//                     new AsyncRequestCallback<List<GoogleContact>>(new InviteGoogleContactsUnmarshaller(
+//                        new ArrayList<GoogleContact>()))
+//                     {
+//                        @Override
+//                        protected void onSuccess(List<GoogleContact> result)
+//                        {
+//                           IDELoader.hide();
+//                           googleContactsReceived(result);
+//                        }
+//
+//                        @Override
+//                        protected void onFailure(Throwable exception)
+//                        {
+//                           IDELoader.hide();
+//                           loadContactsFailed();
+//                        }
+//                     });
+//               IDELoader.show("Loading Google contacts...");
+//            }
+//            catch (RequestException exception)
+//            {
+//               IDELoader.hide();
+//               loadContactsFailed();
+//            }
+//         }
+//      }.schedule(500);
+//   }
 
    private void loadContacts()
    {
@@ -195,7 +213,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       }
       catch (RequestException exception)
       {
-         loadContactsFailed(exception);
+         loadContactsFailed();
       }
 
    }
@@ -205,7 +223,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
       String message =
          "If you want to invite someone from your Google contact list, <br> "
-            + "press OK button and you will be redirected to Google authorization page.";
+            + "press OK button and you will be redirected to Google authorization page. <br>";
 
       Dialogs.getInstance().ask("You have to be logged in Google account!", message, new BooleanValueReceivedHandler()
       {
@@ -221,6 +239,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                   + "&scope=https://www.googleapis.com/auth/userinfo.email"//
                   + "&scope=https://www.googleapis.com/auth/appengine.admin" //
                   + "&scope=https://www.google.com/m8/feeds"//
+                  + "&userId=" + IDE.userId//
                   + "&redirect_after_login="//
                   + Utils.getAuthorizationPageURL();
 
@@ -228,6 +247,10 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                   new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
                authWindow.loginWithOAuth();
                IDE.getInstance().closeView(display.asView().getId());
+            }
+            else 
+            {
+               loadContactsFailed();
             }
 
          }
@@ -254,22 +277,20 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                @Override
                protected void onFailure(Throwable exception)
                {
-                  loadContactsFailed(exception);
+                  loadContactsFailed();
                }
             });
          IDELoader.show("Loading Google contacts...");
       }
       catch (RequestException exception)
       {
-         loadContactsFailed(exception);
+         loadContactsFailed();
       }
    }
-
-   private void loadContactsFailed(Throwable exception)
+   
+   private void loadContactsFailed()
    {
       display.setDevelopersListVisible(false);
-      //String message = exception.getMessage() != null ? exception.getMessage() : CONTACTS_FAILED;
-      //Dialogs.getInstance().showError(message);      
    }
 
    private void googleContactsReceived(List<GoogleContact> contacts)
@@ -351,6 +372,28 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          public void onValueChange(ValueChangeEvent<String> event)
          {
             parseCustomEmails(event.getValue());
+         }
+      });
+
+      display.getEmailsFocusWidget().addFocusHandler(new FocusHandler()
+      {
+         @Override
+         public void onFocus(FocusEvent event)
+         {
+            display.hideEmailsHint();
+         }
+      });
+
+      display.getEmailsFocusWidget().addBlurHandler(new BlurHandler()
+      {
+         @Override
+         public void onBlur(BlurEvent event)
+         {
+            String emails = display.getEmailsTextField().getValue();
+            if (emails == null || emails.trim().isEmpty())
+            {
+               display.showEmailsHint();
+            }
          }
       });
    }

@@ -36,6 +36,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 
 /**
@@ -57,11 +58,12 @@ public class GoogleContactsRestService
    @GET
    @Path("is-authenticate")
    @Produces(MediaType.APPLICATION_JSON)
-   public void isAuthenticate(@Context SecurityContext security) throws Exception
+   public Response isAuthenticate(@Context SecurityContext security) throws Exception
    {
       final String userId = ConversationState.getCurrent().getIdentity().getUserId();
       if (oauthTokenProvider.getToken("google", userId) == null)
-         new WebApplicationException(403);
+         return Response.status(403).entity("OAuth token not found").build();
+      return Response.ok().build();
    }
 
    /**
