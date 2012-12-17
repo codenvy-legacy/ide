@@ -40,7 +40,7 @@ public class FileEditSessionCleaner implements HttpSessionListener
       if (container != null)
       {
          Participants participants = (Participants)container.getComponentInstanceOfType(Participants.class);
-         EditSessions editSessions = (EditSessions)container.getComponentInstanceOfType(Participants.class);
+         EditSessions editSessions = (EditSessions)container.getComponentInstanceOfType(EditSessions.class);
          final String id = se.getSession().getId();
          editSessions.closeAllSessions(id);
          participants.removeParticipant(id);
