@@ -467,7 +467,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          return;
       }
 
-      path = project.getName() + "/" + path;
+      path = project.getPath() + "/" + path;
 
       if (!DEFAULT_PACKAGE.equals(packageName))
       {
