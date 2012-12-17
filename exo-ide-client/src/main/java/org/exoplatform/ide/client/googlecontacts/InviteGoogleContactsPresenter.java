@@ -27,7 +27,7 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
-import org.exoplatform.ide.client.framework.invite.GoogleContactsServiceImpl;
+import org.exoplatform.ide.client.framework.invite.GoogleContactsService;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -138,7 +138,7 @@ public class InviteGoogleContactsPresenter implements InviteGoogleContactsHandle
    {
       try
       {
-         GoogleContactsServiceImpl.getInstance().getContacts(
+         GoogleContactsService.getInstance().getContacts(
             new AsyncRequestCallback<List<GoogleContact>>(
                new InviteGoogleContactsUnmarshaller(new ArrayList<GoogleContact>()))
             {

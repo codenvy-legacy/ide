@@ -188,7 +188,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
                   for (GitHubRepository repo : result)
                   {
-                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl());
+                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(), repo.getGitUrl());
                      processDescription(projectData, repo.getDescription());
                      projectDataList.add(projectData);
                   }
@@ -340,7 +340,7 @@ public class ShowSamplesPresenter implements ShowSamplesHandler, ViewClosedHandl
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
                   for (GitHubRepository repo : result)
                   {
-                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl());
+                     ProjectData projectData = new ProjectData(repo.getName(), null, null, null, repo.getCloneUrl(),repo.getGitUrl());
                      processDescription(projectData, repo.getDescription());
                      projectDataList.add(projectData);
                   }

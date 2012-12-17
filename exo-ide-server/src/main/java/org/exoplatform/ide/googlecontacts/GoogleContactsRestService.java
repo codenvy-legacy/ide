@@ -22,7 +22,8 @@ import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.extensions.Email;
 import com.google.gdata.util.ServiceException;
 
-import org.exoplatform.ide.security.oauth.GoogleOAuthAuthenticator;
+import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,7 +33,10 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  * This REST service is used for getting user's Google Contacts.
@@ -46,6 +50,19 @@ public class GoogleContactsRestService
 {
    @Inject
    private GoogleContactsClient client;
+
+   @Inject
+   private OAuthTokenProvider oauthTokenProvider;
+
+   @GET
+   @Path("is-authenticate")
+   @Produces(MediaType.APPLICATION_JSON)
+   public void isAuthenticate(@Context SecurityContext security) throws Exception
+   {
+      final String userId = ConversationState.getCurrent().getIdentity().getUserId();
+      if (oauthTokenProvider.getToken("google", userId) == null)
+         new WebApplicationException(403);
+   }
 
    /**
     * Fetch all user's contacts.

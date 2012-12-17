@@ -97,7 +97,7 @@ public class GitHubCollaboratorsHandler
       {
          System.out.println("GetCollaboratorsHandler.doInvite()" + gitHubUser.getEmail());
       }
-      
+
       IDE.getInstance().closeView(display.asView().getId());
    }
 
@@ -112,7 +112,7 @@ public class GitHubCollaboratorsHandler
    {
       Window.alert("User > " + user);
       Window.alert("Repository > " + repository);
-      
+
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
       try
@@ -124,10 +124,13 @@ public class GitHubCollaboratorsHandler
                @Override
                protected void onSuccess(Collaborators result)
                {
-                  display = GWT.create(Display.class);
-                  bindDisplay();
-                  IDE.getInstance().openView(display.asView());
-                  display.showCollaborators(result);
+                  if (result != null && !result.getCollaborators().isEmpty())
+                  {
+                     display = GWT.create(Display.class);
+                     bindDisplay();
+                     IDE.getInstance().openView(display.asView());
+                     display.showCollaborators(result);
+                  }
                }
 
                @Override

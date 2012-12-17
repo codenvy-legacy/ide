@@ -240,7 +240,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   protected void onFailure(Throwable exception)
                   {
                      updateDependencyStatusHandler.requestError(projectId, exception);
-                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
+//                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
                      exception.printStackTrace();
                   }
                });
@@ -281,7 +281,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   protected void onFailure(Throwable exception)
                   {
                      updateDependencyStatusHandler.requestError(projectId, exception);
-                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
+//                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
                      exception.printStackTrace();
                   }
                });

@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedEvent;
 import org.exoplatform.ide.client.framework.control.ControlsUpdatedHandler;
 import org.exoplatform.ide.client.framework.discovery.RestDiscoveryService;
-import org.exoplatform.ide.client.framework.invite.GoogleContactsServiceImpl;
+import org.exoplatform.ide.client.framework.invite.GoogleContactsService;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.preference.Preferences;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
@@ -89,7 +89,7 @@ public class PreferencesModule implements InitializeServicesHandler, ControlsUpd
       new VirtualFileSystemFactory(applicationConfiguration.getContext());
       new RestDiscoveryService(applicationConfiguration.getContext());
       new HotKeyManager(controls, applicationSettings);
-      new GoogleContactsServiceImpl(IDELoader.get(), applicationConfiguration.getContext());
+      new GoogleContactsService();
    }
 
    public void onControlsUpdated(ControlsUpdatedEvent event)

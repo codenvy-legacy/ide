@@ -210,7 +210,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                   for (GitHubRepository repo : result)
                   {
                      projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, null, repo
-                        .getSshUrl()));
+                        .getSshUrl(), repo.getGitUrl()));
                      readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
                   }
                   display.getRepositoriesGrid().setValue(projectDataList);
@@ -372,7 +372,11 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
     */
    private void cloneFolder(ProjectData repo, final FolderModel folder)
    {
-      String remoteUri = repo.getRepositoryUrl();
+      String remoteUri = "";
+      if (display.getReadOnlyModeField().getValue())
+        remoteUri = repo.getReadOnlyUrl();
+      else
+         remoteUri = repo.getRepositoryUrl(); 
       if (!remoteUri.endsWith(".git"))
       {
          remoteUri += ".git";

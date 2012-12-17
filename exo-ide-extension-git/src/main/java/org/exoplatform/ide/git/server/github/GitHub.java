@@ -129,6 +129,7 @@ public class GitHub
       String response = doJsonRequest(url, method, null, 200);
       JsonValue jsonArray = JsonHelper.parseJson(response);
       jsonArray = formatJsonArray(jsonArray);
+      String userId = ConversationState.getCurrent().getIdentity().getUserId();
       try
       {
          Iterator<JsonValue> iterator = jsonArray.getElements();
@@ -142,8 +143,10 @@ public class GitHub
                response = doJsonRequest(url, method, null, 200);
                JsonValue jsonUser = JsonHelper.parseJson(response);
                jsonUser = formatObject(jsonUser);
-               GitHubUserImpl userImpl = ObjectBuilder.createObject(GitHubUserImpl.class, jsonUser);
-               collaborators.getCollaborators().add(userImpl);
+               GitHubUserImpl gitHubUser = ObjectBuilder.createObject(GitHubUserImpl.class, jsonUser);
+               if (gitHubUser.getEmail() != null && !gitHubUser.getEmail().isEmpty()
+                    && !gitHubUser.getEmail().equals(userId))
+               collaborators.getCollaborators().add(gitHubUser);
             }
          }
          return collaborators;
