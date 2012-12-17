@@ -59,7 +59,6 @@ import org.picocontainer.Startable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -125,16 +124,6 @@ public class EditSessions implements Startable
          finally
          {
             ConversationState.setCurrent(null);
-         }
-         // After save content may remove FileEditSession without collaborators.
-         for (Iterator<FileEditSession> iterator = editSessions.values().iterator(); iterator.hasNext(); )
-         {
-            FileEditSession editSession = iterator.next();
-            LOG.debug("Active collaborators of file {} : {}", editSession.getPath(), editSession.getCollaborators());
-            if (editSession.getCollaborators().isEmpty())
-            {
-               iterator.remove();
-            }
          }
       }
    }
@@ -220,6 +209,18 @@ public class EditSessions implements Startable
       FileEditSession editSession = editSessions.get(editSessionId);
       if (editSession != null)
       {
+         try
+         {
+            if (editSession.hasChanges())
+            {
+               editSession.save();
+            }
+         }
+         catch (Exception e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
+
          if (editSession.removeCollaborator(userId))
          {
             Set<String> sendTo = new LinkedHashSet<String>();
@@ -234,6 +235,10 @@ public class EditSessions implements Startable
                );
             }
             LOG.debug("Close edit session {}, user {} ", closeMessage.getFileEditSessionKey(), closeMessage.getClientId());
+         }
+         if (editSession.getCollaborators().isEmpty())
+         {
+            editSessions.remove(editSession.getFileEditSessionKey());
          }
       }
    }
