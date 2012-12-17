@@ -125,7 +125,8 @@ public class OpenFileCollaboration implements OpenFileCollaborationEventHandler,
       {
          CollaborationEditorView view = (CollaborationEditorView)event.getView();
          CollabEditor editor = view.getEditor();
-         documentManager.detachFromEditor(editor.getEditor(),editor.getEditor().getDocument());
+         Document document = editor.getEditor().getDocument();
+         documentManager.garbageCollectDocument(document);
          openedFiles.remove(view.getFile().getId());
       }
    }

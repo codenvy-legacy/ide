@@ -222,24 +222,22 @@ public class DocumentManager
   void handleEditableFileReceived(
       FileContents fileContents, JsonArray<GetDocumentCallback> callbacks) {
 
-    /*
-     * One last check to make sure we don't already have a Document for this
-     * file
-     */
     Document document = documentsByFileEditSessionKey.get(fileContents.getFileEditSessionKey());
     if (document == null) {
+       documentsByFileEditSessionKey.remove(fileContents.getFileEditSessionKey());
+    }
       document = createDocument(fileContents.getContents(), new PathUtil(fileContents.getPath()),
           fileContents.getFileEditSessionKey(), fileContents.getCcRevision(),
           fileContents.getConflicts(), fileContents.getConflictHandle(), fileContents);
       tryGarbageCollect();
-    } else {
-      /*
-       * Ensure we have the latest path stashed in the metadata. One case where
-       * this matters is if a file is renamed, we will have had the old path --
-       * this logic will update its path.
-       */
-      DocumentMetadata.putPath(document, new PathUtil(fileContents.getPath()));
-    }
+//    } else {
+//      /*
+//       * Ensure we have the latest path stashed in the metadata. One case where
+//       * this matters is if a file is renamed, we will have had the old path --
+//       * this logic will update its path.
+//       */
+//      DocumentMetadata.putPath(document, new PathUtil(fileContents.getPath()));
+//    }
 
     for (int i = 0, n = callbacks.size(); i < n; i++) {
       callbacks.get(i).onDocumentReceived(document);
@@ -321,7 +319,7 @@ public class DocumentManager
     }
   }
 
-  void garbageCollectDocument(final Document document) {
+  public void garbageCollectDocument(final Document document) {
     if (DocumentMetadata.isLinkedToFile(document)) {
       unlinkFromFile(document);
     }

@@ -333,4 +333,22 @@ public class ParticipantModel {
       }
    }
 
+   public void removeParticipant(ParticipantUserDetails item)
+   {
+      String userId = item.getUserDetails().getUserId();
+      if (presentParticipantsTracker.contains(userId)) {
+         Participant participant = participantsByUserId.remove(userId);
+         if (participant != null) {
+            count--;
+            dispatchParticipantRemoved(participant);
+         }
+
+         for (String clientId : clientIdToUserId.getKeys().asIterable()) {
+            if (clientIdToUserId.get(clientId).equals(userId)) {
+               clientIdToUserId.remove(clientId);
+            }
+         }
+      }
+   }
+
 }

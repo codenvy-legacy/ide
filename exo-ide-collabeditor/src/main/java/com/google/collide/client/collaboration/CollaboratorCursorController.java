@@ -49,6 +49,7 @@ class CollaboratorCursorController {
     private Timer inactiveTimer = new Timer() {
       @Override
       public void run() {
+         //TODO
         cursorView.setVisibility(false);
       }
     };
@@ -87,6 +88,7 @@ class CollaboratorCursorController {
           }
 
           document.getAnchorManager().removeAnchor(collaboratorState.anchor);
+           collaboratorStates.remove(participant.getUserId());
         }
 
         @Override
@@ -174,11 +176,13 @@ class CollaboratorCursorController {
 
     Participant participant = participantModel.getParticipantByUserId(userId);
     if (participant != null) {
+     cursorView.setParticipant(participant);
       /*
        * If the participant exists already, set his color (otherwise the
        * participant model listener will set the color)
        */
       cursorView.setColor(participant.getColor());
+
     }
 
     Anchor anchor =

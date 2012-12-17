@@ -25,6 +25,7 @@ import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.util.JsIntegerMap;
 import com.google.collide.dto.DocumentSelection;
+import com.google.collide.dto.FileCollaboratorGone;
 import com.google.collide.dto.FileContents;
 import com.google.collide.dto.NewFileCollaborator;
 import com.google.collide.dto.RoutingTypes;
@@ -115,6 +116,15 @@ public class CollaborationManager
       }
    };
 
+   private final MessageFilter.MessageRecipient<FileCollaboratorGone> fileCollaboratorGoneMessageRecipient = new MessageFilter.MessageRecipient<FileCollaboratorGone>()
+   {
+      @Override
+      public void onMessageReceived(FileCollaboratorGone message)
+      {
+          removeCollaborator(message);
+      }
+   };
+
    private final AppContext appContext;
 
    private final RemoverManager removerManager = new RemoverManager();
@@ -138,6 +148,7 @@ public class CollaborationManager
       removerManager.track(
          appContext.getPushChannel().getListenerRegistrar().add(pushChannelListener));
       appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.NEWFILECOLLABORATOR, newFileCollaboratorMessageRecipient);
+      appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.FILECOLLABORATORGONE, fileCollaboratorGoneMessageRecipient);
    }
 
    public static CollaborationManager create(AppContext appContext, DocumentManager documentManager,
@@ -218,6 +229,16 @@ public class CollaborationManager
       {
          DocumentCollaborationController collaborationController = docCollabControllersByDocumentId.get(document.getId());
          collaborationController.getParticipantModel().addParticipant(true, message.getParticipant());
+      }
+   }
+
+   private void removeCollaborator(FileCollaboratorGone message)
+   {
+      Document document = documentManager.getDocumentByFilePath(message.getPath());
+      if(document != null)
+      {
+         DocumentCollaborationController collaborationController = docCollabControllersByDocumentId.get(document.getId());
+         collaborationController.getParticipantModel().removeParticipant(message.getParticipant());
       }
    }
 }

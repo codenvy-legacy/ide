@@ -15,8 +15,10 @@
 package com.google.collide.client.editor.selection;
 
 import com.google.collide.client.AppContext;
+import com.google.collide.client.code.Participant;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
+import com.google.collide.client.util.HoverController;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.gwt.resources.client.ClientBundle;
@@ -45,6 +47,10 @@ public class CursorView extends UiComponent<CursorView.View> {
     String root();
 
     String block();
+
+    String name();
+
+    String top();
   }
 
   public interface Resources extends ClientBundle {
@@ -53,10 +59,19 @@ public class CursorView extends UiComponent<CursorView.View> {
   }
 
   static class View extends CompositeView<ViewEvents> {
-    private final Css css;
+
+     public static final int UNHOVER_DELAY = 5 * 1000;
+
+     private final Css css;
     private Element caret;
 
-    private View(Resources res, boolean isLocal) {
+     private Element header;
+
+     private HoverController hoverController;
+
+     private Element top;
+
+     private View(Resources res, boolean isLocal) {
       this.css = res.workspaceEditorCursorCss();
       setElement(createElement(isLocal));
     }
@@ -67,7 +82,35 @@ public class CursorView extends UiComponent<CursorView.View> {
       Element root = Elements.createDivElement(css.root());
       root.appendChild(caret);
       root.getStyle().setZIndex(isLocal ? 1 : 0);
-
+      if(!isLocal)
+      {
+         hoverController = new HoverController();
+         header = Elements.createDivElement(css.name());
+         header.getStyle().setVisibility(CSSStyleDeclaration.Visibility.HIDDEN);
+         top = Elements.createDivElement(css.top());
+         root.appendChild(header);
+         root.appendChild(top);
+         hoverController.addPartner(header);
+         hoverController.addPartner(root);
+         hoverController.addPartner(top);
+         hoverController.setUnhoverDelay(UNHOVER_DELAY);
+         hoverController.setHoverListener(new HoverController.HoverListener()
+         {
+            @Override
+            public void onHover()
+            {
+               getDelegate().onHover(header);
+            }
+         });
+         hoverController.setUnhoverListener(new HoverController.UnhoverListener()
+         {
+            @Override
+            public void onUnhover()
+            {
+               getDelegate().onUnHover(header);
+            }
+         });
+      }
       return root;
     }
 
@@ -82,6 +125,11 @@ public class CursorView extends UiComponent<CursorView.View> {
 
     private void setColor(String color) {
       caret.getStyle().setBackgroundColor(color);
+      if(header != null)
+      {
+         header.getStyle().setBackgroundColor(color);
+         top.getStyle().setBackgroundColor(color);
+      }
     }
 
     private void setBlockMode(boolean isBlockMode) {
@@ -95,6 +143,9 @@ public class CursorView extends UiComponent<CursorView.View> {
 
   interface ViewEvents {
     // TODO: onHover, so we can show the label
+     void onHover(Element display);
+
+     void onUnHover(Element display);
   }
 
   private static final int CARET_BLINK_PERIOD_MS = 500;
@@ -162,5 +213,25 @@ public class CursorView extends UiComponent<CursorView.View> {
 
     getView().setCaretVisible(true);
     caretBlinker.scheduleRepeating(CARET_BLINK_PERIOD_MS);
+  }
+
+  public void setParticipant(final Participant participant)
+  {
+    getView().setDelegate(new ViewEvents()
+    {
+       @Override
+       public void onHover(Element display)
+       {
+          display.setTextContent(participant.getDisplayName());
+          display.getStyle().setVisibility(CSSStyleDeclaration.Visibility.VISIBLE);
+       }
+
+       @Override
+       public void onUnHover(Element display)
+       {
+          display.setInnerHTML("");
+          display.getStyle().setVisibility(CSSStyleDeclaration.Visibility.HIDDEN);
+       }
+    });
   }
 }
