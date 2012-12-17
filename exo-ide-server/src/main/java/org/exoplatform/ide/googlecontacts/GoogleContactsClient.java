@@ -110,7 +110,7 @@ public class GoogleContactsClient
       query.addCustomParameter(new CustomParameter("xoauth_requestor_id", getUserId()));
       DateTime startTime = new DateTime(0);
       query.setUpdatedMin(startTime);
-      int maxResult = 50;
+      int maxResult = 200;
       query.setMaxResults(maxResult);
       List<ContactEntry> googleContacts = new ArrayList<ContactEntry>(maxResult);
       feed = service.query(query, ContactFeed.class);
