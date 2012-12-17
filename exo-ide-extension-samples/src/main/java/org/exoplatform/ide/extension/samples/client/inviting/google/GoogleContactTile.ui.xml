@@ -76,7 +76,7 @@
 			left:80px;
 			top:8px;
 			right:10px;
-			height: 16px;
+			height: 14px;
 			overflow: hidden;
 			
 			font-family:Verdana, Bitstream Vera Sans, sans-serif;
@@ -92,7 +92,7 @@
 			left:80px;
 			top:24px;
 			right:10px;
-			height: 16px;
+			height: 14px;
 			overflow: hidden;
 			
 			font-family:Verdana, Bitstream Vera Sans, sans-serif;
@@ -108,7 +108,7 @@
 			left:80px;
 			top:40px;
 			right:10px;
-			height: 16px;
+			height: 14px;
 			overflow: hidden;
 			
 			font-family:Verdana, Bitstream Vera Sans, sans-serif;

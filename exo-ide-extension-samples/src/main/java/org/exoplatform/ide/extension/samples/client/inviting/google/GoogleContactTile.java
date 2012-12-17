@@ -93,10 +93,12 @@ public class GoogleContactTile extends Composite
       }
 
       name.setText(contact.getName());
+      name.setTitle(name.getText());
       //company.setText(user. getCompany());
       if (!contact.getEmailAddresses().isEmpty())
       {
          email.setText(contact.getEmailAddresses().get(0));
+         email.setTitle(email.getText());
       }
 
       checkBox.addClickHandler(new ClickHandler()
