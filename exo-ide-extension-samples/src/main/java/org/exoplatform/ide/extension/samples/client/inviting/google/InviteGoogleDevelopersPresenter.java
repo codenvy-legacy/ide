@@ -28,16 +28,11 @@ import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -53,6 +48,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -302,6 +298,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             this.contacts.add(contact);
          }
       }
+      Collections.sort(contacts, googleContactsComparator);
 
       display.setDevelopers(contacts, this);
    }

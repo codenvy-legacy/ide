@@ -219,7 +219,7 @@
 		</div>
 
 		<div class="{style.inviteToolbar}">
-			<div class="{style.left}">Or import contacts from Google</div>
+			<div class="{style.left}">Or import contacts from Google:</div>
 			<div class="{style.right}">Invite all</div>
 			<div class="{style.right}"><g:CheckBox ui:field="checkAll" styleName="{style.check}"></g:CheckBox></div>
 		</div>
