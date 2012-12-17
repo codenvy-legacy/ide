@@ -23,6 +23,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.util.List;
 
@@ -119,9 +120,14 @@ public class IdeInviteService
    @RolesAllowed("users")
    @Consumes("text/*")
    public Response sendInvite(@PathParam("mailrecipient") String mailRecipient,
-      @QueryParam("mailsender") String mailsender, String mailBody) throws SendingIdeMailException, InviteException
+      @QueryParam("mailsender") String mailSender, String mailBody) throws SendingIdeMailException, InviteException
    {
-      String from = (mailsender == null || mailsender.isEmpty()) ? sender : mailsender;
+      String userId = null;
+      if (ConversationState.getCurrent() != null)
+         userId = ConversationState.getCurrent().getIdentity().getUserId();
+      else
+         userId = sender;
+      String from = (mailSender == null || mailSender.isEmpty()) ? userId : mailSender;
       inviteService.sendInviteByMail(from, mailRecipient, mailBody);
       return Response.ok().entity("Invitation mail sent successfully").build();
    }
