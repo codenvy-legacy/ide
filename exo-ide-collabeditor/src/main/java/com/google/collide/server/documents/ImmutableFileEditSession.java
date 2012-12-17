@@ -33,5 +33,7 @@ public interface ImmutableFileEditSession
    /** @return last known saved full path of the file */
    String getPath();
 
+   String getResourceId();
+
    boolean hasUnresolvedConflictChunks();
 }

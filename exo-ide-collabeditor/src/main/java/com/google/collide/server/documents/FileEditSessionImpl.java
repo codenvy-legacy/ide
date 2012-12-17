@@ -182,25 +182,18 @@ final class FileEditSessionImpl implements FileEditSession
 
    private final Set<String> editSessionParticipants = new CopyOnWriteArraySet<String>();
    private final Set<String> editSessionParticipantsReadOnly = Collections.unmodifiableSet(editSessionParticipants);
+   private final String editSessionKey;
    private final VirtualFileSystem vfs;
 
-   /**
-    * Constructs a {@link com.google.collide.server.documents.FileEditSessionImpl} for a file.
-    *
-    * @param resourceId
-    *    the identifier for the resource we are editing.
-    * @param initialContents
-    *    the initial contents of the file
-    * @param mergeResult
-    *    if non-null the merge info related to the out of date
-    */
-   FileEditSessionImpl(VirtualFileSystem vfs,
+   FileEditSessionImpl(String editSessionKey,
+                       VirtualFileSystem vfs,
                        String resourceId,
                        String path,
                        String mediaType,
                        String initialContents,
                        @Nullable MergeResult mergeResult)
    {
+      this.editSessionKey = editSessionKey;
       this.vfs = vfs;
       this.resourceId = resourceId;
       this.mediaType = MediaType.valueOf(mediaType);
@@ -235,7 +228,7 @@ final class FileEditSessionImpl implements FileEditSession
    {
       if (closed)
       {
-         throw new FileEditSessionClosedException(resourceId, closedTimeMs);
+         throw new FileEditSessionClosedException(editSessionKey, closedTimeMs);
       }
    }
 
@@ -361,7 +354,7 @@ final class FileEditSessionImpl implements FileEditSession
    public String getFileEditSessionKey()
    {
       // probably ok to call on a closed FileEditSession
-      return resourceId;
+      return editSessionKey;
    }
 
    @Override
@@ -480,6 +473,12 @@ final class FileEditSessionImpl implements FileEditSession
 
    @Override
    public String toString()
+   {
+      return editSessionKey;
+   }
+
+   @Override
+   public String getResourceId()
    {
       return resourceId;
    }
