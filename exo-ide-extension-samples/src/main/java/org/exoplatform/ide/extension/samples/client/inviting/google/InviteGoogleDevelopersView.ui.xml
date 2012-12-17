@@ -6,7 +6,7 @@
 	
    <ui:with field='resource' type='org.exoplatform.ide.extension.samples.client.SamplesClientBundle'/>	
 
-	<ui:style>
+	<ui:style type='org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersView.Style'>
 	/*
 		.inviteForm {
 			position: absolute;
@@ -61,6 +61,18 @@
 		
 		.inviteTopbarTextInput {
 			position:absolute;
+			color: #222222;
+			width:100%;
+			height:20px;
+			resize:false;
+			border-color: #ABADB3 #DBDFE5 #DBDFE5;
+			border-style: solid;
+			border-width: 1px;
+		}
+		
+		.inviteTopbarTextInputWithHint {
+			position:absolute;
+			color: #AAAAAA;
 			width:100%;
 			height:20px;
 			resize:false;
@@ -201,13 +213,13 @@
 	<g:HTMLPanel styleName="{resource.css.inviteHeader48}">
 		<div class="{style.inviteTop}">Invite developers</div>
 	
-		<div class="{style.inviteTopbarTitle}">Enter email adresses:</div>
+		<div class="{style.inviteTopbarTitle}">Enter email adresses manually:</div>
 		<div class="{style.inviteTopbar}">
 			<f:TextInput ui:field="emailsTextField" styleName="{style.inviteTopbarTextInput}"></f:TextInput>
 		</div>
 
 		<div class="{style.inviteToolbar}">
-			<div class="{style.left}">Google contacts</div>
+			<div class="{style.left}">Or import contacts from Google</div>
 			<div class="{style.right}">Invite all</div>
 			<div class="{style.right}"><g:CheckBox ui:field="checkAll" styleName="{style.check}"></g:CheckBox></div>
 		</div>

@@ -18,17 +18,18 @@
  */
 package org.exoplatform.ide.extension.samples.client.inviting.google;
 
-import com.google.gwt.dom.client.Style.Display;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.DivElement;
+import com.google.gwt.dom.client.Style.Display;
 import com.google.gwt.dom.client.TextAreaElement;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
@@ -49,16 +50,20 @@ import java.util.Map;
  * 
  */
 public class InviteGoogleDevelopersView extends ViewImpl implements
-org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display
+   org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display
 {
 
    private static final String ID = "ide.inviteGitHubDevelopersView";
 
    private static final String TITLE = "Invite developers";
 
+   private static final String emailsHint = "Type email addresses separated by commas";
+
    private static final int WIDTH = 800;
 
    private static final int HEIGHT = 550;
+
+   private boolean isEmailsHintShown;
 
    private static InviteGoogleDevelopersViewUiBinder uiBinder = GWT.create(InviteGoogleDevelopersViewUiBinder.class);
 
@@ -72,14 +77,15 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
       {
          setElement(e);
       }
-      
+
       /**
        * Adds a new child widget
        * 
        * @param w the widget to be added
        */
-      public void add(Widget w) {
-        add(w, getElement());
+      public void add(Widget w)
+      {
+         add(w, getElement());
       }
 
       /**
@@ -89,51 +95,62 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
        * @param child the child widget to be added
        * @param container the element within which the child will be contained
        */
-      protected void add(Widget child, Element container) {
-        // Detach new child.
-        child.removeFromParent();
+      protected void add(Widget child, Element container)
+      {
+         // Detach new child.
+         child.removeFromParent();
 
-        // Logical attach.
-        getChildren().add(child);
+         // Logical attach.
+         getChildren().add(child);
 
-        // Physical attach.
-        DOM.appendChild(container, child.getElement());
+         // Physical attach.
+         DOM.appendChild(container, child.getElement());
 
-        // Adopt.
-        adopt(child);
+         // Adopt.
+         adopt(child);
       }
-      
+
    }
-   
+
+   interface Style extends CssResource
+   {
+      String inviteTopbarTextInput();
+
+      String inviteTopbarTextInputWithHint();
+   }
+
+   @UiField
+   Style style;
+
    UserListWidget userListWidget;
 
    @UiField
    DivElement userListElement;
-   
+
    @UiField
    DivElement userListErrorMessage;
-   
+
    @UiField
    CheckBox checkAll;
-   
+
    @UiField
    ImageButton inviteButton, cancelButton;
-   
+
    @UiField
    TextAreaElement inviteMessage;
-   
+
    @UiField
    TextInput emailsTextField;
-   
+
    public InviteGoogleDevelopersView()
    {
       super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       setCloseOnEscape(true);
    }
-   
+
    private Map<GoogleContact, GoogleContactTile> cards = new HashMap<GoogleContact, GoogleContactTile>();
-   
+
    @Override
    public void setDevelopers(List<GoogleContact> contacts, GoogleContactSelectionChangedHandler selectionChangedHandler)
    {
@@ -141,9 +158,9 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
       {
          userListWidget.removeFromParent();
       }
-      
+
       userListWidget = new UserListWidget((Element)userListElement.cast());
-      
+
       cards.clear();
       for (GoogleContact contact : contacts)
       {
@@ -209,6 +226,39 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
    }
 
    @Override
+   public FocusWidget getEmailsFocusWidget()
+   {
+      return emailsTextField;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display#showEmailsHint()
+    */
+   @Override
+   public void showEmailsHint()
+   {
+      emailsTextField.setStyleName(style.inviteTopbarTextInputWithHint());
+      emailsTextField.setText(emailsHint);
+      isEmailsHintShown = true;
+   }
+
+   /**
+    * @see org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display#hideEmailsHint()
+    */
+   @Override
+   public void hideEmailsHint()
+   {
+      if (!isEmailsHintShown)
+      {
+         return;
+      }
+
+      emailsTextField.setStyleName(style.inviteTopbarTextInput());
+      emailsTextField.setText("");
+      isEmailsHintShown = false;
+   }
+
+   @Override
    public void setDevelopersListVisible(boolean visible)
    {
       if (visible)
@@ -219,7 +269,7 @@ org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelop
       else
       {
          userListElement.getStyle().setDisplay(Display.NONE);
-         userListErrorMessage.getStyle().setDisplay(Display.BLOCK);         
+         userListErrorMessage.getStyle().setDisplay(Display.BLOCK);
       }
    }
 

@@ -70,7 +70,7 @@
 			cursor: pointer;
 		}				
 		
-		.userName
+		.userEmail
 		{
 			position: absolute;
 			left:80px;
@@ -102,7 +102,7 @@
 			line-height:12px;
 		}
 		
-		.userEmail
+		.userName
 		{
 			position: absolute;
 			left:80px;
@@ -127,9 +127,9 @@
 				<g:CheckBox ui:field="checkBox" styleName="{style.check}"></g:CheckBox>
 			</g:FlowPanel>
 			<g:Image ui:field="avatarImage" styleName="{style.userAvatarImage}"></g:Image>
-			<g:Label ui:field="name" styleName="{style.userName}"></g:Label>
-			<g:Label ui:field="company" styleName="{style.userCompany}"></g:Label>
 			<g:Label ui:field="email" styleName="{style.userEmail}"></g:Label>
+			<g:Label ui:field="company" styleName="{style.userCompany}"></g:Label>
+			<g:Label ui:field="name" styleName="{style.userName}"></g:Label>
 		</g:FlowPanel>
 	
 	</g:FlowPanel>

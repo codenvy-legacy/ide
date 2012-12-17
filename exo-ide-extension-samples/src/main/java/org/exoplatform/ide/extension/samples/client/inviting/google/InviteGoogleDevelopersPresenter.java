@@ -18,6 +18,18 @@
  */
 package org.exoplatform.ide.extension.samples.client.inviting.google;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -28,6 +40,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -44,6 +57,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -61,7 +76,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    {
 
       void setDevelopersListVisible(boolean visible);
-      
+
       void setDevelopers(List<GoogleContact> developers, GoogleContactSelectionChangedHandler selectionChangedHandler);
 
       boolean isSelected(GoogleContact contact);
@@ -82,6 +97,12 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
       HasValue<String> getEmailsTextField();
 
+      FocusWidget getEmailsFocusWidget();
+
+      void showEmailsHint();
+
+      void hideEmailsHint();
+
    }
 
    private Display display;
@@ -95,6 +116,11 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    private List<String> emailsToInvite = new ArrayList<String>();
 
    private int invitations = 0;
+
+   /**
+    * Comparator for ordering Google contacts list alphabetically, by first e-mail.
+    */
+   private static Comparator<GoogleContact> googleContactsComparator = new GoogleContactsComparator();
 
    public InviteGoogleDevelopersPresenter()
    {
@@ -115,7 +141,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();
-      
+      display.showEmailsHint();
       contacts = new ArrayList<GoogleContact>();
       display.setDevelopersListVisible(true);
       //lazyLoadGoogleContacts();
@@ -197,7 +223,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          loadContactsFailed(exception);
       }
    }
-   
+
    private void loadContactsFailed(Throwable exception)
    {
       display.setDevelopersListVisible(false);
@@ -214,6 +240,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             this.contacts.add(contact);
          }
       }
+      Collections.sort(contacts, googleContactsComparator);
 
       display.setDevelopers(contacts, this);
    }
@@ -284,6 +311,28 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          public void onValueChange(ValueChangeEvent<String> event)
          {
             parseCustomEmails(event.getValue());
+         }
+      });
+
+      display.getEmailsFocusWidget().addFocusHandler(new FocusHandler()
+      {
+         @Override
+         public void onFocus(FocusEvent event)
+         {
+            display.hideEmailsHint();
+         }
+      });
+
+      display.getEmailsFocusWidget().addBlurHandler(new BlurHandler()
+      {
+         @Override
+         public void onBlur(BlurEvent event)
+         {
+            String emails = display.getEmailsTextField().getValue();
+            if (emails == null || emails.trim().isEmpty())
+            {
+               display.showEmailsHint();
+            }
          }
       });
    }
