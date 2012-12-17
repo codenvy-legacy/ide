@@ -30,7 +30,7 @@ import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.part.PropertyListener;
 import org.exoplatform.ide.text.TextUtilities;
 import org.exoplatform.ide.text.store.LineInfo;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.selection.SelectionModel.CursorListener;
 import org.exoplatform.ide.tree.NodeRenderer;
 import org.exoplatform.ide.tree.Tree;
@@ -46,7 +46,7 @@ import org.exoplatform.ide.tree.TreeNodeElement;
 public class OutlineImpl implements OutlinePresenter
 {
 
-   public interface Display extends IsWidget
+   public interface OutlineView extends IsWidget
    {
       void renderTree();
 
@@ -57,9 +57,9 @@ public class OutlineImpl implements OutlinePresenter
       void selectAndExpand(CodeBlock block);
    }
 
-   private Display display;
+   private OutlineView view;
 
-   private TextEditorPartDisplay editor;
+   private TextEditorPartView editor;
 
    private final OutlineModel model;
 
@@ -73,12 +73,12 @@ public class OutlineImpl implements OutlinePresenter
     * 
     */
    public OutlineImpl(Resources resources, OutlineModel model, NodeRenderer<CodeBlock> renderer,
-      TextEditorPartDisplay editor, TextEditorPartPresenter editorPresenter)
+      TextEditorPartView editor, TextEditorPartPresenter editorPresenter)
    {
       this.model = model;
       this.editor = editor;
       dataAdapter = new CodeBlockDataAdapter();
-      display = new OutlineView(resources, dataAdapter, renderer);
+      view = new OutlineViewImpl(resources, dataAdapter, renderer);
       editorPresenter.addPropertyListener(new PropertyListener()
       {
 
@@ -97,13 +97,13 @@ public class OutlineImpl implements OutlinePresenter
          @Override
          public void rootUpdated()
          {
-            display.renderTree();
+            view.renderTree();
          }
 
          @Override
          public void rootChanged(CodeBlock newRoot)
          {
-            display.rootChanged(newRoot);
+            view.rootChanged(newRoot);
          }
 
       });
@@ -114,7 +114,7 @@ public class OutlineImpl implements OutlinePresenter
     */
    private void bind()
    {
-      display.setTreeEventHandler(new Listener<CodeBlock>()
+      view.setTreeEventHandler(new Listener<CodeBlock>()
       {
 
          @Override
@@ -204,7 +204,7 @@ public class OutlineImpl implements OutlinePresenter
             {
                if (!CodeBlock.ROOT_TYPE.equals(blockToSync.getType()))
                {
-                  display.selectAndExpand(blockToSync);
+                  view.selectAndExpand(blockToSync);
                   return;
                }
             }
@@ -219,7 +219,7 @@ public class OutlineImpl implements OutlinePresenter
    @Override
    public void go(HasWidgets container)
    {
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
 }

@@ -19,7 +19,7 @@ import elemental.html.Element;
 import org.exoplatform.ide.mvp.UiComponent;
 import org.exoplatform.ide.text.store.anchor.Anchor;
 import org.exoplatform.ide.texteditor.Buffer;
-import org.exoplatform.ide.texteditor.TextEditorView;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
 import org.exoplatform.ide.texteditor.ElementManager;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
@@ -43,7 +43,7 @@ public class Gutter extends UiComponent<GutterView>
 {
 
    /**
-    * @see TextEditorView#createGutter(boolean, Position, String)
+    * @see TextEditorViewImpl#createGutter(boolean, Position, String)
     */
    public static Gutter create(boolean overviewMode, Position position, String cssClassName, Buffer buffer)
    {

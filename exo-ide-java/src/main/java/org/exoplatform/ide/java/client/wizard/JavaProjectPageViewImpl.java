@@ -7,6 +7,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import elemental.html.Element;
+
 
 /*
  * Copyright (C) 2012 eXo Platform SAS.
@@ -70,7 +72,7 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
    }
 
    @Override
-   public void setActionDelegate(ActionDelegate delegate)
+   public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
    }
@@ -81,4 +83,16 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
       delegate.checkProjectInput();
    }
 
+   @Override
+   public ActionDelegate getDelegate()
+   {
+      return delegate;
+   }
+
+   @Override
+   public Element getElement()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
 }

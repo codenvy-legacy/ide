@@ -19,7 +19,6 @@
 package org.exoplatform.ide.texteditor.codeassistant;
 
 import com.google.gwt.core.client.GWT;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
@@ -28,17 +27,13 @@ import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.json.JsonStringMap.IterationCallback;
 import org.exoplatform.ide.text.BadLocationException;
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.Region;
 import org.exoplatform.ide.text.TextUtilities;
-import org.exoplatform.ide.text.store.DocumentTextStore;
-import org.exoplatform.ide.text.store.LineFinder;
-import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.texteditor.Buffer;
 import org.exoplatform.ide.texteditor.Buffer.ScrollListener;
 import org.exoplatform.ide.texteditor.UndoManager;
 import org.exoplatform.ide.texteditor.api.KeyListener;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
@@ -62,7 +57,7 @@ public class CodeAssistantImpl implements CodeAssistant
 
    private AutocompleteBox box;
 
-   private TextEditorPartDisplay textEditor;
+   private TextEditorPartView textEditor;
 
    private String lastErrorMessage;
 
@@ -200,16 +195,16 @@ public class CodeAssistantImpl implements CodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant#install(org.exoplatform.ide.texteditor.api.TextEditorPartDisplay)
+    * @see org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant#install(org.exoplatform.ide.texteditor.api.TextEditorPartView)
     */
    @Override
-   public void install(TextEditorPartDisplay display)
+   public void install(TextEditorPartView view)
    {
-      this.textEditor = display;
-      box = new AutocompleteUiController(display, res);
-      keyListenerRemover = display.getKeyListenerRegistrar().add(keyListener);
+      this.textEditor = view;
+      box = new AutocompleteUiController(view, res);
+      keyListenerRemover = view.getKeyListenerRegistrar().add(keyListener);
       box.setDelegate(events);
-      display.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener);
+      view.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener);
    }
 
    /**
@@ -265,20 +260,20 @@ public class CodeAssistantImpl implements CodeAssistant
     * Returns an array of completion proposals computed based on the specified document position.
     * The position is used to determine the appropriate content assist processor to invoke.
     *
-    * @param display the display for which to compute the proposals
+    * @param view the view for which to compute the proposals
     * @param offset a document offset
     * @return an array of completion proposals or <code>null</code> if no proposals are possible
     */
-   CompletionProposal[] computeCompletionProposals(TextEditorPartDisplay display, int offset)
+   CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset)
    {
       lastErrorMessage = null;
 
       CompletionProposal[] result = null;
 
-      CodeAssistProcessor p = getProcessor(display, offset);
+      CodeAssistProcessor p = getProcessor(view, offset);
       if (p != null)
       {
-         result = p.computeCompletionProposals(display, offset);
+         result = p.computeCompletionProposals(view, offset);
          lastErrorMessage = p.getErrorMessage();
       }
 
@@ -288,15 +283,15 @@ public class CodeAssistantImpl implements CodeAssistant
    /**
     * Returns the code assist processor for the content type of the specified document position.
     *
-    * @param display the text display
+    * @param view the text view
     * @param offset a offset within the document
     * @return a code-assist processor or <code>null</code> if none exists
     */
-   private CodeAssistProcessor getProcessor(TextEditorPartDisplay display, int offset)
+   private CodeAssistProcessor getProcessor(TextEditorPartView view, int offset)
    {
       try
       {
-         Document document = display.getDocument();
+         Document document = view.getDocument();
          String type = TextUtilities.getContentType(document, partitioning, offset, true);
          return getCodeAssistProcessor(type);
 

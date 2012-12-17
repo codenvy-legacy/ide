@@ -36,8 +36,6 @@ import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Property;
 import org.exoplatform.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
-import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPageView;
-import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

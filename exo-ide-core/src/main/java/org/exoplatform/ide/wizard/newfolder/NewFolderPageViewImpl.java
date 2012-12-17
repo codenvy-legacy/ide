@@ -23,18 +23,21 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import elemental.html.Element;
+
 
 /**
  * NewFolderPageViewImpl is the view of NewFolder wizard.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewFolderPageViewImpl extends Composite implements NewFolderPageView
+public class NewFolderPageViewImpl implements NewFolderPageView
 {
    private static NewFolderViewUiBinder uiBinder = GWT.create(NewFolderViewUiBinder.class);
+
+   private final Widget widget;
 
    @UiField
    TextBox folderName;
@@ -50,7 +53,7 @@ public class NewFolderPageViewImpl extends Composite implements NewFolderPageVie
     */
    public NewFolderPageViewImpl()
    {
-      initWidget(uiBinder.createAndBindUi(this));
+      widget = uiBinder.createAndBindUi(this);
    }
 
    /**
@@ -73,5 +76,30 @@ public class NewFolderPageViewImpl extends Composite implements NewFolderPageVie
    void onFolderNameKeyUp(KeyUpEvent event)
    {
       delegate.checkEnteredInformation();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public ActionDelegate getDelegate()
+   {
+      return delegate;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Widget asWidget()
+   {
+      return widget;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Element getElement()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

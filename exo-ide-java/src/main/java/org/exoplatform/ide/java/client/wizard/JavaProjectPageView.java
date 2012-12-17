@@ -20,11 +20,13 @@ package org.exoplatform.ide.java.client.wizard;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
+import org.exoplatform.ide.mvp.View;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public interface JavaProjectPageView extends IsWidget
+public interface JavaProjectPageView extends IsWidget, View<JavaProjectPageView.ActionDelegate>
 {
    public interface ActionDelegate
    {
@@ -46,12 +48,4 @@ public interface JavaProjectPageView extends IsWidget
     * @return
     */
    String getResourceFolder();
-
-   /**
-    *
-    * @param delegate
-    */
-   void setActionDelegate(ActionDelegate delegate);
-
-
 }

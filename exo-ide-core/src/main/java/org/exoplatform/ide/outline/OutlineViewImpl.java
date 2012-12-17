@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.Resources;
-import org.exoplatform.ide.outline.OutlineImpl.Display;
+import org.exoplatform.ide.outline.OutlineImpl.OutlineView;
 import org.exoplatform.ide.tree.NodeRenderer;
 import org.exoplatform.ide.tree.Tree;
 import org.exoplatform.ide.tree.Tree.Listener;
@@ -35,7 +35,7 @@ import org.exoplatform.ide.tree.Tree.Listener;
  * @version $Id:
  *
  */
-public class OutlineView implements Display
+public class OutlineViewImpl implements OutlineView
 {
 
    private Tree<CodeBlock> tree;
@@ -47,7 +47,7 @@ public class OutlineView implements Display
     * @param resources 
     * @param renderer
     */
-   public OutlineView(Resources resources, CodeBlockDataAdapter codeBlockDataAdapter, NodeRenderer<CodeBlock> renderer)
+   public OutlineViewImpl(Resources resources, CodeBlockDataAdapter codeBlockDataAdapter, NodeRenderer<CodeBlock> renderer)
    {
       tree = Tree.create(resources, codeBlockDataAdapter, renderer);
    }

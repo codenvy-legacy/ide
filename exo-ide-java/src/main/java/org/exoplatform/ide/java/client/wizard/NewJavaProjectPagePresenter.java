@@ -27,6 +27,7 @@ import org.exoplatform.ide.java.client.JavaClientBundle;
 import org.exoplatform.ide.java.client.projectmodel.CompilationUnit;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
 import org.exoplatform.ide.java.client.projectmodel.JavaProjectDesctiprion;
+import org.exoplatform.ide.java.client.wizard.JavaProjectPageView.ActionDelegate;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.File;
@@ -44,8 +45,7 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter
-   implements JavaProjectPageView.ActionDelegate
+public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
 {
    private JavaProjectPageView view;
 
@@ -67,7 +67,7 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter
       super("Java Project", resources.javaProject());
       this.view = view;
       this.resourceProvider = resourceProvider;
-      view.setActionDelegate(this);
+      view.setDelegate(this);
       resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()
       {
          public void onSuccess(JsonArray<String> result)

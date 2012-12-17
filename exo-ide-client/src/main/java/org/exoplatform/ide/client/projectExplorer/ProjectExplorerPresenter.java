@@ -45,7 +45,7 @@ import org.exoplatform.ide.resources.model.Resource;
 public class ProjectExplorerPresenter extends AbstractPartPresenter
 {
 
-   public interface Display extends IsWidget
+   public interface ProjectTreeView extends IsWidget
    {
       void registerListener(Listener listener);
 
@@ -57,16 +57,16 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
       void onNodeAction(Resource resource);
    }
 
-   Display display;
+   ProjectTreeView view;
 
    EventBus eventBus;
 
    PageResources resources;
 
    @Inject
-   public ProjectExplorerPresenter(Display display, EventBus eventBus, PageResources resources)
+   public ProjectExplorerPresenter(ProjectTreeView view, EventBus eventBus, PageResources resources)
    {
-      this.display = display;
+      this.view = view;
       this.eventBus = eventBus;
       this.resources = resources;
       bind();
@@ -79,17 +79,17 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
    public void go(HasWidgets container)
    {
       container.clear();
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
    public void setContent(Resource resource)
    {
-      display.setItems(resource);
+      view.setItems(resource);
    }
 
    protected void bind()
    {
-      display.registerListener(new Listener()
+      view.registerListener(new Listener()
       {
          @Override
          public void onNodeAction(Resource resource)

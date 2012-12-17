@@ -24,14 +24,14 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.outline.OutlinePartPresenter.Display;
+import org.exoplatform.ide.outline.OutlinePartPresenter.OutlinePartView;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class OutlinePartView implements Display
+public class OutlinePartViewImpl implements OutlinePartView
 {
 
    private SimplePanel container;
@@ -39,7 +39,7 @@ public class OutlinePartView implements Display
    private Label noOutline;
 
    @Inject
-   public OutlinePartView()
+   public OutlinePartViewImpl()
    {
       //TODO extract message constant
       noOutline = new Label("An outline is not available.");

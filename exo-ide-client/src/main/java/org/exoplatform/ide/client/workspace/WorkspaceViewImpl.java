@@ -22,11 +22,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.client.workspace.WorkspacePresenter.Display;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
+import org.exoplatform.ide.client.workspace.WorkspacePresenter.WorkspaceView;
 
 /**
  * Created by The eXo Platform SAS
@@ -34,10 +34,10 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-public class WorkspaceView extends Composite implements Display
+public class WorkspaceViewImpl extends Composite implements WorkspaceView
 {
 
-   interface WorspaceViewUiBinder extends UiBinder<Widget, WorkspaceView>
+   interface WorspaceViewUiBinder extends UiBinder<Widget, WorkspaceViewImpl>
    {
    }
 
@@ -69,7 +69,7 @@ public class WorkspaceView extends Composite implements Display
     * implement HasHTML instead of HasText.
     */
    @Inject
-   protected WorkspaceView()
+   protected WorkspaceViewImpl()
    {
       initWidget(uiBinder.createAndBindUi(this));
       // add shadow from editor to all parts of ui

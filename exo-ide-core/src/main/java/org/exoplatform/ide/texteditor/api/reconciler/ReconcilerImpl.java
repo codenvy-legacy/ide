@@ -32,7 +32,7 @@ import org.exoplatform.ide.text.RegionImpl;
 import org.exoplatform.ide.text.TextUtilities;
 import org.exoplatform.ide.text.TypedRegion;
 import org.exoplatform.ide.text.TypedRegionImpl;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.TextInputListener;
 import org.exoplatform.ide.util.executor.BasicIncrementalScheduler;
 
@@ -88,7 +88,7 @@ public class ReconcilerImpl implements Reconciler
 
    private Listener listener;
 
-   private TextEditorPartDisplay textEditor;
+   private TextEditorPartView textEditor;
 
    private DirtyRegionQueue dirtyRegionQueue;
 
@@ -135,15 +135,15 @@ public class ReconcilerImpl implements Reconciler
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.reconciler.Reconciler#install(org.exoplatform.ide.texteditor.api.TextEditorPartDisplay)
+    * @see org.exoplatform.ide.texteditor.api.reconciler.Reconciler#install(org.exoplatform.ide.texteditor.api.TextEditorPartView)
     */
    @Override
-   public void install(TextEditorPartDisplay display)
+   public void install(TextEditorPartView view)
    {
-      this.textEditor = display;
+      this.textEditor = view;
       dirtyRegionQueue = new DirtyRegionQueue();
       listener = new Listener();
-      display.addTextInputListener(listener);
+      view.addTextInputListener(listener);
    }
 
    /**
@@ -216,7 +216,7 @@ public class ReconcilerImpl implements Reconciler
    }
 
    /**
-    * Returns the input document of the text display this reconciler is installed on.
+    * Returns the input document of the text view this reconciler is installed on.
     *
     * @return the reconciler document
     */

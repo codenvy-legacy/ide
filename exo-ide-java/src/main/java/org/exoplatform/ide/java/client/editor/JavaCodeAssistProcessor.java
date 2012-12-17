@@ -37,7 +37,7 @@ import org.exoplatform.ide.java.client.internal.codeassist.CompletionEngine;
 import org.exoplatform.ide.java.client.internal.compiler.env.INameEnvironment;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.runtime.AssertionFailedException;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.util.loging.Log;
@@ -117,7 +117,7 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor
     * {@inheritDoc}
     */
    @Override
-   public CompletionProposal[] computeCompletionProposals(TextEditorPartDisplay display, int offset)
+   public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset)
    {
       if (unit == null)
       {
@@ -126,12 +126,12 @@ public class JavaCodeAssistProcessor implements CodeAssistProcessor
       String projectId = currentFile.getProject().getId();
       CompletionProposalCollector collector =
       //TODO receive vfs id
-         new FillArgumentNamesCompletionProposalCollector(unit, display.getDocument(), offset, projectId, docContext,
+         new FillArgumentNamesCompletionProposalCollector(unit, view.getDocument(), offset, projectId, docContext,
             "dev-monit");
       CompletionEngine e = new CompletionEngine(nameEnvironment, collector, JavaCore.getOptions());
       try
       {
-         e.complete(new org.exoplatform.ide.java.client.compiler.batch.CompilationUnit(display.getDocument().get()
+         e.complete(new org.exoplatform.ide.java.client.compiler.batch.CompilationUnit(view.getDocument().get()
             .toCharArray(), currentFile.getName().substring(0, currentFile.getName().lastIndexOf('.')), "UTF-8"),
             offset, 0);
 

@@ -42,7 +42,7 @@ import org.exoplatform.ide.json.JsonCollections;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class PartStackView extends Composite implements PartStackPresenter.Display
+public class PartStackViewImpl extends Composite implements PartStackPresenter.PartStackView
 {
 
    /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */
@@ -80,7 +80,7 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
     * @param partStackResources 
     */
    @Inject
-   public PartStackView(PartStackUIResources partStackResources)
+   public PartStackViewImpl(PartStackUIResources partStackResources)
    {
       this.resources = partStackResources;
       parent = new DockLayoutPanel(Unit.PX);
@@ -219,7 +219,7 @@ public class PartStackView extends Composite implements PartStackPresenter.Displ
    /**
     *
     */
-   private class TabButton extends Composite implements PartStackPresenter.Display.TabItem
+   private class TabButton extends Composite implements PartStackPresenter.PartStackView.TabItem
    {
 
       private Image image;

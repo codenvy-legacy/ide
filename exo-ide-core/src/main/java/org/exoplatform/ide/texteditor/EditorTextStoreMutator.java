@@ -42,7 +42,7 @@ import org.exoplatform.ide.util.ListenerRegistrar;
 public class EditorTextStoreMutator implements TextStoreMutator
 {
 
-   private TextEditorView editor;
+   private TextEditorViewImpl editor;
 
    private final ListenerManager<BeforeTextListener> beforeTextListenerManager = ListenerManager.create();
 
@@ -51,7 +51,7 @@ public class EditorTextStoreMutator implements TextStoreMutator
    /**
     * @param editor
     */
-   public EditorTextStoreMutator(TextEditorView editor)
+   public EditorTextStoreMutator(TextEditorViewImpl editor)
    {
       this.editor = editor;
    }

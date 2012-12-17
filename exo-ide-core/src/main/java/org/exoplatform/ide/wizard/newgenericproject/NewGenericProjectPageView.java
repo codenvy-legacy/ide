@@ -20,12 +20,14 @@ package org.exoplatform.ide.wizard.newgenericproject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
+import org.exoplatform.ide.mvp.View;
+
 /**
  * Interface of new generic project wizard view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewGenericProjectPageView extends IsWidget
+public interface NewGenericProjectPageView extends IsWidget, View<NewGenericProjectPageView.ActionDelegate>
 {
    /**
     * Returns entered project's name.
@@ -34,13 +36,6 @@ public interface NewGenericProjectPageView extends IsWidget
     */
    String getProjectName();
    
-   /**
-    * Sets new delegate
-    * 
-    * @param delegate
-    */
-   void setCheckProjNameDelegate(ActionDelegate delegate);
-
    /**
     * Needs for delegate some function into GenericProjectPage view.
     */

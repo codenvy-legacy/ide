@@ -85,7 +85,7 @@ import java.util.Date;
 public class WorkspacePresenter implements Presenter
 {
 
-   public interface Display extends IsWidget
+   public interface WorkspaceView extends IsWidget
    {
       HasWidgets getCenterPanel();
 
@@ -98,7 +98,7 @@ public class WorkspacePresenter implements Presenter
       HasWidgets getRightPanel();
    }
 
-   Display display;
+   WorkspaceView view;
 
    EventBus eventBus;
 
@@ -113,7 +113,7 @@ public class WorkspacePresenter implements Presenter
    protected final Resources resources;
 
    @Inject
-   protected WorkspacePresenter(Display display, final ProjectExplorerPresenter projectExplorerPresenter,
+   protected WorkspacePresenter(WorkspaceView view, final ProjectExplorerPresenter projectExplorerPresenter,
                                 EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
                                 final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
                                 ExtensionsPage extensionsPage, PageResources pageResources,
@@ -121,7 +121,7 @@ public class WorkspacePresenter implements Presenter
                                 EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
    {
       super();
-      this.display = display;
+      this.view = view;
       this.projectExplorerPresenter = projectExplorerPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
@@ -163,13 +163,13 @@ public class WorkspacePresenter implements Presenter
    {
       container.clear();
       // Expose Project Explorer into Tools Panel
-      menuPresenter.go(display.getMenuPanel());
+      menuPresenter.go(view.getMenuPanel());
 
-      partAgent.go(PartStackType.NAVIGATION, display.getLeftPanel());
-      partAgent.go(PartStackType.EDITING, display.getCenterPanel());
-      partAgent.go(PartStackType.TOOLING, display.getRightPanel());
+      partAgent.go(PartStackType.NAVIGATION, view.getLeftPanel());
+      partAgent.go(PartStackType.EDITING, view.getCenterPanel());
+      partAgent.go(PartStackType.TOOLING, view.getRightPanel());
 
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
    protected void bind()

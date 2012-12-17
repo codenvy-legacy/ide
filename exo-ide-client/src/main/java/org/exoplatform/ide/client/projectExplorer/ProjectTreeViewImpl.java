@@ -2,19 +2,18 @@ package org.exoplatform.ide.client.projectExplorer;
 
 import com.google.gwt.dom.client.Node;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import elemental.html.DragEvent;
 
 import org.exoplatform.ide.Resources;
-import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Display;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Listener;
+import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.ProjectTreeView;
 import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.tree.Tree;
 import org.exoplatform.ide.tree.TreeNodeElement;
 
-public class ProjectTreeView implements Display, IsWidget
+public class ProjectTreeViewImpl implements ProjectTreeView
 {
 
    protected Tree<Resource> tree;
@@ -22,7 +21,7 @@ public class ProjectTreeView implements Display, IsWidget
    protected Listener presenterListener;
 
    @Inject
-   public ProjectTreeView(Resources resources)
+   public ProjectTreeViewImpl(Resources resources)
    {
       tree = Tree.create(resources);
    }

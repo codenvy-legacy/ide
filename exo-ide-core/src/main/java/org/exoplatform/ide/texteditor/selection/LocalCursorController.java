@@ -19,8 +19,8 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.texteditor.Buffer;
-import org.exoplatform.ide.texteditor.TextEditorView;
-import org.exoplatform.ide.texteditor.TextEditorView.ReadOnlyListener;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl.ReadOnlyListener;
 import org.exoplatform.ide.texteditor.FocusManager;
 import org.exoplatform.ide.util.ListenerRegistrar;
 
@@ -38,7 +38,7 @@ public class LocalCursorController
       ReadOnlyListener {
 
   public static LocalCursorController create(Resources resources, FocusManager focusManager,
-      SelectionModel selectionModel, Buffer buffer, TextEditorView editor) {
+      SelectionModel selectionModel, Buffer buffer, TextEditorViewImpl editor) {
 
     CursorView cursorView = CursorView.create(resources, true);
 
@@ -52,7 +52,7 @@ public class LocalCursorController
   private final SelectionModel selectionModel;
 
   private LocalCursorController(FocusManager focusManager, SelectionModel selectionModel,
-      CursorView cursorView, Buffer buffer, TextEditorView editor) {
+      CursorView cursorView, Buffer buffer, TextEditorViewImpl editor) {
 
     this.selectionModel = selectionModel;
     this.cursorView = cursorView;

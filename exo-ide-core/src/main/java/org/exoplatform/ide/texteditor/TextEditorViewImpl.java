@@ -34,7 +34,7 @@ import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
 import org.exoplatform.ide.texteditor.api.TextEditorOperations;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.TextInputListener;
 import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
@@ -75,7 +75,7 @@ import org.exoplatform.ide.util.input.SignalEvent;
 
 /**
  * The Display for the text editor presenter.
- * This is default implementation for {@link TextEditorPartDisplay}
+ * This is default implementation for {@link TextEditorPartView}
  *  This class composes many of the other classes that together form the editor.
  * For example, the area where the text is displayed, the {@link Buffer}, is a
  * nested presenter. Other components are not presenters, such as the input
@@ -85,7 +85,7 @@ import org.exoplatform.ide.util.input.SignalEvent;
  * "user-select" CSS property. See
  * {@link CssUtils#setUserSelect(Element, boolean)}.
  */
-public class TextEditorView extends UiComponent<TextEditorView.View> implements TextEditorPartDisplay
+public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> implements TextEditorPartView
 {
 
    /**
@@ -275,7 +275,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
 
    private QuickAssistAssistant quickAssistAssistant;
 
-   public TextEditorView(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
+   public TextEditorViewImpl(org.exoplatform.ide.Resources resources, UserActivityManager userActivityManager)
    {
       this.resources = resources;
       this.userActivityManager = userActivityManager;
@@ -358,7 +358,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#addLineRenderer(org.exoplatform.ide.texteditor.renderer.LineRenderer)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#addLineRenderer(org.exoplatform.ide.texteditor.renderer.LineRenderer)
     */
    @Override
    public void addLineRenderer(LineRenderer lineRenderer)
@@ -398,7 +398,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getBeforeTextListenerRegistrar()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getBeforeTextListenerRegistrar()
     */
    @Override
    public ListenerRegistrar<BeforeTextListener> getBeforeTextListenerRegistrar()
@@ -428,7 +428,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getEditorDocumentMutator()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getEditorDocumentMutator()
     */
    @Override
    public TextStoreMutator getEditorDocumentMutator()
@@ -437,7 +437,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getElement()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getElement()
     */
    @Override
    public com.google.gwt.user.client.Element getElement()
@@ -446,7 +446,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getFocusManager()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getFocusManager()
     */
    @Override
    public FocusManager getFocusManager()
@@ -460,7 +460,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getKeyListenerRegistrar()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getKeyListenerRegistrar()
     */
    @Override
    public ListenerRegistrar<KeyListener> getKeyListenerRegistrar()
@@ -474,7 +474,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getRenderer()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getRenderer()
     */
    @Override
    public Renderer getRenderer()
@@ -483,7 +483,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getSelection()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getSelection()
     */
    @Override
    public SelectionModel getSelection()
@@ -514,7 +514,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#setDocument(org.exoplatform.ide.text.DocumentImpl)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#setDocument(org.exoplatform.ide.text.DocumentImpl)
     */
    @Override
    public void setDocument(final DocumentImpl document)
@@ -578,7 +578,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#getDocument()
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#getDocument()
     */
    @Override
    public Document getDocument()
@@ -627,7 +627,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
 
       this.isReadOnly = isReadOnly;
 
-      readOnlyListenerManager.dispatch(new Dispatcher<TextEditorView.ReadOnlyListener>()
+      readOnlyListenerManager.dispatch(new Dispatcher<TextEditorViewImpl.ReadOnlyListener>()
       {
          @Override
          public void dispatch(ReadOnlyListener listener)
@@ -671,7 +671,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#setUndoManager(org.exoplatform.ide.texteditor.UndoManager)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#setUndoManager(org.exoplatform.ide.texteditor.UndoManager)
     */
    @Override
    public void setUndoManager(UndoManager undoManager)
@@ -688,7 +688,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#configure(org.exoplatform.ide.texteditor.api.TextEditorConfiguration)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#configure(org.exoplatform.ide.texteditor.api.TextEditorConfiguration)
     */
    @Override
    public void configure(TextEditorConfiguration configuration)
@@ -761,7 +761,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#canDoOperation(int)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#canDoOperation(int)
     */
    @Override
    public boolean canDoOperation(int operation)
@@ -779,7 +779,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#doOperation(int)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#doOperation(int)
     */
    @Override
    public void doOperation(int operation)
@@ -806,7 +806,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#addTextInputListener(org.exoplatform.ide.texteditor.api.TextInputListener)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#addTextInputListener(org.exoplatform.ide.texteditor.api.TextInputListener)
     */
    @Override
    public void addTextInputListener(TextInputListener listener)
@@ -815,7 +815,7 @@ public class TextEditorView extends UiComponent<TextEditorView.View> implements 
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.TextEditorPartDisplay#removeTextInputListener(org.exoplatform.ide.texteditor.api.TextInputListener)
+    * @see org.exoplatform.ide.texteditor.api.TextEditorPartView#removeTextInputListener(org.exoplatform.ide.texteditor.api.TextInputListener)
     */
    @Override
    public void removeTextInputListener(TextInputListener listener)

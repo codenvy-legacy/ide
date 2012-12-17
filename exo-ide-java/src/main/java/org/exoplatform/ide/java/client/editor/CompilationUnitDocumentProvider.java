@@ -35,8 +35,8 @@ import org.exoplatform.ide.text.Position;
 import org.exoplatform.ide.text.annotation.Annotation;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.annotation.AnnotationModelImpl;
-import org.exoplatform.ide.texteditor.TextEditorView;
-import org.exoplatform.ide.texteditor.TextEditorView.Css;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl.Css;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickFixableAnnotation;
 
 import java.util.ArrayList;
@@ -476,7 +476,7 @@ public class CompilationUnitDocumentProvider extends ResourceDocumentProvider
 
    private AnnotationModel annotationModel;
 
-   private TextEditorView.Css css;
+   private TextEditorViewImpl.Css css;
 
    /**
     * @param css

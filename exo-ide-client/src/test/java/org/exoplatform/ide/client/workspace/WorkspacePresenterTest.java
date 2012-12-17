@@ -54,7 +54,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class WorkspacePresenterTest
 {
    @Mock
-   WorkspacePresenter.Display display;
+   WorkspacePresenter.WorkspaceView workspaceView;
 
    @Mock
    ProjectExplorerPresenter projectExpolorerPresenter;
@@ -103,7 +103,7 @@ public class WorkspacePresenterTest
       // setup container mock and display.asWidget return object
       HasWidgets container = mock(HasWidgets.class);
       Widget wsDisplayAsWidget = mock(Widget.class);
-      when(wsPresenter.display.asWidget()).thenReturn(wsDisplayAsWidget);
+      when(wsPresenter.view.asWidget()).thenReturn(wsDisplayAsWidget);
       // perform action
       wsPresenter.go(container);
       // verify view exposed to UI component
@@ -115,7 +115,7 @@ public class WorkspacePresenterTest
    public void shouldExposeProjectExplorerOnGo()
    {
       HasWidgets leftWorkspacePanel = mock(HasWidgets.class);
-      when(wsPresenter.display.getLeftPanel()).thenReturn(leftWorkspacePanel);
+      when(wsPresenter.view.getLeftPanel()).thenReturn(leftWorkspacePanel);
       wsPresenter.go(mock(HasWidgets.class));
       // verify ProjectView opened
       verify(wsPresenter.projectExplorerPresenter).go(eq(leftWorkspacePanel));

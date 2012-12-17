@@ -45,7 +45,7 @@ public class ProjectExpolorerPresenterTest
 {
 
    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-   ProjectExplorerPresenter.Display display;
+   ProjectExplorerPresenter.ProjectTreeView projectTreeView;
 
    @Spy
    EventBus eventBus = new SimpleEventBus();
@@ -74,7 +74,7 @@ public class ProjectExpolorerPresenterTest
    public void shouldBindDoubleClickHandler()
    {
 
-      verify(display).registerListener((Listener)any());
+      verify(projectTreeView).registerListener((Listener)any());
    }
 
    /**

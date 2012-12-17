@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.texteditor.api.codeassistant;
 
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.codeassistant.CodeAssistantImpl;
 
 /**
  * An <code>CodeAssistant</code> provides support on interactive content completion.
- * The content assistant is a {@link TextEditorPartDisplay} add-on. Its
+ * The content assistant is a {@link TextEditorPartView} add-on. Its
  * purpose is to propose, display, and insert completions of the content
  * of the text viewer's document at the viewer's cursor position. In addition
  * to handle completions, a content assistant can also be requested to provide
@@ -49,14 +49,14 @@ import org.exoplatform.ide.texteditor.codeassistant.CodeAssistantImpl;
 public interface CodeAssistant
 {
    /**
-    * Installs content assist support on the given text display.
+    * Installs content assist support on the given text view.
     *
-    * @param display the text display on which content assist will work
+    * @param view the text view on which content assist will work
     */
-   void install(TextEditorPartDisplay display);
+   void install(TextEditorPartView view);
 
    /**
-    * Uninstalls content assist support from the text display it has
+    * Uninstalls content assist support from the text view it has
     * previously be installed on.
     */
    void uninstall();

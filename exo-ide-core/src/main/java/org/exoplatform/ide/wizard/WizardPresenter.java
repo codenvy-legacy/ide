@@ -21,6 +21,8 @@ package org.exoplatform.ide.wizard;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.ide.wizard.WizardView.ActionDelegate;
+
 /**
  * Wizard presenter manages wizard pages. It's responsible for the 
  * communication user and wizard page.
@@ -30,7 +32,7 @@ import com.google.gwt.user.client.ui.Image;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate, WizardView.ActionDelegate
+public class WizardPresenter implements WizardPagePresenter.WizardUpdateDelegate, ActionDelegate
 {
    private WizardPagePresenter currentPage;
 

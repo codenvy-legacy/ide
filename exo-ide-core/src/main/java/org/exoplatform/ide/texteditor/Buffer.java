@@ -60,7 +60,7 @@ import org.exoplatform.ide.util.executor.Executor;
  * The presenter for the text portion of the editor. This class is used to
  * display text to the user, and to accept mouse input from the user.
  *
- * The lifecycle of this class is tied to the {@link TextEditorView} that owns it.
+ * The lifecycle of this class is tied to the {@link TextEditorViewImpl} that owns it.
  */
 public class Buffer extends UiComponent<Buffer.View> implements LineListener, LineCountListener,
    CoordinateMap.DocumentSizeProvider
@@ -83,7 +83,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
    /**
     * CssResource for the editor.
     */
-   public interface Css extends TextEditorView.EditorSharedCss
+   public interface Css extends TextEditorViewImpl.EditorSharedCss
    {
       String editorLineHeight();
 

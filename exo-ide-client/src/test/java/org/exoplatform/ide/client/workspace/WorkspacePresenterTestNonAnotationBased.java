@@ -54,7 +54,7 @@ public class WorkspacePresenterTestNonAnotationBased
       // initialize service with a mock
       wsPresenter.eventBus = mock(EventBus.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
       // initialize display mock
-      wsPresenter.display = mock(WorkspacePresenter.Display.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
+      wsPresenter.view = mock(WorkspacePresenter.WorkspaceView.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
 
    }
 

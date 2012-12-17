@@ -26,14 +26,14 @@ import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.menu.MainMenuPresenter.Display;
+import org.exoplatform.ide.menu.MainMenuPresenter.MainMenuView;
 
 /**
- * Implements {@link MainMenuPresenter.Display} using standard GWT Menu Widgets  
+ * Implements {@link MainMenuPresenter.MainMenuView} using standard GWT Menu Widgets  
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class MainMenuView implements Display
+public class MainMenuViewImpl implements MainMenuView
 {
    /** Parent menu bar */
    private final MenuBar parentMenuBar;
@@ -42,10 +42,10 @@ public class MainMenuView implements Display
    private final JsonStringMap<MenuItem> menuItems;
 
    /**
-    * Create new {@link MainMenuView} 
+    * Create new {@link MainMenuViewImpl} 
     */
    @Inject
-   public MainMenuView()
+   public MainMenuViewImpl()
    {
       this.parentMenuBar = new MenuBar();
       this.parentMenuBar.setAnimationEnabled(true);

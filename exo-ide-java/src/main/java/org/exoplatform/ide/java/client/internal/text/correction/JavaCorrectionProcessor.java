@@ -38,7 +38,7 @@ import org.exoplatform.ide.runtime.Status;
 import org.exoplatform.ide.text.Position;
 import org.exoplatform.ide.text.annotation.Annotation;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistInvocationContext;
 import org.exoplatform.ide.util.loging.Log;
@@ -93,7 +93,7 @@ public class JavaCorrectionProcessor implements org.exoplatform.ide.texteditor.a
     */
    public CompletionProposal[] computeQuickAssistProposals(QuickAssistInvocationContext quickAssistContext)
    {
-      TextEditorPartDisplay textDisplay = quickAssistContext.getTextEditor();
+      TextEditorPartView textView = quickAssistContext.getTextEditor();
       int documentOffset = quickAssistContext.getOffset();
 
       TextEditorPartPresenter part = assistant.getEditor();
@@ -103,8 +103,8 @@ public class JavaCorrectionProcessor implements org.exoplatform.ide.texteditor.a
       AssistContext context = null;
       if (cu != null)
       {
-         int length = textDisplay != null ? textDisplay.getSelection().getSelectedRange().length : 0;
-         context = new AssistContext(textDisplay, textDisplay.getDocument(), documentOffset, length, cu);
+         int length = textView != null ? textView.getSelection().getSelectedRange().length : 0;
+         context = new AssistContext(textView, textView.getDocument(), documentOffset, length, cu);
       }
 
       Annotation[] annotations = assistant.getAnnotationsAtOffset();

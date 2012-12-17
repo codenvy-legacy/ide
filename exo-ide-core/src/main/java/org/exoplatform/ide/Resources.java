@@ -19,7 +19,7 @@ import com.google.gwt.resources.client.CssResource.NotStrict;
 
 import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.texteditor.EditableContentArea;
-import org.exoplatform.ide.texteditor.TextEditorView;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
 import org.exoplatform.ide.texteditor.renderer.LineNumberRenderer;
 import org.exoplatform.ide.tree.FileTreeNodeRenderer;
 import org.exoplatform.ide.tree.Tree;
@@ -42,7 +42,7 @@ import org.exoplatform.ide.wizard.newresource.NewResourceWizardResources;
  */
 public interface Resources extends
    //    StatusPresenter.Resources,
-   Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorView.Resources, LineNumberRenderer.Resources,
+   Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, LineNumberRenderer.Resources,
    EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources, NewProjectWizardResource,
    NewGenericProjectWizardResource, NewResourceWizardResources
 

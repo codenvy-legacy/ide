@@ -26,7 +26,7 @@ import org.exoplatform.ide.text.Position;
 import org.exoplatform.ide.text.Region;
 import org.exoplatform.ide.text.annotation.Annotation;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.codeassistant.QuickAssistAssistantImpl;
 import org.exoplatform.ide.util.loging.Log;
 
@@ -41,7 +41,7 @@ import java.util.Iterator;
 public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
 {
 
-   private TextEditorPartDisplay textDisplay;
+   private TextEditorPartView textView;
 
    private TextEditorPartPresenter textEditor;
 
@@ -65,9 +65,9 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
     * {@inheritDoc}
     */
    @Override
-   public void install(TextEditorPartDisplay textEditor)
+   public void install(TextEditorPartView textEditor)
    {
-      this.textDisplay = textEditor;
+      this.textView = textEditor;
       super.install(textEditor);
    }
 
@@ -86,24 +86,24 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
       fPosition = null;
       fCurrentAnnotations = null;
 
-      if (textDisplay == null || textDisplay.getDocument() == null)
+      if (textView == null || textView.getDocument() == null)
          // Let superclass deal with this
          return super.showPossibleQuickAssists();
 
       ArrayList<Annotation> resultingAnnotations = new ArrayList<Annotation>(20);
       try
       {
-         Position selectedRange = textDisplay.getSelection().getSelectedRange();
+         Position selectedRange = textView.getSelection().getSelectedRange();
          int currOffset = selectedRange.offset;
          int currLength = selectedRange.length;
          boolean goToClosest = (currLength == 0);
 
          int newOffset =
-            collectQuickFixableAnnotations(textEditor, textDisplay, currOffset, goToClosest, resultingAnnotations);
+            collectQuickFixableAnnotations(textEditor, textView, currOffset, goToClosest, resultingAnnotations);
          if (newOffset != currOffset)
          {
             storePosition(currOffset, currLength);
-            textDisplay.getSelection().setSelectedRange(newOffset, 0);
+            textView.getSelection().setSelectedRange(newOffset, 0);
             //            textDisplay.revealRange(newOffset, 0);
             if (fIsCompletionActive)
             {
@@ -121,7 +121,7 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
 
    }
 
-   public static int collectQuickFixableAnnotations(TextEditorPartPresenter editor, TextEditorPartDisplay display,
+   public static int collectQuickFixableAnnotations(TextEditorPartPresenter editor, TextEditorPartView view,
       int invocationLocation, boolean goToClosest, ArrayList<Annotation> resultingAnnotations)
       throws BadLocationException
    {
@@ -136,7 +136,7 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
       Iterator<Annotation> iter = model.getAnnotationIterator();
       if (goToClosest)
       {
-         Region lineInfo = getRegionOfInterest(display, invocationLocation);
+         Region lineInfo = getRegionOfInterest(view, invocationLocation);
          if (lineInfo == null)
          {
             return invocationLocation;
@@ -262,10 +262,10 @@ public class JavaCorrectionAssistant extends QuickAssistAssistantImpl
       fPosition = new Position(currOffset, currLength);
    }
 
-   private static Region getRegionOfInterest(TextEditorPartDisplay display, int invocationLocation)
+   private static Region getRegionOfInterest(TextEditorPartView view, int invocationLocation)
       throws BadLocationException
    {
-      Document document = display.getDocument();
+      Document document = view.getDocument();
       if (document == null)
       {
          return null;

@@ -23,18 +23,21 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
+import elemental.html.Element;
+
 
 /**
  * NewGenericFilePageViewImpl is the view of NewGenericFile wizard.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericFilePageViewImpl extends Composite implements NewGenericFileView
+public class NewGenericFilePageViewImpl implements NewGenericFileView
 {
    private static NewGenericFilePageViewImplUiBinder uiBinder = GWT.create(NewGenericFilePageViewImplUiBinder.class);
+
+   private final Widget widget;
 
    @UiField TextBox fileName;
 
@@ -49,7 +52,7 @@ public class NewGenericFilePageViewImpl extends Composite implements NewGenericF
     */
    public NewGenericFilePageViewImpl()
    {
-      initWidget(uiBinder.createAndBindUi(this));
+      widget = uiBinder.createAndBindUi(this);
    }
 
    /**
@@ -72,5 +75,30 @@ public class NewGenericFilePageViewImpl extends Composite implements NewGenericF
    void onFileNameKeyUp(KeyUpEvent event)
    {
       delegate.checkEnteredInformation();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Widget asWidget()
+   {
+      return widget;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public ActionDelegate getDelegate()
+   {
+      return delegate;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Element getElement()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

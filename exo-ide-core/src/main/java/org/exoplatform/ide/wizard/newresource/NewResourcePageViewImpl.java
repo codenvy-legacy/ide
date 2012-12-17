@@ -142,4 +142,21 @@ public class NewResourcePageViewImpl implements NewResourcePageView
    {
       return widget;
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   public ActionDelegate getDelegate()
+   {
+      return delegate;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public Element getElement()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
 }

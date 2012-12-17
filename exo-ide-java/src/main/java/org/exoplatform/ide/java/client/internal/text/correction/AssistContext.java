@@ -16,7 +16,7 @@ import org.exoplatform.ide.java.client.core.dom.NodeFinder;
 import org.exoplatform.ide.java.client.internal.corext.codemanipulation.ASTResolving;
 import org.exoplatform.ide.java.client.quickassist.api.InvocationContext;
 import org.exoplatform.ide.text.Document;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.codeassistant.TextInvocationContext;
 
 public class AssistContext extends TextInvocationContext implements InvocationContext
@@ -78,9 +78,9 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
    /*
     * Constructor for CorrectionContext.
     */
-   public AssistContext(TextEditorPartDisplay textDisplay, Document document, int offset, int length)
+   public AssistContext(TextEditorPartView textView, Document document, int offset, int length)
    {
-      super(textDisplay, offset, length);
+      super(textView, offset, length);
       this.document = document;
       fOffset = offset;
       fLength = length;
@@ -104,16 +104,16 @@ public class AssistContext extends TextInvocationContext implements InvocationCo
    //	}
 
    /**
-    * @param textDisplay
+    * @param textView
     * @param document
     * @param documentOffset
     * @param length
     * @param cu
     */
-   public AssistContext(TextEditorPartDisplay textDisplay, Document document, int documentOffset, int length,
+   public AssistContext(TextEditorPartView textView, Document document, int documentOffset, int length,
       CompilationUnit cu)
    {
-      this(textDisplay, document, documentOffset, length);
+      this(textView, document, documentOffset, length);
       fASTRoot = cu;
    }
 

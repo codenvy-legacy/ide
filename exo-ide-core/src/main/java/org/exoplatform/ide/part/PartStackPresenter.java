@@ -34,8 +34,8 @@ import org.exoplatform.ide.core.event.EditorDirtyStateChangedEvent;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.part.PartStackPresenter.Display.TabItem;
-import org.exoplatform.ide.part.PartStackView.FocusRequstHandler;
+import org.exoplatform.ide.part.PartStackPresenter.PartStackView.TabItem;
+import org.exoplatform.ide.part.PartStackViewImpl.FocusRequstHandler;
 import org.exoplatform.ide.presenter.Presenter;
 
 /**
@@ -56,7 +56,7 @@ public class PartStackPresenter implements Presenter
    private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
 
    /** view implementation */
-   private final Display display;
+   private final PartStackView view;
 
    /** current active part */
    private PartPresenter activePart;
@@ -76,7 +76,7 @@ public class PartStackPresenter implements Presenter
    /**
     * PartStack View interface
     */
-   public interface Display extends IsWidget
+   public interface PartStackView extends IsWidget
    {
       /** Tab which can be clicked and closed */
       public interface TabItem extends HasCloseHandlers<TabItem>, HasClickHandlers
@@ -131,11 +131,11 @@ public class PartStackPresenter implements Presenter
     * @param partStackResources
     */
    @Inject
-   public PartStackPresenter(Display display, PartStackUIResources partStackResources, EventBus eventBus)
+   public PartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus)
    {
-      this.display = display;
+      this.view = view;
       this.eventBus = eventBus;
-      display.setFocusRequstHandler(new FocusRequstHandler()
+      view.setFocusRequstHandler(new FocusRequstHandler()
       {
          @Override
          public void onRequestFocus()
@@ -158,7 +158,7 @@ public class PartStackPresenter implements Presenter
       if (!parts.contains(part))
          throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
       int index = parts.indexOf(part);
-      display.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
+      view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
    }
 
    /**
@@ -177,7 +177,7 @@ public class PartStackPresenter implements Presenter
    @Override
    public void go(HasWidgets container)
    {
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
    /**
@@ -187,7 +187,7 @@ public class PartStackPresenter implements Presenter
     */
    public void setFocus(boolean focused)
    {
-      display.setFocus(focused);
+      view.setFocus(focused);
    }
 
    /**
@@ -211,7 +211,7 @@ public class PartStackPresenter implements Presenter
       // include close button
       ImageResource titleImage = part.getTitleImage();
       TabItem tabItem =
-         display.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(),
+         view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(),
             part.getTitleToolTip(), true);
       bindEvents(tabItem, part);
       setActivePart(part);
@@ -261,15 +261,15 @@ public class PartStackPresenter implements Presenter
          return;
       }
       activePart = part;
-      HasWidgets contentPanel = display.getContentPanel();
+      HasWidgets contentPanel = view.getContentPanel();
       contentPanel.clear();
       if (part == null)
       {
-         display.setActiveTabButton(-1);
+         view.setActiveTabButton(-1);
       }
       else
       {
-         display.setActiveTabButton(parts.indexOf(activePart));
+         view.setActiveTabButton(parts.indexOf(activePart));
          activePart.go(contentPanel);
       }
       // notify handler, that part changed
@@ -290,7 +290,7 @@ public class PartStackPresenter implements Presenter
       if (part.onClose())
       {
          int partIndex = parts.indexOf(part);
-         display.removeTabButton(partIndex);
+         view.removeTabButton(partIndex);
          parts.remove(part);
          part.removePropertyListener(propertyListener);
          if (activePart == part)
@@ -319,7 +319,7 @@ public class PartStackPresenter implements Presenter
          }
       });
 
-      item.addCloseHandler(new CloseHandler<PartStackPresenter.Display.TabItem>()
+      item.addCloseHandler(new CloseHandler<PartStackPresenter.PartStackView.TabItem>()
       {
          @Override
          public void onClose(CloseEvent<TabItem> event)

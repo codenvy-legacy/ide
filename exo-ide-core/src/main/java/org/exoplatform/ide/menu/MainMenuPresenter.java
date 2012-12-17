@@ -44,7 +44,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
    /**
     * Main Menu View 
     */
-   public interface Display extends IsWidget
+   public interface MainMenuView extends IsWidget
    {
       /**
        * Set Menu Item by given path visible or invisible.
@@ -82,20 +82,20 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
 
    private final EventBus eventBus;
 
-   private final Display display;
+   private final MainMenuView view;
 
    /**
     * Main Menu Presenter requires Event Bus to listen to Expression Changed Event
     * and View implementation
     * 
     * @param eventBus
-    * @param display
+    * @param view
     */
    @Inject
-   public MainMenuPresenter(EventBus eventBus, Display display)
+   public MainMenuPresenter(EventBus eventBus, MainMenuView view)
    {
       this.eventBus = eventBus;
-      this.display = display;
+      this.view = view;
 
       this.visibileWhenExpressions = JsonCollections.createIntegerMap();
       this.enabledWhenExpressions = JsonCollections.createIntegerMap();
@@ -143,7 +143,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
    public void addMenuItem(String path, Image icon, Command command, Expression visibileWhen, Expression enabledWhen)
    {
 
-      display.addMenuItem(path, icon, command, visibileWhen == null ? true : visibileWhen.getValue(),
+      view.addMenuItem(path, icon, command, visibileWhen == null ? true : visibileWhen.getValue(),
          enabledWhen == null ? true : enabledWhen.getValue());
       // put MenuItem in relation to Expressions
       if (visibileWhen != null)
@@ -170,7 +170,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
    @Override
    public void go(HasWidgets container)
    {
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
    /**
@@ -194,7 +194,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
                   JsonArray<String> itemsPath = visibileWhenExpressions.get(key);
                   for (int i = 0; i < itemsPath.size(); i++)
                   {
-                     display.setVisible(itemsPath.get(i), val);
+                     view.setVisible(itemsPath.get(i), val);
                   }
                }
                // get the list of MenuItems registered with this expression
@@ -203,7 +203,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
                   JsonArray<String> itemsPath = enabledWhenExpressions.get(key);
                   for (int i = 0; i < itemsPath.size(); i++)
                   {
-                     display.setEnabled(itemsPath.get(i), val);
+                     view.setEnabled(itemsPath.get(i), val);
                   }
                }
 

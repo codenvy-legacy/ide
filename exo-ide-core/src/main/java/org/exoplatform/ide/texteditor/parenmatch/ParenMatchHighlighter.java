@@ -28,7 +28,7 @@ import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.text.store.anchor.Anchor;
 import org.exoplatform.ide.text.store.anchor.AnchorManager;
 import org.exoplatform.ide.text.store.anchor.AnchorType;
-import org.exoplatform.ide.texteditor.TextEditorView;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.renderer.LineRenderer;
 import org.exoplatform.ide.texteditor.renderer.Renderer;
@@ -67,7 +67,7 @@ public class ParenMatchHighlighter
    /**
     * Paren match highlighting CSS.
     */
-   public interface Css extends TextEditorView.EditorSharedCss
+   public interface Css extends TextEditorViewImpl.EditorSharedCss
    {
       String match();
    }

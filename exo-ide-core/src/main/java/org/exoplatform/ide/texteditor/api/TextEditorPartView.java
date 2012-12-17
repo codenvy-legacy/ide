@@ -49,7 +49,7 @@ import org.exoplatform.ide.util.ListenerRegistrar;
  * @version $Id:
  *
  */
-public interface TextEditorPartDisplay
+public interface TextEditorPartView
 {
 
    /**
@@ -175,6 +175,5 @@ public interface TextEditorPartDisplay
    Buffer getBuffer();
 
    public ListenerRegistrar<TextListener> getTextListenerRegistrar();
-
 
 }
