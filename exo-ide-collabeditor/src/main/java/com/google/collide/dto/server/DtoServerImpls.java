@@ -8969,7 +8969,7 @@ public class DtoServerImpls {
    public static class FileCollaboratorGoneImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.FileCollaboratorGone, JsonSerializable {
 
       private FileCollaboratorGoneImpl() {
-         super(125);
+         super(127);
       }
 
       protected FileCollaboratorGoneImpl(int type) {
