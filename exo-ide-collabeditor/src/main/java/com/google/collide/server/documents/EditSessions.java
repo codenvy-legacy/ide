@@ -64,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Executors;
@@ -87,7 +88,9 @@ public class EditSessions implements Startable
     * If there is no associated FileEditSession, we need log an error since that probably means we have a stale client.
     */
    private final SelectionTracker selectionTracker = new SelectionTracker();
-   private final ConcurrentMap<String, FileEditSession> editSessions = new ConcurrentHashMap<String, FileEditSession>();
+   // This is important mapping for server side to avoid mapping the same resource twice.
+   private final ConcurrentMap<String, FileEditSession> editSessionsByResourceId =
+      new ConcurrentHashMap<String, FileEditSession>();
 
    public EditSessions(Participants participants, VirtualFileSystemRegistry vfsRegistry)
    {
@@ -106,7 +109,7 @@ public class EditSessions implements Startable
          try
          {
             ConversationState.setCurrent(state);
-            for (FileEditSession editSession : editSessions.values())
+            for (FileEditSession editSession : editSessionsByResourceId.values())
             {
                try
                {
@@ -155,13 +158,13 @@ public class EditSessions implements Startable
          org.exoplatform.ide.vfs.shared.File file =
             (org.exoplatform.ide.vfs.shared.File)vfs.getItemByPath(path, null, PropertyFilter.NONE_FILTER);
          resourceId = file.getId();
-         editSession = editSessions.get(resourceId);
+         editSession = editSessionsByResourceId.get(resourceId);
          if (editSession == null)
          {
             String text = loadFileContext(vfs, resourceId);
             FileEditSession newEditSession =
-               new FileEditSessionImpl(vfs, resourceId, path, file.getMimeType(), text, null);
-            editSession = editSessions.putIfAbsent(resourceId, newEditSession);
+               new FileEditSessionImpl(UUID.randomUUID().toString(), vfs, resourceId, path, file.getMimeType(), text, null);
+            editSession = editSessionsByResourceId.putIfAbsent(resourceId, newEditSession);
             if (editSession == null)
             {
                editSession = newEditSession;
@@ -195,18 +198,32 @@ public class EditSessions implements Startable
       }
       FileContentsImpl fileContents = FileContentsImpl.make()
          .setPath(path)
-         .setFileEditSessionKey(resourceId)
+         .setFileEditSessionKey(editSession.getFileEditSessionKey())
          .setCcRevision(editSession.getDocument().getCcRevision())
          .setContents(editSession.getContents())
          .setContentType(FileContents.ContentType.TEXT);
       return GetFileContentsResponseImpl.make().setFileExists(true).setFileContents(fileContents);
    }
 
+   private FileEditSession findEditSession(String editSessionId)
+   {
+      // Client required to have different 'session key' even for the same resources :( . Since mapping resourceId to
+      // editSession is more important for us we keep only this mapping and lookup session by id if need.
+      for (FileEditSession editSession : editSessionsByResourceId.values())
+      {
+         if (editSessionId.equals(editSession.getFileEditSessionKey()))
+         {
+            return editSession;
+         }
+      }
+      return null;
+   }
+
    public void closeSession(CloseEditor closeMessage)
    {
       final String editSessionId = closeMessage.getFileEditSessionKey();
       final String userId = closeMessage.getClientId();
-      FileEditSession editSession = editSessions.get(editSessionId);
+      FileEditSession editSession = findEditSession(editSessionId);
       if (editSession != null)
       {
          try
@@ -238,7 +255,7 @@ public class EditSessions implements Startable
          }
          if (editSession.getCollaborators().isEmpty())
          {
-            editSessions.remove(editSession.getFileEditSessionKey());
+            editSessionsByResourceId.remove(editSession.getResourceId());
          }
       }
    }
@@ -264,7 +281,7 @@ public class EditSessions implements Startable
    public List<String> closeAllSessions(String userId)
    {
       List<String> result = new ArrayList<String>();
-      for (Map.Entry<String, FileEditSession> e : editSessions.entrySet())
+      for (Map.Entry<String, FileEditSession> e : editSessionsByResourceId.entrySet())
       {
          if (e.getValue().removeCollaborator(userId))
          {
@@ -302,7 +319,7 @@ public class EditSessions implements Startable
    public ServerToClientDocOps mutate(ClientToServerDocOp docOpRequest)
    {
       String resourceId = docOpRequest.getFileEditSessionKey();
-      FileEditSession editSession = editSessions.get(resourceId);
+      FileEditSession editSession = findEditSession(resourceId);
       List<String> docOps = ((JsonArrayListAdapter<String>)docOpRequest.getDocOps2()).asList();
       return applyMutation(
          docOps,
@@ -402,8 +419,8 @@ public class EditSessions implements Startable
 
    public RecoverFromMissedDocOpsResponse recoverDocOps(RecoverFromMissedDocOps missedDocOpsRequest)
    {
-      String resourceId = missedDocOpsRequest.getFileEditSessionKey();
-      FileEditSession editSession = editSessions.get(resourceId);
+      String editSessionId = missedDocOpsRequest.getFileEditSessionKey();
+      FileEditSession editSession = findEditSession(editSessionId);
       List<String> docOps = ((JsonArrayListAdapter<String>)missedDocOpsRequest.getDocOps2()).asList();
 
       // If the client is re-sending any unacked doc ops, apply them first
@@ -414,7 +431,7 @@ public class EditSessions implements Startable
             missedDocOpsRequest.getCurrentCcRevision(),
             null,
             missedDocOpsRequest.getWorkspaceId(),
-            resourceId,
+            editSessionId,
             editSession
          );
       }
@@ -429,7 +446,7 @@ public class EditSessions implements Startable
          DocOpImpl docOp = (DocOpImpl)entry.getValue().docOp;
          ServerToClientDocOpImpl wrappedBroadcastDocOp = ServerToClientDocOpImpl.make()
             .setClientId(missedDocOpsRequest.getClientId()).setAppliedCcRevision(entry.getKey()).setDocOp2(docOp)
-            .setFileEditSessionKey(resourceId)
+            .setFileEditSessionKey(editSessionId)
             .setFilePath(editSession.getPath());
          appliedDocOpsList.add(wrappedBroadcastDocOp);
       }
@@ -442,7 +459,7 @@ public class EditSessions implements Startable
    public GetEditSessionCollaboratorsResponse getEditSessionCollaborators(
       GetEditSessionCollaborators sessionParticipantsRequest)
    {
-      FileEditSession editSession = editSessions.get(sessionParticipantsRequest.getEditSessionId());
+      FileEditSession editSession = findEditSession(sessionParticipantsRequest.getEditSessionId());
       return GetEditSessionCollaboratorsResponseImpl.make()
          .setParticipants(participants.getParticipants(editSession.getCollaborators()));
    }
