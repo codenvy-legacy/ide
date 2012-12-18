@@ -232,7 +232,7 @@
 			<textarea ui:field="inviteMessage" class="{style.inviteMessageText}"></textarea>
 		</div>
 		<div class="{style.inviteFooter}">
-			<f:ImageButton ui:field="inviteButton" enabled="false" addStyleNames="{style.right}" text="Invite developers" width="160px"></f:ImageButton>
+			<f:ImageButton ui:field="inviteButton" enabled="false" addStyleNames="{style.right}" text="Invite&nbsp;Developers" width="160px"></f:ImageButton>
 			<f:ImageButton ui:field="cancelButton" addStyleNames="{style.right},{style.rightMargin}" text="Cancel"></f:ImageButton>
 		</div>
 	</g:HTMLPanel>
