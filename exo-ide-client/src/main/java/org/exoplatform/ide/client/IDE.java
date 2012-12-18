@@ -73,7 +73,6 @@ import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
-import org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler;
 import org.exoplatform.ide.client.websocket.WebSocketHandler;
 
 import java.util.ArrayList;
@@ -186,7 +185,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new PreferencesModule();
 
       new WebSocketHandler();
-      new UnsupportedBrowserHandler();
 
       new IDEDebug();
       new ProjectPreparePresenter();
