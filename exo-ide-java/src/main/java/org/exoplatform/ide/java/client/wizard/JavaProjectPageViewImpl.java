@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import elemental.html.Element;
 
 
 /*
@@ -81,18 +80,5 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
    void handleKeyUpEvent(KeyUpEvent event)
    {
       delegate.checkProjectInput();
-   }
-
-   @Override
-   public ActionDelegate getDelegate()
-   {
-      return delegate;
-   }
-
-   @Override
-   public Element getElement()
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 }

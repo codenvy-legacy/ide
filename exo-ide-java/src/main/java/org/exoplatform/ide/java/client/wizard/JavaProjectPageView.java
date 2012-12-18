@@ -18,15 +18,13 @@
  */
 package org.exoplatform.ide.java.client.wizard;
 
-import com.google.gwt.user.client.ui.IsWidget;
-
-import org.exoplatform.ide.mvp.View;
+import org.exoplatform.ide.view.View;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public interface JavaProjectPageView extends IsWidget, View<JavaProjectPageView.ActionDelegate>
+public interface JavaProjectPageView extends View<JavaProjectPageView.ActionDelegate>
 {
    public interface ActionDelegate
    {
@@ -35,7 +33,6 @@ public interface JavaProjectPageView extends IsWidget, View<JavaProjectPageView.
        */
       void checkProjectInput();
    }
-
 
    /**
     * Get new Project name

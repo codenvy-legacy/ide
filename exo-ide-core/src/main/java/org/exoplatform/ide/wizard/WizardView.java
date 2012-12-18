@@ -21,13 +21,15 @@ package org.exoplatform.ide.wizard;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 
+import org.exoplatform.ide.view.View;
+
 
 /**
  * Interface of Wizard view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardView
+public interface WizardView extends View<WizardView.ActionDelegate>
 {
    /**
     * Sets whether Next button is visible.

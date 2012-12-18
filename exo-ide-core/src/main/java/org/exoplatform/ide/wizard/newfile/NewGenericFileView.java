@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.wizard.newfile;
 
-import com.google.gwt.user.client.ui.IsWidget;
-
-import org.exoplatform.ide.mvp.View;
+import org.exoplatform.ide.view.View;
 
 /**
  * Interface of NewGenericFile view
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewGenericFileView extends IsWidget, View<NewGenericFileView.ActionDelegate>
+public interface NewGenericFileView extends View<NewGenericFileView.ActionDelegate>
 {
    /**
     * Returns file name.

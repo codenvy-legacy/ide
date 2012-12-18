@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.wizard.newgenericproject;
 
-import com.google.gwt.user.client.ui.IsWidget;
-
-import org.exoplatform.ide.mvp.View;
+import org.exoplatform.ide.view.View;
 
 /**
  * Interface of new generic project wizard view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewGenericProjectPageView extends IsWidget, View<NewGenericProjectPageView.ActionDelegate>
+public interface NewGenericProjectPageView extends View<NewGenericProjectPageView.ActionDelegate>
 {
    /**
     * Returns entered project's name.

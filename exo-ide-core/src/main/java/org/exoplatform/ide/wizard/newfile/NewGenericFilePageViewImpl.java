@@ -25,7 +25,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import elemental.html.Element;
 
 
 /**
@@ -83,22 +82,5 @@ public class NewGenericFilePageViewImpl implements NewGenericFileView
    public Widget asWidget()
    {
       return widget;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public ActionDelegate getDelegate()
-   {
-      return delegate;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Element getElement()
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 }

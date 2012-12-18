@@ -18,16 +18,14 @@
  */
 package org.exoplatform.ide.wizard.newfolder;
 
-import com.google.gwt.user.client.ui.IsWidget;
-
-import org.exoplatform.ide.mvp.View;
+import org.exoplatform.ide.view.View;
 
 /**
  * Interface of NewFolder view
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewFolderPageView extends IsWidget, View<NewFolderPageView.ActionDelegate>
+public interface NewFolderPageView extends View<NewFolderPageView.ActionDelegate>
 {
    /**
     * Returns folder name.

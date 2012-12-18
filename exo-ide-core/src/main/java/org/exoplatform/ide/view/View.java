@@ -16,27 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.newresource;
+package org.exoplatform.ide.view;
 
-import org.exoplatform.ide.view.View;
+import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * Interface of new resource view.
+ * Common interface for Views
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewResourcePageView extends View<NewResourcePageView.ActionDelegate>
+public interface View<T> extends IsWidget
 {
    /**
-    * Needs for delegate some function into NewResource view.
+    * Sets the delegate to receive events from this view.
     */
-   public interface ActionDelegate
-   {
-      /**
-       * Returns wizard for selected resource type.
-       * 
-       * @param newFileWizard
-       */
-      void selectedFileType(NewResourceWizardData newFileWizard);
-   }
+   public void setDelegate(T delegate);
 }

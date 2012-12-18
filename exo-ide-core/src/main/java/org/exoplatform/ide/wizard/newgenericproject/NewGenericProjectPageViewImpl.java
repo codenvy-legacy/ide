@@ -26,7 +26,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
-import elemental.html.Element;
 
 
 /**
@@ -83,25 +82,8 @@ public class NewGenericProjectPageViewImpl implements NewGenericProjectPageView
    /**
     * {@inheritDoc}
     */
-   public ActionDelegate getDelegate()
-   {
-      return delegate;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Element getElement()
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 }
