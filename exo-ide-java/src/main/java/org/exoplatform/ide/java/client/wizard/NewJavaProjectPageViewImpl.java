@@ -1,14 +1,3 @@
-package org.exoplatform.ide.java.client.wizard;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
-
-
 /*
  * Copyright (C) 2012 eXo Platform SAS.
  *
@@ -27,11 +16,22 @@ import com.google.gwt.user.client.ui.Widget;
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-public class JavaProjectPageViewImpl implements JavaProjectPageView
+package org.exoplatform.ide.java.client.wizard;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+
+
+public class NewJavaProjectPageViewImpl implements NewJavaProjectPageView
 {
 
    interface JavaProjectPageViewImplUiBinder
-      extends UiBinder<Widget, JavaProjectPageViewImpl>
+      extends UiBinder<Widget, NewJavaProjectPageViewImpl>
    {
    }
 
@@ -47,7 +47,7 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
 
    private ActionDelegate delegate;
 
-   public JavaProjectPageViewImpl()
+   public NewJavaProjectPageViewImpl()
    {
       widget = ourUiBinder.createAndBindUi(this);
    }

@@ -16,30 +16,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client.inject;
+package org.exoplatform.ide.java.client.wizard;
 
-import com.google.gwt.inject.client.AbstractGinModule;
-import org.exoplatform.ide.java.client.wizard.NewJavaProjectPageView;
-import org.exoplatform.ide.java.client.wizard.NewJavaProjectPageViewImpl;
-import org.exoplatform.ide.java.client.wizard.NewPackagePageView;
-import org.exoplatform.ide.java.client.wizard.NewPackagePageViewImpl;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.view.View;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- *
+ * @version $Id: 
  */
-public class JavaGinModule extends AbstractGinModule
+public interface NewPackagePageView extends View<NewPackagePageView.ActionDelegate>
 {
-
-   /**
-    * @see com.google.gwt.inject.client.AbstractGinModule#configure()
-    */
-   @Override
-   protected void configure()
+   public interface ActionDelegate
    {
-      bind(NewJavaProjectPageView.class).to(NewJavaProjectPageViewImpl.class);
-      bind(NewPackagePageView.class).to(NewPackagePageViewImpl.class);
+      void parentChanged(int index);
+
+      void checkPackageName();
    }
 
+   /**
+    * Set all packages or source folders in project
+    * @param parents the packages or source folder names
+    */
+   void setParents(JsonArray<String> parents);
+
+   /**
+    * Get new package name.
+    * @return the new package name
+    */
+   String getPackageName();
 }

@@ -18,19 +18,11 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.web.bindery.event.shared.EventBus;
-
-import com.google.inject.Inject;
-
-import com.google.inject.Singleton;
-
 import com.google.gwt.user.client.ui.Image;
-
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.exoplatform.ide.core.editor.EditorAgent;
-import org.exoplatform.ide.core.event.ActivePartChangedEvent;
-import org.exoplatform.ide.core.event.ActivePartChangedHandler;
 import org.exoplatform.ide.core.expressions.Expression;
-import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
@@ -43,12 +35,12 @@ import org.exoplatform.ide.menu.ExtendedCommand;
 public class SaveCommand implements ExtendedCommand
 {
 
-   private EditorPartPresenter editor;
-   private EditorAgent editorAgent;
    private final EditorDirtyExpression expression;
 
+   private EditorAgent editorAgent;
+
    /**
-    * 
+    *
     */
    @Inject
    public SaveCommand(EditorAgent editorAgent, EditorDirtyExpression expression)
@@ -63,7 +55,7 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public void execute()
    {
-     editorAgent.getActiveEditor().doSave();
+      editorAgent.getActiveEditor().doSave();
    }
 
    /**

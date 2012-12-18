@@ -21,13 +21,12 @@ package org.exoplatform.ide.java.client.wizard;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
-
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.java.client.JavaClientBundle;
 import org.exoplatform.ide.java.client.projectmodel.CompilationUnit;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
 import org.exoplatform.ide.java.client.projectmodel.JavaProjectDesctiprion;
-import org.exoplatform.ide.java.client.wizard.JavaProjectPageView.ActionDelegate;
+import org.exoplatform.ide.java.client.wizard.NewJavaProjectPageView.ActionDelegate;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.File;
@@ -47,7 +46,7 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  */
 public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
 {
-   private JavaProjectPageView view;
+   private NewJavaProjectPageView view;
 
    private ResourceProvider resourceProvider;
 
@@ -62,7 +61,7 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
    private boolean hasResourceFolderIncorrectSymbol;
 
    @Inject
-   public NewJavaProjectPagePresenter(JavaClientBundle resources, JavaProjectPageView view, ResourceProvider resourceProvider)
+   public NewJavaProjectPagePresenter(JavaClientBundle resources, NewJavaProjectPageView view, ResourceProvider resourceProvider)
    {
       super("Java Project", resources.javaProject());
       this.view = view;

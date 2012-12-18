@@ -24,7 +24,7 @@ import org.exoplatform.ide.view.View;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public interface JavaProjectPageView extends View<JavaProjectPageView.ActionDelegate>
+public interface NewJavaProjectPageView extends View<NewJavaProjectPageView.ActionDelegate>
 {
    public interface ActionDelegate
    {
