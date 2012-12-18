@@ -438,6 +438,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          display.setInviteButtonTitle("Invite 1 developer");
       else
          display.setInviteButtonTitle("Invite" + (emails > 0 ? " " + emails + " " : " ") + "developers");
+
    }
 
    public void sendNextEmail()
