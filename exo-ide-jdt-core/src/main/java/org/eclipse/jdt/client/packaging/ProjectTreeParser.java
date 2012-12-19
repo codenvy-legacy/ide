@@ -66,7 +66,7 @@ public class ProjectTreeParser
    {
       void onUpdateComplete(Object item);
    }
-   
+
    public interface ProjectDependenciesUpdateCompleteListener
    {
       void onUpdateComplete(Object item);
@@ -105,18 +105,63 @@ public class ProjectTreeParser
       projectItem.getFolders().clear();
       projectItem.getFiles().clear();
 
-      for (String resourceDirectory : getResourceDirectories())
+      try
       {
-         addResourceFolders(resourceDirectory);
-      }
+         ProjectTreeUnmarshaller unmarshaller = new ProjectTreeUnmarshaller(project);
+         AsyncRequestCallback<ProjectModel> callback = new AsyncRequestCallback<ProjectModel>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(ProjectModel result)
+            {
+               List<Item> items = result.getChildren().getItems();
 
-      if (projectDependencies == null)
-      {
-         loadPomXML();
+               while (!items.isEmpty())
+               {
+                  Item model = items.remove(0);
+
+                  for (String resourceDirectory : getResourceDirectories())
+                  {
+                     if (model.getPath().endsWith(resourceDirectory))
+                     {
+                        addResourceFolders(resourceDirectory, (FolderModel)model);
+                     }
+                  }
+
+                  if (model instanceof FolderModel)
+                  {
+                     for (Item item : ((FolderModel)model).getChildren().getItems())
+                     {
+                        if (item instanceof FolderModel)
+                        {
+                           items.add(item);
+                        }
+                     }
+                  }
+               }
+
+               if (projectDependencies == null)
+               {
+                  loadPomXML();
+               }
+               else
+               {
+                  addFilesAndFoldersToProjectItem();
+               }
+
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent("Error loading project structure"));
+            }
+         };
+
+         VirtualFileSystem.getInstance().getProjectTree(project, callback);
       }
-      else
+      catch (Exception e)
       {
-         addFilesAndFoldersToProjectItem();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -127,7 +172,7 @@ public class ProjectTreeParser
       {
          return null;
       }
-      
+
       DependencyListItem dependencies = setProjectDependencies(dependencyList);
       return dependencies;
    }
@@ -152,7 +197,7 @@ public class ProjectTreeParser
          parseComplete();
       }
 
-      // Load content of get pom.xml   
+      // Load content of get pom.xml
       try
       {
          VirtualFileSystem.getInstance().getContent(
@@ -162,7 +207,7 @@ public class ProjectTreeParser
                protected void onSuccess(FileModel result)
                {
                   List<DependencyItem> dependencies = getDependenciesFromPomXml(result.getContent());
-                  setProjectDependencies(dependencies);                  
+                  setProjectDependencies(dependencies);
                   addFilesAndFoldersToProjectItem();
                }
 
@@ -230,7 +275,7 @@ public class ProjectTreeParser
       try
       {
          Document dom = XMLParser.parse(pomXmlFileContent);
-         
+
          Element projectElement = (Element)dom.getElementsByTagName("project").item(0);
 
          Map<String, String> properties = getPomProperties(projectElement);
@@ -271,10 +316,10 @@ public class ProjectTreeParser
          IDE.fireEvent(new OutputEvent("Error parsing pom.xml.", OutputMessage.Type.ERROR));
          return null;
       }
-      
+
       return projectDependencies;
    }
-   
+
    private DependencyListItem setProjectDependencies(List<DependencyItem> dependencies)
    {
       DependencyListItem referencedLibraries = null;
@@ -285,7 +330,7 @@ public class ProjectTreeParser
             referencedLibraries = dl;
          }
       }
-      
+
       if (referencedLibraries == null)
       {
          referencedLibraries = new DependencyListItem("Referenced Libraries");
@@ -295,12 +340,12 @@ public class ProjectTreeParser
       {
          referencedLibraries.getDependencies().clear();
       }
-      
+
       if (dependencies != null)
       {
-         referencedLibraries.getDependencies().addAll(dependencies);         
+         referencedLibraries.getDependencies().addAll(dependencies);
       }
-      
+
       return referencedLibraries;
    }
 
@@ -326,7 +371,7 @@ public class ProjectTreeParser
 //         }
 //      });
 //   }
-   
+
    private void addFilesAndFoldersToProjectItem()
    {
       List<FolderModel> folders = new ArrayList<FolderModel>();
@@ -370,15 +415,8 @@ public class ProjectTreeParser
       });
    }
 
-   private void addResourceFolders(String resourceDirectory)
+   private void addResourceFolders(String resourceDirectory, FolderModel resourceFolder)
    {
-      FolderModel resourceFolder = getFolderByPath(project.getChildren().getItems(), resourceDirectory, true);
-      if (resourceFolder == null)
-      {
-         return;
-      }
-
-      //ResourceDirectoryItem resourceDirectoryItem = new ResourceDirectoryItem(resourceDirectory, new FolderModel(resourceFolder));
       ResourceDirectoryItem resourceDirectoryItem = new ResourceDirectoryItem(resourceDirectory, resourceFolder);
       projectItem.getResourceDirectories().add(resourceDirectoryItem);
 
@@ -502,36 +540,6 @@ public class ProjectTreeParser
       }
 
       return folders;
-   }
-
-   private FolderModel getFolderByPath(List<Item> items, String path, boolean removeFromParent)
-   {
-      String[] pathes = path.split("/");
-
-      for (int i = 0; i < pathes.length; i++)
-      {
-         String p = pathes[i];
-
-         for (Item item : items)
-         {
-            if (item.getName().equals(p) && item instanceof FolderModel)
-            {
-               if (i == pathes.length - 1)
-               {
-                  if (removeFromParent)
-                  {
-                     items.remove(item);
-                  }
-
-                  return (FolderModel)item;
-               }
-
-               items = ((FolderModel)item).getChildren().getItems();
-            }
-         }
-      }
-
-      return null;
    }
 
    private void searchItemInPackages(List<Object> navigateItems, ResourceDirectoryItem resourceDirectoryItem, Item itemToNavigate)
