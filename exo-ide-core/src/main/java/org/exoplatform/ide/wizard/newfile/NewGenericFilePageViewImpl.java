@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -32,11 +33,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericFilePageViewImpl implements NewGenericFileView
+public class NewGenericFilePageViewImpl extends Composite implements NewGenericFileView
 {
    private static NewGenericFilePageViewImplUiBinder uiBinder = GWT.create(NewGenericFilePageViewImplUiBinder.class);
-
-   private final Widget widget;
 
    @UiField TextBox fileName;
 
@@ -51,7 +50,7 @@ public class NewGenericFilePageViewImpl implements NewGenericFileView
     */
    public NewGenericFilePageViewImpl()
    {
-      widget = uiBinder.createAndBindUi(this);
+      initWidget(uiBinder.createAndBindUi(this));
    }
 
    /**
@@ -74,13 +73,5 @@ public class NewGenericFilePageViewImpl implements NewGenericFileView
    void onFileNameKeyUp(KeyUpEvent event)
    {
       delegate.checkEnteredInformation();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Widget asWidget()
-   {
-      return widget;
    }
 }

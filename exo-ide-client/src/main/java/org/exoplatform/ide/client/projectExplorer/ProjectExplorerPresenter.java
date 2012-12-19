@@ -18,7 +18,6 @@ package org.exoplatform.ide.client.projectExplorer;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -42,29 +41,23 @@ import org.exoplatform.ide.resources.model.Resource;
  *          exo@exoplatform.com
  * Jul 27, 2012  
  */
-public class ProjectExplorerPresenter extends AbstractPartPresenter
+public class ProjectExplorerPresenter extends AbstractPartPresenter implements ProjectExplorerView.ActionDelegate
 {
-
-   public interface ProjectTreeView extends IsWidget
-   {
-      void registerListener(Listener listener);
-
-      void setItems(Resource resource);
-   }
-
-   public interface Listener
-   {
-      void onNodeAction(Resource resource);
-   }
-
-   ProjectTreeView view;
+   ProjectExplorerView view;
 
    EventBus eventBus;
 
    PageResources resources;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param resources
+    */
    @Inject
-   public ProjectExplorerPresenter(ProjectTreeView view, EventBus eventBus, PageResources resources)
+   public ProjectExplorerPresenter(ProjectExplorerView view, EventBus eventBus, PageResources resources)
    {
       this.view = view;
       this.eventBus = eventBus;
@@ -82,21 +75,22 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
       container.add(view.asWidget());
    }
 
+   /**
+    * Sets content.
+    * 
+    * @param resource
+    */
    public void setContent(Resource resource)
    {
       view.setItems(resource);
    }
 
+   /**
+    * Adds behavior to view components
+    */
    protected void bind()
    {
-      view.registerListener(new Listener()
-      {
-         @Override
-         public void onNodeAction(Resource resource)
-         {
-            openFile(resource);
-         }
-      });
+      view.setDelegate(this);
       eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler()
       {
          @Override
@@ -146,6 +140,11 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
       });
    }
 
+   /**
+    * Opens file.
+    * 
+    * @param resource
+    */
    protected void openFile(Resource resource)
    {
       if (resource.isFile())
@@ -182,4 +181,12 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
          + "\n\t- view project's tree" + "\n\t- select and open project's file";
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onNodeAction(Resource resource)
+   {
+      openFile(resource);
+   }
 }

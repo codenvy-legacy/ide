@@ -23,11 +23,12 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 
-public class NewJavaProjectPageViewImpl implements NewJavaProjectPageView
+public class NewJavaProjectPageViewImpl extends Composite implements NewJavaProjectPageView
 {
 
    interface JavaProjectPageViewImplUiBinder
@@ -36,8 +37,6 @@ public class NewJavaProjectPageViewImpl implements NewJavaProjectPageView
    }
 
    private static JavaProjectPageViewImplUiBinder ourUiBinder = GWT.create(JavaProjectPageViewImplUiBinder.class);
-
-   private final Widget widget;
 
    @UiField
    TextBox projectName;
@@ -49,13 +48,7 @@ public class NewJavaProjectPageViewImpl implements NewJavaProjectPageView
 
    public NewJavaProjectPageViewImpl()
    {
-      widget = ourUiBinder.createAndBindUi(this);
-   }
-
-   @Override
-   public Widget asWidget()
-   {
-      return widget;
+      initWidget(ourUiBinder.createAndBindUi(this));
    }
 
    @Override

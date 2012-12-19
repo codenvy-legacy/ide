@@ -45,7 +45,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class TestPartStackPresenter
 {
    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-   PartStackPresenter.PartStackView partStackView;
+   PartStackView partStackView;
 
    @Mock
    PartStackUIResources resources;

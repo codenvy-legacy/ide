@@ -16,26 +16,21 @@
  */
 package org.exoplatform.ide.part;
 
-import com.google.web.bindery.event.shared.EventBus;
-
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
-import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.core.event.EditorDirtyStateChangedEvent;
 import org.exoplatform.ide.editor.EditorPartPresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.part.PartStackPresenter.PartStackView.TabItem;
-import org.exoplatform.ide.part.PartStackViewImpl.FocusRequstHandler;
+import org.exoplatform.ide.part.PartStackView.TabItem;
 import org.exoplatform.ide.presenter.Presenter;
 
 /**
@@ -50,7 +45,7 @@ import org.exoplatform.ide.presenter.Presenter;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class PartStackPresenter implements Presenter
+public class PartStackPresenter implements Presenter, PartStackView.ActionDelegate
 {
    /** list of parts */
    private final JsonArray<PartPresenter> parts = JsonCollections.createArray();
@@ -71,38 +66,6 @@ public class PartStackPresenter implements Presenter
 
       /** PartStack is being clicked and requests Focus */
       void onRequestFocus(PartStackPresenter partStack);
-   }
-
-   /**
-    * PartStack View interface
-    */
-   public interface PartStackView extends IsWidget
-   {
-      /** Tab which can be clicked and closed */
-      public interface TabItem extends HasCloseHandlers<TabItem>, HasClickHandlers
-      {
-      }
-
-      /** Add Tab */
-      public TabItem addTabButton(Image icon, String title, String toolTip, boolean closable);
-
-      /** Remove Tab */
-      public void removeTabButton(int index);
-
-      /** Set Active Tab */
-      public void setActiveTabButton(int index);
-
-      /** Get Content Panel */
-      public HasWidgets getContentPanel();
-
-      /** Set PartStack focused */
-      public void setFocus(boolean focused);
-
-      /** Set display focus request handler   */
-      public void setFocusRequstHandler(FocusRequstHandler handler);
-
-      /** Update Tab */
-      public void updateTabItem(int index, ImageResource icon, String title, String toolTip);
    }
 
    private PropertyListener propertyListener = new PropertyListener()
@@ -135,18 +98,7 @@ public class PartStackPresenter implements Presenter
    {
       this.view = view;
       this.eventBus = eventBus;
-      view.setFocusRequstHandler(new FocusRequstHandler()
-      {
-         @Override
-         public void onRequestFocus()
-         {
-            // notify partStackHandler
-            if (partStackHandler != null)
-            {
-               partStackHandler.onRequestFocus(PartStackPresenter.this);
-            }
-         }
-      });
+      view.setDelegate(this);
    }
 
    /**
@@ -319,7 +271,7 @@ public class PartStackPresenter implements Presenter
          }
       });
 
-      item.addCloseHandler(new CloseHandler<PartStackPresenter.PartStackView.TabItem>()
+      item.addCloseHandler(new CloseHandler<PartStackView.TabItem>()
       {
          @Override
          public void onClose(CloseEvent<TabItem> event)
@@ -328,5 +280,18 @@ public class PartStackPresenter implements Presenter
             close(part);
          }
       });
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onRequestFocus()
+   {
+      // notify partStackHandler
+      if (partStackHandler != null)
+      {
+         partStackHandler.onRequestFocus(PartStackPresenter.this);
+      }
    }
 }

@@ -16,56 +16,53 @@
  */
 package org.exoplatform.ide.menu;
 
-import com.google.inject.Inject;
-
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.menu.MainMenuPresenter.MainMenuView;
 
 /**
- * Implements {@link MainMenuPresenter.MainMenuView} using standard GWT Menu Widgets  
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * Implements {@link MainMenuView} using standard GWT Menu Widgets
+ * 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class MainMenuViewImpl implements MainMenuView
+public class MainMenuViewImpl extends Composite implements MainMenuView
 {
+   private static MainMenuUiBinder uiBinder = GWT.create(MainMenuUiBinder.class);
+
    /** Parent menu bar */
-   private final MenuBar parentMenuBar;
+   @UiField
+   MenuBar parentMenuBar;
 
    /** Map storing Path and corresponding menu item  */
    private final JsonStringMap<MenuItem> menuItems;
 
+   interface MainMenuUiBinder extends UiBinder<Widget, MainMenuViewImpl>
+   {
+   }
+
    /**
-    * Create new {@link MainMenuViewImpl} 
+    * Create new {@link MainMenuViewImpl}
     */
    @Inject
    public MainMenuViewImpl()
    {
-      this.parentMenuBar = new MenuBar();
-      this.parentMenuBar.setAnimationEnabled(true);
-      this.parentMenuBar.setAutoOpen(true);
-
+      initWidget(uiBinder.createAndBindUi(this));
       this.menuItems = JsonCollections.createStringMap();
    }
 
    /**
-   * {@inheritDoc}
-   */
-   @Override
-   public Widget asWidget()
-   {
-      return parentMenuBar;
-   }
-
-   /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public void setVisible(String path, boolean visible)
    {
@@ -76,8 +73,8 @@ public class MainMenuViewImpl implements MainMenuView
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public void setEnabled(String path, boolean enabled)
    {
@@ -88,8 +85,8 @@ public class MainMenuViewImpl implements MainMenuView
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled)
    {
@@ -152,4 +149,13 @@ public class MainMenuViewImpl implements MainMenuView
       return menuBar;
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDelegate(ActionDelegate delegate)
+   {
+      // ok
+      // there are no events for now
+   }
 }

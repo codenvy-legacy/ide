@@ -54,7 +54,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class WorkspacePresenterTest
 {
    @Mock
-   WorkspacePresenter.WorkspaceView workspaceView;
+   WorkspaceView workspaceView;
 
    @Mock
    ProjectExplorerPresenter projectExpolorerPresenter;

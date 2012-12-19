@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
@@ -34,10 +35,8 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericProjectPageViewImpl implements NewGenericProjectPageView
+public class NewGenericProjectPageViewImpl extends Composite implements NewGenericProjectPageView
 {
-   private final Widget widget;
-
    private ActionDelegate delegate;
 
    private static NewGenericPrPageViewImplUiBinder uiBinder = GWT.create(NewGenericPrPageViewImplUiBinder.class);
@@ -54,21 +53,13 @@ public class NewGenericProjectPageViewImpl implements NewGenericProjectPageView
 
    public NewGenericProjectPageViewImpl()
    {
-      widget = uiBinder.createAndBindUi(this);
+      initWidget(uiBinder.createAndBindUi(this));
    }
 
    @UiHandler("projectName")
    void onProjectNameKeyUp(KeyUpEvent event)
    {
       delegate.checkProjectName();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Widget asWidget()
-   {
-      return widget;
    }
 
    /**

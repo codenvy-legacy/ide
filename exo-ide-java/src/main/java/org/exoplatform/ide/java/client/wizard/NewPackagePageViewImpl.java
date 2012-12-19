@@ -24,11 +24,12 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
 import org.exoplatform.ide.json.JsonArray;
 
 /**
@@ -36,15 +37,13 @@ import org.exoplatform.ide.json.JsonArray;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class NewPackagePageViewImpl implements NewPackagePageView
+public class NewPackagePageViewImpl extends Composite implements NewPackagePageView
 {
    interface NewPackagePageViewImplUiBinder extends UiBinder<DockLayoutPanel, NewPackagePageViewImpl>
    {
    }
 
    private static NewPackagePageViewImplUiBinder ourUiBinder = GWT.create(NewPackagePageViewImplUiBinder.class);
-
-   private final DockLayoutPanel rootElement;
 
    @UiField
    TextBox packageName;
@@ -57,8 +56,7 @@ public class NewPackagePageViewImpl implements NewPackagePageView
    @Inject
    public NewPackagePageViewImpl()
    {
-      rootElement = ourUiBinder.createAndBindUi(this);
-
+      initWidget(ourUiBinder.createAndBindUi(this));
    }
 
    /**{@inheritDoc}*/
@@ -66,13 +64,6 @@ public class NewPackagePageViewImpl implements NewPackagePageView
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
-   }
-
-   /**{@inheritDoc}*/
-   @Override
-   public Widget asWidget()
-   {
-      return rootElement;
    }
 
    /**{@inheritDoc}*/

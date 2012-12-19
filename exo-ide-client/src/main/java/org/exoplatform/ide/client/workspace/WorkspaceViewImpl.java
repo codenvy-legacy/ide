@@ -26,13 +26,10 @@ import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.client.workspace.WorkspacePresenter.WorkspaceView;
-
 /**
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 24, 2012  
+ * Implements {@link WorkspaceView}
+ * 
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public class WorkspaceViewImpl extends Composite implements WorkspaceView
 {
@@ -58,15 +55,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    @UiField(provided=true) SplitLayoutPanel splitPanel = new SplitLayoutPanel(4);
 
    /**
-    * Because this class has a default constructor, it can
-    * be used as a binder template. In other words, it can be used in other
-    * *.ui.xml files as follows:
-    * <ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
-     *   xmlns:g="urn:import:**user's package**">
-    *  <g:**UserClassName**>Hello!</g:**UserClassName>
-    * </ui:UiBinder>
-    * Note that depending on the widget that is used, it may be necessary to
-    * implement HasHTML instead of HasText.
+    * Create view.
     */
    @Inject
    protected WorkspaceViewImpl()
@@ -95,15 +84,6 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    }
 
    /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void clearCenterPanel()
-   {
-      centerPanel.clear();
-   }
-
-   /**
     * {@inheritDoc}
     */
    @Override
@@ -121,4 +101,13 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
       return rightPanel;
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDelegate(ActionDelegate delegate)
+   {
+      // ok
+      // there are no events for now
+   }
 }

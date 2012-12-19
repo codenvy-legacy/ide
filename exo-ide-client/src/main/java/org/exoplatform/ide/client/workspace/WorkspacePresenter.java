@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
@@ -82,21 +81,8 @@ import java.util.Date;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-public class WorkspacePresenter implements Presenter
+public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate
 {
-
-   public interface WorkspaceView extends IsWidget
-   {
-      HasWidgets getCenterPanel();
-
-      void clearCenterPanel();
-
-      HasWidgets getLeftPanel();
-
-      HasWidgets getMenuPanel();
-
-      HasWidgets getRightPanel();
-   }
 
    WorkspaceView view;
 
@@ -122,6 +108,7 @@ public class WorkspacePresenter implements Presenter
    {
       super();
       this.view = view;
+      view.setDelegate(this);
       this.projectExplorerPresenter = projectExplorerPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;

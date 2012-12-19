@@ -40,12 +40,14 @@ import org.exoplatform.ide.extension.ExtensionRegistry;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.menu.MainMenuView;
 import org.exoplatform.ide.menu.MainMenuViewImpl;
-import org.exoplatform.ide.outline.OutlinePartPresenter.OutlinePartView;
+import org.exoplatform.ide.outline.OutlinePartPresenter;
 import org.exoplatform.ide.outline.OutlinePartViewImpl;
 import org.exoplatform.ide.part.PartAgentPresenter;
 import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.part.PartStackUIResources;
+import org.exoplatform.ide.part.PartStackView;
 import org.exoplatform.ide.part.PartStackViewImpl;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
@@ -90,7 +92,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
       bind(UserActivityManager.class).in(Singleton.class);
-      bind(OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
+      bind(OutlinePartPresenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
    }
 
    /**
@@ -110,11 +112,11 @@ public class CoreGinModule extends AbstractGinModule
 
       // main menu
       bind(MainMenuPresenter.class).in(Singleton.class);
-      bind(MainMenuPresenter.MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
+      bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
       bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
 
       // part agent
-      bind(PartStackPresenter.PartStackView.class).to(PartStackViewImpl.class);
+      bind(PartStackView.class).to(PartStackViewImpl.class);
       bind(PartStackPresenter.class);
       bind(PartAgentPresenter.class).in(Singleton.class);
       
