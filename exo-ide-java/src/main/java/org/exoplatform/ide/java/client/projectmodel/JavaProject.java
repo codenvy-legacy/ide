@@ -23,6 +23,8 @@ import com.google.web.bindery.event.shared.EventBus;
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.java.client.core.JavaConventions;
 import org.exoplatform.ide.java.client.core.JavaCore;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Link;
@@ -134,7 +136,7 @@ public class JavaProject extends Project
          }
          else
          {
-            packagePartName = name.substring(parent.getName().length() + 1);
+            packagePartName = name.substring(folderParent.getName().length() + 1);
          }
          final Folder packageParent = folderParent;
          final String path = packagePartName.replaceAll("\\.", "/");
@@ -149,7 +151,7 @@ public class JavaProject extends Project
                   if (path.contains("/"))
                   {
                      // refresh tree, cause additional hierarchy folders my have been created
-                     refreshTree(packageParent, new AsyncCallback<Folder>()
+                     refreshTree(parent, new AsyncCallback<Folder>()
                      {
                         @Override
                         public void onSuccess(Folder result)
@@ -461,5 +463,22 @@ public class JavaProject extends Project
       {
          throw new JavaModelException(status.getMessage());
       }
+   }
+
+   /**
+    * Get SourceFolder's in this project
+    * @return the array of source folders
+    */
+   public JsonArray<SourceFolder> getSourceFolders()
+   {
+      JsonArray<SourceFolder> sourceFolders = JsonCollections.createArray();
+      for (Resource r : getChildren().asIterable())
+      {
+         if (r instanceof SourceFolder)
+         {
+            sourceFolders.add((SourceFolder)r);
+         }
+      }
+      return sourceFolders;
    }
 }

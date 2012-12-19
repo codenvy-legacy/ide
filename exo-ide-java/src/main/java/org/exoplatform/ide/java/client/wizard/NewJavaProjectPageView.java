@@ -21,11 +21,15 @@ package org.exoplatform.ide.java.client.wizard;
 import org.exoplatform.ide.view.View;
 
 /**
+ * View for new Java project wizard.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public interface JavaProjectPageView extends View<JavaProjectPageView.ActionDelegate>
+public interface NewJavaProjectPageView extends View<NewJavaProjectPageView.ActionDelegate>
 {
+   /**
+    *Action delegate for new Java project wizard
+    */
    public interface ActionDelegate
    {
       /**
@@ -36,13 +40,13 @@ public interface JavaProjectPageView extends View<JavaProjectPageView.ActionDele
 
    /**
     * Get new Project name
-    * @return
+    * @return the new project name.
     */
    String getProjectName();
 
    /**
-    * Get Resource folder name
-    * @return
+    * Get Source folder name
+    * @return the source folder name
     */
-   String getResourceFolder();
+   String getSourceFolder();
 }
