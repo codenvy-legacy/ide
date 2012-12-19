@@ -64,13 +64,6 @@ public interface WizardView extends View<WizardView.ActionDelegate>
    void setFinishButtonEnabled(boolean isEnabled);
 
    /**
-    * Sets new delegate
-    * 
-    * @param delegate
-    */
-   void setDelegate(ActionDelegate delegate);
-
-   /**
     * Sets new caption of wizard's page
     * 
     * @param caption
