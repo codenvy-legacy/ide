@@ -65,7 +65,7 @@ public class NewJavaProjectPageViewImpl implements NewJavaProjectPageView
    }
 
    @Override
-   public String getResourceFolder()
+   public String getSourceFolder()
    {
       return sourceFolder.getValue();
    }

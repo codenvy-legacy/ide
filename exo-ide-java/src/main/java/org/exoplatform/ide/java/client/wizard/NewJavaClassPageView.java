@@ -22,24 +22,51 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.view.View;
 
 /**
+ * View for new Java class wizard.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
 public interface NewJavaClassPageView extends View<NewJavaClassPageView.ActionDelegate>
 {
+   /**
+    * Action delegate for new Java class wizard
+    */
    public interface ActionDelegate
    {
 
+      /**
+       * Selected parent changed.
+       * @param index the parent index
+       */
       void parentChanged(int index);
 
+      /**
+       * New type name changed, validate it.
+       */
       void checkTypeName();
    }
 
+   /**
+    * Get new class name
+    * @return new class name
+    */
    String getClassName();
 
+   /**
+    * Get new class type (class, interface, enum, annotation)
+    * @return new class type
+    */
    String getClassType();
 
+   /**
+    * Set new class types
+    * @param classTypes  the array of class types
+    */
    void setClassTypes(JsonArray<String> classTypes);
 
+   /**
+    * Set parent names for new type
+    * @param parentNames the array of names
+    */
    void setParents(JsonArray<String> parentNames);
 }

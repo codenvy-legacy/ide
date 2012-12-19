@@ -31,6 +31,11 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import org.exoplatform.ide.json.JsonArray;
 
+/**
+ * Default implementation for new Java package View.
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ */
 public class NewPackagePageViewImpl implements NewPackagePageView
 {
    interface NewPackagePageViewImplUiBinder
@@ -57,18 +62,21 @@ public class NewPackagePageViewImpl implements NewPackagePageView
 
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public Widget asWidget()
    {
       return rootElement;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void setParents(JsonArray<String> parents)
    {
@@ -78,6 +86,7 @@ public class NewPackagePageViewImpl implements NewPackagePageView
       }
    }
 
+   /**{@inheritDoc}*/
    @Override
    public String getPackageName()
    {

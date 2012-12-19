@@ -39,6 +39,7 @@ import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
+ * Presenter of wizard for creating new package.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
@@ -98,30 +99,35 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
       parent = parents.get(0);
    }
 
+   /**{@inheritDoc}*/
    @Override
    public WizardPagePresenter flipToNext()
    {
       return null;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean canFinish()
    {
       return isCompleted();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean hasNext()
    {
       return false;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean isCompleted()
    {
       return !notJavaProject && isPackageNameValid;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public String getNotice()
    {
@@ -143,6 +149,7 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
       return "Create a new Java package.";
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void go(AcceptsOneWidget container)
    {
@@ -150,12 +157,14 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
       checkPackageName();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void parentChanged(int index)
    {
       parent = parents.get(index);
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void checkPackageName()
    {
@@ -163,6 +172,7 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
       delegate.updateControls();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void doFinish()
    {
@@ -195,6 +205,10 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
       super.doFinish();
    }
 
+   /**
+    * Validate new Java package name
+    * @param value the new package name
+    */
    private void validate(String value)
    {
       IStatus status =

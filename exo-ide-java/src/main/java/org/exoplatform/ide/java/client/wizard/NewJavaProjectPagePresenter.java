@@ -41,6 +41,7 @@ import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
+ * Presenter of wizard for creating java project
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
@@ -82,31 +83,36 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
       });
    }
 
+   /**{@inheritDoc}*/
    @Override
    public WizardPagePresenter flipToNext()
    {
       return null;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean canFinish()
    {
       return isCompleted();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean hasNext()
    {
       return false;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean isCompleted()
    {
       return !view.getProjectName().isEmpty() && !hasProjectIncorrectSymbol && hasProjectList && !hasSameProject
-         && !hasResourceFolderIncorrectSymbol && !view.getResourceFolder().isEmpty();
+         && !hasResourceFolderIncorrectSymbol && !view.getSourceFolder().isEmpty();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public String getNotice()
    {
@@ -124,7 +130,7 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
             }
             else
             {
-               if (view.getResourceFolder().isEmpty())
+               if (view.getSourceFolder().isEmpty())
                {
                   return "Please, enter a source folder name.";
                }
@@ -149,19 +155,21 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
       }
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void checkProjectInput()
    {
 
       hasProjectIncorrectSymbol = false;
       String projectName = view.getProjectName();
-      String resourceFolder = view.getResourceFolder();
+      String resourceFolder = view.getSourceFolder();
       hasProjectIncorrectSymbol = !ResourceNameValidator.isProjectNameValid(projectName);
       hasResourceFolderIncorrectSymbol = !ResourceNameValidator.isFolderNameValid(resourceFolder);
 
@@ -175,12 +183,13 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
       delegate.updateControls();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void doFinish()
    {
       resourceProvider.createProject(view.getProjectName(), JsonCollections
          .<Property>createArray(new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, JavaProject.PRIMARY_NATURE),//
-            new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS, JsonCollections.createArray(view.getResourceFolder()))), new AsyncCallback<Project>()
+            new Property(JavaProjectDesctiprion.PROPERTY_SOURCE_FOLDERS, JsonCollections.createArray(view.getSourceFolder()))), new AsyncCallback<Project>()
       {
          @Override
          public void onFailure(Throwable caught)
@@ -217,7 +226,7 @@ public class NewJavaProjectPagePresenter extends AbstractWizardPagePresenter imp
 
    private void createSourceFolder(final Project project)
    {
-      project.createFolder(project, view.getResourceFolder(), new AsyncCallback<Folder>()
+      project.createFolder(project, view.getSourceFolder(), new AsyncCallback<Folder>()
       {
          @Override
          public void onFailure(Throwable caught)

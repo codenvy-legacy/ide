@@ -22,15 +22,26 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.view.View;
 
 /**
+ * View for new Java package wizard.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
 public interface NewPackagePageView extends View<NewPackagePageView.ActionDelegate>
 {
+   /**
+    * Action delegate for new Java package wizard.
+    */
    public interface ActionDelegate
    {
+      /**
+       * Package parent changed.
+       * @param index the parent index.
+       */
       void parentChanged(int index);
 
+      /**
+       * New package name changed, validate it.
+       */
       void checkPackageName();
    }
 

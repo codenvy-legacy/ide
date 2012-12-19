@@ -40,6 +40,7 @@ import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
+ * Java class presenter wizard. It's may create Java class, interface, enum and annotation.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
@@ -127,30 +128,35 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       parent = parents.get(0);
    }
 
+   /**{@inheritDoc}*/
    @Override
    public WizardPagePresenter flipToNext()
    {
       return null;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean canFinish()
    {
       return isCompleted();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean hasNext()
    {
       return false;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public boolean isCompleted()
    {
       return isTypeNameValid;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public String getNotice()
    {
@@ -168,12 +174,14 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       return null;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void doFinish()
    {
@@ -212,10 +220,14 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Log.error(getClass(), e);
       }
    }
 
+   /**
+    * add to class name java extension(".java")
+    * @return class file name
+    */
    private String createCassName()
    {
       return view.getClassName() + ".java";
@@ -250,6 +262,10 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       createClassFile(content.toString());
    }
 
+   /**
+    * Get package declaration. If parent is source folder( default package), return new line.
+    * @return the package declaration
+    */
    private String getPackage()
    {
       if (parent instanceof SourceFolder)
@@ -279,12 +295,14 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       });
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void parentChanged(int index)
    {
       parent = parents.get(index);
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void checkTypeName()
    {
@@ -292,6 +310,10 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       delegate.updateControls();
    }
 
+   /**
+    * Validate compilation unit name.
+    * @param value name of new compilation unit
+    */
    private void validate(String value)
    {
       IStatus status =

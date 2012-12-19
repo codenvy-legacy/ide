@@ -32,6 +32,7 @@ import com.google.inject.Inject;
 import org.exoplatform.ide.json.JsonArray;
 
 /**
+ * Default implementation for {@link NewJavaClassPageView}
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
@@ -63,42 +64,55 @@ public class NewJavaClassPageViewImpl implements NewJavaClassPageView
       rootPanel = ourUiBinder.createAndBindUi(this);
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
    }
 
+   /**{@inheritDoc}*/
    @Override
    public Widget asWidget()
    {
       return rootPanel;
    }
 
+   /**
+    * Handler for ChangeEvent
+    * @param event the ChangeEvent
+    */
    @UiHandler("parents")
    void handleParentChanged(ChangeEvent event)
    {
       delegate.parentChanged(parents.getSelectedIndex());
    }
 
+   /**
+    * Handler for KeyUpEvent
+    * @param event the KeyUpEvent
+    */
    @UiHandler(value = {"typeName"})
    void handleKeyUpEvent(KeyUpEvent event)
    {
       delegate.checkTypeName();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public String getClassName()
    {
       return typeName.getText();
    }
 
+   /**{@inheritDoc}*/
    @Override
    public String getClassType()
    {
       return types.getItemText(types.getSelectedIndex());
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void setClassTypes(JsonArray<String> classTypes)
    {
@@ -108,6 +122,7 @@ public class NewJavaClassPageViewImpl implements NewJavaClassPageView
       }
    }
 
+   /**{@inheritDoc}*/
    @Override
    public void setParents(JsonArray<String> parentNames)
    {
