@@ -16,28 +16,51 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.newproject;
+package org.exoplatform.ide.client.workspace;
+
+import com.google.gwt.user.client.ui.HasWidgets;
 
 import org.exoplatform.ide.view.View;
 
 /**
- * Interface of new project page view.
+ * Workspace view interface. 
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewProjectPageView extends View<NewProjectPageView.ActionDelegate>
+public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
 {
    /**
-    * Needs for delegate some function into NewProjectPage view.
+    * Returns central panel.
+    * 
+    * @return
+    */
+   HasWidgets getCenterPanel();
+
+   /**
+    * Returns left panel.
+    * 
+    * @return
+    */
+   HasWidgets getLeftPanel();
+
+   /**
+    * Returns menu panel.
+    * 
+    * @return
+    */
+   HasWidgets getMenuPanel();
+
+   /**
+    * Returns right panel.
+    * 
+    * @return
+    */
+   HasWidgets getRightPanel();
+
+   /**
+    * Needs for delegate some function into Workspace view.
     */
    public interface ActionDelegate
    {
-      /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the button with id
-       * 
-       * @param id button's id
-       */
-      void onButtonPressed(int id);
    }
 }

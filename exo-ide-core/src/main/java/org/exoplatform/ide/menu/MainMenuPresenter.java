@@ -19,7 +19,6 @@ package org.exoplatform.ide.menu;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -38,42 +37,8 @@ import org.exoplatform.ide.presenter.Presenter;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class MainMenuPresenter implements Presenter, MainMenuAgent
+public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView.ActionDelegate
 {
-
-   /**
-    * Main Menu View 
-    */
-   public interface MainMenuView extends IsWidget
-   {
-      /**
-       * Set Menu Item by given path visible or invisible.
-       * 
-       * @param path menuItem path
-       * @param visible state
-       */
-      void setVisible(String path, boolean visible);
-
-      /**
-       * Set Menu Item by given path enabled or disabled.
-       * 
-       * @param path menuItem path
-       * @param enabled
-       */
-      void setEnabled(String path, boolean enabled);
-
-      /**
-       * Add menu item with the following path, icon, command, visible and enabled states
-       * 
-       * @param path
-       * @param icon
-       * @param command
-       * @param visible
-       * @param enabled
-       */
-      void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled);
-   }
-
    /** Map Expression ID <--> MenuItemPath */
    private final JsonIntegerMap<JsonArray<String>> visibileWhenExpressions;
 
@@ -96,6 +61,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
    {
       this.eventBus = eventBus;
       this.view = view;
+      view.setDelegate(this);
 
       this.visibileWhenExpressions = JsonCollections.createIntegerMap();
       this.enabledWhenExpressions = JsonCollections.createIntegerMap();

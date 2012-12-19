@@ -63,7 +63,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    {
       super("Select a wizard", image);
       this.view = view;
-      view.setBtnPressedDelegate(this);
+      view.setDelegate(this);
       this.wizards = wizardAgent.getNewProjectWizards();
    }
 

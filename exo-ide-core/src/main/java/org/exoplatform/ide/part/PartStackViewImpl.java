@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.part;
 
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.MouseDownEvent;
@@ -25,6 +25,8 @@ import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -32,6 +34,7 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.InlineLabel;
 import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.json.JsonArray;
@@ -42,20 +45,15 @@ import org.exoplatform.ide.json.JsonCollections;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class PartStackViewImpl extends Composite implements PartStackPresenter.PartStackView
+public class PartStackViewImpl extends Composite implements PartStackView
 {
+   private static PartStackUiBinder uiBinder = GWT.create(PartStackUiBinder.class);
 
-   /** Handles Focus Request Event. It is generated, when user clicks a stack anywhere */
-   public interface FocusRequstHandler
-   {
-      /** PartStack is being clicked and requests Focus */
-      void onRequestFocus();
-   }
-   
+   private ActionDelegate delegate;
+
+   private final PartStackUIResources resources;
+
    private TabButton activeTab;
-
-   // panels
-   private final SimplePanel contentPanel;
 
    private boolean focused;
 
@@ -64,16 +62,21 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
 
    private HandlerRegistration focusRequstHandlerRegistration;
 
-   private final DockLayoutPanel parent;
-
    // list of tabs
    private final JsonArray<TabButton> tabs = JsonCollections.createArray();
 
-   private final FlowPanel tabsPanel;
+   @UiField
+   DockLayoutPanel parent;
 
-   private FocusRequstHandler displayHandler;
+   @UiField
+   FlowPanel tabsPanel;
 
-   private final PartStackUIResources resources;
+   @UiField
+   SimplePanel contentPanel;
+
+   interface PartStackUiBinder extends UiBinder<Widget, PartStackViewImpl>
+   {
+   }
 
    /**
     * Create View
@@ -82,25 +85,19 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
    @Inject
    public PartStackViewImpl(PartStackUIResources partStackResources)
    {
-      this.resources = partStackResources;
-      parent = new DockLayoutPanel(Unit.PX);
-      initWidget(parent);
+      resources = partStackResources;
+      initWidget(uiBinder.createAndBindUi(this));
 
       parent.setStyleName(resources.partStackCss().idePartStack());
-      tabsPanel = new FlowPanel();
       tabsPanel.setStyleName(resources.partStackCss().idePartStackTabs());
-      contentPanel = new SimplePanel();
       contentPanel.setStyleName(resources.partStackCss().idePartStackContent());
-
-      parent.addNorth(tabsPanel, 26);
-      parent.add(contentPanel);
 
       addFocusRequestHandler();
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public TabItem addTabButton(Image icon, String title, String toolTip, boolean closable)
    {
@@ -111,8 +108,8 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public HasWidgets getContentPanel()
    {
@@ -120,8 +117,8 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public void removeTabButton(int index)
    {
@@ -133,8 +130,8 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    public void setActiveTabButton(int index)
    {
@@ -151,12 +148,12 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
    }
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc} 
+    */
    @Override
-   public void setFocusRequstHandler(FocusRequstHandler handler)
+   public void setDelegate(ActionDelegate delegate)
    {
-      this.displayHandler = handler;
+      this.delegate = delegate;
    }
 
    /**
@@ -205,6 +202,7 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
          focusRequstHandlerRegistration = null;
       }
    }
+
    /**
     * {@inheritDoc}
     */
@@ -217,9 +215,9 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
    }
 
    /**
-    *
+    * Special button for tab title.
     */
-   private class TabButton extends Composite implements PartStackPresenter.PartStackView.TabItem
+   private class TabButton extends Composite implements PartStackView.TabItem
    {
 
       private Image image;
@@ -228,6 +226,14 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
 
       private InlineLabel tabItemTittle;
 
+      /**
+       * Create button.
+       * 
+       * @param icon
+       * @param title
+       * @param toolTip
+       * @param closable
+       */
       public TabButton(Image icon, String title, String toolTip, boolean closable)
       {
          tabItem = new FlowPanel();
@@ -282,11 +288,10 @@ public class PartStackViewImpl extends Composite implements PartStackPresenter.P
       @Override
       public void onMouseDown(MouseDownEvent event)
       {
-         if (displayHandler != null)
+         if (delegate != null)
          {
-            displayHandler.onRequestFocus();
+            delegate.onRequestFocus();
          }
       }
    }
-
 }

@@ -16,28 +16,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.wizard.newproject;
+package org.exoplatform.ide.client.projectExplorer;
 
+import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.view.View;
 
 /**
- * Interface of new project page view.
+ * Interface of project tree view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewProjectPageView extends View<NewProjectPageView.ActionDelegate>
+public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDelegate>
 {
    /**
-    * Needs for delegate some function into NewProjectPage view.
+    * Sets items into tree.
+    * 
+    * @param resource The root resource item
+    */
+   void setItems(Resource resource);
+
+   /**
+    * Needs for delegate some function into ProjectTree view. 
     */
    public interface ActionDelegate
    {
       /**
-       * Performs any actions appropriate in response to the user 
-       * having pressed the button with id
+       * Performs any actions in response to some node action.
        * 
-       * @param id button's id
+       * @param resource node
        */
-      void onButtonPressed(int id);
+      void onNodeAction(Resource resource);
    }
 }

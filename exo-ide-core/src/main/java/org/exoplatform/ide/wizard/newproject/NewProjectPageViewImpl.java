@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.HTMLTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
@@ -39,14 +40,12 @@ import org.exoplatform.ide.json.JsonArray;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewProjectPageViewImpl implements NewProjectPageView
+public class NewProjectPageViewImpl extends Composite implements NewProjectPageView
 {
    private static NewProjectViewImplUiBinder uiBinder = GWT.create(NewProjectViewImplUiBinder.class);
 
    @UiField(provided = true)
    Grid technologies;
-
-   private final Widget widget;
 
    private ActionDelegate delegate;
 
@@ -65,7 +64,7 @@ public class NewProjectPageViewImpl implements NewProjectPageView
    {
       createTechnologiesTable(wizardDatas);
 
-      widget = uiBinder.createAndBindUi(this);
+      initWidget(uiBinder.createAndBindUi(this));
    }
 
    /**
@@ -131,17 +130,8 @@ public class NewProjectPageViewImpl implements NewProjectPageView
    /**
     * {@inheritDoc}
     */
-   public Widget asWidget()
-   {
-      return widget;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void setBtnPressedDelegate(ActionDelegate delegate)
+   public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
    }
-
 }

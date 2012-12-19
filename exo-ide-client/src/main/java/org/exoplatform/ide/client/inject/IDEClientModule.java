@@ -22,8 +22,10 @@ import com.google.inject.Singleton;
 import org.exoplatform.ide.client.BootstrapController;
 import org.exoplatform.ide.client.StyleInjector;
 import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter;
-import org.exoplatform.ide.client.projectExplorer.ProjectTreeViewImpl;
+import org.exoplatform.ide.client.projectExplorer.ProjectExplorerView;
+import org.exoplatform.ide.client.projectExplorer.ProjectExplorerViewImpl;
 import org.exoplatform.ide.client.workspace.WorkspacePresenter;
+import org.exoplatform.ide.client.workspace.WorkspaceView;
 import org.exoplatform.ide.client.workspace.WorkspaceViewImpl;
 
 /**
@@ -46,9 +48,9 @@ public class IDEClientModule extends AbstractGinModule
    protected void configure()
    {
       bind(BootstrapController.class).in(Singleton.class);
-      bind(WorkspacePresenter.WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
+      bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
       bind(WorkspacePresenter.class).in(Singleton.class);
-      bind(ProjectExplorerPresenter.ProjectTreeView.class).to(ProjectTreeViewImpl.class).in(Singleton.class);
+      bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
       bind(ProjectExplorerPresenter.class).in(Singleton.class);
       bind(StyleInjector.class).in(Singleton.class);
       //      bind(IDEAppController.class).in(Singleton.class);
