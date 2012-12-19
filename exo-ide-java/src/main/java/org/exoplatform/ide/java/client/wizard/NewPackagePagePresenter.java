@@ -91,12 +91,13 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
             }
          }
          view.setParents(parentNames);
+         parent = parents.get(0);
       }
       else
       {
          notJavaProject = true;
+         view.disableAllUi();
       }
-      parent = parents.get(0);
    }
 
    /**{@inheritDoc}*/
@@ -189,19 +190,20 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
          parentName = parent.getName() + '.';
       }
 
-      ((JavaProject)project).createPackage(parentSourceFolder, parentName + view.getPackageName(), new AsyncCallback<Package>()
-      {
-         @Override
-         public void onFailure(Throwable caught)
+      ((JavaProject)project).createPackage(parentSourceFolder, parentName + view.getPackageName(),
+         new AsyncCallback<Package>()
          {
-            Log.error(NewPackagePagePresenter.class, caught);
-         }
+            @Override
+            public void onFailure(Throwable caught)
+            {
+               Log.error(NewPackagePagePresenter.class, caught);
+            }
 
-         @Override
-         public void onSuccess(Package result)
-         {
-         }
-      });
+            @Override
+            public void onSuccess(Package result)
+            {
+            }
+         });
       super.doFinish();
    }
 
@@ -211,9 +213,8 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
     */
    private void validate(String value)
    {
-      IStatus status =
-         JavaConventions.validatePackageName(value, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-            JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+      IStatus status = JavaConventions.validatePackageName(value, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+         JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
       switch (status.getSeverity())
       {
          case IStatus.WARNING:

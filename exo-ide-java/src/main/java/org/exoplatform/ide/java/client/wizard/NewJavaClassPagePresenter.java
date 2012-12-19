@@ -89,6 +89,8 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
 
    private boolean isTypeNameValid;
 
+   private boolean notJavaProject;
+
    @Inject
    public NewJavaClassPagePresenter(NewJavaClassPageView view, ResourceProvider provider, EditorAgent editorAgent)
    {
@@ -102,30 +104,38 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
 
    private void init()
    {
-      JsonArray<String> classTypes = JsonCollections.createArray();
-      for (JavaTypes t : JavaTypes.values())
+      if (activeProject instanceof JavaProject)
       {
-         classTypes.add(t.toString());
-      }
-      view.setClassTypes(classTypes);
-      JavaProject javaProject = (JavaProject)activeProject;
-      JsonArray<String> parentNames = JsonCollections.createArray();
-      parents = JsonCollections.createArray();
-      for (SourceFolder sf : javaProject.getSourceFolders().asIterable())
-      {
-         parentNames.add(sf.getName() + " " + DEFAULT_PACKAGE);
-         parents.add(sf);
-         for (Resource r : sf.getChildren().asIterable())
+         JsonArray<String> classTypes = JsonCollections.createArray();
+         for (JavaTypes t : JavaTypes.values())
          {
-            if (r instanceof org.exoplatform.ide.java.client.projectmodel.Package)
+            classTypes.add(t.toString());
+         }
+         view.setClassTypes(classTypes);
+         JavaProject javaProject = (JavaProject)activeProject;
+         JsonArray<String> parentNames = JsonCollections.createArray();
+         parents = JsonCollections.createArray();
+         for (SourceFolder sf : javaProject.getSourceFolders().asIterable())
+         {
+            parentNames.add(sf.getName() + " " + DEFAULT_PACKAGE);
+            parents.add(sf);
+            for (Resource r : sf.getChildren().asIterable())
             {
-               parentNames.add(r.getName());
-               parents.add((Folder)r);
+               if (r instanceof org.exoplatform.ide.java.client.projectmodel.Package)
+               {
+                  parentNames.add(r.getName());
+                  parents.add((Folder)r);
+               }
             }
          }
+         view.setParents(parentNames);
+         parent = parents.get(0);
       }
-      view.setParents(parentNames);
-      parent = parents.get(0);
+      else
+      {
+         notJavaProject = true;
+         view.disableAllUi();
+      }
    }
 
    /**{@inheritDoc}*/
@@ -153,13 +163,17 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
    @Override
    public boolean isCompleted()
    {
-      return isTypeNameValid;
+      return !notJavaProject && isTypeNameValid;
    }
 
    /**{@inheritDoc}*/
    @Override
    public String getNotice()
    {
+      if (notJavaProject)
+      {
+         return activeProject.getName() + " is not Java project";
+      }
       if (!isTypeNameValid)
       {
          return errorMessage;
@@ -279,20 +293,21 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
 
    private void createClassFile(final String fileContent)
    {
-      ((JavaProject)activeProject).createCompilationUnit(parent, createCassName(), fileContent, new AsyncCallback<CompilationUnit>()
-      {
-         @Override
-         public void onFailure(Throwable caught)
+      ((JavaProject)activeProject).createCompilationUnit(parent, createCassName(), fileContent,
+         new AsyncCallback<CompilationUnit>()
          {
-            Log.error(NewJavaClassPagePresenter.class, caught);
-         }
+            @Override
+            public void onFailure(Throwable caught)
+            {
+               Log.error(NewJavaClassPagePresenter.class, caught);
+            }
 
-         @Override
-         public void onSuccess(CompilationUnit result)
-         {
-            editorAgent.openEditor(result);
-         }
-      });
+            @Override
+            public void onSuccess(CompilationUnit result)
+            {
+               editorAgent.openEditor(result);
+            }
+         });
    }
 
    /**{@inheritDoc}*/
@@ -316,9 +331,8 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
     */
    private void validate(String value)
    {
-      IStatus status =
-         JavaConventions.validateCompilationUnitName(value, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-            JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+      IStatus status = JavaConventions.validateCompilationUnitName(value, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+         JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
       switch (status.getSeverity())
       {
          case IStatus.WARNING:

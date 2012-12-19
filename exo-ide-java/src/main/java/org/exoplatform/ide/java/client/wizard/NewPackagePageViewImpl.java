@@ -38,8 +38,7 @@ import org.exoplatform.ide.json.JsonArray;
  */
 public class NewPackagePageViewImpl implements NewPackagePageView
 {
-   interface NewPackagePageViewImplUiBinder
-      extends UiBinder<DockLayoutPanel, NewPackagePageViewImpl>
+   interface NewPackagePageViewImplUiBinder extends UiBinder<DockLayoutPanel, NewPackagePageViewImpl>
    {
    }
 
@@ -91,6 +90,14 @@ public class NewPackagePageViewImpl implements NewPackagePageView
    public String getPackageName()
    {
       return packageName.getText();
+   }
+
+   /**{@inheritDoc}*/
+   @Override
+   public void disableAllUi()
+   {
+      packageName.setEnabled(false);
+      parents.setEnabled(false);
    }
 
    @UiHandler("parents")

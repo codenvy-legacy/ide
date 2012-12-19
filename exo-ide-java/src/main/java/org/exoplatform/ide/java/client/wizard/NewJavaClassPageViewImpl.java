@@ -38,8 +38,7 @@ import org.exoplatform.ide.json.JsonArray;
  */
 public class NewJavaClassPageViewImpl implements NewJavaClassPageView
 {
-   interface NewJavaClassPageViewImplUiBinder
-      extends UiBinder<DockLayoutPanel, NewJavaClassPageViewImpl>
+   interface NewJavaClassPageViewImplUiBinder extends UiBinder<DockLayoutPanel, NewJavaClassPageViewImpl>
    {
    }
 
@@ -131,5 +130,14 @@ public class NewJavaClassPageViewImpl implements NewJavaClassPageView
          parents.addItem(s);
       }
 
+   }
+
+   /**{@inheritDoc}*/
+   @Override
+   public void disableAllUi()
+   {
+      parents.setEnabled(false);
+      types.setEnabled(false);
+      typeName.setEnabled(false);
    }
 }

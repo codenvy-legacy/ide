@@ -56,4 +56,9 @@ public interface NewPackagePageView extends View<NewPackagePageView.ActionDelega
     * @return the new package name
     */
    String getPackageName();
+
+   /**
+    * Disable all ui components.
+    */
+   void disableAllUi();
 }
