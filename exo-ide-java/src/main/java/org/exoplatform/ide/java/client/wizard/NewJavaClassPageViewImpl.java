@@ -31,30 +31,36 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import org.exoplatform.ide.json.JsonArray;
 
-public class NewPackagePageViewImpl implements NewPackagePageView
+/**
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: 
+ */
+public class NewJavaClassPageViewImpl implements NewJavaClassPageView
 {
-   interface NewPackagePageViewImplUiBinder
-      extends UiBinder<DockLayoutPanel, NewPackagePageViewImpl>
+   interface NewJavaClassPageViewImplUiBinder
+      extends UiBinder<DockLayoutPanel, NewJavaClassPageViewImpl>
    {
    }
 
-   private static NewPackagePageViewImplUiBinder ourUiBinder = GWT.create(NewPackagePageViewImplUiBinder.class);
+   private static NewJavaClassPageViewImplUiBinder ourUiBinder = GWT.create(NewJavaClassPageViewImplUiBinder.class);
 
-   private final DockLayoutPanel rootElement;
+   private ActionDelegate delegate;
 
-   @UiField
-   TextBox packageName;
+   private final DockLayoutPanel rootPanel;
 
    @UiField
    ListBox parents;
 
-   private ActionDelegate delegate;
+   @UiField
+   TextBox typeName;
+
+   @UiField
+   ListBox types;
 
    @Inject
-   public NewPackagePageViewImpl()
+   public NewJavaClassPageViewImpl()
    {
-      rootElement = ourUiBinder.createAndBindUi(this);
-
+      rootPanel = ourUiBinder.createAndBindUi(this);
    }
 
    @Override
@@ -66,22 +72,7 @@ public class NewPackagePageViewImpl implements NewPackagePageView
    @Override
    public Widget asWidget()
    {
-      return rootElement;
-   }
-
-   @Override
-   public void setParents(JsonArray<String> parents)
-   {
-      for (String s : parents.asIterable())
-      {
-         this.parents.addItem(s);
-      }
-   }
-
-   @Override
-   public String getPackageName()
-   {
-      return packageName.getText();
+      return rootPanel;
    }
 
    @UiHandler("parents")
@@ -90,10 +81,40 @@ public class NewPackagePageViewImpl implements NewPackagePageView
       delegate.parentChanged(parents.getSelectedIndex());
    }
 
-   @UiHandler(value = {"packageName"})
+   @UiHandler(value = {"typeName"})
    void handleKeyUpEvent(KeyUpEvent event)
    {
-      delegate.checkPackageName();
+      delegate.checkTypeName();
    }
 
+   @Override
+   public String getClassName()
+   {
+      return typeName.getText();
+   }
+
+   @Override
+   public String getClassType()
+   {
+      return types.getItemText(types.getSelectedIndex());
+   }
+
+   @Override
+   public void setClassTypes(JsonArray<String> classTypes)
+   {
+      for (String s : classTypes.asIterable())
+      {
+         types.addItem(s);
+      }
+   }
+
+   @Override
+   public void setParents(JsonArray<String> parentNames)
+   {
+      for (String s : parentNames.asIterable())
+      {
+         parents.addItem(s);
+      }
+
+   }
 }

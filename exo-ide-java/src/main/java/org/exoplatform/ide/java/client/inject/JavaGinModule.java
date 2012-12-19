@@ -19,6 +19,8 @@
 package org.exoplatform.ide.java.client.inject;
 
 import com.google.gwt.inject.client.AbstractGinModule;
+import org.exoplatform.ide.java.client.wizard.NewJavaClassPageView;
+import org.exoplatform.ide.java.client.wizard.NewJavaClassPageViewImpl;
 import org.exoplatform.ide.java.client.wizard.NewJavaProjectPageView;
 import org.exoplatform.ide.java.client.wizard.NewJavaProjectPageViewImpl;
 import org.exoplatform.ide.java.client.wizard.NewPackagePageView;
@@ -40,6 +42,7 @@ public class JavaGinModule extends AbstractGinModule
    {
       bind(NewJavaProjectPageView.class).to(NewJavaProjectPageViewImpl.class);
       bind(NewPackagePageView.class).to(NewPackagePageViewImpl.class);
+      bind(NewJavaClassPageView.class).to(NewJavaClassPageViewImpl.class);
    }
 
 }

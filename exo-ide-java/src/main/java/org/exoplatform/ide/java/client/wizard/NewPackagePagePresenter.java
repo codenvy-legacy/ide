@@ -51,8 +51,6 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
 
    private boolean notJavaProject;
 
-   private JsonArray<String> parentNames;
-
    private JsonArray<Folder> parents;
 
    private Folder parent;
@@ -76,7 +74,7 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
       if (project instanceof JavaProject)
       {
          JavaProject javaProject = (JavaProject)project;
-         parentNames = JsonCollections.createArray();
+         JsonArray<String> parentNames = JsonCollections.createArray();
          parents = JsonCollections.createArray();
          for (SourceFolder sf : javaProject.getSourceFolders().asIterable())
          {

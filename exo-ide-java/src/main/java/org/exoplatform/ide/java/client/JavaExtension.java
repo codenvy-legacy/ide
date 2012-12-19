@@ -49,6 +49,7 @@ import org.exoplatform.ide.java.client.templates.TemplateStore;
 import org.exoplatform.ide.java.client.templates.TypeResolver;
 import org.exoplatform.ide.java.client.templates.TypeVariableResolver;
 import org.exoplatform.ide.java.client.templates.VarResolver;
+import org.exoplatform.ide.java.client.wizard.NewJavaClassPagePresenter;
 import org.exoplatform.ide.java.client.wizard.NewJavaProjectPagePresenter;
 import org.exoplatform.ide.java.client.wizard.NewPackagePagePresenter;
 import org.exoplatform.ide.json.JsonCollections;
@@ -81,7 +82,8 @@ public class JavaExtension
     */
    @Inject
    public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
-                        EventBus eventBus, WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider, Provider<NewPackagePagePresenter> packageProvider)
+                        EventBus eventBus, WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider,
+                        Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider)
    {
       this();
       FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -93,6 +95,7 @@ public class JavaExtension
          JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, JsonCollections.<String>createArray());
 
       wizardAgent.registerNewResourceWizard("Java", "Package", JavaClientBundle.INSTANCE.packageItem(), packageProvider);
+      wizardAgent.registerNewResourceWizard("Java", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), classProvider);
    }
 
    /**
