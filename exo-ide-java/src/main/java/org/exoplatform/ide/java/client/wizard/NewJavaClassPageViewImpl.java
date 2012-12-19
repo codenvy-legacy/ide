@@ -24,11 +24,12 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+
 import org.exoplatform.ide.json.JsonArray;
 
 /**
@@ -36,7 +37,7 @@ import org.exoplatform.ide.json.JsonArray;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public class NewJavaClassPageViewImpl implements NewJavaClassPageView
+public class NewJavaClassPageViewImpl extends Composite implements NewJavaClassPageView
 {
    interface NewJavaClassPageViewImplUiBinder
       extends UiBinder<DockLayoutPanel, NewJavaClassPageViewImpl>
@@ -46,8 +47,6 @@ public class NewJavaClassPageViewImpl implements NewJavaClassPageView
    private static NewJavaClassPageViewImplUiBinder ourUiBinder = GWT.create(NewJavaClassPageViewImplUiBinder.class);
 
    private ActionDelegate delegate;
-
-   private final DockLayoutPanel rootPanel;
 
    @UiField
    ListBox parents;
@@ -61,7 +60,7 @@ public class NewJavaClassPageViewImpl implements NewJavaClassPageView
    @Inject
    public NewJavaClassPageViewImpl()
    {
-      rootPanel = ourUiBinder.createAndBindUi(this);
+      initWidget(ourUiBinder.createAndBindUi(this));
    }
 
    /**{@inheritDoc}*/
@@ -69,13 +68,6 @@ public class NewJavaClassPageViewImpl implements NewJavaClassPageView
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
-   }
-
-   /**{@inheritDoc}*/
-   @Override
-   public Widget asWidget()
-   {
-      return rootPanel;
    }
 
    /**
@@ -130,6 +122,5 @@ public class NewJavaClassPageViewImpl implements NewJavaClassPageView
       {
          parents.addItem(s);
       }
-
    }
 }

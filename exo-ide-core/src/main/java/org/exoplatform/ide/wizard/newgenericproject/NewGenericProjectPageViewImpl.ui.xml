@@ -6,12 +6,11 @@
 			float: left;
 		}
 	</ui:style>
-	<g:HTMLPanel>
-		<g:FlowPanel width="100%" height="100%" ui:field="mainPanel" styleName="{style.component}">
-			<g:Label text="Project name:" horizontalAlignment="ALIGN_LEFT"
-				width="" styleName="{style.component}" />
-			<g:TextBox ui:field="projectName" visibleLength="30"
-				styleName="component" />
-		</g:FlowPanel>
-	</g:HTMLPanel>
+	<g:FlowPanel width="100%" height="100%" ui:field="mainPanel"
+		styleName="{style.component}">
+		<g:Label text="Project name:" horizontalAlignment="ALIGN_LEFT"
+			width="" styleName="{style.component}" />
+		<g:TextBox ui:field="projectName" visibleLength="30"
+			styleName="component" />
+	</g:FlowPanel>
 </ui:UiBinder> 

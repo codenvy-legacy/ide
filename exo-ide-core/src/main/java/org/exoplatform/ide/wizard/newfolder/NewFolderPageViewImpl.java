@@ -23,6 +23,7 @@ import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -32,11 +33,9 @@ import com.google.gwt.user.client.ui.Widget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewFolderPageViewImpl implements NewFolderPageView
+public class NewFolderPageViewImpl extends Composite implements NewFolderPageView
 {
    private static NewFolderViewUiBinder uiBinder = GWT.create(NewFolderViewUiBinder.class);
-
-   private final Widget widget;
 
    @UiField
    TextBox folderName;
@@ -52,7 +51,7 @@ public class NewFolderPageViewImpl implements NewFolderPageView
     */
    public NewFolderPageViewImpl()
    {
-      widget = uiBinder.createAndBindUi(this);
+      initWidget(uiBinder.createAndBindUi(this));
    }
 
    /**
@@ -75,13 +74,5 @@ public class NewFolderPageViewImpl implements NewFolderPageView
    void onFolderNameKeyUp(KeyUpEvent event)
    {
       delegate.checkEnteredInformation();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Widget asWidget()
-   {
-      return widget;
    }
 }
