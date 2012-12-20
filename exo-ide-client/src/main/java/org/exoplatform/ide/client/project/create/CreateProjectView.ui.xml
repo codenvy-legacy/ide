@@ -1,186 +1,203 @@
 <!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
-<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
-   xmlns:e="urn:import:org.exoplatform.ide.client.project.create">
-   <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle' />
-   <ui:with field='templateResource' type='org.exoplatform.ide.client.framework.ui.IconImageBundle' />
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder" xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component"
+             xmlns:e="urn:import:org.exoplatform.ide.client.project.create">
+   <ui:with field='resource' type='org.exoplatform.ide.client.IDEImageBundle'/>
+   <ui:with field='templateResource' type='org.exoplatform.ide.client.framework.ui.IconImageBundle'/>
    <ui:with field="locale" type="org.exoplatform.ide.client.IdeLocalizationConstant"></ui:with>
    <ui:with field="templateLocale" type="org.exoplatform.ide.client.messages.IdeTemplateLocalizationConstant"></ui:with>
    <ui:style>
       @external gwt-ToggleButton-up, gwt-ToggleButton-up-hovering, gwt-ToggleButton-up-disabled, gwt-ToggleButton-down, gwt-ToggleButton-down-hovering, gwt-ToggleButton-down-disabled, gwt-ToggleButton-down, gwt-ToggleButton-down-hovering, gwt-ToggleButton-down-disabled;
 
       .gwt-ToggleButton-up {
-        border: 1px solid #BCBCBC;
-        cursor: pointer;
-        cursor: hand;
+         border: 1px solid #BCBCBC;
+         cursor: pointer;
+         cursor: hand;
       }
 
       .gwt-ToggleButton-up-hovering {
-        border: 1px solid;
-        border-color: #B6CCE8;
-        cursor: pointer;
-        cursor: hand;
+         border: 1px solid;
+         border-color: #B6CCE8;
+         cursor: pointer;
+         cursor: hand;
       }
 
       .gwt-ToggleButton-up-disabled {
-        border: 1px solid #ccc;
-        cursor: default;
-        opacity: .5;
-        zoom: 1;
-        opacity: 0.4;
+         border: 1px solid #ccc;
+         cursor: default;
+         opacity: .5;
+         zoom: 1;
+         opacity: 0.4;
       }
 
       .gwt-ToggleButton-down,
       .gwt-ToggleButton-down-hovering,
       .gwt-ToggleButton-down-disabled {
-        padding: 4px 4px 2px 6px;
+         padding: 4px 4px 2px 6px;
       }
 
       .gwt-ToggleButton-down {
-        background-position: 0 -513px;
-        border: 1px solid #bcbcbc;
-        cursor: pointer;
-        cursor: hand;
+         background-position: 0 -513px;
+         border: 1px solid #bcbcbc;
+         cursor: pointer;
+         cursor: hand;
       }
 
       .gwt-ToggleButton-down-hovering {
-        background-position: 0 -513px;
-        border: 1px solid;
-        border-color: #B6CCE8;
-        cursor: pointer;
-        cursor: hand;
+         background-position: 0 -513px;
+         border: 1px solid;
+         border-color: #B6CCE8;
+         cursor: pointer;
+         cursor: hand;
       }
 
       .gwt-ToggleButton-down-disabled {
-        background-position: 0 -513px;
-        border: 1px solid #ccc;
-        cursor: default;
-        opacity: .5;
-        zoom: 1;
-        opacity: 0.4;
+         background-position: 0 -513px;
+         border: 1px solid #ccc;
+         cursor: default;
+         opacity: .5;
+         zoom: 1;
+         opacity: 0.4;
       }
 
       .topLabel {
-      	font-size: 12px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         font-size: 12px;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
       }
 
       .checkboxLabel {
-      	font-size: 11px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	margin-top: 2px;
+         font-size: 11px;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         margin-top: 2px;
       }
 
       .labelTitle {
-	    font-size: 11px;
-      	font-weight: bold;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	color: #545454;
-      	margin-top: 4px;
+         font-size: 11px;
+         font-weight: bold;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         color: #545454;
+         margin-top: 4px;
       }
-      
+
       .error {
-	    font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-size: 11px;
-      	color: #D21A1A;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         font-size: 11px;
+         color: #D21A1A;
       }
-      
+
       .labelAlign {
-      	margin-top: 10px;
+         margin-top: 10px;
       }
-      
+
       .floatRight {
-      	float: right;
-      	margin-left: 5px;
+         float: right;
+         margin-left: 5px;
       }
 
       .floatLeft {
-      	float: left;
+         float: left;
       }
 
       .clearLeft {
-      	clear: left;
+         clear: left;
       }
-      
+
       .rightAlign {
-      	margin-left: auto;
+         margin-left: auto;
       }
 
       .title {
-      	height: 45px;
-      	display: block;
-      	width: 100%;
-      	border-bottom: 1px solid #ACACAC;
-      	margin-bottom: 30px;
-      	font-size: 14;
-      	font-weight: bold;
+         height: 45px;
+         display: block;
+         width: 100%;
+         border-bottom: 1px solid #ACACAC;
+         margin-bottom: 30px;
+         font-size: 14;
+         font-weight: bold;
       }
-      
+
       .templateImage {
-      	float: left;
-      	width: 36px;
-      	height: 36px;
-      	margin-right: 10px;
+         float: left;
+         width: 36px;
+         height: 36px;
+         margin-right: 10px;
       }
 
       .questionImage {
-      	float: left;
-      	width: 16px;
-      	height: 16px;
-      	margin-left: 10px;
-      	margin-top: 7px;
+         float: left;
+         width: 16px;
+         height: 16px;
+         margin-left: 10px;
+         margin-top: 7px;
       }
-      
+
       .templatesGridMargin {
-      	margin-top: 10px;
-      	margin-left: 10px;
-      	margin-right: 10px;
+         margin-top: 10px;
+         margin-left: 10px;
+         margin-right: 10px;
       }
 
       .marginTop0 {
-      	margin-top: 0px;
+         margin-top: 0px;
       }
 
       .marginTop3 {
-      	margin-top: 3px;
+         margin-top: 3px;
       }
 
       .panelMarginTop {
-      	margin-top: 10px;
+         margin-top: 10px;
       }
 
       .marginLeft4 {
-      	margin-left: 4px;
+         margin-left: 4px;
       }
 
       .marginLeft10 {
-      	margin-left: 10px;
+         margin-left: 10px;
       }
 
       .marginBottom {
-      	margin-bottom: 10px;
+         margin-bottom: 10px;
+      }
+
+      .marginRight10 {
+         margin-right: 10px;
       }
 
       .buttonsGroupTitle {
-      	font-size: 11px;
-      	font-family: Verdana, Bitstream Vera Sans, sans-serif;
-      	font-weight: bold;
-      	margin-top: 10px;
-      	margin-bottom: 10px;
-      	color: #545454;
+         font-size: 11px;
+         font-family: Verdana, Bitstream Vera Sans, sans-serif;
+         font-weight: bold;
+         margin-top: 10px;
+         margin-bottom: 10px;
+         color: #545454;
       }
 
       .line {
-      	border-bottom: 1px solid #DBDFE5;
-	  }
+         border-bottom: 1px solid #DBDFE5;
+      }
+
+      .zeroturnaroundText {
+         width: 580px;
+      }
+
+      .errorMessage {
+         font-weight: bold;
+         color: #ff0000;
+         margin-top: 10px;
+      }
    </ui:style>
 
    <f:Border borderColor="transparent" margin="15">
       <f:layer top="0" bottom="35">
          <g:FlowPanel>
             <g:FlowPanel ui:field="createProjectStep" width="100%" height="100%">
-               <g:DockLayoutPanel width="100%" unit="PX" height="44px" addStyleNames="{style.panelMarginTop} {style.line}">
+               <g:DockLayoutPanel width="100%" unit="PX" height="44px"
+                                  addStyleNames="{style.panelMarginTop} {style.line}">
                   <g:west size="100">
-                     <f:Label value="{templateLocale.createProjectFromTemplateName}" isHTML="true" styleName="{style.labelTitle}" width="100%"></f:Label>
+                     <f:Label value="{templateLocale.createProjectFromTemplateName}" isHTML="true"
+                              styleName="{style.labelTitle}" width="100%"></f:Label>
                   </g:west>
                   <g:center>
                      <f:TextInput ui:field="projectNameField" width="100%" height="22px"></f:TextInput>
@@ -190,30 +207,37 @@
                   </g:south>
                </g:DockLayoutPanel>
                <g:FlowPanel addStyleNames="{style.line}">
-                  <g:Label text="{templateLocale.chooseTechnology}" addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
-                  <g:Image title="{templateLocale.chooseTechnologyTooltip}" resource="{resource.question}" addStyleNames="{style.questionImage}"></g:Image>
-                  <g:Grid ui:field="projectTypesGrid" addStyleNames="{style.clearLeft}" />
+                  <g:Label text="{templateLocale.chooseTechnology}"
+                           addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
+                  <g:Image title="{templateLocale.chooseTechnologyTooltip}" resource="{resource.question}"
+                           addStyleNames="{style.questionImage}"></g:Image>
+                  <g:Grid ui:field="projectTypesGrid" addStyleNames="{style.clearLeft}"/>
                </g:FlowPanel>
                <g:FlowPanel addStyleNames="{style.line}">
-                  <g:Label text="{templateLocale.choosePaaS}" addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
-                  <g:Image title="{templateLocale.choosePaaSTooltip}" resource="{resource.question}" addStyleNames="{style.questionImage}"></g:Image>
-                  <g:Grid ui:field="targetGrid" addStyleNames="{style.clearLeft}" />
+                  <g:Label text="{templateLocale.choosePaaS}"
+                           addStyleNames="{style.buttonsGroupTitle} {style.floatLeft}"></g:Label>
+                  <g:Image title="{templateLocale.choosePaaSTooltip}" resource="{resource.question}"
+                           addStyleNames="{style.questionImage}"></g:Image>
+                  <g:Grid ui:field="targetGrid" addStyleNames="{style.clearLeft}"/>
                </g:FlowPanel>
             </g:FlowPanel>
             <g:DockLayoutPanel width="100%" height="100%">
                <g:center>
                   <g:FlowPanel width="100%" height="100%">
-                     <g:DockLayoutPanel ui:field="chooseTemplateStep" unit="PX" height="100%" styleName="{style.templatesGridMargin}">
+                     <g:DockLayoutPanel ui:field="chooseTemplateStep" unit="PX" height="100%"
+                                        styleName="{style.templatesGridMargin}">
 		                <g:north size="70">
 		                   <g:FlowPanel styleName="{style.title}">
 		                      <g:Image resource="{templateResource.template}" styleName="{style.templateImage}"></g:Image>
- 		                      <g:Label text="{templateLocale.createProjectFromTemplateSelectTemplate}" addStyleNames="{style.topLabel} {style.labelAlign}"></g:Label>
+ 		                      <g:Label text="{templateLocale.createProjectFromTemplateSelectTemplate}"
+                                      addStyleNames="{style.topLabel} {style.labelAlign}"></g:Label>
 		                   </g:FlowPanel>
 		                </g:north>
 		                <g:center>
 		                   <f:Border addStyleNames="{style.marginBottom}">
 		                      <f:layer>
-		                         <e:ProjectTemplateGrid width="100%" height="100%" ui:field="templatesGrid"></e:ProjectTemplateGrid>
+		                         <e:ProjectTemplateGrid width="100%" height="100%"
+                                                      ui:field="templatesGrid"></e:ProjectTemplateGrid>
 		                      </f:layer>
 		                   </f:Border>
 		                </g:center>
@@ -222,22 +246,67 @@
                      </g:FlowPanel>
                   </g:FlowPanel>
                </g:center>
-               <g:south size="50">
+               <g:south size="145">
 	               <g:DockLayoutPanel ui:field="jRebelPanel" addStyleNames="{style.panelMarginTop} {style.marginLeft10}">
-	                  <g:west size="85">
-	                     <g:Image resource="{resource.jrebel}" styleName="{style.marginTop3}"></g:Image>
-	                  </g:west>
 	                  <g:center>
-	                     <g:FlowPanel>
-	                        <g:CheckBox ui:field="useJRebelPluginField" height="22px" addStyleNames="{style.floatLeft}"></g:CheckBox>
-	                        <f:Label value="{templateLocale.useJRebelPlugin}" height="18px" addStyleNames="{style.floatLeft} {style.checkboxLabel}"></f:Label>
-	                        <g:Image title="{templateLocale.whatIsJRebel}" resource="{resource.question}" addStyleNames="{style.questionImage} {style.marginTop0}"></g:Image>
-	                     </g:FlowPanel>
+                        <g:DockLayoutPanel>
+                           <g:west size="85">
+	                           <g:Image resource="{resource.jrebel}" styleName="{style.marginTop3}"></g:Image>
+	                        </g:west>
+                           <g:east size="565">
+                              <g:FlowPanel>
+	                              <g:CheckBox ui:field="useJRebelPluginField" height="22px"
+                                             addStyleNames="{style.floatLeft}"></g:CheckBox>
+	                              <f:Label value="{templateLocale.useJRebelPlugin}" height="18px"
+                                          addStyleNames="{style.floatLeft} {style.checkboxLabel}"></f:Label>
+	                              <g:Image title="{templateLocale.whatIsJRebel}" resource="{resource.question}"
+                                          addStyleNames="{style.questionImage} {style.marginTop0}"></g:Image>
+	                           </g:FlowPanel>
+                           </g:east>
+                        </g:DockLayoutPanel>
 	                  </g:center>
-	                  <g:south size="20">
-                         <g:FlowPanel>
-                            <f:Label value="{templateLocale.zeroturnaround}" height="26px" addStyleNames="{style.marginLeft4}"></f:Label>
-                         </g:FlowPanel>
+	                  <g:south size="105">
+                         <g:DockLayoutPanel>
+                            <g:north size="50"><f:Label value="{templateLocale.zeroturnaround}" height="26px"
+                                                        addStyleNames="{style.marginLeft4} {style.zeroturnaroundText}"></f:Label></g:north>
+                            <g:west size="300">
+                               <g:DockLayoutPanel>
+                                  <g:west size="100">
+                                     <g:FlowPanel>
+                                        <f:Label value="First name:" height="24px" text=""></f:Label>
+                                        <f:Label value="Phone number:" height="24px" text=""
+                                                 addStyleNames="{style.panelMarginTop}"></f:Label>
+                                     </g:FlowPanel>
+                                  </g:west>
+                                  <g:center>
+                                     <g:FlowPanel>
+                                        <f:TextInput ui:field="jRebelProfileFirstName" width="100%" height="20px"
+                                                     enabled="true"></f:TextInput>
+                                        <f:TextInput ui:field="jRebelProfilePhone" width="100%" height="20px"
+                                                     enabled="true"
+                                                     addStyleNames="{style.panelMarginTop}"></f:TextInput>
+                                     </g:FlowPanel>
+                                  </g:center>
+                               </g:DockLayoutPanel>
+                            </g:west>
+                            <g:east size="300">
+                               <g:DockLayoutPanel addStyleNames="{style.marginRight10}">
+                                  <g:west size="100">
+                                     <g:FlowPanel>
+                                        <f:Label value="Last name:" height="24px" text=""></f:Label>
+                                     </g:FlowPanel>
+                                  </g:west>
+                                  <g:center>
+                                     <g:FlowPanel>
+                                        <f:TextInput ui:field="jRebelProfileLastName" width="100%" height="20px"
+                                                     enabled="true"></f:TextInput>
+                                        <f:Label ui:field="jRebelErrorFillingMessage" value="All fields are necessary!"
+                                                 height="30px" addStyleNames="{style.errorMessage}"></f:Label>
+                                     </g:FlowPanel>
+                                  </g:center>
+                               </g:DockLayoutPanel>
+                            </g:east>
+                         </g:DockLayoutPanel>
 	                  </g:south>
 	               </g:DockLayoutPanel>
                </g:south>
@@ -246,14 +315,18 @@
       </f:layer>
       <f:layer height="22px" bottom="0">
          <g:FlowPanel styleName="{style.rightAlign}">
-            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}" imageName="cancel"
-               addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="finishButton" enabled="true" width="90" height="22" text="{locale.finishButton}" imageName="ok"
-               addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="nextButton" enabled="true" width="90" height="22" text="{locale.nextButton}" imageName="next"
-               addStyleNames="{style.floatRight}"></f:ImageButton>
-            <f:ImageButton ui:field="backButton" enabled="true" width="90" height="22" text="{locale.backButton}" imageName="back"
-               addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="cancelButton" width="90" height="22" text="{locale.cancelButton}"
+                           imageName="cancel"
+                           addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="finishButton" enabled="true" width="90" height="22" text="{locale.finishButton}"
+                           imageName="ok"
+                           addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="nextButton" enabled="true" width="90" height="22" text="{locale.nextButton}"
+                           imageName="next"
+                           addStyleNames="{style.floatRight}"></f:ImageButton>
+            <f:ImageButton ui:field="backButton" enabled="true" width="90" height="22" text="{locale.backButton}"
+                           imageName="back"
+                           addStyleNames="{style.floatRight}"></f:ImageButton>
          </g:FlowPanel>
       </f:layer>
    </f:Border>

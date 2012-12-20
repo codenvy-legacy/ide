@@ -57,7 +57,7 @@ import java.util.Map.Entry;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 4:41:51 PM anya $
- * 
+ *
  */
 public class CreateProjectView extends ViewImpl implements CreateProjectPresenter.Display
 {
@@ -127,6 +127,18 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    @UiField
    DockLayoutPanel jRebelPanel;
 
+   @UiField
+   TextInput jRebelProfileFirstName;
+
+   @UiField
+   TextInput jRebelProfileLastName;
+
+   @UiField
+   TextInput jRebelProfilePhone;
+
+   @UiField
+   Label jRebelErrorFillingMessage;
+
    private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
    private List<ToggleButton> targetButtonsList = new LinkedList<ToggleButton>();
@@ -150,6 +162,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       projectNameField.setName(NAME_FIELD_ID);
 
       deployProjectStep.setVisible(false);
+      jRebelErrorFillingMessage.setVisible(false);
    }
 
    /**
@@ -515,7 +528,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    /**
     * Creates a {@link ToggleButton} with the specified images and preconfigured style settings.
-    * 
+    *
     * @param enabledImage image for enabled button state
     * @param disabledImage image for disabled button state
     * @return a {@link ToggleButton}
@@ -539,7 +552,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    /**
     * Creates an HTML widget with the specified text content and preconfigured style settings.
-    * 
+    *
     * @param label the new widget's text content
     * @return an HTML widget
     */
@@ -558,4 +571,35 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       return titleLabel;
    }
 
+   @Override
+   public void setJRebelProfileFieldsActive(boolean enabled)
+   {
+      jRebelProfileFirstName.setEnabled(enabled);
+      jRebelProfileLastName.setEnabled(enabled);
+      jRebelProfilePhone.setEnabled(enabled);
+   }
+
+   @Override
+   public HasValue<String> getJRebelFirstNameField()
+   {
+      return jRebelProfileFirstName;
+   }
+
+   @Override
+   public HasValue<String> getJRebelLastNameField()
+   {
+      return jRebelProfileLastName;
+   }
+
+   @Override
+   public HasValue<String> getJRebelPhoneNumberField()
+   {
+      return jRebelProfilePhone;
+   }
+
+   @Override
+   public void setJRebelErrorFillingMessageLabel(boolean visible)
+   {
+      jRebelErrorFillingMessage.setVisible(visible);
+   }
 }

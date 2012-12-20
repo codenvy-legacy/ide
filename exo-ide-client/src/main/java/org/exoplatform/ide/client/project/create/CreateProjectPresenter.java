@@ -26,13 +26,20 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ToggleButton;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -52,6 +59,7 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
@@ -65,12 +73,14 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 3:38:19 PM anya $
- * 
+ *
  */
 public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedHandler, ViewClosedHandler,
    DeployResultHandler
@@ -91,7 +101,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       /**
        * Returns {@link ProjectType} for the appropriate button.
-       * 
+       *
        * @param button {@link ToggleButton}
        * @return {@link ProjectType}
        */
@@ -99,7 +109,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       /**
        * Returns {@link PaaS} for the appropriate button.
-       * 
+       *
        * @param button {@link ToggleButton}
        * @return {@link PaaS}
        */
@@ -130,6 +140,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       HasClickHandlers getCancelButton();
 
+      HasValue<String> getJRebelFirstNameField();
+
+      HasValue<String> getJRebelLastNameField();
+
+      HasValue<String> getJRebelPhoneNumberField();
+
       void enableNextButton(boolean enabled);
 
       void enableFinishButton(boolean enabled);
@@ -141,6 +157,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       void showDeployProjectStep();
 
       void setDeployView(Composite deployView);
+
+      void setJRebelProfileFieldsActive(boolean enabled);
+
+      void setJRebelErrorFillingMessageLabel(boolean visible);
    }
 
    private Display display;
@@ -197,6 +217,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    public void bindDisplay()
    {
+      display.getUseJRebelPlugin().setValue(true);
       display.getNameField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
 
@@ -269,6 +290,19 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          @Override
          public void onClick(ClickEvent event)
          {
+            if (display.getUseJRebelPlugin().getValue())
+            {
+               if (display.getJRebelFirstNameField().getValue().isEmpty() ||
+                  display.getJRebelLastNameField().getValue().isEmpty() ||
+                  display.getJRebelPhoneNumberField().getValue().isEmpty())
+               {
+                  display.setJRebelErrorFillingMessageLabel(true);
+                  return;
+               }
+               display.setJRebelErrorFillingMessageLabel(false);
+
+               sendProfileInfoToZeroTurnaround();
+            }
             if (isDeployStep)
             {
                doDeploy((availableProjectTemplates.size() == 1) ? availableProjectTemplates.get(0) : selectedTemplate);
@@ -289,6 +323,22 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             else
             {
                createProject(null);
+            }
+         }
+      });
+
+      display.getUseJRebelPlugin().addValueChangeHandler(new ValueChangeHandler<Boolean>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<Boolean> event)
+         {
+            if (event.getValue())
+            {
+               display.setJRebelProfileFieldsActive(true);
+            }
+            else
+            {
+               display.setJRebelProfileFieldsActive(false);
             }
          }
       });
@@ -405,7 +455,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    /**
     * Sets the available project types.
-    * 
+    *
     * @param list a list of the available project types
     */
    private void setProjectTypes(List<ProjectType> list)
@@ -442,7 +492,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    /**
     * Sets the deployment targets.
-    * 
+    *
     * @param targetsList a list of the available deployment targets
     */
    private void setTargets(List<PaaS> targetsList)
@@ -571,7 +621,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    /**
     * Get the list of targets, where project with pointed project type can be deployed.
-    * 
+    *
     * @param projectType the project type
     * @return {@link List} of {@link PaaS}
     */
@@ -585,7 +635,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          {
             values.add(paas);
          }
-      };
+      }
+      ;
       return values;
    }
 
@@ -645,7 +696,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    /**
     * Writes 'jrebel' property to the project properties.
-    * 
+    *
     * @param project {@link ProjectModel}
     */
    private void writeUseJRebelProperty(ProjectModel project)
@@ -724,7 +775,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    /**
     * Prepare project type list to be displayed.
-    * 
+    *
     * @param projectTemplates available project templates
     * @return {@link List}
     */
@@ -744,7 +795,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    /**
     * Get the list of project templates, that are suitable to pointed project type and deploy target.
-    * 
+    *
     * @param projectType project's type
     * @param target deploy target
     * @return {@link List} list of {@link ProjectTemplate}
@@ -780,7 +831,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    /**
     * Validates project name for existence.
-    * 
+    *
     * @param projectName project's name
     */
    private void validateProjectName(final String projectName)
@@ -789,30 +840,30 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       {
          VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
             ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+         {
+            @Override
+            protected void onSuccess(List<Item> result)
             {
-               @Override
-               protected void onSuccess(List<Item> result)
+               for (Item item : result)
                {
-                  for (Item item : result)
+                  if (projectName.equals(item.getName()))
                   {
-                     if (projectName.equals(item.getName()))
-                     {
-                        display.getErrorLabel().setValue(
-                           org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
-                              .createProjectFromTemplateProjectExists(projectName));
-                        return;
-                     }
+                     display.getErrorLabel().setValue(
+                        org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
+                           .createProjectFromTemplateProjectExists(projectName));
+                     return;
                   }
-                  display.getErrorLabel().setValue("");
-                  goNext();
                }
+               display.getErrorLabel().setValue("");
+               goNext();
+            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+            }
+         });
       }
       catch (RequestException e)
       {
@@ -831,4 +882,38 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       display.setJRebelPanelVisibility(visible);
    }
 
+   private void sendProfileInfoToZeroTurnaround()
+   {
+      String url = Utils.getRestContext() + "/ide/jrebel/profile/info";
+
+      JSONObject json = new JSONObject();
+      json.put("first_name", new JSONString(display.getJRebelFirstNameField().getValue()));
+      json.put("last_name", new JSONString(display.getJRebelLastNameField().getValue()));
+      json.put("phone", new JSONString(display.getJRebelPhoneNumberField().getValue()));
+
+      try
+      {
+         AsyncRequest.build(RequestBuilder.POST, url)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
+            .data(json.toString())
+            .send(new AsyncRequestCallback<Void>()
+            {
+               @Override
+               protected void onSuccess(Void result)
+               {
+                  Window.alert("success");
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  Window.alert("Failure");
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
 }
