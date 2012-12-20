@@ -901,13 +901,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                @Override
                protected void onSuccess(Void result)
                {
-                  Window.alert("success");
+                  //success
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  Window.alert("Failure");
                }
             });
       }
