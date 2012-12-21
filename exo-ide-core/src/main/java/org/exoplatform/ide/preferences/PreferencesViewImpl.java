@@ -44,7 +44,7 @@ import org.exoplatform.ide.util.dom.Elements;
 
 /**
  * PreferenceViewImpl is the view of preferences.
- * The view shows preference pages to the end user. It has an area at the top containing
+ * The view shows preference pages to the end user. It has an area at the bottom containing
  * OK, Apply and Close buttons, on the left hand side of page is list of available preferences,
  * on the right hand side of page is current preference page.
  * 
