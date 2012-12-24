@@ -23,11 +23,13 @@ import com.google.inject.name.Named;
 import com.google.inject.name.Names;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
+
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.part.PartAgent;
+import org.exoplatform.ide.api.ui.preferences.PreferencesAgent;
 import org.exoplatform.ide.api.ui.wizard.WizardAgent;
 import org.exoplatform.ide.core.StandardComponentInitializer;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
@@ -50,6 +52,7 @@ import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.part.PartStackView;
 import org.exoplatform.ide.part.PartStackViewImpl;
+import org.exoplatform.ide.preferences.PreferencesAgentImpl;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
@@ -58,7 +61,8 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 
 /**
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
+ *
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 public class CoreGinModule extends AbstractGinModule
 {
@@ -75,7 +79,8 @@ public class CoreGinModule extends AbstractGinModule
       bind(ExtensionRegistry.class).in(Singleton.class);
       bind(StandardComponentInitializer.class).in(Singleton.class);
       bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
-
+      bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
+      
       resourcesAPIconfigure();
 
       uiAPIconfigure();
@@ -96,7 +101,7 @@ public class CoreGinModule extends AbstractGinModule
    }
 
    /**
-    * Configures binding for Resource API (Resource Manager)
+    * Configures binding for Resource API (Resource Manager) 
     */
    protected void resourcesAPIconfigure()
    {
@@ -119,7 +124,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(PartStackView.class).to(PartStackViewImpl.class);
       bind(PartStackPresenter.class);
       bind(PartAgentPresenter.class).in(Singleton.class);
-
+      
       bind(PartAgent.class).to(PartAgentPresenter.class).in(Singleton.class);
       // resources: images and css
       bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);

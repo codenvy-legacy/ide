@@ -20,9 +20,9 @@ package org.exoplatform.ide.wizard;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DeckLayoutPanel;
@@ -89,47 +89,8 @@ public class WizardViewImpl extends DialogBox implements WizardView
 
       this.setText(title);
       this.setWidget(widget);
-
-      bind();
    }
 
-   /**
-    * Adds behavior to wizard view components
-    */
-   private void bind()
-   {
-      btnNext.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onNextClicked();
-         }
-      });
-
-      btnBack.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onBackClicked();
-         }
-      });
-
-      btnFinish.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onFinishClicked();
-         }
-      });
-
-      btnCancel.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onCancelClicked();
-         }
-      });
-   }
 
    /**
     * {@inheritDoc}
@@ -233,5 +194,29 @@ public class WizardViewImpl extends DialogBox implements WizardView
    public AcceptsOneWidget getContentPanel()
    {
       return contentPanel;
+   }
+
+   @UiHandler("btnCancel")
+   void onBtnCancelClick(ClickEvent event)
+   {
+      delegate.onCancelClicked();
+   }
+
+   @UiHandler("btnFinish")
+   void onBtnFinishClick(ClickEvent event)
+   {
+      delegate.onFinishClicked();
+   }
+
+   @UiHandler("btnNext")
+   void onBtnNextClick(ClickEvent event)
+   {
+      delegate.onNextClicked();
+   }
+
+   @UiHandler("btnBack")
+   void onBtnBackClick(ClickEvent event)
+   {
+      delegate.onBackClicked();
    }
 }
