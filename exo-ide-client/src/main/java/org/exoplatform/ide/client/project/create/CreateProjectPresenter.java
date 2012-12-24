@@ -30,7 +30,6 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
@@ -73,9 +72,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -158,9 +155,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       void setDeployView(Composite deployView);
 
-      void setJRebelProfileFieldsActive(boolean enabled);
+      void setJRebelErrorFillingMessageLabel(String message);
 
-      void setJRebelErrorFillingMessageLabel(boolean visible);
+      void setJRebelProfileFieldsVisible(boolean visible);
    }
 
    private Display display;
@@ -269,6 +266,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             }
             else
             {
+               if (display.getUseJRebelPlugin().getValue())
+               {
+                  if (!checkJRebelFieldFill())
+                  {
+                     return;
+                  }
+               }
                goNext();
             }
          }
@@ -292,15 +296,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          {
             if (display.getUseJRebelPlugin().getValue())
             {
-               if (display.getJRebelFirstNameField().getValue().isEmpty() ||
-                  display.getJRebelLastNameField().getValue().isEmpty() ||
-                  display.getJRebelPhoneNumberField().getValue().isEmpty())
+               if (!checkJRebelFieldFill())
                {
-                  display.setJRebelErrorFillingMessageLabel(true);
                   return;
                }
-               display.setJRebelErrorFillingMessageLabel(false);
-
                sendProfileInfoToZeroTurnaround();
             }
             if (isDeployStep)
@@ -334,12 +333,39 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          {
             if (event.getValue())
             {
-               display.setJRebelProfileFieldsActive(true);
+               display.setJRebelProfileFieldsVisible(true);
             }
             else
             {
-               display.setJRebelProfileFieldsActive(false);
+               display.setJRebelProfileFieldsVisible(false);
             }
+         }
+      });
+
+      display.getJRebelFirstNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            checkJRebelFieldFill();
+         }
+      });
+
+      display.getJRebelLastNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            checkJRebelFieldFill();
+         }
+      });
+
+      display.getJRebelPhoneNumberField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            checkJRebelFieldFill();
          }
       });
    }
@@ -544,6 +570,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          goToProjectStep();
       }
       updateNavigationButtonsState();
+      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -566,6 +593,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          }
       }
       updateNavigationButtonsState();
+      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -914,5 +942,31 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   private boolean checkJRebelFieldFill()
+   {
+      if (display.getUseJRebelPlugin().getValue())
+      {
+         if (!display.getJRebelFirstNameField().getValue().isEmpty()
+            && !display.getJRebelLastNameField().getValue().isEmpty()
+            && !display.getJRebelPhoneNumberField().getValue().isEmpty())
+         {
+            String phone = display.getJRebelPhoneNumberField().getValue();
+
+            boolean phoneMatched = phone.matches("\\+\\d{2}\\s?-?\\s?[(]?\\d{3}[)]?\\s?-?\\s?\\d{3}\\s?-?\\s?\\d{4}");
+            if (!phoneMatched)
+            {
+               display.setJRebelErrorFillingMessageLabel("Phone must be: +xx-(xxx)-xxxxxxx");
+            }
+            else
+            {
+               display.setJRebelErrorFillingMessageLabel("");
+            }
+            return phoneMatched;
+         }
+         display.setJRebelErrorFillingMessageLabel("All field are required!");
+      }
+      return false;
    }
 }

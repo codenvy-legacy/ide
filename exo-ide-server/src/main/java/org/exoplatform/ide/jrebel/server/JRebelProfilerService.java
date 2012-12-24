@@ -41,8 +41,8 @@ public class JRebelProfilerService
    @Path("profile/info")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
-   public void getProfileInfo(Map<String, String> values,
-                              @Context SecurityContext sctx)
+   public void sendProfileInfo(Map<String, String> values,
+                               @Context SecurityContext sctx)
       throws JRebelProfilerException
    {
       Principal principal = sctx.getUserPrincipal();
@@ -58,7 +58,7 @@ public class JRebelProfilerService
          && phone != null
          && !phone.isEmpty())
       {
-         profiler.getProfileInfo(
+         profiler.sendProfileInfo(
             principal.getName(),
             values.get("first_name"),
             values.get("last_name"),

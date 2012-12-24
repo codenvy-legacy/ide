@@ -185,7 +185,10 @@
       .errorMessage {
          font-weight: bold;
          color: #ff0000;
-         margin-top: 10px;
+      }
+
+      .jRebelPannelHeight {
+         height: 140px;
       }
    </ui:style>
 
@@ -242,12 +245,12 @@
 		                   </f:Border>
 		                </g:center>
 		             </g:DockLayoutPanel>
-                     <g:FlowPanel ui:field="deployProjectStep" visible="false" width="100%" height="100%">
+                     <g:FlowPanel ui:field="deployProjectStep" visible="false" width="100%">
                      </g:FlowPanel>
-                  </g:FlowPanel>
-               </g:center>
-               <g:south size="145">
-	               <g:DockLayoutPanel ui:field="jRebelPanel" addStyleNames="{style.panelMarginTop} {style.marginLeft10}">
+
+
+	               <g:DockLayoutPanel ui:field="jRebelPanel"
+                                     addStyleNames="{style.panelMarginTop} {style.marginLeft10} {style.jRebelPannelHeight}">
 	                  <g:center>
                         <g:DockLayoutPanel>
                            <g:west size="85">
@@ -266,7 +269,7 @@
                         </g:DockLayoutPanel>
 	                  </g:center>
 	                  <g:south size="105">
-                         <g:DockLayoutPanel>
+                         <g:DockLayoutPanel ui:field="jRebelProfileFields">
                             <g:north size="50"><f:Label value="{templateLocale.zeroturnaround}" height="26px"
                                                         addStyleNames="{style.marginLeft4} {style.zeroturnaroundText}"></f:Label></g:north>
                             <g:west size="300">
@@ -291,25 +294,35 @@
                             </g:west>
                             <g:east size="300">
                                <g:DockLayoutPanel addStyleNames="{style.marginRight10}">
-                                  <g:west size="100">
-                                     <g:FlowPanel>
-                                        <f:Label value="Last name:" height="24px" text=""></f:Label>
-                                     </g:FlowPanel>
-                                  </g:west>
-                                  <g:center>
-                                     <g:FlowPanel>
-                                        <f:TextInput ui:field="jRebelProfileLastName" width="100%" height="20px"
-                                                     enabled="true"></f:TextInput>
-                                        <f:Label ui:field="jRebelErrorFillingMessage" value="All fields are necessary!"
-                                                 height="30px" addStyleNames="{style.errorMessage}"></f:Label>
-                                     </g:FlowPanel>
-                                  </g:center>
+                                 <g:center>
+                                    <g:DockLayoutPanel>
+                                       <g:west size="100">
+                                          <g:FlowPanel>
+                                             <f:Label value="Last name:" height="24px" text=""></f:Label>
+                                          </g:FlowPanel>
+                                       </g:west>
+                                       <g:center>
+                                          <g:FlowPanel>
+                                             <f:TextInput ui:field="jRebelProfileLastName" width="100%" height="20px"
+                                                          enabled="true"></f:TextInput>
+                                          </g:FlowPanel>
+                                       </g:center>
+                                    </g:DockLayoutPanel>
+                                 </g:center>
+                                 <g:south size="25">
+                                    <g:DockLayoutPanel>
+                                       <g:center>
+                                          <f:Label ui:field="jRebelErrorFillingMessage"
+                                                   addStyleNames="{style.errorMessage}"></f:Label>
+                                       </g:center>
+                                    </g:DockLayoutPanel>
+                                 </g:south>
                                </g:DockLayoutPanel>
                             </g:east>
                          </g:DockLayoutPanel>
 	                  </g:south>
-	               </g:DockLayoutPanel>
-               </g:south>
+	               </g:DockLayoutPanel></g:FlowPanel>
+               </g:center>
             </g:DockLayoutPanel>
          </g:FlowPanel>
       </f:layer>

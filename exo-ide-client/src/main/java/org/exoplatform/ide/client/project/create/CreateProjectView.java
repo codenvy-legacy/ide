@@ -139,6 +139,9 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    @UiField
    Label jRebelErrorFillingMessage;
 
+   @UiField
+   DockLayoutPanel jRebelProfileFields;
+
    private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
    private List<ToggleButton> targetButtonsList = new LinkedList<ToggleButton>();
@@ -162,7 +165,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       projectNameField.setName(NAME_FIELD_ID);
 
       deployProjectStep.setVisible(false);
-      jRebelErrorFillingMessage.setVisible(false);
+      jRebelErrorFillingMessage.setValue("");
    }
 
    /**
@@ -524,6 +527,28 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    public void setJRebelPanelVisibility(boolean isVisible)
    {
       jRebelPanel.setVisible(isVisible);
+      if (isVisible)
+      {
+         chooseTemplateStep.setHeight("58%");
+      }
+      else
+      {
+         chooseTemplateStep.setHeight("88%");
+      }
+   }
+
+   @Override
+   public void setJRebelProfileFieldsVisible(boolean visible)
+   {
+      jRebelProfileFields.setVisible(visible);
+      if (visible)
+      {
+         chooseTemplateStep.setHeight("58%");
+      }
+      else
+      {
+         chooseTemplateStep.setHeight("88%");
+      }
    }
 
    /**
@@ -572,14 +597,6 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    @Override
-   public void setJRebelProfileFieldsActive(boolean enabled)
-   {
-      jRebelProfileFirstName.setEnabled(enabled);
-      jRebelProfileLastName.setEnabled(enabled);
-      jRebelProfilePhone.setEnabled(enabled);
-   }
-
-   @Override
    public HasValue<String> getJRebelFirstNameField()
    {
       return jRebelProfileFirstName;
@@ -598,8 +615,8 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    @Override
-   public void setJRebelErrorFillingMessageLabel(boolean visible)
+   public void setJRebelErrorFillingMessageLabel(String message)
    {
-      jRebelErrorFillingMessage.setVisible(visible);
+      jRebelErrorFillingMessage.setValue(message);
    }
 }
