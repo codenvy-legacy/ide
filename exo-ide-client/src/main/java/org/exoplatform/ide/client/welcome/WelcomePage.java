@@ -23,7 +23,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasWidgets;
 
-import org.exoplatform.ide.client.ImageBundle;
+import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 
 /**
@@ -37,15 +37,15 @@ public class WelcomePage extends AbstractPartPresenter
    private static WelcomePageUiBinder uiBinder = GWT.create(WelcomePageUiBinder.class);
    private Element element;
 
-   private ImageBundle imageBundle;
+   private PageResources resources;
 
    interface WelcomePageUiBinder extends UiBinder<Element, WelcomePage>
    {
    }
 
-   public WelcomePage(ImageBundle imageBundle)
+   public WelcomePage(PageResources resources)
    {
-      this.imageBundle = imageBundle;
+      this.resources = resources;
       element = uiBinder.createAndBindUi(this);
    }
 
@@ -76,7 +76,7 @@ public class WelcomePage extends AbstractPartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      return imageBundle.welcomePageIcon();
+      return resources.welcomePageIcon();
    }
 
    /**

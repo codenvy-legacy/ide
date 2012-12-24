@@ -15,5 +15,8 @@
 
    <source path="ui" />
    <source path="wizard" />
+   <source path="menu" />
+   <source path="part" />
+   <source path="preferences" />
    <source path="" />
 </module>

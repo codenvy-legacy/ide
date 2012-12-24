@@ -1,13 +1,3 @@
-package org.exoplatform.ide.java.client.wizard;
-
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.TextBox;
-import com.google.gwt.user.client.ui.Widget;
-
 /*
  * Copyright (C) 2012 eXo Platform SAS.
  *
@@ -26,17 +16,27 @@ import com.google.gwt.user.client.ui.Widget;
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-public class JavaProjectPageViewImpl implements JavaProjectPageView
+package org.exoplatform.ide.java.client.wizard;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.TextBox;
+import com.google.gwt.user.client.ui.Widget;
+
+
+public class NewJavaProjectPageViewImpl extends Composite implements NewJavaProjectPageView
 {
 
    interface JavaProjectPageViewImplUiBinder
-      extends UiBinder<Widget, JavaProjectPageViewImpl>
+      extends UiBinder<Widget, NewJavaProjectPageViewImpl>
    {
    }
 
    private static JavaProjectPageViewImplUiBinder ourUiBinder = GWT.create(JavaProjectPageViewImplUiBinder.class);
-
-   private final Widget widget;
 
    @UiField
    TextBox projectName;
@@ -46,15 +46,9 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
 
    private ActionDelegate delegate;
 
-   public JavaProjectPageViewImpl()
+   public NewJavaProjectPageViewImpl()
    {
-      widget = ourUiBinder.createAndBindUi(this);
-   }
-
-   @Override
-   public Widget asWidget()
-   {
-      return widget;
+      initWidget(ourUiBinder.createAndBindUi(this));
    }
 
    @Override
@@ -64,13 +58,13 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
    }
 
    @Override
-   public String getResourceFolder()
+   public String getSourceFolder()
    {
       return sourceFolder.getValue();
    }
 
    @Override
-   public void setActionDelegate(ActionDelegate delegate)
+   public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
    }
@@ -80,5 +74,4 @@ public class JavaProjectPageViewImpl implements JavaProjectPageView
    {
       delegate.checkProjectInput();
    }
-
 }

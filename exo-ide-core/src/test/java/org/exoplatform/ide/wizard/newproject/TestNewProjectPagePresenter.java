@@ -77,7 +77,7 @@ public class TestNewProjectPagePresenter
       wizardAgent = mock(WizardAgentImpl.class);
       when(wizardAgent.getNewProjectWizards()).thenReturn(wizards);
 
-      presenter = new NewProjectPagePresenter(wizardAgent, mock(NewProjectWizardResource.class), view);
+      presenter = new NewProjectPagePresenter(wizardAgent, null, view);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
    }
 

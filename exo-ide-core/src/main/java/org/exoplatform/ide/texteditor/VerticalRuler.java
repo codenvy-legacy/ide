@@ -32,7 +32,7 @@ import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.annotation.AnnotationModelEvent;
 import org.exoplatform.ide.text.annotation.AnnotationModelListener;
 import org.exoplatform.ide.texteditor.api.TextEditorOperations;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.gutter.Gutter;
 import org.exoplatform.ide.texteditor.gutter.Gutter.ClickListener;
 import org.exoplatform.ide.util.ListenerRegistrar.Remover;
@@ -87,9 +87,9 @@ public class VerticalRuler
 
    private Remover remover;
 
-   private final Gutter display;
+   private final Gutter view;
 
-   private final TextEditorPartDisplay editor;
+   private final TextEditorPartView editor;
 
    private InternalListener listener;
 
@@ -98,20 +98,20 @@ public class VerticalRuler
    /**
     * @param leftNotificationGutter
     */
-   public VerticalRuler(Gutter leftNotificationGutter, TextEditorPartDisplay editor)
+   public VerticalRuler(Gutter leftNotificationGutter, TextEditorPartView editor)
    {
-      this.display = leftNotificationGutter;
+      this.view = leftNotificationGutter;
       this.editor = editor;
       listener = new InternalListener();
       elements = JsonCollections.createArray();
-      display.getClickListenerRegistrar().add(new ClickListener()
+      view.getClickListenerRegistrar().add(new ClickListener()
       {
 
          @Override
          public void onClick(int y)
          {
 
-            TextEditorPartDisplay editor = VerticalRuler.this.editor;
+            TextEditorPartView editor = VerticalRuler.this.editor;
             if (editor.canDoOperation(TextEditorOperations.QUICK_ASSIST))
             {
                int lineNumber = editor.getBuffer().convertYToLineNumber(y, true);
@@ -137,7 +137,7 @@ public class VerticalRuler
    {
       for (Element e : elements.asIterable())
       {
-         display.removeUnmanagedElement(e);
+         view.removeUnmanagedElement(e);
       }
       elements.clear();
 
@@ -150,7 +150,7 @@ public class VerticalRuler
          Position position = model.getPosition(annotation);
          int lineNumber = getLineNumberForPosition(position);
          m.setTopPosition(editor.getBuffer().calculateLineTop(lineNumber), "px");
-         display.addUnmanagedElement(m.getElement());
+         view.addUnmanagedElement(m.getElement());
          elements.add(m.getElement());
       }
    }

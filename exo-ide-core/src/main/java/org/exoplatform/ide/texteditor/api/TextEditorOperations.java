@@ -19,9 +19,9 @@
 package org.exoplatform.ide.texteditor.api;
 
 /**
- * Defines the target for text operations. {@link TextEditorPartDisplay#canDoOperation(int)} informs
+ * Defines the target for text operations. {@link TextEditorPartView#canDoOperation(int)} informs
  * the clients about the ability of the target to perform the specified
- * operation at the current point in time. {@link TextEditorPartDisplay#doOperation(int)} executes
+ * operation at the current point in time. {@link TextEditorPartView#doOperation(int)} executes
  * the specified operation.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:

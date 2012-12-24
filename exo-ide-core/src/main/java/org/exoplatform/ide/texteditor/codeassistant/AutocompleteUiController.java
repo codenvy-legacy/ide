@@ -30,7 +30,7 @@ import org.exoplatform.ide.json.js.JsoArray;
 import org.exoplatform.ide.runtime.Assert;
 import org.exoplatform.ide.text.store.anchor.ReadOnlyAnchor;
 import org.exoplatform.ide.texteditor.FocusManager;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.ui.Popup;
 import org.exoplatform.ide.ui.list.SimpleList;
@@ -156,7 +156,7 @@ public class AutocompleteUiController implements AutocompleteBox
 
    private Events delegate;
 
-   private final TextEditorPartDisplay editor;
+   private final TextEditorPartView editor;
 
    private final Element box;
 
@@ -180,7 +180,7 @@ public class AutocompleteUiController implements AutocompleteBox
 
    private Popup infoPopup;
 
-   public AutocompleteUiController(TextEditorPartDisplay editor, Resources res)
+   public AutocompleteUiController(TextEditorPartView editor, Resources res)
    {
       this.editor = editor;
       this.resources = res;

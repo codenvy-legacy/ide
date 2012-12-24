@@ -18,22 +18,15 @@
  */
 package org.exoplatform.ide.wizard.newproject;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import org.exoplatform.ide.view.View;
 
 /**
  * Interface of new project page view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewProjectPageView extends IsWidget
+public interface NewProjectPageView extends View<NewProjectPageView.ActionDelegate>
 {
-   /**
-    * Sets new delegate
-    * 
-    * @param delegate
-    */
-   void setBtnPressedDelegate(ActionDelegate delegate);
-
    /**
     * Needs for delegate some function into NewProjectPage view.
     */

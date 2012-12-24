@@ -16,14 +16,14 @@
  */
 package org.exoplatform.ide.client.projectExplorer;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 
 import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import org.exoplatform.ide.client.projectExplorer.ProjectExplorerPresenter.Listener;
+import org.exoplatform.ide.client.projectExplorer.ProjectExplorerView.ActionDelegate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +45,7 @@ public class ProjectExpolorerPresenterTest
 {
 
    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-   ProjectExplorerPresenter.Display display;
+   ProjectExplorerView projectExplorerView;
 
    @Spy
    EventBus eventBus = new SimpleEventBus();
@@ -74,7 +74,7 @@ public class ProjectExpolorerPresenterTest
    public void shouldBindDoubleClickHandler()
    {
 
-      verify(display).registerListener((Listener)any());
+      verify(projectExplorerView).setDelegate((ActionDelegate)any());
    }
 
    /**

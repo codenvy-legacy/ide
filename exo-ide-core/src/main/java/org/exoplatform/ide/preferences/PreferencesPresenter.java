@@ -1,0 +1,134 @@
+/*
+ * Copyright (C) 2012 eXo Platform SAS.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+ */
+package org.exoplatform.ide.preferences;
+
+import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.json.JsonArray;
+
+
+/**
+ * PreferencesPresenter is presentation of preference pages.
+ * It manages preference pages. It's responsible for the communication user and wizard page.
+ * In typical usage, the client instantiates this class with list of preferences. 
+ * The presenter serves as the preference page container and orchestrates the
+ * presentation of its pages.
+ * 
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ */
+public class PreferencesPresenter implements PreferencesView.ActionDelegate,
+   PreferencesPagePresenter.DirtyStateListener
+{
+   private PreferencesPagePresenter currentPage;
+
+   private PreferencesView view;
+
+   private JsonArray<PreferencesPagePresenter> preferences;
+
+   /**
+    * Create presenter.
+    * 
+    * @param resources
+    * @param agent
+    */
+   public PreferencesPresenter(Resources resources, PreferencesAgentImpl agent)
+   {
+      this(new PreferencesViewImpl(resources, agent.getPreferences()), agent);
+   }
+
+   /**
+    * Create presenter.
+    * 
+    * For tests.
+    * 
+    * @param view
+    * @param agent
+    */
+   protected PreferencesPresenter(PreferencesView view, PreferencesAgentImpl agent)
+   {
+      this.view = view;
+      view.setDelegate(this);
+      preferences = agent.getPreferences();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onDirtyChanged()
+   {
+      view.setApplyButtonEnabled(currentPage.isDirty());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onCloseClicked()
+   {
+      view.close();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onApplyClicked()
+   {
+      for (int i = 0; i < preferences.size(); i++)
+      {
+         PreferencesPagePresenter page = preferences.get(i);
+         if (page.isDirty())
+         {
+            page.doApply();
+         }
+      }
+
+      onDirtyChanged();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void selectedPreference(PreferencesPagePresenter preference)
+   {
+      currentPage = preference;
+      currentPage.setUpdateDelegate(this);
+      onDirtyChanged();
+      currentPage.go(view.getContentPanel());
+   }
+
+   /**
+    * Shows preferences.
+    */
+   public void showPreferences()
+   {
+      view.showPreferences();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onOkClicked()
+   {
+      onApplyClicked();
+      onCloseClicked();
+   }
+}

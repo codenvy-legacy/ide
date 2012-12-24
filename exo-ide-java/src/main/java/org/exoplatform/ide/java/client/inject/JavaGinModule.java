@@ -19,8 +19,12 @@
 package org.exoplatform.ide.java.client.inject;
 
 import com.google.gwt.inject.client.AbstractGinModule;
-import org.exoplatform.ide.java.client.wizard.JavaProjectPageView;
-import org.exoplatform.ide.java.client.wizard.JavaProjectPageViewImpl;
+import org.exoplatform.ide.java.client.wizard.NewJavaClassPageView;
+import org.exoplatform.ide.java.client.wizard.NewJavaClassPageViewImpl;
+import org.exoplatform.ide.java.client.wizard.NewJavaProjectPageView;
+import org.exoplatform.ide.java.client.wizard.NewJavaProjectPageViewImpl;
+import org.exoplatform.ide.java.client.wizard.NewPackagePageView;
+import org.exoplatform.ide.java.client.wizard.NewPackagePageViewImpl;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -36,7 +40,9 @@ public class JavaGinModule extends AbstractGinModule
    @Override
    protected void configure()
    {
-      bind(JavaProjectPageView.class).to(JavaProjectPageViewImpl.class);
+      bind(NewJavaProjectPageView.class).to(NewJavaProjectPageViewImpl.class);
+      bind(NewPackagePageView.class).to(NewPackagePageViewImpl.class);
+      bind(NewJavaClassPageView.class).to(NewJavaClassPageViewImpl.class);
    }
 
 }

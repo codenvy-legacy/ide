@@ -18,7 +18,7 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.text.store.DocumentModel;
 import org.exoplatform.ide.text.store.Line;
-import org.exoplatform.ide.texteditor.TextEditorView;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.api.parser.Token;
 import org.exoplatform.ide.texteditor.documentparser.DocumentParser;
@@ -43,7 +43,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
    private static final String LINE_TAG_CACHED_TOKENS = "SyntaxHighlighter.cachedTokens";
 
    public static SyntaxHighlighter create(DocumentModel document, Renderer renderer, ViewportModel viewport,
-      SelectionModel selection, DocumentParser documentParser, TextEditorView.Css editorCss)
+      SelectionModel selection, DocumentParser documentParser, TextEditorViewImpl.Css editorCss)
    {
       ListenerRegistrar.RemoverManager removerManager = new ListenerRegistrar.RemoverManager();
       SyntaxHighlighter syntaxHighlighter =
@@ -68,7 +68,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
 
    private SyntaxHighlighter(DocumentModel document, Renderer editorRenderer, ViewportModel viewport,
       SelectionModel selection, DocumentParser documentParser, ListenerRegistrar.RemoverManager removerManager,
-      TextEditorView.Css editorCss)
+      TextEditorViewImpl.Css editorCss)
    {
       this.editorRenderer = editorRenderer;
       this.viewport = viewport;

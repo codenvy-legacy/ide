@@ -45,7 +45,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class TestPartStackPresenter
 {
    @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-   PartStackPresenter.Display display;
+   PartStackView partStackView;
 
    @Mock
    PartStackUIResources resources;
@@ -78,7 +78,7 @@ public class TestPartStackPresenter
       // setup container mock and display.asWidget return object
       HasWidgets container = mock(HasWidgets.class);
       Widget displayAsWidget = mock(Widget.class);
-      when(display.asWidget()).thenReturn(displayAsWidget);
+      when(partStackView.asWidget()).thenReturn(displayAsWidget);
       // perform action
       stack.go(container);
       // verify view exposed to UI component
@@ -101,7 +101,7 @@ public class TestPartStackPresenter
    public void shoudDelegateSetFocusToDisplay()
    {
       stack.setFocus(true);
-      verify(display).setFocus(eq(true));
+      verify(partStackView).setFocus(eq(true));
    }
 
    @Test

@@ -16,62 +16,60 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.outline;
+package org.exoplatform.ide.preferences;
 
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
-import com.google.inject.Inject;
-
-import org.exoplatform.ide.outline.OutlinePartPresenter.Display;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
- *
+ * Abstract base implementation for all preference page implementations.
+ * It's simpler to get started using Preferences.
+ * 
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class OutlinePartView implements Display
+public abstract class AbstractPreferencesPagePresenter implements PreferencesPagePresenter
 {
+   protected DirtyStateListener delegate;
 
-   private SimplePanel container;
+   private String title;
 
-   private Label noOutline;
+   private ImageResource icon;
 
-   @Inject
-   public OutlinePartView()
+   /**
+    * Create preference page.
+    * 
+    * @param title
+    * @param icon
+    */
+   public AbstractPreferencesPagePresenter(String title, ImageResource icon)
    {
-      //TODO extract message constant
-      noOutline = new Label("An outline is not available.");
-      container = new SimplePanel();
+      this.title = title;
+      this.icon = icon;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public Widget asWidget()
+   public void setUpdateDelegate(DirtyStateListener delegate)
    {
-      return container;
+      this.delegate = delegate;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void showNoOutline()
+   public String getTitle()
    {
-      container.clear();
-      container.add(noOutline);
+      return title;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public HasWidgets getContainer()
+   public ImageResource getIcon()
    {
-      return container;
+      return icon;
    }
-
 }

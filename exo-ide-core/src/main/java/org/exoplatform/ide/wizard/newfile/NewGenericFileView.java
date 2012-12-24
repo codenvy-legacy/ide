@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.wizard.newfile;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import org.exoplatform.ide.view.View;
 
 /**
  * Interface of NewGenericFile view
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewGenericFileView extends IsWidget
+public interface NewGenericFileView extends View<NewGenericFileView.ActionDelegate>
 {
    /**
     * Returns file name.
@@ -33,13 +33,6 @@ public interface NewGenericFileView extends IsWidget
     * @return
     */
    String getFileName();
-
-   /**
-    * Sets new delegate.
-    * 
-    * @param delegate
-    */
-   void setDelegate(ActionDelegate delegate);
 
    /**
     * Needs for delegate some function into NewGenericFile view.

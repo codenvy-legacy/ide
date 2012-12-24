@@ -31,7 +31,7 @@ import org.exoplatform.ide.text.DocumentImpl;
 import org.exoplatform.ide.text.annotation.AnnotationModel;
 import org.exoplatform.ide.text.store.TextChange;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.TextListener;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 
@@ -43,7 +43,7 @@ import org.exoplatform.ide.util.executor.UserActivityManager;
 public class TextEditorPresenter extends AbstractTextEditorPresenter
 {
 
-   protected TextEditorPartDisplay editor;
+   protected TextEditorPartView editor;
 
    private final TextListener textListener = new TextListener()
    {
@@ -66,7 +66,7 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
       DocumentProvider documentProvider, TextEditorConfiguration configuration)
    {
       super(configuration, documentProvider);
-      editor = new TextEditorView(resources, userActivityManager);
+      editor = new TextEditorViewImpl(resources, userActivityManager);
       editor.getTextListenerRegistrar().add(textListener);
    }
 

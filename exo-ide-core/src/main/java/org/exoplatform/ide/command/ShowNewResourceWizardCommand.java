@@ -65,7 +65,7 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
    public void execute()
    {
       NewResourcePagePresenter page = new NewResourcePagePresenter(resources, wizardAgent);
-      WizardPresenter wizardDialog = new WizardPresenter(page, resources, "Create resource");
+      WizardPresenter wizardDialog = new WizardPresenter(page, "Create resource");
       wizardDialog.showWizard();
    }
 

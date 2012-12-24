@@ -19,7 +19,9 @@
 package org.exoplatform.ide.wizard;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Image;
+
+import org.exoplatform.ide.view.View;
 
 
 /**
@@ -27,7 +29,7 @@ import com.google.gwt.user.client.ui.IsWidget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardView
+public interface WizardView extends View<WizardView.ActionDelegate>
 {
    /**
     * Sets whether Next button is visible.
@@ -62,13 +64,6 @@ public interface WizardView
    void setFinishButtonEnabled(boolean isEnabled);
 
    /**
-    * Sets new delegate
-    * 
-    * @param delegate
-    */
-   void setDelegate(ActionDelegate delegate);
-
-   /**
     * Sets new caption of wizard's page
     * 
     * @param caption
@@ -87,7 +82,7 @@ public interface WizardView
     * 
     * @param image
     */
-   void setImage(IsWidget image);
+   void setImage(Image image);
 
    /**
     * Close wizard

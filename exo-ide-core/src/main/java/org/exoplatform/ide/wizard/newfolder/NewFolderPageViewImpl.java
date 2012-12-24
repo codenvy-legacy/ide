@@ -27,6 +27,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
+
 /**
  * NewFolderPageViewImpl is the view of NewFolder wizard.
  * 

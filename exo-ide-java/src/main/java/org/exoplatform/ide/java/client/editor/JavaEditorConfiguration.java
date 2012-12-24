@@ -22,7 +22,7 @@ import org.exoplatform.ide.java.client.editor.outline.OutlineModelUpdater;
 import org.exoplatform.ide.outline.OutlineModel;
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.texteditor.api.TextEditorConfiguration;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistant;
 import org.exoplatform.ide.texteditor.api.parser.Parser;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
@@ -68,7 +68,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
     * @see org.exoplatform.ide.texteditor.api.TextEditorConfiguration#getParser()
     */
    @Override
-   public Parser getParser(TextEditorPartDisplay display)
+   public Parser getParser(TextEditorPartView view)
    {
       CmParser parser = CodeMirror2.getParserForMime("text/x-java");
       parser.setNameAndFactory("clike", new BasicTokenFactory());
@@ -79,7 +79,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
     * {@inheritDoc}
     */
    @Override
-   public Reconciler getReconciler(TextEditorPartDisplay display)
+   public Reconciler getReconciler(TextEditorPartView view)
    {
       BasicIncrementalScheduler scheduler = new BasicIncrementalScheduler(manager, 50, 100);
       ReconcilerImpl reconciler = new ReconcilerImpl(Document.DEFAULT_PARTITIONING, scheduler);
@@ -111,7 +111,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
     * {@inheritDoc}
     */
    @Override
-   public CodeAssistant getContentAssistant(TextEditorPartDisplay display)
+   public CodeAssistant getContentAssistant(TextEditorPartView view)
    {
       CodeAssistantImpl impl = new CodeAssistantImpl();
       impl.setCodeAssistantProcessor(Document.DEFAULT_CONTENT_TYPE, getOrCreateCodeAssistProcessor());
@@ -122,7 +122,7 @@ public class JavaEditorConfiguration extends TextEditorConfiguration
     * {@inheritDoc}
     */
    @Override
-   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartDisplay display)
+   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartView view)
    {
       return new JavaCorrectionAssistant(javaEditor, reconcilerStrategy);
    }

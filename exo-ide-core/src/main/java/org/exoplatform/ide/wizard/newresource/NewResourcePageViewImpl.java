@@ -24,6 +24,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import elemental.html.Element;
@@ -42,7 +43,7 @@ import org.exoplatform.ide.util.dom.Elements;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewResourcePageViewImpl implements NewResourcePageView
+public class NewResourcePageViewImpl extends Composite implements NewResourcePageView
 {
    private static NewFileViewUiBinder uiBinder = GWT.create(NewFileViewUiBinder.class);
 
@@ -50,8 +51,6 @@ public class NewResourcePageViewImpl implements NewResourcePageView
    ScrollPanel resources;
 
    private ActionDelegate delegate;
-
-   private final Widget widget;
 
    private SimpleList<NewResourceWizardData> list;
 
@@ -66,7 +65,6 @@ public class NewResourcePageViewImpl implements NewResourcePageView
             SafeHtmlBuilder sb = new SafeHtmlBuilder();
             // Add icon
             sb.appendHtmlConstant("<table><tr><td>");
-            //            Image icon = itemData.getIcon();
             ImageResource icon = itemData.getIcon();
             if (icon != null)
             {
@@ -117,7 +115,7 @@ public class NewResourcePageViewImpl implements NewResourcePageView
     */
    public NewResourcePageViewImpl(Resources resources, JsonArray<NewResourceWizardData> wizards)
    {
-      widget = uiBinder.createAndBindUi(this);
+      initWidget(uiBinder.createAndBindUi(this));
 
       TableElement tableElement = Elements.createTableElement();
       tableElement.setAttribute("style", "width: 100%");
@@ -134,13 +132,5 @@ public class NewResourcePageViewImpl implements NewResourcePageView
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public Widget asWidget()
-   {
-      return widget;
    }
 }

@@ -19,7 +19,6 @@ package org.exoplatform.ide.menu;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -38,42 +37,8 @@ import org.exoplatform.ide.presenter.Presenter;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class MainMenuPresenter implements Presenter, MainMenuAgent
+public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView.ActionDelegate
 {
-
-   /**
-    * Main Menu View 
-    */
-   public interface Display extends IsWidget
-   {
-      /**
-       * Set Menu Item by given path visible or invisible.
-       * 
-       * @param path menuItem path
-       * @param visible state
-       */
-      void setVisible(String path, boolean visible);
-
-      /**
-       * Set Menu Item by given path enabled or disabled.
-       * 
-       * @param path menuItem path
-       * @param enabled
-       */
-      void setEnabled(String path, boolean enabled);
-
-      /**
-       * Add menu item with the following path, icon, command, visible and enabled states
-       * 
-       * @param path
-       * @param icon
-       * @param command
-       * @param visible
-       * @param enabled
-       */
-      void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled);
-   }
-
    /** Map Expression ID <--> MenuItemPath */
    private final JsonIntegerMap<JsonArray<String>> visibileWhenExpressions;
 
@@ -82,20 +47,21 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
 
    private final EventBus eventBus;
 
-   private final Display display;
+   private final MainMenuView view;
 
    /**
     * Main Menu Presenter requires Event Bus to listen to Expression Changed Event
     * and View implementation
     * 
     * @param eventBus
-    * @param display
+    * @param view
     */
    @Inject
-   public MainMenuPresenter(EventBus eventBus, Display display)
+   public MainMenuPresenter(EventBus eventBus, MainMenuView view)
    {
       this.eventBus = eventBus;
-      this.display = display;
+      this.view = view;
+      view.setDelegate(this);
 
       this.visibileWhenExpressions = JsonCollections.createIntegerMap();
       this.enabledWhenExpressions = JsonCollections.createIntegerMap();
@@ -143,7 +109,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
    public void addMenuItem(String path, Image icon, Command command, Expression visibileWhen, Expression enabledWhen)
    {
 
-      display.addMenuItem(path, icon, command, visibileWhen == null ? true : visibileWhen.getValue(),
+      view.addMenuItem(path, icon, command, visibileWhen == null ? true : visibileWhen.getValue(),
          enabledWhen == null ? true : enabledWhen.getValue());
       // put MenuItem in relation to Expressions
       if (visibileWhen != null)
@@ -170,7 +136,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
    @Override
    public void go(HasWidgets container)
    {
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
    /**
@@ -194,7 +160,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
                   JsonArray<String> itemsPath = visibileWhenExpressions.get(key);
                   for (int i = 0; i < itemsPath.size(); i++)
                   {
-                     display.setVisible(itemsPath.get(i), val);
+                     view.setVisible(itemsPath.get(i), val);
                   }
                }
                // get the list of MenuItems registered with this expression
@@ -203,7 +169,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent
                   JsonArray<String> itemsPath = enabledWhenExpressions.get(key);
                   for (int i = 0; i < itemsPath.size(); i++)
                   {
-                     display.setEnabled(itemsPath.get(i), val);
+                     view.setEnabled(itemsPath.get(i), val);
                   }
                }
 

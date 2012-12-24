@@ -18,19 +18,19 @@
  */
 package org.exoplatform.ide.wizard;
 
-import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DeckLayoutPanel;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
-
+import com.google.gwt.user.client.ui.Widget;
 
 /**
  * WizardViewImpl is the view of wizard.
@@ -42,123 +42,55 @@ import com.google.gwt.user.client.ui.SimplePanel;
  */
 public class WizardViewImpl extends DialogBox implements WizardView
 {
-   private Button btnNext;
-
-   private Button btnBack;
-
-   private Button btnFinish;
-
-   private Button btnCancel;
-
-   private Label caption;
-
-   private Label notice;
-
-   private SimplePanel imagePanel;
-
-   private DeckLayoutPanel contentPanel;
-
-   private WizardView.ActionDelegate delegate;
+   private static ViewImplUiBinder uiBinder = GWT.create(ViewImplUiBinder.class);
 
    private final int ANIMATION_TIME = 400;
 
    private final int NO_TIME = 0;
 
+   @UiField
+   Button btnCancel;
+
+   @UiField
+   Button btnFinish;
+
+   @UiField
+   Button btnBack;
+
+   @UiField
+   Button btnNext;
+
+   @UiField
+   SimplePanel imagePanel;
+
+   @UiField
+   Label caption;
+
+   @UiField
+   Label notice;
+
+   @UiField
+   DeckLayoutPanel contentPanel;
+
+   private ActionDelegate delegate;
+
+   interface ViewImplUiBinder extends UiBinder<Widget, WizardViewImpl>
+   {
+   }
+
    /**
-    * Create view with given instance of resources
+    * Create view.
     * 
-    * @param resources resources for wizard (for example css)
+    * @param title
     */
-   public WizardViewImpl(WizardResource resources, String title)
+   public WizardViewImpl(String title)
    {
-      setText(title);
-      addStyleName(resources.wizardCss().ideWizard());
+      Widget widget = uiBinder.createAndBindUi(this);
 
-      DockLayoutPanel mainPanel = new DockLayoutPanel(Unit.PX);
-      mainPanel.setSize("600px", "400px");
-
-      DockLayoutPanel northPanel = new DockLayoutPanel(Unit.PX);
-
-      FlowPanel buttonPanel = new FlowPanel();
-      btnFinish = new Button("Finish");
-      btnFinish.setStyleName(resources.wizardCss().alignBtn());
-      buttonPanel.add(btnFinish);
-
-      btnCancel = new Button("Cancel");
-      btnCancel.setStyleName(resources.wizardCss().alignBtn());
-      buttonPanel.add(btnCancel);
-
-      mainPanel.addSouth(buttonPanel, 26);
-
-      //TODO needs improvement next and back buttons      
-      btnBack = new Button("<");
-      btnBack.setStyleName(resources.wizardCss().backBtn());
-      SimplePanel wrapBackBtn = new SimplePanel(btnBack);
-      wrapBackBtn.setHeight("100%");
-      mainPanel.addWest(wrapBackBtn, 20);
-      
-      btnNext = new Button(">");
-      btnNext.setStyleName(resources.wizardCss().nextBtn());
-      SimplePanel wrapNextBtn = new SimplePanel(btnNext);
-      wrapNextBtn.setHeight("100%");
-      mainPanel.addEast(wrapNextBtn, 20);
-
-      imagePanel = new SimplePanel();
-      northPanel.addEast(imagePanel, 48);
-
-      caption = new Label();
-      notice = new Label();
-
-      northPanel.addNorth(caption, 20);
-      northPanel.add(notice);
-
-      mainPanel.addNorth(northPanel, 48);
-
-      contentPanel = new DeckLayoutPanel();
-      mainPanel.add(contentPanel);
-
-      add(mainPanel);
-
-      bind();
+      this.setText(title);
+      this.setWidget(widget);
    }
 
-   /**
-    * Adds behavior to wizard view components
-    */
-   private void bind()
-   {
-      btnNext.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onNextClicked();
-         }
-      });
-
-      btnBack.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onBackClicked();
-         }
-      });
-
-      btnFinish.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onFinishClicked();
-         }
-      });
-
-      btnCancel.addClickHandler(new ClickHandler()
-      {
-         public void onClick(ClickEvent event)
-         {
-            delegate.onCancelClicked();
-         }
-      });
-   }
 
    /**
     * {@inheritDoc}
@@ -171,17 +103,17 @@ public class WizardViewImpl extends DialogBox implements WizardView
    /**
     * {@inheritDoc}
     */
-   public void setBackButtonVisible(boolean isVisible)
+   public void setNextButtonEnabled(boolean isEnabled)
    {
-      btnBack.setVisible(isVisible);
+      btnNext.setEnabled(isEnabled);
    }
 
    /**
     * {@inheritDoc}
     */
-   public void setNextButtonEnabled(boolean isEnabled)
+   public void setBackButtonVisible(boolean isVisible)
    {
-      btnNext.setEnabled(isEnabled);
+      btnBack.setVisible(isVisible);
    }
 
    /**
@@ -219,25 +151,17 @@ public class WizardViewImpl extends DialogBox implements WizardView
    /**
     * {@inheritDoc}
     */
+   public void setImage(Image image)
+   {
+      imagePanel.setWidget(image);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
    public void close()
    {
       this.hide();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public AcceptsOneWidget getContentPanel()
-   {
-      return contentPanel;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void setImage(IsWidget image)
-   {
-      imagePanel.setWidget(image);
    }
 
    /**
@@ -262,5 +186,37 @@ public class WizardViewImpl extends DialogBox implements WizardView
       {
          contentPanel.setAnimationDuration(NO_TIME);
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public AcceptsOneWidget getContentPanel()
+   {
+      return contentPanel;
+   }
+
+   @UiHandler("btnCancel")
+   void onBtnCancelClick(ClickEvent event)
+   {
+      delegate.onCancelClicked();
+   }
+
+   @UiHandler("btnFinish")
+   void onBtnFinishClick(ClickEvent event)
+   {
+      delegate.onFinishClicked();
+   }
+
+   @UiHandler("btnNext")
+   void onBtnNextClick(ClickEvent event)
+   {
+      delegate.onNextClicked();
+   }
+
+   @UiHandler("btnBack")
+   void onBtnBackClick(ClickEvent event)
+   {
+      delegate.onBackClicked();
    }
 }

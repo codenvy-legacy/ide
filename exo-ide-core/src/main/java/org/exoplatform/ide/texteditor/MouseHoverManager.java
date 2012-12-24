@@ -72,7 +72,7 @@ public class MouseHoverManager
       void onMouseHover(int x, int y, LineInfo lineInfo, int column);
    }
 
-   private final TextEditorView editor;
+   private final TextEditorViewImpl editor;
 
    private final JsonStringMap<ListenerManager<MouseHoverListener>> listenerManagers = JsonCollections.createStringMap();
 
@@ -168,7 +168,7 @@ public class MouseHoverManager
 
    private final MouseListenersImpl mouseListener = new MouseListenersImpl();
 
-   MouseHoverManager(TextEditorView editor)
+   MouseHoverManager(TextEditorViewImpl editor)
    {
       this.editor = editor;
    }

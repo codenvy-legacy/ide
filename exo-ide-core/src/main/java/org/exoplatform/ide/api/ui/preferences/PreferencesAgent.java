@@ -16,42 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.java.client.wizard;
+package org.exoplatform.ide.api.ui.preferences;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import org.exoplatform.ide.preferences.PreferencesPagePresenter;
+
 
 /**
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * Provides add new preference page.
+ * 
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface JavaProjectPageView extends IsWidget
+public interface PreferencesAgent
 {
-   public interface ActionDelegate
-   {
-      /**
-       * Checks whether project's name is complete or not and updates navigation buttons.
-       */
-      void checkProjectInput();
-   }
-
-
    /**
-    * Get new Project name
-    * @return
+    * Adds new preference page into preferences list.
+    * 
+    * @param page
     */
-   String getProjectName();
-
-   /**
-    * Get Resource folder name
-    * @return
-    */
-   String getResourceFolder();
-
-   /**
-    *
-    * @param delegate
-    */
-   void setActionDelegate(ActionDelegate delegate);
-
-
+   void addPage(PreferencesPagePresenter page);
 }

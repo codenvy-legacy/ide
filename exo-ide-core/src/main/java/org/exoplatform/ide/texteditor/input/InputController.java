@@ -28,8 +28,8 @@ import org.exoplatform.ide.text.store.TextStoreMutator;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.Position;
 import org.exoplatform.ide.text.store.util.LineUtils;
-import org.exoplatform.ide.texteditor.TextEditorView;
-import org.exoplatform.ide.texteditor.TextEditorView.ReadOnlyListener;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl.ReadOnlyListener;
 import org.exoplatform.ide.texteditor.ViewportModel;
 import org.exoplatform.ide.texteditor.api.KeyListener;
 import org.exoplatform.ide.texteditor.api.NativeKeyUpListener;
@@ -64,7 +64,7 @@ public class InputController
 
    private DocumentModel document;
 
-   private TextEditorView editor;
+   private TextEditorViewImpl editor;
 
    private TextStoreMutator editorDocumentMutator;
 
@@ -95,7 +95,7 @@ public class InputController
       return document;
    }
 
-   public TextEditorView getEditor()
+   public TextEditorViewImpl getEditor()
    {
       return editor;
    }
@@ -137,7 +137,7 @@ public class InputController
       this.viewport = viewport;
    }
 
-   public void initializeFromEditor(TextEditorView editor, TextStoreMutator editorDocumentMutator)
+   public void initializeFromEditor(TextEditorViewImpl editor, TextStoreMutator editorDocumentMutator)
    {
       this.editor = editor;
       this.editorDocumentMutator = editorDocumentMutator;

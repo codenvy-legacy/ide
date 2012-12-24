@@ -16,140 +16,47 @@
  */
 package org.exoplatform.ide.menu;
 
-import com.google.inject.Inject;
-
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.menu.MainMenuPresenter.Display;
+import org.exoplatform.ide.view.View;
 
 /**
- * Implements {@link MainMenuPresenter.Display} using standard GWT Menu Widgets  
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * Main Menu View 
  */
-public class MainMenuView implements Display
+public interface MainMenuView extends View<MainMenuView.ActionDelegate>
 {
-   /** Parent menu bar */
-   private final MenuBar parentMenuBar;
-
-   /** Map storing Path and corresponding menu item  */
-   private final JsonStringMap<MenuItem> menuItems;
-
    /**
-    * Create new {@link MainMenuView} 
-    */
-   @Inject
-   public MainMenuView()
-   {
-      this.parentMenuBar = new MenuBar();
-      this.parentMenuBar.setAnimationEnabled(true);
-      this.parentMenuBar.setAutoOpen(true);
-
-      this.menuItems = JsonCollections.createStringMap();
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public Widget asWidget()
-   {
-      return parentMenuBar;
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void setVisible(String path, boolean visible)
-   {
-      if (menuItems.containsKey(path))
-      {
-         menuItems.get(path).setVisible(visible);
-      }
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void setEnabled(String path, boolean enabled)
-   {
-      if (menuItems.containsKey(path))
-      {
-         menuItems.get(path).setEnabled(enabled);
-      }
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled)
-   {
-      MenuPath menuPath = new MenuPath(path);
-      // Recursively get destination menu bar
-      MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1);
-      // create new item
-      MenuItem newItem = dstMenuBar.addItem(menuPath.getPathElementAt(menuPath.getSize() - 1), command);
-      newItem.setVisible(visible);
-      newItem.setEnabled(enabled);
-      // store item in the map
-      menuItems.put(path, newItem);
-   }
-
-   /**
-    * Recursively find corresponding menu bar or create new if nothing found
+    * Set Menu Item by given path visible or invisible.
     * 
-    * @param menuPath
-    * @param depth
-    * @return
+    * @param path menuItem path
+    * @param visible state
     */
-   private MenuBar getOrCreateParentMenuBar(MenuPath menuPath, int depth)
-   {
-      if (depth == 0)
-      {
-         return parentMenuBar;
-      }
-      else
-      {
-         // try to get parent
-         MenuItem menuItem = menuItems.get(menuPath.getParentPath(depth));
-         if (menuItem != null)
-         {
-            MenuBar subMenu = menuItem.getSubMenu();
-            if (subMenu == null)
-            {
-               subMenu = createSubMenuBar();
-               menuItem.setSubMenu(subMenu);
-            }
-            return subMenu;
-         }
-         else
-         {
-            MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth - 1);
-            MenuItem newItem = dstMenuBar.addItem(menuPath.getPathElementAt(depth - 1), createSubMenuBar());
-            menuItems.put(menuPath.getParentPath(depth), newItem);
-            return newItem.getSubMenu();
-         }
-      }
-   }
+   void setVisible(String path, boolean visible);
 
    /**
-    * @return new instance of {@link MenuBar}
+    * Set Menu Item by given path enabled or disabled.
+    * 
+    * @param path menuItem path
+    * @param enabled
     */
-   private MenuBar createSubMenuBar()
-   {
-      MenuBar menuBar = new MenuBar(true);
-      menuBar.setAnimationEnabled(true);
-      menuBar.setAutoOpen(true);
-      return menuBar;
-   }
+   void setEnabled(String path, boolean enabled);
 
+   /**
+    * Add menu item with the following path, icon, command, visible and enabled states
+    * 
+    * @param path
+    * @param icon
+    * @param command
+    * @param visible
+    * @param enabled
+    */
+   void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled);
+
+   /**
+    * Needs for delegate some function into MainMenu view.
+    */
+   public interface ActionDelegate
+   {
+   }
 }

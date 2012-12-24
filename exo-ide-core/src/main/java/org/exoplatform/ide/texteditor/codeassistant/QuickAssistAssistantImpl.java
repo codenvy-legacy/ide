@@ -20,7 +20,7 @@ package org.exoplatform.ide.texteditor.codeassistant;
 
 import org.exoplatform.ide.text.Document;
 import org.exoplatform.ide.text.annotation.Annotation;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
@@ -61,9 +61,9 @@ public class QuickAssistAssistantImpl implements QuickAssistAssistant
        * {@inheritDoc}
        */
       @Override
-      public CompletionProposal[] computeCompletionProposals(TextEditorPartDisplay display, int offset)
+      public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset)
       {
-         return processor.computeQuickAssistProposals(new TextInvocationContext(display, offset, -1));
+         return processor.computeQuickAssistProposals(new TextInvocationContext(view, offset, -1));
       }
 
       /**
@@ -102,7 +102,7 @@ public class QuickAssistAssistantImpl implements QuickAssistAssistant
     * {@inheritDoc}
     */
    @Override
-   public void install(TextEditorPartDisplay textEditor)
+   public void install(TextEditorPartView textEditor)
    {
       fQuickAssistAssistantImpl.install(textEditor);
    }

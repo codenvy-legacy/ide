@@ -26,9 +26,9 @@ import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistAssistant;
 import org.exoplatform.ide.texteditor.api.reconciler.Reconciler;
 
 /**
- * This class bundles the configuration space of a editor display. Instances of
+ * This class bundles the configuration space of a editor view. Instances of
  * this class are passed to the <code>configure</code> method of
- * <code>TextEditorPartDisplay</code>.
+ * <code>TextEditorPartView</code>.
  * <p>
  * Each method in this class get as argument the source viewer for which it
  * should provide a particular configuration setting such as a presentation
@@ -57,23 +57,23 @@ public class TextEditorConfiguration
     * Returns the visual width of the tab character. This implementation always
     * returns 3.
     *
-    * @param display the display to be configured by this configuration
+    * @param view the view to be configured by this configuration
     * @return the tab width
     */
-   public int getTabWidth(TextEditorPartDisplay display)
+   public int getTabWidth(TextEditorPartView view)
    {
       return 3;
    }
 
    /**
-    * Returns the undo manager for the given text display. This implementation
+    * Returns the undo manager for the given text view. This implementation
     * always returns a new instance of <code>DefaultUndoManager</code> whose
     * history length is set to 25.
     *
-    * @param display the text display to be configured by this configuration
+    * @param view the text view to be configured by this configuration
     * @return an undo manager or <code>null</code> if no undo/redo should not be supported
     */
-   public UndoManager getUndoManager(TextEditorPartDisplay display)
+   public UndoManager getUndoManager(TextEditorPartView view)
    {
       return new UndoManager(25);
    }
@@ -82,10 +82,10 @@ public class TextEditorConfiguration
     * Returns the content formatter ready to be used with the given source viewer.
     * This implementation always returns <code>null</code>.
     *
-    * @param display the source viewer to be configured by this configuration
+    * @param view the source viewer to be configured by this configuration
     * @return a content formatter or <code>null</code> if formatting should not be supported
     */
-   public ContentFormatter getContentFormatter(TextEditorPartDisplay display)
+   public ContentFormatter getContentFormatter(TextEditorPartView view)
    {
       return null;
    }
@@ -94,10 +94,10 @@ public class TextEditorConfiguration
     * Returns the content assistant ready to be used with the given source viewer.
     * This implementation always returns <code>null</code>.
     *
-    * @param display the source viewer to be configured by this configuration
+    * @param view the source viewer to be configured by this configuration
     * @return a content assistant or <code>null</code> if content assist should not be supported
     */
-   public CodeAssistant getContentAssistant(TextEditorPartDisplay display)
+   public CodeAssistant getContentAssistant(TextEditorPartView view)
    {
       return null;
    }
@@ -107,39 +107,39 @@ public class TextEditorConfiguration
     * source viewer.
     * This implementation always returns <code>null</code>.
     *
-    * @param display thet ext display to be configured by this configuration
+    * @param view that ext view to be configured by this configuration
     * @return a quick assist assistant or <code>null</code> if quick assist should not be supported
     */
-   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartDisplay display)
+   public QuickAssistAssistant getQuickAssistAssistant(TextEditorPartView view)
    {
       return null;
    }
 
    /**
-    * Returns the auto edit strategies ready to be used with the given text display
+    * Returns the auto edit strategies ready to be used with the given text view
     * when manipulating text of the given content type. 
     * 
-    * @param display the source viewer to be configured by this configuration
+    * @param view the source viewer to be configured by this configuration
     * @param contentType the content type for which the strategies are applicable
     * @return the auto edit strategies or <code>null</code> if automatic editing is not to be enabled
     */
-   public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartDisplay display, String contentType)
+   public AutoEditStrategy[] getAutoEditStrategies(TextEditorPartView view, String contentType)
    {
       //TODO return default
       return null; //new AutoEditStrategy[]{getAutoIndentStrategy(display, contentType)};
    }
 
    /**
-    * Returns all configured content types for the given text display. This list
-    * tells the caller which content types must be configured for the given text display,
-    * i.e. for which content types the given display functionalities
+    * Returns all configured content types for the given text view. This list
+    * tells the caller which content types must be configured for the given text view,
+    * i.e. for which content types the given view functionalities
     * must be specified. This implementation always returns <code>
     * new String[] { Document.DEFAULT_CONTENT_TYPE }</code>.
     *
-    * @param display the source viewer to be configured by this configuration
+    * @param view the source viewer to be configured by this configuration
     * @return the configured content types for the given viewer
     */
-   public String[] getConfiguredContentTypes(TextEditorPartDisplay display)
+   public String[] getConfiguredContentTypes(TextEditorPartView view)
    {
       return new String[]{Document.DEFAULT_CONTENT_TYPE};
    }
@@ -149,11 +149,11 @@ public class TextEditorConfiguration
     * used when the querying content types from the source viewer's input document.  This
     * implementation always returns <code>IDocumentExtension3.DEFAULT_PARTITIONING</code>.
     *
-    * @param display the source viewer to be configured by this configuration
+    * @param view the source viewer to be configured by this configuration
     * @return the configured partitioning
-    * @see #getConfiguredContentTypes(TextEditorPartDisplay)
+    * @see #getConfiguredContentTypes(TextEditorPartView)
     */
-   public String getConfiguredDocumentPartitioning(TextEditorPartDisplay display)
+   public String getConfiguredDocumentPartitioning(TextEditorPartView view)
    {
       return Document.DEFAULT_PARTITIONING;
    }
@@ -161,22 +161,22 @@ public class TextEditorConfiguration
    /**
     * Returns parser for syntax highlight.
     * This implementation always returns <code>null</code>.
-    *  @param display the source viewer to be configured by this configuration
+    *  @param view the source viewer to be configured by this configuration
     * @return the Parser
     */
-   public Parser getParser(TextEditorPartDisplay display)
+   public Parser getParser(TextEditorPartView view)
    {
       return null;
    }
    
    /**
-    * Returns the reconciler ready to be used with the given source display.
+    * Returns the reconciler ready to be used with the given source view.
     * This implementation always returns <code>null</code>.
     *
-    * @param display the source display to be configured by this configuration
+    * @param view the source view to be configured by this configuration
     * @return a reconciler or <code>null</code> if reconciling should not be supported
     */
-   public Reconciler getReconciler(TextEditorPartDisplay display) 
+   public Reconciler getReconciler(TextEditorPartView view) 
    {
       return null;
    }

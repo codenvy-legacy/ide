@@ -38,14 +38,14 @@ import org.exoplatform.ide.part.AbstractPartPresenter;
 public class OutlinePartPresenter extends AbstractPartPresenter implements ActivePartChangedHandler
 {
 
-   public interface Display extends IsWidget
+   public interface OutlinePartView extends IsWidget
    {
       HasWidgets getContainer();
 
       void showNoOutline();
    }
 
-   private final Display display;
+   private final OutlinePartView view;
 
    private TextEditorPartPresenter activePart;
 
@@ -53,9 +53,9 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
     * 
     */
    @Inject
-   public OutlinePartPresenter(Display display, EventBus eventBus)
+   public OutlinePartPresenter(OutlinePartView view, EventBus eventBus)
    {
-      this.display = display;
+      this.view = view;
       eventBus.addHandler(ActivePartChangedEvent.TYPE, this);
    }
 
@@ -94,7 +94,7 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
    @Override
    public void go(HasWidgets container)
    {
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
    /**
@@ -110,12 +110,12 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
             activePart = (TextEditorPartPresenter)event.getActivePart();
             if (activePart.getOutline() != null)
             {
-               display.getContainer().clear();
-               activePart.getOutline().go(display.getContainer());
+               view.getContainer().clear();
+               activePart.getOutline().go(view.getContainer());
             }
             else
             {
-               display.showNoOutline();
+               view.showNoOutline();
             }
          }
       }

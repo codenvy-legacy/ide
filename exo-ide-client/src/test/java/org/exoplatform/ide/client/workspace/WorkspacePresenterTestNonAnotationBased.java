@@ -16,8 +16,12 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.withSettings;
 
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
@@ -54,8 +58,7 @@ public class WorkspacePresenterTestNonAnotationBased
       // initialize service with a mock
       wsPresenter.eventBus = mock(EventBus.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
       // initialize display mock
-      wsPresenter.display = mock(WorkspacePresenter.Display.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
-
+      wsPresenter.view = mock(WorkspaceView.class, withSettings().defaultAnswer(RETURNS_DEEP_STUBS));
    }
 
    @After

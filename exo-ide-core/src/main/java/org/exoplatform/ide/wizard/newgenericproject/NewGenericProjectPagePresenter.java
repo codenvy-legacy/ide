@@ -34,14 +34,14 @@ import org.exoplatform.ide.util.StringUtils;
 import org.exoplatform.ide.util.loging.Log;
 import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
+import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPageView.ActionDelegate;
 
 /**
  * Provides creating new generic project.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements
-   NewGenericProjectPageView.ActionDelegate
+public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
 {
    private NewGenericProjectPageView view;
 
@@ -84,7 +84,7 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    {
       super("New generic project wizard", image);
       this.view = view;
-      view.setCheckProjNameDelegate(this);
+      view.setDelegate(this);
       this.resourceProvider = resourceProvider;
       
       this.resourceProvider.listProjects(new AsyncCallback<JsonArray<String>>()

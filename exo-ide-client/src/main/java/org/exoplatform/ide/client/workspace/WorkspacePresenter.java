@@ -28,7 +28,6 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
@@ -40,7 +39,7 @@ import elemental.html.TableElement;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
-import org.exoplatform.ide.client.ImageBundle;
+import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.client.event.FileEventHandler;
@@ -82,23 +81,10 @@ import java.util.Date;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-public class WorkspacePresenter implements Presenter
+public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelegate
 {
 
-   public interface Display extends IsWidget
-   {
-      HasWidgets getCenterPanel();
-
-      void clearCenterPanel();
-
-      HasWidgets getLeftPanel();
-
-      HasWidgets getMenuPanel();
-
-      HasWidgets getRightPanel();
-   }
-
-   Display display;
+   WorkspaceView view;
 
    EventBus eventBus;
 
@@ -113,15 +99,16 @@ public class WorkspacePresenter implements Presenter
    protected final Resources resources;
 
    @Inject
-   protected WorkspacePresenter(Display display, final ProjectExplorerPresenter projectExplorerPresenter,
+   protected WorkspacePresenter(WorkspaceView view, final ProjectExplorerPresenter projectExplorerPresenter,
                                 EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
                                 final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-                                ExtensionsPage extensionsPage, ImageBundle imageBundle,
+                                ExtensionsPage extensionsPage, PageResources pageResources,
                                 OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
                                 EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
    {
       super();
-      this.display = display;
+      this.view = view;
+      view.setDelegate(this);
       this.projectExplorerPresenter = projectExplorerPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
@@ -150,7 +137,7 @@ public class WorkspacePresenter implements Presenter
       //XXX DEMO
 
       partAgent.addPart(extensionsPage, PartStackType.EDITING);
-      partAgent.addPart(new WelcomePage(imageBundle), PartStackType.EDITING);
+      partAgent.addPart(new WelcomePage(pageResources), PartStackType.EDITING);
       partAgent.addPart(projectExplorerPresenter, PartStackType.NAVIGATION);
       partAgent.addPart(outlinePresenter, PartStackType.TOOLING);
    }
@@ -163,13 +150,13 @@ public class WorkspacePresenter implements Presenter
    {
       container.clear();
       // Expose Project Explorer into Tools Panel
-      menuPresenter.go(display.getMenuPanel());
+      menuPresenter.go(view.getMenuPanel());
 
-      partAgent.go(PartStackType.NAVIGATION, display.getLeftPanel());
-      partAgent.go(PartStackType.EDITING, display.getCenterPanel());
-      partAgent.go(PartStackType.TOOLING, display.getRightPanel());
+      partAgent.go(PartStackType.NAVIGATION, view.getLeftPanel());
+      partAgent.go(PartStackType.EDITING, view.getCenterPanel());
+      partAgent.go(PartStackType.TOOLING, view.getRightPanel());
 
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
    protected void bind()

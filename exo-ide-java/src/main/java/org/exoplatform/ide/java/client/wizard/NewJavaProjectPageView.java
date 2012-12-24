@@ -16,29 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client;
+package org.exoplatform.ide.java.client.wizard;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ImageResource;
+import org.exoplatform.ide.view.View;
 
 /**
- * The class provides access to images. These images is used into title's image for tabs.
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- * @version $Id: ImageBundle.java 34360 Nov 12, 2012 aplotnikov $
+ * View for new Java project wizard.
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: 
  */
-public interface ImageBundle extends ClientBundle
+public interface NewJavaProjectPageView extends View<NewJavaProjectPageView.ActionDelegate>
 {
+   /**
+    *Action delegate for new Java project wizard
+    */
+   public interface ActionDelegate
+   {
+      /**
+       * Checks whether project's name is complete or not and updates navigation buttons.
+       */
+      void checkProjectInput();
+   }
 
-   @Source("org/exoplatform/ide/client/images/welcome.png")
-   ImageResource welcomePageIcon();
+   /**
+    * Get new Project name
+    * @return the new project name.
+    */
+   String getProjectName();
 
-   @Source("org/exoplatform/ide/client/images/extention.png")
-   ImageResource extentionPageIcon();
-
-   @Source("org/exoplatform/ide/client/images/project.png")
-   ImageResource projectExplorerIcon();
-   
-   @Source("org/exoplatform/ide/client/images/outline.png")
-   ImageResource outlineIcon();
+   /**
+    * Get Source folder name
+    * @return the source folder name
+    */
+   String getSourceFolder();
 }

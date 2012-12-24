@@ -22,7 +22,7 @@ import org.exoplatform.ide.text.Document;
 
 /**
  * Text input listeners registered with an
- * {@link TextEditorPartDisplay} are informed if the document
+ * {@link TextEditorPartView} are informed if the document
  * serving as the text viewer's model is replaced.
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:

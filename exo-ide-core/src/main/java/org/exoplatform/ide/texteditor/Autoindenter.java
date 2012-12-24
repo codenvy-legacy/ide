@@ -144,7 +144,7 @@ public class Autoindenter
     * Creates an instance of {@link Autoindenter} that is configured to take on
     * the appropriate indentation strategy depending on the document parser.
     */
-   public static Autoindenter create(DocumentParser documentParser, TextEditorView editor)
+   public static Autoindenter create(DocumentParser documentParser, TextEditorViewImpl editor)
    {
       if (documentParser.hasSmartIndent())
       {
@@ -153,7 +153,7 @@ public class Autoindenter
       return new Autoindenter(new PreviousLineMatchingIndentationStrategy(), editor);
    }
 
-   private final TextEditorView editor;
+   private final TextEditorViewImpl editor;
 
    private final IndentationStrategy indentationStrategy;
 
@@ -170,7 +170,7 @@ public class Autoindenter
 
    private final Remover textListenerRemover;
 
-   private Autoindenter(IndentationStrategy indentationStrategy, TextEditorView editor)
+   private Autoindenter(IndentationStrategy indentationStrategy, TextEditorViewImpl editor)
    {
       this.indentationStrategy = indentationStrategy;
       this.editor = editor;

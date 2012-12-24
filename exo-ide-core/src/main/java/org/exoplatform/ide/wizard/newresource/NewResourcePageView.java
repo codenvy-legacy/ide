@@ -18,22 +18,15 @@
  */
 package org.exoplatform.ide.wizard.newresource;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import org.exoplatform.ide.view.View;
 
 /**
  * Interface of new resource view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewResourcePageView extends IsWidget
+public interface NewResourcePageView extends View<NewResourcePageView.ActionDelegate>
 {
-   /**
-    * Sets new delegate.
-    * 
-    * @param delegate
-    */
-   void setDelegate(ActionDelegate delegate);
-
    /**
     * Needs for delegate some function into NewResource view.
     */

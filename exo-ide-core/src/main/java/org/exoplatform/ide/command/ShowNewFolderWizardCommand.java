@@ -65,7 +65,7 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    public void execute()
    {
       NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider);
-      WizardPresenter wizardDialog = new WizardPresenter(page, resources, "Create folder");
+      WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder");
       wizardDialog.showWizard();
    }
 

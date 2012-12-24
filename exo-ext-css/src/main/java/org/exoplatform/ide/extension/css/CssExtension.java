@@ -28,11 +28,11 @@ import org.exoplatform.ide.extension.Extension;
 import org.exoplatform.ide.extension.css.editor.CssEditorProvider;
 import org.exoplatform.ide.extension.css.wizard.NewCSSFilePagePresenter;
 import org.exoplatform.ide.resources.FileType;
-import org.exoplatform.ide.texteditor.TextEditorView;
+import org.exoplatform.ide.texteditor.TextEditorViewImpl;
 
 /**
  * Extension add CSS support to the IDE Application.
- * It porivdes configured {@link TextEditorView} with {@link CssEditorProvider} with syntax coloring and
+ * It porivdes configured {@link TextEditorViewImpl} with {@link CssEditorProvider} with syntax coloring and
  * autocomplete.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 

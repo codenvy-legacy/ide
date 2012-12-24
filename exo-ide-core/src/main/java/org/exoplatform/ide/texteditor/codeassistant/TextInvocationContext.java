@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.texteditor.codeassistant;
 
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistInvocationContext;
 
 /**
@@ -30,21 +30,21 @@ import org.exoplatform.ide.texteditor.api.quickassist.QuickAssistInvocationConte
 public class TextInvocationContext implements QuickAssistInvocationContext
 {
 
-   private TextEditorPartDisplay display;
+   private TextEditorPartView view;
 
    private int offset;
 
    private int length;
 
    /**
-    * @param display
+    * @param view
     * @param offset
     * @param length
     */
-   public TextInvocationContext(TextEditorPartDisplay display, int offset, int length)
+   public TextInvocationContext(TextEditorPartView view, int offset, int length)
    {
       super();
-      this.display = display;
+      this.view = view;
       this.offset = offset;
       this.length = length;
    }
@@ -71,9 +71,9 @@ public class TextInvocationContext implements QuickAssistInvocationContext
     * {@inheritDoc}
     */
    @Override
-   public TextEditorPartDisplay getTextEditor()
+   public TextEditorPartView getTextEditor()
    {
-      return display;
+      return view;
    }
 
 }

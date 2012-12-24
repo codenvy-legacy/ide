@@ -18,11 +18,10 @@ package org.exoplatform.ide.client.projectExplorer;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.client.ImageBundle;
+import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.client.event.FileEvent;
 import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
@@ -42,33 +41,27 @@ import org.exoplatform.ide.resources.model.Resource;
  *          exo@exoplatform.com
  * Jul 27, 2012  
  */
-public class ProjectExplorerPresenter extends AbstractPartPresenter
+public class ProjectExplorerPresenter extends AbstractPartPresenter implements ProjectExplorerView.ActionDelegate
 {
-
-   public interface Display extends IsWidget
-   {
-      void registerListener(Listener listener);
-
-      void setItems(Resource resource);
-   }
-
-   public interface Listener
-   {
-      void onNodeAction(Resource resource);
-   }
-
-   Display display;
+   ProjectExplorerView view;
 
    EventBus eventBus;
 
-   ImageBundle imageBundle;
+   PageResources resources;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param resources
+    */
    @Inject
-   public ProjectExplorerPresenter(Display display, EventBus eventBus, ImageBundle imageBundle)
+   public ProjectExplorerPresenter(ProjectExplorerView view, EventBus eventBus, PageResources resources)
    {
-      this.display = display;
+      this.view = view;
       this.eventBus = eventBus;
-      this.imageBundle = imageBundle;
+      this.resources = resources;
       bind();
    }
 
@@ -79,24 +72,25 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
    public void go(HasWidgets container)
    {
       container.clear();
-      container.add(display.asWidget());
+      container.add(view.asWidget());
    }
 
+   /**
+    * Sets content.
+    * 
+    * @param resource
+    */
    public void setContent(Resource resource)
    {
-      display.setItems(resource);
+      view.setItems(resource);
    }
 
+   /**
+    * Adds behavior to view components
+    */
    protected void bind()
    {
-      display.registerListener(new Listener()
-      {
-         @Override
-         public void onNodeAction(Resource resource)
-         {
-            openFile(resource);
-         }
-      });
+      view.setDelegate(this);
       eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectActionHandler()
       {
          @Override
@@ -146,6 +140,11 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
       });
    }
 
+   /**
+    * Opens file.
+    * 
+    * @param resource
+    */
    protected void openFile(Resource resource)
    {
       if (resource.isFile())
@@ -169,7 +168,7 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      return imageBundle.projectExplorerIcon();
+      return resources.projectExplorerIcon();
    }
 
    /**
@@ -182,4 +181,12 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter
          + "\n\t- view project's tree" + "\n\t- select and open project's file";
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onNodeAction(Resource resource)
+   {
+      openFile(resource);
+   }
 }

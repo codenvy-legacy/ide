@@ -6,8 +6,6 @@
 @def tabsPanelBackground #DDDDDD;
 @def highlightFocus #FFB800;
 .ide-PartStack { /* fill */
-	height: 100%;
-	width: 100%;
 }
 
 .ide-PartStack .ide-PartStack-Tabs {

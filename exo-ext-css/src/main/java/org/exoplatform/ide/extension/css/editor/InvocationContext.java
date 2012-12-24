@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.extension.css.editor;
 
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 
 /**
  * Invocation context for Css code assistant, it's hold prefix, offset and resources of currant code assistant session.
@@ -34,13 +34,13 @@ public class InvocationContext
 
    private final CssResources resources;
 
-   private final TextEditorPartDisplay editor;
+   private final TextEditorPartView editor;
 
    /**
     * @param prefix
     * @param offset
     */
-   public InvocationContext(String prefix, int offset, CssResources resources, TextEditorPartDisplay editor)
+   public InvocationContext(String prefix, int offset, CssResources resources, TextEditorPartView editor)
    {
       super();
       this.prefix = prefix;
@@ -76,7 +76,7 @@ public class InvocationContext
    /**
     * @return the editor
     */
-   public TextEditorPartDisplay getEditor()
+   public TextEditorPartView getEditor()
    {
       return editor;
    }

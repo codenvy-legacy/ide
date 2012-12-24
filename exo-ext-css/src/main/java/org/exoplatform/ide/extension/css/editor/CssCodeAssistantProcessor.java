@@ -22,7 +22,7 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.js.JsoArray;
 import org.exoplatform.ide.text.store.Line;
 import org.exoplatform.ide.text.store.Position;
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 import org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistProcessor;
 import org.exoplatform.ide.texteditor.api.codeassistant.CompletionProposal;
 import org.exoplatform.ide.util.AbstractTrie;
@@ -177,18 +177,18 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
    }
 
    /**
-    * @see org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistProcessor#computeCompletionProposals(org.exoplatform.ide.texteditor.api.TextEditorPartDisplay, int)
+    * @see org.exoplatform.ide.texteditor.api.codeassistant.CodeAssistProcessor#computeCompletionProposals(org.exoplatform.ide.texteditor.api.TextEditorPartView, int)
     */
    @Override
-   public CompletionProposal[] computeCompletionProposals(TextEditorPartDisplay display, int offset)
+   public CompletionProposal[] computeCompletionProposals(TextEditorPartView view, int offset)
    {
-      if (display.getSelection().hasSelection())
+      if (view.getSelection().hasSelection())
       {
          // Doesn't make much sense to autocomplete CSS when something is selected.
          return null;
       }
 
-      completionQuery = updateOrCreateQuery(completionQuery, display.getSelection().getCursorPosition());
+      completionQuery = updateOrCreateQuery(completionQuery, view.getSelection().getCursorPosition());
       if (completionQuery == null)
       {
          return null;
@@ -199,7 +199,7 @@ public class CssCodeAssistantProcessor implements CodeAssistProcessor
       {
          return null;
       }
-      InvocationContext context = new InvocationContext(triggeringString, offset, resourcess, display);
+      InvocationContext context = new InvocationContext(triggeringString, offset, resourcess, view);
       switch (completionQuery.getCompletionType())
       {
          case PROPERTY :

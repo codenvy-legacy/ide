@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.texteditor.api.quickassist;
 
-import org.exoplatform.ide.texteditor.api.TextEditorPartDisplay;
+import org.exoplatform.ide.texteditor.api.TextEditorPartView;
 
 /**
  * Context information for quick fix and quick assist processors.
@@ -48,5 +48,5 @@ public interface QuickAssistInvocationContext
     *
     * @return the text editor or <code>null</code> if not available
     */
-   TextEditorPartDisplay getTextEditor();
+   TextEditorPartView getTextEditor();
 }

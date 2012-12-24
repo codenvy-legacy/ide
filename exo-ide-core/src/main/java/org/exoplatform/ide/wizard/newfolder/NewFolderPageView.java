@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.wizard.newfolder;
 
-import com.google.gwt.user.client.ui.IsWidget;
+import org.exoplatform.ide.view.View;
 
 /**
  * Interface of NewFolder view
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface NewFolderPageView extends IsWidget
+public interface NewFolderPageView extends View<NewFolderPageView.ActionDelegate>
 {
    /**
     * Returns folder name.
@@ -33,13 +33,6 @@ public interface NewFolderPageView extends IsWidget
     * @return
     */
    String getFolderName();
-
-   /**
-    * Sets new delegate.
-    * 
-    * @param delegate
-    */
-   void setDelegate(ActionDelegate delegate);
 
    /**
     * Needs for delegate some function into NewFolder view.
