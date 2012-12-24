@@ -266,7 +266,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             }
             else
             {
-               if (display.getUseJRebelPlugin().getValue())
+               if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
                {
                   if (!checkJRebelFieldFill())
                   {
@@ -294,7 +294,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          @Override
          public void onClick(ClickEvent event)
          {
-            if (display.getUseJRebelPlugin().getValue())
+            if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
             {
                if (!checkJRebelFieldFill())
                {
