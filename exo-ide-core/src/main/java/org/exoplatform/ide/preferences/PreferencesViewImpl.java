@@ -166,9 +166,13 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView
       this.delegate = delegate;
       
       //show first page if page is exist
-      if (firstPage!=null)
+      if (firstPage != null)
       {
          listDelegate.onListItemClicked(null, firstPage);
+      }
+      else
+      {
+         btnApply.setEnabled(false);
       }
    }
 

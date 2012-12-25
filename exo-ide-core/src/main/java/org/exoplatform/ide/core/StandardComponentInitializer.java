@@ -27,6 +27,7 @@ import org.exoplatform.ide.command.SaveCommand;
 import org.exoplatform.ide.command.ShowNewFolderWizardCommand;
 import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.command.ShowNewResourceWizardCommand;
+import org.exoplatform.ide.command.ShowPreferenceCommand;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
@@ -52,7 +53,7 @@ public class StandardComponentInitializer
       ShowNewFolderWizardCommand newFolderCommand, ShowNewProjectWizardCommand newProjectCommand,
       WizardAgentImpl wizardAgent, Provider<NewGenericProjectPagePresenter> genericProjectProvider,
       Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
-      Resources resources)
+      Resources resources, ShowPreferenceCommand showPreferencesCommand)
    {
       wizardAgent.registerNewProjectWizard("Generic Project", "Create generic project", "",
          resources.genericProjectIcon(), genericProjectProvider, JsonCollections.<String> createArray());
@@ -66,5 +67,7 @@ public class StandardComponentInitializer
 
       menuPresenter.addMenuItem("File/Save", saveCommand);
       menuPresenter.addMenuItem("File/Save All", saveAllCommand);
+
+      menuPresenter.addMenuItem("Window/Preferences", showPreferencesCommand);
    }
 }

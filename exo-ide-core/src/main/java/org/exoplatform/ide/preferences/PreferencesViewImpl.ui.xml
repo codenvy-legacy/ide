@@ -19,7 +19,7 @@
 			</g:FlowPanel>
 		</g:south>
 		<g:west size="180.0">
-			<g:ScrollPanel width="100%" height="100%" ui:field="preferences"/>
+			<g:ScrollPanel ui:field="preferences"/>
 		</g:west>
 		<g:center>
 			<g:SimplePanel width="100%" height="100%" ui:field="contentPanel"/>
