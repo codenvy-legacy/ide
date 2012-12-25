@@ -22,8 +22,10 @@ import java.security.Principal;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
@@ -38,7 +40,7 @@ public class JRebelProfilerService
    @Inject
    JRebelProfiler profiler;
 
-   @Path("profile/info")
+   @Path("profile/send")
    @POST
    @Consumes(MediaType.APPLICATION_JSON)
    public void sendProfileInfo(Map<String, String> values,
@@ -50,25 +52,22 @@ public class JRebelProfilerService
       String lastName = values.get("last_name");
       String phone = values.get("phone");
 
-      if (principal != null
-         && firstName != null
-         && !firstName.isEmpty()
-         && lastName != null
-         && !lastName.isEmpty()
-         && phone != null
-         && !phone.isEmpty())
+      if (principal != null && firstName != null && !firstName.isEmpty() && lastName != null && !lastName.isEmpty()
+         && phone != null && !phone.isEmpty())
       {
-         profiler.sendProfileInfo(
-            principal.getName(),
-            values.get("first_name"),
-            values.get("last_name"),
-            values.get("phone")
-         );
+         profiler.sendProfileInfo(principal.getName(), firstName, lastName, phone);
       }
       else
       {
          throw new JRebelProfilerException("Fail to get user profile information");
       }
+   }
 
+   @Path("profile/get")
+   @GET
+   @Produces(MediaType.APPLICATION_JSON)
+   public Map<String, String> getProfileInfo() throws JRebelProfilerException
+   {
+      return profiler.getProfileInfo();
    }
 }

@@ -527,28 +527,32 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    public void setJRebelPanelVisibility(boolean isVisible)
    {
       jRebelPanel.setVisible(isVisible);
-      if (isVisible)
-      {
-         chooseTemplateStep.setHeight("58%");
-      }
-      else
-      {
-         chooseTemplateStep.setHeight("88%");
-      }
    }
 
    @Override
    public void setJRebelProfileFieldsVisible(boolean visible)
    {
       jRebelProfileFields.setVisible(visible);
-      if (visible)
+      for (int i = 0; i < getProjectTypeButtons().size(); i++)
       {
-         chooseTemplateStep.setHeight("58%");
+         if (getProjectTypeButtons().get(i).isDown())
+         {
+            ProjectType projectType = ProjectType.fromValue(projectTypesMap.get(getProjectTypeButtons().get(i)).value());
+            if (projectType == ProjectType.JSP || projectType == ProjectType.SPRING)
+            {
+               if (visible)
+               {
+                  chooseTemplateStep.setHeight("58%");
+               }
+               else
+               {
+                  chooseTemplateStep.setHeight("88%");
+               }
+               return;
+            }
+         }
       }
-      else
-      {
-         chooseTemplateStep.setHeight("88%");
-      }
+      chooseTemplateStep.setHeight("100%");
    }
 
    /**
@@ -618,5 +622,13 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    public void setJRebelErrorFillingMessageLabel(String message)
    {
       jRebelErrorFillingMessage.setValue(message);
+   }
+
+   @Override
+   public void setJRebelProfileFieldsActive(boolean active)
+   {
+      jRebelProfileFirstName.setEnabled(active);
+      jRebelProfileLastName.setEnabled(active);
+      jRebelProfilePhone.setEnabled(active);
    }
 }

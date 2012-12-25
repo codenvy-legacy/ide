@@ -29,6 +29,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
@@ -58,6 +59,7 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
@@ -158,6 +160,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       void setJRebelErrorFillingMessageLabel(String message);
 
       void setJRebelProfileFieldsVisible(boolean visible);
+
+      void setJRebelProfileFieldsActive(boolean active);
    }
 
    private Display display;
@@ -261,12 +265,17 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                }
                else
                {
+                  if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+                  {
+                     getJRebelUserProfileInfo();
+                  }
                   validateProjectName(display.getNameField().getValue());
                }
             }
             else
             {
-               if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
+               if (display.getUseJRebelPlugin().getValue()
+                  && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
                {
                   if (!checkJRebelFieldFill())
                   {
@@ -294,7 +303,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          @Override
          public void onClick(ClickEvent event)
          {
-            if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
+            if (display.getUseJRebelPlugin().getValue()
+               && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
             {
                if (!checkJRebelFieldFill())
                {
@@ -912,7 +922,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    private void sendProfileInfoToZeroTurnaround()
    {
-      String url = Utils.getRestContext() + "/ide/jrebel/profile/info";
+      String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
 
       JSONObject json = new JSONObject();
       json.put("first_name", new JSONString(display.getJRebelFirstNameField().getValue()));
@@ -957,7 +967,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             boolean phoneMatched = phone.matches("\\+\\d{2}\\s?-?\\s?[(]?\\d{3}[)]?\\s?-?\\s?\\d{3}\\s?-?\\s?\\d{4}");
             if (!phoneMatched)
             {
-               display.setJRebelErrorFillingMessageLabel("Phone must be: +xx-(xxx)-xxxxxxx");
+               display.setJRebelErrorFillingMessageLabel("Phone must be: +xx (xxx) xxxxxxx");
             }
             else
             {
@@ -968,5 +978,50 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          display.setJRebelErrorFillingMessageLabel("All field are required!");
       }
       return false;
+   }
+
+   private void getJRebelUserProfileInfo()
+   {
+      String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
+
+      try
+      {
+         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+         AsyncRequest.build(RequestBuilder.GET, url)
+            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+            .send(new AsyncRequestCallback<StringBuilder>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  JSONObject jsonObject = JSONParser.parseStrict(result.toString()).isObject();
+                  String firstName = jsonObject.get("first_name").isString().stringValue();
+                  String lastName = jsonObject.get("last_name").isString().stringValue();
+                  String phone = jsonObject.get("phone").isString().stringValue();
+
+                  if (firstName != null && lastName != null && phone != null)
+                  {
+                     display.getJRebelFirstNameField().setValue(firstName);
+                     display.getJRebelLastNameField().setValue(lastName);
+                     display.getJRebelPhoneNumberField().setValue(phone);
+
+                     display.setJRebelProfileFieldsActive(false);
+                  }
+                  else
+                  {
+                     display.setJRebelProfileFieldsActive(true);
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }
