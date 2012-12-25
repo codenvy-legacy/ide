@@ -17,7 +17,6 @@
 package org.exoplatform.ide.client.workspace;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -527,8 +526,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
          dialogBox.setText("Open the project");
 
          ScrollPanel listPanel = new ScrollPanel();
-         listPanel.setSize("100%", "100%");
-         listPanel.getElement().appendChild((Node)list.getView().getElement());
+         listPanel.setStyleName(resources.coreCss().simpleListContainer());
+         listPanel.add(list);
          dialogBox.setTitle("Select a project");
          dialogBox.setText("Select a project, please");
 

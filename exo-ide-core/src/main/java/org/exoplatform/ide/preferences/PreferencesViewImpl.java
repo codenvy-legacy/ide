@@ -19,7 +19,6 @@
 package org.exoplatform.ide.preferences;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -147,7 +146,8 @@ public class PreferencesViewImpl extends DialogBox implements PreferencesView
       tableElement.setAttribute("style", "width: 100%");
       list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
 
-      this.preferences.getElement().appendChild((Node)list.getView().getElement());
+      this.preferences.setStyleName(resources.coreCss().simpleListContainer());
+      this.preferences.add(list);
 
       list.render(preferences);
 

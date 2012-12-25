@@ -15,13 +15,16 @@
 package org.exoplatform.ide.tree;
 
 import com.google.gwt.core.client.Duration;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseEvent;
@@ -40,6 +43,7 @@ import org.exoplatform.ide.util.dom.Elements;
 import org.exoplatform.ide.util.dom.MouseGestureListener;
 import org.exoplatform.ide.util.input.SignalEvent;
 import org.exoplatform.ide.util.input.SignalEventImpl;
+import org.exoplatform.ide.util.loging.Log;
 
 /**
  * A tree widget that is capable of rendering any tree data structure whose node
@@ -70,7 +74,7 @@ import org.exoplatform.ide.util.input.SignalEventImpl;
  *
  * </pre>
  */
-public class Tree<D> extends UiComponent<Tree.View<D>>
+public class Tree<D> extends UiComponent<Tree.View<D>> implements IsWidget
 {
 
    /**
@@ -658,6 +662,8 @@ public class Tree<D> extends UiComponent<Tree.View<D>>
    }
 
    private final DragDropController dragDropController = new DragDropController();
+   
+   private HTML widget;
 
    /**
     * Handles logical events sourced by the View.
@@ -754,7 +760,7 @@ public class Tree<D> extends UiComponent<Tree.View<D>>
     */
    public void autoExpandAndSelectNode(D nodeData, boolean dispatchNodeAction)
    {
-      GWT.log(">"+getModel().dataAdapter.getNodePath(nodeData));
+      Log.info(getClass(), ">" + getModel().dataAdapter.getNodePath(nodeData));
       
       // Expand the tree to the selected element.
       expandPathRecursive(getModel().root, getModel().dataAdapter.getNodePath(nodeData), false);
@@ -1297,5 +1303,20 @@ public class Tree<D> extends UiComponent<Tree.View<D>>
       Css css = getModel().resources.treeCss();
       Element treeNodeBody = CssUtils.getAncestorOrSelfWithClassName(element, css.treeNodeBody());
       return treeNodeBody != null ? getView().getTreeNodeFromTreeNodeBody(treeNodeBody, css) : null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Widget asWidget()
+   {
+      if (widget == null)
+      {
+         widget = new HTML();
+         widget.getElement().appendChild((Node)getView().getElement());
+      }
+
+      return widget;
    }
 }

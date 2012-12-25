@@ -54,11 +54,12 @@ public interface Resources extends
    /**
     * Interface for css resources.
     */
-   public interface AppCss extends CssResource
+   public interface CoreCss extends CssResource
    {
+      String simpleListContainer();
    }
 
-   @Source({"app.css", "org/exoplatform/ide/common/constants.css"})
+   @Source({"Core.css", "org/exoplatform/ide/common/constants.css"})
    @NotStrict
-   AppCss appCss();
+   CoreCss coreCss();
 }

@@ -42,7 +42,7 @@ public class StyleInjector
 
    public void inject()
    {
-      resources.appCss().ensureInjected();
+      resources.coreCss().ensureInjected();
       resources.editableContentAreaCss().ensureInjected();
       resources.editorSelectionLineRendererCss().ensureInjected();
       resources.lineNumberRendererCss().ensureInjected();

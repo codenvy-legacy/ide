@@ -16,8 +16,6 @@
  */
 package org.exoplatform.ide.client.projectExplorer;
 
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import elemental.html.DragEvent;
@@ -55,9 +53,7 @@ public class ProjectExplorerViewImpl implements ProjectExplorerView
    @Override
    public Widget asWidget()
    {
-      HTML h = new HTML();
-      h.getElement().appendChild((Node)tree.getView().getElement());
-      return h;
+      return tree.asWidget();
    }
 
    /**

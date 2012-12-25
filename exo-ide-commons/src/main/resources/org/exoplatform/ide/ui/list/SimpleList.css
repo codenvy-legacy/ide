@@ -6,13 +6,8 @@
 
 .listBase {
   background: #FFF;
-  border: menuListBorderPx solid rgba(0,0,0,0.2);
   outline: none;
   white-space: nowrap;
-
-  -webkit-box-shadow: dropdownShadow;
-  -moz-box-shadow: dropdownShadow;
-  box-shadow: dropdownShadow;
 }
 
 .listContainer {
