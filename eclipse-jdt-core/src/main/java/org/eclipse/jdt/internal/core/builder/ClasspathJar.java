@@ -27,183 +27,266 @@ import java.io.*;
 import java.util.*;
 import java.util.zip.*;
 
-public class ClasspathJar extends ClasspathLocation {
+public class ClasspathJar extends ClasspathLocation
+{
 
-static class PackageCacheEntry {
-	long lastModified;
-	long fileSize;
-	SimpleSet packageSet;
+   static class PackageCacheEntry
+   {
+      long lastModified;
 
-	PackageCacheEntry(long lastModified, long fileSize, SimpleSet packageSet) {
-		this.lastModified = lastModified;
-		this.fileSize = fileSize;
-		this.packageSet = packageSet;
-	}
-}
+      long fileSize;
 
-static SimpleLookupTable PackageCache = new SimpleLookupTable();
+      SimpleSet packageSet;
 
-/**
- * Calculate and cache the package list available in the zipFile.
- * @param jar The ClasspathJar to use
- * @return A SimpleSet with the all the package names in the zipFile.
- */
-static SimpleSet findPackageSet(ClasspathJar jar) {
-	String zipFileName = jar.zipFilename;
-	long lastModified = jar.lastModified();
-	long fileSize = new File(zipFileName).length();
-	PackageCacheEntry cacheEntry = (PackageCacheEntry) PackageCache.get(zipFileName);
-	if (cacheEntry != null && cacheEntry.lastModified == lastModified && cacheEntry.fileSize == fileSize)
-		return cacheEntry.packageSet;
+      PackageCacheEntry(long lastModified, long fileSize, SimpleSet packageSet)
+      {
+         this.lastModified = lastModified;
+         this.fileSize = fileSize;
+         this.packageSet = packageSet;
+      }
+   }
 
-	SimpleSet packageSet = new SimpleSet(41);
-	packageSet.add(""); //$NON-NLS-1$
-	nextEntry : for (Enumeration e = jar.zipFile.entries(); e.hasMoreElements(); ) {
-		String fileName = ((ZipEntry) e.nextElement()).getName();
+   static SimpleLookupTable PackageCache = new SimpleLookupTable();
 
-		// add the package name & all of its parent packages
-		int last = fileName.lastIndexOf('/');
-		while (last > 0) {
-			// extract the package name
-			String packageName = fileName.substring(0, last);
-			if (packageSet.addIfNotIncluded(packageName) == null)
-				continue nextEntry; // already existed
-			last = packageName.lastIndexOf('/');
-		}
-	}
+   /**
+    * Calculate and cache the package list available in the zipFile.
+    *
+    * @param jar The ClasspathJar to use
+    * @return A SimpleSet with the all the package names in the zipFile.
+    */
+   static SimpleSet findPackageSet(ClasspathJar jar)
+   {
+      String zipFileName = jar.zipFilename;
+      long lastModified = jar.lastModified();
+      long fileSize = new File(zipFileName).length();
+      PackageCacheEntry cacheEntry = (PackageCacheEntry)PackageCache.get(zipFileName);
+      if (cacheEntry != null && cacheEntry.lastModified == lastModified && cacheEntry.fileSize == fileSize)
+      {
+         return cacheEntry.packageSet;
+      }
 
-	PackageCache.put(zipFileName, new PackageCacheEntry(lastModified, fileSize, packageSet));
-	return packageSet;
-}
+      SimpleSet packageSet = new SimpleSet(41);
+      packageSet.add(""); //$NON-NLS-1$
+      nextEntry:
+      for (Enumeration e = jar.zipFile.entries(); e.hasMoreElements(); )
+      {
+         String fileName = ((ZipEntry)e.nextElement()).getName();
+
+         // add the package name & all of its parent packages
+         int last = fileName.lastIndexOf('/');
+         while (last > 0)
+         {
+            // extract the package name
+            String packageName = fileName.substring(0, last);
+            if (packageSet.addIfNotIncluded(packageName) == null)
+            {
+               continue nextEntry; // already existed
+            }
+            last = packageName.lastIndexOf('/');
+         }
+      }
+
+      PackageCache.put(zipFileName, new PackageCacheEntry(lastModified, fileSize, packageSet));
+      return packageSet;
+   }
 
 
-String zipFilename; // keep for equals
-IFile resource;
-ZipFile zipFile;
-long lastModified;
-boolean closeZipFileAtEnd;
-SimpleSet knownPackageNames;
-AccessRuleSet accessRuleSet;
+   String zipFilename; // keep for equals
 
-ClasspathJar(IFile resource, AccessRuleSet accessRuleSet) {
-	this.resource = resource;
-	try {
-		java.net.URI location = resource.getLocationURI();
-		if (location == null) {
-			this.zipFilename = ""; //$NON-NLS-1$
-		} else {
-			File localFile = Util.toLocalFile(location, null);
-			this.zipFilename = localFile.getPath();
-		}
-	} catch (CoreException e) {
-		// ignore
-	}
-	this.zipFile = null;
-	this.knownPackageNames = null;
-	this.accessRuleSet = accessRuleSet;
-}
+   IFile resource;
 
-ClasspathJar(String zipFilename, long lastModified, AccessRuleSet accessRuleSet) {
-	this.zipFilename = zipFilename;
-	this.lastModified = lastModified;
-	this.zipFile = null;
-	this.knownPackageNames = null;
-	this.accessRuleSet = accessRuleSet;
-}
+   ZipFile zipFile;
 
-public ClasspathJar(ZipFile zipFile, AccessRuleSet accessRuleSet) {
-	this.zipFilename = zipFile.getName();
-	this.zipFile = zipFile;
-	this.closeZipFileAtEnd = false;
-	this.knownPackageNames = null;
-	this.accessRuleSet = accessRuleSet;
-}
+   long lastModified;
 
-public void cleanup() {
-	if (this.zipFile != null && this.closeZipFileAtEnd) {
-		try {
-			this.zipFile.close();
-		} catch(IOException e) { // ignore it
-		}
-		this.zipFile = null;
-	}
-	this.knownPackageNames = null;
-}
+   boolean closeZipFileAtEnd;
 
-public boolean equals(Object o) {
-	if (this == o) return true;
-	if (!(o instanceof ClasspathJar)) return false;
+   SimpleSet knownPackageNames;
 
-	ClasspathJar jar = (ClasspathJar) o;
-	if (this.accessRuleSet != jar.accessRuleSet)
-		if (this.accessRuleSet == null || !this.accessRuleSet.equals(jar.accessRuleSet))
-			return false;
-	return this.zipFilename.equals(jar.zipFilename) && lastModified() == jar.lastModified();
-}
+   AccessRuleSet accessRuleSet;
 
-public NameEnvironmentAnswer findClass(String binaryFileName, String qualifiedPackageName, String qualifiedBinaryFileName) {
-	if (!isPackage(qualifiedPackageName)) return null; // most common case
+   ClasspathJar(IFile resource, AccessRuleSet accessRuleSet)
+   {
+      this.resource = resource;
+      try
+      {
+         java.net.URI location = resource.getLocationURI();
+         if (location == null)
+         {
+            this.zipFilename = ""; //$NON-NLS-1$
+         }
+         else
+         {
+            File localFile = Util.toLocalFile(location, null);
+            this.zipFilename = localFile.getPath();
+         }
+      }
+      catch (CoreException e)
+      {
+         // ignore
+      }
+      this.zipFile = null;
+      this.knownPackageNames = null;
+      this.accessRuleSet = accessRuleSet;
+   }
 
-	try {
-		ClassFileReader reader = ClassFileReader.read(this.zipFile, qualifiedBinaryFileName);
-		if (reader != null) {
-			if (this.accessRuleSet == null)
-				return new NameEnvironmentAnswer(reader, null);
-			String fileNameWithoutExtension = qualifiedBinaryFileName.substring(0, qualifiedBinaryFileName.length() - SuffixConstants.SUFFIX_CLASS.length);
-			return new NameEnvironmentAnswer(reader, this.accessRuleSet.getViolatedRestriction(fileNameWithoutExtension.toCharArray()));
-		}
-	} catch (IOException e) { // treat as if class file is missing
-	} catch (ClassFormatException e) { // treat as if class file is missing
-	}
-	return null;
-}
+   ClasspathJar(String zipFilename, long lastModified, AccessRuleSet accessRuleSet)
+   {
+      this.zipFilename = zipFilename;
+      this.lastModified = lastModified;
+      this.zipFile = null;
+      this.knownPackageNames = null;
+      this.accessRuleSet = accessRuleSet;
+   }
 
-public IPath getProjectRelativePath() {
-	if (this.resource == null) return null;
-	return	this.resource.getProjectRelativePath();
-}
+   public ClasspathJar(ZipFile zipFile, AccessRuleSet accessRuleSet)
+   {
+      this.zipFilename = zipFile.getName();
+      this.zipFile = zipFile;
+      this.closeZipFileAtEnd = false;
+      this.knownPackageNames = null;
+      this.accessRuleSet = accessRuleSet;
+   }
 
-public int hashCode() {
-	return this.zipFilename == null ? super.hashCode() : this.zipFilename.hashCode();
-}
+   public void cleanup()
+   {
+      if (this.zipFile != null && this.closeZipFileAtEnd)
+      {
+         try
+         {
+            this.zipFile.close();
+         }
+         catch (IOException e)
+         { // ignore it
+         }
+         this.zipFile = null;
+      }
+      this.knownPackageNames = null;
+   }
 
-public boolean isPackage(String qualifiedPackageName) {
-	if (this.knownPackageNames != null)
-		return this.knownPackageNames.includes(qualifiedPackageName);
+   public boolean equals(Object o)
+   {
+      if (this == o)
+      {
+         return true;
+      }
+      if (!(o instanceof ClasspathJar))
+      {
+         return false;
+      }
 
-	try {
-		if (this.zipFile == null) {
-			if (org.eclipse.jdt.internal.core.JavaModelManager.ZIP_ACCESS_VERBOSE) {
-				System.out.println("(" + Thread.currentThread() + ") [ClasspathJar.isPackage(String)] Creating ZipFile on " + this.zipFilename); //$NON-NLS-1$	//$NON-NLS-2$
-			}
-			this.zipFile = new ZipFile(this.zipFilename);
-			this.closeZipFileAtEnd = true;
-		}
-		this.knownPackageNames = findPackageSet(this);
-	} catch(Exception e) {
-		this.knownPackageNames = new SimpleSet(); // assume for this build the zipFile is empty
-	}
-	return this.knownPackageNames.includes(qualifiedPackageName);
-}
+      ClasspathJar jar = (ClasspathJar)o;
+      if (this.accessRuleSet != jar.accessRuleSet)
+      {
+         if (this.accessRuleSet == null || !this.accessRuleSet.equals(jar.accessRuleSet))
+         {
+            return false;
+         }
+      }
+      return this.zipFilename.equals(jar.zipFilename) && lastModified() == jar.lastModified();
+   }
 
-public long lastModified() {
-	if (this.lastModified == 0)
-		this.lastModified = new File(this.zipFilename).lastModified();
-	return this.lastModified;
-}
+   public NameEnvironmentAnswer findClass(String binaryFileName, String qualifiedPackageName,
+      String qualifiedBinaryFileName)
+   {
+      if (!isPackage(qualifiedPackageName))
+      {
+         return null; // most common case
+      }
 
-public String toString() {
-	String start = "Classpath jar file " + this.zipFilename; //$NON-NLS-1$
-	if (this.accessRuleSet == null)
-		return start;
-	return start + " with " + this.accessRuleSet; //$NON-NLS-1$
-}
+      try
+      {
+         ClassFileReader reader = ClassFileReader.read(this.zipFile, qualifiedBinaryFileName);
+         if (reader != null)
+         {
+            if (this.accessRuleSet == null)
+            {
+               return new NameEnvironmentAnswer(reader, null);
+            }
+            String fileNameWithoutExtension = qualifiedBinaryFileName.substring(0,
+               qualifiedBinaryFileName.length() - SuffixConstants.SUFFIX_CLASS.length);
+            return new NameEnvironmentAnswer(reader,
+               this.accessRuleSet.getViolatedRestriction(fileNameWithoutExtension.toCharArray()));
+         }
+      }
+      catch (IOException e)
+      { // treat as if class file is missing
+      }
+      catch (ClassFormatException e)
+      { // treat as if class file is missing
+      }
+      return null;
+   }
 
-public String debugPathString() {
-	long time = lastModified();
-	if (time == 0)
-		return this.zipFilename;
-	return this.zipFilename + '(' + (new Date(time)) + " : " + time + ')'; //$NON-NLS-1$
-}
+   public IPath getProjectRelativePath()
+   {
+      if (this.resource == null)
+      {
+         return null;
+      }
+      return this.resource.getProjectRelativePath();
+   }
+
+   public int hashCode()
+   {
+      return this.zipFilename == null ? super.hashCode() : this.zipFilename.hashCode();
+   }
+
+   public boolean isPackage(String qualifiedPackageName)
+   {
+      if (this.knownPackageNames != null)
+      {
+         return this.knownPackageNames.includes(qualifiedPackageName);
+      }
+
+      try
+      {
+         if (this.zipFile == null)
+         {
+            if (org.eclipse.jdt.internal.core.JavaModelManager.ZIP_ACCESS_VERBOSE)
+            {
+               System.out.println(
+                  "(" + Thread.currentThread() + ") [ClasspathJar.isPackage(String)] Creating ZipFile on " + this.zipFilename); //$NON-NLS-1$	//$NON-NLS-2$
+            }
+            this.zipFile = new ZipFile(this.zipFilename);
+            this.closeZipFileAtEnd = true;
+         }
+         this.knownPackageNames = findPackageSet(this);
+      }
+      catch (Exception e)
+      {
+         this.knownPackageNames = new SimpleSet(); // assume for this build the zipFile is empty
+      }
+      return this.knownPackageNames.includes(qualifiedPackageName);
+   }
+
+   public long lastModified()
+   {
+      if (this.lastModified == 0)
+      {
+         this.lastModified = new File(this.zipFilename).lastModified();
+      }
+      return this.lastModified;
+   }
+
+   public String toString()
+   {
+      String start = "Classpath jar file " + this.zipFilename; //$NON-NLS-1$
+      if (this.accessRuleSet == null)
+      {
+         return start;
+      }
+      return start + " with " + this.accessRuleSet; //$NON-NLS-1$
+   }
+
+   public String debugPathString()
+   {
+      long time = lastModified();
+      if (time == 0)
+      {
+         return this.zipFilename;
+      }
+      return this.zipFilename + '(' + (new Date(time)) + " : " + time + ')'; //$NON-NLS-1$
+   }
 
 }

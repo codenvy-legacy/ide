@@ -15,129 +15,147 @@ import org.eclipse.jdt.internal.compiler.codegen.*;
 import org.eclipse.jdt.internal.compiler.flow.*;
 import org.eclipse.jdt.internal.compiler.lookup.*;
 
-public class LabeledStatement extends Statement {
+public class LabeledStatement extends Statement
+{
 
-	public Statement statement;
-	public char[] label;
-	public BranchLabel targetLabel;
-	public int labelEnd;
+   public Statement statement;
 
-	// for local variables table attributes
-	int mergedInitStateIndex = -1;
+   public char[] label;
 
-	/**
-	 * LabeledStatement constructor comment.
-	 */
-	public LabeledStatement(char[] label, Statement statement, long labelPosition, int sourceEnd) {
+   public BranchLabel targetLabel;
 
-		this.statement = statement;
-		// remember useful empty statement
-		if (statement instanceof EmptyStatement) statement.bits |= IsUsefulEmptyStatement;
-		this.label = label;
-		this.sourceStart = (int)(labelPosition >>> 32);
-		this.labelEnd = (int) labelPosition;
-		this.sourceEnd = sourceEnd;
-	}
+   public int labelEnd;
 
-	public FlowInfo analyseCode(
-		BlockScope currentScope,
-		FlowContext flowContext,
-		FlowInfo flowInfo) {
+   // for local variables table attributes
+   int mergedInitStateIndex = -1;
 
-		// need to stack a context to store explicit label, answer inits in case of normal completion merged
-		// with those relative to the exit path from break statement occurring inside the labeled statement.
-		if (this.statement == null) {
-			return flowInfo;
-		} else {
-			LabelFlowContext labelContext;
-			FlowInfo statementInfo, mergedInfo;
-			statementInfo = this.statement.analyseCode(
-				currentScope,
-				(labelContext =
-					new LabelFlowContext(
-						flowContext,
-						this,
-						this.label,
-						(this.targetLabel = new BranchLabel()),
-						currentScope)),
-				flowInfo);
-			boolean reinjectNullInfo = (statementInfo.tagBits & FlowInfo.UNREACHABLE) != 0 &&
-				(labelContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) == 0;
-			mergedInfo = statementInfo.mergedWith(labelContext.initsOnBreak);
-			if (reinjectNullInfo) {
-				// an embedded loop has had no chance to reinject forgotten null info
-				((UnconditionalFlowInfo)mergedInfo).addInitializationsFrom(flowInfo.unconditionalFieldLessCopy()).
-					addInitializationsFrom(labelContext.initsOnBreak.unconditionalFieldLessCopy());
-			}
-			this.mergedInitStateIndex =
-				currentScope.methodScope().recordInitializationStates(mergedInfo);
-			if ((this.bits & ASTNode.LabelUsed) == 0) {
-				currentScope.problemReporter().unusedLabel(this);
-			}
-			return mergedInfo;
-		}
-	}
+   /**
+    * LabeledStatement constructor comment.
+    */
+   public LabeledStatement(char[] label, Statement statement, long labelPosition, int sourceEnd)
+   {
 
-	public ASTNode concreteStatement() {
+      this.statement = statement;
+      // remember useful empty statement
+      if (statement instanceof EmptyStatement)
+      {
+         statement.bits |= IsUsefulEmptyStatement;
+      }
+      this.label = label;
+      this.sourceStart = (int)(labelPosition >>> 32);
+      this.labelEnd = (int)labelPosition;
+      this.sourceEnd = sourceEnd;
+   }
 
-		// return statement.concreteStatement(); // for supporting nested labels:   a:b:c: someStatement (see 21912)
-		return this.statement;
-	}
+   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
+   {
 
-	/**
-	 * Code generation for labeled statement
-	 *
-	 * may not need actual source positions recording
-	 *
-	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-	 */
-	public void generateCode(BlockScope currentScope, CodeStream codeStream) {
+      // need to stack a context to store explicit label, answer inits in case of normal completion merged
+      // with those relative to the exit path from break statement occurring inside the labeled statement.
+      if (this.statement == null)
+      {
+         return flowInfo;
+      }
+      else
+      {
+         LabelFlowContext labelContext;
+         FlowInfo statementInfo, mergedInfo;
+         statementInfo = this.statement.analyseCode(currentScope,
+            (labelContext = new LabelFlowContext(flowContext, this, this.label, (this.targetLabel = new BranchLabel()),
+               currentScope)), flowInfo);
+         boolean reinjectNullInfo = (statementInfo.tagBits & FlowInfo.UNREACHABLE) != 0 && (labelContext.initsOnBreak.tagBits & FlowInfo.UNREACHABLE) == 0;
+         mergedInfo = statementInfo.mergedWith(labelContext.initsOnBreak);
+         if (reinjectNullInfo)
+         {
+            // an embedded loop has had no chance to reinject forgotten null info
+            ((UnconditionalFlowInfo)mergedInfo).addInitializationsFrom(flowInfo.unconditionalFieldLessCopy()).
+               addInitializationsFrom(labelContext.initsOnBreak.unconditionalFieldLessCopy());
+         }
+         this.mergedInitStateIndex = currentScope.methodScope().recordInitializationStates(mergedInfo);
+         if ((this.bits & ASTNode.LabelUsed) == 0)
+         {
+            currentScope.problemReporter().unusedLabel(this);
+         }
+         return mergedInfo;
+      }
+   }
 
-		if ((this.bits & IsReachable) == 0) {
-			return;
-		}
-		int pc = codeStream.position;
-		if (this.targetLabel != null) {
-			this.targetLabel.initialize(codeStream);
-			if (this.statement != null) {
-				this.statement.generateCode(currentScope, codeStream);
-			}
-			this.targetLabel.place();
-		}
-		// May loose some local variable initializations : affecting the local variable attributes
-		if (this.mergedInitStateIndex != -1) {
-			codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-			codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
-		}
-		codeStream.recordPositionsFrom(pc, this.sourceStart);
-	}
+   public ASTNode concreteStatement()
+   {
 
-	public StringBuffer printStatement(int tab, StringBuffer output) {
+      // return statement.concreteStatement(); // for supporting nested labels:   a:b:c: someStatement (see 21912)
+      return this.statement;
+   }
 
-		printIndent(tab, output).append(this.label).append(": "); //$NON-NLS-1$
-		if (this.statement == null)
-			output.append(';');
-		else
-			this.statement.printStatement(0, output);
-		return output;
-	}
+   /**
+    * Code generation for labeled statement
+    *
+    * may not need actual source positions recording
+    *
+    * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
+    * @param codeStream   org.eclipse.jdt.internal.compiler.codegen.CodeStream
+    */
+   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   {
 
-	public void resolve(BlockScope scope) {
+      if ((this.bits & IsReachable) == 0)
+      {
+         return;
+      }
+      int pc = codeStream.position;
+      if (this.targetLabel != null)
+      {
+         this.targetLabel.initialize(codeStream);
+         if (this.statement != null)
+         {
+            this.statement.generateCode(currentScope, codeStream);
+         }
+         this.targetLabel.place();
+      }
+      // May loose some local variable initializations : affecting the local variable attributes
+      if (this.mergedInitStateIndex != -1)
+      {
+         codeStream.removeNotDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+         codeStream.addDefinitelyAssignedVariables(currentScope, this.mergedInitStateIndex);
+      }
+      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   }
 
-		if (this.statement != null) {
-			this.statement.resolve(scope);
-		}
-	}
+   public StringBuffer printStatement(int tab, StringBuffer output)
+   {
+
+      printIndent(tab, output).append(this.label).append(": "); //$NON-NLS-1$
+      if (this.statement == null)
+      {
+         output.append(';');
+      }
+      else
+      {
+         this.statement.printStatement(0, output);
+      }
+      return output;
+   }
+
+   public void resolve(BlockScope scope)
+   {
+
+      if (this.statement != null)
+      {
+         this.statement.resolve(scope);
+      }
+   }
 
 
-	public void traverse(
-		ASTVisitor visitor,
-		BlockScope blockScope) {
+   public void traverse(ASTVisitor visitor, BlockScope blockScope)
+   {
 
-		if (visitor.visit(this, blockScope)) {
-			if (this.statement != null) this.statement.traverse(visitor, blockScope);
-		}
-		visitor.endVisit(this, blockScope);
-	}
+      if (visitor.visit(this, blockScope))
+      {
+         if (this.statement != null)
+         {
+            this.statement.traverse(visitor, blockScope);
+         }
+      }
+      visitor.endVisit(this, blockScope);
+   }
 }

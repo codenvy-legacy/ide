@@ -17,23 +17,24 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.2
  */
-public interface IStackMapTableAttribute extends IClassFileAttribute {
+public interface IStackMapTableAttribute extends IClassFileAttribute
+{
 
-	/**
-	 * Answer back the number of stack map frames of this atribute as specified in
-	 * the JVM specifications.
-	 *
-	 * @return the number of stack map frames of this atribute as specified in
-	 * the JVM specifications
-	 */
-	int getNumberOfEntries();
+   /**
+    * Answer back the number of stack map frames of this atribute as specified in
+    * the JVM specifications.
+    *
+    * @return the number of stack map frames of this atribute as specified in
+    *         the JVM specifications
+    */
+   int getNumberOfEntries();
 
-	/**
-	 * Answer back the stack map frames for this attribute as specified
-	 * in the JVM specifications.
-	 *
-	 * @return the stack map frames for this attribute as specified
-	 * in the JVM specifications
-	 */
-	IStackMapFrame[] getStackMapFrame();
+   /**
+    * Answer back the stack map frames for this attribute as specified
+    * in the JVM specifications.
+    *
+    * @return the stack map frames for this attribute as specified
+    *         in the JVM specifications
+    */
+   IStackMapFrame[] getStackMapFrame();
 }

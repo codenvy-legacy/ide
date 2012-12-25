@@ -18,12 +18,13 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.0
  */
-public interface IAnnotationDefaultAttribute extends IClassFileAttribute {
+public interface IAnnotationDefaultAttribute extends IClassFileAttribute
+{
 
-	/**
-	 * Answer back the member value as described in the JVM specifications.
-	 *
-	 * @return the member value
-	 */
-	IAnnotationComponentValue getMemberValue();
+   /**
+    * Answer back the member value as described in the JVM specifications.
+    *
+    * @return the member value
+    */
+   IAnnotationComponentValue getMemberValue();
 }

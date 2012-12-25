@@ -20,61 +20,71 @@ import org.eclipse.jdt.internal.core.util.Util;
 /**
  *
  */
-public class UserLibraryClasspathContainer implements IClasspathContainer {
+public class UserLibraryClasspathContainer implements IClasspathContainer
+{
 
-	private String name;
+   private String name;
 
-	public UserLibraryClasspathContainer(String name) {
-		this.name = name;
-	}
+   public UserLibraryClasspathContainer(String name)
+   {
+      this.name = name;
+   }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
-	 */
-	public IClasspathEntry[] getClasspathEntries() {
-		UserLibrary library= getUserLibrary();
-		if (library != null) {
-			return library.getEntries();
-		}
-		return new IClasspathEntry[0];
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.core.IClasspathContainer#getClasspathEntries()
+    */
+   public IClasspathEntry[] getClasspathEntries()
+   {
+      UserLibrary library = getUserLibrary();
+      if (library != null)
+      {
+         return library.getEntries();
+      }
+      return new IClasspathEntry[0];
+   }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
-	 */
-	public String getDescription() {
-		return this.name;
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.core.IClasspathContainer#getDescription()
+    */
+   public String getDescription()
+   {
+      return this.name;
+   }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getKind()
-	 */
-	public int getKind() {
-		UserLibrary library= getUserLibrary();
-		if (library != null && library.isSystemLibrary()) {
-			return K_SYSTEM;
-		}
-		return K_APPLICATION;
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.core.IClasspathContainer#getKind()
+    */
+   public int getKind()
+   {
+      UserLibrary library = getUserLibrary();
+      if (library != null && library.isSystemLibrary())
+      {
+         return K_SYSTEM;
+      }
+      return K_APPLICATION;
+   }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.core.IClasspathContainer#getPath()
-	 */
-	public IPath getPath() {
-		return new Path(JavaCore.USER_LIBRARY_CONTAINER_ID).append(this.name);
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.core.IClasspathContainer#getPath()
+    */
+   public IPath getPath()
+   {
+      return new Path(JavaCore.USER_LIBRARY_CONTAINER_ID).append(this.name);
+   }
 
-	private UserLibrary getUserLibrary() {
-		UserLibrary userLibrary = JavaModelManager.getUserLibraryManager().getUserLibrary(this.name);
-		if (userLibrary == null && (JavaModelManager.CP_RESOLVE_VERBOSE || JavaModelManager.CP_RESOLVE_VERBOSE_FAILURE)) {
-			verbose_no_user_library_found(this.name);
-		}
-		return userLibrary;
-	}
+   private UserLibrary getUserLibrary()
+   {
+      UserLibrary userLibrary = JavaModelManager.getUserLibraryManager().getUserLibrary(this.name);
+      if (userLibrary == null && (JavaModelManager.CP_RESOLVE_VERBOSE || JavaModelManager.CP_RESOLVE_VERBOSE_FAILURE))
+      {
+         verbose_no_user_library_found(this.name);
+      }
+      return userLibrary;
+   }
 
-	private void verbose_no_user_library_found(String userLibraryName) {
-		Util.verbose(
-			"UserLibrary INIT - FAILED (no user library found)\n" + //$NON-NLS-1$
-			"	userLibraryName: " + userLibraryName); //$NON-NLS-1$
-	}
+   private void verbose_no_user_library_found(String userLibraryName)
+   {
+      Util.verbose("UserLibrary INIT - FAILED (no user library found)\n" + //$NON-NLS-1$
+         "	userLibraryName: " + userLibraryName); //$NON-NLS-1$
+   }
 }

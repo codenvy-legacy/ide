@@ -55,67 +55,68 @@ import org.eclipse.core.runtime.IPath;
  *
  * @since 3.1
  */
-public interface IAccessRule {
+public interface IAccessRule
+{
 
-	/**
-	 * Constant indicating that files matching the rule's pattern are accessible.
-	 */
-	int K_ACCESSIBLE = 0;
+   /**
+    * Constant indicating that files matching the rule's pattern are accessible.
+    */
+   int K_ACCESSIBLE = 0;
 
-	/**
-	 * Constant indicating that files matching the rule's pattern are non accessible.
-	 */
-	int K_NON_ACCESSIBLE = 1;
+   /**
+    * Constant indicating that files matching the rule's pattern are non accessible.
+    */
+   int K_NON_ACCESSIBLE = 1;
 
-	/**
-	 * Constant indicating that access to the files matching the rule's pattern is discouraged.
-	 */
-	int K_DISCOURAGED = 2;
+   /**
+    * Constant indicating that access to the files matching the rule's pattern is discouraged.
+    */
+   int K_DISCOURAGED = 2;
 
-	/**
-	 * <p>Flag indicating that whether a type matching this rule should be ignored iff a type with
-	 * the same qualified name can be found on a later classpath entry with a better
-	 * accessibility.</p>
-	 * <p>E.g. if a type p.X matches a rule K_NON_ACCESSIBLE | IGNORE_IF_BETTER
-	 * on a library entry 'lib1' and another type p.X also matches a rule
-	 * K_DISCOURAGED on library entry 'lib2' ('lib2' being after 'lib1' on the
-	 * classpath), then p.X from 'lib2' will be used and reported as
-	 * discouraged.</p>
-	 *
-	 * @since 3.2
-	 */
-	int IGNORE_IF_BETTER = 0x100;
+   /**
+    * <p>Flag indicating that whether a type matching this rule should be ignored iff a type with
+    * the same qualified name can be found on a later classpath entry with a better
+    * accessibility.</p>
+    * <p>E.g. if a type p.X matches a rule K_NON_ACCESSIBLE | IGNORE_IF_BETTER
+    * on a library entry 'lib1' and another type p.X also matches a rule
+    * K_DISCOURAGED on library entry 'lib2' ('lib2' being after 'lib1' on the
+    * classpath), then p.X from 'lib2' will be used and reported as
+    * discouraged.</p>
+    *
+    * @since 3.2
+    */
+   int IGNORE_IF_BETTER = 0x100;
 
-	/**
-	 * Returns the file pattern for this access rule.
-	 *
-	 * @return the file pattern for this access rule
-	 */
-	IPath getPattern();
+   /**
+    * Returns the file pattern for this access rule.
+    *
+    * @return the file pattern for this access rule
+    */
+   IPath getPattern();
 
-	/**
-	 * Returns the kind of this access rule (one of {@link #K_ACCESSIBLE}, {@link #K_NON_ACCESSIBLE}
-	 * or {@link #K_DISCOURAGED}).
-	 *
-	 * @return the kind of this access rule
-	 */
-	int getKind();
+   /**
+    * Returns the kind of this access rule (one of {@link #K_ACCESSIBLE}, {@link #K_NON_ACCESSIBLE}
+    * or {@link #K_DISCOURAGED}).
+    *
+    * @return the kind of this access rule
+    */
+   int getKind();
 
-	/**
-	 * <p>Returns whether a type matching this rule should be ignored iff a type with
-	 * the same qualified name can be found on a later classpath entry with a better
-	 * accessibility.</p>
-	 * <p>E.g. if a type p.X matches a rule K_NON_ACCESSIBLE | IGNORE_IF_BETTER
-	 * on a library entry 'lib1' and another type p.X also matches a rule
-	 * K_DISCOURAGED on library entry 'lib2' ('lib2' being after 'lib1' on the
-	 * classpath), then p.X from 'lib2' will be used and reported as
-	 * discouraged.</p>
-	 *
-	 * @return whether a type matching this rule should be ignored iff a type
-	 *              with the same qualified name can be found on a later classpath
-	 *              entry with a better accessibility
-	 * @since 3.2
-	 */
-	boolean ignoreIfBetter();
+   /**
+    * <p>Returns whether a type matching this rule should be ignored iff a type with
+    * the same qualified name can be found on a later classpath entry with a better
+    * accessibility.</p>
+    * <p>E.g. if a type p.X matches a rule K_NON_ACCESSIBLE | IGNORE_IF_BETTER
+    * on a library entry 'lib1' and another type p.X also matches a rule
+    * K_DISCOURAGED on library entry 'lib2' ('lib2' being after 'lib1' on the
+    * classpath), then p.X from 'lib2' will be used and reported as
+    * discouraged.</p>
+    *
+    * @return whether a type matching this rule should be ignored iff a type
+    *         with the same qualified name can be found on a later classpath
+    *         entry with a better accessibility
+    * @since 3.2
+    */
+   boolean ignoreIfBetter();
 
 }

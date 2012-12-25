@@ -18,21 +18,22 @@ package org.eclipse.jdt.core.util;
  *
  * @since 2.0
  */
-public interface IConstantValueAttribute extends IClassFileAttribute {
+public interface IConstantValueAttribute extends IClassFileAttribute
+{
 
-	/**
-	 * Answer back the constant value index.
-	 *
-	 * @return the constant value index
-	 */
-	int getConstantValueIndex();
+   /**
+    * Answer back the constant value index.
+    *
+    * @return the constant value index
+    */
+   int getConstantValueIndex();
 
-	/**
-	 * Answer back the constant pool entry that represents the constant
-	 * value of this attribute.
-	 *
-	 * @return the constant pool entry that represents the constant
-	 * value of this attribute
-	 */
-	IConstantPoolEntry getConstantValue();
+   /**
+    * Answer back the constant pool entry that represents the constant
+    * value of this attribute.
+    *
+    * @return the constant pool entry that represents the constant
+    *         value of this attribute
+    */
+   IConstantPoolEntry getConstantValue();
 }

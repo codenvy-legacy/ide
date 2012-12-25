@@ -4,7 +4,7 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
@@ -24,7 +24,7 @@ import org.eclipse.core.internal.runtime.AdapterManager;
  * of the {@link IAdapterManager} service. The method would look like:
  * <pre>
  *     public Object getAdapter(Class adapter) {
- *         IAdapterManager manager = ...;//lookup the IAdapterManager service         
+ *         IAdapterManager manager = ...;//lookup the IAdapterManager service
  *         return manager.getAdapter(this, adapter);
  *     }
  * </pre>
@@ -37,32 +37,35 @@ import org.eclipse.core.internal.runtime.AdapterManager;
  * @see IAdapterManager
  * @see IAdaptable
  */
-public abstract class PlatformObject implements IAdaptable {
-	/**
-	 * Constructs a new platform object.
-	 */
-	public PlatformObject() {
-		super();
-	}
+public abstract class PlatformObject implements IAdaptable
+{
+   /**
+    * Constructs a new platform object.
+    */
+   public PlatformObject()
+   {
+      super();
+   }
 
-	/**
-	 * Returns an object which is an instance of the given class
-	 * associated with this object. Returns <code>null</code> if
-	 * no such object can be found.
-	 * <p>
-	 * This implementation of the method declared by <code>IAdaptable</code>
-	 * passes the request along to the platform's adapter manager; roughly
-	 * <code>Platform.getAdapterManager().getAdapter(this, adapter)</code>.
-	 * Subclasses may override this method (however, if they do so, they
-	 * should invoke the method on their superclass to ensure that the
-	 * Platform's adapter manager is consulted).
-	 * </p>
-	 *
-	 * @param adapter the class to adapt to
-	 * @return the adapted object or <code>null</code>
-	 * @see IAdaptable#getAdapter(Class)
-	 */
-	public Object getAdapter(Class adapter) {
-		return AdapterManager.getDefault().getAdapter(this, adapter);
-	}
+   /**
+    * Returns an object which is an instance of the given class
+    * associated with this object. Returns <code>null</code> if
+    * no such object can be found.
+    * <p>
+    * This implementation of the method declared by <code>IAdaptable</code>
+    * passes the request along to the platform's adapter manager; roughly
+    * <code>Platform.getAdapterManager().getAdapter(this, adapter)</code>.
+    * Subclasses may override this method (however, if they do so, they
+    * should invoke the method on their superclass to ensure that the
+    * Platform's adapter manager is consulted).
+    * </p>
+    *
+    * @param adapter the class to adapt to
+    * @return the adapted object or <code>null</code>
+    * @see IAdaptable#getAdapter(Class)
+    */
+   public Object getAdapter(Class adapter)
+   {
+      return AdapterManager.getDefault().getAdapter(this, adapter);
+   }
 }

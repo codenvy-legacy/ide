@@ -15,23 +15,24 @@ import org.eclipse.jdt.core.IMemberValuePair;
 /*
  * Element info for an IAnnotation element that originated from source.
  */
-public class AnnotationInfo extends SourceRefElementInfo {
+public class AnnotationInfo extends SourceRefElementInfo
+{
 
-	/*
-	 * The start position of this annotation's name in the its
-	 * openable's buffer.
-	 */
-	public int nameStart= -1;
+   /*
+    * The start position of this annotation's name in the its
+    * openable's buffer.
+    */
+   public int nameStart = -1;
 
-	/*
-	 * The last position of this annotation in the its
-	 * openable's buffer.
-	 */
-	public int nameEnd= -1;
+   /*
+    * The last position of this annotation in the its
+    * openable's buffer.
+    */
+   public int nameEnd = -1;
 
-	/*
-	 * The member-value pairs of this annotation.
-	 */
-	public IMemberValuePair[] members;
+   /*
+    * The member-value pairs of this annotation.
+    */
+   public IMemberValuePair[] members;
 
 }

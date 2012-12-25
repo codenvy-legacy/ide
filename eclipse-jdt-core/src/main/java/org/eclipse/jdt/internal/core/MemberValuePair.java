@@ -13,53 +13,62 @@ package org.eclipse.jdt.internal.core;
 import org.eclipse.jdt.core.IMemberValuePair;
 import org.eclipse.jdt.internal.core.util.Util;
 
-public class MemberValuePair implements IMemberValuePair {
+public class MemberValuePair implements IMemberValuePair
+{
 
-	String memberName;
-	public Object value;
-	public int valueKind = K_UNKNOWN;
+   String memberName;
 
-	public MemberValuePair(String memberName) {
-		this.memberName = memberName;
-	}
+   public Object value;
 
-	public MemberValuePair(String memberName, Object value, int valueKind) {
-		this(memberName);
-		this.value = value;
-		this.valueKind = valueKind;
-	}
+   public int valueKind = K_UNKNOWN;
 
-	public boolean equals(Object obj) {
-		if (!(obj instanceof MemberValuePair)) {
-			return false;
-		}
-		MemberValuePair other = (MemberValuePair) obj;
-		return
-			this.valueKind == other.valueKind
-			&& this.memberName.equals(other.memberName)
-			&& (this.value == other.value
-				|| (this.value != null && this.value.equals(other.value))
-				|| (this.value instanceof Object[] && other.value instanceof Object[] && Util.equalArraysOrNull((Object[])this.value, (Object[]) other.value)));
-	}
+   public MemberValuePair(String memberName)
+   {
+      this.memberName = memberName;
+   }
 
-	public String getMemberName() {
-		return this.memberName;
-	}
+   public MemberValuePair(String memberName, Object value, int valueKind)
+   {
+      this(memberName);
+      this.value = value;
+      this.valueKind = valueKind;
+   }
 
-	public Object getValue() {
-		return this.value;
-	}
+   public boolean equals(Object obj)
+   {
+      if (!(obj instanceof MemberValuePair))
+      {
+         return false;
+      }
+      MemberValuePair other = (MemberValuePair)obj;
+      return this.valueKind == other.valueKind && this.memberName.equals(
+         other.memberName) && (this.value == other.value || (this.value != null && this.value.equals(
+         other.value)) || (this.value instanceof Object[] && other.value instanceof Object[] && Util.equalArraysOrNull(
+         (Object[])this.value, (Object[])other.value)));
+   }
 
-	public int getValueKind() {
-		return this.valueKind;
-	}
+   public String getMemberName()
+   {
+      return this.memberName;
+   }
 
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((this.memberName == null) ? 0 : this.memberName.hashCode());
-		result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
-		result = prime * result + this.valueKind;
-		return result;
-	}
+   public Object getValue()
+   {
+      return this.value;
+   }
+
+   public int getValueKind()
+   {
+      return this.valueKind;
+   }
+
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((this.memberName == null) ? 0 : this.memberName.hashCode());
+      result = prime * result + ((this.value == null) ? 0 : this.value.hashCode());
+      result = prime * result + this.valueKind;
+      return result;
+   }
 }

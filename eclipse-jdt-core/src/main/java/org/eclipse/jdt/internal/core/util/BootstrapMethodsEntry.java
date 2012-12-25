@@ -17,36 +17,41 @@ import org.eclipse.jdt.core.util.IConstantPool;
 /**
  * Default implementation of {@link IBootstrapMethodsEntry}
  */
-public class BootstrapMethodsEntry
-	extends ClassFileStruct
-	implements IBootstrapMethodsEntry {
+public class BootstrapMethodsEntry extends ClassFileStruct implements IBootstrapMethodsEntry
+{
 
-	private int bootstrapMethodReference;
-	private int[] bootstrapArguments;
+   private int bootstrapMethodReference;
 
-	public BootstrapMethodsEntry(byte classFileBytes[], IConstantPool constantPool, int offset) throws ClassFormatException {
-		this.bootstrapMethodReference = u2At(classFileBytes, 0, offset);
-		int length = u2At(classFileBytes, 2, offset);
-		int[] arguments = new int[length];
-		int position = 4;
-		for (int i = 0; i < length; i++) {
-			arguments[i] = u2At(classFileBytes, position, offset);
-			position += 2;
-		}
-		this.bootstrapArguments = arguments;
-	}
+   private int[] bootstrapArguments;
 
-	/**
-	 * @see IBootstrapMethodsEntry#getBootstrapArguments()
-	 */
-	public int[] getBootstrapArguments() {
-		return this.bootstrapArguments;
-	}
+   public BootstrapMethodsEntry(byte classFileBytes[], IConstantPool constantPool,
+      int offset) throws ClassFormatException
+   {
+      this.bootstrapMethodReference = u2At(classFileBytes, 0, offset);
+      int length = u2At(classFileBytes, 2, offset);
+      int[] arguments = new int[length];
+      int position = 4;
+      for (int i = 0; i < length; i++)
+      {
+         arguments[i] = u2At(classFileBytes, position, offset);
+         position += 2;
+      }
+      this.bootstrapArguments = arguments;
+   }
 
-	/**
-	 * @see IBootstrapMethodsEntry#getBootstrapMethodReference()
-	 */
-	public int getBootstrapMethodReference() {
-		return this.bootstrapMethodReference;
-	}
+   /**
+    * @see IBootstrapMethodsEntry#getBootstrapArguments()
+    */
+   public int[] getBootstrapArguments()
+   {
+      return this.bootstrapArguments;
+   }
+
+   /**
+    * @see IBootstrapMethodsEntry#getBootstrapMethodReference()
+    */
+   public int getBootstrapMethodReference()
+   {
+      return this.bootstrapMethodReference;
+   }
 }

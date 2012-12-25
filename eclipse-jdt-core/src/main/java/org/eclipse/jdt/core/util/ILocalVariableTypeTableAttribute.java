@@ -18,23 +18,24 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.0
  */
-public interface ILocalVariableTypeTableAttribute extends IClassFileAttribute {
+public interface ILocalVariableTypeTableAttribute extends IClassFileAttribute
+{
 
-	/**
-	 * Answer back the local variable type table length of this entry as specified in
-	 * the JVM specifications.
-	 *
-	 * @return the local variable type table length of this entry as specified in
-	 * the JVM specifications
-	 */
-	int getLocalVariableTypeTableLength();
+   /**
+    * Answer back the local variable type table length of this entry as specified in
+    * the JVM specifications.
+    *
+    * @return the local variable type table length of this entry as specified in
+    *         the JVM specifications
+    */
+   int getLocalVariableTypeTableLength();
 
-	/**
-	 * Answer back the local variable type table of this entry as specified in
-	 * the JVM specifications. Answer an empty array if none.
-	 *
-	 * @return the local variable type table of this entry as specified in
-	 * the JVM specifications. Answer an empty array if none
-	 */
-	ILocalVariableTypeTableEntry[] getLocalVariableTypeTable();
+   /**
+    * Answer back the local variable type table of this entry as specified in
+    * the JVM specifications. Answer an empty array if none.
+    *
+    * @return the local variable type table of this entry as specified in
+    *         the JVM specifications. Answer an empty array if none
+    */
+   ILocalVariableTypeTableEntry[] getLocalVariableTypeTable();
 }

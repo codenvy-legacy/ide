@@ -21,78 +21,109 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.internal.core.util.Util;
 
-public abstract class JarEntryResource  extends PlatformObject implements IJarEntryResource {
+public abstract class JarEntryResource extends PlatformObject implements IJarEntryResource
+{
 
-	protected Object parent;
-	protected String simpleName;
+   protected Object parent;
 
-	public JarEntryResource(String simpleName) {
-		this.simpleName = simpleName;
-	}
+   protected String simpleName;
 
-	public abstract JarEntryResource clone(Object newParent);
+   public JarEntryResource(String simpleName)
+   {
+      this.simpleName = simpleName;
+   }
 
-	public boolean equals(Object obj) {
-		if (! (obj instanceof JarEntryResource))
-			return false;
-		JarEntryResource other = (JarEntryResource) obj;
-		return this.parent.equals(other.parent) && this.simpleName.equals(other.simpleName);
-	}
+   public abstract JarEntryResource clone(Object newParent);
 
-	protected String getEntryName() {
-		String parentEntryName;
-		if (this.parent instanceof IPackageFragment) {
-			String elementName = ((IPackageFragment) this.parent).getElementName();
-			parentEntryName = elementName.length() == 0 ? "" : elementName .replace('.', '/') + '/'; //$NON-NLS-1$
-		} else if (this.parent instanceof IPackageFragmentRoot) {
-			parentEntryName = ""; //$NON-NLS-1$
-		} else {
-			parentEntryName = ((JarEntryDirectory) this.parent).getEntryName() + '/';
-		}
-		return parentEntryName + this.simpleName;
-	}
+   public boolean equals(Object obj)
+   {
+      if (!(obj instanceof JarEntryResource))
+      {
+         return false;
+      }
+      JarEntryResource other = (JarEntryResource)obj;
+      return this.parent.equals(other.parent) && this.simpleName.equals(other.simpleName);
+   }
 
-	public IPath getFullPath() {
-		return new Path(getEntryName()).makeAbsolute();
-	}
+   protected String getEntryName()
+   {
+      String parentEntryName;
+      if (this.parent instanceof IPackageFragment)
+      {
+         String elementName = ((IPackageFragment)this.parent).getElementName();
+         parentEntryName = elementName.length() == 0 ? "" : elementName.replace('.', '/') + '/'; //$NON-NLS-1$
+      }
+      else if (this.parent instanceof IPackageFragmentRoot)
+      {
+         parentEntryName = ""; //$NON-NLS-1$
+      }
+      else
+      {
+         parentEntryName = ((JarEntryDirectory)this.parent).getEntryName() + '/';
+      }
+      return parentEntryName + this.simpleName;
+   }
 
-	public String getName() {
-		return this.simpleName;
-	}
+   public IPath getFullPath()
+   {
+      return new Path(getEntryName()).makeAbsolute();
+   }
 
-	public Object getParent() {
-		return this.parent;
-	}
+   public String getName()
+   {
+      return this.simpleName;
+   }
 
-	public IPackageFragmentRoot getPackageFragmentRoot() {
-		if (this.parent instanceof IPackageFragment) {
-			return (IPackageFragmentRoot) ((IPackageFragment) this.parent).getParent();
-		} else if (this.parent instanceof IPackageFragmentRoot) {
-			return (IPackageFragmentRoot) this.parent;
-		} else {
-			return ((JarEntryDirectory) this.parent).getPackageFragmentRoot();
-		}
-	}
+   public Object getParent()
+   {
+      return this.parent;
+   }
 
-	protected ZipFile getZipFile() throws CoreException {
-		if (this.parent instanceof IPackageFragment) {
-			JarPackageFragmentRoot root = (JarPackageFragmentRoot) ((IPackageFragment) this.parent).getParent();
-			return root.getJar();
-		} else if (this.parent instanceof JarPackageFragmentRoot) {
-			return ((JarPackageFragmentRoot) this.parent).getJar();
-		} else
-			return ((JarEntryDirectory) this.parent).getZipFile();
-	}
+   public IPackageFragmentRoot getPackageFragmentRoot()
+   {
+      if (this.parent instanceof IPackageFragment)
+      {
+         return (IPackageFragmentRoot)((IPackageFragment)this.parent).getParent();
+      }
+      else if (this.parent instanceof IPackageFragmentRoot)
+      {
+         return (IPackageFragmentRoot)this.parent;
+      }
+      else
+      {
+         return ((JarEntryDirectory)this.parent).getPackageFragmentRoot();
+      }
+   }
 
-	public int hashCode() {
-		return Util.combineHashCodes(this.simpleName.hashCode(), this.parent.hashCode());
-	}
+   protected ZipFile getZipFile() throws CoreException
+   {
+      if (this.parent instanceof IPackageFragment)
+      {
+         JarPackageFragmentRoot root = (JarPackageFragmentRoot)((IPackageFragment)this.parent).getParent();
+         return root.getJar();
+      }
+      else if (this.parent instanceof JarPackageFragmentRoot)
+      {
+         return ((JarPackageFragmentRoot)this.parent).getJar();
+      }
+      else
+      {
+         return ((JarEntryDirectory)this.parent).getZipFile();
+      }
+   }
 
-	public boolean isReadOnly() {
-		return true;
-	}
+   public int hashCode()
+   {
+      return Util.combineHashCodes(this.simpleName.hashCode(), this.parent.hashCode());
+   }
 
-	public void setParent(Object parent) {
-		this.parent = parent;
-	}
+   public boolean isReadOnly()
+   {
+      return true;
+   }
+
+   public void setParent(Object parent)
+   {
+      this.parent = parent;
+   }
 }

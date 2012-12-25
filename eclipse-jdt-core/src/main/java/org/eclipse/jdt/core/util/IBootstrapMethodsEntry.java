@@ -17,8 +17,10 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.8
  */
-public interface IBootstrapMethodsEntry {
+public interface IBootstrapMethodsEntry
+{
 
-	int getBootstrapMethodReference();
-	int[] getBootstrapArguments();
+   int getBootstrapMethodReference();
+
+   int[] getBootstrapArguments();
 }

@@ -27,153 +27,209 @@ import org.eclipse.jdt.internal.core.util.Util;
 /**
  * Common functionality for Binary member handles.
  */
-public abstract class BinaryMember extends NamedMember {
-		
-/*
- * Constructs a binary member.
- */
-protected BinaryMember(JavaElement parent, String name) {
-	super(parent, name);
-}
-/*
- * @see ISourceManipulation
- */
-public void copy(IJavaElement container, IJavaElement sibling, String rename, boolean force, IProgressMonitor monitor) throws JavaModelException {
-	throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
-}
-protected IAnnotation[] getAnnotations(IBinaryAnnotation[] binaryAnnotations, long tagBits) {
-	IAnnotation[] standardAnnotations = getStandardAnnotations(tagBits);
-	if (binaryAnnotations == null)
-		return standardAnnotations;
-	int length = binaryAnnotations.length;
-	int standardLength = standardAnnotations.length;
-	int fullLength = length + standardLength;
-	if (fullLength == 0) {
-		return Annotation.NO_ANNOTATIONS;
-	}
-	IAnnotation[] annotations = new IAnnotation[fullLength];
-	for (int i = 0; i < length; i++) {
-		annotations[i] = Util.getAnnotation(this, binaryAnnotations[i], null);
-	}
-	System.arraycopy(standardAnnotations, 0, annotations, length, standardLength);
-	return annotations;
-}
-private IAnnotation getAnnotation(char[][] annotationName) {
-	return new Annotation(this, new String(CharOperation.concatWith(annotationName, '.')));
-}
-protected IAnnotation[] getStandardAnnotations(long tagBits) {
-	if ((tagBits & TagBits.AllStandardAnnotationsMask) == 0)
-		return Annotation.NO_ANNOTATIONS;
-	ArrayList annotations = new ArrayList();
+public abstract class BinaryMember extends NamedMember
+{
 
-	if ((tagBits & TagBits.AnnotationTargetMASK) != 0) {
-		annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_TARGET));
-	}
-	if ((tagBits & TagBits.AnnotationRetentionMASK) != 0) {
-		annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_RETENTION));
-	}
-	if ((tagBits & TagBits.AnnotationDeprecated) != 0) {
-		annotations.add(getAnnotation(TypeConstants.JAVA_LANG_DEPRECATED));
-	}
-	if ((tagBits & TagBits.AnnotationDocumented) != 0) {
-		annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_DOCUMENTED));
-	}
-	if ((tagBits & TagBits.AnnotationInherited) != 0) {
-		annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_INHERITED));
-	}
-	if ((tagBits & TagBits.AnnotationPolymorphicSignature) != 0) {
-		annotations.add(getAnnotation(TypeConstants.JAVA_LANG_INVOKE_METHODHANDLE_$_POLYMORPHICSIGNATURE));
-	}
-	if ((tagBits & TagBits.AnnotationSafeVarargs) != 0) {
-		annotations.add(getAnnotation(TypeConstants.JAVA_LANG_SAFEVARARGS));
-	}
-	// note that JAVA_LANG_SUPPRESSWARNINGS and JAVA_LANG_OVERRIDE cannot appear in binaries
-	return (IAnnotation[]) annotations.toArray(new IAnnotation[annotations.size()]);
-}
+   /*
+    * Constructs a binary member.
+    */
+   protected BinaryMember(JavaElement parent, String name)
+   {
+      super(parent, name);
+   }
 
-public String[] getCategories() throws JavaModelException {
-	SourceMapper mapper= getSourceMapper();
-	if (mapper != null) {
-		// ensure the class file's buffer is open so that categories are computed
-		((ClassFile)getClassFile()).getBuffer();
+   /*
+    * @see ISourceManipulation
+    */
+   public void copy(IJavaElement container, IJavaElement sibling, String rename, boolean force,
+      IProgressMonitor monitor) throws JavaModelException
+   {
+      throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
+   }
 
-		if (mapper.categories != null) {
-			String[] categories = (String[]) mapper.categories.get(this);
-			if (categories != null)
-				return categories;
-		}
-	}
-	return CharOperation.NO_STRINGS;
-}
-public String getKey() {
-	try {
-		return getKey(false/*don't open*/);
-	} catch (JavaModelException e) {
-		// happen only if force open is true
-		return null;
-	}
-}
-/**
- * @see org.eclipse.jdt.internal.compiler.lookup.Binding#computeUniqueKey()
- */
-public abstract String getKey(boolean forceOpen) throws JavaModelException;
-/*
- * @see ISourceReference
- */
-public ISourceRange getNameRange() throws JavaModelException {
-	SourceMapper mapper= getSourceMapper();
-	if (mapper != null) {
-		// ensure the class file's buffer is open so that source ranges are computed
-		((ClassFile)getClassFile()).getBuffer();
+   protected IAnnotation[] getAnnotations(IBinaryAnnotation[] binaryAnnotations, long tagBits)
+   {
+      IAnnotation[] standardAnnotations = getStandardAnnotations(tagBits);
+      if (binaryAnnotations == null)
+      {
+         return standardAnnotations;
+      }
+      int length = binaryAnnotations.length;
+      int standardLength = standardAnnotations.length;
+      int fullLength = length + standardLength;
+      if (fullLength == 0)
+      {
+         return Annotation.NO_ANNOTATIONS;
+      }
+      IAnnotation[] annotations = new IAnnotation[fullLength];
+      for (int i = 0; i < length; i++)
+      {
+         annotations[i] = Util.getAnnotation(this, binaryAnnotations[i], null);
+      }
+      System.arraycopy(standardAnnotations, 0, annotations, length, standardLength);
+      return annotations;
+   }
 
-		return mapper.getNameRange(this);
-	} else {
-		return SourceMapper.UNKNOWN_RANGE;
-	}
-}
-/*
- * @see ISourceReference
- */
-public ISourceRange getSourceRange() throws JavaModelException {
-	SourceMapper mapper= getSourceMapper();
-	if (mapper != null) {
-		// ensure the class file's buffer is open so that source ranges are computed
-		((ClassFile)getClassFile()).getBuffer();
+   private IAnnotation getAnnotation(char[][] annotationName)
+   {
+      return new Annotation(this, new String(CharOperation.concatWith(annotationName, '.')));
+   }
 
-		return mapper.getSourceRange(this);
-	} else {
-		return SourceMapper.UNKNOWN_RANGE;
-	}
-}
-/*
- * @see IMember
- */
-public boolean isBinary() {
-	return true;
-}
-/*
- * @see IJavaElement
- */
-public boolean isStructureKnown() throws JavaModelException {
-	return ((IJavaElement)getOpenableParent()).isStructureKnown();
-}
-/*
- * @see ISourceManipulation
- */
-public void move(IJavaElement container, IJavaElement sibling, String rename, boolean force, IProgressMonitor monitor) throws JavaModelException {
-	throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
-}
-/*
- * @see ISourceManipulation
- */
-public void rename(String newName, boolean force, IProgressMonitor monitor) throws JavaModelException {
-	throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
-}
-/*
- * Sets the contents of this element.
- * Throws an exception as this element is read only.
- */
-public void setContents(String contents, IProgressMonitor monitor) throws JavaModelException {
-	throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
-}
+   protected IAnnotation[] getStandardAnnotations(long tagBits)
+   {
+      if ((tagBits & TagBits.AllStandardAnnotationsMask) == 0)
+      {
+         return Annotation.NO_ANNOTATIONS;
+      }
+      ArrayList annotations = new ArrayList();
+
+      if ((tagBits & TagBits.AnnotationTargetMASK) != 0)
+      {
+         annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_TARGET));
+      }
+      if ((tagBits & TagBits.AnnotationRetentionMASK) != 0)
+      {
+         annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_RETENTION));
+      }
+      if ((tagBits & TagBits.AnnotationDeprecated) != 0)
+      {
+         annotations.add(getAnnotation(TypeConstants.JAVA_LANG_DEPRECATED));
+      }
+      if ((tagBits & TagBits.AnnotationDocumented) != 0)
+      {
+         annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_DOCUMENTED));
+      }
+      if ((tagBits & TagBits.AnnotationInherited) != 0)
+      {
+         annotations.add(getAnnotation(TypeConstants.JAVA_LANG_ANNOTATION_INHERITED));
+      }
+      if ((tagBits & TagBits.AnnotationPolymorphicSignature) != 0)
+      {
+         annotations.add(getAnnotation(TypeConstants.JAVA_LANG_INVOKE_METHODHANDLE_$_POLYMORPHICSIGNATURE));
+      }
+      if ((tagBits & TagBits.AnnotationSafeVarargs) != 0)
+      {
+         annotations.add(getAnnotation(TypeConstants.JAVA_LANG_SAFEVARARGS));
+      }
+      // note that JAVA_LANG_SUPPRESSWARNINGS and JAVA_LANG_OVERRIDE cannot appear in binaries
+      return (IAnnotation[])annotations.toArray(new IAnnotation[annotations.size()]);
+   }
+
+   public String[] getCategories() throws JavaModelException
+   {
+      SourceMapper mapper = getSourceMapper();
+      if (mapper != null)
+      {
+         // ensure the class file's buffer is open so that categories are computed
+         ((ClassFile)getClassFile()).getBuffer();
+
+         if (mapper.categories != null)
+         {
+            String[] categories = (String[])mapper.categories.get(this);
+            if (categories != null)
+            {
+               return categories;
+            }
+         }
+      }
+      return CharOperation.NO_STRINGS;
+   }
+
+   public String getKey()
+   {
+      try
+      {
+         return getKey(false/*don't open*/);
+      }
+      catch (JavaModelException e)
+      {
+         // happen only if force open is true
+         return null;
+      }
+   }
+
+   /**
+    * @see org.eclipse.jdt.internal.compiler.lookup.Binding#computeUniqueKey()
+    */
+   public abstract String getKey(boolean forceOpen) throws JavaModelException;
+
+   /*
+    * @see ISourceReference
+    */
+   public ISourceRange getNameRange() throws JavaModelException
+   {
+      SourceMapper mapper = getSourceMapper();
+      if (mapper != null)
+      {
+         // ensure the class file's buffer is open so that source ranges are computed
+         ((ClassFile)getClassFile()).getBuffer();
+
+         return mapper.getNameRange(this);
+      }
+      else
+      {
+         return SourceMapper.UNKNOWN_RANGE;
+      }
+   }
+
+   /*
+    * @see ISourceReference
+    */
+   public ISourceRange getSourceRange() throws JavaModelException
+   {
+      SourceMapper mapper = getSourceMapper();
+      if (mapper != null)
+      {
+         // ensure the class file's buffer is open so that source ranges are computed
+         ((ClassFile)getClassFile()).getBuffer();
+
+         return mapper.getSourceRange(this);
+      }
+      else
+      {
+         return SourceMapper.UNKNOWN_RANGE;
+      }
+   }
+
+   /*
+    * @see IMember
+    */
+   public boolean isBinary()
+   {
+      return true;
+   }
+
+   /*
+    * @see IJavaElement
+    */
+   public boolean isStructureKnown() throws JavaModelException
+   {
+      return ((IJavaElement)getOpenableParent()).isStructureKnown();
+   }
+
+   /*
+    * @see ISourceManipulation
+    */
+   public void move(IJavaElement container, IJavaElement sibling, String rename, boolean force,
+      IProgressMonitor monitor) throws JavaModelException
+   {
+      throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
+   }
+
+   /*
+    * @see ISourceManipulation
+    */
+   public void rename(String newName, boolean force, IProgressMonitor monitor) throws JavaModelException
+   {
+      throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
+   }
+
+   /*
+    * Sets the contents of this element.
+    * Throws an exception as this element is read only.
+    */
+   public void setContents(String contents, IProgressMonitor monitor) throws JavaModelException
+   {
+      throw new JavaModelException(new JavaModelStatus(IJavaModelStatusConstants.READ_ONLY, this));
+   }
 }

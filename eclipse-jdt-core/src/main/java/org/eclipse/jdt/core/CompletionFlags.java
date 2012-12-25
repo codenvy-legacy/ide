@@ -18,34 +18,36 @@ package org.eclipse.jdt.core;
  * </p>
  *
  * @see CompletionProposal#getAdditionalFlags()
- *
  * @since 3.3
  */
-public final class CompletionFlags {
-	/**
-	 * Constant representing the absence of any flag
-	 */
-	public static final int Default = 0x0000;
+public final class CompletionFlags
+{
+   /**
+    * Constant representing the absence of any flag
+    */
+   public static final int Default = 0x0000;
 
-	/**
-	 * Constant representing a static import
-	 */
-	public static final int StaticImport = 0x0001;
+   /**
+    * Constant representing a static import
+    */
+   public static final int StaticImport = 0x0001;
 
-	/**
-	 * Not instantiable.
-	 */
-	private CompletionFlags() {
-		// Not instantiable
-	}
+   /**
+    * Not instantiable.
+    */
+   private CompletionFlags()
+   {
+      // Not instantiable
+   }
 
-	/**
-	 * Returns whether the given integer includes the {@link #StaticImport} flag.
-	 *
-	 * @param flags the flags
-	 * @return <code>true</code> if the {@link #StaticImport} flag is included
-	 */
-	public static boolean isStaticImport(int flags) {
-		return (flags & StaticImport) != 0;
-	}
+   /**
+    * Returns whether the given integer includes the {@link #StaticImport} flag.
+    *
+    * @param flags the flags
+    * @return <code>true</code> if the {@link #StaticImport} flag is included
+    */
+   public static boolean isStaticImport(int flags)
+   {
+      return (flags & StaticImport) != 0;
+   }
 }

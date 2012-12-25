@@ -18,20 +18,21 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.0
  */
-public interface IParameterAnnotation {
+public interface IParameterAnnotation
+{
 
-	/**
-	 * Answer back the number of annotations as described in the JVM specifications.
-	 *
-	 * @return the number of annotations
-	 */
-	int getAnnotationsNumber();
+   /**
+    * Answer back the number of annotations as described in the JVM specifications.
+    *
+    * @return the number of annotations
+    */
+   int getAnnotationsNumber();
 
-	/**
-	 * Answer back the annotations as described in the JVM specifications.
-	 * Answers an empty collection if none.
-	 *
-	 * @return the annotations
-	 */
-	IAnnotation[] getAnnotations();
+   /**
+    * Answer back the annotations as described in the JVM specifications.
+    * Answers an empty collection if none.
+    *
+    * @return the annotations
+    */
+   IAnnotation[] getAnnotations();
 }

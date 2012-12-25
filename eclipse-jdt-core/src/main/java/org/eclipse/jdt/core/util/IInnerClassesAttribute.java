@@ -18,23 +18,24 @@ package org.eclipse.jdt.core.util;
  *
  * @since 2.0
  */
-public interface IInnerClassesAttribute extends IClassFileAttribute {
+public interface IInnerClassesAttribute extends IClassFileAttribute
+{
 
-	/**
-	 * Answer back the number of inner classes infos as specified in
-	 * the JVM specifications.
-	 *
-	 * @return the number of inner classes infos as specified in
-	 * the JVM specifications
-	 */
-	int getNumberOfClasses();
+   /**
+    * Answer back the number of inner classes infos as specified in
+    * the JVM specifications.
+    *
+    * @return the number of inner classes infos as specified in
+    *         the JVM specifications
+    */
+   int getNumberOfClasses();
 
-	/**
-	 * Answer back the array of inner attribute entries as specified in
-	 * the JVM specifications, or an empty array if none.
-	 *
-	 * @return the array of inner attribute entries as specified in
-	 * the JVM specifications, or an empty array if none
-	 */
-	IInnerClassesAttributeEntry[] getInnerClassAttributesEntries();
+   /**
+    * Answer back the array of inner attribute entries as specified in
+    * the JVM specifications, or an empty array if none.
+    *
+    * @return the array of inner attribute entries as specified in
+    *         the JVM specifications, or an empty array if none
+    */
+   IInnerClassesAttributeEntry[] getInnerClassAttributesEntries();
 }

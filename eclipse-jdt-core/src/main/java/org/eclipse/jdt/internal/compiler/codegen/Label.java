@@ -10,24 +10,28 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.compiler.codegen;
 
-public abstract class Label {
+public abstract class Label
+{
 
-	public CodeStream codeStream;
-	public int position = POS_NOT_SET; // position=POS_NOT_SET Then it's pos is not set.
+   public CodeStream codeStream;
 
-	public final static int POS_NOT_SET = -1;
+   public int position = POS_NOT_SET; // position=POS_NOT_SET Then it's pos is not set.
 
-public Label() {
-	// for creating labels ahead of code generation
-}
+   public final static int POS_NOT_SET = -1;
 
-public Label(CodeStream codeStream) {
-	this.codeStream = codeStream;
-}
+   public Label()
+   {
+      // for creating labels ahead of code generation
+   }
 
-/*
-* Place the label target position.
-*/
-public abstract void place();
+   public Label(CodeStream codeStream)
+   {
+      this.codeStream = codeStream;
+   }
+
+   /*
+   * Place the label target position.
+   */
+   public abstract void place();
 
 }

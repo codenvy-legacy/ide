@@ -17,32 +17,33 @@ package org.eclipse.jdt.core.util;
  *
  * @since 2.0
  */
-public interface IConstantPool {
+public interface IConstantPool
+{
 
-	/**
-	 * Answer back the number of entries in the constant pool.
-	 *
-	 * @return the number of entries in the constant pool
-	 */
-	int getConstantPoolCount();
+   /**
+    * Answer back the number of entries in the constant pool.
+    *
+    * @return the number of entries in the constant pool
+    */
+   int getConstantPoolCount();
 
-	/**
-	 * Answer back the type of the entry at the given index in the constant pool.
-	 *
-	 * @param index the index of the entry in the constant pool
-	 * @return the type of the entry at the index @index in the constant pool
-	 */
-	int getEntryKind(int index);
+   /**
+    * Answer back the type of the entry at the given index in the constant pool.
+    *
+    * @param index the index of the entry in the constant pool
+    * @return the type of the entry at the index @index in the constant pool
+    */
+   int getEntryKind(int index);
 
-	/**
-	 * Answer back the entry at the given index in the constant pool.
-	 * 
-	 * <p>The return value can be an instance of {@link IConstantPoolEntry2} if the value returned
-	 * by {@link #getEntryKind(int)} is either {@link IConstantPoolConstant#CONSTANT_MethodHandle},
-	 * {@link IConstantPoolConstant#CONSTANT_MethodType} or {@link IConstantPoolConstant#CONSTANT_InvokeDynamic}.</p>
-	 *
-	 * @param index the index of the entry in the constant pool
-	 * @return the entry at the given index in the constant pool
-	 */
-	IConstantPoolEntry decodeEntry(int index);
+   /**
+    * Answer back the entry at the given index in the constant pool.
+    *
+    * <p>The return value can be an instance of {@link IConstantPoolEntry2} if the value returned
+    * by {@link #getEntryKind(int)} is either {@link IConstantPoolConstant#CONSTANT_MethodHandle},
+    * {@link IConstantPoolConstant#CONSTANT_MethodType} or {@link IConstantPoolConstant#CONSTANT_InvokeDynamic}.</p>
+    *
+    * @param index the index of the entry in the constant pool
+    * @return the entry at the given index in the constant pool
+    */
+   IConstantPoolEntry decodeEntry(int index);
 }

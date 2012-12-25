@@ -19,12 +19,13 @@ package org.eclipse.jdt.core;
  * This interface may be implemented by clients.
  * </p>
  */
-public interface IBufferChangedListener {
+public interface IBufferChangedListener
+{
 
-	/**
-	 * Notifies that the given event has occurred.
-	 *
-	 * @param event the change event
-	 */
-	public void bufferChanged(BufferChangedEvent event);
+   /**
+    * Notifies that the given event has occurred.
+    *
+    * @param event the change event
+    */
+   public void bufferChanged(BufferChangedEvent event);
 }
