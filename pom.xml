@@ -710,6 +710,12 @@
             <artifactId>exo-ide-jrebel-remote</artifactId>
             <version>${project.version}</version>
          </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>eclipse-jdt-core</artifactId>
+            <version>${project.version}</version>
+         </dependency>
       </dependencies>
    </dependencyManagement>
    <build>
@@ -910,5 +916,6 @@
       <module>exo-ide-packaging-maven-builder</module>
       <module>exo-ide-packaging-codeassistant-server</module>
       <module>exo-ide-jrebel-remote</module>
+      <module>eclipse-jdt-core</module>
    </modules>
 </project>
