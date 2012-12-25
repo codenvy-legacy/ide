@@ -16,19 +16,14 @@ package org.exoplatform.ide.texteditor.input;
 
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
-import org.exoplatform.ide.text.store.LineInfo;
 import org.exoplatform.ide.texteditor.TextEditorViewImpl;
-import org.exoplatform.ide.texteditor.Spacer;
 import org.exoplatform.ide.texteditor.selection.SelectionModel;
 import org.exoplatform.ide.texteditor.selection.SelectionModel.MoveAction;
-import org.exoplatform.ide.util.SortedList;
 import org.exoplatform.ide.util.browser.UserAgent;
 import org.exoplatform.ide.util.input.CharCodeWithModifiers;
 import org.exoplatform.ide.util.input.KeyCodeMap;
 import org.exoplatform.ide.util.input.ModifierKeys;
 import org.exoplatform.ide.util.input.SignalEvent;
-
-import java.util.Random;
 
 /**
  * The default InputScheme implementation for common keybindings. {@link ModifierKeys#ACTION}
@@ -52,13 +47,9 @@ import java.util.Random;
  * with that key. For arrow keys this is one character in the direction of the
  * arrow, for page up/down this is an entire page.
  * </ul>
- *
- *
  */
 public class DefaultScheme extends InputScheme
 {
-
-   private static final boolean ENABLE_DEBUG_SPACER_KEYS = false;
 
    private static final boolean ENABLE_ANIMATION_CONTROL_KEYS = false;
 
@@ -192,8 +183,8 @@ public class DefaultScheme extends InputScheme
             SelectionModel selection = this.getScheme().getInputController().getSelection();
             int column = selection.getCursorColumn();
 
-            getScheme().getInputController().getEditorDocumentMutator()
-               .insertText(selection.getCursorLine(), selection.getCursorLineNumber(), column, text);
+            getScheme().getInputController().getEditorDocumentMutator().insertText(selection.getCursorLine(),
+               selection.getCursorLineNumber(), column, text);
             return true;
          }
       };
@@ -447,57 +438,6 @@ public class DefaultScheme extends InputScheme
       //          });
       //    }
 
-      if (ENABLE_DEBUG_SPACER_KEYS)
-      {
-         final SortedList<Spacer> spacers = new SortedList<Spacer>(new Spacer.Comparator());
-         final Spacer.OneWaySpacerComparator spacerFinder = new Spacer.OneWaySpacerComparator();
-
-         defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 'i')
-         {
-            @Override
-            public boolean event(InputScheme scheme, SignalEvent event)
-            {
-               final TextEditorViewImpl editor = scheme.getInputController().getEditor();
-               spacers.add(editor.getBuffer().addSpacer(
-                  new LineInfo(editor.getSelection().getCursorLine(), editor.getSelection().getCursorLineNumber()),
-                  new Random().nextInt(500) + 1));
-               return true;
-            }
-         });
-
-         defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 'd')
-         {
-            @Override
-            public boolean event(InputScheme scheme, SignalEvent event)
-            {
-               final TextEditorViewImpl editor = scheme.getInputController().getEditor();
-               spacerFinder.setValue(editor.getSelection().getCursorLineNumber());
-               int spacerIndex = spacers.findInsertionIndex(spacerFinder, false);
-               if (spacerIndex >= 0)
-               {
-                  editor.getBuffer().removeSpacer(spacers.get(spacerIndex));
-                  spacers.remove(spacerIndex);
-               }
-               return true;
-            }
-         });
-
-         defaultMode.addShortcut(new EventShortcut(ModifierKeys.ACTION, 'u')
-         {
-            @Override
-            public boolean event(InputScheme scheme, SignalEvent event)
-            {
-               final TextEditorViewImpl editor = scheme.getInputController().getEditor();
-               spacerFinder.setValue(editor.getSelection().getCursorLineNumber());
-               int spacerIndex = spacers.findInsertionIndex(spacerFinder, false);
-               if (spacerIndex >= 0)
-               {
-                  // spacers.get(spacerIndex).setHeight(new Random().nextInt(500)+1);
-               }
-               return true;
-            }
-         });
-      }
 
       if (ENABLE_ANIMATION_CONTROL_KEYS)
       {

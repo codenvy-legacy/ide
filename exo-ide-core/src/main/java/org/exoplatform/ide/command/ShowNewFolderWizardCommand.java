@@ -21,7 +21,6 @@ package org.exoplatform.ide.command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.expressions.Expression;
@@ -31,21 +30,21 @@ import org.exoplatform.ide.wizard.newfolder.NewFolderPagePresenter;
 
 /**
  * Command for "New/Folder" action.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
 public class ShowNewFolderWizardCommand implements ExtendedCommand
 {
    private final Resources resources;
-   
+
    private final ResourceProvider resourceProvider;
 
    private final ProjectOpenedExpression expression;
 
    /**
     * Create command.
-    * 
+    *
     * @param resources
     * @param resourceProvider
     * @param expression
@@ -81,7 +80,7 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
-   public Expression visibleWhen()
+   public Expression inContext()
    {
       // TODO Auto-generated method stub
       return null;
@@ -90,7 +89,7 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
-   public Expression enabledWhen()
+   public Expression canExecute()
    {
       return expression;
    }

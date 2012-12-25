@@ -29,7 +29,7 @@ import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id: 
+ * @version $Id:
  */
 @Singleton
 public class SaveAllCommand implements ExtendedCommand
@@ -37,6 +37,7 @@ public class SaveAllCommand implements ExtendedCommand
 
 
    private EditorAgent editorAgent;
+
    private EditorsDirtyExpression expression;
 
    @Inject
@@ -55,10 +56,10 @@ public class SaveAllCommand implements ExtendedCommand
          @Override
          public void onIteration(String key, EditorPartPresenter value)
          {
-              if(value.isDirty())
-              {
-                 value.doSave();
-              }
+            if (value.isDirty())
+            {
+               value.doSave();
+            }
          }
       });
    }
@@ -71,13 +72,13 @@ public class SaveAllCommand implements ExtendedCommand
    }
 
    @Override
-   public Expression visibleWhen()
+   public Expression inContext()
    {
       return null;
    }
 
    @Override
-   public Expression enabledWhen()
+   public Expression canExecute()
    {
       return expression;
    }

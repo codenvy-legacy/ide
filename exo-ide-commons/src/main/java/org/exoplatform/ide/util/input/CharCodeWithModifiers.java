@@ -16,7 +16,6 @@ package org.exoplatform.ide.util.input;
 
 import org.exoplatform.ide.runtime.Assert;
 
-// TODO: Add method that builds textual representation.
 /**
  * Bean that holds information describing the matching key-press.
  *
@@ -35,8 +34,7 @@ public class CharCodeWithModifiers
    public CharCodeWithModifiers(int modifiers, int charCode)
    {
       Assert.isTrue(!KeyCodeMap.needsShift(charCode) || (modifiers & ModifierKeys.SHIFT) == 0,
-         "Do not include ModifierKeys.SHIFT for EventShortcuts where the "
-            + "key pressed could be modified by pressing shift.");
+         "Do not include ModifierKeys.SHIFT for EventShortcuts where the " + "key pressed could be modified by pressing shift.");
       this.modifiers = modifiers;
       this.charCode = charCode;
       this.digest = computeKeyDigest(modifiers, charCode);

@@ -21,7 +21,6 @@ import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
-
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.event.ExpressionsChangedHandler;
@@ -35,14 +34,18 @@ import org.exoplatform.ide.presenter.Presenter;
 /**
  * Manages Main Menu Items, their runtime visibility and enabled state.
  *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView.ActionDelegate
 {
-   /** Map Expression ID <--> MenuItemPath */
+   /**
+    * Map Expression ID <--> MenuItemPath
+    */
    private final JsonIntegerMap<JsonArray<String>> visibileWhenExpressions;
 
-   /** Map Expression ID <--> MenuItemPath */
+   /**
+    * Map Expression ID <--> MenuItemPath
+    */
    private final JsonIntegerMap<JsonArray<String>> enabledWhenExpressions;
 
    private final EventBus eventBus;
@@ -52,7 +55,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
    /**
     * Main Menu Presenter requires Event Bus to listen to Expression Changed Event
     * and View implementation
-    * 
+    *
     * @param eventBus
     * @param view
     */
@@ -98,7 +101,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
       }
       else
       {
-         addMenuItem(path, command.getIcon(), command, command.visibleWhen(), command.enabledWhen());
+         addMenuItem(path, command.getIcon(), command, command.inContext(), command.canExecute());
       }
    }
 
@@ -106,25 +109,25 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
     * {@inheritDoc}
     */
    @Override
-   public void addMenuItem(String path, Image icon, Command command, Expression visibileWhen, Expression enabledWhen)
+   public void addMenuItem(String path, Image icon, Command command, Expression visibleWhen, Expression enabledWhen)
    {
 
-      view.addMenuItem(path, icon, command, visibileWhen == null ? true : visibileWhen.getValue(),
+      view.addMenuItem(path, icon, command, visibleWhen == null ? true : visibleWhen.getValue(),
          enabledWhen == null ? true : enabledWhen.getValue());
       // put MenuItem in relation to Expressions
-      if (visibileWhen != null)
+      if (visibleWhen != null)
       {
-         if (!visibileWhenExpressions.hasKey(visibileWhen.getId()))
+         if (!visibileWhenExpressions.hasKey(visibleWhen.getId()))
          {
-            visibileWhenExpressions.put(visibileWhen.getId(), JsonCollections.<String> createArray());
+            visibileWhenExpressions.put(visibleWhen.getId(), JsonCollections.<String>createArray());
          }
-         visibileWhenExpressions.get(visibileWhen.getId()).add(path);
+         visibileWhenExpressions.get(visibleWhen.getId()).add(path);
       }
       if (enabledWhen != null)
       {
          if (!enabledWhenExpressions.hasKey(enabledWhen.getId()))
          {
-            enabledWhenExpressions.put(enabledWhen.getId(), JsonCollections.<String> createArray());
+            enabledWhenExpressions.put(enabledWhen.getId(), JsonCollections.<String>createArray());
          }
          enabledWhenExpressions.get(enabledWhen.getId()).add(path);
       }

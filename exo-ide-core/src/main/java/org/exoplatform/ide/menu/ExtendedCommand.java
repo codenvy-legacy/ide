@@ -18,16 +18,14 @@ package org.exoplatform.ide.menu;
 
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.ide.core.expressions.Expression;
 
 /**
- *
- * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 public interface ExtendedCommand extends Command
 {
-   
+
    /**
     * {@inheritDoc}
     */
@@ -37,20 +35,22 @@ public interface ExtendedCommand extends Command
    /**
     * Command can provide a Image. It will be displayed in
     * UI components related to this command.
-    * 
+    *
     * @return associated image
     */
    public Image getIcon();
 
    /**
     * @return a Core Expression, it's result will be used
-    * to determine Command's Visibility
+    *         to determine Command's context, i.e. if in current IDE state (opened project, file etc.) this command has sense.
     */
-   public Expression visibleWhen();
+   public Expression inContext();
 
    /**
     * @return a Core Expression, it's result will be used
-    * to determine Command's enabled state
+    *         to determine Command's execute state.
+    *         In UI this expression used for show enabled/disabled menu command, key binding uses for determine if this command
+    *         mey execute if keys pressed.
     */
-   public Expression enabledWhen();
+   public Expression canExecute();
 }
