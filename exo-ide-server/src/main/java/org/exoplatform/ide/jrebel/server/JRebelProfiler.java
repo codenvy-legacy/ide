@@ -47,7 +47,7 @@ public class JRebelProfiler
 
    private final static String INVITES_ROOT = IDE + "/jrebel";
 
-   private static final Log LOG_JREBEL_PROP = ExoLogger.getLogger(JRebelProfiler.class);
+   private static final Log LOG_JREBEL_PROP = ExoLogger.getLogger("JRebel");
 
    public JRebelProfiler(SessionProviderService sessionProviderService, RegistryService registryService)
    {
