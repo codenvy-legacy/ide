@@ -1355,21 +1355,21 @@ public interface IWorkspace extends IAdaptable
     */
    public void setDescription(IWorkspaceDescription description) throws CoreException;
 
-   /**
-    * Sets the lock to use for controlling write access to this workspace. The
-    * lock must only be set once.
-    * <p>
-    * This method is for internal use by the platform-related plug-ins. Clients
-    * should not call this method.
-    * </p>
-    *
-    * @param lock the lock to install on this workspace.
-    * @deprecated it is no longer possible to override the workspace lock
-    *             behavior. This functionality is now provided in the platform API by
-    *             subclassing the {@link LockListener} class. This API will be deleted
-    *             in a future release. See bug 311240 for details.
-    */
-   public void setWorkspaceLock(WorkspaceLock lock);
+//   /**
+//    * Sets the lock to use for controlling write access to this workspace. The
+//    * lock must only be set once.
+//    * <p>
+//    * This method is for internal use by the platform-related plug-ins. Clients
+//    * should not call this method.
+//    * </p>
+//    *
+//    * @param lock the lock to install on this workspace.
+//    * @deprecated it is no longer possible to override the workspace lock
+//    *             behavior. This functionality is now provided in the platform API by
+//    *             subclassing the {@link LockListener} class. This API will be deleted
+//    *             in a future release. See bug 311240 for details.
+//    */
+//   public void setWorkspaceLock(WorkspaceLock lock);
 
    /**
     * Returns a copy of the given set of natures sorted in prerequisite order.
