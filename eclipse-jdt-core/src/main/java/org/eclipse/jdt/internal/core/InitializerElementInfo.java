@@ -13,6 +13,7 @@ package org.eclipse.jdt.internal.core;
 /**
  * Element info for IInitializer elements.
  */
-public class InitializerElementInfo extends MemberElementInfo {
-	// used only as a marker class: contains no methods
+public class InitializerElementInfo extends MemberElementInfo
+{
+   // used only as a marker class: contains no methods
 }

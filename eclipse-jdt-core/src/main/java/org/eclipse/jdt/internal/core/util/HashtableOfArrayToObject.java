@@ -13,190 +13,249 @@ package org.eclipse.jdt.internal.core.util;
 /**
  * Hashtable of {Object[] --> Object }
  */
-public final class HashtableOfArrayToObject implements Cloneable {
+public final class HashtableOfArrayToObject implements Cloneable
+{
 
-	// to avoid using Enumerations, walk the individual tables skipping nulls
-	public Object[][] keyTable;
-	public Object[] valueTable;
+   // to avoid using Enumerations, walk the individual tables skipping nulls
+   public Object[][] keyTable;
 
-	public int elementSize; // number of elements in the table
-	int threshold;
+   public Object[] valueTable;
 
-	public HashtableOfArrayToObject() {
-		this(13);
-	}
+   public int elementSize; // number of elements in the table
 
-	public HashtableOfArrayToObject(int size) {
+   int threshold;
 
-		this.elementSize = 0;
-		this.threshold = size; // size represents the expected number of elements
-		int extraRoom = (int) (size * 1.75f);
-		if (this.threshold == extraRoom)
-			extraRoom++;
-		this.keyTable = new Object[extraRoom][];
-		this.valueTable = new Object[extraRoom];
-	}
+   public HashtableOfArrayToObject()
+   {
+      this(13);
+   }
 
-	public Object clone() throws CloneNotSupportedException {
-		HashtableOfArrayToObject result = (HashtableOfArrayToObject) super.clone();
-		result.elementSize = this.elementSize;
-		result.threshold = this.threshold;
+   public HashtableOfArrayToObject(int size)
+   {
 
-		int length = this.keyTable.length;
-		result.keyTable = new Object[length][];
-		System.arraycopy(this.keyTable, 0, result.keyTable, 0, length);
+      this.elementSize = 0;
+      this.threshold = size; // size represents the expected number of elements
+      int extraRoom = (int)(size * 1.75f);
+      if (this.threshold == extraRoom)
+      {
+         extraRoom++;
+      }
+      this.keyTable = new Object[extraRoom][];
+      this.valueTable = new Object[extraRoom];
+   }
 
-		length = this.valueTable.length;
-		result.valueTable = new Object[length];
-		System.arraycopy(this.valueTable, 0, result.valueTable, 0, length);
-		return result;
-	}
+   public Object clone() throws CloneNotSupportedException
+   {
+      HashtableOfArrayToObject result = (HashtableOfArrayToObject)super.clone();
+      result.elementSize = this.elementSize;
+      result.threshold = this.threshold;
 
-	public boolean containsKey(Object[] key) {
-		int length = this.keyTable.length;
-		int index = hashCode(key) % length;
-		int keyLength = key.length;
-		Object[] currentKey;
-		while ((currentKey = this.keyTable[index]) != null) {
-			if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
-				return true;
-			if (++index == length) {
-				index = 0;
-			}
-		}
-		return false;
-	}
+      int length = this.keyTable.length;
+      result.keyTable = new Object[length][];
+      System.arraycopy(this.keyTable, 0, result.keyTable, 0, length);
 
-	public Object get(Object[] key) {
-		int length = this.keyTable.length;
-		int index = hashCode(key) % length;
-		int keyLength = key.length;
-		Object[] currentKey;
-		while ((currentKey = this.keyTable[index]) != null) {
-			if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
-				return this.valueTable[index];
-			if (++index == length) {
-				index = 0;
-			}
-		}
-		return null;
-	}
+      length = this.valueTable.length;
+      result.valueTable = new Object[length];
+      System.arraycopy(this.valueTable, 0, result.valueTable, 0, length);
+      return result;
+   }
 
-	public int getIndex(Object[] key) {
-		int length = this.keyTable.length;
-		int index = hashCode(key) % length;
-		int keyLength = key.length;
-		Object[] currentKey;
-		while ((currentKey = this.keyTable[index]) != null) {
-			if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
-				return index;
-			if (++index == length) {
-				index = 0;
-			}
-		}
-		return -1;
-	}
-	
-	public Object[] getKey(Object[] key, int keyLength) {
-		int length = this.keyTable.length;
-		int index = hashCode(key, keyLength) % length;
-		Object[] currentKey;
-		while ((currentKey = this.keyTable[index]) != null) {
-			if (currentKey.length == keyLength && Util.equalArrays(currentKey, key, keyLength))
-				return currentKey;
-			if (++index == length) {
-				index = 0;
-			}
-		}
-		return null;
-	}
+   public boolean containsKey(Object[] key)
+   {
+      int length = this.keyTable.length;
+      int index = hashCode(key) % length;
+      int keyLength = key.length;
+      Object[] currentKey;
+      while ((currentKey = this.keyTable[index]) != null)
+      {
+         if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
+         {
+            return true;
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      return false;
+   }
 
-	private int hashCode(Object[] element) {
-		return hashCode(element, element.length);
-	}
+   public Object get(Object[] key)
+   {
+      int length = this.keyTable.length;
+      int index = hashCode(key) % length;
+      int keyLength = key.length;
+      Object[] currentKey;
+      while ((currentKey = this.keyTable[index]) != null)
+      {
+         if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
+         {
+            return this.valueTable[index];
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      return null;
+   }
 
-	private int hashCode(Object[] element, int length) {
-		int hash = 0;
-		for (int i = length-1; i >= 0; i--)
-			hash = Util.combineHashCodes(hash, element[i].hashCode());
-		return hash & 0x7FFFFFFF;
-	}
+   public int getIndex(Object[] key)
+   {
+      int length = this.keyTable.length;
+      int index = hashCode(key) % length;
+      int keyLength = key.length;
+      Object[] currentKey;
+      while ((currentKey = this.keyTable[index]) != null)
+      {
+         if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
+         {
+            return index;
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      return -1;
+   }
 
-	public Object put(Object[] key, Object value) {
-		int length = this.keyTable.length;
-		int index = hashCode(key) % length;
-		int keyLength = key.length;
-		Object[] currentKey;
-		while ((currentKey = this.keyTable[index]) != null) {
-			if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
-				return this.valueTable[index] = value;
-			if (++index == length) {
-				index = 0;
-			}
-		}
-		this.keyTable[index] = key;
-		this.valueTable[index] = value;
+   public Object[] getKey(Object[] key, int keyLength)
+   {
+      int length = this.keyTable.length;
+      int index = hashCode(key, keyLength) % length;
+      Object[] currentKey;
+      while ((currentKey = this.keyTable[index]) != null)
+      {
+         if (currentKey.length == keyLength && Util.equalArrays(currentKey, key, keyLength))
+         {
+            return currentKey;
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      return null;
+   }
 
-		// assumes the threshold is never equal to the size of the table
-		if (++this.elementSize > this.threshold)
-			rehash();
-		return value;
-	}
+   private int hashCode(Object[] element)
+   {
+      return hashCode(element, element.length);
+   }
 
-	public Object removeKey(Object[] key) {
-		int length = this.keyTable.length;
-		int index = hashCode(key) % length;
-		int keyLength = key.length;
-		Object[] currentKey;
-		while ((currentKey = this.keyTable[index]) != null) {
-			if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key)) {
-				Object value = this.valueTable[index];
-				this.elementSize--;
-				this.keyTable[index] = null;
-				this.valueTable[index] = null;
-				rehash();
-				return value;
-			}
-			if (++index == length) {
-				index = 0;
-			}
-		}
-		return null;
-	}
+   private int hashCode(Object[] element, int length)
+   {
+      int hash = 0;
+      for (int i = length - 1; i >= 0; i--)
+      {
+         hash = Util.combineHashCodes(hash, element[i].hashCode());
+      }
+      return hash & 0x7FFFFFFF;
+   }
 
-	private void rehash() {
+   public Object put(Object[] key, Object value)
+   {
+      int length = this.keyTable.length;
+      int index = hashCode(key) % length;
+      int keyLength = key.length;
+      Object[] currentKey;
+      while ((currentKey = this.keyTable[index]) != null)
+      {
+         if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
+         {
+            return this.valueTable[index] = value;
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      this.keyTable[index] = key;
+      this.valueTable[index] = value;
 
-		HashtableOfArrayToObject newHashtable = new HashtableOfArrayToObject(this.elementSize * 2);		// double the number of expected elements
-		Object[] currentKey;
-		for (int i = this.keyTable.length; --i >= 0;)
-			if ((currentKey = this.keyTable[i]) != null)
-				newHashtable.put(currentKey, this.valueTable[i]);
+      // assumes the threshold is never equal to the size of the table
+      if (++this.elementSize > this.threshold)
+      {
+         rehash();
+      }
+      return value;
+   }
 
-		this.keyTable = newHashtable.keyTable;
-		this.valueTable = newHashtable.valueTable;
-		this.threshold = newHashtable.threshold;
-	}
+   public Object removeKey(Object[] key)
+   {
+      int length = this.keyTable.length;
+      int index = hashCode(key) % length;
+      int keyLength = key.length;
+      Object[] currentKey;
+      while ((currentKey = this.keyTable[index]) != null)
+      {
+         if (currentKey.length == keyLength && Util.equalArraysOrNull(currentKey, key))
+         {
+            Object value = this.valueTable[index];
+            this.elementSize--;
+            this.keyTable[index] = null;
+            this.valueTable[index] = null;
+            rehash();
+            return value;
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      return null;
+   }
 
-	public int size() {
-		return this.elementSize;
-	}
+   private void rehash()
+   {
 
-	public String toString() {
-		StringBuffer buffer = new StringBuffer();
-		Object[] element;
-		for (int i = 0, length = this.keyTable.length; i < length; i++)
-			if ((element = this.keyTable[i]) != null) {
-				buffer.append('{');
-				for (int j = 0, length2 = element.length; j < length2; j++) {
-					buffer.append(element[j]);
-					if (j != length2-1)
-						buffer.append(", "); //$NON-NLS-1$
-				}
-				buffer.append("} -> ");  //$NON-NLS-1$
-				buffer.append(this.valueTable[i]);
-				if (i != length-1)
-					buffer.append('\n');
-			}
-		return buffer.toString();
-	}
+      HashtableOfArrayToObject newHashtable = new HashtableOfArrayToObject(
+         this.elementSize * 2);      // double the number of expected elements
+      Object[] currentKey;
+      for (int i = this.keyTable.length; --i >= 0; )
+      {
+         if ((currentKey = this.keyTable[i]) != null)
+         {
+            newHashtable.put(currentKey, this.valueTable[i]);
+         }
+      }
+
+      this.keyTable = newHashtable.keyTable;
+      this.valueTable = newHashtable.valueTable;
+      this.threshold = newHashtable.threshold;
+   }
+
+   public int size()
+   {
+      return this.elementSize;
+   }
+
+   public String toString()
+   {
+      StringBuffer buffer = new StringBuffer();
+      Object[] element;
+      for (int i = 0, length = this.keyTable.length; i < length; i++)
+      {
+         if ((element = this.keyTable[i]) != null)
+         {
+            buffer.append('{');
+            for (int j = 0, length2 = element.length; j < length2; j++)
+            {
+               buffer.append(element[j]);
+               if (j != length2 - 1)
+               {
+                  buffer.append(", "); //$NON-NLS-1$
+               }
+            }
+            buffer.append("} -> ");  //$NON-NLS-1$
+            buffer.append(this.valueTable[i]);
+            if (i != length - 1)
+            {
+               buffer.append('\n');
+            }
+         }
+      }
+      return buffer.toString();
+   }
 }

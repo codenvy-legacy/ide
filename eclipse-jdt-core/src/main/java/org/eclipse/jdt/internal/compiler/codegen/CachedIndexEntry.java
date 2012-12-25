@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.compiler.codegen;
 
-public class CachedIndexEntry {
-	public char[] signature;
-	public int index;
+public class CachedIndexEntry
+{
+   public char[] signature;
 
-	public CachedIndexEntry(char[] signature, int index) {
-		this.signature = signature;
-		this.index = index;
-	}
+   public int index;
+
+   public CachedIndexEntry(char[] signature, int index)
+   {
+      this.signature = signature;
+      this.index = index;
+   }
 }

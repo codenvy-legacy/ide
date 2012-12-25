@@ -14,69 +14,81 @@ import org.eclipse.jdt.core.util.ClassFormatException;
 import org.eclipse.jdt.core.util.IConstantPool;
 import org.eclipse.jdt.core.util.IStackMapFrame;
 import org.eclipse.jdt.core.util.IStackMapTableAttribute;
+
 /**
  * Default implementation of IStackMapTableAttribute.
+ *
  * @see IStackMapTableAttribute
  */
-public class StackMapTableAttribute
-	extends ClassFileAttribute
-	implements IStackMapTableAttribute {
+public class StackMapTableAttribute extends ClassFileAttribute implements IStackMapTableAttribute
+{
 
-	private static final IStackMapFrame[] NO_FRAMES = new IStackMapFrame[0];
-	private static final byte[] NO_ENTRIES = new byte[0];
+   private static final IStackMapFrame[] NO_FRAMES = new IStackMapFrame[0];
 
-	private int numberOfEntries;
-	private IStackMapFrame[] frames;
+   private static final byte[] NO_ENTRIES = new byte[0];
 
-	private byte[] bytes;
+   private int numberOfEntries;
 
-	/**
-	 * Constructor for LineNumberAttribute.
-	 * @param classFileBytes
-	 * @param constantPool
-	 * @param offset
-	 * @throws ClassFormatException
-	 */
-	public StackMapTableAttribute(
-			byte[] classFileBytes,
-			IConstantPool constantPool,
-			int offset)
-			throws ClassFormatException {
-		super(classFileBytes, constantPool, offset);
+   private IStackMapFrame[] frames;
 
-		final int length = u2At(classFileBytes, 6, offset);
-		this.numberOfEntries = length;
-		if (length != 0) {
-			int readOffset = 8;
-			this.frames = new IStackMapFrame[length];
-			for (int i = 0; i < length; i++) {
-				StackMapFrame frame = new StackMapFrame(classFileBytes, constantPool, offset + readOffset);
-				this.frames[i] = frame;
-				readOffset += frame.sizeInBytes();
-			}
-		} else {
-			this.frames = NO_FRAMES;
-		}
-		final int byteLength = (int) u4At(classFileBytes, 2, offset);
+   private byte[] bytes;
 
-		if (length != 0) {
-			System.arraycopy(classFileBytes, offset + 6, this.bytes = new byte[byteLength], 0, byteLength);
-		} else {
-			this.bytes = NO_ENTRIES;
-		}
-	}
+   /**
+    * Constructor for LineNumberAttribute.
+    *
+    * @param classFileBytes
+    * @param constantPool
+    * @param offset
+    * @throws ClassFormatException
+    */
+   public StackMapTableAttribute(byte[] classFileBytes, IConstantPool constantPool,
+      int offset) throws ClassFormatException
+   {
+      super(classFileBytes, constantPool, offset);
 
-	public int getNumberOfEntries() {
-		return this.numberOfEntries;
-	}
+      final int length = u2At(classFileBytes, 6, offset);
+      this.numberOfEntries = length;
+      if (length != 0)
+      {
+         int readOffset = 8;
+         this.frames = new IStackMapFrame[length];
+         for (int i = 0; i < length; i++)
+         {
+            StackMapFrame frame = new StackMapFrame(classFileBytes, constantPool, offset + readOffset);
+            this.frames[i] = frame;
+            readOffset += frame.sizeInBytes();
+         }
+      }
+      else
+      {
+         this.frames = NO_FRAMES;
+      }
+      final int byteLength = (int)u4At(classFileBytes, 2, offset);
 
-	public IStackMapFrame[] getStackMapFrame() {
-		return this.frames;
-	}
+      if (length != 0)
+      {
+         System.arraycopy(classFileBytes, offset + 6, this.bytes = new byte[byteLength], 0, byteLength);
+      }
+      else
+      {
+         this.bytes = NO_ENTRIES;
+      }
+   }
 
-	/**
-	 */
-	public byte[] getBytes() {
-		return this.bytes;
-	}
+   public int getNumberOfEntries()
+   {
+      return this.numberOfEntries;
+   }
+
+   public IStackMapFrame[] getStackMapFrame()
+   {
+      return this.frames;
+   }
+
+   /**
+    */
+   public byte[] getBytes()
+   {
+      return this.bytes;
+   }
 }

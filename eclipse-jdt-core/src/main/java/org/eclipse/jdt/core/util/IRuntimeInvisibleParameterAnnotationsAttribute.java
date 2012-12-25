@@ -18,19 +18,20 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.0
  */
-public interface IRuntimeInvisibleParameterAnnotationsAttribute extends IClassFileAttribute {
+public interface IRuntimeInvisibleParameterAnnotationsAttribute extends IClassFileAttribute
+{
 
-	/**
-	 * Answer back the number of parameters as described in the JVM specifications.
-	 *
-	 * @return the number of parameters
-	 */
-	int getParametersNumber();
+   /**
+    * Answer back the number of parameters as described in the JVM specifications.
+    *
+    * @return the number of parameters
+    */
+   int getParametersNumber();
 
-	/**
-	 * Answer back the parameter annotations. Answers an empty collection if none.
-	 *
-	 * @return the parameter annotations. Answers an empty collection if none.
-	 */
-	IParameterAnnotation[] getParameterAnnotations();
+   /**
+    * Answer back the parameter annotations. Answers an empty collection if none.
+    *
+    * @return the parameter annotations. Answers an empty collection if none.
+    */
+   IParameterAnnotation[] getParameterAnnotations();
 }

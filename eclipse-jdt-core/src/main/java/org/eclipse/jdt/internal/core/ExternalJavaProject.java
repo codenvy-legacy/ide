@@ -18,50 +18,64 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class ExternalJavaProject extends JavaProject {
+public class ExternalJavaProject extends JavaProject
+{
 
-	/*
-	 * Note this name can be surfaced in the UI (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=128258)
-	 */
-	public static final String EXTERNAL_PROJECT_NAME = " "; //$NON-NLS-1$
+   /*
+    * Note this name can be surfaced in the UI (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=128258)
+    */
+   public static final String EXTERNAL_PROJECT_NAME = " "; //$NON-NLS-1$
 
-	public ExternalJavaProject(IClasspathEntry[] rawClasspath) {
-		super(ResourcesPlugin.getWorkspace().getRoot().getProject(EXTERNAL_PROJECT_NAME), JavaModelManager.getJavaModelManager().getJavaModel());
-		try {
-			getPerProjectInfo().setRawClasspath(rawClasspath, defaultOutputLocation(), JavaModelStatus.VERIFIED_OK/*no .classpath format problem*/);
-		} catch (JavaModelException e) {
-			// getPerProjectInfo() never throws JavaModelException for an ExternalJavaProject
-		}
-	}
+   public ExternalJavaProject(IClasspathEntry[] rawClasspath)
+   {
+      super(ResourcesPlugin.getWorkspace().getRoot().getProject(EXTERNAL_PROJECT_NAME),
+         JavaModelManager.getJavaModelManager().getJavaModel());
+      try
+      {
+         getPerProjectInfo().setRawClasspath(rawClasspath, defaultOutputLocation(), JavaModelStatus.VERIFIED_OK/*no .classpath format problem*/);
+      }
+      catch (JavaModelException e)
+      {
+         // getPerProjectInfo() never throws JavaModelException for an ExternalJavaProject
+      }
+   }
 
-	public boolean equals(Object o) {
-		return this == o;
-	}
+   public boolean equals(Object o)
+   {
+      return this == o;
+   }
 
-	public boolean exists() {
-		// external project never exists
-		return false;
-	}
+   public boolean exists()
+   {
+      // external project never exists
+      return false;
+   }
 
-	public String getOption(String optionName, boolean inheritJavaCoreOptions) {
-		if (JavaCore.COMPILER_PB_FORBIDDEN_REFERENCE.equals(optionName)
-				|| JavaCore.COMPILER_PB_DISCOURAGED_REFERENCE.equals(optionName))
-			return JavaCore.IGNORE;
-		return super.getOption(optionName, inheritJavaCoreOptions);
-	}
+   public String getOption(String optionName, boolean inheritJavaCoreOptions)
+   {
+      if (JavaCore.COMPILER_PB_FORBIDDEN_REFERENCE.equals(
+         optionName) || JavaCore.COMPILER_PB_DISCOURAGED_REFERENCE.equals(optionName))
+      {
+         return JavaCore.IGNORE;
+      }
+      return super.getOption(optionName, inheritJavaCoreOptions);
+   }
 
-	public boolean isOnClasspath(IJavaElement element) {
-		// since project is external, no element is on classpath (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=61013#c16)
-		return false;
-	}
+   public boolean isOnClasspath(IJavaElement element)
+   {
+      // since project is external, no element is on classpath (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=61013#c16)
+      return false;
+   }
 
-	public boolean isOnClasspath(IResource resource) {
-		// since project is external, no resource is on classpath (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=61013#c16)
-		return false;
-	}
+   public boolean isOnClasspath(IResource resource)
+   {
+      // since project is external, no resource is on classpath (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=61013#c16)
+      return false;
+   }
 
-	protected IStatus validateExistence(IResource underlyingResource) {
-		// allow opening of external project
-		return JavaModelStatus.VERIFIED_OK;
-	}
+   protected IStatus validateExistence(IResource underlyingResource)
+   {
+      // allow opening of external project
+      return JavaModelStatus.VERIFIED_OK;
+   }
 }

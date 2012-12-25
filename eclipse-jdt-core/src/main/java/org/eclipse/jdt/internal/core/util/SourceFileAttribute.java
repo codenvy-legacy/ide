@@ -19,45 +19,47 @@ import org.eclipse.jdt.core.util.ISourceAttribute;
 /**
  * Default implementation of ISourceAttribute
  */
-public class SourceFileAttribute
-	extends ClassFileAttribute
-	implements ISourceAttribute {
+public class SourceFileAttribute extends ClassFileAttribute implements ISourceAttribute
+{
 
-	private int sourceFileIndex;
-	private char[] sourceFileName;
+   private int sourceFileIndex;
 
-	/**
-	 * Constructor for SourceFileAttribute.
-	 * @param classFileBytes
-	 * @param constantPool
-	 * @param offset
-	 * @throws ClassFormatException
-	 */
-	public SourceFileAttribute(
-		byte[] classFileBytes,
-		IConstantPool constantPool,
-		int offset)
-		throws ClassFormatException {
-		super(classFileBytes, constantPool, offset);
-		this.sourceFileIndex = u2At(classFileBytes, 6, offset);
-		IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.sourceFileIndex);
-		if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8) {
-			throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-		}
-		this.sourceFileName = constantPoolEntry.getUtf8Value();
-	}
-	/**
-	 * @see ISourceAttribute#getSourceFileIndex()
-	 */
-	public int getSourceFileIndex() {
-		return this.sourceFileIndex;
-	}
+   private char[] sourceFileName;
 
-	/**
-	 * @see ISourceAttribute#getSourceFileName()
-	 */
-	public char[] getSourceFileName() {
-		return this.sourceFileName;
-	}
+   /**
+    * Constructor for SourceFileAttribute.
+    *
+    * @param classFileBytes
+    * @param constantPool
+    * @param offset
+    * @throws ClassFormatException
+    */
+   public SourceFileAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException
+   {
+      super(classFileBytes, constantPool, offset);
+      this.sourceFileIndex = u2At(classFileBytes, 6, offset);
+      IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.sourceFileIndex);
+      if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8)
+      {
+         throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+      }
+      this.sourceFileName = constantPoolEntry.getUtf8Value();
+   }
+
+   /**
+    * @see ISourceAttribute#getSourceFileIndex()
+    */
+   public int getSourceFileIndex()
+   {
+      return this.sourceFileIndex;
+   }
+
+   /**
+    * @see ISourceAttribute#getSourceFileName()
+    */
+   public char[] getSourceFileName()
+   {
+      return this.sourceFileName;
+   }
 
 }

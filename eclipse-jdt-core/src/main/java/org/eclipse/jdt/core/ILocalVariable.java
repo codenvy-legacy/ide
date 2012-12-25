@@ -22,76 +22,76 @@ package org.eclipse.jdt.core;
  * </p>
  *
  * @since 3.0
- * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface ILocalVariable extends IJavaElement, ISourceReference, IAnnotatable {
+public interface ILocalVariable extends IJavaElement, ISourceReference, IAnnotatable
+{
 
-	/**
-	 * Returns the name of this local variable.
-	 *
-	 * @return the name of this local variable.
-	 */
-	String getElementName();
+   /**
+    * Returns the name of this local variable.
+    *
+    * @return the name of this local variable.
+    */
+   String getElementName();
 
-	/**
-	 * Returns the source range of this local variable's name.
-	 *
-	 * @return the source range of this local variable's name
-	 */
-	ISourceRange getNameRange();
+   /**
+    * Returns the source range of this local variable's name.
+    *
+    * @return the source range of this local variable's name
+    */
+   ISourceRange getNameRange();
 
-	/**
-	 * Returns the type signature of this local variable.
-	 * <p>
-	 * The type signature may be either unresolved (for source types)
-	 * or resolved (for binary types), and either basic (for basic types)
-	 * or rich (for parameterized types). See {@link Signature} for details.
-	 * </p>
-	 *
-	 * @return the type signature of this local variable.
-	 * @see Signature
-	 */
-	String getTypeSignature();
-	
-	/**
-	 * Returns <code>true</code> if this local variable is a method parameter, <code>false</code> otherwise.
-	 * 
-	 * @return <code>true</code> if this local variable is a method parameter, <code>false</code> otherwise
-	 * @since 3.7
-	 */
-	boolean isParameter();
+   /**
+    * Returns the type signature of this local variable.
+    * <p>
+    * The type signature may be either unresolved (for source types)
+    * or resolved (for binary types), and either basic (for basic types)
+    * or rich (for parameterized types). See {@link Signature} for details.
+    * </p>
+    *
+    * @return the type signature of this local variable.
+    * @see Signature
+    */
+   String getTypeSignature();
 
-	/**
-	 * Returns the modifier flags for this local variable. The flags can be examined using class
-	 * {@link Flags}.
-	 * 
-	 * <p>Note that only flags as indicated in the source are returned.</p>
-	 *
-	 * @return the modifier flags for this local variable
-	 * @see Flags
-	 * @since 3.7
-	 */
-	int getFlags();
+   /**
+    * Returns <code>true</code> if this local variable is a method parameter, <code>false</code> otherwise.
+    *
+    * @return <code>true</code> if this local variable is a method parameter, <code>false</code> otherwise
+    * @since 3.7
+    */
+   boolean isParameter();
 
-	/**
-	 * Returns the declaring member of this local variable.
-	 * <p>
-	 * This is a handle-only method.
-	 * </p>
-	 *
-	 * @return the declaring member of this local variable
-	 * @since 3.7
-	 */
-	IMember getDeclaringMember();
+   /**
+    * Returns the modifier flags for this local variable. The flags can be examined using class
+    * {@link Flags}.
+    *
+    * <p>Note that only flags as indicated in the source are returned.</p>
+    *
+    * @return the modifier flags for this local variable
+    * @see Flags
+    * @since 3.7
+    */
+   int getFlags();
 
-	/**
-	 * Returns the Java type root in which this local variable is declared.
-	 * <p>
-	 * This is a handle-only method.
-	 * </p>
-	 *
-	 * @return the Java type root in which this local variable is declared
-	 * @since 3.7
-	 */
-	ITypeRoot getTypeRoot();
+   /**
+    * Returns the declaring member of this local variable.
+    * <p>
+    * This is a handle-only method.
+    * </p>
+    *
+    * @return the declaring member of this local variable
+    * @since 3.7
+    */
+   IMember getDeclaringMember();
+
+   /**
+    * Returns the Java type root in which this local variable is declared.
+    * <p>
+    * This is a handle-only method.
+    * </p>
+    *
+    * @return the Java type root in which this local variable is declared
+    * @since 3.7
+    */
+   ITypeRoot getTypeRoot();
 }

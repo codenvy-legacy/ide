@@ -20,40 +20,54 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaModelException;
 
-public class ExternalFolderChange {
+public class ExternalFolderChange
+{
 
-	private JavaProject project;
-	private IClasspathEntry[] oldResolvedClasspath;
+   private JavaProject project;
 
-	public ExternalFolderChange(JavaProject project, IClasspathEntry[] oldResolvedClasspath) {
-		this.project = project;
-		this.oldResolvedClasspath = oldResolvedClasspath;
-	}
+   private IClasspathEntry[] oldResolvedClasspath;
 
-	/*
-	 * Update external folders
-	 */
-	public void updateExternalFoldersIfNecessary(boolean refreshIfExistAlready, IProgressMonitor monitor) throws JavaModelException {
-		HashSet oldFolders = ExternalFoldersManager.getExternalFolders(this.oldResolvedClasspath);
-		IClasspathEntry[] newResolvedClasspath = this.project.getResolvedClasspath();
-		HashSet newFolders = ExternalFoldersManager.getExternalFolders(newResolvedClasspath);
-		if (newFolders == null)
-			return;
-		ExternalFoldersManager foldersManager = JavaModelManager.getExternalManager();
-		Iterator iterator = newFolders.iterator();
-		while (iterator.hasNext()) {
-			Object folderPath = iterator.next();
-			if (oldFolders == null || !oldFolders.remove(folderPath) || foldersManager.removePendingFolder(folderPath)) {
-				try {
-					foldersManager.createLinkFolder((IPath) folderPath, refreshIfExistAlready, monitor);
-				} catch (CoreException e) {
-					throw new JavaModelException(e);
-				}
-			}
-		}
-		// removal of linked folders is done during save
-	}
-	public String toString() {
-		return "ExternalFolderChange: " + this.project.getElementName(); //$NON-NLS-1$
-	}
+   public ExternalFolderChange(JavaProject project, IClasspathEntry[] oldResolvedClasspath)
+   {
+      this.project = project;
+      this.oldResolvedClasspath = oldResolvedClasspath;
+   }
+
+   /*
+    * Update external folders
+    */
+   public void updateExternalFoldersIfNecessary(boolean refreshIfExistAlready,
+      IProgressMonitor monitor) throws JavaModelException
+   {
+      HashSet oldFolders = ExternalFoldersManager.getExternalFolders(this.oldResolvedClasspath);
+      IClasspathEntry[] newResolvedClasspath = this.project.getResolvedClasspath();
+      HashSet newFolders = ExternalFoldersManager.getExternalFolders(newResolvedClasspath);
+      if (newFolders == null)
+      {
+         return;
+      }
+      ExternalFoldersManager foldersManager = JavaModelManager.getExternalManager();
+      Iterator iterator = newFolders.iterator();
+      while (iterator.hasNext())
+      {
+         Object folderPath = iterator.next();
+         if (oldFolders == null || !oldFolders.remove(folderPath) || foldersManager.removePendingFolder(folderPath))
+         {
+            try
+            {
+               foldersManager.createLinkFolder((IPath)folderPath, refreshIfExistAlready, monitor);
+            }
+            catch (CoreException e)
+            {
+               throw new JavaModelException(e);
+            }
+         }
+      }
+      // removal of linked folders is done during save
+   }
+
+   public String toString()
+   {
+      return "ExternalFolderChange: " + this.project.getElementName(); //$NON-NLS-1$
+   }
 }

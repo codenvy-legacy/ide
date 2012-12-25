@@ -23,179 +23,193 @@ import org.eclipse.core.runtime.IProgressMonitor;
  * <code>IClassFile</code> (representing a binary class file).
  * The children are listed in no particular order.
  * </p>
- *
- * @noimplement This interface is not intended to be implemented by clients.
  */
-public interface IPackageFragment extends IParent, IJavaElement, IOpenable, ISourceManipulation {
+public interface IPackageFragment extends IParent, IJavaElement, IOpenable, ISourceManipulation
+{
 
-	/**
-	 * <p>
-	 * The name of package fragment for the default package (value: the empty
-	 * string, <code>""</code>).
-	 * </p>
- 	*/
-	public static final String DEFAULT_PACKAGE_NAME = ""; //$NON-NLS-1$
-	/**
-	 * Returns whether this fragment contains at least one Java resource.
-	 * @return true if this fragment contains at least one Java resource, false otherwise
-	 * @exception JavaModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 */
-	boolean containsJavaResources() throws JavaModelException;
-	/**
-	 * Creates and returns a compilation unit in this package fragment
-	 * with the specified name and contents. No verification is performed
-	 * on the contents.
-	 *
-	 * <p>It is possible that a compilation unit with the same name already exists in this
-	 * package fragment.
-	 * The value of the <code>force</code> parameter affects the resolution of
-	 * such a conflict:<ul>
-	 * <li> <code>true</code> - in this case the compilation is created with the new contents</li>
-	 * <li> <code>false</code> - in this case a <code>JavaModelException</code> is thrown</li>
-	 * </ul>
-	 *
-	 * @param contents the given contents
-	 * @param force specify how to handle conflict is the same name already exists
-	 * @param monitor the given progress monitor
-	 * @param name the given name
-	 * @exception JavaModelException if the element could not be created. Reasons include:
-	 * <ul>
-	 * <li> This Java element does not exist (ELEMENT_DOES_NOT_EXIST)</li>
-	 * <li> A <code>CoreException</code> occurred while creating an underlying resource
-	 * <li> The name is not a valid compilation unit name (INVALID_NAME)
-	 * <li> The contents are <code>null</code> (INVALID_CONTENTS)
-	 * </ul>
-	 * @return a compilation unit in this package fragment
-	 * with the specified name and contents
-	 */
-	ICompilationUnit createCompilationUnit(String name, String contents, boolean force, IProgressMonitor monitor) throws JavaModelException;
-	/**
-	 * Returns the class file with the specified name
-	 * in this package (for example, <code>"Object.class"</code>).
-	 * The ".class" suffix is required.
-	 * This is a handle-only method.  The class file may or may not be present.
-	 * @param name the given name
-	 * @return the class file with the specified name in this package
-	 */
-	IClassFile getClassFile(String name);
-	/**
-	 * Returns all of the class files in this package fragment.
-	 *
-	 * <p>Note: it is possible that a package fragment contains only
-	 * compilation units (in other words, its kind is <code>K_SOURCE</code>), in
-	 * which case this method returns an empty collection.
-	 *
-	 * @exception JavaModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return all of the class files in this package fragment
-	 */
-	IClassFile[] getClassFiles() throws JavaModelException;
-	/**
-	 * Returns the compilation unit with the specified name
-	 * in this package (for example, <code>"Object.java"</code>).
-	 * The name has to be a valid compilation unit name.
-	 * This is a handle-only method.  The compilation unit may or may not be present.
-	 *
-	 * @param name the given name
-	 * @return the compilation unit with the specified name in this package
-	 * @see JavaConventions#validateCompilationUnitName(String name, String sourceLevel, String complianceLevel)
-	 */
-	ICompilationUnit getCompilationUnit(String name);
-	/**
-	 * Returns all of the compilation units in this package fragment.
-	 *
-	 * <p>Note: it is possible that a package fragment contains only
-	 * class files (in other words, its kind is <code>K_BINARY</code>), in which
-	 * case this method returns an empty collection.
-	 * </p>
-	 *
-	 * @exception JavaModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return all of the compilation units in this package fragment
-	 */
-	ICompilationUnit[] getCompilationUnits() throws JavaModelException;
-	/**
-	 * Returns all of the compilation units in this package fragment that are
-	 * in working copy mode and that have the given owner.
-	 * <p>
-	 * Only existing working copies are returned. So a compilation unit handle that has no
-	 * corresponding resource on disk will be included if and only if is in working copy mode.
-	 * </p>
-	 * <p>Note: it is possible that a package fragment contains only
-	 * class files (in other words, its kind is <code>K_BINARY</code>), in which
-	 * case this method returns an empty collection.
-	 * </p>
-	 *
-	 * @param owner the owner of the returned compilation units
-	 * @exception JavaModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return all of the compilation units in this package fragment
-	 * @since 3.0
-	 */
-	ICompilationUnit[] getCompilationUnits(WorkingCopyOwner owner) throws JavaModelException;
-	/**
-	 * Returns the dot-separated package name of this fragment, for example
-	 * <code>"java.lang"</code>, or <code>""</code> (the empty string),
-	 * for the default package.
-	 *
-	 * @return the dot-separated package name of this fragment
-	 */
-	String getElementName();
-	/**
-	 * Returns this package fragment's root kind encoded as an integer.
-	 * A package fragment can contain source files (i.e. files with one of
-	 * the {@link JavaCore#getJavaLikeExtensions() Java-like extensions}),
-	 * or <code>.class</code> files. This is a convenience method.
-	 *
-	 * @exception JavaModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return this package fragment's root kind encoded as an integer
-	 * @see IPackageFragmentRoot#K_SOURCE
-	 * @see IPackageFragmentRoot#K_BINARY
-	 */
-	int getKind() throws JavaModelException;
-	/**
-	 * Returns an array of non-Java resources contained in this package fragment.
-	 * <p>
-	 * Non-Java resources includes other files and folders located in the same
-	 * directory as the compilation units or class files for this package
-	 * fragment. Source files excluded from this package by virtue of
-	 * inclusion/exclusion patterns on the corresponding source classpath entry
-	 * are considered non-Java resources and will appear in the result
-	 * (possibly in a folder).
-	 * </p><p>
-	 * Since 3.3, if this package fragment is inside an archive, the non-Java resources
-	 * are a tree of {@link IJarEntryResource}s. One can navigate this tree using
-	 * the {@link IJarEntryResource#getChildren()} and
-	 * {@link IJarEntryResource#getParent()} methods.
-	 * </p>
-	 *
-	 * @exception JavaModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return an array of non-Java resources (<code>IFile</code>s,
-	 *              <code>IFolder</code>s, or <code>IStorage</code>s if the
-	 *              package fragment is in an archive) contained in this package
-	 *              fragment
-	 * @see IClasspathEntry#getInclusionPatterns()
-	 * @see IClasspathEntry#getExclusionPatterns()
-	 */
-	Object[] getNonJavaResources() throws JavaModelException;
-	/**
-	 * Returns whether this package fragment's name is
-	 * a prefix of other package fragments in this package fragment's
-	 * root.
-	 *
-	 * @exception JavaModelException if this element does not exist or if an
-	 *		exception occurs while accessing its corresponding resource.
-	 * @return true if this package fragment's name is a prefix of other package fragments in this package fragment's root, false otherwise
-	 */
-	boolean hasSubpackages() throws JavaModelException;
-	/**
-	 * Returns whether this package fragment is a default package.
-	 * This is a handle-only method.
-	 *
-	 * @return true if this package fragment is a default package
-	 */
-	boolean isDefaultPackage();
+   /**
+    * <p>
+    * The name of package fragment for the default package (value: the empty
+    * string, <code>""</code>).
+    * </p>
+    */
+   public static final String DEFAULT_PACKAGE_NAME = ""; //$NON-NLS-1$
+
+   /**
+    * Returns whether this fragment contains at least one Java resource.
+    *
+    * @return true if this fragment contains at least one Java resource, false otherwise
+    * @throws JavaModelException if this element does not exist or if an
+    *                            exception occurs while accessing its corresponding resource.
+    */
+   boolean containsJavaResources() throws JavaModelException;
+
+   /**
+    * Creates and returns a compilation unit in this package fragment
+    * with the specified name and contents. No verification is performed
+    * on the contents.
+    *
+    * <p>It is possible that a compilation unit with the same name already exists in this
+    * package fragment.
+    * The value of the <code>force</code> parameter affects the resolution of
+    * such a conflict:<ul>
+    * <li> <code>true</code> - in this case the compilation is created with the new contents</li>
+    * <li> <code>false</code> - in this case a <code>JavaModelException</code> is thrown</li>
+    * </ul>
+    *
+    * @param contents the given contents
+    * @param force    specify how to handle conflict is the same name already exists
+    * @param monitor  the given progress monitor
+    * @param name     the given name
+    * @return a compilation unit in this package fragment
+    *         with the specified name and contents
+    * @throws JavaModelException if the element could not be created. Reasons include:
+    *                            <ul>
+    *                            <li> This Java element does not exist (ELEMENT_DOES_NOT_EXIST)</li>
+    *                            <li> A <code>CoreException</code> occurred while creating an underlying resource
+    *                            <li> The name is not a valid compilation unit name (INVALID_NAME)
+    *                            <li> The contents are <code>null</code> (INVALID_CONTENTS)
+    *                            </ul>
+    */
+   ICompilationUnit createCompilationUnit(String name, String contents, boolean force,
+      IProgressMonitor monitor) throws JavaModelException;
+
+   /**
+    * Returns the class file with the specified name
+    * in this package (for example, <code>"Object.class"</code>).
+    * The ".class" suffix is required.
+    * This is a handle-only method.  The class file may or may not be present.
+    *
+    * @param name the given name
+    * @return the class file with the specified name in this package
+    */
+   IClassFile getClassFile(String name);
+
+   /**
+    * Returns all of the class files in this package fragment.
+    *
+    * <p>Note: it is possible that a package fragment contains only
+    * compilation units (in other words, its kind is <code>K_SOURCE</code>), in
+    * which case this method returns an empty collection.
+    *
+    * @return all of the class files in this package fragment
+    * @throws JavaModelException if this element does not exist or if an
+    *                            exception occurs while accessing its corresponding resource.
+    */
+   IClassFile[] getClassFiles() throws JavaModelException;
+
+   /**
+    * Returns the compilation unit with the specified name
+    * in this package (for example, <code>"Object.java"</code>).
+    * The name has to be a valid compilation unit name.
+    * This is a handle-only method.  The compilation unit may or may not be present.
+    *
+    * @param name the given name
+    * @return the compilation unit with the specified name in this package
+    * @see JavaConventions#validateCompilationUnitName(String name, String sourceLevel, String complianceLevel)
+    */
+   ICompilationUnit getCompilationUnit(String name);
+
+   /**
+    * Returns all of the compilation units in this package fragment.
+    *
+    * <p>Note: it is possible that a package fragment contains only
+    * class files (in other words, its kind is <code>K_BINARY</code>), in which
+    * case this method returns an empty collection.
+    * </p>
+    *
+    * @return all of the compilation units in this package fragment
+    * @throws JavaModelException if this element does not exist or if an
+    *                            exception occurs while accessing its corresponding resource.
+    */
+   ICompilationUnit[] getCompilationUnits() throws JavaModelException;
+
+   /**
+    * Returns all of the compilation units in this package fragment that are
+    * in working copy mode and that have the given owner.
+    * <p>
+    * Only existing working copies are returned. So a compilation unit handle that has no
+    * corresponding resource on disk will be included if and only if is in working copy mode.
+    * </p>
+    * <p>Note: it is possible that a package fragment contains only
+    * class files (in other words, its kind is <code>K_BINARY</code>), in which
+    * case this method returns an empty collection.
+    * </p>
+    *
+    * @param owner the owner of the returned compilation units
+    * @return all of the compilation units in this package fragment
+    * @throws JavaModelException if this element does not exist or if an
+    *                            exception occurs while accessing its corresponding resource.
+    * @since 3.0
+    */
+   ICompilationUnit[] getCompilationUnits(WorkingCopyOwner owner) throws JavaModelException;
+
+   /**
+    * Returns the dot-separated package name of this fragment, for example
+    * <code>"java.lang"</code>, or <code>""</code> (the empty string),
+    * for the default package.
+    *
+    * @return the dot-separated package name of this fragment
+    */
+   String getElementName();
+
+   /**
+    * Returns this package fragment's root kind encoded as an integer.
+    * A package fragment can contain source files (i.e. files with one of
+    * the {@link JavaCore#getJavaLikeExtensions() Java-like extensions}),
+    * or <code>.class</code> files. This is a convenience method.
+    *
+    * @return this package fragment's root kind encoded as an integer
+    * @throws JavaModelException if this element does not exist or if an
+    *                            exception occurs while accessing its corresponding resource.
+    * @see IPackageFragmentRoot#K_SOURCE
+    * @see IPackageFragmentRoot#K_BINARY
+    */
+   int getKind() throws JavaModelException;
+
+   /**
+    * Returns an array of non-Java resources contained in this package fragment.
+    * <p>
+    * Non-Java resources includes other files and folders located in the same
+    * directory as the compilation units or class files for this package
+    * fragment. Source files excluded from this package by virtue of
+    * inclusion/exclusion patterns on the corresponding source classpath entry
+    * are considered non-Java resources and will appear in the result
+    * (possibly in a folder).
+    * </p><p>
+    * Since 3.3, if this package fragment is inside an archive, the non-Java resources
+    * are a tree of {@link IJarEntryResource}s. One can navigate this tree using
+    * the {@link IJarEntryResource#getChildren()} and
+    * {@link IJarEntryResource#getParent()} methods.
+    * </p>
+    *
+    * @return an array of non-Java resources (<code>IFile</code>s,
+    *         <code>IFolder</code>s, or <code>IStorage</code>s if the
+    *         package fragment is in an archive) contained in this package
+    *         fragment
+    * @throws JavaModelException if this element does not exist or if an
+    *                            exception occurs while accessing its corresponding resource.
+    * @see IClasspathEntry#getInclusionPatterns()
+    * @see IClasspathEntry#getExclusionPatterns()
+    */
+   Object[] getNonJavaResources() throws JavaModelException;
+
+   /**
+    * Returns whether this package fragment's name is
+    * a prefix of other package fragments in this package fragment's
+    * root.
+    *
+    * @return true if this package fragment's name is a prefix of other package fragments in this package fragment's root, false otherwise
+    * @throws JavaModelException if this element does not exist or if an
+    *                            exception occurs while accessing its corresponding resource.
+    */
+   boolean hasSubpackages() throws JavaModelException;
+
+   /**
+    * Returns whether this package fragment is a default package.
+    * This is a handle-only method.
+    *
+    * @return true if this package fragment is a default package
+    */
+   boolean isDefaultPackage();
 }

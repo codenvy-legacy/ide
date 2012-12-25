@@ -16,50 +16,62 @@ package org.eclipse.jdt.core.util;
  *
  * @since 2.0
  */
-public class ClassFormatException extends Exception {
+public class ClassFormatException extends Exception
+{
 
-	public static final int ERROR_MALFORMED_UTF8 = 1;
-	public static final int ERROR_TRUNCATED_INPUT = 2;
-	public static final int INVALID_CONSTANT_POOL_ENTRY = 3;
-	public static final int TOO_MANY_BYTES = 4;
-	public static final int INVALID_ARGUMENTS_FOR_INVOKEINTERFACE = 5;
-	public static final int INVALID_BYTECODE = 6;
+   public static final int ERROR_MALFORMED_UTF8 = 1;
 
-	/**
-	 * @since 3.0
-	 */
-	public static final int INVALID_TAG_CONSTANT = 7;
+   public static final int ERROR_TRUNCATED_INPUT = 2;
 
-	/**
-	 * @since 3.0
-	 */
-	public static final int INVALID_MAGIC_NUMBER = 8;
+   public static final int INVALID_CONSTANT_POOL_ENTRY = 3;
 
-	private static final long serialVersionUID = 6582900558320612988L; // backward compatible
+   public static final int TOO_MANY_BYTES = 4;
 
-	/**
-	 * Constructor for ClassFormatException.
-	 * @param errorID the given error ID
-	 */
-	public ClassFormatException(int errorID) {
-		// TODO (olivier) what is the errorID?
-	}
+   public static final int INVALID_ARGUMENTS_FOR_INVOKEINTERFACE = 5;
 
-	/**
-	 * Constructor for ClassFormatException.
-	 * @param message the message for the exception
-	 */
-	public ClassFormatException(String message) {
-		super(message);
-	}
+   public static final int INVALID_BYTECODE = 6;
 
-	/**
-	 * Constructor for ClassFormatException.
-	 * @param message the message for the exception
-	 * @param  cause  the cause of the exception
-	 * @since 3.5
-	 */
-	public ClassFormatException(String message, Throwable cause) {
-		super(message, cause);
-	}
+   /**
+    * @since 3.0
+    */
+   public static final int INVALID_TAG_CONSTANT = 7;
+
+   /**
+    * @since 3.0
+    */
+   public static final int INVALID_MAGIC_NUMBER = 8;
+
+   private static final long serialVersionUID = 6582900558320612988L; // backward compatible
+
+   /**
+    * Constructor for ClassFormatException.
+    *
+    * @param errorID the given error ID
+    */
+   public ClassFormatException(int errorID)
+   {
+      // TODO (olivier) what is the errorID?
+   }
+
+   /**
+    * Constructor for ClassFormatException.
+    *
+    * @param message the message for the exception
+    */
+   public ClassFormatException(String message)
+   {
+      super(message);
+   }
+
+   /**
+    * Constructor for ClassFormatException.
+    *
+    * @param message the message for the exception
+    * @param cause   the cause of the exception
+    * @since 3.5
+    */
+   public ClassFormatException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

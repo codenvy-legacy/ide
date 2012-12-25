@@ -16,107 +16,125 @@ import org.eclipse.jdt.internal.compiler.impl.StringConstant;
 import org.eclipse.jdt.internal.compiler.lookup.BlockScope;
 import org.eclipse.jdt.internal.compiler.lookup.TypeBinding;
 
-public class StringLiteral extends Literal {
+public class StringLiteral extends Literal
+{
 
-	char[] source;
-	int lineNumber;
+   char[] source;
 
-	public StringLiteral(char[] token, int start, int end, int lineNumber) {
+   int lineNumber;
 
-		this(start,end);
-		this.source = token;
-		this.lineNumber = lineNumber - 1; // line number is 1 based
-	}
+   public StringLiteral(char[] token, int start, int end, int lineNumber)
+   {
 
-	public StringLiteral(int s, int e) {
+      this(start, end);
+      this.source = token;
+      this.lineNumber = lineNumber - 1; // line number is 1 based
+   }
 
-		super(s,e);
-	}
+   public StringLiteral(int s, int e)
+   {
 
-	public void computeConstant() {
+      super(s, e);
+   }
 
-		this.constant = StringConstant.fromValue(String.valueOf(this.source));
-	}
+   public void computeConstant()
+   {
 
-	public ExtendedStringLiteral extendWith(CharLiteral lit){
+      this.constant = StringConstant.fromValue(String.valueOf(this.source));
+   }
 
-		//add the lit source to mine, just as if it was mine
-		return new ExtendedStringLiteral(this,lit);
-	}
+   public ExtendedStringLiteral extendWith(CharLiteral lit)
+   {
 
-	public ExtendedStringLiteral extendWith(StringLiteral lit){
+      //add the lit source to mine, just as if it was mine
+      return new ExtendedStringLiteral(this, lit);
+   }
 
-		//add the lit source to mine, just as if it was mine
-		return new ExtendedStringLiteral(this,lit);
-	}
+   public ExtendedStringLiteral extendWith(StringLiteral lit)
+   {
 
-	/**
-	 *  Add the lit source to mine, just as if it was mine
-	 */
-	public StringLiteralConcatenation extendsWith(StringLiteral lit) {
-		return new StringLiteralConcatenation(this, lit);
-	}
-	/**
-	 * Code generation for string literal
-	 */
-	public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired) {
+      //add the lit source to mine, just as if it was mine
+      return new ExtendedStringLiteral(this, lit);
+   }
 
-		int pc = codeStream.position;
-		if (valueRequired)
-			codeStream.ldc(this.constant.stringValue());
-		codeStream.recordPositionsFrom(pc, this.sourceStart);
-	}
+   /**
+    * Add the lit source to mine, just as if it was mine
+    */
+   public StringLiteralConcatenation extendsWith(StringLiteral lit)
+   {
+      return new StringLiteralConcatenation(this, lit);
+   }
 
-	public TypeBinding literalType(BlockScope scope) {
+   /**
+    * Code generation for string literal
+    */
+   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   {
 
-		return scope.getJavaLangString();
-	}
+      int pc = codeStream.position;
+      if (valueRequired)
+      {
+         codeStream.ldc(this.constant.stringValue());
+      }
+      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   }
 
-	public StringBuffer printExpression(int indent, StringBuffer output) {
+   public TypeBinding literalType(BlockScope scope)
+   {
 
-		// handle some special char.....
-		output.append('\"');
-		for (int i = 0; i < this.source.length; i++) {
-			switch (this.source[i]) {
-				case '\b' :
-					output.append("\\b"); //$NON-NLS-1$
-					break;
-				case '\t' :
-					output.append("\\t"); //$NON-NLS-1$
-					break;
-				case '\n' :
-					output.append("\\n"); //$NON-NLS-1$
-					break;
-				case '\f' :
-					output.append("\\f"); //$NON-NLS-1$
-					break;
-				case '\r' :
-					output.append("\\r"); //$NON-NLS-1$
-					break;
-				case '\"' :
-					output.append("\\\""); //$NON-NLS-1$
-					break;
-				case '\'' :
-					output.append("\\'"); //$NON-NLS-1$
-					break;
-				case '\\' : //take care not to display the escape as a potential real char
-					output.append("\\\\"); //$NON-NLS-1$
-					break;
-				default :
-					output.append(this.source[i]);
-			}
-		}
-		output.append('\"');
-		return output;
-	}
+      return scope.getJavaLangString();
+   }
 
-	public char[] source() {
+   public StringBuffer printExpression(int indent, StringBuffer output)
+   {
 
-		return this.source;
-	}
+      // handle some special char.....
+      output.append('\"');
+      for (int i = 0; i < this.source.length; i++)
+      {
+         switch (this.source[i])
+         {
+            case '\b':
+               output.append("\\b"); //$NON-NLS-1$
+               break;
+            case '\t':
+               output.append("\\t"); //$NON-NLS-1$
+               break;
+            case '\n':
+               output.append("\\n"); //$NON-NLS-1$
+               break;
+            case '\f':
+               output.append("\\f"); //$NON-NLS-1$
+               break;
+            case '\r':
+               output.append("\\r"); //$NON-NLS-1$
+               break;
+            case '\"':
+               output.append("\\\""); //$NON-NLS-1$
+               break;
+            case '\'':
+               output.append("\\'"); //$NON-NLS-1$
+               break;
+            case '\\': //take care not to display the escape as a potential real char
+               output.append("\\\\"); //$NON-NLS-1$
+               break;
+            default:
+               output.append(this.source[i]);
+         }
+      }
+      output.append('\"');
+      return output;
+   }
 
-	public void traverse(ASTVisitor visitor, BlockScope scope) {
-		visitor.visit(this, scope);
-		visitor.endVisit(this, scope);
-	}
+   public char[] source()
+   {
+
+      return this.source;
+   }
+
+   public void traverse(ASTVisitor visitor, BlockScope scope)
+   {
+      visitor.visit(this, scope);
+      visitor.endVisit(this, scope);
+   }
 }

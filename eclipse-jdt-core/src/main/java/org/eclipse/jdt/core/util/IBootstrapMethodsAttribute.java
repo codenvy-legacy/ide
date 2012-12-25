@@ -17,24 +17,25 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.8
  */
-public interface IBootstrapMethodsAttribute extends IClassFileAttribute {
+public interface IBootstrapMethodsAttribute extends IClassFileAttribute
+{
 
-	/**
-	 * Answer back the number of bootstrap methods of this entry as specified in
-	 * the JVM specifications.
-	 *
-	 * @return the number of bootstrap methods of this entry as specified in
-	 * the JVM specifications
-	 */
-	int getBootstrapMethodsLength();
+   /**
+    * Answer back the number of bootstrap methods of this entry as specified in
+    * the JVM specifications.
+    *
+    * @return the number of bootstrap methods of this entry as specified in
+    *         the JVM specifications
+    */
+   int getBootstrapMethodsLength();
 
-	/**
-	 * Answer back the bootstrap methods table of this entry as specified in
-	 * the JVM specifications. Answer an empty array if none.
-	 *
-	 * @return the bootstrap methods table of this entry as specified in
-	 * the JVM specifications. Answer an empty array if none
-	 */
-	IBootstrapMethodsEntry[] getBootstrapMethods();
+   /**
+    * Answer back the bootstrap methods table of this entry as specified in
+    * the JVM specifications. Answer an empty array if none.
+    *
+    * @return the bootstrap methods table of this entry as specified in
+    *         the JVM specifications. Answer an empty array if none
+    */
+   IBootstrapMethodsEntry[] getBootstrapMethods();
 
 }

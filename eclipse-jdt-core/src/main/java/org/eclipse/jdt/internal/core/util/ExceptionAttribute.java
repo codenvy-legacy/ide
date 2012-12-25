@@ -20,52 +20,62 @@ import org.eclipse.jdt.core.util.IExceptionAttribute;
 /**
  * Default implementation of IExceptionAttribute.
  */
-public class ExceptionAttribute extends ClassFileAttribute implements IExceptionAttribute {
-	private int exceptionsNumber;
-	private char[][] exceptionNames;
-	private int[] exceptionIndexes;
+public class ExceptionAttribute extends ClassFileAttribute implements IExceptionAttribute
+{
+   private int exceptionsNumber;
 
-	ExceptionAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException {
-		super(classFileBytes, constantPool, offset);
-		this.exceptionsNumber = u2At(classFileBytes, 6, offset);
-		int exceptionLength = this.exceptionsNumber;
-		this.exceptionNames = CharOperation.NO_CHAR_CHAR;
-		this.exceptionIndexes = org.eclipse.jdt.internal.compiler.util.Util.EMPTY_INT_ARRAY;
-		if (exceptionLength != 0) {
-			this.exceptionNames = new char[exceptionLength][];
-			this.exceptionIndexes = new int[exceptionLength];
-		}
-		int readOffset = 8;
-		IConstantPoolEntry constantPoolEntry;
-		for (int i = 0; i < exceptionLength; i++) {
-			this.exceptionIndexes[i] = u2At(classFileBytes, readOffset, offset);
-			constantPoolEntry = constantPool.decodeEntry(this.exceptionIndexes[i]);
-			if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Class) {
-				throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-			}
-			this.exceptionNames[i] = constantPoolEntry.getClassInfoName();
-			readOffset += 2;
-		}
-	}
+   private char[][] exceptionNames;
 
-	/**
-	 * @see IExceptionAttribute#getExceptionIndexes()
-	 */
-	public int[] getExceptionIndexes() {
-		return this.exceptionIndexes;
-	}
+   private int[] exceptionIndexes;
 
-	/**
-	 * @see IExceptionAttribute#getExceptionNames()
-	 */
-	public char[][] getExceptionNames() {
-		return this.exceptionNames;
-	}
+   ExceptionAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException
+   {
+      super(classFileBytes, constantPool, offset);
+      this.exceptionsNumber = u2At(classFileBytes, 6, offset);
+      int exceptionLength = this.exceptionsNumber;
+      this.exceptionNames = CharOperation.NO_CHAR_CHAR;
+      this.exceptionIndexes = org.eclipse.jdt.internal.compiler.util.Util.EMPTY_INT_ARRAY;
+      if (exceptionLength != 0)
+      {
+         this.exceptionNames = new char[exceptionLength][];
+         this.exceptionIndexes = new int[exceptionLength];
+      }
+      int readOffset = 8;
+      IConstantPoolEntry constantPoolEntry;
+      for (int i = 0; i < exceptionLength; i++)
+      {
+         this.exceptionIndexes[i] = u2At(classFileBytes, readOffset, offset);
+         constantPoolEntry = constantPool.decodeEntry(this.exceptionIndexes[i]);
+         if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Class)
+         {
+            throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+         }
+         this.exceptionNames[i] = constantPoolEntry.getClassInfoName();
+         readOffset += 2;
+      }
+   }
 
-	/**
-	 * @see IExceptionAttribute#getExceptionsNumber()
-	 */
-	public int getExceptionsNumber() {
-		return this.exceptionsNumber;
-	}
+   /**
+    * @see IExceptionAttribute#getExceptionIndexes()
+    */
+   public int[] getExceptionIndexes()
+   {
+      return this.exceptionIndexes;
+   }
+
+   /**
+    * @see IExceptionAttribute#getExceptionNames()
+    */
+   public char[][] getExceptionNames()
+   {
+      return this.exceptionNames;
+   }
+
+   /**
+    * @see IExceptionAttribute#getExceptionsNumber()
+    */
+   public int getExceptionsNumber()
+   {
+      return this.exceptionsNumber;
+   }
 }

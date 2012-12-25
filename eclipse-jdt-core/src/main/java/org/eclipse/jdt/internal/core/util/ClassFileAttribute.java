@@ -19,38 +19,47 @@ import org.eclipse.jdt.core.util.IConstantPoolEntry;
 /**
  * Default implementation of IClassFileAttribute
  */
-public class ClassFileAttribute extends ClassFileStruct implements IClassFileAttribute {
-	public static final IClassFileAttribute[] NO_ATTRIBUTES = new IClassFileAttribute[0];
-	private long attributeLength;
-	private int attributeNameIndex;
-	private char[] attributeName;
+public class ClassFileAttribute extends ClassFileStruct implements IClassFileAttribute
+{
+   public static final IClassFileAttribute[] NO_ATTRIBUTES = new IClassFileAttribute[0];
 
-	public ClassFileAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException {
-		this.attributeNameIndex = u2At(classFileBytes, 0, offset);
-		this.attributeLength = u4At(classFileBytes, 2, offset);
-		IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.attributeNameIndex);
-		if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8) {
-			throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
-		}
-		this.attributeName = constantPoolEntry.getUtf8Value();
-	}
+   private long attributeLength;
 
-	public int getAttributeNameIndex() {
-		return this.attributeNameIndex;
-	}
+   private int attributeNameIndex;
 
-	/**
-	 * @see IClassFileAttribute#getAttributeName()
-	 */
-	public char[] getAttributeName() {
-		return this.attributeName;
-	}
+   private char[] attributeName;
 
-	/**
-	 * @see IClassFileAttribute#getAttributeLength()
-	 */
-	public long getAttributeLength() {
-		return this.attributeLength;
-	}
+   public ClassFileAttribute(byte[] classFileBytes, IConstantPool constantPool, int offset) throws ClassFormatException
+   {
+      this.attributeNameIndex = u2At(classFileBytes, 0, offset);
+      this.attributeLength = u4At(classFileBytes, 2, offset);
+      IConstantPoolEntry constantPoolEntry = constantPool.decodeEntry(this.attributeNameIndex);
+      if (constantPoolEntry.getKind() != IConstantPoolConstant.CONSTANT_Utf8)
+      {
+         throw new ClassFormatException(ClassFormatException.INVALID_CONSTANT_POOL_ENTRY);
+      }
+      this.attributeName = constantPoolEntry.getUtf8Value();
+   }
+
+   public int getAttributeNameIndex()
+   {
+      return this.attributeNameIndex;
+   }
+
+   /**
+    * @see IClassFileAttribute#getAttributeName()
+    */
+   public char[] getAttributeName()
+   {
+      return this.attributeName;
+   }
+
+   /**
+    * @see IClassFileAttribute#getAttributeLength()
+    */
+   public long getAttributeLength()
+   {
+      return this.attributeLength;
+   }
 
 }

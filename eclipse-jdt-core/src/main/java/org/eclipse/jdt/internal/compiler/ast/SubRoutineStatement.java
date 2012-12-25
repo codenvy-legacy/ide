@@ -18,58 +18,76 @@ import org.eclipse.jdt.internal.compiler.lookup.LocalVariableBinding;
 /**
  * Extra behavior for statements which are generating subroutines
  */
-public abstract class SubRoutineStatement extends Statement {
+public abstract class SubRoutineStatement extends Statement
+{
 
-	public static void reenterAllExceptionHandlers(SubRoutineStatement[] subroutines, int max, CodeStream codeStream) {
-		if (subroutines == null) return;
-		if (max < 0) max = subroutines.length;
-		for (int i = 0; i < max; i++) {
-			SubRoutineStatement sub = subroutines[i];
-			sub.enterAnyExceptionHandler(codeStream);
-			sub.enterDeclaredExceptionHandlers(codeStream);
-		}
-	}
+   public static void reenterAllExceptionHandlers(SubRoutineStatement[] subroutines, int max, CodeStream codeStream)
+   {
+      if (subroutines == null)
+      {
+         return;
+      }
+      if (max < 0)
+      {
+         max = subroutines.length;
+      }
+      for (int i = 0; i < max; i++)
+      {
+         SubRoutineStatement sub = subroutines[i];
+         sub.enterAnyExceptionHandler(codeStream);
+         sub.enterDeclaredExceptionHandlers(codeStream);
+      }
+   }
 
-	ExceptionLabel anyExceptionLabel;
+   ExceptionLabel anyExceptionLabel;
 
-	public ExceptionLabel enterAnyExceptionHandler(CodeStream codeStream) {
+   public ExceptionLabel enterAnyExceptionHandler(CodeStream codeStream)
+   {
 
-		if (this.anyExceptionLabel == null) {
-			this.anyExceptionLabel = new ExceptionLabel(codeStream, null /*any exception*/);
-		}
-		this.anyExceptionLabel.placeStart();
-		return this.anyExceptionLabel;
-	}
+      if (this.anyExceptionLabel == null)
+      {
+         this.anyExceptionLabel = new ExceptionLabel(codeStream, null /*any exception*/);
+      }
+      this.anyExceptionLabel.placeStart();
+      return this.anyExceptionLabel;
+   }
 
-	public void enterDeclaredExceptionHandlers(CodeStream codeStream) {
-		// do nothing by default
-	}
+   public void enterDeclaredExceptionHandlers(CodeStream codeStream)
+   {
+      // do nothing by default
+   }
 
-	public void exitAnyExceptionHandler() {
-		if (this.anyExceptionLabel != null) {
-			this.anyExceptionLabel.placeEnd();
-		}
-	}
+   public void exitAnyExceptionHandler()
+   {
+      if (this.anyExceptionLabel != null)
+      {
+         this.anyExceptionLabel.placeEnd();
+      }
+   }
 
-	public void exitDeclaredExceptionHandlers(CodeStream codeStream) {
-		// do nothing by default
-	}
+   public void exitDeclaredExceptionHandlers(CodeStream codeStream)
+   {
+      // do nothing by default
+   }
 
 
-	/**
-	 * Generate an invocation of a subroutine (e.g. jsr finally) in current context.
-	 * @param currentScope
-	 * @param codeStream
-	 * @param targetLocation
-	 * @param stateIndex
-	 * @param secretLocal
-	 * @return boolean, <code>true</code> if the generated code will abrupt completion
-	 */
-	public abstract boolean generateSubRoutineInvocation(BlockScope currentScope, CodeStream codeStream, Object targetLocation, int stateIndex, LocalVariableBinding secretLocal);
+   /**
+    * Generate an invocation of a subroutine (e.g. jsr finally) in current context.
+    *
+    * @param currentScope
+    * @param codeStream
+    * @param targetLocation
+    * @param stateIndex
+    * @param secretLocal
+    * @return boolean, <code>true</code> if the generated code will abrupt completion
+    */
+   public abstract boolean generateSubRoutineInvocation(BlockScope currentScope, CodeStream codeStream,
+      Object targetLocation, int stateIndex, LocalVariableBinding secretLocal);
 
-	public abstract boolean isSubRoutineEscaping();
+   public abstract boolean isSubRoutineEscaping();
 
-	public void placeAllAnyExceptionHandler() {
-		this.anyExceptionLabel.place();
-	}
+   public void placeAllAnyExceptionHandler()
+   {
+      this.anyExceptionLabel.place();
+   }
 }

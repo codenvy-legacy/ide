@@ -23,24 +23,30 @@ import org.eclipse.jdt.internal.core.util.Messages;
  *
  * @see CopyElementsOperation
  */
-public class MoveElementsOperation extends CopyElementsOperation {
-/**
- * When executed, this operation will move the given elements to the given containers.
- */
-public MoveElementsOperation(IJavaElement[] elementsToMove, IJavaElement[] destContainers, boolean force) {
-	super(elementsToMove, destContainers, force);
-}
-/**
- * Returns the <code>String</code> to use as the main task name
- * for progress monitoring.
- */
-protected String getMainTaskName() {
-	return Messages.operation_moveElementProgress;
-}
-/**
- * @see CopyElementsOperation#isMove()
- */
-protected boolean isMove() {
-	return true;
-}
+public class MoveElementsOperation extends CopyElementsOperation
+{
+   /**
+    * When executed, this operation will move the given elements to the given containers.
+    */
+   public MoveElementsOperation(IJavaElement[] elementsToMove, IJavaElement[] destContainers, boolean force)
+   {
+      super(elementsToMove, destContainers, force);
+   }
+
+   /**
+    * Returns the <code>String</code> to use as the main task name
+    * for progress monitoring.
+    */
+   protected String getMainTaskName()
+   {
+      return Messages.operation_moveElementProgress;
+   }
+
+   /**
+    * @see CopyElementsOperation#isMove()
+    */
+   protected boolean isMove()
+   {
+      return true;
+   }
 }

@@ -17,50 +17,63 @@ import org.eclipse.jdt.core.util.IConstantPoolEntry2;
  *
  * @since 2.0
  */
-public class ConstantPoolEntry2 extends ConstantPoolEntry implements IConstantPoolEntry2 {
-	
-	private int descriptorIndex;
-	private int referenceKind;
-	private int referenceIndex;
-	private int bootstrapMethodAttributeIndex;
-	
-	public int getDescriptorIndex() {
-		return this.descriptorIndex;
-	}
+public class ConstantPoolEntry2 extends ConstantPoolEntry implements IConstantPoolEntry2
+{
 
-	public int getReferenceKind() {
-		return this.referenceKind;
-	}
+   private int descriptorIndex;
 
-	public int getReferenceIndex() {
-		return this.referenceIndex;
-	}
+   private int referenceKind;
 
-	public int getBootstrapMethodAttributeIndex() {
-		return this.bootstrapMethodAttributeIndex;
-	}
+   private int referenceIndex;
 
-	public void setDescriptorIndex(int descriptorIndex) {
-		this.descriptorIndex = descriptorIndex;
-	}
+   private int bootstrapMethodAttributeIndex;
 
-	public void setReferenceKind(int referenceKind) {
-		this.referenceKind = referenceKind;
-	}
+   public int getDescriptorIndex()
+   {
+      return this.descriptorIndex;
+   }
 
-	public void setReferenceIndex(int referenceIndex) {
-		this.referenceIndex = referenceIndex;
-	}
+   public int getReferenceKind()
+   {
+      return this.referenceKind;
+   }
 
-	public void setBootstrapMethodAttributeIndex(int bootstrapMethodAttributeIndex) {
-		this.bootstrapMethodAttributeIndex = bootstrapMethodAttributeIndex;
-	}
-	
-	public void reset() {
-		super.reset();
-		this.descriptorIndex = 0;
-		this.referenceKind = 0;
-		this.referenceIndex = 0;
-		this.bootstrapMethodAttributeIndex = 0;
-	}
+   public int getReferenceIndex()
+   {
+      return this.referenceIndex;
+   }
+
+   public int getBootstrapMethodAttributeIndex()
+   {
+      return this.bootstrapMethodAttributeIndex;
+   }
+
+   public void setDescriptorIndex(int descriptorIndex)
+   {
+      this.descriptorIndex = descriptorIndex;
+   }
+
+   public void setReferenceKind(int referenceKind)
+   {
+      this.referenceKind = referenceKind;
+   }
+
+   public void setReferenceIndex(int referenceIndex)
+   {
+      this.referenceIndex = referenceIndex;
+   }
+
+   public void setBootstrapMethodAttributeIndex(int bootstrapMethodAttributeIndex)
+   {
+      this.bootstrapMethodAttributeIndex = bootstrapMethodAttributeIndex;
+   }
+
+   public void reset()
+   {
+      super.reset();
+      this.descriptorIndex = 0;
+      this.referenceKind = 0;
+      this.referenceIndex = 0;
+      this.bootstrapMethodAttributeIndex = 0;
+   }
 }

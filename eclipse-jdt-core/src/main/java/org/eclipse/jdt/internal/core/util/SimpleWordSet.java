@@ -12,57 +12,87 @@ package org.eclipse.jdt.internal.core.util;
 
 import org.eclipse.jdt.core.compiler.CharOperation;
 
-public final class SimpleWordSet {
+public final class SimpleWordSet
+{
 
-// to avoid using Enumerations, walk the individual values skipping nulls
-public char[][] words;
-public int elementSize; // number of elements in the table
-public int threshold;
+   // to avoid using Enumerations, walk the individual values skipping nulls
+   public char[][] words;
 
-public SimpleWordSet(int size) {
-	this.elementSize = 0;
-	this.threshold = size; // size represents the expected number of elements
-	int extraRoom = (int) (size * 1.5f);
-	if (this.threshold == extraRoom)
-		extraRoom++;
-	this.words = new char[extraRoom][];
-}
+   public int elementSize; // number of elements in the table
 
-public char[] add(char[] word) {
-	int length = this.words.length;
-	int index = CharOperation.hashCode(word) % length;
-	char[] current;
-	while ((current = this.words[index]) != null) {
-		if (CharOperation.equals(current, word)) return current;
-		if (++index == length) index = 0;
-	}
-	this.words[index] = word;
+   public int threshold;
 
-	// assumes the threshold is never equal to the size of the table
-	if (++this.elementSize > this.threshold) rehash();
-	return word;
-}
+   public SimpleWordSet(int size)
+   {
+      this.elementSize = 0;
+      this.threshold = size; // size represents the expected number of elements
+      int extraRoom = (int)(size * 1.5f);
+      if (this.threshold == extraRoom)
+      {
+         extraRoom++;
+      }
+      this.words = new char[extraRoom][];
+   }
 
-public boolean includes(char[] word) {
-	int length = this.words.length;
-	int index = CharOperation.hashCode(word) % length;
-	char[] current;
-	while ((current = this.words[index]) != null) {
-		if (CharOperation.equals(current, word)) return true;
-		if (++index == length) index = 0;
-	}
-	return false;
-}
+   public char[] add(char[] word)
+   {
+      int length = this.words.length;
+      int index = CharOperation.hashCode(word) % length;
+      char[] current;
+      while ((current = this.words[index]) != null)
+      {
+         if (CharOperation.equals(current, word))
+         {
+            return current;
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      this.words[index] = word;
 
-private void rehash() {
-	SimpleWordSet newSet = new SimpleWordSet(this.elementSize * 2); // double the number of expected elements
-	char[] current;
-	for (int i = this.words.length; --i >= 0;)
-		if ((current = this.words[i]) != null)
-			newSet.add(current);
+      // assumes the threshold is never equal to the size of the table
+      if (++this.elementSize > this.threshold)
+      {
+         rehash();
+      }
+      return word;
+   }
 
-	this.words = newSet.words;
-	this.elementSize = newSet.elementSize;
-	this.threshold = newSet.threshold;
-}
+   public boolean includes(char[] word)
+   {
+      int length = this.words.length;
+      int index = CharOperation.hashCode(word) % length;
+      char[] current;
+      while ((current = this.words[index]) != null)
+      {
+         if (CharOperation.equals(current, word))
+         {
+            return true;
+         }
+         if (++index == length)
+         {
+            index = 0;
+         }
+      }
+      return false;
+   }
+
+   private void rehash()
+   {
+      SimpleWordSet newSet = new SimpleWordSet(this.elementSize * 2); // double the number of expected elements
+      char[] current;
+      for (int i = this.words.length; --i >= 0; )
+      {
+         if ((current = this.words[i]) != null)
+         {
+            newSet.add(current);
+         }
+      }
+
+      this.words = newSet.words;
+      this.elementSize = newSet.elementSize;
+      this.threshold = newSet.threshold;
+   }
 }

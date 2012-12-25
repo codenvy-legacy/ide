@@ -18,100 +18,124 @@ import org.eclipse.jdt.internal.compiler.lookup.ClassScope;
 import org.eclipse.jdt.internal.compiler.lookup.Scope;
 import org.eclipse.jdt.internal.compiler.lookup.TypeVariableBinding;
 
-public class TypeParameter extends AbstractVariableDeclaration {
+public class TypeParameter extends AbstractVariableDeclaration
+{
 
-    public TypeVariableBinding binding;
-	public TypeReference[] bounds;
+   public TypeVariableBinding binding;
 
-	/**
-	 * @see org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration#getKind()
-	 */
-	public int getKind() {
-		return TYPE_PARAMETER;
-	}
+   public TypeReference[] bounds;
 
-	public void checkBounds(Scope scope) {
+   /**
+    * @see org.eclipse.jdt.internal.compiler.ast.AbstractVariableDeclaration#getKind()
+    */
+   public int getKind()
+   {
+      return TYPE_PARAMETER;
+   }
 
-		if (this.type != null) {
-			this.type.checkBounds(scope);
-		}
-		if (this.bounds != null) {
-			for (int i = 0, length = this.bounds.length; i < length; i++) {
-				this.bounds[i].checkBounds(scope);
-			}
-		}
-	}
+   public void checkBounds(Scope scope)
+   {
 
-	private void internalResolve(Scope scope, boolean staticContext) {
-	    // detect variable/type name collisions
-		if (this.binding != null) {
-			Binding existingType = scope.parent.getBinding(this.name, Binding.TYPE, this, false/*do not resolve hidden field*/);
-			if (existingType != null
-					&& this.binding != existingType
-					&& existingType.isValidBinding()
-					&& (existingType.kind() != Binding.TYPE_PARAMETER || !staticContext)) {
-				scope.problemReporter().typeHiding(this, existingType);
-			}
-		}
-	}
+      if (this.type != null)
+      {
+         this.type.checkBounds(scope);
+      }
+      if (this.bounds != null)
+      {
+         for (int i = 0, length = this.bounds.length; i < length; i++)
+         {
+            this.bounds[i].checkBounds(scope);
+         }
+      }
+   }
 
-	public void resolve(BlockScope scope) {
-		internalResolve(scope, scope.methodScope().isStatic);
-	}
+   private void internalResolve(Scope scope, boolean staticContext)
+   {
+      // detect variable/type name collisions
+      if (this.binding != null)
+      {
+         Binding existingType = scope.parent.getBinding(this.name, Binding.TYPE, this, false/*do not resolve hidden field*/);
+         if (existingType != null && this.binding != existingType && existingType.isValidBinding() && (existingType.kind() != Binding.TYPE_PARAMETER || !staticContext))
+         {
+            scope.problemReporter().typeHiding(this, existingType);
+         }
+      }
+   }
 
-	public void resolve(ClassScope scope) {
-		internalResolve(scope, scope.enclosingSourceType().isStatic());
-	}
+   public void resolve(BlockScope scope)
+   {
+      internalResolve(scope, scope.methodScope().isStatic);
+   }
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.jdt.internal.compiler.ast.AstNode#print(int, java.lang.StringBuffer)
-	 */
-	public StringBuffer printStatement(int indent, StringBuffer output) {
-		output.append(this.name);
-		if (this.type != null) {
-			output.append(" extends "); //$NON-NLS-1$
-			this.type.print(0, output);
-		}
-		if (this.bounds != null){
-			for (int i = 0; i < this.bounds.length; i++) {
-				output.append(" & "); //$NON-NLS-1$
-				this.bounds[i].print(0, output);
-			}
-		}
-		return output;
-	}
+   public void resolve(ClassScope scope)
+   {
+      internalResolve(scope, scope.enclosingSourceType().isStatic());
+   }
 
-	public void generateCode(BlockScope currentScope, CodeStream codeStream) {
-	    // nothing to do
-	}
+   /* (non-Javadoc)
+    * @see org.eclipse.jdt.internal.compiler.ast.AstNode#print(int, java.lang.StringBuffer)
+    */
+   public StringBuffer printStatement(int indent, StringBuffer output)
+   {
+      output.append(this.name);
+      if (this.type != null)
+      {
+         output.append(" extends "); //$NON-NLS-1$
+         this.type.print(0, output);
+      }
+      if (this.bounds != null)
+      {
+         for (int i = 0; i < this.bounds.length; i++)
+         {
+            output.append(" & "); //$NON-NLS-1$
+            this.bounds[i].print(0, output);
+         }
+      }
+      return output;
+   }
 
-	public void traverse(ASTVisitor visitor, BlockScope scope) {
-		if (visitor.visit(this, scope)) {
-			if (this.type != null) {
-				this.type.traverse(visitor, scope);
-			}
-			if (this.bounds != null) {
-				int boundsLength = this.bounds.length;
-				for (int i = 0; i < boundsLength; i++) {
-					this.bounds[i].traverse(visitor, scope);
-				}
-			}
-		}
-		visitor.endVisit(this, scope);
-	}
+   public void generateCode(BlockScope currentScope, CodeStream codeStream)
+   {
+      // nothing to do
+   }
 
-	public void traverse(ASTVisitor visitor, ClassScope scope) {
-		if (visitor.visit(this, scope)) {
-			if (this.type != null) {
-				this.type.traverse(visitor, scope);
-			}
-			if (this.bounds != null) {
-				int boundsLength = this.bounds.length;
-				for (int i = 0; i < boundsLength; i++) {
-					this.bounds[i].traverse(visitor, scope);
-				}
-			}
-		}
-		visitor.endVisit(this, scope);
-	}
+   public void traverse(ASTVisitor visitor, BlockScope scope)
+   {
+      if (visitor.visit(this, scope))
+      {
+         if (this.type != null)
+         {
+            this.type.traverse(visitor, scope);
+         }
+         if (this.bounds != null)
+         {
+            int boundsLength = this.bounds.length;
+            for (int i = 0; i < boundsLength; i++)
+            {
+               this.bounds[i].traverse(visitor, scope);
+            }
+         }
+      }
+      visitor.endVisit(this, scope);
+   }
+
+   public void traverse(ASTVisitor visitor, ClassScope scope)
+   {
+      if (visitor.visit(this, scope))
+      {
+         if (this.type != null)
+         {
+            this.type.traverse(visitor, scope);
+         }
+         if (this.bounds != null)
+         {
+            int boundsLength = this.bounds.length;
+            for (int i = 0; i < boundsLength; i++)
+            {
+               this.bounds[i].traverse(visitor, scope);
+            }
+         }
+      }
+      visitor.endVisit(this, scope);
+   }
 }

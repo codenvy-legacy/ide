@@ -17,67 +17,71 @@ import org.eclipse.jdt.internal.compiler.flow.*;
 import org.eclipse.jdt.internal.compiler.impl.Constant;
 import org.eclipse.jdt.internal.compiler.lookup.*;
 
-public class ClassLiteralAccess extends Expression {
+public class ClassLiteralAccess extends Expression
+{
 
-	public TypeReference type;
-	public TypeBinding targetType;
-	FieldBinding syntheticField;
+   public TypeReference type;
 
-	public ClassLiteralAccess(int sourceEnd, TypeReference type) {
-		this.type = type;
-		type.bits |= IgnoreRawTypeCheck; // no need to worry about raw type usage
-		this.sourceStart = type.sourceStart;
-		this.sourceEnd = sourceEnd;
-	}
+   public TypeBinding targetType;
 
-	public FlowInfo analyseCode(
-		BlockScope currentScope,
-		FlowContext flowContext,
-		FlowInfo flowInfo) {
+   FieldBinding syntheticField;
 
-		// if reachable, request the addition of a synthetic field for caching the class descriptor
-		SourceTypeBinding sourceType = currentScope.outerMostClassScope().enclosingSourceType();
-		// see https://bugs.eclipse.org/bugs/show_bug.cgi?id=22334
-		if (!sourceType.isInterface()
-				&& !this.targetType.isBaseType()
-				&& currentScope.compilerOptions().targetJDK < ClassFileConstants.JDK1_5) {
-			this.syntheticField = sourceType.addSyntheticFieldForClassLiteral(this.targetType, currentScope);
-		}
-		return flowInfo;
-	}
+   public ClassLiteralAccess(int sourceEnd, TypeReference type)
+   {
+      this.type = type;
+      type.bits |= IgnoreRawTypeCheck; // no need to worry about raw type usage
+      this.sourceStart = type.sourceStart;
+      this.sourceEnd = sourceEnd;
+   }
 
-	/**
-	 * MessageSendDotClass code generation
-	 *
-	 * @param currentScope org.eclipse.jdt.internal.compiler.lookup.BlockScope
-	 * @param codeStream org.eclipse.jdt.internal.compiler.codegen.CodeStream
-	 * @param valueRequired boolean
-	 */
-	public void generateCode(
-		BlockScope currentScope,
-		CodeStream codeStream,
-		boolean valueRequired) {
-		int pc = codeStream.position;
+   public FlowInfo analyseCode(BlockScope currentScope, FlowContext flowContext, FlowInfo flowInfo)
+   {
 
-		// in interface case, no caching occurs, since cannot make a cache field for interface
-		if (valueRequired) {
-			codeStream.generateClassLiteralAccessForType(this.type.resolvedType, this.syntheticField);
-			codeStream.generateImplicitConversion(this.implicitConversion);
-		}
-		codeStream.recordPositionsFrom(pc, this.sourceStart);
-	}
+      // if reachable, request the addition of a synthetic field for caching the class descriptor
+      SourceTypeBinding sourceType = currentScope.outerMostClassScope().enclosingSourceType();
+      // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=22334
+      if (!sourceType.isInterface() && !this.targetType.isBaseType() && currentScope.compilerOptions().targetJDK < ClassFileConstants.JDK1_5)
+      {
+         this.syntheticField = sourceType.addSyntheticFieldForClassLiteral(this.targetType, currentScope);
+      }
+      return flowInfo;
+   }
 
-	public StringBuffer printExpression(int indent, StringBuffer output) {
+   /**
+    * MessageSendDotClass code generation
+    *
+    * @param currentScope  org.eclipse.jdt.internal.compiler.lookup.BlockScope
+    * @param codeStream    org.eclipse.jdt.internal.compiler.codegen.CodeStream
+    * @param valueRequired boolean
+    */
+   public void generateCode(BlockScope currentScope, CodeStream codeStream, boolean valueRequired)
+   {
+      int pc = codeStream.position;
 
-		return this.type.print(0, output).append(".class"); //$NON-NLS-1$
-	}
+      // in interface case, no caching occurs, since cannot make a cache field for interface
+      if (valueRequired)
+      {
+         codeStream.generateClassLiteralAccessForType(this.type.resolvedType, this.syntheticField);
+         codeStream.generateImplicitConversion(this.implicitConversion);
+      }
+      codeStream.recordPositionsFrom(pc, this.sourceStart);
+   }
 
-	public TypeBinding resolveType(BlockScope scope) {
+   public StringBuffer printExpression(int indent, StringBuffer output)
+   {
 
-		this.constant = Constant.NotAConstant;
-		if ((this.targetType = this.type.resolveType(scope, true /* check bounds*/)) == null)
-			return null;
-		
+      return this.type.print(0, output).append(".class"); //$NON-NLS-1$
+   }
+
+   public TypeBinding resolveType(BlockScope scope)
+   {
+
+      this.constant = Constant.NotAConstant;
+      if ((this.targetType = this.type.resolveType(scope, true /* check bounds*/)) == null)
+      {
+         return null;
+      }
+
 		/* https://bugs.eclipse.org/bugs/show_bug.cgi?id=320463
 		   https://bugs.eclipse.org/bugs/show_bug.cgi?id=312076
 		   JLS3 15.8.2 forbids the type named in the class literal expression from being a parameterized type.
@@ -86,44 +90,56 @@ public class ClassLiteralAccess extends Expression {
 		   Corollary wise, we should resolve the type of the class literal expression to be a raw type as
 		   class literals exist only for the raw underlying type. 
 		 */
-		this.targetType = scope.environment().convertToRawType(this.targetType, true /* force conversion of enclosing types*/);
+      this.targetType = scope.environment().convertToRawType(this.targetType, true /* force conversion of enclosing types*/);
 
-		if (this.targetType.isArrayType()) {
-			ArrayBinding arrayBinding = (ArrayBinding) this.targetType;
-			TypeBinding leafComponentType = arrayBinding.leafComponentType;
-			if (leafComponentType == TypeBinding.VOID) {
-				scope.problemReporter().cannotAllocateVoidArray(this);
-				return null;
-			} else if (leafComponentType.isTypeVariable()) {
-				scope.problemReporter().illegalClassLiteralForTypeVariable((TypeVariableBinding)leafComponentType, this);
-			}
-		} else if (this.targetType.isTypeVariable()) {
-			scope.problemReporter().illegalClassLiteralForTypeVariable((TypeVariableBinding)this.targetType, this);
-		}
-		ReferenceBinding classType = scope.getJavaLangClass();
-		// https://bugs.eclipse.org/bugs/show_bug.cgi?id=328689
-		if (scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5) {
-			// Integer.class --> Class<Integer>, perform boxing of base types (int.class --> Class<Integer>)
-			TypeBinding boxedType = null;
-			if (this.targetType.id == T_void) {
-				boxedType = scope.environment().getResolvedType(JAVA_LANG_VOID, scope);
-			} else {
-				boxedType = scope.boxing(this.targetType);
-			}
-			this.resolvedType = scope.environment().createParameterizedType(classType, new TypeBinding[]{ boxedType }, null/*not a member*/);
-		} else {
-			this.resolvedType = classType;
-		}
-		return this.resolvedType;
-	}
+      if (this.targetType.isArrayType())
+      {
+         ArrayBinding arrayBinding = (ArrayBinding)this.targetType;
+         TypeBinding leafComponentType = arrayBinding.leafComponentType;
+         if (leafComponentType == TypeBinding.VOID)
+         {
+            scope.problemReporter().cannotAllocateVoidArray(this);
+            return null;
+         }
+         else if (leafComponentType.isTypeVariable())
+         {
+            scope.problemReporter().illegalClassLiteralForTypeVariable((TypeVariableBinding)leafComponentType, this);
+         }
+      }
+      else if (this.targetType.isTypeVariable())
+      {
+         scope.problemReporter().illegalClassLiteralForTypeVariable((TypeVariableBinding)this.targetType, this);
+      }
+      ReferenceBinding classType = scope.getJavaLangClass();
+      // https://bugs.eclipse.org/bugs/show_bug.cgi?id=328689
+      if (scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5)
+      {
+         // Integer.class --> Class<Integer>, perform boxing of base types (int.class --> Class<Integer>)
+         TypeBinding boxedType = null;
+         if (this.targetType.id == T_void)
+         {
+            boxedType = scope.environment().getResolvedType(JAVA_LANG_VOID, scope);
+         }
+         else
+         {
+            boxedType = scope.boxing(this.targetType);
+         }
+         this.resolvedType = scope.environment().createParameterizedType(classType, new TypeBinding[]{boxedType}, null/*not a member*/);
+      }
+      else
+      {
+         this.resolvedType = classType;
+      }
+      return this.resolvedType;
+   }
 
-	public void traverse(
-		ASTVisitor visitor,
-		BlockScope blockScope) {
+   public void traverse(ASTVisitor visitor, BlockScope blockScope)
+   {
 
-		if (visitor.visit(this, blockScope)) {
-			this.type.traverse(visitor, blockScope);
-		}
-		visitor.endVisit(this, blockScope);
-	}
+      if (visitor.visit(this, blockScope))
+      {
+         this.type.traverse(visitor, blockScope);
+      }
+      visitor.endVisit(this, blockScope);
+   }
 }

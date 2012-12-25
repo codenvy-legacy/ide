@@ -18,25 +18,26 @@ package org.eclipse.jdt.core.util;
  *
  * @since 3.0
  */
-public interface IAnnotationComponent {
-	/**
-	 * Answer back the component name index as described in the JVM specifications.
-	 *
-	 * @return the component name index
-	 */
-	int getComponentNameIndex();
+public interface IAnnotationComponent
+{
+   /**
+    * Answer back the component name index as described in the JVM specifications.
+    *
+    * @return the component name index
+    */
+   int getComponentNameIndex();
 
-	/**
-	 * Answer back the component name as described in the JVM specifications.
-	 *
-	 * @return the component name
-	 */
-	char[] getComponentName();
+   /**
+    * Answer back the component name as described in the JVM specifications.
+    *
+    * @return the component name
+    */
+   char[] getComponentName();
 
-	/**
-	 * Answer back the component value as described in the JVM specifications.
-	 *
-	 * @return the component value
-	 */
-	IAnnotationComponentValue getComponentValue();
+   /**
+    * Answer back the component value as described in the JVM specifications.
+    *
+    * @return the component value
+    */
+   IAnnotationComponentValue getComponentValue();
 }

@@ -23,23 +23,29 @@ import org.eclipse.jdt.internal.core.util.Messages;
  *
  * @see CopyResourceElementsOperation
  */
-public class MoveResourceElementsOperation extends CopyResourceElementsOperation {
-/**
- * When executed, this operation will move the given elements to the given containers.
- */
-public MoveResourceElementsOperation(IJavaElement[] elementsToMove, IJavaElement[] destContainers, boolean force) {
-	super(elementsToMove, destContainers, force);
-}
-/**
- * @see MultiOperation
- */
-protected String getMainTaskName() {
-	return Messages.operation_moveResourceProgress;
-}
-/**
- * @see CopyResourceElementsOperation#isMove()
- */
-protected boolean isMove() {
-	return true;
-}
+public class MoveResourceElementsOperation extends CopyResourceElementsOperation
+{
+   /**
+    * When executed, this operation will move the given elements to the given containers.
+    */
+   public MoveResourceElementsOperation(IJavaElement[] elementsToMove, IJavaElement[] destContainers, boolean force)
+   {
+      super(elementsToMove, destContainers, force);
+   }
+
+   /**
+    * @see MultiOperation
+    */
+   protected String getMainTaskName()
+   {
+      return Messages.operation_moveResourceProgress;
+   }
+
+   /**
+    * @see CopyResourceElementsOperation#isMove()
+    */
+   protected boolean isMove()
+   {
+      return true;
+   }
 }
