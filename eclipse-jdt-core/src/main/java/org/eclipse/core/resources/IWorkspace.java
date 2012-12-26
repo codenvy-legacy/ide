@@ -79,14 +79,14 @@ public interface IWorkspace extends IAdaptable
     */
    public static final int AVOID_UPDATE = 1;
 
-   //	/**
-   //	 * Constant that can be passed to {@link #validateEdit(org.eclipse.core.resources.IFile[], Object)}
-   //	 * to indicate that the caller does not have access to a UI context but would still
-   //	 * like to have UI-based validation if possible.
-   //	 * @since 3.3
-   //	 * @see #validateEdit(IFile[], Object)
-   //	 */
-   //	public static final Object VALIDATE_PROMPT = FileModificationValidationContext.VALIDATE_PROMPT;
+   	/**
+   	 * Constant that can be passed to {@link #validateEdit(org.eclipse.core.resources.IFile[], Object)}
+   	 * to indicate that the caller does not have access to a UI context but would still
+   	 * like to have UI-based validation if possible.
+   	 * @since 3.3
+   	 * @see #validateEdit(IFile[], Object)
+   	 */
+   	public static final Object VALIDATE_PROMPT =  null; //FileModificationValidationContext.VALIDATE_PROMPT;
 
    /**
     * The name of the IWorkspace OSGi service (value "org.eclipse.core.resources.IWorkspace").
@@ -1338,7 +1338,6 @@ public interface IWorkspace extends IAdaptable
     *                                    </ul>
     * @throws OperationCanceledException if the operation is canceled.
     *                                    Cancelation can occur even if no progress monitor is provided.
-    * @see #addSaveParticipant(Plugin, ISaveParticipant)
     */
    public IStatus save(boolean full, IProgressMonitor monitor) throws CoreException;
 
@@ -1689,7 +1688,6 @@ public interface IWorkspace extends IAdaptable
     * @see IResource#FOLDER
     * @see IResource#FILE
     * @see IStatus#OK
-    * @see IResourceStatus#getPath()
     */
    public IStatus validatePath(String path, int typeMask);
 

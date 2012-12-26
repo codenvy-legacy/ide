@@ -20,14 +20,12 @@ import java.util.Set;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.util.Util;
-import org.osgi.service.prefs.BackingStoreException;
 
 /**
  *
@@ -64,64 +62,64 @@ public class UserLibraryManager
 
    private void initialize()
    {
-      this.userLibraries = new HashMap();
-      IEclipsePreferences instancePreferences = JavaModelManager.getJavaModelManager().getInstancePreferences();
-      String[] propertyNames;
-      try
-      {
-         propertyNames = instancePreferences.keys();
-      }
-      catch (BackingStoreException e)
-      {
-         Util.log(e, "Exception while initializing user libraries"); //$NON-NLS-1$
-         return;
-      }
-
-      boolean preferencesNeedFlush = false;
-      for (int i = 0, length = propertyNames.length; i < length; i++)
-      {
-         String propertyName = propertyNames[i];
-         if (propertyName.startsWith(CP_USERLIBRARY_PREFERENCES_PREFIX))
-         {
-            String propertyValue = instancePreferences.get(propertyName, null);
-            if (propertyValue != null)
-            {
-               String libName = propertyName.substring(CP_USERLIBRARY_PREFERENCES_PREFIX.length());
-               StringReader reader = new StringReader(propertyValue);
-               UserLibrary library;
-               try
-               {
-                  library = UserLibrary.createFromString(reader);
-               }
-               catch (IOException e)
-               {
-                  Util.log(e, "Exception while initializing user library " + libName); //$NON-NLS-1$
-                  instancePreferences.remove(propertyName);
-                  preferencesNeedFlush = true;
-                  continue;
-               }
-               catch (ClasspathEntry.AssertionFailedException e)
-               {
-                  Util.log(e, "Exception while initializing user library " + libName); //$NON-NLS-1$
-                  instancePreferences.remove(propertyName);
-                  preferencesNeedFlush = true;
-                  continue;
-               }
-               this.userLibraries.put(libName, library);
-            }
-         }
-      }
-      if (preferencesNeedFlush)
-      {
-         try
-         {
-            instancePreferences.flush();
-         }
-         catch (BackingStoreException e)
-         {
-            Util.log(e, "Exception while flusing instance preferences"); //$NON-NLS-1$
-         }
-      }
+//      this.userLibraries = new HashMap();
+//      IEclipsePreferences instancePreferences = JavaModelManager.getJavaModelManager().getInstancePreferences();
+//      String[] propertyNames;
+//      try
+//      {
+//         propertyNames = instancePreferences.keys();
+//      }
+//      catch (BackingStoreException e)
+//      {
+//         Util.log(e, "Exception while initializing user libraries"); //$NON-NLS-1$
+//         return;
+//      }
+//
+//      boolean preferencesNeedFlush = false;
+//      for (int i = 0, length = propertyNames.length; i < length; i++)
+//      {
+//         String propertyName = propertyNames[i];
+//         if (propertyName.startsWith(CP_USERLIBRARY_PREFERENCES_PREFIX))
+//         {
+//            String propertyValue = instancePreferences.get(propertyName, null);
+//            if (propertyValue != null)
+//            {
+//               String libName = propertyName.substring(CP_USERLIBRARY_PREFERENCES_PREFIX.length());
+//               StringReader reader = new StringReader(propertyValue);
+//               UserLibrary library;
+//               try
+//               {
+//                  library = UserLibrary.createFromString(reader);
+//               }
+//               catch (IOException e)
+//               {
+//                  Util.log(e, "Exception while initializing user library " + libName); //$NON-NLS-1$
+//                  instancePreferences.remove(propertyName);
+//                  preferencesNeedFlush = true;
+//                  continue;
+//               }
+//               catch (ClasspathEntry.AssertionFailedException e)
+//               {
+//                  Util.log(e, "Exception while initializing user library " + libName); //$NON-NLS-1$
+//                  instancePreferences.remove(propertyName);
+//                  preferencesNeedFlush = true;
+//                  continue;
+//               }
+//               this.userLibraries.put(libName, library);
+//            }
+//         }
+//      }
+//      if (preferencesNeedFlush)
+//      {
+//         try
+//         {
+//            instancePreferences.flush();
+//         }
+//         catch (BackingStoreException e)
+//         {
+//            Util.log(e, "Exception while flusing instance preferences"); //$NON-NLS-1$
+//         }
+//      }
    }
 
    public void updateUserLibrary(String libName, String encodedUserLibrary)
@@ -203,50 +201,50 @@ public class UserLibraryManager
 
    public void removeUserLibrary(String libName)
    {
-      synchronized (this.userLibraries)
-      {
-         IEclipsePreferences instancePreferences = JavaModelManager.getJavaModelManager().getInstancePreferences();
-         String propertyName = CP_USERLIBRARY_PREFERENCES_PREFIX + libName;
-         instancePreferences.remove(propertyName);
-         try
-         {
-            instancePreferences.flush();
-         }
-         catch (BackingStoreException e)
-         {
-            Util.log(e, "Exception while removing user library " + libName); //$NON-NLS-1$
-         }
-      }
-      // this.userLibraries was updated during the PreferenceChangeEvent (see preferenceChange(...))
+//      synchronized (this.userLibraries)
+//      {
+//         IEclipsePreferences instancePreferences = JavaModelManager.getJavaModelManager().getInstancePreferences();
+//         String propertyName = CP_USERLIBRARY_PREFERENCES_PREFIX + libName;
+//         instancePreferences.remove(propertyName);
+//         try
+//         {
+//            instancePreferences.flush();
+//         }
+//         catch (BackingStoreException e)
+//         {
+//            Util.log(e, "Exception while removing user library " + libName); //$NON-NLS-1$
+//         }
+//      }
+//      // this.userLibraries was updated during the PreferenceChangeEvent (see preferenceChange(...))
    }
 
    public void setUserLibrary(String libName, IClasspathEntry[] entries, boolean isSystemLibrary)
    {
-      synchronized (this.userLibraries)
-      {
-         IEclipsePreferences instancePreferences = JavaModelManager.getJavaModelManager().getInstancePreferences();
-         String propertyName = CP_USERLIBRARY_PREFERENCES_PREFIX + libName;
-         try
-         {
-            String propertyValue = UserLibrary.serialize(entries, isSystemLibrary);
-            instancePreferences.put(propertyName,
-               propertyValue); // sends out a PreferenceChangeEvent (see preferenceChange(...))
-         }
-         catch (IOException e)
-         {
-            Util.log(e, "Exception while serializing user library " + libName); //$NON-NLS-1$
-            return;
-         }
-         try
-         {
-            instancePreferences.flush();
-         }
-         catch (BackingStoreException e)
-         {
-            Util.log(e, "Exception while saving user library " + libName); //$NON-NLS-1$
-         }
-      }
-      // this.userLibraries was updated during the PreferenceChangeEvent (see preferenceChange(...))
+//      synchronized (this.userLibraries)
+//      {
+//         IEclipsePreferences instancePreferences = JavaModelManager.getJavaModelManager().getInstancePreferences();
+//         String propertyName = CP_USERLIBRARY_PREFERENCES_PREFIX + libName;
+//         try
+//         {
+//            String propertyValue = UserLibrary.serialize(entries, isSystemLibrary);
+//            instancePreferences.put(propertyName,
+//               propertyValue); // sends out a PreferenceChangeEvent (see preferenceChange(...))
+//         }
+//         catch (IOException e)
+//         {
+//            Util.log(e, "Exception while serializing user library " + libName); //$NON-NLS-1$
+//            return;
+//         }
+//         try
+//         {
+//            instancePreferences.flush();
+//         }
+//         catch (BackingStoreException e)
+//         {
+//            Util.log(e, "Exception while saving user library " + libName); //$NON-NLS-1$
+//         }
+//      }
+//      // this.userLibraries was updated during the PreferenceChangeEvent (see preferenceChange(...))
    }
 
 }

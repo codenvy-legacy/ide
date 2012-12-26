@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.resources.WorkspaceJob;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.core.compiler.CharOperation;
@@ -1027,35 +1026,35 @@ public class DeltaProcessor
             {
                if (asynchronous)
                {
-                  WorkspaceJob touchJob = new WorkspaceJob(Messages.updating_external_archives_jobName)
-                  {
-
-                     public IStatus runInWorkspace(IProgressMonitor progressMonitor) throws CoreException
-                     {
-                        try
-                        {
-                           if (progressMonitor != null)
-                           {
-                              progressMonitor.beginTask("", projectsToTouch.length); //$NON-NLS-1$
-                           }
-                           touchProjects(projectsToTouch, progressMonitor);
-                        }
-                        finally
-                        {
-                           if (progressMonitor != null)
-                           {
-                              progressMonitor.done();
-                           }
-                        }
-                        return Status.OK_STATUS;
-                     }
-
-                     public boolean belongsTo(Object family)
-                     {
-                        return ResourcesPlugin.FAMILY_MANUAL_REFRESH == family;
-                     }
-                  };
-                  touchJob.schedule();
+//                  WorkspaceJob touchJob = new WorkspaceJob(Messages.updating_external_archives_jobName)
+//                  {
+//
+//                     public IStatus runInWorkspace(IProgressMonitor progressMonitor) throws CoreException
+//                     {
+//                        try
+//                        {
+//                           if (progressMonitor != null)
+//                           {
+//                              progressMonitor.beginTask("", projectsToTouch.length); //$NON-NLS-1$
+//                           }
+//                           touchProjects(projectsToTouch, progressMonitor);
+//                        }
+//                        finally
+//                        {
+//                           if (progressMonitor != null)
+//                           {
+//                              progressMonitor.done();
+//                           }
+//                        }
+//                        return Status.OK_STATUS;
+//                     }
+//
+//                     public boolean belongsTo(Object family)
+//                     {
+//                        return ResourcesPlugin.FAMILY_MANUAL_REFRESH == family;
+//                     }
+//                  };
+//                  touchJob.schedule();
                }
                else
                {
@@ -2145,17 +2144,17 @@ public class DeltaProcessor
 
                public void run() throws Exception
                {
-                  PerformanceStats stats = null;
-                  if (PERF)
-                  {
-                     stats = PerformanceStats.getStats(JavaModelManager.DELTA_LISTENER_PERF, listener);
-                     stats.startRun();
-                  }
+//                  PerformanceStats stats = null;
+//                  if (PERF)
+//                  {
+//                     stats = PerformanceStats.getStats(JavaModelManager.DELTA_LISTENER_PERF, listener);
+//                     stats.startRun();
+//                  }
                   listener.elementChanged(extraEvent);
-                  if (PERF)
-                  {
-                     stats.endRun();
-                  }
+//                  if (PERF)
+//                  {
+//                     stats.endRun();
+//                  }
                }
             });
             if (VERBOSE)

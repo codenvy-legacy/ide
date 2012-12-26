@@ -10,20 +10,41 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core.util;
 
-import java.io.*;
-import java.net.URI;
-import java.util.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Assert;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentType;
-import org.eclipse.core.runtime.preferences.IScopeContext;
-import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jdt.core.*;
+import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.IAnnotation;
+import org.eclipse.jdt.core.IClassFile;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IInitializer;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModelStatusConstants;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMemberValuePair;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.ISourceRange;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaConventions;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.Signature;
+import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ArrayType;
@@ -41,9 +62,9 @@ import org.eclipse.jdt.core.util.IMethodInfo;
 import org.eclipse.jdt.internal.compiler.ast.AbstractMethodDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.AnnotationMethodDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.Argument;
-import org.eclipse.jdt.internal.compiler.ast.UnionTypeReference;
 import org.eclipse.jdt.internal.compiler.ast.MethodDeclaration;
 import org.eclipse.jdt.internal.compiler.ast.TypeReference;
+import org.eclipse.jdt.internal.compiler.ast.UnionTypeReference;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileReader;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFormatException;
 import org.eclipse.jdt.internal.compiler.env.ClassSignature;
@@ -67,9 +88,23 @@ import org.eclipse.jdt.internal.core.Member;
 import org.eclipse.jdt.internal.core.MemberValuePair;
 import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.core.PackageFragmentRoot;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Provides convenient utility methods to other types in this package.
@@ -104,7 +139,7 @@ public class Util
 
    private static final String EMPTY_ARGUMENT = "   "; //$NON-NLS-1$
 
-   private static char[][] JAVA_LIKE_EXTENSIONS;
+   private static char[][] JAVA_LIKE_EXTENSIONS = new char[][]{new char[]{'j','a','v','a'}};
 
    private static final char[] BOOLEAN = "boolean".toCharArray(); //$NON-NLS-1$
 
@@ -1047,41 +1082,41 @@ public class Util
     */
    public static char[][] getJavaLikeExtensions()
    {
-      if (JAVA_LIKE_EXTENSIONS == null)
-      {
-         IContentType javaContentType = Platform.getContentTypeManager().getContentType(
-            JavaCore.JAVA_SOURCE_CONTENT_TYPE);
-         HashSet fileExtensions = new HashSet();
-         // content types derived from java content type should be included (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
-         IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
-         for (int i = 0, length = contentTypes.length; i < length; i++)
-         {
-            if (contentTypes[i].isKindOf(javaContentType))
-            { // note that javaContentType.isKindOf(javaContentType) == true
-               String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-               for (int j = 0, length2 = fileExtension.length; j < length2; j++)
-               {
-                  fileExtensions.add(fileExtension[j]);
-               }
-            }
-         }
-         int length = fileExtensions.size();
-         // note that file extensions contains "java" as it is defined in JDT Core's plugin.xml
-         char[][] extensions = new char[length][];
-         extensions[0] = SuffixConstants.EXTENSION_java.toCharArray(); // ensure that "java" is first
-         int index = 1;
-         Iterator iterator = fileExtensions.iterator();
-         while (iterator.hasNext())
-         {
-            String fileExtension = (String)iterator.next();
-            if (SuffixConstants.EXTENSION_java.equals(fileExtension))
-            {
-               continue;
-            }
-            extensions[index++] = fileExtension.toCharArray();
-         }
-         JAVA_LIKE_EXTENSIONS = extensions;
-      }
+//      if (JAVA_LIKE_EXTENSIONS == null)
+//      {
+//         IContentType javaContentType = Platform.getContentTypeManager().getContentType(
+//            JavaCore.JAVA_SOURCE_CONTENT_TYPE);
+//         HashSet fileExtensions = new HashSet();
+//         // content types derived from java content type should be included (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
+//         IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
+//         for (int i = 0, length = contentTypes.length; i < length; i++)
+//         {
+//            if (contentTypes[i].isKindOf(javaContentType))
+//            { // note that javaContentType.isKindOf(javaContentType) == true
+//               String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+//               for (int j = 0, length2 = fileExtension.length; j < length2; j++)
+//               {
+//                  fileExtensions.add(fileExtension[j]);
+//               }
+//            }
+//         }
+//         int length = fileExtensions.size();
+//         // note that file extensions contains "java" as it is defined in JDT Core's plugin.xml
+//         char[][] extensions = new char[length][];
+//         extensions[0] = SuffixConstants.EXTENSION_java.toCharArray(); // ensure that "java" is first
+//         int index = 1;
+//         Iterator iterator = fileExtensions.iterator();
+//         while (iterator.hasNext())
+//         {
+//            String fileExtension = (String)iterator.next();
+//            if (SuffixConstants.EXTENSION_java.equals(fileExtension))
+//            {
+//               continue;
+//            }
+//            extensions[index++] = fileExtension.toCharArray();
+//         }
+//         JAVA_LIKE_EXTENSIONS = extensions;
+//      }
       return JAVA_LIKE_EXTENSIONS;
    }
 
@@ -1205,30 +1240,30 @@ public class Util
          }
       }
 
-      if (Platform.isRunning())
-      {
-         // line delimiter in project preference
-         IScopeContext[] scopeContext;
-         if (project != null)
-         {
-            scopeContext = new IScopeContext[]{new ProjectScope(project.getProject())};
-            lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
-               Platform.PREF_LINE_SEPARATOR, null, scopeContext);
-            if (lineSeparator != null)
-            {
-               return lineSeparator;
-            }
-         }
-
-         // line delimiter in workspace preference
-         scopeContext = new IScopeContext[]{InstanceScope.INSTANCE};
-         lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
-            null, scopeContext);
-         if (lineSeparator != null)
-         {
-            return lineSeparator;
-         }
-      }
+//      if (Platform.isRunning())
+//      {
+//         // line delimiter in project preference
+//         IScopeContext[] scopeContext;
+//         if (project != null)
+//         {
+//            scopeContext = new IScopeContext[]{new ProjectScope(project.getProject())};
+//            lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+//               Platform.PREF_LINE_SEPARATOR, null, scopeContext);
+//            if (lineSeparator != null)
+//            {
+//               return lineSeparator;
+//            }
+//         }
+//
+//         // line delimiter in workspace preference
+//         scopeContext = new IScopeContext[]{InstanceScope.INSTANCE};
+//         lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
+//            null, scopeContext);
+//         if (lineSeparator != null)
+//         {
+//            return lineSeparator;
+//         }
+//      }
 
       // system line delimiter
       return org.eclipse.jdt.internal.compiler.util.Util.LINE_SEPARATOR;
@@ -2191,7 +2226,7 @@ public class Util
     */
    protected static boolean isAttributeSupported(int attribute)
    {
-      return (EFS.getLocalFileSystem().attributes() & attribute) != 0;
+      return false; //(EFS.getLocalFileSystem().attributes() & attribute) != 0;
    }
 
    /**
@@ -2203,15 +2238,15 @@ public class Util
     */
    public static boolean isReadOnly(IResource resource)
    {
-      if (isReadOnlySupported())
-      {
-         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-         if (resourceAttributes == null)
-         {
-            return false; // not supported on this platform for this resource
-         }
-         return resourceAttributes.isReadOnly();
-      }
+//      if (isReadOnlySupported())
+//      {
+//         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
+//         if (resourceAttributes == null)
+//         {
+//            return false; // not supported on this platform for this resource
+//         }
+//         return resourceAttributes.isReadOnly();
+//      }
       return false;
    }
 
@@ -2221,7 +2256,7 @@ public class Util
     */
    public static boolean isReadOnlySupported()
    {
-      return isAttributeSupported(EFS.ATTRIBUTE_READ_ONLY);
+      return false; //isAttributeSupported(EFS.ATTRIBUTE_READ_ONLY);
    }
 
    /*
@@ -2489,7 +2524,9 @@ public class Util
 	 */
    public static void log(IStatus status)
    {
-      JavaCore.getPlugin().getLog().log(status);
+      //TODO add logger
+      //JavaCore.getPlugin().getLog().log(status);
+      System.out.println(status);
    }
 
    public static void log(Throwable e)
@@ -2984,20 +3021,20 @@ public class Util
    {
       if (isReadOnlySupported())
       {
-         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-         if (resourceAttributes == null)
-         {
-            return; // not supported on this platform for this resource
-         }
-         resourceAttributes.setReadOnly(readOnly);
-         try
-         {
-            resource.setResourceAttributes(resourceAttributes);
-         }
-         catch (CoreException e)
-         {
-            // ignore
-         }
+//         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
+//         if (resourceAttributes == null)
+//         {
+//            return; // not supported on this platform for this resource
+//         }
+//         resourceAttributes.setReadOnly(readOnly);
+//         try
+//         {
+//            resource.setResourceAttributes(resourceAttributes);
+//         }
+//         catch (CoreException e)
+//         {
+//            // ignore
+//         }
       }
    }
 
@@ -3187,14 +3224,15 @@ public class Util
 	 */
    public static File toLocalFile(URI uri, IProgressMonitor monitor) throws CoreException
    {
-      IFileStore fileStore = EFS.getStore(uri);
-      File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
-      if (localFile == null)
-      // non local file system
-      {
-         localFile = fileStore.toLocalFile(EFS.CACHE, monitor);
-      }
-      return localFile;
+//      IFileStore fileStore = EFS.getStore(uri);
+//      File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
+//      if (localFile == null)
+//      // non local file system
+//      {
+//         localFile = fileStore.toLocalFile(EFS.CACHE, monitor);
+//      }
+//      return localFile;
+      return null;
    }
 
    /**

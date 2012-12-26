@@ -14,10 +14,10 @@ import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IDocumentListener;
 import org.exoplatform.ide.editor.shared.text.IDocumentPartitioner;
 import org.exoplatform.ide.editor.shared.text.IDocumentPartitioningListener;
-import org.eclipse.jface.text.IPositionUpdater;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.ITypedRegion;
-import org.eclipse.jface.text.Position;
+import org.exoplatform.ide.editor.shared.text.IPositionUpdater;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.ITypedRegion;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  * Minimal implementation of IDocument to apply text edit onto a string.

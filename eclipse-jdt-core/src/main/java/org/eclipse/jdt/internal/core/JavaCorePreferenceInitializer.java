@@ -12,7 +12,6 @@ package org.eclipse.jdt.internal.core;
 
 import java.util.*;
 
-import org.eclipse.core.runtime.preferences.*;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
@@ -22,11 +21,10 @@ import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
  * Initially done in JavaCore.initializeDefaultPreferences which was deprecated
  * with new eclipse preferences mechanism.
  */
-public class JavaCorePreferenceInitializer extends AbstractPreferenceInitializer
+public class JavaCorePreferenceInitializer
 {
 
    /**
-    * @see org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer#initializeDefaultPreferences()
     */
    public void initializeDefaultPreferences()
    {
@@ -97,15 +95,15 @@ public class JavaCorePreferenceInitializer extends AbstractPreferenceInitializer
       // Time out for parameter names
       defaultOptionsMap.put(JavaCore.TIMEOUT_FOR_PARAMETER_NAME_FROM_ATTACHED_JAVADOC, "50"); //$NON-NLS-1$
 
-      // Store default values to default preferences
-      IEclipsePreferences defaultPreferences = DefaultScope.INSTANCE.getNode(JavaCore.PLUGIN_ID);
-      for (Iterator iter = defaultOptionsMap.entrySet().iterator(); iter.hasNext(); )
-      {
-         Map.Entry entry = (Map.Entry)iter.next();
-         String optionName = (String)entry.getKey();
-         defaultPreferences.put(optionName, (String)entry.getValue());
-         optionNames.add(optionName);
-      }
+//      // Store default values to default preferences
+//      IEclipsePreferences defaultPreferences = DefaultScope.INSTANCE.getNode(JavaCore.PLUGIN_ID);
+//      for (Iterator iter = defaultOptionsMap.entrySet().iterator(); iter.hasNext(); )
+//      {
+//         Map.Entry entry = (Map.Entry)iter.next();
+//         String optionName = (String)entry.getKey();
+//         defaultPreferences.put(optionName, (String)entry.getValue());
+//         optionNames.add(optionName);
+//      }
 
       // Initialize deprecated options
       initializeDeprecatedOptions();

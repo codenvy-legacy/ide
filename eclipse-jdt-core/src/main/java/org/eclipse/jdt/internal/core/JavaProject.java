@@ -38,18 +38,14 @@ import org.eclipse.core.resources.IProjectNature;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.content.IContentDescription;
-import org.eclipse.core.runtime.preferences.IEclipsePreferences;
-import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -81,7 +77,6 @@ import org.eclipse.jdt.internal.core.util.MementoTokenizer;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
 import org.eclipse.jdt.internal.eval.EvaluationContext;
-import org.osgi.service.prefs.BackingStoreException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -170,12 +165,12 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
     */
    protected IProject project;
 
-   /**
-    * Preferences listeners
-    */
-   private IEclipsePreferences.INodeChangeListener preferencesNodeListener;
-
-   private IEclipsePreferences.IPreferenceChangeListener preferencesChangeListener;
+//   /**
+//    * Preferences listeners
+//    */
+//   private IEclipsePreferences.INodeChangeListener preferencesNodeListener;
+//
+//   private IEclipsePreferences.IPreferenceChangeListener preferencesChangeListener;
 
    /**
     * Constructor needed for <code>IProject.getNature()</code> and <code>IProject.addNature()</code>.
@@ -593,17 +588,17 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
             this.project, false);
          if (perProjectInfo != null && perProjectInfo.preferences != null)
          {
-            IEclipsePreferences eclipseParentPreferences = (IEclipsePreferences)perProjectInfo.preferences.parent();
-            if (this.preferencesNodeListener != null)
-            {
-               eclipseParentPreferences.removeNodeChangeListener(this.preferencesNodeListener);
-               this.preferencesNodeListener = null;
-            }
-            if (this.preferencesChangeListener != null)
-            {
-               perProjectInfo.preferences.removePreferenceChangeListener(this.preferencesChangeListener);
-               this.preferencesChangeListener = null;
-            }
+//            IEclipsePreferences eclipseParentPreferences = (IEclipsePreferences)perProjectInfo.preferences.parent();
+//            if (this.preferencesNodeListener != null)
+//            {
+//               eclipseParentPreferences.removeNodeChangeListener(this.preferencesNodeListener);
+//               this.preferencesNodeListener = null;
+//            }
+//            if (this.preferencesChangeListener != null)
+//            {
+//               perProjectInfo.preferences.removePreferenceChangeListener(this.preferencesChangeListener);
+//               this.preferencesChangeListener = null;
+//            }
          }
       }
       super.close();
@@ -1780,93 +1775,93 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
       return null;
    }
 
-   /**
-    * Returns the project custom preference pool.
-    * Project preferences may include custom encoding.
-    *
-    * @return IEclipsePreferences or <code>null</code> if the project
-    *         does not have a java nature.
-    */
-   public IEclipsePreferences getEclipsePreferences()
-   {
-      if (!JavaProject.hasJavaNature(this.project))
-      {
-         return null;
-      }
-      // Get cached preferences if exist
-      JavaModelManager.PerProjectInfo perProjectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfo(
-         this.project, true);
-      if (perProjectInfo.preferences != null)
-      {
-         return perProjectInfo.preferences;
-      }
-      // Init project preferences
-      IScopeContext context = new ProjectScope(getProject());
-      final IEclipsePreferences eclipsePreferences = context.getNode(JavaCore.PLUGIN_ID);
-      updatePreferences(eclipsePreferences);
-      perProjectInfo.preferences = eclipsePreferences;
-
-      // Listen to new preferences node
-      final IEclipsePreferences eclipseParentPreferences = (IEclipsePreferences)eclipsePreferences.parent();
-      if (eclipseParentPreferences != null)
-      {
-         if (this.preferencesNodeListener != null)
-         {
-            eclipseParentPreferences.removeNodeChangeListener(this.preferencesNodeListener);
-         }
-         this.preferencesNodeListener = new IEclipsePreferences.INodeChangeListener()
-         {
-            public void added(IEclipsePreferences.NodeChangeEvent event)
-            {
-               // do nothing
-            }
-
-            public void removed(IEclipsePreferences.NodeChangeEvent event)
-            {
-               if (event.getChild() == eclipsePreferences)
-               {
-                  JavaModelManager.getJavaModelManager().resetProjectPreferences(JavaProject.this);
-               }
-            }
-         };
-         eclipseParentPreferences.addNodeChangeListener(this.preferencesNodeListener);
-      }
-
-      // Listen to preferences changes
-      if (this.preferencesChangeListener != null)
-      {
-         eclipsePreferences.removePreferenceChangeListener(this.preferencesChangeListener);
-      }
-      this.preferencesChangeListener = new IEclipsePreferences.IPreferenceChangeListener()
-      {
-         public void preferenceChange(IEclipsePreferences.PreferenceChangeEvent event)
-         {
-            String propertyName = event.getKey();
-            JavaModelManager manager = JavaModelManager.getJavaModelManager();
-            if (propertyName.startsWith(JavaCore.PLUGIN_ID))
-            {
-               if (propertyName.equals(JavaCore.CORE_JAVA_BUILD_CLEAN_OUTPUT_FOLDER) ||
-                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_RESOURCE_COPY_FILTER) ||
-                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_DUPLICATE_RESOURCE) ||
-                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_RECREATE_MODIFIED_CLASS_FILES_IN_OUTPUT_FOLDER) ||
-                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH) ||
-                  propertyName.equals(JavaCore.CORE_ENABLE_CLASSPATH_EXCLUSION_PATTERNS) ||
-                  propertyName.equals(JavaCore.CORE_ENABLE_CLASSPATH_MULTIPLE_OUTPUT_LOCATIONS) ||
-                  propertyName.equals(JavaCore.CORE_INCOMPLETE_CLASSPATH) ||
-                  propertyName.equals(JavaCore.CORE_CIRCULAR_CLASSPATH) ||
-                  propertyName.equals(JavaCore.CORE_OUTPUT_LOCATION_OVERLAPPING_ANOTHER_SOURCE) ||
-                  propertyName.equals(JavaCore.CORE_INCOMPATIBLE_JDK_LEVEL))
-               {
-                  manager.deltaState.addClasspathValidation(JavaProject.this);
-               }
-               manager.resetProjectOptions(JavaProject.this);
-               JavaProject.this.resetCaches(); // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=233568
-            }
-         }
-      };
-      eclipsePreferences.addPreferenceChangeListener(this.preferencesChangeListener);
-      return eclipsePreferences;
-   }
+//   /**
+//    * Returns the project custom preference pool.
+//    * Project preferences may include custom encoding.
+//    *
+//    * @return IEclipsePreferences or <code>null</code> if the project
+//    *         does not have a java nature.
+//    */
+//   public IEclipsePreferences getEclipsePreferences()
+//   {
+//      if (!JavaProject.hasJavaNature(this.project))
+//      {
+//         return null;
+//      }
+//      // Get cached preferences if exist
+//      JavaModelManager.PerProjectInfo perProjectInfo = JavaModelManager.getJavaModelManager().getPerProjectInfo(
+//         this.project, true);
+//      if (perProjectInfo.preferences != null)
+//      {
+//         return perProjectInfo.preferences;
+//      }
+//      // Init project preferences
+//      IScopeContext context = new ProjectScope(getProject());
+//      final IEclipsePreferences eclipsePreferences = context.getNode(JavaCore.PLUGIN_ID);
+//      updatePreferences(eclipsePreferences);
+//      perProjectInfo.preferences = eclipsePreferences;
+//
+//      // Listen to new preferences node
+//      final IEclipsePreferences eclipseParentPreferences = (IEclipsePreferences)eclipsePreferences.parent();
+//      if (eclipseParentPreferences != null)
+//      {
+//         if (this.preferencesNodeListener != null)
+//         {
+//            eclipseParentPreferences.removeNodeChangeListener(this.preferencesNodeListener);
+//         }
+//         this.preferencesNodeListener = new IEclipsePreferences.INodeChangeListener()
+//         {
+//            public void added(IEclipsePreferences.NodeChangeEvent event)
+//            {
+//               // do nothing
+//            }
+//
+//            public void removed(IEclipsePreferences.NodeChangeEvent event)
+//            {
+//               if (event.getChild() == eclipsePreferences)
+//               {
+//                  JavaModelManager.getJavaModelManager().resetProjectPreferences(JavaProject.this);
+//               }
+//            }
+//         };
+//         eclipseParentPreferences.addNodeChangeListener(this.preferencesNodeListener);
+//      }
+//
+//      // Listen to preferences changes
+//      if (this.preferencesChangeListener != null)
+//      {
+//         eclipsePreferences.removePreferenceChangeListener(this.preferencesChangeListener);
+//      }
+//      this.preferencesChangeListener = new IEclipsePreferences.IPreferenceChangeListener()
+//      {
+//         public void preferenceChange(IEclipsePreferences.PreferenceChangeEvent event)
+//         {
+//            String propertyName = event.getKey();
+//            JavaModelManager manager = JavaModelManager.getJavaModelManager();
+//            if (propertyName.startsWith(JavaCore.PLUGIN_ID))
+//            {
+//               if (propertyName.equals(JavaCore.CORE_JAVA_BUILD_CLEAN_OUTPUT_FOLDER) ||
+//                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_RESOURCE_COPY_FILTER) ||
+//                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_DUPLICATE_RESOURCE) ||
+//                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_RECREATE_MODIFIED_CLASS_FILES_IN_OUTPUT_FOLDER) ||
+//                  propertyName.equals(JavaCore.CORE_JAVA_BUILD_INVALID_CLASSPATH) ||
+//                  propertyName.equals(JavaCore.CORE_ENABLE_CLASSPATH_EXCLUSION_PATTERNS) ||
+//                  propertyName.equals(JavaCore.CORE_ENABLE_CLASSPATH_MULTIPLE_OUTPUT_LOCATIONS) ||
+//                  propertyName.equals(JavaCore.CORE_INCOMPLETE_CLASSPATH) ||
+//                  propertyName.equals(JavaCore.CORE_CIRCULAR_CLASSPATH) ||
+//                  propertyName.equals(JavaCore.CORE_OUTPUT_LOCATION_OVERLAPPING_ANOTHER_SOURCE) ||
+//                  propertyName.equals(JavaCore.CORE_INCOMPATIBLE_JDK_LEVEL))
+//               {
+//                  manager.deltaState.addClasspathValidation(JavaProject.this);
+//               }
+//               manager.resetProjectOptions(JavaProject.this);
+//               JavaProject.this.resetCaches(); // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=233568
+//            }
+//         }
+//      };
+//      eclipsePreferences.addPreferenceChangeListener(this.preferencesChangeListener);
+//      return eclipsePreferences;
+//   }
 
    public String getElementName()
    {
@@ -1999,8 +1994,9 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
     */
    public String getOption(String optionName, boolean inheritJavaCoreOptions)
    {
-      return JavaModelManager.getJavaModelManager().getOption(optionName, inheritJavaCoreOptions,
-         getEclipsePreferences());
+//      return JavaModelManager.getJavaModelManager().getOption(optionName, inheritJavaCoreOptions,
+//         getEclipsePreferences());
+      return null;
    }
 
    /**
@@ -2017,81 +2013,78 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
       Hashtable projectOptions = null;
       JavaModelManager javaModelManager = JavaModelManager.getJavaModelManager();
       HashSet optionNames = javaModelManager.optionNames;
-      try
-      {
-         perProjectInfo = getPerProjectInfo();
-         projectOptions = perProjectInfo.options;
-         if (projectOptions == null)
-         {
-            // get eclipse preferences
-            IEclipsePreferences projectPreferences = getEclipsePreferences();
-            if (projectPreferences == null)
-            {
-               return options; // cannot do better (non-Java project)
-            }
-            // create project options
-            String[] propertyNames = projectPreferences.keys();
-            projectOptions = new Hashtable(propertyNames.length);
-            for (int i = 0; i < propertyNames.length; i++)
-            {
-               String propertyName = propertyNames[i];
-               String value = projectPreferences.get(propertyName, null);
-               if (value != null)
-               {
-                  value = value.trim();
-                  // Keep the option value, even if it's deprecated
-                  // see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=324987
-                  projectOptions.put(propertyName, value);
-                  if (!optionNames.contains(propertyName))
-                  {
-                     // try to migrate deprecated options
-                     String[] compatibleOptions = (String[])javaModelManager.deprecatedOptions.get(propertyName);
-                     if (compatibleOptions != null)
-                     {
-                        for (int co = 0, length = compatibleOptions.length; co < length; co++)
-                        {
-                           String compatibleOption = compatibleOptions[co];
-                           if (!projectOptions.containsKey(compatibleOption))
-                           {
-                              projectOptions.put(compatibleOption, value);
-                           }
-                        }
-                     }
-                  }
-               }
-            }
-            // cache project options
-            perProjectInfo.options = projectOptions;
-         }
-      }
-      catch (JavaModelException jme)
-      {
-         projectOptions = new Hashtable();
-      }
-      catch (BackingStoreException e)
-      {
-         projectOptions = new Hashtable();
-      }
-
-      // Inherit from JavaCore options if specified
-      if (inheritJavaCoreOptions)
-      {
-         Iterator propertyNames = projectOptions.entrySet().iterator();
-         while (propertyNames.hasNext())
-         {
-            Map.Entry entry = (Map.Entry)propertyNames.next();
-            String propertyName = (String)entry.getKey();
-            String propertyValue = (String)entry.getValue();
-            if (propertyValue != null && javaModelManager.knowsOption(propertyName))
-            {
-               options.put(propertyName, propertyValue.trim());
-            }
-         }
-         Util.fixTaskTags(options);
-         return options;
-      }
-      Util.fixTaskTags(projectOptions);
-      return projectOptions;
+//      try
+//      {
+//         perProjectInfo = getPerProjectInfo();
+//         projectOptions = perProjectInfo.options;
+//         if (projectOptions == null)
+//         {
+//            // get eclipse preferences
+//            IEclipsePreferences projectPreferences = getEclipsePreferences();
+//            if (projectPreferences == null)
+//            {
+//               return options; // cannot do better (non-Java project)
+//            }
+//            // create project options
+//            String[] propertyNames = projectPreferences.keys();
+//            projectOptions = new Hashtable(propertyNames.length);
+//            for (int i = 0; i < propertyNames.length; i++)
+//            {
+//               String propertyName = propertyNames[i];
+//               String value = projectPreferences.get(propertyName, null);
+//               if (value != null)
+//               {
+//                  value = value.trim();
+//                  // Keep the option value, even if it's deprecated
+//                  // see bug https://bugs.eclipse.org/bugs/show_bug.cgi?id=324987
+//                  projectOptions.put(propertyName, value);
+//                  if (!optionNames.contains(propertyName))
+//                  {
+//                     // try to migrate deprecated options
+//                     String[] compatibleOptions = (String[])javaModelManager.deprecatedOptions.get(propertyName);
+//                     if (compatibleOptions != null)
+//                     {
+//                        for (int co = 0, length = compatibleOptions.length; co < length; co++)
+//                        {
+//                           String compatibleOption = compatibleOptions[co];
+//                           if (!projectOptions.containsKey(compatibleOption))
+//                           {
+//                              projectOptions.put(compatibleOption, value);
+//                           }
+//                        }
+//                     }
+//                  }
+//               }
+//            }
+//            // cache project options
+//            perProjectInfo.options = projectOptions;
+//         }
+//      }
+//      catch (JavaModelException jme)
+//      {
+//         projectOptions = new Hashtable();
+//      }
+//
+//      // Inherit from JavaCore options if specified
+//      if (inheritJavaCoreOptions)
+//      {
+//         Iterator propertyNames = projectOptions.entrySet().iterator();
+//         while (propertyNames.hasNext())
+//         {
+//            Map.Entry entry = (Map.Entry)propertyNames.next();
+//            String propertyName = (String)entry.getKey();
+//            String propertyValue = (String)entry.getValue();
+//            if (propertyValue != null && javaModelManager.knowsOption(propertyName))
+//            {
+//               options.put(propertyName, propertyValue.trim());
+//            }
+//         }
+//         Util.fixTaskTags(options);
+//         return options;
+//      }
+//      Util.fixTaskTags(projectOptions);
+//      return projectOptions;
+      return options;
    }
 
    /**
@@ -2782,51 +2775,51 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
       return false;
    }
 
-   /**
-    * load preferences from a shareable format (VCM-wise)
-    */
-   private IEclipsePreferences loadPreferences()
-   {
-
-      IEclipsePreferences preferences = null;
-      IPath projectMetaLocation = getPluginWorkingLocation();
-      if (projectMetaLocation != null)
-      {
-         File prefFile = projectMetaLocation.append(PREF_FILENAME).toFile();
-         if (prefFile.exists())
-         { // load preferences from file
-            InputStream in = null;
-            try
-            {
-               in = new BufferedInputStream(new FileInputStream(prefFile));
-               preferences = Platform.getPreferencesService().readPreferences(in);
-            }
-            catch (CoreException e)
-            { // problems loading preference store - quietly ignore
-            }
-            catch (IOException e)
-            { // problems loading preference store - quietly ignore
-            }
-            finally
-            {
-               if (in != null)
-               {
-                  try
-                  {
-                     in.close();
-                  }
-                  catch (IOException e)
-                  { // ignore problems with close
-                  }
-               }
-            }
-            // one shot read, delete old preferences
-            prefFile.delete();
-            return preferences;
-         }
-      }
-      return null;
-   }
+//   /**
+//    * load preferences from a shareable format (VCM-wise)
+//    */
+//   private IEclipsePreferences loadPreferences()
+//   {
+//
+//      IEclipsePreferences preferences = null;
+//      IPath projectMetaLocation = getPluginWorkingLocation();
+//      if (projectMetaLocation != null)
+//      {
+//         File prefFile = projectMetaLocation.append(PREF_FILENAME).toFile();
+//         if (prefFile.exists())
+//         { // load preferences from file
+//            InputStream in = null;
+//            try
+//            {
+//               in = new BufferedInputStream(new FileInputStream(prefFile));
+//               preferences = Platform.getPreferencesService().readPreferences(in);
+//            }
+//            catch (CoreException e)
+//            { // problems loading preference store - quietly ignore
+//            }
+//            catch (IOException e)
+//            { // problems loading preference store - quietly ignore
+//            }
+//            finally
+//            {
+//               if (in != null)
+//               {
+//                  try
+//                  {
+//                     in.close();
+//                  }
+//                  catch (IOException e)
+//                  { // ignore problems with close
+//                  }
+//               }
+//            }
+//            // one shot read, delete old preferences
+//            prefFile.delete();
+//            return preferences;
+//         }
+//      }
+//      return null;
+//   }
 
    /**
     * @see IJavaProject#newEvaluationContext()
@@ -3623,23 +3616,23 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
     */
    public void setOption(String optionName, String optionValue)
    {
-      // Store option value
-      IEclipsePreferences projectPreferences = getEclipsePreferences();
-      boolean modified = JavaModelManager.getJavaModelManager().storePreference(optionName, optionValue,
-         projectPreferences, null);
-
-      // Write changes
-      if (modified)
-      {
-         try
-         {
-            projectPreferences.flush();
-         }
-         catch (BackingStoreException e)
-         {
-            // problem with pref store - quietly ignore
-         }
-      }
+//      // Store option value
+//      IEclipsePreferences projectPreferences = getEclipsePreferences();
+//      boolean modified = JavaModelManager.getJavaModelManager().storePreference(optionName, optionValue,
+//         projectPreferences, null);
+//
+//      // Write changes
+//      if (modified)
+//      {
+//         try
+//         {
+//            projectPreferences.flush();
+//         }
+//         catch (BackingStoreException e)
+//         {
+//            // problem with pref store - quietly ignore
+//         }
+//      }
    }
 
    /**
@@ -3648,61 +3641,61 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
    public void setOptions(Map newOptions)
    {
 
-      IEclipsePreferences projectPreferences = getEclipsePreferences();
-      if (projectPreferences == null)
-      {
-         return;
-      }
-      try
-      {
-         if (newOptions == null)
-         {
-            projectPreferences.clear();
-         }
-         else
-         {
-            Iterator entries = newOptions.entrySet().iterator();
-            JavaModelManager javaModelManager = JavaModelManager.getJavaModelManager();
-            while (entries.hasNext())
-            {
-               Map.Entry entry = (Map.Entry)entries.next();
-               String key = (String)entry.getKey();
-               String value = (String)entry.getValue();
-               javaModelManager.storePreference(key, value, projectPreferences, newOptions);
-            }
-
-            // reset to default all options not in new map
-            // @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=26255
-            // @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=49691
-            String[] pNames = projectPreferences.keys();
-            int ln = pNames.length;
-            for (int i = 0; i < ln; i++)
-            {
-               String key = pNames[i];
-               if (!newOptions.containsKey(key))
-               {
-                  projectPreferences.remove(key); // old preferences => remove from preferences table
-               }
-            }
-         }
-
-         // persist options
-         projectPreferences.flush();
-
-         // flush cache immediately
-         try
-         {
-            getPerProjectInfo().options = null;
-         }
-         catch (JavaModelException e)
-         {
-            // do nothing
-         }
-      }
-      catch (BackingStoreException e)
-      {
-         // problem with pref store - quietly ignore
-      }
+//      IEclipsePreferences projectPreferences = getEclipsePreferences();
+//      if (projectPreferences == null)
+//      {
+//         return;
+//      }
+//      try
+//      {
+//         if (newOptions == null)
+//         {
+//            projectPreferences.clear();
+//         }
+//         else
+//         {
+//            Iterator entries = newOptions.entrySet().iterator();
+//            JavaModelManager javaModelManager = JavaModelManager.getJavaModelManager();
+//            while (entries.hasNext())
+//            {
+//               Map.Entry entry = (Map.Entry)entries.next();
+//               String key = (String)entry.getKey();
+//               String value = (String)entry.getValue();
+//               javaModelManager.storePreference(key, value, projectPreferences, newOptions);
+//            }
+//
+//            // reset to default all options not in new map
+//            // @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=26255
+//            // @see https://bugs.eclipse.org/bugs/show_bug.cgi?id=49691
+//            String[] pNames = projectPreferences.keys();
+//            int ln = pNames.length;
+//            for (int i = 0; i < ln; i++)
+//            {
+//               String key = pNames[i];
+//               if (!newOptions.containsKey(key))
+//               {
+//                  projectPreferences.remove(key); // old preferences => remove from preferences table
+//               }
+//            }
+//         }
+//
+//         // persist options
+//         projectPreferences.flush();
+//
+//         // flush cache immediately
+//         try
+//         {
+//            getPerProjectInfo().options = null;
+//         }
+//         catch (JavaModelException e)
+//         {
+//            // do nothing
+//         }
+//      }
+//      catch (BackingStoreException e)
+//      {
+//         // problem with pref store - quietly ignore
+//      }
    }
 
    /**
@@ -3915,36 +3908,36 @@ public class JavaProject extends Openable implements IJavaProject, IProjectNatur
       prereqChain.remove(path);
    }
 
-   /*
-	 * Update eclipse preferences from old preferences.
-	 */
-   private void updatePreferences(IEclipsePreferences preferences)
-   {
-
-      IEclipsePreferences oldPreferences = loadPreferences();
-      if (oldPreferences != null)
-      {
-         try
-         {
-            String[] propertyNames = oldPreferences.childrenNames();
-            for (int i = 0; i < propertyNames.length; i++)
-            {
-               String propertyName = propertyNames[i];
-               String propertyValue = oldPreferences.get(propertyName, ""); //$NON-NLS-1$
-               if (!"".equals(propertyValue))
-               { //$NON-NLS-1$
-                  preferences.put(propertyName, propertyValue);
-               }
-            }
-            // save immediately new preferences
-            preferences.flush();
-         }
-         catch (BackingStoreException e)
-         {
-            // fails silently
-         }
-      }
-   }
+//   /*
+//	 * Update eclipse preferences from old preferences.
+//	 */
+//   private void updatePreferences(IEclipsePreferences preferences)
+//   {
+//
+//      IEclipsePreferences oldPreferences = loadPreferences();
+//      if (oldPreferences != null)
+//      {
+//         try
+//         {
+//            String[] propertyNames = oldPreferences.childrenNames();
+//            for (int i = 0; i < propertyNames.length; i++)
+//            {
+//               String propertyName = propertyNames[i];
+//               String propertyValue = oldPreferences.get(propertyName, ""); //$NON-NLS-1$
+//               if (!"".equals(propertyValue))
+//               { //$NON-NLS-1$
+//                  preferences.put(propertyName, propertyValue);
+//               }
+//            }
+//            // save immediately new preferences
+//            preferences.flush();
+//         }
+//         catch (BackingStoreException e)
+//         {
+//            // fails silently
+//         }
+//      }
+//   }
 
    protected IStatus validateExistence(IResource underlyingResource)
    {
