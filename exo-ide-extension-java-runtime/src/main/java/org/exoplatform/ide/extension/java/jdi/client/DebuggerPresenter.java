@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -50,6 +51,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -106,7 +108,7 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -460,7 +462,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                {
                   List<Variable> variables = new ArrayList<Variable>(result.getFields());
                   if (result.getLocalVariables() != null)
+                  {
                      variables.addAll(result.getLocalVariables());
+                  }
                   display.setVariables(variables);
                }
 
@@ -610,7 +614,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Performs actions when event list was received.
-    * 
+    *
     * @param eventList debugger event list
     */
    private void onEventListReceived(DebuggerEventList eventList)
@@ -627,7 +631,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                location = stepEvent.getLocation();
                filePath = resolveFilePath(location);
                if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+               {
                   openFile(location);
+               }
                currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
             }
             else if (event instanceof BreakPointEvent)
@@ -636,14 +642,18 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                location = breakPointEvent.getBreakPoint().getLocation();
                filePath = resolveFilePath(location);
                if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+               {
                   openFile(location);
+               }
                currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
             }
             doGetDump();
             enabelButtons();
          }
          if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath()))
+         {
             breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+         }
       }
    }
 
@@ -827,7 +837,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application in debug mode by sending request over WebSocket or HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void debugApplication(String warUrl)
@@ -861,7 +871,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application in debug mode by sending request over HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void debugApplicationREST(String warUrl)
@@ -895,7 +905,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application by sending request over WebSocket or HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void runApplication(String warUrl)
@@ -911,6 +921,17 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(ApplicationInstance result)
                {
+                  //Need this temporary fix because with using websocket we get stopURL like:
+                  //ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
+                  //but it must be like:
+                  //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
+                  if (!result.getStopURL().matches("http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+"))
+                  {
+                     String fixedStopURL = Window.Location.getProtocol() + "//" + Window.Location.getHost() +
+                        Utils.getRestContext() + "/" + result.getStopURL();
+                     result.setStopURL(fixedStopURL);
+                  }
+
                   onApplicationStarted(result);
                }
 
@@ -929,7 +950,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application by sending request over HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void runApplicationREST(String warUrl)
@@ -969,19 +990,19 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       {
          DebuggerClientService.getInstance().connect(debugApplicationInstance.getDebugHost(),
             debugApplicationInstance.getDebugPort(), new AsyncRequestCallback<DebuggerInfo>(unmarshaller)
+         {
+            @Override
+            public void onSuccess(DebuggerInfo result)
             {
-               @Override
-               public void onSuccess(DebuggerInfo result)
-               {
-                  IDE.eventBus().fireEvent(new DebuggerConnectedEvent(result));
-               }
+               IDE.eventBus().fireEvent(new DebuggerConnectedEvent(result));
+            }
 
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  reconnectDebugger(debugApplicationInstance);
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               reconnectDebugger(debugApplicationInstance);
+            }
+         });
       }
       catch (RequestException e)
       {
@@ -991,7 +1012,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Update deployed application using JRebel.
-    * 
+    *
     * @param warUrl URL to download project WAR
     */
    private void updateApplication(String warUrl)
@@ -1178,7 +1199,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void resetStates()
    {
-      display.setVariables(Collections.<Variable> emptyList());
+      display.setVariables(Collections.<Variable>emptyList());
       breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
       currentBreakPoint = null;
    }
@@ -1194,7 +1215,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new BreakPointsUpdatedEvent(Collections.<String, Set<EditorBreakPoint>> emptyMap()));
+                  IDE.fireEvent(new BreakPointsUpdatedEvent(Collections.<String, Set<EditorBreakPoint>>emptyMap()));
                }
 
                @Override
@@ -1274,7 +1295,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Whether to use JRebel feature for the current project.
-    * 
+    *
     * @return <code>true</code> if need to use JRebel
     */
    private boolean isUseJRebel()
@@ -1314,16 +1335,16 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
          Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeTitle(),
             DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeQuestion(), new BooleanValueReceivedHandler()
+         {
+            @Override
+            public void booleanValueReceived(Boolean value)
             {
-               @Override
-               public void booleanValueReceived(Boolean value)
+               if (value == true)
                {
-                  if (value == true)
-                  {
-                     prolongExpirationTime();
-                  }
+                  prolongExpirationTime();
                }
-            });
+            }
+         });
          return;
       }
 
