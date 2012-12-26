@@ -33,7 +33,7 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeCorrectio
 import org.eclipse.jdt.client.internal.text.correction.proposals.FixCorrectionProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.Collection;
 import java.util.HashMap;

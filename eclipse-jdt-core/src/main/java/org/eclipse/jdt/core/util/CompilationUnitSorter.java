@@ -21,8 +21,8 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.internal.core.SortElementsOperation;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * Operation for sorting members within a compilation unit.

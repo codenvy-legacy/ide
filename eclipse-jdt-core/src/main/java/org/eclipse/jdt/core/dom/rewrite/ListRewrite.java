@@ -24,7 +24,7 @@ import org.eclipse.jdt.internal.core.dom.rewrite.NodeInfoStore;
 import org.eclipse.jdt.internal.core.dom.rewrite.RewriteEvent;
 import org.eclipse.jdt.internal.core.dom.rewrite.RewriteEventStore;
 import org.eclipse.jdt.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
-import org.eclipse.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * For describing manipulations to a child list property of an AST node.

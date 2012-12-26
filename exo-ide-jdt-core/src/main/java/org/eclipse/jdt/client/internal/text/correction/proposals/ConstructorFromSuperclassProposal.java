@@ -43,7 +43,7 @@ import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class ConstructorFromSuperclassProposal extends LinkedCorrectionProposal
 {

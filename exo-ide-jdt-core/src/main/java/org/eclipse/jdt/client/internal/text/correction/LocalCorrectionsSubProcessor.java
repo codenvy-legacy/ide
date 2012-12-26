@@ -118,9 +118,9 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.NewVariableCorr
 import org.eclipse.jdt.client.internal.text.correction.proposals.ReplaceCorrectionProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.InsertEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -19,9 +19,9 @@ import org.eclipse.jdt.client.core.dom.NodeFinder;
 import org.eclipse.jdt.client.core.dom.SimpleName;
 import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 public class RenameNodeCorrectionProposal extends CUCorrectionProposal
 {

@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.internal.corext.fix;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Expression;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Proposal for a default serial version id.

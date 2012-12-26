@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -313,14 +312,7 @@ public class SourceMapper extends ReferenceInfoAdapter implements ISourceElement
       this.areRootPathsComputed = false;
       this.options = options;
       this.encoding = encoding;
-      try
-      {
-         this.defaultEncoding = ResourcesPlugin.getWorkspace().getRoot().getDefaultCharset();
-      }
-      catch (CoreException e)
-      {
-         // use no encoding
-      }
+      this.defaultEncoding = "UTF-8"; //ResourcesPlugin.getWorkspace().getRoot().getDefaultCharset();
       if (rootPath != null)
       {
          this.rootPaths = new ArrayList();

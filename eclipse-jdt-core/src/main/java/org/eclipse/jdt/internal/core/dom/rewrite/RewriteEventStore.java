@@ -10,14 +10,24 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core.dom.rewrite;
 
-import java.util.*;
-
 import org.eclipse.jdt.core.Signature;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.core.dom.rewrite.TargetSourceRangeComputer;
-import org.eclipse.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 
 /**

@@ -12,13 +12,10 @@ package org.eclipse.jdt.client.ltk.refactoring;
 
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
-import org.eclipse.jdt.client.runtime.IStatus;
-import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.eclipse.jdt.client.runtime.Status;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
-import org.exoplatform.ide.editor.text.edits.UndoEdit;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.text.edits.UndoEdit;
 
 /**
  * A special {@link TextChange} that operates on a <code>IFile</code>.

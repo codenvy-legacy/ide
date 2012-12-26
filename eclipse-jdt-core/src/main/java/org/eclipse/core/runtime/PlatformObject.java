@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.core.runtime;
 
-import org.eclipse.core.internal.runtime.AdapterManager;
-
 /**
  * An abstract superclass implementing the <code>IAdaptable</code>
  * interface. <code>getAdapter</code> invocations are directed

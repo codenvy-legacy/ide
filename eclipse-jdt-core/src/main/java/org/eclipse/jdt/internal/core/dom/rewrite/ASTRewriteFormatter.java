@@ -34,9 +34,9 @@ import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.Position;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
-import org.eclipse.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /* package */ final class ASTRewriteFormatter
 {

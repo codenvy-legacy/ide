@@ -26,8 +26,8 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.internal.compiler.parser.Scanner;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Umbrella owner and abstract syntax tree node factory.

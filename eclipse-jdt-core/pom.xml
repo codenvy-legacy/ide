@@ -9,4 +9,10 @@
    <artifactId>eclipse-jdt-core</artifactId>
    <packaging>jar</packaging>
    <name>Eclipse :: JDT :: Core</name>
+   <dependencies>
+		<dependency>
+			<groupId>org.exoplatform.ide</groupId>
+			<artifactId>exo-ide-editor-api</artifactId>
+		</dependency>
+	</dependencies>
 </project>

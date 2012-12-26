@@ -33,7 +33,7 @@ import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * This operation copies/moves/renames a collection of resources from their current

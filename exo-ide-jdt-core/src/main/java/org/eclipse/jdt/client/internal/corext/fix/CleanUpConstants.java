@@ -11,9 +11,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.internal.corext.fix;
 
-import org.exoplatform.ide.editor.runtime.Assert;
-
-import java.util.Iterator;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 public class CleanUpConstants
 {

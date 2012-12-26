@@ -12,8 +12,8 @@ package org.eclipse.jdt.core;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.UndoEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.UndoEdit;
 
 /**
  * A buffer contains the text contents of a resource. It is not language-specific.

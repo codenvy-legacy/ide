@@ -22,8 +22,8 @@ import org.eclipse.jdt.client.core.formatter.IndentManipulation;
 
 import org.eclipse.jdt.client.internal.corext.dom.TokenScanner;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class SelectionAwareSourceRangeComputer extends TargetSourceRangeComputer
 {

@@ -13,7 +13,7 @@ package org.eclipse.jdt.internal.core.dom.rewrite;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  *

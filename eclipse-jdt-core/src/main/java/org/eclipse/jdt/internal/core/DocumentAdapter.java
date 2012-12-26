@@ -11,8 +11,8 @@
 package org.eclipse.jdt.internal.core;
 
 import org.eclipse.jdt.core.IBuffer;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.Document;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.Document;
 
 /*
  * Adapts an IBuffer to IDocument

@@ -23,7 +23,7 @@ import org.eclipse.jdt.client.core.dom.ForStatement;
 
 import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
 import org.eclipse.jdt.client.runtime.IStatus;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class ConvertLoopFix extends CompilationUnitRewriteOperationsFix
 {

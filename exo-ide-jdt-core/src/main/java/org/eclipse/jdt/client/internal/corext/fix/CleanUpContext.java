@@ -11,7 +11,7 @@
 package org.eclipse.jdt.client.internal.corext.fix;
 
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * The context that contains all information required by a clean up to create a fix.

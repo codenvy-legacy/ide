@@ -32,8 +32,8 @@ import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.core.dom.rewrite.ImportRewriteAnalyzer;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
-import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 
 /**

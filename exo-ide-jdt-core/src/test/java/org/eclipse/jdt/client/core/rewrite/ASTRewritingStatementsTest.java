@@ -17,8 +17,8 @@ import org.eclipse.jdt.client.core.dom.*;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 import org.junit.Ignore;
 import org.junit.Test;
 

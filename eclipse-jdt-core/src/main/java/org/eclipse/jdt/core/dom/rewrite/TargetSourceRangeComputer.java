@@ -28,7 +28,7 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
  * the source range to be affected when replacing or deleting a particular node.
  * An instance of the subclass should be registered with
  * {@link ASTRewrite#setTargetSourceRangeComputer(TargetSourceRangeComputer)}.
- * During a call to {@link ASTRewrite#rewriteAST(org.eclipse.jface.text.IDocument, java.util.Map)},
+ * During a call to {@link ASTRewrite#rewriteAST(org.exoplatform.ide.editor.shared.text.IDocument, java.util.Map)},
  * the {@link #computeSourceRange(ASTNode)} method on this object will be
  * used to compute the source range for a node being deleted or replaced.
  * </p>

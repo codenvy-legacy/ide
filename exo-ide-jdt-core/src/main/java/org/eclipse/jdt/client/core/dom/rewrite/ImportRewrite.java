@@ -30,10 +30,10 @@ import org.eclipse.jdt.client.internal.core.dom.rewrite.ImportRewriteAnalyzer;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.HashMap;

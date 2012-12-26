@@ -36,11 +36,11 @@ import org.eclipse.jdt.internal.core.dom.rewrite.RewriteEventStore;
 import org.eclipse.jdt.internal.core.dom.rewrite.TrackedNodePosition;
 import org.eclipse.jdt.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
 import org.eclipse.jdt.internal.core.dom.rewrite.RewriteEventStore.PropertyLocation;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.TextUtilities;
-import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.TextUtilities;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * Infrastructure for modifying code by describing changes to AST nodes.

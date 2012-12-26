@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core.util;
 
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.IDocumentListener;
-import org.eclipse.jface.text.IDocumentPartitioner;
-import org.eclipse.jface.text.IDocumentPartitioningListener;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocumentListener;
+import org.exoplatform.ide.editor.shared.text.IDocumentPartitioner;
+import org.exoplatform.ide.editor.shared.text.IDocumentPartitioningListener;
 import org.eclipse.jface.text.IPositionUpdater;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.ITypedRegion;
@@ -34,7 +34,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getChar(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getChar(int)
     */
    public char getChar(int offset)
    {
@@ -42,7 +42,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLength()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLength()
     */
    public int getLength()
    {
@@ -50,7 +50,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#get()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#get()
     */
    public String get()
    {
@@ -58,7 +58,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#get(int, int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#get(int, int)
     */
    public String get(int offset, int length)
    {
@@ -66,7 +66,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#set(java.lang.String)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#set(java.lang.String)
     */
    public void set(String text)
    {
@@ -74,7 +74,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#replace(int, int, java.lang.String)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#replace(int, int, java.lang.String)
     */
    public void replace(int offset, int length, String text)
    {
@@ -83,7 +83,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#addDocumentListener(org.eclipse.jface.text.IDocumentListener)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#addDocumentListener(org.exoplatform.ide.editor.shared.text.IDocumentListener)
     */
    public void addDocumentListener(IDocumentListener listener)
    {
@@ -91,7 +91,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#removeDocumentListener(org.eclipse.jface.text.IDocumentListener)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#removeDocumentListener(org.exoplatform.ide.editor.shared.text.IDocumentListener)
     */
    public void removeDocumentListener(IDocumentListener listener)
    {
@@ -99,7 +99,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#addPrenotifiedDocumentListener(org.eclipse.jface.text.IDocumentListener)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#addPrenotifiedDocumentListener(org.exoplatform.ide.editor.shared.text.IDocumentListener)
     */
    public void addPrenotifiedDocumentListener(IDocumentListener documentAdapter)
    {
@@ -107,7 +107,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#removePrenotifiedDocumentListener(org.eclipse.jface.text.IDocumentListener)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#removePrenotifiedDocumentListener(org.exoplatform.ide.editor.shared.text.IDocumentListener)
     */
    public void removePrenotifiedDocumentListener(IDocumentListener documentAdapter)
    {
@@ -115,7 +115,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#addPositionCategory(java.lang.String)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#addPositionCategory(java.lang.String)
     */
    public void addPositionCategory(String category)
    {
@@ -123,7 +123,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#removePositionCategory(java.lang.String)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#removePositionCategory(java.lang.String)
     */
    public void removePositionCategory(String category)
    {
@@ -131,7 +131,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getPositionCategories()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getPositionCategories()
     */
    public String[] getPositionCategories()
    {
@@ -140,7 +140,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#containsPositionCategory(java.lang.String)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#containsPositionCategory(java.lang.String)
     */
    public boolean containsPositionCategory(String category)
    {
@@ -149,7 +149,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#addPosition(org.eclipse.jface.text.Position)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#addPosition(org.eclipse.jface.text.Position)
     */
    public void addPosition(Position position)
    {
@@ -157,7 +157,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#removePosition(org.eclipse.jface.text.Position)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#removePosition(org.eclipse.jface.text.Position)
     */
    public void removePosition(Position position)
    {
@@ -165,7 +165,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#addPosition(java.lang.String, org.eclipse.jface.text.Position)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#addPosition(java.lang.String, org.eclipse.jface.text.Position)
     */
    public void addPosition(String category, Position position)
    {
@@ -173,7 +173,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#removePosition(java.lang.String, org.eclipse.jface.text.Position)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#removePosition(java.lang.String, org.eclipse.jface.text.Position)
     */
    public void removePosition(String category, Position position)
    {
@@ -181,7 +181,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getPositions(java.lang.String)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getPositions(java.lang.String)
     */
    public Position[] getPositions(String category)
    {
@@ -190,7 +190,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#containsPosition(java.lang.String, int, int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#containsPosition(java.lang.String, int, int)
     */
    public boolean containsPosition(String category, int offset, int length)
    {
@@ -199,7 +199,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#computeIndexInCategory(java.lang.String, int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#computeIndexInCategory(java.lang.String, int)
     */
    public int computeIndexInCategory(String category, int offset)
    {
@@ -208,7 +208,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#addPositionUpdater(org.eclipse.jface.text.IPositionUpdater)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#addPositionUpdater(org.eclipse.jface.text.IPositionUpdater)
     */
    public void addPositionUpdater(IPositionUpdater updater)
    {
@@ -216,7 +216,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#removePositionUpdater(org.eclipse.jface.text.IPositionUpdater)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#removePositionUpdater(org.eclipse.jface.text.IPositionUpdater)
     */
    public void removePositionUpdater(IPositionUpdater updater)
    {
@@ -224,7 +224,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#insertPositionUpdater(org.eclipse.jface.text.IPositionUpdater, int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#insertPositionUpdater(org.eclipse.jface.text.IPositionUpdater, int)
     */
    public void insertPositionUpdater(IPositionUpdater updater, int index)
    {
@@ -232,7 +232,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getPositionUpdaters()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getPositionUpdaters()
     */
    public IPositionUpdater[] getPositionUpdaters()
    {
@@ -241,7 +241,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLegalContentTypes()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLegalContentTypes()
     */
    public String[] getLegalContentTypes()
    {
@@ -250,7 +250,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getContentType(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getContentType(int)
     */
    public String getContentType(int offset)
    {
@@ -259,7 +259,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getPartition(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getPartition(int)
     */
    public ITypedRegion getPartition(int offset)
    {
@@ -268,7 +268,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#computePartitioning(int, int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#computePartitioning(int, int)
     */
    public ITypedRegion[] computePartitioning(int offset, int length)
    {
@@ -277,7 +277,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#addDocumentPartitioningListener(org.eclipse.jface.text.IDocumentPartitioningListener)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#addDocumentPartitioningListener(org.exoplatform.ide.editor.shared.text.IDocumentPartitioningListener)
     */
    public void addDocumentPartitioningListener(IDocumentPartitioningListener listener)
    {
@@ -285,7 +285,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#removeDocumentPartitioningListener(org.eclipse.jface.text.IDocumentPartitioningListener)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#removeDocumentPartitioningListener(org.exoplatform.ide.editor.shared.text.IDocumentPartitioningListener)
     */
    public void removeDocumentPartitioningListener(IDocumentPartitioningListener listener)
    {
@@ -293,7 +293,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#setDocumentPartitioner(org.eclipse.jface.text.IDocumentPartitioner)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#setDocumentPartitioner(org.exoplatform.ide.editor.shared.text.IDocumentPartitioner)
     */
    public void setDocumentPartitioner(IDocumentPartitioner partitioner)
    {
@@ -301,7 +301,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getDocumentPartitioner()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getDocumentPartitioner()
     */
    public IDocumentPartitioner getDocumentPartitioner()
    {
@@ -310,7 +310,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLineLength(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLineLength(int)
     */
    public int getLineLength(int line)
    {
@@ -319,7 +319,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLineOfOffset(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLineOfOffset(int)
     */
    public int getLineOfOffset(int offset)
    {
@@ -328,7 +328,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLineOffset(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLineOffset(int)
     */
    public int getLineOffset(int line)
    {
@@ -337,7 +337,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLineInformation(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLineInformation(int)
     */
    public IRegion getLineInformation(int line)
    {
@@ -346,7 +346,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLineInformationOfOffset(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLineInformationOfOffset(int)
     */
    public IRegion getLineInformationOfOffset(int offset)
    {
@@ -355,7 +355,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getNumberOfLines()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getNumberOfLines()
     */
    public int getNumberOfLines()
    {
@@ -364,7 +364,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getNumberOfLines(int, int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getNumberOfLines(int, int)
     */
    public int getNumberOfLines(int offset, int length)
    {
@@ -373,7 +373,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#computeNumberOfLines(java.lang.String)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#computeNumberOfLines(java.lang.String)
     */
    public int computeNumberOfLines(String text)
    {
@@ -382,7 +382,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLegalLineDelimiters()
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLegalLineDelimiters()
     */
    public String[] getLegalLineDelimiters()
    {
@@ -391,7 +391,7 @@ public class SimpleDocument implements IDocument
    }
 
    /* (non-Javadoc)
-    * @see org.eclipse.jface.text.IDocument#getLineDelimiter(int)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#getLineDelimiter(int)
     */
    public String getLineDelimiter(int line)
    {
@@ -400,7 +400,7 @@ public class SimpleDocument implements IDocument
    }
 
    /**
-    * @see org.eclipse.jface.text.IDocument#search(int, java.lang.String, boolean, boolean, boolean)
+    * @see org.exoplatform.ide.editor.shared.text.IDocument#search(int, java.lang.String, boolean, boolean, boolean)
     * @deprecated
     */
    public int search(int startOffset, String findString, boolean forwardSearch, boolean caseSensitive,

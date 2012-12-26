@@ -28,7 +28,7 @@ import org.exoplatform.gwtframework.ui.client.component.Toolbar;
 import org.exoplatform.gwtframework.ui.client.util.ImageHelper;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.git.client.GitClientBundle;

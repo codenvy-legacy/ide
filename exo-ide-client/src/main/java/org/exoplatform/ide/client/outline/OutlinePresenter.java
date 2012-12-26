@@ -37,16 +37,16 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.SettingsService;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 

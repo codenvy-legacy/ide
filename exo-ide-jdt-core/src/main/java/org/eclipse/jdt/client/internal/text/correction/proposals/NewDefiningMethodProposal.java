@@ -30,7 +30,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class NewDefiningMethodProposal extends AbstractMethodCorrectionProposal
 {

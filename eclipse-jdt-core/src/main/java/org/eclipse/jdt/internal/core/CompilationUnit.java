@@ -12,13 +12,48 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core;
 
-import java.io.IOException;
-import java.util.*;
-
-import org.eclipse.core.resources.*;
-import org.eclipse.core.runtime.*;
-import org.eclipse.jdt.core.*;
-import org.eclipse.jdt.core.compiler.*;
+import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.CompletionRequestor;
+import org.eclipse.jdt.core.Flags;
+import org.eclipse.jdt.core.IBuffer;
+import org.eclipse.jdt.core.IBufferFactory;
+import org.eclipse.jdt.core.ICodeAssist;
+import org.eclipse.jdt.core.ICodeCompletionRequestor;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.ICompletionRequestor;
+import org.eclipse.jdt.core.IImportContainer;
+import org.eclipse.jdt.core.IImportDeclaration;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModelStatusConstants;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IMember;
+import org.eclipse.jdt.core.IMethod;
+import org.eclipse.jdt.core.IOpenable;
+import org.eclipse.jdt.core.IPackageDeclaration;
+import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IProblemRequestor;
+import org.eclipse.jdt.core.ISourceManipulation;
+import org.eclipse.jdt.core.ISourceRange;
+import org.eclipse.jdt.core.ISourceReference;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeRoot;
+import org.eclipse.jdt.core.IWorkingCopy;
+import org.eclipse.jdt.core.JavaConventions;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.WorkingCopyOwner;
+import org.eclipse.jdt.core.compiler.CategorizedProblem;
+import org.eclipse.jdt.core.compiler.CharOperation;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.internal.compiler.IProblemFactory;
 import org.eclipse.jdt.internal.compiler.SourceElementParser;
@@ -30,13 +65,17 @@ import org.eclipse.jdt.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.internal.core.util.MementoTokenizer;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.UndoEdit;
 
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-
-import org.eclipse.text.edits.MalformedTreeException;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.UndoEdit;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @see ICompilationUnit
@@ -1691,12 +1730,12 @@ public class CompilationUnit extends Openable
       }
 
 
-      PerformanceStats stats = null;
-      if (ReconcileWorkingCopyOperation.PERF)
-      {
-         stats = PerformanceStats.getStats(JavaModelManager.RECONCILE_PERF, this);
-         stats.startRun(new String(getFileName()));
-      }
+//      PerformanceStats stats = null;
+//      if (ReconcileWorkingCopyOperation.PERF)
+//      {
+//         stats = PerformanceStats.getStats(JavaModelManager.RECONCILE_PERF, this);
+//         stats.startRun(new String(getFileName()));
+//      }
       ReconcileWorkingCopyOperation op = new ReconcileWorkingCopyOperation(this, astLevel, reconcileFlags,
          workingCopyOwner);
       JavaModelManager manager = JavaModelManager.getJavaModelManager();
@@ -1710,10 +1749,10 @@ public class CompilationUnit extends Openable
       {
          manager.flushZipFiles(this);
       }
-      if (ReconcileWorkingCopyOperation.PERF)
-      {
-         stats.endRun();
-      }
+//      if (ReconcileWorkingCopyOperation.PERF)
+//      {
+//         stats.endRun();
+//      }
       return op.ast;
    }
 

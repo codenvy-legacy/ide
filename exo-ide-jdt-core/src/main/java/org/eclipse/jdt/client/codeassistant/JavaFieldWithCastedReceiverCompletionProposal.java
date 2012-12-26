@@ -14,7 +14,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Java completion proposal for {@link CompletionProposal#FIELD_REF_WITH_CASTED_RECEIVER}.

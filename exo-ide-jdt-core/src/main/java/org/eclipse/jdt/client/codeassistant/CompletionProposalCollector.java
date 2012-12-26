@@ -27,8 +27,8 @@ import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.core.util.TypeFinder;
 import org.eclipse.jdt.client.internal.compiler.lookup.ReferenceBinding;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.HashSet;

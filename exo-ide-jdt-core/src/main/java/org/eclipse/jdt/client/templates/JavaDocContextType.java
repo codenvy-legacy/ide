@@ -14,8 +14,8 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.templates.api.GlobalTemplateVariables;
 import org.eclipse.jdt.client.templates.api.SimpleTemplateVariableResolver;
 import org.eclipse.jdt.client.templates.api.TemplateContext;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  * The context type for templates inside Javadoc.

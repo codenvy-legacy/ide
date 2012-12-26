@@ -44,7 +44,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.Region;
 import org.eclipse.text.edits.DeleteEdit;
 import org.eclipse.text.edits.InsertEdit;
-import org.eclipse.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
 
 public final class ImportRewriteAnalyzer
 {

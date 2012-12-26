@@ -27,7 +27,7 @@ import org.exoplatform.ide.client.framework.module.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.FileTypeRegistry;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
 /**

@@ -42,8 +42,8 @@ import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.text.edits.RangeMarker;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * This operation is used to sort elements in a compilation unit according to

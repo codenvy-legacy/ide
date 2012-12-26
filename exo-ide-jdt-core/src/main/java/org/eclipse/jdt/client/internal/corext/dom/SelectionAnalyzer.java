@@ -12,9 +12,9 @@ package org.eclipse.jdt.client.internal.corext.dom;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.Expression;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.Region;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.Region;
 
 import java.util.ArrayList;
 import java.util.List;

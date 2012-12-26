@@ -12,12 +12,12 @@
 package org.eclipse.jdt.core;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.IBinding;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.UndoEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.UndoEdit;
 
 
 /**

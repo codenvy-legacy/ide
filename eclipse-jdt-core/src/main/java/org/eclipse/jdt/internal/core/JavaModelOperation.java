@@ -20,8 +20,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * Defines behavior common to all Java Model operations

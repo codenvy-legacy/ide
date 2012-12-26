@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.internal.text.correction;
 
 import org.eclipse.jdt.client.codeassistant.api.IInvocationContext;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 import java.util.Collection;
 

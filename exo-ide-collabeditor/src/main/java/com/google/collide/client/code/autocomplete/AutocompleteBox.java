@@ -14,7 +14,7 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 
 /**
  * Interface used to isolate {@link Autocompleter} from UI implementation.

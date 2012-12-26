@@ -11,7 +11,7 @@
 package org.eclipse.jdt.client.internal.text.quickassist;
 
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Context information for quick fix and quick assist processors.

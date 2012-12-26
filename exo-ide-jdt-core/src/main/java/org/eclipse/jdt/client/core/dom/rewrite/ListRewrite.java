@@ -21,7 +21,7 @@ import org.eclipse.jdt.client.internal.core.dom.rewrite.NodeInfoStore;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEvent;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore;
 import org.eclipse.jdt.client.internal.core.dom.rewrite.RewriteEventStore.CopySourceInfo;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 import java.util.Collections;
 import java.util.List;

@@ -29,7 +29,7 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.internal.core.util.Messages;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * This operation deletes a collection of elements (and

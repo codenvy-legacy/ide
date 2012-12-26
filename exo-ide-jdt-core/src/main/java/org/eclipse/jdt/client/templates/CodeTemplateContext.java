@@ -18,11 +18,11 @@ import org.eclipse.jdt.client.templates.api.TemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateTranslator;
 import org.eclipse.jdt.client.templates.api.TemplateVariableResolver;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.DefaultLineTracker;
-import org.exoplatform.ide.editor.text.ILineTracker;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.DefaultLineTracker;
+import org.exoplatform.ide.editor.shared.text.ILineTracker;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 

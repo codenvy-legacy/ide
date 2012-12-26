@@ -24,9 +24,9 @@ import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.internal.text.JavaWordFinder;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.hover.TextHover;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.hover.TextHover;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -54,7 +54,7 @@ public abstract class AbstractJavaHover implements TextHover, UpdateOutlineHandl
       cUnit = event.getCompilationUnit();
    }
    /**
-    * @see org.exoplatform.ide.editor.hover.TextHover#getHoverRegion(org.exoplatform.ide.editor.api.Editor, int)
+    * @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverRegion(org.exoplatform.ide.editor.client.api.Editor, int)
     */
    @Override
    public IRegion getHoverRegion(Editor editor, int offset)

@@ -14,11 +14,11 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.text.edits.MultiTextEdit;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.TextUtilities;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.jface.text.TextUtilities;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.SimplePropertyDescriptor;

@@ -27,7 +27,7 @@ import org.eclipse.jdt.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.internal.core.util.Util;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * <p>This abstract class implements behavior common to <code>CreateElementInCUOperations</code>.

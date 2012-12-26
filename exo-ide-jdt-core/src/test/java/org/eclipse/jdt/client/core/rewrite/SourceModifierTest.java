@@ -11,9 +11,9 @@
 package org.eclipse.jdt.client.core.rewrite;
 
 import org.eclipse.jdt.client.internal.core.dom.rewrite.SourceModifier;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
-import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 import org.junit.Test;
 
 /**

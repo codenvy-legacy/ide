@@ -17,7 +17,7 @@ import org.eclipse.jdt.client.core.dom.BodyDeclaration;
 import org.eclipse.jdt.client.core.dom.ChildListPropertyDescriptor;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 public class BodyDeclarationRewrite
 {

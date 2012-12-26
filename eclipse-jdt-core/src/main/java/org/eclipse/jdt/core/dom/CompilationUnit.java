@@ -22,8 +22,8 @@ import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.internal.compiler.util.Util;
-import org.eclipse.jface.text.IDocument;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * Java compilation unit AST node type. This is the type of the root of an AST.

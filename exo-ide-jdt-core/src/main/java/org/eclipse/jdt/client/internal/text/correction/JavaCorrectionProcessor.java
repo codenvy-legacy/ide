@@ -30,7 +30,7 @@ import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.MultiStatus;
 import org.eclipse.jdt.client.runtime.Status;
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -28,7 +28,7 @@ import org.eclipse.jdt.client.internal.compiler.parser.ScannerHelper;
 import org.eclipse.jdt.client.internal.compiler.util.SuffixConstants;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 import java.util.ArrayList;
 import java.util.Arrays;

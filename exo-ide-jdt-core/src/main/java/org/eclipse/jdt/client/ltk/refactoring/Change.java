@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.ltk.refactoring;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.OperationCanceledException;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * An abstract base implementation for object representing a generic change

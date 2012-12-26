@@ -45,8 +45,8 @@ import org.eclipse.text.edits.MoveSourceEdit;
 import org.eclipse.text.edits.MoveTargetEdit;
 import org.eclipse.text.edits.RangeMarker;
 import org.eclipse.text.edits.ReplaceEdit;
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 
 /**

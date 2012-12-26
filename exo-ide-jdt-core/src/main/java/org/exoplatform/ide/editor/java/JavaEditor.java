@@ -26,7 +26,7 @@ import com.google.collide.client.editor.gutter.Gutter.Position;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
-import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.shared.text.Document;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

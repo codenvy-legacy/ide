@@ -18,7 +18,6 @@ import org.eclipse.core.resources.*;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.PerformanceStats;
 import org.eclipse.jdt.core.*;
 import org.eclipse.jdt.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.internal.codeassist.SelectionEngine;
@@ -129,12 +128,12 @@ public abstract class Openable extends JavaElement implements IOpenable, IBuffer
       {
          throw new IllegalArgumentException("Completion requestor cannot be null"); //$NON-NLS-1$
       }
-      PerformanceStats performanceStats = CompletionEngine.PERF ? PerformanceStats.getStats(
-         JavaModelManager.COMPLETION_PERF, this) : null;
-      if (performanceStats != null)
-      {
-         performanceStats.startRun(new String(cu.getFileName()) + " at " + position); //$NON-NLS-1$
-      }
+//      PerformanceStats performanceStats = CompletionEngine.PERF ? PerformanceStats.getStats(
+//         JavaModelManager.COMPLETION_PERF, this) : null;
+//      if (performanceStats != null)
+//      {
+//         performanceStats.startRun(new String(cu.getFileName()) + " at " + position); //$NON-NLS-1$
+//      }
       IBuffer buffer = getBuffer();
       if (buffer == null)
       {
@@ -154,10 +153,10 @@ public abstract class Openable extends JavaElement implements IOpenable, IBuffer
       CompletionEngine engine = new CompletionEngine(environment, requestor, project.getOptions(true), project, owner,
          monitor);
       engine.complete(cu, position, 0, typeRoot);
-      if (performanceStats != null)
-      {
-         performanceStats.endRun();
-      }
+//      if (performanceStats != null)
+//      {
+//         performanceStats.endRun();
+//      }
       if (NameLookup.VERBOSE)
       {
          System.out.println(
@@ -170,13 +169,13 @@ public abstract class Openable extends JavaElement implements IOpenable, IBuffer
    protected IJavaElement[] codeSelect(org.eclipse.jdt.internal.compiler.env.ICompilationUnit cu, int offset,
       int length, WorkingCopyOwner owner) throws JavaModelException
    {
-      PerformanceStats performanceStats = SelectionEngine.PERF ? PerformanceStats.getStats(
-         JavaModelManager.SELECTION_PERF, this) : null;
-      if (performanceStats != null)
-      {
-         performanceStats.startRun(new String(
-            cu.getFileName()) + " at [" + offset + "," + length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-      }
+//      PerformanceStats performanceStats = SelectionEngine.PERF ? PerformanceStats.getStats(
+//         JavaModelManager.SELECTION_PERF, this) : null;
+//      if (performanceStats != null)
+//      {
+//         performanceStats.startRun(new String(
+//            cu.getFileName()) + " at [" + offset + "," + length + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+//      }
 
       JavaProject project = (JavaProject)getJavaProject();
       SearchableEnvironment environment = project.newSearchableNameEnvironment(owner);
@@ -197,10 +196,10 @@ public abstract class Openable extends JavaElement implements IOpenable, IBuffer
       SelectionEngine engine = new SelectionEngine(environment, requestor, project.getOptions(true), owner);
       engine.select(cu, offset, offset + length - 1);
 
-      if (performanceStats != null)
-      {
-         performanceStats.endRun();
-      }
+//      if (performanceStats != null)
+//      {
+//         performanceStats.endRun();
+//      }
       if (NameLookup.VERBOSE)
       {
          System.out.println(

@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates.api;
 
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  * Instances of this class describe the context of a template as a region of a document. That region may be either specified by

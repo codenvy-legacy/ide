@@ -11,8 +11,8 @@
 package org.eclipse.jdt.client.core.formatter;
 
 import org.eclipse.jdt.client.internal.compiler.util.Util;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * Specification for a generic source code formatter.

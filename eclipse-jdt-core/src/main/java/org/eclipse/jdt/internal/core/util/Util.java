@@ -69,7 +69,7 @@ import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.core.PackageFragmentRoot;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.text.edits.MalformedTreeException;
-import org.eclipse.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * Provides convenient utility methods to other types in this package.

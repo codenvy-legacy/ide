@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core.dom.rewrite;
 
-import org.eclipse.text.edits.TextEdit;
-import org.eclipse.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.rewrite.ITrackedNodePosition;
