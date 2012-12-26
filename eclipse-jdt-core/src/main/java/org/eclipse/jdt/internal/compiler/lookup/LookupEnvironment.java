@@ -1674,12 +1674,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
       char[][][] missingTypeNames)
    {
       if (end == -1)
-
-
-
-       nd    ignature.length;
-
-
+      {
+         end = signature.length;
+      }
       char[][] compoundName = CharOperation.splitOn('/', signature, start, end);
       boolean wasMissingType = false;
       if (missingTypeNames != null)
@@ -1712,13 +1709,11 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          dimension++;
       }
       if (end == -1)
-
-
-
-       nd   signature.le gth - 1;
+      {
+         end = signature.length - 1;
       }
 
-    ust switch on signature[start] - the L case is the else
+      // Just switch on signature[start] - the L case is the else
       TypeBinding binding = null;
       if (start == end)
       {
@@ -1764,12 +1759,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
 
       if (dimension == 0)
       {
-
-       t
-          g;
+         return binding;
       }
-
-       n createArrayType(binding, dimension);
+      return createArrayType(binding, dimension);
    }
 
    public TypeBinding getTypeFromTypeSignature(SignatureWrapper wrapper, TypeVariableBinding[] staticVariables,
@@ -1792,15 +1784,12 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          int varEnd = wrapper.computeEnd();
          for (int i = staticVariables.length; --i >= 0; )
          {
-
-
-       ti n.equals(staticVariables[i].sourceName, wrapper.sign ture, varStart, va End))
-
-
-          ion == 0 ? (Type in i g staticVariables[i] : createArra T pe(staticVariables[i], dimension);
-
-
-    ferenceBinding initialType = enclosingType;
+            if (CharOperation.equals(staticVariables[i].sourceName, wrapper.signature, varStart, varEnd))
+            {
+               return dimension == 0 ? (TypeBinding)staticVariables[i] : createArrayType(staticVariables[i], dimension);
+            }
+         }
+         ReferenceBinding initialType = enclosingType;
          do
          {
             TypeVariableBinding[] enclosingTypeVariables;
@@ -1813,16 +1802,15 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
                enclosingTypeVariables = enclosingType.typeVariables();
             }
             for (int i = enclosingTypeVariables.length; --i >= 0; )
-
-
-       ti n.equals(enclosingTypeVariables[i].sourceName, wrapper.sign ture, varStart, va End))
-
-
-          ion == 0 ? (Type in i g enclosingTypeVariables[i] : createArra T pe(
-            Variables[i], dimension);
-
-
-             while ((enclosingType = enclosingType.enclosingType()) != null);
+            {
+               if (CharOperation.equals(enclosingTypeVariables[i].sourceName, wrapper.signature, varStart, varEnd))
+               {
+                  return dimension == 0 ? (TypeBinding)enclosingTypeVariables[i] : createArrayType(
+                     enclosingTypeVariables[i], dimension);
+               }
+            }
+         }
+         while ((enclosingType = enclosingType.enclosingType()) != null);
          this.problemReporter.undefinedTypeVariableSignature(
             CharOperation.subarray(wrapper.signature, varStart, varEnd), initialType);
          return null; // cannot reach this, since previous problem will abort compilation
@@ -1832,28 +1820,20 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          isParameterized = (wrapper.end == wrapper.bracket), enclosingType, missingTypeNames);
       if (!isParameterized)
       {
-
-    t
-       ion == 0 ? type   c e t Arra T pe(type, dimension);
+         return dimension == 0 ? type : createArrayType(type, dimension);
       }
 
-
-    ype must be a ReferenceBinding at this point, cannot be a BaseTypeBinding or ArrayTypeBinding
+      // type must be a ReferenceBinding at this point, cannot be a BaseTypeBinding or ArrayTypeBinding
       ReferenceBinding actualType = (ReferenceBinding)type;
       if (actualType instanceof UnresolvedReferenceBinding)
       {
-
-
-          ti n.indexOf('$', actualType.c mpoundName[actualType.compoundName.length - 1]) > 0)
-
-
-
-             (Reference i ding)BinaryTypeBinding.resolveType(actualType, this,
-             aw conversion */); // must reso ve member types before asking for enclosingType
+         if (CharOperation.indexOf('$', actualType.compoundName[actualType.compoundName.length - 1]) > 0)
+         {
+            actualType = (ReferenceBinding)BinaryTypeBinding.resolveType(actualType, this,
+               false /* no raw conversion */); // must resolve member types before asking for enclosingType
          }
-
-
-       enceBinding actualEnclosing = actualType.enclosingType();
+      }
+      ReferenceBinding actualEnclosing = actualType.enclosingType();
       if (actualEnclosing != null)
       { // convert needed if read some static member type
          actualEnclosing = (ReferenceBinding)convertToRawType(actualEnclosing, false /*do not force conversion of enclosing types*/);
@@ -1872,12 +1852,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          // need to protect against the member type being null when the signature is invalid
          if (memberType == null)
          {
-
-
-          eporter.corruptedSignature(parameterizedType, wrapper.sign ture, memberStart)  // aborts
+            this.problemReporter.corruptedSignature(parameterizedType, wrapper.signature, memberStart); // aborts
          }
-
-        (wrapper.signature[wrapper.start] == '<')
+         if (wrapper.signature[wrapper.start] == '<')
          {
             wrapper.start++; // skip '<'
             typeArguments = getTypeArgumentsFromSignature(wrapper, staticVariables, enclosingType, memberType,
@@ -1928,11 +1905,10 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          MissingTypeBinding missingType = (MissingTypeBinding)this.missingTypes.get(i);
          if (CharOperation.equals(missingType.sourceName, typeName))
          {
-
-
-                }
-
-       return false;
+            return true;
+         }
+      }
+      return false;
    }
 
    /* Ask the oracle if a package exists named name in the package named compoundName.
@@ -1941,12 +1917,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    {
       if (compoundName == null || compoundName.length == 0)
       {
-
-    t
-       ameEnv ronment.isPackage(null, name);
+         return this.nameEnvironment.isPackage(null, name);
       }
-
-    n this.nameEnvironment.isPackage(compoundName, name);
+      return this.nameEnvironment.isPackage(compoundName, name);
    }
 
    // The method verifier is lazily initialized to guarantee the receiver, the compiler & the oracle are ready.
@@ -1954,12 +1927,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    {
       if (this.verifier == null)
       {
-
-    i
-        = newMethodV r fier();
+         this.verifier = newMethodVerifier();
       }
-
-    n this.verifier;
+      return this.verifier;
    }
 
    public MethodVerifier newMethodVerifier()
@@ -1976,12 +1946,11 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    {
       for (int i = 0, fileCount = classFiles.length; i < fileCount; i++)
       {
-
-    i
-       ePool.release(classFiles[i]);
+         this.classFilePool.release(classFiles[i]);
       }
    }
-    blic void reset()
+
+   public void reset()
    {
       this.defaultPackage = new PackageBinding(this); // assume the default package always exists
       this.defaultImports = null;
@@ -1994,15 +1963,13 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
          ArrayBinding[] arrayBindings = this.uniqueArrayBindings[i];
          if (arrayBindings != null)
          {
-
-
-          arr yBin i g .length; --j >= 0; )
-
-
-             [j] = null;
-
-
-          // NOTE: remember to fix #updateCaches(...) when adding unique binding caches
+            for (int j = arrayBindings.length; --j >= 0; )
+            {
+               arrayBindings[j] = null;
+            }
+         }
+      }
+      // NOTE: remember to fix #updateCaches(...) when adding unique binding caches
       this.uniqueParameterizedTypeBindings = new SimpleLookupTable(3);
       this.uniqueRawTypeBindings = new SimpleLookupTable(3);
       this.uniqueWildcardBindings = new SimpleLookupTable(3);
@@ -2014,12 +1981,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
 
       for (int i = this.units.length; --i >= 0; )
       {
-
-       i
-           = null;
-
-
-       lastUnitIndex = -1;
+         this.units[i] = null;
+      }
+      this.lastUnitIndex = -1;
       this.lastCompletedUnitIndex = -1;
       this.unitBeingCompleted = null; // in case AbortException occurred
 
@@ -2037,11 +2001,9 @@ public class LookupEnvironment implements ProblemReasons, TypeConstants
    {
       if (accessRestriction == null)
       {
-
-    t
-        }
-
-    modifiers |= ExtraCompilerModifiers.AccRestrictedAccess;
+         return;
+      }
+      type.modifiers |= ExtraCompilerModifiers.AccRestrictedAccess;
       this.accessRestrictions.put(type, accessRestriction);
    }
 

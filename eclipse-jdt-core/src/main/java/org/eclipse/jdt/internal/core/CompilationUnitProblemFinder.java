@@ -255,27 +255,18 @@ public class CompilationUnitProblemFinder extends Compiler
       finally
       {
          if (environment != null)
-
-
-
-         nvironment.setMonitor(null);  / don't hold a reference to this external object
-
-
+         {
+            environment.setMonitor(null); // don't hold a reference to this external object
+         }
          if (problemFactory != null)
-
-
-
-         roblemFactory.monitor    ull;  / don't hold a reference to this external object
-
-
+         {
+            problemFactory.monitor = null; // don't hold a reference to this external object
+         }
          // NB: unit.cleanUp() is done by caller
          if (problemFinder != null && !creatingAST)
-
-
-
-         roblemFinder.lookupEnvironment.reset();
-
-
+         {
+            problemFinder.lookupEnvironment.reset();
+         }
       }
       return unit;
    }

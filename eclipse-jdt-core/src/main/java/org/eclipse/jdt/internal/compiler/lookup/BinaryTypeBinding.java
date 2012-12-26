@@ -1832,12 +1832,9 @@ public class BinaryTypeBinding extends ReferenceBinding
       }
       this.typeBits |= (this.superclass.typeBits & TypeIds.InheritableBits);
       if ((this.typeBits & (TypeIds.BitAutoCloseable | TypeIds.BitCloseable)) != 0) // avoid the side-effects of hasTypeBit()!
-
-
-
-         his.typeBits  =  pplyCloseableWhitelists();
-
-
+      {
+         this.typeBits |= applyCloseableWhitelists();
+      }
       return this.superclass;
    }
 
@@ -1845,12 +1842,9 @@ public class BinaryTypeBinding extends ReferenceBinding
    public ReferenceBinding[] superInterfaces()
    {
       if ((this.tagBits & TagBits.HasUnresolvedSuperinterfaces) == 0)
-
-
-
-       eturn  his.superInterfaces;
-
-
+      {
+         return this.superInterfaces;
+      }
 
       for (int i = this.superInterfaces.length; --i >= 0; )
       {
@@ -1883,20 +1877,14 @@ public class BinaryTypeBinding extends ReferenceBinding
    public TypeVariableBinding[] typeVariables()
    {
       if ((this.tagBits & TagBits.HasUnresolvedTypeVariables) == 0)
-
-
-
-       eturn  his.typeVariables;
-
-
+      {
+         return this.typeVariables;
+      }
 
       for (int i = this.typeVariables.length; --i >= 0; )
-
-
-
-          his.typeVariables[i].resolve();
-
-
+      {
+         this.typeVariables[i].resolve();
+      }
       this.tagBits &= ~TagBits.HasUnresolvedTypeVariables;
       return this.typeVariables;
    }
@@ -1906,83 +1894,50 @@ public class BinaryTypeBinding extends ReferenceBinding
       StringBuffer buffer = new StringBuffer();
 
       if (isDeprecated())
-
-
-
-          uffer.append("deprecated ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("deprecated "); //$NON-NLS-1$
+      }
       if (isPublic())
-
-
-
-          uffer.append("public ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("public "); //$NON-NLS-1$
+      }
       if (isProtected())
-
-
-
-          uffer.append("protected ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("protected "); //$NON-NLS-1$
+      }
       if (isPrivate())
-
-
-
-          uffer.append("private ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("private "); //$NON-NLS-1$
+      }
       if (isAbstract() && isClass())
-
-
-
-          uffer.append("abstract ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("abstract "); //$NON-NLS-1$
+      }
       if (isStatic() && isNestedType())
-
-
-
-          uffer.append("static ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("static "); //$NON-NLS-1$
+      }
       if (isFinal())
-
-
-
-          uffer.append("final ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("final "); //$NON-NLS-1$
+      }
 
       if (isEnum())
-
-
-
-          uffer.append("enum ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("enum "); //$NON-NLS-1$
+      }
       else if (isAnnotationType())
-
-
-
-          uffer.append("@interface ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("@interface "); //$NON-NLS-1$
+      }
       else if (isClass())
-
-
-
-          uffer.append("class ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("class "); //$NON-NLS-1$
+      }
       else
-
-
-
-          uffer.append("interface ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("interface "); //$NON-NLS-1$
+      }
       buffer.append(
          (this.compoundName != null) ? CharOperation.toString(this.compoundName) : "UNNAMED TYPE"); //$NON-NLS-1$
 
@@ -1996,12 +1951,9 @@ public class BinaryTypeBinding extends ReferenceBinding
          for (int i = 0, length = this.typeVariables.length; i < length; i++)
          {
             if (i > 0)
-
-
-
-          uffer.append(", ");  /$NON-NLS-1$
-
-
+            {
+               buffer.append(", "); //$NON-NLS-1$
+            }
             if (this.typeVariables[i] == null)
             {
                buffer.append("NULL TYPE VARIABLE"); //$NON-NLS-1$
@@ -2023,12 +1975,9 @@ public class BinaryTypeBinding extends ReferenceBinding
             for (int i = 0, length = this.superInterfaces.length; i < length; i++)
             {
                if (i > 0)
-
-
-
-          uffer.append(", ");  /$NON-NLS-1$
-
-
+               {
+                  buffer.append(", "); //$NON-NLS-1$
+               }
                buffer.append(
                   (this.superInterfaces[i] != null) ? this.superInterfaces[i].debugName() : "NULL TYPE"); //$NON-NLS-1$
             }
@@ -2051,13 +2000,10 @@ public class BinaryTypeBinding extends ReferenceBinding
          {
             buffer.append("\n/*   fields   */"); //$NON-NLS-1$
             for (int i = 0, length = this.fields.length; i < length; i++)
-
-
-
-          uffer.append(
-this.fields[i]  =  ull)    \n"    his.fields[i].toString()    \nNULL FIELD");  /$NON-NLS-1$ //$NON-NLS-2$
-
-
+            {
+               buffer.append(
+                  (this.fields[i] != null) ? "\n" + this.fields[i].toString() : "\nNULL FIELD"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
          }
       }
       else
@@ -2071,13 +2017,10 @@ this.fields[i]  =  ull)    \n"    his.fields[i].toString()    \nNULL FIELD");  /
          {
             buffer.append("\n/*   methods   */"); //$NON-NLS-1$
             for (int i = 0, length = this.methods.length; i < length; i++)
-
-
-
-          uffer.append(
-this.methods[i]  =  ull)    \n"    his.methods[i].toString()    \nNULL METHOD");  /$NON-NLS-1$ //$NON-NLS-2$
-
-
+            {
+               buffer.append(
+                  (this.methods[i] != null) ? "\n" + this.methods[i].toString() : "\nNULL METHOD"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
          }
       }
       else
@@ -2091,13 +2034,10 @@ this.methods[i]  =  ull)    \n"    his.methods[i].toString()    \nNULL METHOD");
          {
             buffer.append("\n/*   members   */"); //$NON-NLS-1$
             for (int i = 0, length = this.memberTypes.length; i < length; i++)
-
-
-
-          uffer.append(
-this.memberTypes[i]  =  ull)    \n"    his.memberTypes[i].toString()    \nNULL TYPE");  /$NON-NLS-1$ //$NON-NLS-2$
-
-
+            {
+               buffer.append(
+                  (this.memberTypes[i] != null) ? "\n" + this.memberTypes[i].toString() : "\nNULL TYPE"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
          }
       }
       else

@@ -405,24 +405,18 @@ public class ForStatement extends Statement
          {
             //nice only with expressions
             if (i > 0)
-
-
-
-          utput.append(", ");  /$NON-NLS-1$
-
-
+            {
+               output.append(", "); //$NON-NLS-1$
+            }
             this.initializations[i].print(0, output);
          }
       }
       output.append("; "); //$NON-NLS-1$
       //cond
       if (this.condition != null)
-
-
-
-          his.condition.printExpression(0,  utput);
-
-
+      {
+         this.condition.printExpression(0, output);
+      }
       output.append("; "); //$NON-NLS-1$
       //updates
       if (this.increments != null)
@@ -430,24 +424,18 @@ public class ForStatement extends Statement
          for (int i = 0; i < this.increments.length; i++)
          {
             if (i > 0)
-
-
-
-          utput.append(", ");  /$NON-NLS-1$
-
-
+            {
+               output.append(", "); //$NON-NLS-1$
+            }
             this.increments[i].print(0, output);
          }
       }
       output.append(") "); //$NON-NLS-1$
       //block
       if (this.action == null)
-
-
-
-          utput.append(';');
-
-
+      {
+         output.append(';');
+      }
       else
       {
          output.append('\n');
@@ -462,43 +450,28 @@ public class ForStatement extends Statement
       // use the scope that will hold the init declarations
       this.scope = (this.bits & ASTNode.NeededScope) != 0 ? new BlockScope(upperScope) : upperScope;
       if (this.initializations != null)
-
-
-
-          or  int      ,  ength    his.initializations.length;      ength;  ++)
-
-
-
-             his.initializations[i].resolve(this.scope);
-
-
-
-
+      {
+         for (int i = 0, length = this.initializations.length; i < length; i++)
+         {
+            this.initializations[i].resolve(this.scope);
+         }
+      }
       if (this.condition != null)
       {
          TypeBinding type = this.condition.resolveTypeExpecting(this.scope, TypeBinding.BOOLEAN);
          this.condition.computeConversion(this.scope, type, type);
       }
       if (this.increments != null)
-
-
-
-          or  int      ,  ength    his.increments.length;      ength;  ++)
-
-
-
-             his.increments[i].resolve(this.scope);
-
-
-
-
+      {
+         for (int i = 0, length = this.increments.length; i < length; i++)
+         {
+            this.increments[i].resolve(this.scope);
+         }
+      }
       if (this.action != null)
-
-
-
-          his.action.resolve(this.scope);
-
-
+      {
+         this.action.resolve(this.scope);
+      }
    }
 
    public void traverse(ASTVisitor visitor, BlockScope blockScope)
@@ -510,41 +483,29 @@ public class ForStatement extends Statement
          {
             int initializationsLength = this.initializations.length;
             for (int i = 0; i < initializationsLength; i++)
-
-
-
-          his.initializations[i].traverse(visitor,  his.scope);
-
-
+            {
+               this.initializations[i].traverse(visitor, this.scope);
+            }
          }
 
          if (this.condition != null)
-
-
-
-             his.condition.traverse(visitor,  his.scope);
-
-
+         {
+            this.condition.traverse(visitor, this.scope);
+         }
 
          if (this.increments != null)
          {
             int incrementsLength = this.increments.length;
             for (int i = 0; i < incrementsLength; i++)
-
-
-
-             his.increments[i].traverse(visitor,  his.scope);
-
-
+            {
+               this.increments[i].traverse(visitor, this.scope);
+            }
          }
 
          if (this.action != null)
-
-
-
-             his.action.traverse(visitor,  his.scope);
-
-
+         {
+            this.action.traverse(visitor, this.scope);
+         }
       }
       visitor.endVisit(this, blockScope);
    }

@@ -110,8 +110,9 @@ public class DocumentElementParser extends Parser
    protected void consumeCatchFormalParameter()
    {
       // FormalParameter ::= Type VariableDeclaratorId ==> false
-      // FormalParameter ::= Modifiers Type VariableDeclaratorId ==> true   /*
-	astStack :
+      // FormalParameter ::= Modifiers Type VariableDeclaratorId ==> true
+   /*
+   astStack :
 	identifierStack : type identifier
 	intStack : dim dim
 	 ==>

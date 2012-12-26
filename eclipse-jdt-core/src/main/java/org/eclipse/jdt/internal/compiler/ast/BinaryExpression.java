@@ -1715,7 +1715,8 @@ public class BinaryExpression extends OperatorExpression
    public void generateOptimizedStringConcatenation(BlockScope blockScope, CodeStream codeStream, int typeID)
    {
       // keep implementation in sync with CombinedBinaryExpression
-      // #generateOptimizedStringConcatenation   /* In the case trying to make a string concatenation, there is no need to create a new
+      // #generateOptimizedStringConcatenation
+   /* In the case trying to make a string concatenation, there is no need to create a new
 	 * string buffer, thus use a lower-level API for code generation involving only the
 	 * appending of arguments to the existing StringBuffer
 	 */

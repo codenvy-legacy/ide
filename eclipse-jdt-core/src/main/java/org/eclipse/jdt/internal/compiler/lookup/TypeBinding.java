@@ -789,19 +789,13 @@ abstract public class TypeBinding extends Binding
 	 */
 
       if (this == otherType)
-
-
-
-          eturn  alse;
-
-
+      {
+         return false;
+      }
       if (otherType == null)
-
-
-
-      eturn  rue;
-
-
+      {
+         return true;
+      }
 
       switch (kind())
       {
@@ -813,12 +807,9 @@ abstract public class TypeBinding extends Binding
                case Binding.PARAMETERIZED_TYPE:
                   ParameterizedTypeBinding otherParamType = (ParameterizedTypeBinding)otherType;
                   if (paramType.genericType() != otherParamType.genericType())
-
-
-
-             eturn  rue;
-
-
+                  {
+                     return true;
+                  }
                   if (!paramType.isStatic())
                   { // static member types do not compare their enclosing
                      ReferenceBinding enclosing = enclosingType();
@@ -826,31 +817,22 @@ abstract public class TypeBinding extends Binding
                      {
                         ReferenceBinding otherEnclosing = otherParamType.enclosingType();
                         if (otherEnclosing == null)
-
-
-
-             eturn  rue;
-
-
+                        {
+                           return true;
+                        }
                         if ((otherEnclosing.tagBits & TagBits.HasDirectWildcard) == 0)
                         {
                            if (enclosing.isProvablyDistinct(otherEnclosing))
-
-
-
-             eturn  rue;  / https://bugs.eclipse.org/bugs/show_bug.cgi?id=302919
-
-
+                           {
+                              return true; // https://bugs.eclipse.org/bugs/show_bug.cgi?id=302919
+                           }
                         }
                         else
                         {
                            if (!enclosing.isEquivalentTo(otherParamType.enclosingType()))
-
-
-
-             eturn  rue;
-
-
+                           {
+                              return true;
+                           }
                         }
                      }
                   }
@@ -858,32 +840,23 @@ abstract public class TypeBinding extends Binding
                   TypeBinding[] otherArguments = otherParamType.arguments;
                   int otherLength = otherArguments == null ? 0 : otherArguments.length;
                   if (otherLength != length)
-
-
-
-             eturn  rue;
-
-
+                  {
+                     return true;
+                  }
                   for (int i = 0; i < length; i++)
                   {
                      if (paramType.arguments[i].isProvablyDistinctTypeArgument(otherArguments[i], paramType, i))
-
-
-
-             eturn  rue;
-
-
+                     {
+                        return true;
+                     }
                   }
                   return false;
 
                case Binding.GENERIC_TYPE:
                   if (paramType.genericType() != otherType)
-
-
-
-                   eturn  rue;
-
-
+                  {
+                     return true;
+                  }
                   if (!paramType.isStatic())
                   { // static member types do not compare their enclosing
                      ReferenceBinding enclosing = enclosingType();
@@ -891,31 +864,22 @@ abstract public class TypeBinding extends Binding
                      {
                         ReferenceBinding otherEnclosing = otherType.enclosingType();
                         if (otherEnclosing == null)
-
-
-
-                   eturn  rue;
-
-
+                        {
+                           return true;
+                        }
                         if ((otherEnclosing.tagBits & TagBits.HasDirectWildcard) == 0)
                         {
                            if (enclosing != otherEnclosing)
-
-
-
-                   eturn  rue;
-
-
+                           {
+                              return true;
+                           }
                         }
                         else
                         {
                            if (!enclosing.isEquivalentTo(otherType.enclosingType()))
-
-
-
-                   eturn  rue;
-
-
+                           {
+                              return true;
+                           }
                         }
                      }
                   }
@@ -923,21 +887,15 @@ abstract public class TypeBinding extends Binding
                   otherArguments = otherType.typeVariables();
                   otherLength = otherArguments == null ? 0 : otherArguments.length;
                   if (otherLength != length)
-
-
-
-                   eturn  rue;
-
-
+                  {
+                     return true;
+                  }
                   for (int i = 0; i < length; i++)
                   {
                      if (paramType.arguments[i].isProvablyDistinctTypeArgument(otherArguments[i], paramType, i))
-
-
-
-                   eturn  rue;
-
-
+                     {
+                        return true;
+                     }
                   }
                   return false;
 
@@ -986,12 +944,9 @@ abstract public class TypeBinding extends Binding
       final int rank)
    {
       if (this == otherArgument)
-
-
-
-       eturn  alse;
-
-
+      {
+         return false;
+      }
 
       TypeBinding upperBound1 = null;
       TypeBinding lowerBound1 = null;
@@ -1033,12 +988,9 @@ abstract public class TypeBinding extends Binding
                break;
             }
             if (variable.firstBound == null) // unbound variable
-
-
-
-          eturn  alse;
-
-
+            {
+               return false;
+            }
             TypeBinding eliminatedType = Scope.convertEliminatingTypeVariables(variable, genericType, rank, null);
             switch (eliminatedType.kind())
             {
@@ -1099,12 +1051,9 @@ abstract public class TypeBinding extends Binding
                break;
             }
             if (otherVariable.firstBound == null) // unbound variable
-
-
-
-          eturn  alse;
-
-
+            {
+               return false;
+            }
             TypeBinding otherEliminatedType = Scope.convertEliminatingTypeVariables(otherVariable, genericType, rank,
                null);
             switch (otherEliminatedType.kind())
@@ -1201,12 +1150,9 @@ abstract public class TypeBinding extends Binding
    {
       TypeBinding leafType = leafComponentType();
       if (!(leafType instanceof ReferenceBinding))
-
-
-
-       eturn  rue;
-
-
+      {
+         return true;
+      }
       ReferenceBinding current = (ReferenceBinding)leafType;
       do
       {
@@ -1219,12 +1165,9 @@ abstract public class TypeBinding extends Binding
                return false;
             case Binding.PARAMETERIZED_TYPE:
                if (current.isBoundParameterizedType())
-
-
-
-       eturn  alse;
-
-
+               {
+                  return false;
+               }
                break;
             case Binding.RAW_TYPE:
                return true;
@@ -1259,12 +1202,9 @@ abstract public class TypeBinding extends Binding
    public boolean isTypeArgumentContainedBy(TypeBinding otherType)
    {
       if (this == otherType)
-
-
-
-       eturn  rue;
-
-
+      {
+         return true;
+      }
       switch (otherType.kind())
       {
          // handle captured wildcards.
@@ -1316,12 +1256,9 @@ abstract public class TypeBinding extends Binding
                   {
                      case Wildcard.EXTENDS:
                         if (wildcard.otherBounds != null) // intersection type
-
-
-
-          reak;
-
-
+                        {
+                           break;
+                        }
                         upperBound = wildcard.bound;
                         lowerBound = null;
                         break;
@@ -1339,40 +1276,28 @@ abstract public class TypeBinding extends Binding
                   {
                      CaptureBinding capture = (CaptureBinding)this;
                      if (capture.lowerBound != null)
-
-
-
-          owerBound    apture.lowerBound;
-
-
+                     {
+                        lowerBound = capture.lowerBound;
+                     }
                   }
             }
             WildcardBinding otherWildcard = (WildcardBinding)otherType;
             if (otherWildcard.otherBounds != null)
-
-
-
-          eturn  alse;  / not a true wildcard (intersection type)
-
-
+            {
+               return false; // not a true wildcard (intersection type)
+            }
             TypeBinding otherBound = otherWildcard.bound;
             switch (otherWildcard.boundKind)
             {
                case Wildcard.EXTENDS:
                   if (otherBound == this)
-
-
-
-          eturn  rue;  / ? extends T  <=  ? extends ? extends T
-
-
+                  {
+                     return true; // ? extends T  <=  ? extends ? extends T
+                  }
                   if (upperBound == null)
-
-
-
-          eturn  alse;
-
-
+                  {
+                     return false;
+                  }
                   TypeBinding match = upperBound.findSuperTypeOriginatingFrom(otherBound);
                   if (match != null && (match = match.leafComponentType()).isRawType())
                   {
@@ -1383,19 +1308,13 @@ abstract public class TypeBinding extends Binding
 
                case Wildcard.SUPER:
                   if (otherBound == this)
-
-
-
-                   eturn  rue;  / ? super T  <=  ? super ? super T
-
-
+                  {
+                     return true; // ? super T  <=  ? super ? super T
+                  }
                   if (lowerBound == null)
-
-
-
-                   eturn  alse;
-
-
+                  {
+                     return false;
+                  }
                   match = otherBound.findSuperTypeOriginatingFrom(lowerBound);
                   if (match != null && (match = match.leafComponentType()).isRawType())
                   {
@@ -1411,21 +1330,15 @@ abstract public class TypeBinding extends Binding
             // allow List<?> to match List<? extends Object> (and reciprocally)
          case Binding.PARAMETERIZED_TYPE:
             if (!isParameterizedType())
-
-
-
-       eturn  alse;
-
-
+            {
+               return false;
+            }
             ParameterizedTypeBinding paramType = (ParameterizedTypeBinding)this;
             ParameterizedTypeBinding otherParamType = (ParameterizedTypeBinding)otherType;
             if (paramType.actualType() != otherParamType.actualType())
-
-
-
-       eturn  alse;
-
-
+            {
+               return false;
+            }
             if (!paramType.isStatic())
             { // static member types do not compare their enclosing
                ReferenceBinding enclosing = enclosingType();
@@ -1433,31 +1346,22 @@ abstract public class TypeBinding extends Binding
                {
                   ReferenceBinding otherEnclosing = otherParamType.enclosingType();
                   if (otherEnclosing == null)
-
-
-
-       eturn  alse;
-
-
+                  {
+                     return false;
+                  }
                   if ((otherEnclosing.tagBits & TagBits.HasDirectWildcard) == 0)
                   {
                      if (enclosing != otherEnclosing)
-
-
-
-       eturn  alse;
-
-
+                     {
+                        return false;
+                     }
                   }
                   else
                   {
                      if (!enclosing.isEquivalentTo(otherParamType.enclosingType()))
-
-
-
-       eturn  alse;
-
-
+                     {
+                        return false;
+                     }
                   }
                }
             }
@@ -1465,42 +1369,30 @@ abstract public class TypeBinding extends Binding
             TypeBinding[] otherArguments = otherParamType.arguments;
             int otherLength = otherArguments == null ? 0 : otherArguments.length;
             if (otherLength != length)
-
-
-
-       eturn  alse;
-
-
+            {
+               return false;
+            }
             nextArgument:
             for (int i = 0; i < length; i++)
             {
                TypeBinding argument = paramType.arguments[i];
                TypeBinding otherArgument = otherArguments[i];
                if (argument == otherArgument)
-
-
-
-       ontinue  extArgument;
-
-
+               {
+                  continue nextArgument;
+               }
                int kind = argument.kind();
                if (otherArgument.kind() != kind)
-
-
-
-       eturn  alse;
-
-
+               {
+                  return false;
+               }
                switch (kind)
                {
                   case Binding.PARAMETERIZED_TYPE:
                      if (argument.isTypeArgumentContainedBy(otherArgument)) // recurse
-
-
-
-       ontinue  extArgument;
-
-
+                     {
+                        continue nextArgument;
+                     }
                      break;
                   case Binding.WILDCARD_TYPE:
                   case Binding.INTERSECTION_TYPE:
@@ -1511,24 +1403,18 @@ abstract public class TypeBinding extends Binding
                         case Wildcard.EXTENDS:
                            // match "? extends <upperBound>" with "?"
                            if (otherWildcard.boundKind == Wildcard.UNBOUND && wildcard.bound == wildcard.typeVariable().upperBound())
-
-
-
-       ontinue  extArgument;
-
-
+                           {
+                              continue nextArgument;
+                           }
                            break;
                         case Wildcard.SUPER:
                            break;
                         case Wildcard.UNBOUND:
                            // match "?" with "? extends <upperBound>"
                            if (otherWildcard.boundKind == Wildcard.EXTENDS && otherWildcard.bound == otherWildcard.typeVariable().upperBound())
-
-
-
-       ontinue  extArgument;
-
-
+                           {
+                              continue nextArgument;
+                           }
                            break;
                      }
                      break;
@@ -1606,61 +1492,40 @@ abstract public class TypeBinding extends Binding
    {
 
       if (this == targetType)
-
-
-
-          eturn  alse;
-
-
+      {
+         return false;
+      }
       targetType = targetType.leafComponentType();
       if (!(targetType instanceof ReferenceBinding))
-
-
-
-          eturn  alse;
-
-
+      {
+         return false;
+      }
 
       TypeBinding currentType = leafComponentType();
       TypeBinding match = currentType.findSuperTypeOriginatingFrom(targetType);
       if (!(match instanceof ReferenceBinding))
-
-
-
-          eturn  alse;
-
-
+      {
+         return false;
+      }
       ReferenceBinding compatible = (ReferenceBinding)match;
       while (compatible.isRawType())
       {
          if (targetType.isBoundParameterizedType())
-
-
-
-          eturn  rue;
-
-
+         {
+            return true;
+         }
          if (compatible.isStatic())
-
-
-
-          reak;
-
-
+         {
+            break;
+         }
          if ((compatible = compatible.enclosingType()) == null)
-
-
-
-          reak;
-
-
+         {
+            break;
+         }
          if ((targetType = targetType.enclosingType()) == null)
-
-
-
-          reak;
-
-
+         {
+            break;
+         }
       }
       return false;
    }

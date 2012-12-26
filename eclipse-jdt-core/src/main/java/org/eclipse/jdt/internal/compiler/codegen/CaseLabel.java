@@ -39,7 +39,8 @@ public class CaseLabel extends BranchLabel
          this.codeStream.classFileOffset += 4;
       }
       else
-      { //Position is set. Write it!      /*
+      { //Position is set. Write it!
+       /*
 		 * Position is set. Write it if it is not a wide branch.
 		 */
          this.codeStream.writeSignedWord(this.position - this.instructionPosition);

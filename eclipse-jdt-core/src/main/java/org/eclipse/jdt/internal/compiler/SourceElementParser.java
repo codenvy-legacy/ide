@@ -736,8 +736,10 @@ public class SourceElementParser extends CommentRecorderParser
 
    protected void consumeSingleTypeImportDeclarationName()
    {
-      // SingleTypeImportDeclarationName ::= 'import' Name   /* push an ImportRef build from the last name
-	stored in the identifier stack. */
+      // SingleTypeImportDeclarationName ::= 'import' Name
+    /* push an ImportRef build from the last name
+	    stored in the identifier stack.
+	 */
 
       ImportReference impt;
       int length;

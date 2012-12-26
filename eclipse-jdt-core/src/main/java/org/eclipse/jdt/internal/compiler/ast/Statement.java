@@ -95,20 +95,14 @@ public abstract class Statement extends ASTNode
                TypeBinding lastType = arguments[varArgPos].resolvedType;
                if (lastType == TypeBinding.NULL || (varArgsType.dimensions() == lastType.dimensions() && lastType.isCompatibleWith(
                   varArgsType)))
-
-
-
-          assThrough    rue;  / pass directly as-is
-
-
+               {
+                  passThrough = true; // pass directly as-is
+               }
             }
             if (!passThrough)
-
-
-
-          umParamsToCheck--;  / with non-passthrough varargs last param is fed from individual args -> don't check
-
-
+            {
+               numParamsToCheck--; // with non-passthrough varargs last param is fed from individual args -> don't check
+            }
          }
 
          for (int i = 0; i < numParamsToCheck; i++)
@@ -120,13 +114,10 @@ public abstract class Statement extends ASTNode
                int nullStatus = argument.nullStatus(
                   flowInfo); // slight loss of precision: should also use the null info from the receiver.
                if (nullStatus != FlowInfo.NON_NULL) // if required non-null is not provided
-
-
-
-             lowContext.recordNullityMismatch(currentScope,  rgument,  rgument.resolvedType,  xpectedType,
- ullStatus);
-
-
+               {
+                  flowContext.recordNullityMismatch(currentScope, argument, argument.resolvedType, expectedType,
+                     nullStatus);
+               }
             }
          }
       }
@@ -169,24 +160,18 @@ public abstract class Statement extends ASTNode
       if ((flowInfo.reachMode() & FlowInfo.UNREACHABLE) != 0)
       {
          if ((flowInfo.reachMode() & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
-
-
-
-       his.bits  =  ASTNode.IsReachable;
-
-
+         {
+            this.bits &= ~ASTNode.IsReachable;
+         }
          if (flowInfo == FlowInfo.DEAD_END)
          {
             if (previousComplaintLevel < COMPLAINED_UNREACHABLE)
             {
                scope.problemReporter().unreachableCode(this);
                if (endOfBlock)
-
-
-
-       cope.checkUnclosedCloseables(flowInfo,  ull,  ull,  ull);
-
-
+               {
+                  scope.checkUnclosedCloseables(flowInfo, null, null, null);
+               }
             }
             return COMPLAINED_UNREACHABLE;
          }
@@ -196,12 +181,9 @@ public abstract class Statement extends ASTNode
             {
                scope.problemReporter().fakeReachable(this);
                if (endOfBlock)
-
-
-
-       cope.checkUnclosedCloseables(flowInfo,  ull,  ull,  ull);
-
-
+               {
+                  scope.checkUnclosedCloseables(flowInfo, null, null, null);
+               }
             }
             return COMPLAINED_FAKE_REACHABLE;
          }
@@ -279,12 +261,9 @@ public abstract class Statement extends ASTNode
       else if (arguments != null)
       { // standard generation for method arguments
          for (int i = 0, max = arguments.length; i < max; i++)
-
-
-
-       rguments[i].generateCode(currentScope,  odeStream,  rue);
-
-
+         {
+            arguments[i].generateCode(currentScope, codeStream, true);
+         }
       }
    }
 
@@ -294,12 +273,9 @@ public abstract class Statement extends ASTNode
       Scope scope)
    {
       if (scope.isBoxingCompatibleWith(expressionType, targetType))
-
-
-
-       eturn  rue;
-
-
+      {
+         return true;
+      }
 
       return expressionType.isBaseType()  // narrowing then boxing ? Only allowed for some target types see 362279
          && !targetType.isBaseType() && !targetType.isTypeVariable() && scope.compilerOptions().sourceLevel >= org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants.JDK1_5 // autoboxing

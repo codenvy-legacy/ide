@@ -364,21 +364,15 @@ public class NameEnvironment implements INameEnvironment, SuffixConstants
             String enclosingTypeName = qualifiedTypeName.substring(0, index);
             SourceFile unit = (SourceFile)this.additionalUnits.get(enclosingTypeName); // doesn't have file extension
             if (unit != null)
-
-
-
-         eturn  ew  ameEnvironmentAnswer(unit,  ull /*no access restriction*/);
-
-
+            {
+               return new NameEnvironmentAnswer(unit, null /*no access restriction*/);
+            }
          }
          SourceFile unit = (SourceFile)this.additionalUnits.get(qualifiedTypeName); // doesn't have file extension
          if (unit != null)
-
-
-
-         eturn  ew  ameEnvironmentAnswer(unit,  ull /*no access restriction*/);
-
-
+         {
+            return new NameEnvironmentAnswer(unit, null /*no access restriction*/);
+         }
       }
 
       String qBinaryFileName = qualifiedTypeName + SUFFIX_STRING_class;
@@ -402,56 +396,41 @@ public class NameEnvironment implements INameEnvironment, SuffixConstants
             if (!answer.ignoreIfBetter())
             {
                if (answer.isBetter(suggestedAnswer))
-
-
-
-      eturn  nswer;
-
-
+               {
+                  return answer;
+               }
             }
             else if (answer.isBetter(suggestedAnswer))
-             / remember suggestion and keep looking
-
-
-
-      uggestedAnswer    nswer;
-
-
+            // remember suggestion and keep looking
+            {
+               suggestedAnswer = answer;
+            }
          }
       }
       if (suggestedAnswer != null)
-       / no better answer was found
-
-
-
-      eturn  uggestedAnswer;
-
-
+      // no better answer was found
+      {
+         return suggestedAnswer;
+      }
       return null;
    }
 
    public NameEnvironmentAnswer findType(char[][] compoundName)
    {
       if (compoundName != null)
-
-
-
-       eturn  indClass(new  tring(CharOperation.concatWith(compoundName,  /')),
- ompoundName[compoundName.length    ]);
-
-
+      {
+         return findClass(new String(CharOperation.concatWith(compoundName, '/')),
+            compoundName[compoundName.length - 1]);
+      }
       return null;
    }
 
    public NameEnvironmentAnswer findType(char[] typeName, char[][] packageName)
    {
       if (typeName != null)
-
-
-
-       eturn  indClass(new  tring(CharOperation.concatWith(packageName,  ypeName,  /')),  ypeName);
-
-
+      {
+         return findClass(new String(CharOperation.concatWith(packageName, typeName, '/')), typeName);
+      }
       return null;
    }
 
@@ -464,18 +443,12 @@ public class NameEnvironment implements INameEnvironment, SuffixConstants
    {
       // NOTE: the output folders are added at the beginning of the binaryLocations
       for (int i = 0, l = this.binaryLocations.length; i < l; i++)
-
-
-
-       f  this.binaryLocations[i].isPackage(qualifiedPackageName))
-
-
-
-          eturn  rue;
-
-
-
-
+      {
+         if (this.binaryLocations[i].isPackage(qualifiedPackageName))
+         {
+            return true;
+         }
+      }
       return false;
    }
 
@@ -490,12 +463,9 @@ public class NameEnvironment implements INameEnvironment, SuffixConstants
       {
          this.initialTypeNames = new SimpleSet(typeNames.length);
          for (int i = 0, l = typeNames.length; i < l; i++)
-
-
-
-       his.initialTypeNames.add(typeNames[i]);
-
-
+         {
+            this.initialTypeNames.add(typeNames[i]);
+         }
       }
       // map the additional source files by qualified type name
       if (additionalFiles == null)
@@ -509,28 +479,19 @@ public class NameEnvironment implements INameEnvironment, SuffixConstants
          {
             SourceFile additionalUnit = additionalFiles[i];
             if (additionalUnit != null)
-
-
-
-       his.additionalUnits.put(additionalUnit.initialTypeName,  dditionalFiles[i]);
-
-
+            {
+               this.additionalUnits.put(additionalUnit.initialTypeName, additionalFiles[i]);
+            }
          }
       }
 
       for (int i = 0, l = this.sourceLocations.length; i < l; i++)
-
-
-
-          his.sourceLocations[i].reset();
-
-
+      {
+         this.sourceLocations[i].reset();
+      }
       for (int i = 0, l = this.binaryLocations.length; i < l; i++)
-
-
-
-          his.binaryLocations[i].reset();
-
-
+      {
+         this.binaryLocations[i].reset();
+      }
    }
 }

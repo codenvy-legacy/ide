@@ -114,12 +114,9 @@ public class Argument extends LocalDeclaration
       printIndent(indent, output);
       printModifiers(this.modifiers, output);
       if (this.annotations != null)
-
-
-
-          rintAnnotations(this.annotations,  utput);
-
-
+      {
+         printAnnotations(this.annotations, output);
+      }
 
       if (this.type == null)
       {
@@ -206,12 +203,9 @@ public class Argument extends LocalDeclaration
       scope.addLocalVariable(this.binding);
       this.binding.setConstant(Constant.NotAConstant);
       if (hasError)
-
-
-
-          eturn  ull;
-
-
+      {
+         return null;
+      }
       return exceptionType;
    }
 
@@ -224,20 +218,14 @@ public class Argument extends LocalDeclaration
          {
             int annotationsLength = this.annotations.length;
             for (int i = 0; i < annotationsLength; i++)
-
-
-
-          his.annotations[i].traverse(visitor,  cope);
-
-
+            {
+               this.annotations[i].traverse(visitor, scope);
+            }
          }
          if (this.type != null)
-
-
-
-          his.type.traverse(visitor,  cope);
-
-
+         {
+            this.type.traverse(visitor, scope);
+         }
       }
       visitor.endVisit(this, scope);
    }
@@ -251,20 +239,14 @@ public class Argument extends LocalDeclaration
          {
             int annotationsLength = this.annotations.length;
             for (int i = 0; i < annotationsLength; i++)
-
-
-
-          his.annotations[i].traverse(visitor,  cope);
-
-
+            {
+               this.annotations[i].traverse(visitor, scope);
+            }
          }
          if (this.type != null)
-
-
-
-          his.type.traverse(visitor,  cope);
-
-
+         {
+            this.type.traverse(visitor, scope);
+         }
       }
       visitor.endVisit(this, scope);
    }

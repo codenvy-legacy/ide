@@ -1059,21 +1059,15 @@ public class SingleNameReference extends NameReference implements OperatorIds
    public void manageSyntheticAccessIfNecessary(BlockScope currentScope, FlowInfo flowInfo, boolean isReadAccess)
    {
       if ((flowInfo.tagBits & FlowInfo.UNREACHABLE_OR_DEAD) != 0)
-
-
-
-       eturn;
-
-
+      {
+         return;
+      }
 
       //If inlinable field, forget the access emulation, the code gen will directly target it
       if (this.constant != Constant.NotAConstant)
-
-
-
-          eturn;
-
-
+      {
+         return;
+      }
 
       if ((this.bits & Binding.FIELD) != 0)
       {
@@ -1084,12 +1078,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
             && codegenField.declaringClass.getPackage() != currentScope.enclosingSourceType().getPackage())))
          {
             if (this.syntheticAccessors == null)
-
-
-
-          his.syntheticAccessors    ew  ethodBinding[2];
-
-
+            {
+               this.syntheticAccessors = new MethodBinding[2];
+            }
             this.syntheticAccessors[isReadAccess ? SingleNameReference.READ : SingleNameReference.WRITE] = ((SourceTypeBinding)currentScope.enclosingSourceType().
                enclosingTypeAt((this.bits & ASTNode.DepthMASK) >> ASTNode.DepthSHIFT)).addSyntheticMethod(codegenField,
                isReadAccess, false /*not super access*/);
@@ -1112,12 +1103,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
          case Binding.LOCAL: // reading a local variable
             LocalVariableBinding local = (LocalVariableBinding)this.binding;
             if (local != null)
-
-
-
-       eturn  lowInfo.nullStatus(local);
-
-
+            {
+               return flowInfo.nullStatus(local);
+            }
       }
       return FlowInfo.NON_NULL; // never get there
    }
@@ -1129,12 +1117,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
    {
       TypeBinding convertedType = this.resolvedType;
       if (this.genericCast != null)
-
-
-
-       onvertedType    his.genericCast;
-
-
+      {
+         convertedType = this.genericCast;
+      }
       int runtimeType = (this.implicitConversion & TypeIds.IMPLICIT_CONVERSION_MASK) >> 4;
       switch (runtimeType)
       {
@@ -1261,12 +1246,9 @@ public class SingleNameReference extends NameReference implements OperatorIds
                //deprecated test
                TypeBinding type = (TypeBinding)this.binding;
                if (isTypeUseDeprecated(type, scope))
-
-
-
-          cope.problemReporter().deprecatedType(type,  his);
-
-
+               {
+                  scope.problemReporter().deprecatedType(type, this);
+               }
                type = scope.environment().convertToRawType(type, false /*do not force conversion of enclosing types*/);
                return this.resolvedType = type;
          }

@@ -516,12 +516,9 @@ public class InternalNamingConventions
       }
 
       if (updateFirstCharacter)
-
-
-
-          ithoutSuffixName[0]    cannerHelper.toLowerCase(withoutSuffixName[0]);
-
-
+      {
+         withoutSuffixName[0] = ScannerHelper.toLowerCase(withoutSuffixName[0]);
+      }
       return withoutSuffixName;
    }
 
@@ -634,12 +631,9 @@ public class InternalNamingConventions
    {
 
       if (baseName == null || baseName.length == 0)
-
-
-
-          eturn;
-
-
+      {
+         return;
+      }
 
       Map options;
       if (javaProject != null)
@@ -745,12 +739,9 @@ public class InternalNamingConventions
          {
             // compute variable name from base type
             if (internalPrefix.length > 0)
-
-
-
-             eturn;
-
-
+            {
+               return;
+            }
 
             tempNames = computeBaseTypeNames(baseName, isConstantField, excluded);
          }
@@ -918,12 +909,9 @@ public class InternalNamingConventions
                tempName = CharOperation.concat(CharOperation.subarray(internalPrefix, 0, matchingIndex),
                   unprefixedName);
                if (matchingIndex == 0)
-
-
-
-             empName[0]    cannerHelper.toLowerCase(tempName[0]);
-
-
+               {
+                  tempName[0] = ScannerHelper.toLowerCase(tempName[0]);
+               }
             }
             else
             {

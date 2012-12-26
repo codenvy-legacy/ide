@@ -167,7 +167,7 @@ public class IrritantSet
 
 
 
-       eturn  alse;
+       return false;
 
 
       }
@@ -201,7 +201,7 @@ public class IrritantSet
 
 
 
-       eturn;
+       return;
 
 
       int group = (singleGroupIrritants & GROUP_MASK) >> GROUP_SHIFT;
@@ -214,7 +214,7 @@ public class IrritantSet
 
 
 
-       eturn;
+       return;
 
 
       System.arraycopy(other.bits, 0, this.bits = new int[GROUP_MAX], 0, GROUP_MAX);
@@ -231,7 +231,7 @@ public class IrritantSet
 
 
 
-       eturn  alse;
+       return  false;
 
 
       for (int i = 0; i < GROUP_MAX; i++)
@@ -240,7 +240,7 @@ public class IrritantSet
 
 
 
-       eturn  rue;
+       return  true;
 
 
       }
@@ -258,7 +258,7 @@ public class IrritantSet
 
 
 
-       eturn  alse;
+       return  false;
 
 
       for (int i = 0; i < GROUP_MAX; i++)
@@ -267,7 +267,7 @@ public class IrritantSet
 
 
 
-       eturn  alse;
+       return  false;
 
 
       }
@@ -298,7 +298,7 @@ public class IrritantSet
 
 
 
-       eturn  his;
+       return  this;
 
 
       boolean wasNoOp = true;

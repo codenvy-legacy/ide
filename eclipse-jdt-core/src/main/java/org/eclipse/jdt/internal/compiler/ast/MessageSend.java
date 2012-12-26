@@ -638,12 +638,9 @@ public class MessageSend extends Expression implements InvocationSite
             declaringClass.isAnonymousType() &&
             declaringClass.superclass() instanceof MissingTypeBinding;
          if (!avoidSecondary)
-
-
-
-         cope.problemReporter().invalidMethod(this,  his.binding);
-
-
+         {
+            scope.problemReporter().invalidMethod(this, this.binding);
+         }
          MethodBinding closestMatch = ((ProblemMethodBinding)this.binding).closestMatch;
          switch (this.binding.problemId())
          {
@@ -656,12 +653,9 @@ public class MessageSend extends Expression implements InvocationSite
             case ProblemReasons.ParameterBoundMismatch:
                // only steal returnType in cases listed above
                if (closestMatch != null)
-
-
-
-         his.resolvedType    losestMatch.returnType;
-
-
+               {
+                  this.resolvedType = closestMatch.returnType;
+               }
                break;
          }
          // record the closest match, for clients who may still need hint about possible method match
@@ -748,12 +742,9 @@ public class MessageSend extends Expression implements InvocationSite
          // abstract private methods cannot occur nor abstract static............
       }
       if (isMethodUseDeprecated(this.binding, scope, true))
-
-
-
-      cope.problemReporter().deprecatedMethod(this.binding,  his);
-
-
+      {
+         scope.problemReporter().deprecatedMethod(this.binding, this);
+      }
 
       // from 1.5 source level on, array#clone() returns the array type (but binding still shows Object)
       if (this.binding == scope.environment().arrayClone && compilerOptions.sourceLevel >= ClassFileConstants.JDK1_5)
@@ -808,12 +799,9 @@ public class MessageSend extends Expression implements InvocationSite
    public void setActualReceiverType(ReferenceBinding receiverType)
    {
       if (receiverType == null)
-
-
-
-       eturn;  / error scenario only
-
-
+      {
+         return; // error scenario only
+      }
       this.actualReceiverType = receiverType;
    }
 
@@ -860,12 +848,9 @@ public class MessageSend extends Expression implements InvocationSite
          {
             int argumentsLength = this.arguments.length;
             for (int i = 0; i < argumentsLength; i++)
-
-
-
-       his.arguments[i].traverse(visitor,  lockScope);
-
-
+            {
+               this.arguments[i].traverse(visitor, blockScope);
+            }
          }
       }
       visitor.endVisit(this, blockScope);

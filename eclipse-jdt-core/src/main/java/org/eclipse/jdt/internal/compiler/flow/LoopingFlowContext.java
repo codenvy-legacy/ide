@@ -588,12 +588,9 @@ public class LoopingFlowContext extends SwitchFlowContext
          while ((scope = scope.parent) != null)
          {
             if (scope == this.associatedScope)
-
-
-
-          eturn  alse;
-
-
+            {
+               return false;
+            }
          }
       }
       if (this.assignCount == 0)
@@ -604,13 +601,10 @@ public class LoopingFlowContext extends SwitchFlowContext
       else
       {
          if (this.assignCount == this.finalAssignments.length)
-
-
-
-          ystem.arraycopy(this.finalAssignments,  ,  this.finalAssignments    ew  eference[this.assignCount    ]),  ,
- his.assignCount);
-
-
+         {
+            System.arraycopy(this.finalAssignments, 0, (this.finalAssignments = new Reference[this.assignCount * 2]), 0,
+               this.assignCount);
+         }
          System.arraycopy(this.finalVariables, 0, (this.finalVariables = new VariableBinding[this.assignCount * 2]), 0,
             this.assignCount);
       }

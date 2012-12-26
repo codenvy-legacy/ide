@@ -324,7 +324,8 @@ public class IncrementalImageBuilder extends AbstractImageBuilder
          {
             if (CharOperation.equals(last.toCharArray(), TypeConstants.PACKAGE_INFO_NAME))
             {
-               path = path.removeLastSegments(1); // the package-info file has changed so blame the package itself            /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=323785, in the case of default package,
+               path = path.removeLastSegments(1); // the package-info file has changed so blame the package itself
+               /* https://bugs.eclipse.org/bugs/show_bug.cgi?id=323785, in the case of default package,
 				   there is no need to blame the package itself as there can be no annotations or documentation
 				   comment tags in the package-info file that can influence the rest of the package. Just bail out
 				   so we don't touch null objects below.

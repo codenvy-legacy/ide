@@ -1784,39 +1784,23 @@ public class SourceTypeBinding extends ReferenceBinding
                               {
                                  // is erasure of signature of m1 same as signature of m2?
                                  for (index = pLength; --index >= 0; )
-
-
-
-                     f  params1[index].erasure()  =  arams2[index])
-
-
-                                        / If one of them is a raw type
-
-                        f  params2[index]  nstanceof  awTypeBinding)
-
-
-
-                           f  params1[index].erasure()  =  (RawTypeBinding)params2[index]).actualType())
-
-
-
-                              reak;
-
-
-
-
-
-                        lse
-
-
-
-                           reak;
-
-
-
-
-
-
+                                 {
+                                    if (params1[index].erasure() != params2[index])
+                                    {
+                                       // If one of them is a raw type
+                                       if (params2[index] instanceof RawTypeBinding)
+                                       {
+                                          if (params1[index].erasure() != ((RawTypeBinding)params2[index]).actualType())
+                                          {
+                                             break;
+                                          }
+                                       }
+                                       else
+                                       {
+                                          break;
+                                       }
+                                    }
+                                 }
 
                               }
                               if (index >= 0)
@@ -1872,12 +1856,9 @@ public class SourceTypeBinding extends ReferenceBinding
                         methodDecl.binding = null;
                         // do not alter original method array until resolution is over, due to reentrance (143259)
                         if (resolvedMethods == this.methods)
-
-
-
-               ystem.arraycopy(this.methods,  ,  esolvedMethods    ew  ethodBinding[length],  ,  ength);
-
-
+                        {
+                           System.arraycopy(this.methods, 0, resolvedMethods = new MethodBinding[length], 0, length);
+                        }
                         resolvedMethods[i] = null;
                         failed++;
                      }
@@ -1901,12 +1882,9 @@ public class SourceTypeBinding extends ReferenceBinding
                      method2Decl.binding = null;
                      // do not alter original method array until resolution is over, due to reentrance (143259)
                      if (resolvedMethods == this.methods)
-
-
-
-               ystem.arraycopy(this.methods,  ,  esolvedMethods    ew  ethodBinding[length],  ,  ength);
-
-
+                     {
+                        System.arraycopy(this.methods, 0, resolvedMethods = new MethodBinding[length], 0, length);
+                     }
                      resolvedMethods[j] = null;
                      failed++;
                   }
@@ -1916,20 +1894,14 @@ public class SourceTypeBinding extends ReferenceBinding
             { // forget method with invalid return type... was kept to detect possible collisions
                methodDecl = method.sourceMethod();
                if (methodDecl != null)
-
-
-
-            ethodDecl.binding    ull;
-
-
+               {
+                  methodDecl.binding = null;
+               }
                // do not alter original method array until resolution is over, due to reentrance (143259)
                if (resolvedMethods == this.methods)
-
-
-
-            ystem.arraycopy(this.methods,  ,  esolvedMethods    ew  ethodBinding[length],  ,  ength);
-
-
+               {
+                  System.arraycopy(this.methods, 0, resolvedMethods = new MethodBinding[length], 0, length);
+               }
                resolvedMethods[i] = null;
                failed++;
             }
@@ -1953,18 +1925,12 @@ public class SourceTypeBinding extends ReferenceBinding
             {
                MethodBinding[] newMethods = new MethodBinding[newSize];
                for (int i = 0, j = 0, length = resolvedMethods.length; i < length; i++)
-
-
-
-         f  resolvedMethods[i]  =  ull)
-
-
-
-            ewMethods[j++]    esolvedMethods[i];
-
-
-
-
+               {
+                  if (resolvedMethods[i] != null)
+                  {
+                     newMethods[j++] = resolvedMethods[i];
+                  }
+               }
                this.methods = newMethods;
             }
          }
@@ -1979,48 +1945,33 @@ public class SourceTypeBinding extends ReferenceBinding
    public FieldBinding resolveTypeFor(FieldBinding field)
    {
       if ((field.modifiers & ExtraCompilerModifiers.AccUnresolved) == 0)
-
-
-
-       eturn  ield;
-
-
+      {
+         return field;
+      }
 
       if (this.scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5)
       {
          if ((field.getAnnotationTagBits() & TagBits.AnnotationDeprecated) != 0)
-
-
-
-          ield.modifiers  =  lassFileConstants.AccDeprecated;
-
-
+         {
+            field.modifiers |= ClassFileConstants.AccDeprecated;
+         }
       }
       if (isViewedAsDeprecated() && !field.isDeprecated())
-
-
-
-          ield.modifiers  =  xtraCompilerModifiers.AccDeprecatedImplicitly;
-
-
+      {
+         field.modifiers |= ExtraCompilerModifiers.AccDeprecatedImplicitly;
+      }
       if (hasRestrictedAccess())
-
-
-
-          ield.modifiers  =  xtraCompilerModifiers.AccRestrictedAccess;
-
-
+      {
+         field.modifiers |= ExtraCompilerModifiers.AccRestrictedAccess;
+      }
       FieldDeclaration[] fieldDecls = this.scope.referenceContext.fields;
       int length = fieldDecls == null ? 0 : fieldDecls.length;
       for (int f = 0; f < length; f++)
       {
          if (fieldDecls[f].binding != field)
-
-
-
-          ontinue;
-
-
+         {
+            continue;
+         }
 
          MethodScope initializationScope = field.isStatic() ? this.scope.referenceContext.staticInitializerScope : this.scope.referenceContext.initializerScope;
          FieldBinding previousField = initializationScope.initializedField;
@@ -2073,46 +2024,31 @@ public class SourceTypeBinding extends ReferenceBinding
    public MethodBinding resolveTypesFor(MethodBinding method)
    {
       if ((method.modifiers & ExtraCompilerModifiers.AccUnresolved) == 0)
-
-
-
-       eturn  ethod;
-
-
+      {
+         return method;
+      }
 
       if (this.scope.compilerOptions().sourceLevel >= ClassFileConstants.JDK1_5)
       {
          if ((method.getAnnotationTagBits() & TagBits.AnnotationDeprecated) != 0)
-
-
-
-          ethod.modifiers  =  lassFileConstants.AccDeprecated;
-
-
+         {
+            method.modifiers |= ClassFileConstants.AccDeprecated;
+         }
       }
       if (isViewedAsDeprecated() && !method.isDeprecated())
-
-
-
-          ethod.modifiers  =  xtraCompilerModifiers.AccDeprecatedImplicitly;
-
-
+      {
+         method.modifiers |= ExtraCompilerModifiers.AccDeprecatedImplicitly;
+      }
       if (hasRestrictedAccess())
-
-
-
-          ethod.modifiers  =  xtraCompilerModifiers.AccRestrictedAccess;
-
-
+      {
+         method.modifiers |= ExtraCompilerModifiers.AccRestrictedAccess;
+      }
 
       AbstractMethodDeclaration methodDecl = method.sourceMethod();
       if (methodDecl == null)
-
-
-
-          eturn  ull;  / method could not be resolved in previous iteration
-
-
+      {
+         return null; // method could not be resolved in previous iteration
+      }
 
 
       TypeParameter[] typeParameters = methodDecl.typeParameters();
@@ -2121,12 +2057,9 @@ public class SourceTypeBinding extends ReferenceBinding
          methodDecl.scope.connectTypeVariables(typeParameters, true);
          // Perform deferred bound checks for type variables (only done after type variable hierarchy is connected)
          for (int i = 0, paramLength = typeParameters.length; i < paramLength; i++)
-
-
-
-          ypeParameters[i].checkBounds(methodDecl.scope);
-
-
+         {
+            typeParameters[i].checkBounds(methodDecl.scope);
+         }
       }
       TypeReference[] exceptionTypes = methodDecl.thrownExceptions;
       if (exceptionTypes != null)
@@ -2139,12 +2072,9 @@ public class SourceTypeBinding extends ReferenceBinding
          {
             resolvedExceptionType = (ReferenceBinding)exceptionTypes[i].resolveType(methodDecl.scope, true /* check bounds*/);
             if (resolvedExceptionType == null)
-
-
-
-          ontinue;
-
-
+            {
+               continue;
+            }
             if (resolvedExceptionType.isBoundParameterizedType())
             {
                methodDecl.scope.problemReporter().invalidParameterizedExceptionType(resolvedExceptionType,
@@ -2167,13 +2097,10 @@ public class SourceTypeBinding extends ReferenceBinding
             method.thrownExceptions[count++] = resolvedExceptionType;
          }
          if (count < size)
-
-
-
-          ystem.arraycopy(method.thrownExceptions,  ,  ethod.thrownExceptions    ew  eferenceBinding[count],  ,
- ount);
-
-
+         {
+            System.arraycopy(method.thrownExceptions, 0, method.thrownExceptions = new ReferenceBinding[count], 0,
+               count);
+         }
       }
       final boolean reportUnavoidableGenericTypeProblems = this.scope.compilerOptions().reportUnavoidableGenericTypeProblems;
       boolean foundArgProblem = false;
@@ -2226,12 +2153,9 @@ public class SourceTypeBinding extends ReferenceBinding
                }
                TypeBinding leafType = parameterType.leafComponentType();
                if (leafType instanceof ReferenceBinding && (((ReferenceBinding)leafType).modifiers & ExtraCompilerModifiers.AccGenericSignature) != 0)
-
-
-
-                ethod.modifiers  =  xtraCompilerModifiers.AccGenericSignature;
-
-
+               {
+                  method.modifiers |= ExtraCompilerModifiers.AccGenericSignature;
+               }
                newParameters[i] = parameterType;
                arg.binding = new LocalVariableBinding(arg, parameterType, arg.modifiers, true /*isArgument*/);
             }
@@ -2315,12 +2239,9 @@ public class SourceTypeBinding extends ReferenceBinding
                method.returnType = methodType;
                TypeBinding leafType = methodType.leafComponentType();
                if (leafType instanceof ReferenceBinding && (((ReferenceBinding)leafType).modifiers & ExtraCompilerModifiers.AccGenericSignature) != 0)
-
-
-
-          ethod.modifiers  =  xtraCompilerModifiers.AccGenericSignature;
-
-
+               {
+                  method.modifiers |= ExtraCompilerModifiers.AccGenericSignature;
+               }
             }
          }
       }
@@ -2331,34 +2252,22 @@ public class SourceTypeBinding extends ReferenceBinding
          // nullify type parameter bindings as well as they have a backpointer to the method binding
          // (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=81134)
          if (typeParameters != null)
-
-
-
-          or  int      ,  ength    ypeParameters.length;      ength;  ++)
-
-
-
-             ypeParameters[i].binding    ull;
-
-
-
-
+         {
+            for (int i = 0, length = typeParameters.length; i < length; i++)
+            {
+               typeParameters[i].binding = null;
+            }
+         }
          return null;
       }
       if (this.scope.compilerOptions().isAnnotationBasedNullAnalysisEnabled)
-
-
-
-          reateArgumentBindings(method);  / need annotations resolved already at this point
-
-
+      {
+         createArgumentBindings(method); // need annotations resolved already at this point
+      }
       if (foundReturnTypeProblem)
-
-
-
-          eturn  ethod;  / but its still unresolved with a null return type & is still connected to its method declaration
-
-
+      {
+         return method; // but its still unresolved with a null return type & is still connected to its method declaration
+      }
 
       method.modifiers &= ~ExtraCompilerModifiers.AccUnresolved;
       return method;
@@ -2380,12 +2289,9 @@ public class SourceTypeBinding extends ReferenceBinding
       if (methodDecl != null)
       {
          if (method.parameters != Binding.NO_PARAMETERS)
-
-
-
-       ethodDecl.createArgumentBindings();
-
-
+         {
+            methodDecl.createArgumentBindings();
+         }
          if ((findNonNullDefault(methodDecl.scope, methodDecl.scope.environment()) == NONNULL_BY_DEFAULT))
          {
             method.fillInDefaultNonNullness();
@@ -2396,12 +2302,9 @@ public class SourceTypeBinding extends ReferenceBinding
    private void evaluateNullAnnotations(long annotationTagBits)
    {
       if (this.nullnessDefaultInitialized > 0 || !this.scope.compilerOptions().isAnnotationBasedNullAnalysisEnabled)
-
-
-
-       eturn;
-
-
+      {
+         return;
+      }
       boolean isPackageInfo = CharOperation.equals(this.sourceName, TypeConstants.PACKAGE_INFO_NAME);
       PackageBinding pkg = getPackage();
       boolean isInDefaultPkg = (pkg.compoundName == CharOperation.NO_CHAR_CHAR);
@@ -2428,19 +2331,13 @@ public class SourceTypeBinding extends ReferenceBinding
       // transfer nullness info from tagBits to this.nullnessDefaultAnnotation
       int newDefaultNullness = NO_NULL_DEFAULT;
       if ((annotationTagBits & TagBits.AnnotationNullUnspecifiedByDefault) != 0)
-
-
-
-       ewDefaultNullness    ULL_UNSPECIFIED_BY_DEFAULT;
-
-
+      {
+         newDefaultNullness = NULL_UNSPECIFIED_BY_DEFAULT;
+      }
       else if ((annotationTagBits & TagBits.AnnotationNonNullByDefault) != 0)
-
-
-
-       ewDefaultNullness    ONNULL_BY_DEFAULT;
-
-
+      {
+         newDefaultNullness = NONNULL_BY_DEFAULT;
+      }
       if (newDefaultNullness != NO_NULL_DEFAULT)
       {
          if (isPackageInfo)
@@ -2459,12 +2356,9 @@ public class SourceTypeBinding extends ReferenceBinding
       {
          this.scope.problemReporter().missingNonNullByDefaultAnnotation(this.scope.referenceContext);
          if (!isInDefaultPkg)
-
-
-
-       kg.defaultNullness    ULL_UNSPECIFIED_BY_DEFAULT;
-
-
+         {
+            pkg.defaultNullness = NULL_UNSPECIFIED_BY_DEFAULT;
+         }
       }
    }
 
@@ -2519,19 +2413,13 @@ public class SourceTypeBinding extends ReferenceBinding
                {
                   long methodTagBits = referenceMethod.binding.tagBits;
                   if ((methodTagBits & TagBits.AnnotationNonNullByDefault) != 0)
-
-
-
-          eturn  ONNULL_BY_DEFAULT;
-
-
+                  {
+                     return NONNULL_BY_DEFAULT;
+                  }
                   if ((methodTagBits & TagBits.AnnotationNullUnspecifiedByDefault) != 0)
-
-
-
-          eturn  ULL_UNSPECIFIED_BY_DEFAULT;
-
-
+                  {
+                     return NULL_UNSPECIFIED_BY_DEFAULT;
+                  }
                }
                break;
             case Scope.CLASS_SCOPE:
@@ -2565,12 +2453,9 @@ public class SourceTypeBinding extends ReferenceBinding
    public AnnotationHolder retrieveAnnotationHolder(Binding binding, boolean forceInitialization)
    {
       if (forceInitialization)
-
-
-
-       inding.getAnnotationTagBits();  / ensure annotations are up to date
-
-
+      {
+         binding.getAnnotationTagBits(); // ensure annotations are up to date
+      }
       return super.retrieveAnnotationHolder(binding, false);
    }
 
@@ -2600,12 +2485,9 @@ public class SourceTypeBinding extends ReferenceBinding
       { // scope null when no annotation cached, and type got processed fully (159631)
          this.scope.referenceCompilationUnit().compilationResult.hasAnnotations = true;
          if (!this.scope.environment().globalOptions.storeAnnotations)
-
-
-
-       eturn  ull;  / not supported during this compile
-
-
+         {
+            return null; // not supported during this compile
+         }
          this.storedAnnotations = new SimpleLookupTable(3);
       }
       return this.storedAnnotations;
@@ -2663,22 +2545,16 @@ public class SourceTypeBinding extends ReferenceBinding
    public FieldBinding[] syntheticFields()
    {
       if (this.synthetics == null)
-
-
-
-       eturn  ull;
-
-
+      {
+         return null;
+      }
       int fieldSize = this.synthetics[SourceTypeBinding.FIELD_EMUL] == null ? 0 : this.synthetics[SourceTypeBinding.FIELD_EMUL].size();
       int literalSize = this.synthetics[SourceTypeBinding.CLASS_LITERAL_EMUL] == null ? 0 : this.synthetics[SourceTypeBinding.CLASS_LITERAL_EMUL].size();
       int totalSize = fieldSize + literalSize;
       if (totalSize == 0)
-
-
-
-       eturn  ull;
-
-
+      {
+         return null;
+      }
       FieldBinding[] bindings = new FieldBinding[totalSize];
 
       // add innerclass synthetics
@@ -2709,98 +2585,59 @@ public class SourceTypeBinding extends ReferenceBinding
       StringBuffer buffer = new StringBuffer(30);
       buffer.append("(id="); //$NON-NLS-1$
       if (this.id == TypeIds.NoId)
-
-
-
-       uffer.append("NoId");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("NoId"); //$NON-NLS-1$
+      }
       else
-
-
-
-       uffer.append(this.id);
-
-
+      {
+         buffer.append(this.id);
+      }
       buffer.append(")\n"); //$NON-NLS-1$
       if (isDeprecated())
-
-
-
-       uffer.append("deprecated ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("deprecated "); //$NON-NLS-1$
+      }
       if (isPublic())
-
-
-
-       uffer.append("public ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("public "); //$NON-NLS-1$
+      }
       if (isProtected())
-
-
-
-       uffer.append("protected ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("protected "); //$NON-NLS-1$
+      }
       if (isPrivate())
-
-
-
-       uffer.append("private ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("private "); //$NON-NLS-1$
+      }
       if (isAbstract() && isClass())
-
-
-
-       uffer.append("abstract ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("abstract "); //$NON-NLS-1$
+      }
       if (isStatic() && isNestedType())
-
-
-
-       uffer.append("static ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("static "); //$NON-NLS-1$
+      }
       if (isFinal())
-
-
-
-       uffer.append("final ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("final "); //$NON-NLS-1$
+      }
 
       if (isEnum())
-
-
-
-          uffer.append("enum ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("enum "); //$NON-NLS-1$
+      }
       else if (isAnnotationType())
-
-
-
-          uffer.append("@interface ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("@interface "); //$NON-NLS-1$
+      }
       else if (isClass())
-
-
-
-          uffer.append("class ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("class "); //$NON-NLS-1$
+      }
       else
-
-
-
-          uffer.append("interface ");  /$NON-NLS-1$
-
-
+      {
+         buffer.append("interface "); //$NON-NLS-1$
+      }
       buffer.append(
          (this.compoundName != null) ? CharOperation.toString(this.compoundName) : "UNNAMED TYPE"); //$NON-NLS-1$
 
@@ -2814,12 +2651,9 @@ public class SourceTypeBinding extends ReferenceBinding
          for (int i = 0, length = this.typeVariables.length; i < length; i++)
          {
             if (i > 0)
-
-
-
-          uffer.append(", ");  /$NON-NLS-1$
-
-
+            {
+               buffer.append(", "); //$NON-NLS-1$
+            }
             if (this.typeVariables[i] == null)
             {
                buffer.append("NULL TYPE VARIABLE"); //$NON-NLS-1$
@@ -2841,12 +2675,9 @@ public class SourceTypeBinding extends ReferenceBinding
             for (int i = 0, length = this.superInterfaces.length; i < length; i++)
             {
                if (i > 0)
-
-
-
-          uffer.append(", ");  /$NON-NLS-1$
-
-
+               {
+                  buffer.append(", "); //$NON-NLS-1$
+               }
                buffer.append(
                   (this.superInterfaces[i] != null) ? this.superInterfaces[i].debugName() : "NULL TYPE"); //$NON-NLS-1$
             }
@@ -2869,13 +2700,10 @@ public class SourceTypeBinding extends ReferenceBinding
          {
             buffer.append("\n/*   fields   */"); //$NON-NLS-1$
             for (int i = 0, length = this.fields.length; i < length; i++)
-
-
-
-          uffer.append('\n').append(
-this.fields[i]  =  ull)    his.fields[i].toString()    NULL FIELD");  /$NON-NLS-1$
-
-
+            {
+               buffer.append('\n').append(
+                  (this.fields[i] != null) ? this.fields[i].toString() : "NULL FIELD"); //$NON-NLS-1$
+            }
          }
       }
       else
@@ -2889,13 +2717,10 @@ this.fields[i]  =  ull)    his.fields[i].toString()    NULL FIELD");  /$NON-NLS-
          {
             buffer.append("\n/*   methods   */"); //$NON-NLS-1$
             for (int i = 0, length = this.methods.length; i < length; i++)
-
-
-
-          uffer.append('\n').append(
-this.methods[i]  =  ull)    his.methods[i].toString()    NULL METHOD");  /$NON-NLS-1$
-
-
+            {
+               buffer.append('\n').append(
+                  (this.methods[i] != null) ? this.methods[i].toString() : "NULL METHOD"); //$NON-NLS-1$
+            }
          }
       }
       else
@@ -2909,13 +2734,10 @@ this.methods[i]  =  ull)    his.methods[i].toString()    NULL METHOD");  /$NON-N
          {
             buffer.append("\n/*   members   */"); //$NON-NLS-1$
             for (int i = 0, length = this.memberTypes.length; i < length; i++)
-
-
-
-          uffer.append('\n').append(
-this.memberTypes[i]  =  ull)    his.memberTypes[i].toString()    NULL TYPE");  /$NON-NLS-1$
-
-
+            {
+               buffer.append('\n').append(
+                  (this.memberTypes[i] != null) ? this.memberTypes[i].toString() : "NULL TYPE"); //$NON-NLS-1$
+            }
          }
       }
       else
@@ -2937,12 +2759,9 @@ this.memberTypes[i]  =  ull)    his.memberTypes[i].toString()    NULL TYPE");  /
       verifier.verify(this);
 
       for (int i = this.memberTypes.length; --i >= 0; )
-
-
-
-          (SourceTypeBinding)this.memberTypes[i]).verifyMethods(verifier);
-
-
+      {
+         ((SourceTypeBinding)this.memberTypes[i]).verifyMethods(verifier);
+      }
    }
 
    public FieldBinding[] unResolvedFields()
@@ -2956,35 +2775,23 @@ this.memberTypes[i]  =  ull)    his.memberTypes[i].toString()    NULL TYPE");  /
       for (int i = 0; i < this.fields.length; i++)
       {
          if (!this.fields[i].isPrivate())
-
-
-
-       his.fields[i].modifiers  =  xtraCompilerModifiers.AccLocallyUsed;
-
-
+         {
+            this.fields[i].modifiers |= ExtraCompilerModifiers.AccLocallyUsed;
+         }
       }
       for (int i = 0; i < this.memberTypes.length; i++)
       {
          if (!this.memberTypes[i].isPrivate())
-
-
-
-       his.memberTypes[i].modifiers  =  xtraCompilerModifiers.AccLocallyUsed;
-
-
+         {
+            this.memberTypes[i].modifiers |= ExtraCompilerModifiers.AccLocallyUsed;
+         }
       }
       if (this.superclass.isPrivate())
-
-
-
-       f  this.superclass  nstanceof  ourceTypeBinding)   / should always be true because private super type can only be accessed in same CU
-
-
-
-          (SourceTypeBinding)this.superclass).tagIndirectlyAccessibleMembers();
-
-
-
-
+      {
+         if (this.superclass instanceof SourceTypeBinding)  // should always be true because private super type can only be accessed in same CU
+         {
+            ((SourceTypeBinding)this.superclass).tagIndirectlyAccessibleMembers();
+         }
+      }
    }
 }
