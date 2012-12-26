@@ -93,8 +93,8 @@ public class JRebelProfiler
          profileElement.appendChild(profileInfo);
          registryService.recreateEntry(sessionProvider, IDE, new RegistryEntry(profileDocument));
 
-         firstName = firstName.replaceAll("([\"])", "\\$1");
-         lastName = lastName.replaceAll("([\"])", "\\$1");
+         firstName = firstName.replaceAll("\"", "'");
+         lastName = lastName.replaceAll("\"", "'");
 
          String formatted =
             String.format(

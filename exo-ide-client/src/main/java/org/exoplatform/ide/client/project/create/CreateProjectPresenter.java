@@ -962,10 +962,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          {
             String phone = display.getJRebelPhoneNumberField().getValue();
 
-            boolean phoneMatched = phone.matches("\\+\\d{2}\\s?-?\\s?[(]?\\d{3}[)]?\\s?-?\\s?\\d{3}\\s?-?\\s?\\d{4}");
+            boolean phoneMatched = phone.matches("^[+]?[\\d\\-\\s().]+$");
             if (!phoneMatched)
             {
-               display.setJRebelErrorMessageLabel("Phone must be: +xx (xxx) xxxxxxx");
+               display.setJRebelErrorMessageLabel("Valid phone number consists of digits or special characters '+', '(', ')', '-' only.");
             }
             else
             {
