@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.jrebel.server;
 
-import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.registry.RegistryEntry;
@@ -61,23 +60,15 @@ public class JRebelProfiler
       SessionProvider sessionProvider = sessionProviderService.getSystemSessionProvider(null);
       RegistryEntry registryEntry = getOrCreateProfileRoot(sessionProvider);
 
-      saveProfileInfoIfNotExist(registryEntry, sessionProvider, firstName, lastName, phone);
-
-      Map<String, String> profileInfo = new HashMap<String, String>();
-      profileInfo.put("description", "jRebel user profile details");
-      profileInfo.put("userId", userId);
-      profileInfo.put("firstName", firstName);
-      profileInfo.put("lastName", lastName);
-      profileInfo.put("phone", phone);
-
-      LOG_JREBEL_PROP.error(JsonHelper.toJson(profileInfo));
+      saveProfileInfoIfNotExistAndSend(registryEntry, sessionProvider, userId, firstName, lastName, phone);
    }
 
-   private void saveProfileInfoIfNotExist(RegistryEntry entry,
-                                          SessionProvider sessionProvider,
-                                          String firstName,
-                                          String lastName,
-                                          String phone) throws JRebelProfilerException
+   private void saveProfileInfoIfNotExistAndSend(RegistryEntry entry,
+                                                 SessionProvider sessionProvider,
+                                                 String userId,
+                                                 String firstName,
+                                                 String lastName,
+                                                 String phone) throws JRebelProfilerException
    {
       try
       {
@@ -101,6 +92,20 @@ public class JRebelProfiler
 
          profileElement.appendChild(profileInfo);
          registryService.recreateEntry(sessionProvider, IDE, new RegistryEntry(profileDocument));
+
+         firstName = firstName.replaceAll("([\"])", "\\$1");
+         lastName = lastName.replaceAll("([\"])", "\\$1");
+
+         String formatted =
+            String.format(
+               "\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"",
+               userId,
+               firstName,
+               lastName,
+               phone
+            );
+
+         LOG_JREBEL_PROP.error(formatted);
       }
       catch (RepositoryException e)
       {

@@ -137,7 +137,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    TextInput jRebelProfilePhone;
 
    @UiField
-   Label jRebelErrorFillingMessage;
+   Label jRebelErrorMessageLabel;
 
    @UiField
    DockLayoutPanel jRebelProfileFields;
@@ -152,6 +152,8 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    private Map<PaaS, ToggleButton> paasButtonsMap = new HashMap<PaaS, ToggleButton>();
 
+   private boolean showJRebelStoredForm;
+
    public CreateProjectView()
    {
       super(ID, ViewType.MODAL, CREATE_TITLE, null, WIDTH, HEIGHT, false);
@@ -165,7 +167,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       projectNameField.setName(NAME_FIELD_ID);
 
       deployProjectStep.setVisible(false);
-      jRebelErrorFillingMessage.setValue("");
+      jRebelErrorMessageLabel.setValue("");
    }
 
    /**
@@ -530,7 +532,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    @Override
-   public void setJRebelProfileFieldsVisible(boolean visible)
+   public void setJRebelFormVisible(boolean visible)
    {
       jRebelProfileFields.setVisible(visible);
       for (int i = 0; i < getProjectTypeButtons().size(); i++)
@@ -542,6 +544,11 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             {
                if (visible)
                {
+                  if (!showJRebelStoredForm)
+                  {
+                     chooseTemplateStep.setHeight("88%");
+                     return;
+                  }
                   chooseTemplateStep.setHeight("58%");
                }
                else
@@ -619,16 +626,14 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    }
 
    @Override
-   public void setJRebelErrorFillingMessageLabel(String message)
+   public void setJRebelErrorMessageLabel(String message)
    {
-      jRebelErrorFillingMessage.setValue(message);
+      jRebelErrorMessageLabel.setValue(message);
    }
 
    @Override
-   public void setJRebelProfileFieldsActive(boolean active)
+   public void setJRebelStoredFormVisible(boolean visible)
    {
-      jRebelProfileFirstName.setEnabled(active);
-      jRebelProfileLastName.setEnabled(active);
-      jRebelProfilePhone.setEnabled(active);
+      showJRebelStoredForm = visible;
    }
 }

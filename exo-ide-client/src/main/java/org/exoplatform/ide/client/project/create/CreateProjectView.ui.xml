@@ -312,7 +312,7 @@
                                  <g:south size="25">
                                     <g:DockLayoutPanel>
                                        <g:center>
-                                          <f:Label ui:field="jRebelErrorFillingMessage"
+                                          <f:Label ui:field="jRebelErrorMessageLabel"
                                                    addStyleNames="{style.errorMessage}"></f:Label>
                                        </g:center>
                                     </g:DockLayoutPanel>

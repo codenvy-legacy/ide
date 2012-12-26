@@ -157,11 +157,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       void setDeployView(Composite deployView);
 
-      void setJRebelErrorFillingMessageLabel(String message);
+      void setJRebelErrorMessageLabel(String message);
 
-      void setJRebelProfileFieldsVisible(boolean visible);
+      void setJRebelFormVisible(boolean visible);
 
-      void setJRebelProfileFieldsActive(boolean active);
+      void setJRebelStoredFormVisible(boolean visible);
    }
 
    private Display display;
@@ -343,11 +343,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          {
             if (event.getValue())
             {
-               display.setJRebelProfileFieldsVisible(true);
+               display.setJRebelFormVisible(true);
             }
             else
             {
-               display.setJRebelProfileFieldsVisible(false);
+               display.setJRebelFormVisible(false);
             }
          }
       });
@@ -580,7 +580,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          goToProjectStep();
       }
       updateNavigationButtonsState();
-      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -603,7 +602,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          }
       }
       updateNavigationButtonsState();
-      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -967,15 +965,15 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
             boolean phoneMatched = phone.matches("\\+\\d{2}\\s?-?\\s?[(]?\\d{3}[)]?\\s?-?\\s?\\d{3}\\s?-?\\s?\\d{4}");
             if (!phoneMatched)
             {
-               display.setJRebelErrorFillingMessageLabel("Phone must be: +xx (xxx) xxxxxxx");
+               display.setJRebelErrorMessageLabel("Phone must be: +xx (xxx) xxxxxxx");
             }
             else
             {
-               display.setJRebelErrorFillingMessageLabel("");
+               display.setJRebelErrorMessageLabel("");
             }
             return phoneMatched;
          }
-         display.setJRebelErrorFillingMessageLabel("All field are required!");
+         display.setJRebelErrorMessageLabel("All field are required!");
       }
       return false;
    }
@@ -1005,17 +1003,20 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                      display.getJRebelLastNameField().setValue(lastName);
                      display.getJRebelPhoneNumberField().setValue(phone);
 
-                     display.setJRebelProfileFieldsActive(false);
+                     display.setJRebelStoredFormVisible(false);
                   }
                   else
                   {
-                     display.setJRebelProfileFieldsActive(true);
+                     display.setJRebelStoredFormVisible(true);
                   }
+                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
+                  display.setJRebelStoredFormVisible(true);
+                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
                }
             });
       }
