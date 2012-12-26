@@ -42,13 +42,13 @@ import java.util.List;
 
 /**
  * Control for updating deployed application using JRebel.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateAppControl.java Oct 30, 2012 2:53:32 PM azatsarynnyy $
  *
  */
 public class UpdateAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStoppedHandler, ActiveProjectChangedHandler
+   AppStartedHandler, AppStoppedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
@@ -81,7 +81,6 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStoppedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -102,7 +101,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
    {
       updateState(event.getProject());
    }
-   
+
 
    /**
     * @param project
@@ -121,12 +120,6 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       setEnabled(false);
       setShowInContextMenu(isJavaProject && useJRebel);
    }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      updateState(event.getProject());
-   }
 
    @Override
    public void onAppStopped(AppStoppedEvent appStopedEvent)
@@ -142,7 +135,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
 
    /**
     * Read projects property 'jrebel'.
-    * 
+    *
     * @return <code>true</code> if need to use JRebel
     */
    private boolean isUseJRebel(ProjectModel project)

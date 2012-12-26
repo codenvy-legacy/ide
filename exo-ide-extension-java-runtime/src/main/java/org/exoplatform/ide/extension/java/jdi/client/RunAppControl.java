@@ -37,7 +37,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
 
 public class RunAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStoppedHandler, ActiveProjectChangedHandler
+   AppStartedHandler, AppStoppedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
@@ -68,7 +68,6 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStoppedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -105,13 +104,6 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       setVisible(isJavaProject);
       setEnabled(isJavaProject);
       setShowInContextMenu(isJavaProject);
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      String projectType = event.getProject().getProjectType();
-      updateStatus(projectType);
    }
 
    @Override

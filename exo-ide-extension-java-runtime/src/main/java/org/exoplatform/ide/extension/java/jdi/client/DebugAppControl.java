@@ -37,7 +37,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 
 public class DebugAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStoppedHandler, ActiveProjectChangedHandler
+   AppStartedHandler, AppStoppedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.debugAppControlId();
 
@@ -68,7 +68,6 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStoppedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -99,17 +98,10 @@ public class DebugAppControl extends SimpleControl implements IDEControl, Projec
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
             || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-             || ProjectType.WAR.value().equals(projectType) || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType);
+            || ProjectType.WAR.value().equals(projectType) || ProjectType.JSP.value().equals(projectType) || ProjectType.AWS.value().equals(projectType);
       setVisible(isJavaProject);
       setEnabled(isJavaProject);
       setShowInContextMenu(isJavaProject);
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      String projectType = event.getProject().getProjectType();
-      updateState(projectType);
    }
 
    @Override
