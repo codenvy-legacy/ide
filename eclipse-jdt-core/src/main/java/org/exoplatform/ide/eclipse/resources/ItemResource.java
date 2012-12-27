@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.internal.resources.ICoreConstants;
+import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IPathVariableManager;
@@ -26,14 +28,24 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceProxy;
 import org.eclipse.core.resources.IResourceProxyVisitor;
+import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.ItemImpl;
 
 import java.net.URI;
@@ -47,11 +59,37 @@ import java.util.Map;
 public class ItemResource implements IResource
 {
 
+   protected IPath path;
+
+   protected WorkspaceResource workspace;
+
+   /**
+    * Wrapped {@link ItemImpl}.
+    */
    protected ItemImpl delegate;
 
+   /**
+    * {@link VirtualFileSystem} instance.
+    */
    protected VirtualFileSystem vfs;
 
-   public ItemResource(ItemImpl item, VirtualFileSystem vfs)
+   /**
+    * Creates new {@link ItemResource} with the specified <code>path</code> in pointed <code>workspace</code>.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
+    */
+   protected ItemResource(IPath path, WorkspaceResource workspace)
+   {
+      this.path = path.removeTrailingSeparator();
+      this.workspace = workspace;
+   }
+
+   /**
+    * @param item {@link ItemImpl}
+    * @param vfs {@link VirtualFileSystem}
+    */
+   protected ItemResource(ItemImpl item, VirtualFileSystem vfs)
    {
       this.delegate = item;
       this.vfs = vfs;
@@ -93,8 +131,7 @@ public class ItemResource implements IResource
    @Override
    public void accept(IResourceProxyVisitor visitor, int memberFlags) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      accept(visitor, IResource.DEPTH_INFINITE, memberFlags);
    }
 
    /**
@@ -113,8 +150,7 @@ public class ItemResource implements IResource
    @Override
    public void accept(IResourceVisitor visitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      accept(visitor, IResource.DEPTH_INFINITE, 0);
    }
 
    /**
@@ -123,8 +159,7 @@ public class ItemResource implements IResource
    @Override
    public void accept(IResourceVisitor visitor, int depth, boolean includePhantoms) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      accept(visitor, depth, includePhantoms ? IContainer.INCLUDE_PHANTOMS : 0);
    }
 
    /**
@@ -153,8 +188,8 @@ public class ItemResource implements IResource
    @Override
    public void copy(IPath destination, boolean force, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      copy(destination, updateFlags, monitor);
    }
 
    /**
@@ -173,8 +208,8 @@ public class ItemResource implements IResource
    @Override
    public void copy(IProjectDescription description, boolean force, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      copy(description, updateFlags, monitor);
    }
 
    /**
@@ -213,8 +248,7 @@ public class ItemResource implements IResource
    @Override
    public void delete(boolean force, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      delete(force ? IResource.FORCE : IResource.NONE, monitor);
    }
 
    /**
@@ -223,8 +257,44 @@ public class ItemResource implements IResource
    @Override
    public void delete(int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
+      try
+      {
+         vfs.delete(delegate.getId(), null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+   }
 
+   /**
+    * This is not an IResource method.
+    * 
+    * @see org.eclipse.core.resources.IFile#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
+    * @see org.eclipse.core.resources.IFolder#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
+    * @see org.eclipse.core.resources.IProject#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   public void delete(boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException
+   {
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
+      delete(updateFlags, monitor);
    }
 
    /**
@@ -298,8 +368,7 @@ public class ItemResource implements IResource
    @Override
    public IPath getFullPath()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return path;
    }
 
    /**
@@ -417,8 +486,7 @@ public class ItemResource implements IResource
    @Override
    public IPath getProjectRelativePath()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return getFullPath().removeFirstSegments(ICoreConstants.PROJECT_SEGMENT_LENGTH);
    }
 
    /**
@@ -486,8 +554,7 @@ public class ItemResource implements IResource
    @Override
    public IWorkspace getWorkspace()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return workspace;
    }
 
    /**
@@ -496,8 +563,7 @@ public class ItemResource implements IResource
    @Override
    public boolean isAccessible()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return exists();
    }
 
    /**
@@ -506,8 +572,7 @@ public class ItemResource implements IResource
    @Override
    public boolean isDerived()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return isDerived(IResource.NONE);
    }
 
    /**
@@ -546,8 +611,7 @@ public class ItemResource implements IResource
    @Override
    public boolean isLinked()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return isLinked(NONE);
    }
 
    /**
@@ -636,8 +700,7 @@ public class ItemResource implements IResource
    @Override
    public void move(IPath destination, boolean force, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      move(destination, force ? IResource.FORCE : IResource.NONE, monitor);
    }
 
    /**
@@ -646,8 +709,34 @@ public class ItemResource implements IResource
    @Override
    public void move(IPath destination, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      try
+      {
+         vfs.move(delegate.getId(), delegate.getParentId(), null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
    }
 
    /**
@@ -657,8 +746,9 @@ public class ItemResource implements IResource
    public void move(IProjectDescription description, boolean force, boolean keepHistory, IProgressMonitor monitor)
       throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
+      move(description, updateFlags, monitor);
    }
 
    /**
@@ -667,8 +757,26 @@ public class ItemResource implements IResource
    @Override
    public void move(IProjectDescription description, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
+      Assert.isNotNull(description);
+      if (getType() != IResource.PROJECT)
+      {
+         String message =
+            "Cannot move " + getFullPath() + " to " + description.getName() + ".  Source must be a project."; //NLS.bind(Messages.resources_moveNotProject, getFullPath(), description.getName());
+         throw new ResourceException(IResourceStatus.INVALID_VALUE, getFullPath(), message, null);
+      }
+      ((ProjectResource)this).move(description, updateFlags, monitor);
+   }
 
+   /**
+    * @see org.eclipse.core.resources.IFile#move(IPath, boolean, boolean, IProgressMonitor)
+    * @see org.eclipse.core.resources.IFolder#move(IPath, boolean, boolean, IProgressMonitor)
+    */
+   public void move(IPath destination, boolean force, boolean keepHistory, IProgressMonitor monitor)
+      throws CoreException
+   {
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
+      move(destination, updateFlags, monitor);
    }
 
    /**

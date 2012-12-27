@@ -27,18 +27,8 @@ import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemImpl;
-import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -49,10 +39,21 @@ public class ContainerResource extends ItemResource implements IContainer
 {
 
    /**
-    * @param item
-    * @param vfs
+    * Creates new {@link ContainerResource} with the specified <code>path</code> in pointed <code>workspace</code>.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
     */
-   public ContainerResource(ItemImpl item, VirtualFileSystem vfs)
+   protected ContainerResource(IPath path, WorkspaceResource workspace)
+   {
+      super(path, workspace);
+   }
+
+   /**
+    * @param item {@link ItemImpl}
+    * @param vfs {@link VirtualFileSystem}
+    */
+   protected ContainerResource(ItemImpl item, VirtualFileSystem vfs)
    {
       super(item, vfs);
    }
@@ -73,8 +74,7 @@ public class ContainerResource extends ItemResource implements IContainer
    @Override
    public IResource findMember(String path)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return findMember(path, false);
    }
 
    /**
@@ -93,8 +93,7 @@ public class ContainerResource extends ItemResource implements IContainer
    @Override
    public IResource findMember(IPath path)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return findMember(path, false);
    }
 
    /**
@@ -133,29 +132,16 @@ public class ContainerResource extends ItemResource implements IContainer
    @Override
    public IFile getFile(IPath path)
    {
-      try
-      {
-         Item item = vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER);
-         if (ItemType.FILE == item.getItemType())
-         {
-            return (FileResource)item;
-         }
-         return null;
-      }
-      catch (ItemNotFoundException e)
-      {
-         return null;
-         // TODO
-         //return (FileResource)vfs.createFile(delegate.getId(), "", MediaType.TEXT_PLAIN_TYPE, null);
-      }
-      catch (PermissionDeniedException e)
-      {
-         return null;
-      }
-      catch (VirtualFileSystemException e)
-      {
-         return null;
-      }
+      return (IFile)workspace.newResource(getFullPath().append(path), FILE);
+   }
+
+   /**
+    * @see org.eclipse.core.resources.IFolder#getFile(java.lang.String)
+    * @see org.eclipse.core.resources.IProject#getFile(java.lang.String)
+    */
+   public IFile getFile(String name)
+   {
+      return (IFile)workspace.newResource(getFullPath().append(name), FILE);
    }
 
    /**
@@ -164,19 +150,16 @@ public class ContainerResource extends ItemResource implements IContainer
    @Override
    public IFolder getFolder(IPath path)
    {
-      try
-      {
-         Item item = vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER);
-         if (ItemType.FOLDER == item.getItemType())
-         {
-            return (FolderResource)item;
-         }
-         return null;
-      }
-      catch (Exception e)
-      {
-         return null;
-      }
+      return (IFolder)workspace.newResource(getFullPath().append(path), FOLDER);
+   }
+
+   /**
+    * @see org.eclipse.core.resources.IFolder#getFolder(java.lang.String)
+    * @see org.eclipse.core.resources.IProject#getFolder(java.lang.String)
+    */
+   public IFolder getFolder(String name)
+   {
+      return (IFolder)workspace.newResource(getFullPath().append(name), FOLDER);
    }
 
    /**
@@ -185,49 +168,7 @@ public class ContainerResource extends ItemResource implements IContainer
    @Override
    public IResource[] members() throws CoreException
    {
-      try
-      {
-         ItemList<Item> childrenList = vfs.getChildren(delegate.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
-         if (childrenList.getNumItems() > 0)
-         {
-            IResource[] resourceArray = new IResource[childrenList.getNumItems()];
-            int i = 0;
-            for (Item item : childrenList.getItems())
-            {
-               switch (item.getItemType())
-               {
-                  case FILE :
-                     resourceArray[i++] = (FileResource)item;
-                     break;
-                  case FOLDER :
-                     resourceArray[i++] = (FolderResource)item;
-                     break;
-                  case PROJECT :
-                     resourceArray[i++] = (ProjectResource)item;
-                     break;
-               }
-            }
-            return resourceArray;
-         }
-
-         return new IResource[0];
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
+      return members(IResource.NONE);
    }
 
    /**
@@ -236,8 +177,7 @@ public class ContainerResource extends ItemResource implements IContainer
    @Override
    public IResource[] members(boolean includePhantoms) throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
+      return members(includePhantoms ? INCLUDE_PHANTOMS : IResource.NONE);
    }
 
    /**
@@ -248,6 +188,50 @@ public class ContainerResource extends ItemResource implements IContainer
    {
       // TODO Auto-generated method stub
       return null;
+
+      //      try
+      //      {
+      //         ItemList<Item> childrenList = vfs.getChildren(delegate.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+      //         if (childrenList.getNumItems() > 0)
+      //         {
+      //            IResource[] resourceArray = new IResource[childrenList.getNumItems()];
+      //            int i = 0;
+      //            for (Item item : childrenList.getItems())
+      //            {
+      //               switch (item.getItemType())
+      //               {
+      //                  case FILE :
+      //                     resourceArray[i++] = (FileResource)item;
+      //                     break;
+      //                  case FOLDER :
+      //                     resourceArray[i++] = (FolderResource)item;
+      //                     break;
+      //                  case PROJECT :
+      //                     resourceArray[i++] = (ProjectResource)item;
+      //                     break;
+      //               }
+      //            }
+      //            return resourceArray;
+      //         }
+      //
+      //         return new IResource[0];
+      //      }
+      //      catch (ItemNotFoundException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
+      //      catch (InvalidArgumentException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
+      //      catch (PermissionDeniedException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
+      //      catch (VirtualFileSystemException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
    }
 
    /**

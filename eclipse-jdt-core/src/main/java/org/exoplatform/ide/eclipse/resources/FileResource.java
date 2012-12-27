@@ -20,6 +20,7 @@ package org.exoplatform.ide.eclipse.resources;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,6 +29,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -36,6 +38,8 @@ import org.exoplatform.ide.vfs.shared.FileImpl;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -46,10 +50,21 @@ public class FileResource extends ItemResource implements IFile
 {
 
    /**
-    * @param file
-    * @param vfs
+    * Creates new {@link FileResource} with the specified <code>path</code> in pointed <code>workspace</code>.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
     */
-   public FileResource(FileImpl file, VirtualFileSystem vfs)
+   protected FileResource(IPath path, WorkspaceResource workspace)
+   {
+      super(path, workspace);
+   }
+
+   /**
+    * @param file {@link FileImpl}
+    * @param vfs {@link VirtualFileSystem}
+    */
+   protected FileResource(FileImpl file, VirtualFileSystem vfs)
    {
       super(file, vfs);
    }
@@ -81,8 +96,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void create(InputStream source, boolean force, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      create(source, (force ? IResource.FORCE : IResource.NONE), monitor);
    }
 
    /**
@@ -91,8 +105,30 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void create(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      try
+      {
+         vfs.createFile(delegate.getParentId(), getName(), MediaType.TEXT_PLAIN_TYPE, source);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "Folder already exists in the workspace.", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
    }
 
    /**
@@ -110,16 +146,6 @@ public class FileResource extends ItemResource implements IFile
     */
    @Override
    public void createLink(URI location, int updateFlags, IProgressMonitor monitor) throws CoreException
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * @see org.eclipse.core.resources.IFile#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
-    */
-   @Override
-   public void delete(boolean force, boolean keepHistory, IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
 
@@ -171,26 +197,29 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public InputStream getContents() throws CoreException
    {
-      try
-      {
-         return vfs.getContent(delegate.getId()).getStream();
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
+      // TODO Auto-generated method stub
+      return null;
+
+//      try
+//      {
+//         return vfs.getContent(delegate.getId()).getStream();
+//      }
+//      catch (ItemNotFoundException e)
+//      {
+//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+//      }
+//      catch (InvalidArgumentException e)
+//      {
+//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+//      }
+//      catch (PermissionDeniedException e)
+//      {
+//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+//      }
+//      catch (VirtualFileSystemException e)
+//      {
+//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+//      }
    }
 
    /**
@@ -221,17 +250,6 @@ public class FileResource extends ItemResource implements IFile
    {
       // TODO Auto-generated method stub
       return null;
-   }
-
-   /**
-    * @see org.eclipse.core.resources.IFile#move(org.eclipse.core.runtime.IPath, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
-    */
-   @Override
-   public void move(IPath destination, boolean force, boolean keepHistory, IProgressMonitor monitor)
-      throws CoreException
-   {
-      // TODO Auto-generated method stub
-
    }
 
    /**
