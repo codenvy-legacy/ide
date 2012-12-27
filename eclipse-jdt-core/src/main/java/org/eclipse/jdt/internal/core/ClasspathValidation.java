@@ -90,12 +90,9 @@ public class ClasspathValidation
          }
          status = ClasspathEntry.validateClasspath(this.project, rawClasspath, outputLocation);
          if (status.getCode() != IStatus.OK)
-
-
-
-          his.project.createClasspathProblemMarker(status);
-
-
+         {
+            this.project.createClasspathProblemMarker(status);
+         }
       }
    }
 

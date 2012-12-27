@@ -27,15 +27,15 @@ import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jdt.core.formatter.DefaultCodeFormatterConstants;
 import org.eclipse.jdt.core.formatter.IndentManipulation;
-import org.eclipse.jface.text.BadLocationException;
-import org.eclipse.jface.text.BadPositionCategoryException;
-import org.eclipse.jface.text.DefaultPositionUpdater;
-import org.eclipse.jface.text.Document;
-import org.eclipse.jface.text.Position;
-import org.eclipse.text.edits.DeleteEdit;
-import org.eclipse.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.BadPositionCategoryException;
+import org.exoplatform.ide.editor.shared.text.DefaultPositionUpdater;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.Position;
+import org.exoplatform.ide.editor.shared.text.edits.DeleteEdit;
+import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
 import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
-import org.eclipse.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /* package */ final class ASTRewriteFormatter

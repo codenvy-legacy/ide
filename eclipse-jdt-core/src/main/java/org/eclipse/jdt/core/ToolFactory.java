@@ -91,38 +91,38 @@ public class ToolFactory
    public static ICodeFormatter createCodeFormatter()
    {
 
-      Plugin jdtCorePlugin = JavaCore.getPlugin();
-      if (jdtCorePlugin == null)
-      {
-         return null;
-      }
-
-      IExtensionPoint extension = jdtCorePlugin.getDescriptor().getExtensionPoint(
-         JavaModelManager.FORMATTER_EXTPOINT_ID);
-      if (extension != null)
-      {
-         IExtension[] extensions = extension.getExtensions();
-         for (int i = 0; i < extensions.length; i++)
-         {
-            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-            for (int j = 0; j < configElements.length; j++)
-            {
-               try
-               {
-                  Object execExt = configElements[j].createExecutableExtension("class"); //$NON-NLS-1$
-                  if (execExt instanceof ICodeFormatter)
-                  {
-                     // use first contribution found
-                     return (ICodeFormatter)execExt;
-                  }
-               }
-               catch (CoreException e)
-               {
-                  // unable to instantiate extension, will answer default formatter instead
-               }
-            }
-         }
-      }
+      //      Plugin jdtCorePlugin = JavaCore.getPlugin();
+      //      if (jdtCorePlugin == null)
+      //      {
+      //         return null;
+      //      }
+      //
+      //      IExtensionPoint extension = jdtCorePlugin.getDescriptor().getExtensionPoint(
+      //         JavaModelManager.FORMATTER_EXTPOINT_ID);
+      //      if (extension != null)
+      //      {
+      //         IExtension[] extensions = extension.getExtensions();
+      //         for (int i = 0; i < extensions.length; i++)
+      //         {
+      //            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+      //            for (int j = 0; j < configElements.length; j++)
+      //            {
+      //               try
+      //               {
+      //                  Object execExt = configElements[j].createExecutableExtension("class"); //$NON-NLS-1$
+      //                  if (execExt instanceof ICodeFormatter)
+      //                  {
+      //                     // use first contribution found
+      //                     return (ICodeFormatter)execExt;
+      //                  }
+      //               }
+      //               catch (CoreException e)
+      //               {
+      //                  // unable to instantiate extension, will answer default formatter instead
+      //               }
+      //            }
+      //         }
+      //      }
       // no proper contribution found, use default formatter
       return createDefaultCodeFormatter(null);
    }
