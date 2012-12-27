@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.*;
  * </p>
  *
  * @see IResource
- * @see Platform#getAdapterManager()
  */
 public interface IResourceDelta extends IAdaptable
 {
@@ -30,12 +29,12 @@ public interface IResourceDelta extends IAdaptable
     * Constants defining resource delta kinds:
 	 *====================================================================*/
 
-   //	/**
-   //	 * Delta kind constant indicating that the resource has not been changed in any way.
-   //	 *
-   //	 * @see IResourceDelta#getKind()
-   //	 */
-   //	public static final int NO_CHANGE = IElementComparator.K_NO_CHANGE;
+   /**
+    * Delta kind constant indicating that the resource has not been changed in any way.
+    *
+    * @see IResourceDelta#getKind()
+    */
+   public static final int NO_CHANGE = 0;
 
    /**
     * Delta kind constant (bit mask) indicating that the resource has been added
@@ -88,7 +87,7 @@ public interface IResourceDelta extends IAdaptable
    public static final int ALL_WITH_PHANTOMS = CHANGED | ADDED | REMOVED | ADDED_PHANTOM | REMOVED_PHANTOM;
 
 	/*====================================================================
-	 * Constants which describe resource changes:
+    * Constants which describe resource changes:
 	 *====================================================================*/
 
    /**
@@ -117,7 +116,7 @@ public interface IResourceDelta extends IAdaptable
    /**
     * Change constant (bit mask) indicating that the resource was copied from another location.
     * The location in the "before" state can be retrieved using <code>getMovedFromPath()</code>.
-    * This flag is only used when describing potential changes using an {@link IResourceChangeDescriptionFactory}.
+    * This flag is only used when describing potential changes using an IResourceChangeDescriptionFactory.
     *
     * @see IResourceDelta#getFlags()
     * @since 3.2
@@ -434,7 +433,7 @@ public interface IResourceDelta extends IAdaptable
     * <li><code>MOVED_FROM</code> - The resource has moved.
     * <code>getMovedFromPath</code> will return the path of where it was moved from.</li>
     * </ul>
-    * The following code is only used when describing potential changes using an {@link IResourceChangeDescriptionFactory}:
+    * The following code is only used when describing potential changes using an IResourceChangeDescriptionFactory:
     * <ul>
     * <li><code>COPIED_FROM</code> - Change constant (bit mask) indicating that the resource was copied from another location.
     * The location in the "before" state can be retrieved using <code>getMovedFromPath()</code>.</li>

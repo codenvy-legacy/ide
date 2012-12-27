@@ -167,7 +167,7 @@ public final class JavaCore
 
    private static final IResource[] NO_GENERATED_RESOURCES = new IResource[0];
 
-//   private static Plugin JAVA_CORE_PLUGIN = null;
+   //   private static Plugin JAVA_CORE_PLUGIN = null;
 
    private static JavaCore JAVA_CORE;
 
@@ -2894,7 +2894,7 @@ public final class JavaCore
    public JavaCore()
    {
       super();
-//      JAVA_CORE_PLUGIN = this;
+      //      JAVA_CORE_PLUGIN = this;
       JAVA_CORE = this;
    }
 
@@ -3371,70 +3371,70 @@ public final class JavaCore
 
    private static ClasspathContainerInitializer computeClasspathContainerInitializer(String containerID)
    {
-//      Plugin jdtCorePlugin = JavaCore.getPlugin();
-//      if (jdtCorePlugin == null)
-//      {
-//         return null;
-//      }
-//
-//      IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(JavaCore.PLUGIN_ID,
-//         JavaModelManager.CPCONTAINER_INITIALIZER_EXTPOINT_ID);
-//      if (extension != null)
-//      {
-//         IExtension[] extensions = extension.getExtensions();
-//         for (int i = 0; i < extensions.length; i++)
-//         {
-//            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-//            for (int j = 0; j < configElements.length; j++)
-//            {
-//               IConfigurationElement configurationElement = configElements[j];
-//               String initializerID = configurationElement.getAttribute("id"); //$NON-NLS-1$
-//               if (initializerID != null && initializerID.equals(containerID))
-//               {
-//                  if (JavaModelManager.CP_RESOLVE_VERBOSE_ADVANCED)
-//                  {
-//                     verbose_found_container_initializer(containerID, configurationElement);
-//                  }
-//                  try
-//                  {
-//                     Object execExt = configurationElement.createExecutableExtension("class"); //$NON-NLS-1$
-//                     if (execExt instanceof ClasspathContainerInitializer)
-//                     {
-//                        return (ClasspathContainerInitializer)execExt;
-//                     }
-//                  }
-//                  catch (CoreException e)
-//                  {
-//                     // executable extension could not be created: ignore this initializer
-//                     if (JavaModelManager.CP_RESOLVE_VERBOSE || JavaModelManager.CP_RESOLVE_VERBOSE_FAILURE)
-//                     {
-//                        verbose_failed_to_instanciate_container_initializer(containerID, configurationElement);
-//                        e.printStackTrace();
-//                     }
-//                  }
-//               }
-//            }
-//         }
-//      }
+      //      Plugin jdtCorePlugin = JavaCore.getPlugin();
+      //      if (jdtCorePlugin == null)
+      //      {
+      //         return null;
+      //      }
+      //
+      //      IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(JavaCore.PLUGIN_ID,
+      //         JavaModelManager.CPCONTAINER_INITIALIZER_EXTPOINT_ID);
+      //      if (extension != null)
+      //      {
+      //         IExtension[] extensions = extension.getExtensions();
+      //         for (int i = 0; i < extensions.length; i++)
+      //         {
+      //            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+      //            for (int j = 0; j < configElements.length; j++)
+      //            {
+      //               IConfigurationElement configurationElement = configElements[j];
+      //               String initializerID = configurationElement.getAttribute("id"); //$NON-NLS-1$
+      //               if (initializerID != null && initializerID.equals(containerID))
+      //               {
+      //                  if (JavaModelManager.CP_RESOLVE_VERBOSE_ADVANCED)
+      //                  {
+      //                     verbose_found_container_initializer(containerID, configurationElement);
+      //                  }
+      //                  try
+      //                  {
+      //                     Object execExt = configurationElement.createExecutableExtension("class"); //$NON-NLS-1$
+      //                     if (execExt instanceof ClasspathContainerInitializer)
+      //                     {
+      //                        return (ClasspathContainerInitializer)execExt;
+      //                     }
+      //                  }
+      //                  catch (CoreException e)
+      //                  {
+      //                     // executable extension could not be created: ignore this initializer
+      //                     if (JavaModelManager.CP_RESOLVE_VERBOSE || JavaModelManager.CP_RESOLVE_VERBOSE_FAILURE)
+      //                     {
+      //                        verbose_failed_to_instanciate_container_initializer(containerID, configurationElement);
+      //                        e.printStackTrace();
+      //                     }
+      //                  }
+      //               }
+      //            }
+      //         }
+      //      }
       return null;
    }
 
-//   private static void verbose_failed_to_instanciate_container_initializer(String containerID,
-//      IConfigurationElement configurationElement)
-//   {
-//      Util.verbose("CPContainer INIT - failed to instanciate initializer\n" + //$NON-NLS-1$
-//         "	container ID: " + containerID + '\n' + //$NON-NLS-1$
-//         "	class: " + configurationElement.getAttribute("class"), //$NON-NLS-1$ //$NON-NLS-2$
-//         System.err);
-//   }
-//
-//   private static void verbose_found_container_initializer(String containerID,
-//      IConfigurationElement configurationElement)
-//   {
-//      Util.verbose("CPContainer INIT - found initializer\n" + //$NON-NLS-1$
-//         "	container ID: " + containerID + '\n' + //$NON-NLS-1$
-//         "	class: " + configurationElement.getAttribute("class")); //$NON-NLS-1$ //$NON-NLS-2$
-//   }
+   //   private static void verbose_failed_to_instanciate_container_initializer(String containerID,
+   //      IConfigurationElement configurationElement)
+   //   {
+   //      Util.verbose("CPContainer INIT - failed to instanciate initializer\n" + //$NON-NLS-1$
+   //         "	container ID: " + containerID + '\n' + //$NON-NLS-1$
+   //         "	class: " + configurationElement.getAttribute("class"), //$NON-NLS-1$ //$NON-NLS-2$
+   //         System.err);
+   //   }
+   //
+   //   private static void verbose_found_container_initializer(String containerID,
+   //      IConfigurationElement configurationElement)
+   //   {
+   //      Util.verbose("CPContainer INIT - found initializer\n" + //$NON-NLS-1$
+   //         "	container ID: " + containerID + '\n' + //$NON-NLS-1$
+   //         "	class: " + configurationElement.getAttribute("class")); //$NON-NLS-1$ //$NON-NLS-2$
+   //   }
 
    /**
     * Returns the path held in the given classpath variable.
@@ -3592,36 +3592,36 @@ public final class JavaCore
          return null;
       }
 
-//      // Search for extension point to get the possible deprecation message
-//      Plugin jdtCorePlugin = JavaCore.getPlugin();
-//      if (jdtCorePlugin == null)
-//      {
-//         return null;
-//      }
-//
-//      IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(JavaCore.PLUGIN_ID,
-//         JavaModelManager.CPVARIABLE_INITIALIZER_EXTPOINT_ID);
-//      if (extension != null)
-//      {
-//         IExtension[] extensions = extension.getExtensions();
-//         for (int i = 0; i < extensions.length; i++)
-//         {
-//            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-//            for (int j = 0; j < configElements.length; j++)
-//            {
-//               IConfigurationElement configElement = configElements[j];
-//               String varAttribute = configElement.getAttribute("variable"); //$NON-NLS-1$
-//               if (variableName.equals(varAttribute))
-//               {
-//                  String deprecatedAttribute = configElement.getAttribute("deprecated"); //$NON-NLS-1$
-//                  if (deprecatedAttribute != null)
-//                  {
-//                     return deprecatedAttribute;
-//                  }
-//               }
-//            }
-//         }
-//      }
+      //      // Search for extension point to get the possible deprecation message
+      //      Plugin jdtCorePlugin = JavaCore.getPlugin();
+      //      if (jdtCorePlugin == null)
+      //      {
+      //         return null;
+      //      }
+      //
+      //      IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(JavaCore.PLUGIN_ID,
+      //         JavaModelManager.CPVARIABLE_INITIALIZER_EXTPOINT_ID);
+      //      if (extension != null)
+      //      {
+      //         IExtension[] extensions = extension.getExtensions();
+      //         for (int i = 0; i < extensions.length; i++)
+      //         {
+      //            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+      //            for (int j = 0; j < configElements.length; j++)
+      //            {
+      //               IConfigurationElement configElement = configElements[j];
+      //               String varAttribute = configElement.getAttribute("variable"); //$NON-NLS-1$
+      //               if (variableName.equals(varAttribute))
+      //               {
+      //                  String deprecatedAttribute = configElement.getAttribute("deprecated"); //$NON-NLS-1$
+      //                  if (deprecatedAttribute != null)
+      //                  {
+      //                     return deprecatedAttribute;
+      //                  }
+      //               }
+      //            }
+      //         }
+      //      }
       return null;
    }
 
@@ -3639,81 +3639,81 @@ public final class JavaCore
    public static ClasspathVariableInitializer getClasspathVariableInitializer(String variable)
    {
 
-//      Plugin jdtCorePlugin = JavaCore.getPlugin();
-//      if (jdtCorePlugin == null)
-//      {
-//         return null;
-//      }
-//
-//      IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(JavaCore.PLUGIN_ID,
-//         JavaModelManager.CPVARIABLE_INITIALIZER_EXTPOINT_ID);
-//      if (extension != null)
-//      {
-//         IExtension[] extensions = extension.getExtensions();
-//         for (int i = 0; i < extensions.length; i++)
-//         {
-//            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
-//            for (int j = 0; j < configElements.length; j++)
-//            {
-//               IConfigurationElement configElement = configElements[j];
-//               try
-//               {
-//                  String varAttribute = configElement.getAttribute("variable"); //$NON-NLS-1$
-//                  if (variable.equals(varAttribute))
-//                  {
-//                     if (JavaModelManager.CP_RESOLVE_VERBOSE_ADVANCED)
-//                     {
-//                        verbose_found_variable_initializer(variable, configElement);
-//                     }
-//                     Object execExt = configElement.createExecutableExtension("class"); //$NON-NLS-1$
-//                     if (execExt instanceof ClasspathVariableInitializer)
-//                     {
-//                        ClasspathVariableInitializer initializer = (ClasspathVariableInitializer)execExt;
-//                        String deprecatedAttribute = configElement.getAttribute("deprecated"); //$NON-NLS-1$
-//                        if (deprecatedAttribute != null)
-//                        {
-//                           JavaModelManager.getJavaModelManager().deprecatedVariables.put(variable,
-//                              deprecatedAttribute);
-//                        }
-//                        String readOnlyAttribute = configElement.getAttribute("readOnly"); //$NON-NLS-1$
-//                        if (JavaModelManager.TRUE.equals(readOnlyAttribute))
-//                        {
-//                           JavaModelManager.getJavaModelManager().readOnlyVariables.add(variable);
-//                        }
-//                        return initializer;
-//                     }
-//                  }
-//               }
-//               catch (CoreException e)
-//               {
-//                  // executable extension could not be created: ignore this initializer
-//                  if (JavaModelManager.CP_RESOLVE_VERBOSE || JavaModelManager.CP_RESOLVE_VERBOSE_FAILURE)
-//                  {
-//                     verbose_failed_to_instanciate_variable_initializer(variable, configElement);
-//                     e.printStackTrace();
-//                  }
-//               }
-//            }
-//         }
-//      }
+      //      Plugin jdtCorePlugin = JavaCore.getPlugin();
+      //      if (jdtCorePlugin == null)
+      //      {
+      //         return null;
+      //      }
+      //
+      //      IExtensionPoint extension = Platform.getExtensionRegistry().getExtensionPoint(JavaCore.PLUGIN_ID,
+      //         JavaModelManager.CPVARIABLE_INITIALIZER_EXTPOINT_ID);
+      //      if (extension != null)
+      //      {
+      //         IExtension[] extensions = extension.getExtensions();
+      //         for (int i = 0; i < extensions.length; i++)
+      //         {
+      //            IConfigurationElement[] configElements = extensions[i].getConfigurationElements();
+      //            for (int j = 0; j < configElements.length; j++)
+      //            {
+      //               IConfigurationElement configElement = configElements[j];
+      //               try
+      //               {
+      //                  String varAttribute = configElement.getAttribute("variable"); //$NON-NLS-1$
+      //                  if (variable.equals(varAttribute))
+      //                  {
+      //                     if (JavaModelManager.CP_RESOLVE_VERBOSE_ADVANCED)
+      //                     {
+      //                        verbose_found_variable_initializer(variable, configElement);
+      //                     }
+      //                     Object execExt = configElement.createExecutableExtension("class"); //$NON-NLS-1$
+      //                     if (execExt instanceof ClasspathVariableInitializer)
+      //                     {
+      //                        ClasspathVariableInitializer initializer = (ClasspathVariableInitializer)execExt;
+      //                        String deprecatedAttribute = configElement.getAttribute("deprecated"); //$NON-NLS-1$
+      //                        if (deprecatedAttribute != null)
+      //                        {
+      //                           JavaModelManager.getJavaModelManager().deprecatedVariables.put(variable,
+      //                              deprecatedAttribute);
+      //                        }
+      //                        String readOnlyAttribute = configElement.getAttribute("readOnly"); //$NON-NLS-1$
+      //                        if (JavaModelManager.TRUE.equals(readOnlyAttribute))
+      //                        {
+      //                           JavaModelManager.getJavaModelManager().readOnlyVariables.add(variable);
+      //                        }
+      //                        return initializer;
+      //                     }
+      //                  }
+      //               }
+      //               catch (CoreException e)
+      //               {
+      //                  // executable extension could not be created: ignore this initializer
+      //                  if (JavaModelManager.CP_RESOLVE_VERBOSE || JavaModelManager.CP_RESOLVE_VERBOSE_FAILURE)
+      //                  {
+      //                     verbose_failed_to_instanciate_variable_initializer(variable, configElement);
+      //                     e.printStackTrace();
+      //                  }
+      //               }
+      //            }
+      //         }
+      //      }
       return null;
    }
 
-//   private static void verbose_failed_to_instanciate_variable_initializer(String variable,
-//      IConfigurationElement configElement)
-//   {
-//      Util.verbose("CPContainer INIT - failed to instanciate initializer\n" + //$NON-NLS-1$
-//         "	variable: " + variable + '\n' + //$NON-NLS-1$
-//         "	class: " + configElement.getAttribute("class"), //$NON-NLS-1$ //$NON-NLS-2$
-//         System.err);
-//   }
-//
-//   private static void verbose_found_variable_initializer(String variable, IConfigurationElement configElement)
-//   {
-//      Util.verbose("CPVariable INIT - found initializer\n" + //$NON-NLS-1$
-//         "	variable: " + variable + '\n' + //$NON-NLS-1$
-//         "	class: " + configElement.getAttribute("class")); //$NON-NLS-1$ //$NON-NLS-2$
-//   }
+   //   private static void verbose_failed_to_instanciate_variable_initializer(String variable,
+   //      IConfigurationElement configElement)
+   //   {
+   //      Util.verbose("CPContainer INIT - failed to instanciate initializer\n" + //$NON-NLS-1$
+   //         "	variable: " + variable + '\n' + //$NON-NLS-1$
+   //         "	class: " + configElement.getAttribute("class"), //$NON-NLS-1$ //$NON-NLS-2$
+   //         System.err);
+   //   }
+   //
+   //   private static void verbose_found_variable_initializer(String variable, IConfigurationElement configElement)
+   //   {
+   //      Util.verbose("CPVariable INIT - found initializer\n" + //$NON-NLS-1$
+   //         "	variable: " + variable + '\n' + //$NON-NLS-1$
+   //         "	class: " + configElement.getAttribute("class")); //$NON-NLS-1$ //$NON-NLS-2$
+   //   }
 
    /**
     * Returns the names of all known classpath variables.
@@ -4132,15 +4132,15 @@ public final class JavaCore
       return JavaModelManager.getJavaModelManager().getOptions();
    }
 
-//   /**
-//    * Returns the single instance of the Java core plug-in runtime class.
-//    *
-//    * @return the single instance of the Java core plug-in runtime class
-//    */
-//   public static Plugin getPlugin()
-//   {
-//      return JAVA_CORE_PLUGIN;
-//   }
+   //   /**
+   //    * Returns the single instance of the Java core plug-in runtime class.
+   //    *
+   //    * @return the single instance of the Java core plug-in runtime class
+   //    */
+   //   public static Plugin getPlugin()
+   //   {
+   //      return JAVA_CORE_PLUGIN;
+   //   }
 
    /**
     * This is a helper method, which returns the resolved classpath entry denoted
@@ -5974,38 +5974,63 @@ public final class JavaCore
       JavaModelManager.getJavaModelManager().setOptions(newOptions);
    }
 
-//   /* (non-Javadoc)
-//    * Shutdown the JavaCore plug-in.
-//    * <p>
-//    * De-registers the JavaModelManager as a resource changed listener and save participant.
-//    * <p>
-//    * @see org.eclipse.core.runtime.Plugin#stop(BundleContext)
-//    */
-//   public void stop(BundleContext context) throws Exception
-//   {
-//      try
-//      {
-//         JavaModelManager.getJavaModelManager().shutdown();
-//      }
-//      finally
-//      {
-//         // ensure we call super.stop as the last thing
-//         super.stop(context);
-//      }
-//   }
-//
-//   /* (non-Javadoc)
-//    * Startup the JavaCore plug-in.
-//    * <p>
-//    * Registers the JavaModelManager as a resource changed listener and save participant.
-//    * Starts the background indexing, and restore saved classpath variable values.
-//    * <p>
-//    * @throws Exception
-//    * @see org.eclipse.core.runtime.Plugin#start(BundleContext)
-//    */
-//   public void start(BundleContext context) throws Exception
-//   {
-//      super.start(context);
-//      JavaModelManager.getJavaModelManager().startup();
-//   }
+   /**
+    * Returns the location in the local file system of the
+    * plug-in state area for this plug-in.
+    * If the plug-in state area did not exist prior to this call,
+    * it is created.
+    * <p>
+    * The plug-in state area is a file directory within the
+    * platform's metadata area where a plug-in is free to create files.
+    * The content and structure of this area is defined by the plug-in,
+    * and the particular plug-in is solely responsible for any files
+    * it puts there. It is recommended for plug-in preference settings and
+    * other configuration parameters.
+    * </p>
+    *
+    * @return a local file system path
+    *         XXX Investigate the usage of a service factory (see also platform.getStateLocation)
+    * @throws IllegalStateException, when the system is running with no data area (-data @none),
+    *                                or when a data area has not been set yet.
+    */
+   public final IPath getStateLocation() throws IllegalStateException
+   {
+      //TODO
+      return null; // InternalPlatform.getDefault().getStateLocation(getBundle(), true);
+   }
+
+   //   /* (non-Javadoc)
+   //    * Shutdown the JavaCore plug-in.
+   //    * <p>
+   //    * De-registers the JavaModelManager as a resource changed listener and save participant.
+   //    * <p>
+   //    * @see org.eclipse.core.runtime.Plugin#stop(BundleContext)
+   //    */
+   //   public void stop(BundleContext context) throws Exception
+   //   {
+   //      try
+   //      {
+   //         JavaModelManager.getJavaModelManager().shutdown();
+   //      }
+   //      finally
+   //      {
+   //         // ensure we call super.stop as the last thing
+   //         super.stop(context);
+   //      }
+   //   }
+   //
+   //   /* (non-Javadoc)
+   //    * Startup the JavaCore plug-in.
+   //    * <p>
+   //    * Registers the JavaModelManager as a resource changed listener and save participant.
+   //    * Starts the background indexing, and restore saved classpath variable values.
+   //    * <p>
+   //    * @throws Exception
+   //    * @see org.eclipse.core.runtime.Plugin#start(BundleContext)
+   //    */
+   //   public void start(BundleContext context) throws Exception
+   //   {
+   //      super.start(context);
+   //      JavaModelManager.getJavaModelManager().startup();
+   //   }
 }

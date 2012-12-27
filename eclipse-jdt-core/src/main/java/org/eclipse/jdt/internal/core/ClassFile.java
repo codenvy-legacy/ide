@@ -363,11 +363,11 @@ public class ClassFile extends Openable implements IClassFile, SuffixConstants
          }
          catch (ClassFormatException cfe)
          {
-            //the structure remains unknown
-            if (JavaCore.getPlugin().isDebugging())
-            {
-               cfe.printStackTrace(System.err);
-            }
+            //            //the structure remains unknown
+            //            if (JavaCore.getPlugin().isDebugging())
+            //            {
+            //               cfe.printStackTrace(System.err);
+            //            }
             return null;
          }
          catch (IOException ioe)

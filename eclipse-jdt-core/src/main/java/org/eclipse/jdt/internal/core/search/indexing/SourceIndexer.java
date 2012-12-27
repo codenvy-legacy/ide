@@ -17,9 +17,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.search.SearchDocument;
 import org.eclipse.jdt.internal.compiler.SourceElementParser;
+import org.eclipse.jdt.internal.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.internal.compiler.util.SuffixConstants;
 import org.eclipse.jdt.internal.core.JavaModelManager;
-import org.eclipse.jdt.internal.core.jdom.CompilationUnit;
 import org.eclipse.jdt.internal.core.search.processing.JobManager;
 
 /**
@@ -35,41 +35,59 @@ import org.eclipse.jdt.internal.core.search.processing.JobManager;
  * - Types;<br>
  * - Constructors.
  */
-public class SourceIndexer extends AbstractIndexer implements SuffixConstants {
+public class SourceIndexer extends AbstractIndexer implements SuffixConstants
+{
 
-	public SourceIndexer(SearchDocument document) {
-		super(document);
-	}
-	public void indexDocument() {
-		// Create a new Parser
-		SourceIndexerRequestor requestor = new SourceIndexerRequestor(this);
-		String documentPath = this.document.getPath();
-		SourceElementParser parser = this.document.getParser();
-		if (parser == null) {
-			IPath path = new Path(documentPath);
-			IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
-			parser = JavaModelManager.getJavaModelManager().indexManager.getSourceElementParser(JavaCore.create(project), requestor);
-		} else {
-			parser.setRequestor(requestor);
-		}
+   public SourceIndexer(SearchDocument document)
+   {
+      super(document);
+   }
 
-		// Launch the parser
-		char[] source = null;
-		char[] name = null;
-		try {
-			source = this.document.getCharContents();
-			name = documentPath.toCharArray();
-		} catch(Exception e){
-			// ignore
-		}
-		if (source == null || name == null) return; // could not retrieve document info (e.g. resource was discarded)
-		CompilationUnit compilationUnit = new CompilationUnit(source, name);
-		try {
-			parser.parseCompilationUnit(compilationUnit, true/*full parse*/, null/*no progress*/);
-		} catch (Exception e) {
-			if (JobManager.VERBOSE) {
-				e.printStackTrace();
-			}
-		}
-	}
+   public void indexDocument()
+   {
+      // Create a new Parser
+      SourceIndexerRequestor requestor = new SourceIndexerRequestor(this);
+      String documentPath = this.document.getPath();
+      SourceElementParser parser = this.document.getParser();
+      if (parser == null)
+      {
+         IPath path = new Path(documentPath);
+         IProject project = ResourcesPlugin.getWorkspace().getRoot().getProject(path.segment(0));
+         parser = JavaModelManager.getJavaModelManager().indexManager.getSourceElementParser(JavaCore.create(project),
+            requestor);
+      }
+      else
+      {
+         parser.setRequestor(requestor);
+      }
+
+      // Launch the parser
+      char[] source = null;
+      char[] name = null;
+      try
+      {
+         source = this.document.getCharContents();
+         name = documentPath.toCharArray();
+      }
+      catch (Exception e)
+      {
+         // ignore
+      }
+      if (source == null || name == null)
+      {
+         return; // could not retrieve document info (e.g. resource was discarded)
+      }
+      CompilationUnit compilationUnit = new CompilationUnit(source, new String(name), "UTF-8");
+      try
+      {
+         parser.parseCompilationUnit(compilationUnit, true/*full parse*/, null/*no progress*/);
+      }
+      catch (Exception e)
+      {
+         if (JobManager.VERBOSE)
+         {
+            e.printStackTrace();
+         }
+      }
+   }
 }

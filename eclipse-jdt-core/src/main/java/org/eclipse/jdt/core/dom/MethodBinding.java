@@ -314,7 +314,7 @@ class MethodBinding implements IMethodBinding
 
    private JavaElement getUnresolvedJavaElement()
    {
-      if (JavaCore.getPlugin() == null)
+      if (JavaCore.getJavaCore() == null)
       {
          return null;
       }

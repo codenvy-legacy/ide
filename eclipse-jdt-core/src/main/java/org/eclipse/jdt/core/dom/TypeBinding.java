@@ -302,7 +302,7 @@ class TypeBinding implements ITypeBinding
       }
       catch (RuntimeException e)
       {         /* in case a method cannot be resolvable due to missing jars on the classpath
-			 * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
+          * see https://bugs.eclipse.org/bugs/show_bug.cgi?id=57871
 			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=63550
 			 * https://bugs.eclipse.org/bugs/show_bug.cgi?id=64299
 			 */
@@ -653,7 +653,7 @@ class TypeBinding implements ITypeBinding
 
    private JavaElement getUnresolvedJavaElement(org.eclipse.jdt.internal.compiler.lookup.TypeBinding typeBinding)
    {
-      if (JavaCore.getPlugin() == null)
+      if (JavaCore.getJavaCore() == null)
       {
          return null;
       }

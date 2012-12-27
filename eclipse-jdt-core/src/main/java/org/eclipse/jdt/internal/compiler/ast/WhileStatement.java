@@ -268,12 +268,9 @@ public class WhileStatement extends Statement
       TypeBinding type = this.condition.resolveTypeExpecting(scope, TypeBinding.BOOLEAN);
       this.condition.computeConversion(scope, type, type);
       if (this.action != null)
-
-
-
-          his.action.resolve(scope);
-
-
+      {
+         this.action.resolve(scope);
+      }
    }
 
    public StringBuffer printStatement(int tab, StringBuffer output)
@@ -282,19 +279,13 @@ public class WhileStatement extends Statement
       printIndent(tab, output).append("while ("); //$NON-NLS-1$
       this.condition.printExpression(0, output).append(')');
       if (this.action == null)
-
-
-
-          utput.append(';');
-
-
+      {
+         output.append(';');
+      }
       else
-
-
-
-          his.action.printStatement(tab    ,  utput);
-
-
+      {
+         this.action.printStatement(tab + 1, output);
+      }
       return output;
    }
 
@@ -305,12 +296,9 @@ public class WhileStatement extends Statement
       {
          this.condition.traverse(visitor, blockScope);
          if (this.action != null)
-
-
-
-          his.action.traverse(visitor,  lockScope);
-
-
+         {
+            this.action.traverse(visitor, blockScope);
+         }
       }
       visitor.endVisit(this, blockScope);
    }

@@ -23,8 +23,61 @@ import org.eclipse.jdt.internal.core.util.Util;
 import java.io.*;
 import java.util.*;
 
-public class JavaBuilder extends IncrementalProjectBuilder
+public class JavaBuilder
 {
+
+   /**
+    * Build kind constant (value 6) indicating a full build request.  A full
+    * build discards all previously built state and builds all resources again.
+    * Resource deltas are not applicable for this kind of build.
+    * <p>
+    * <strong>Note:</strong> If there is no previous delta, a request for {@link #INCREMENTAL_BUILD}
+    * or {@link #AUTO_BUILD} will result in the builder being called with {@link #FULL_BUILD}
+    * build kind.
+    * </p>
+    *
+    * @see IProject#build(int, IProgressMonitor)
+    * @see IProject#build(int, String, Map, IProgressMonitor)
+    * @see IWorkspace#build(int, IProgressMonitor)
+    */
+   public static final int FULL_BUILD = 6;
+
+   /**
+    * Build kind constant (value 9) indicating an automatic build request.  When
+    * autobuild is turned on, these builds are triggered automatically whenever
+    * resources change.  Apart from the method by which autobuilds are triggered,
+    * they otherwise operate like an incremental build.
+    *
+    * @see IWorkspaceDescription#setAutoBuilding(boolean)
+    * @see IWorkspace#isAutoBuilding()
+    */
+   public static final int AUTO_BUILD = 9;
+
+   /**
+    * Build kind constant (value 10) indicating an incremental build request.
+    * Incremental builds use an {@link IResourceDelta} that describes what
+    * resources have changed since the last build.  The builder calculates
+    * what resources are affected by the delta, and rebuilds the affected resources.
+    *
+    * @see IProject#build(int, IProgressMonitor)
+    * @see IProject#build(int, String, Map, IProgressMonitor)
+    * @see IWorkspace#build(int, IProgressMonitor)
+    */
+   public static final int INCREMENTAL_BUILD = 10;
+
+   /**
+    * Build kind constant (value 15) indicating a clean build request.  A clean
+    * build discards any additional state that has  been computed as a result of
+    * previous builds, and returns the project to a clean slate. Resource
+    * deltas are not applicable for this kind of build.
+    *
+    * @see IProject#build(int, IProgressMonitor)
+    * @see IProject#build(int, String, Map, IProgressMonitor)
+    * @see IWorkspace#build(int, IProgressMonitor)
+    * @see #clean(IProgressMonitor)
+    * @since 3.0
+    */
+   public static final int CLEAN_BUILD = 15;
 
    IProject currentProject;
 
@@ -357,6 +410,11 @@ public class JavaBuilder extends IncrementalProjectBuilder
       return requiredProjects;
    }
 
+   private IProject getProject()
+   {
+      return currentProject;
+   }
+
    private void buildAll()
    {
       this.notifier.checkCancel();
@@ -606,6 +664,13 @@ public class JavaBuilder extends IncrementalProjectBuilder
       }
       this.notifier.subTask(""); //$NON-NLS-1$
       return deltas;
+   }
+
+   private IResourceDelta getDelta(IProject currentProject)
+   {
+      //TODO
+      //      return buildManager.getDelta(currentProject);
+      return null;
    }
 
    public State getLastState(IProject project)
@@ -1053,6 +1118,16 @@ public class JavaBuilder extends IncrementalProjectBuilder
             }
          }
       }
+   }
+
+   private void needRebuild()
+   {
+
+   }
+
+   private boolean hasBeenBuilt(IProject project)
+   {
+      return false;
    }
 
    private void printLocations(ClasspathLocation[] newLocations, ClasspathLocation[] oldLocations)

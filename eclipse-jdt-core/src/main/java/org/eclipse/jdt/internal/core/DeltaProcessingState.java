@@ -701,7 +701,7 @@ public class DeltaProcessingState implements IResourceChangeListener
 
    private File getTimeStampsFile()
    {
-      return JavaCore.getPlugin().getStateLocation().append("externalLibsTimeStamps").toFile(); //$NON-NLS-1$
+      return JavaCore.getJavaCore().getStateLocation().append("externalLibsTimeStamps").toFile(); //$NON-NLS-1$
    }
 
    public void saveExternalLibTimeStamps() throws CoreException

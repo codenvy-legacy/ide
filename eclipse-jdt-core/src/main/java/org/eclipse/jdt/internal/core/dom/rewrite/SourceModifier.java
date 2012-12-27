@@ -10,12 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core.dom.rewrite;
 
+import org.eclipse.jdt.core.formatter.IndentManipulation;
+import org.exoplatform.ide.editor.shared.text.edits.ISourceModifier;
+import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.jdt.core.formatter.IndentManipulation;
-import org.eclipse.text.edits.ISourceModifier;
-import org.eclipse.text.edits.ReplaceEdit;
 
 
 public class SourceModifier implements ISourceModifier

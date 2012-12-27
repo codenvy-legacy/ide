@@ -270,7 +270,7 @@ class VariableBinding implements IVariableBinding
 
    private JavaElement getUnresolvedJavaElement()
    {
-      if (JavaCore.getPlugin() == null)
+      if (JavaCore.getJavaCore() == null)
       {
          return null;
       }

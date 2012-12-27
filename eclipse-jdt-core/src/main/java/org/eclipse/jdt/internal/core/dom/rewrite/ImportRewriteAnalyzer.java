@@ -40,10 +40,10 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.TypeNameRequestor;
 import org.eclipse.jdt.internal.core.JavaProject;
-import org.eclipse.jface.text.IRegion;
-import org.eclipse.jface.text.Region;
-import org.eclipse.text.edits.DeleteEdit;
-import org.eclipse.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.Region;
+import org.exoplatform.ide.editor.shared.text.edits.DeleteEdit;
+import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
 import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
 
 public final class ImportRewriteAnalyzer
@@ -228,7 +228,7 @@ public final class ImportRewriteAnalyzer
    private String getQualifier(ImportDeclaration decl)
    {
       String name = decl.getName().getFullyQualifiedName();      /*
-		 * If it's on demand import, return the fully qualified name. (e.g. pack1.Foo.* => pack.Foo, pack1.* => pack1)
+       * If it's on demand import, return the fully qualified name. (e.g. pack1.Foo.* => pack.Foo, pack1.* => pack1)
 		 * This is because we need to have pack1.Foo.* and pack1.Bar under different qualifier groups.
 		 */
       if (decl.isOnDemand())
