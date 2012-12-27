@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.client.workspace;
 
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.exoplatform.ide.view.View;
 
@@ -34,28 +34,28 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
     * 
     * @return
     */
-   HasWidgets getCenterPanel();
+   AcceptsOneWidget getCenterPanel();
 
    /**
     * Returns left panel.
     * 
     * @return
     */
-   HasWidgets getLeftPanel();
+   AcceptsOneWidget getLeftPanel();
 
    /**
     * Returns menu panel.
     * 
     * @return
     */
-   HasWidgets getMenuPanel();
+   AcceptsOneWidget getMenuPanel();
 
    /**
     * Returns right panel.
     * 
     * @return
     */
-   HasWidgets getRightPanel();
+   AcceptsOneWidget getRightPanel();
 
    /**
     * Needs for delegate some function into Workspace view.

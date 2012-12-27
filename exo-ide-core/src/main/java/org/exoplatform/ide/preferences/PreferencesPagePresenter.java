@@ -19,7 +19,8 @@
 package org.exoplatform.ide.preferences;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import org.exoplatform.ide.presenter.Presenter;
 
 /**
  * Interface of preference page.
@@ -27,7 +28,7 @@ import com.google.gwt.user.client.ui.AcceptsOneWidget;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface PreferencesPagePresenter
+public interface PreferencesPagePresenter extends Presenter
 {
    /**
     * Needs for delegate updateControls function into PagePresenter.
@@ -52,13 +53,6 @@ public interface PreferencesPagePresenter
     * having pressed the Apply button.
     */
    void doApply();
-
-   /**
-    * Expose preference's page into given container
-    * 
-    * @param container place where preference's page will be exposed
-    */
-   void go(AcceptsOneWidget container);
 
    /**
     * Returns whether this page is changed or not.

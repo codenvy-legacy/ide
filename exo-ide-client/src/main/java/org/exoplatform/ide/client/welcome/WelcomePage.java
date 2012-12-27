@@ -20,8 +20,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasWidgets;
 
 import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.part.AbstractPartPresenter;
@@ -53,12 +53,12 @@ public class WelcomePage extends AbstractPartPresenter
    * {@inheritDoc}
    */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
       HTML h = new HTML();
       h.getElement().appendChild(element);
       h.setSize("100%", "100%");
-      container.add(h);
+      container.setWidget(h);
    }
 
    /**

@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.presenter;
 
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 /**
  * Common interface for Presenters that are responsible for driving the UI
@@ -33,5 +33,5 @@ public interface Presenter
     * 
     * @param container
     */
-   void go(final HasWidgets container);
+   void go(final AcceptsOneWidget container);
 }

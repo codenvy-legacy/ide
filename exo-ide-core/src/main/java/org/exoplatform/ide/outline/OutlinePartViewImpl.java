@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.outline;
 
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -69,7 +69,7 @@ public class OutlinePartViewImpl implements OutlinePartView
     * {@inheritDoc}
     */
    @Override
-   public HasWidgets getContainer()
+   public AcceptsOneWidget getContainer()
    {
       return container;
    }

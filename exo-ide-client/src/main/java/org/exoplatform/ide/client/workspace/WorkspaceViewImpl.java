@@ -19,8 +19,8 @@ package org.exoplatform.ide.client.workspace;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -69,7 +69,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    * {@inheritDoc}
    */
    @Override
-   public HasWidgets getCenterPanel()
+   public AcceptsOneWidget getCenterPanel()
    {
       return centerPanel;
    }
@@ -78,7 +78,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    * {@inheritDoc}
    */
    @Override
-   public HasWidgets getLeftPanel()
+   public AcceptsOneWidget getLeftPanel()
    {
       return leftPanel;
    }
@@ -87,7 +87,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
     * {@inheritDoc}
     */
    @Override
-   public HasWidgets getMenuPanel()
+   public AcceptsOneWidget getMenuPanel()
    {
       return topPanel;
    }
@@ -96,7 +96,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
     * {@inheritDoc}
     */
    @Override
-   public HasWidgets getRightPanel()
+   public AcceptsOneWidget getRightPanel()
    {
       return rightPanel;
    }

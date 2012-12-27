@@ -17,10 +17,11 @@
 package org.exoplatform.ide.menu;
 
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
+
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.event.ExpressionsChangedHandler;
@@ -137,9 +138,9 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
     * {@inheritDoc}
     */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-      container.add(view.asWidget());
+      container.setWidget(view);
    }
 
    /**

@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.part;
 
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -145,7 +145,7 @@ public class PartAgentPresenter implements PartAgent
     * @param type
     * @param container
     */
-   public void go(PartStackType type, HasWidgets container)
+   public void go(PartStackType type, AcceptsOneWidget container)
    {
       getPartStack(type).go(container);
    }

@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent.Type;
 import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
@@ -101,22 +101,22 @@ public class WorkspacePresenterTest
    public void shouldExposeUItoContainer()
    {
       // setup container mock and display.asWidget return object
-      HasWidgets container = mock(HasWidgets.class);
+      AcceptsOneWidget container = mock(AcceptsOneWidget.class);
       Widget wsDisplayAsWidget = mock(Widget.class);
       when(wsPresenter.view.asWidget()).thenReturn(wsDisplayAsWidget);
       // perform action
       wsPresenter.go(container);
       // verify view exposed to UI component
-      verify(container).add(eq(wsDisplayAsWidget));
+      verify(container).setWidget(eq(wsDisplayAsWidget));
    }
 
    @Ignore
    @Test
    public void shouldExposeProjectExplorerOnGo()
    {
-      HasWidgets leftWorkspacePanel = mock(HasWidgets.class);
+      AcceptsOneWidget leftWorkspacePanel = mock(AcceptsOneWidget.class);
       when(wsPresenter.view.getLeftPanel()).thenReturn(leftWorkspacePanel);
-      wsPresenter.go(mock(HasWidgets.class));
+      wsPresenter.go(mock(AcceptsOneWidget.class));
       // verify ProjectView opened
       verify(wsPresenter.projectExplorerPresenter).go(eq(leftWorkspacePanel));
    }

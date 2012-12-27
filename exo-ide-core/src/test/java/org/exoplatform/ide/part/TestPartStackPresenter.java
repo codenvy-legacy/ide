@@ -16,13 +16,17 @@
  */
 package org.exoplatform.ide.part;
 
-import static junit.framework.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.user.client.ui.HasWidgets;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
@@ -76,13 +80,11 @@ public class TestPartStackPresenter
    public void shouldExposeUItoContainer()
    {
       // setup container mock and display.asWidget return object
-      HasWidgets container = mock(HasWidgets.class);
-      Widget displayAsWidget = mock(Widget.class);
-      when(partStackView.asWidget()).thenReturn(displayAsWidget);
+      AcceptsOneWidget container = mock(AcceptsOneWidget.class);
       // perform action
       stack.go(container);
       // verify view exposed to UI component
-      verify(container).add(eq(displayAsWidget));
+      verify(container).setWidget(eq(partStackView));
    }
 
    @Test

@@ -21,7 +21,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -127,9 +127,9 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     * {@inheritDoc}
     */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-      container.add(view.asWidget());
+      container.setWidget(view);
    }
 
    /**
@@ -213,8 +213,8 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
          return;
       }
       activePart = part;
-      HasWidgets contentPanel = view.getContentPanel();
-      contentPanel.clear();
+      AcceptsOneWidget contentPanel = view.getContentPanel();
+
       if (part == null)
       {
          view.setActiveTabButton(-1);
