@@ -155,9 +155,9 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
    {
       boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
       if (isSecureConnection)
-         return "wss://" + Window.Location.getHost() + "/websocket";
+         return "wss://" + Window.Location.getHost() + "/IDE/websocket";
       else
-         return "ws://" + Window.Location.getHost() + "/websocket";
+         return "ws://" + Window.Location.getHost() + "/IDE/websocket";
    }
 
    /**

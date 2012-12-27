@@ -244,6 +244,11 @@
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-shell</artifactId>
 		</dependency>
+		
+		<dependency>
+		  <groupId>org.exoplatform.ide</groupId>
+		  <artifactId>exo-ide-websocket</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>

@@ -62,17 +62,17 @@ public class InviteService
 
    private final SessionProviderService sessionProviderService;
 
-   private final OrganizationService organizationService;
+   private final InviteUserService inviteUserService;
 
    private final InviteMessagePropertiesProvider inviteMessagePropertiesProvider;
 
    public InviteService(RegistryService registry, SessionProviderService sessionProviderService, MailSender mailSender,
-      OrganizationService organizationService, InviteMessagePropertiesProvider messagePropertiesProvider)
+      InviteUserService inviteUserService, InviteMessagePropertiesProvider messagePropertiesProvider)
    {
       this.registry = registry;
       this.mailSender = mailSender;
       this.sessionProviderService = sessionProviderService;
-      this.organizationService = organizationService;
+      this.inviteUserService = inviteUserService;
       this.inviteMessagePropertiesProvider = messagePropertiesProvider;
    }
 
@@ -101,22 +101,7 @@ public class InviteService
       }
       try
       {
-         UserHandler userHandler = organizationService.getUserHandler();
-         User newUser = userHandler.createUserInstance(invite.getEmail());
-         newUser.setPassword(invite.getPassword());
-         newUser.setFirstName(" ");
-         newUser.setLastName(" ");
-         newUser.setEmail(invite.getEmail());
-         userHandler.createUser(newUser, true);
-
-         // register user in groups '/platform/developers' and '/platform/users'
-         GroupHandler groupHandler = organizationService.getGroupHandler();
-         Group developersGroup = groupHandler.findGroupById("/platform/developers");
-         MembershipType membership = organizationService.getMembershipTypeHandler().findMembershipType("member");
-         organizationService.getMembershipHandler().linkMembership(newUser, developersGroup, membership, true);
-
-         Group usersGroup = groupHandler.findGroupById("/platform/users");
-         organizationService.getMembershipHandler().linkMembership(newUser, usersGroup, membership, true);
+         inviteUserService.addUser(invite);
       }
       catch (Exception e)
       {
@@ -142,8 +127,7 @@ public class InviteService
    {
       try
       {
-         UserHandler userHandler = organizationService.getUserHandler();
-         return userHandler.findUserByName(userName) != null;
+         return inviteUserService.isUserRegistered(userName);
       }
       catch (Exception e)//NOSONAR
       {
