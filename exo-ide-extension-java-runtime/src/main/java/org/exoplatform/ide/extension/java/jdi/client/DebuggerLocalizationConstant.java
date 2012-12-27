@@ -265,7 +265,7 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
 
    @DefaultMessage("Debugger is disconnected.")
    @Key("debugger.disconnected")
-   String debuggeDisconnected();
+   String debuggerDisconnected();
 
    @DefaultMessage("Failed to retrieve logs.")
    @Key("get.logs.error.message")

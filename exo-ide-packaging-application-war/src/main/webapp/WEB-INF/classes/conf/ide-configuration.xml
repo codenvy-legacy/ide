@@ -382,54 +382,49 @@
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
    
-    <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
-      <init-params>
-         <object-param>
-            <name>CF0</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.apprun0.exoplatform.com</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>N31IuH4Rj6Bmc21PyunE</string>
-               </field>
-            </object>
-         </object-param>
-         <object-param>
-            <name>CF1</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.apprun1.exoplatform.com</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>N31IuH4Rj6Bmc21PyunE</string>
-               </field>
-            </object>
-         </object-param>
-         <object-param>
-            <name>CF2</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.apprun2.exoplatform.com</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>N31IuH4Rj6Bmc21PyunE</string>
-               </field>
-            </object>
-         </object-param>
-      </init-params>
-   </component>
+   <component>
 
+<type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
+
+<init-params>
+
+<object-param>
+
+<name>CF0</name>
+
+<object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
+
+<field name="target">
+
+<string>http://api.javarun2.exoplatform.com</string>
+
+
+
+</field>
+
+<field name="user">
+
+<string>exoidedev@exoplatform.com</string>
+
+
+
+</field>
+
+<field name="password">
+
+<string>1234qwer</string>
+
+</field>
+
+</object>
+
+</object-param>
+
+
+
+</init-params>
+
+</component>
    <!-- End CloudFoundry -->
 
    <component>
