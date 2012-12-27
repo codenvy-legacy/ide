@@ -33,7 +33,9 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.FileImpl;
+import org.exoplatform.ide.vfs.shared.ItemImpl;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -54,19 +56,26 @@ public class FileResource extends ItemResource implements IFile
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
+    * @param vfs {@link VirtualFileSystem}
     */
-   protected FileResource(IPath path, WorkspaceResource workspace)
+   protected FileResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
    {
-      super(path, workspace);
+      super(path, workspace, vfs);
    }
 
    /**
-    * @param file {@link FileImpl}
+    * Creates new {@link FileResource} with the specified <code>path</code> in the pointed <code>workspace</code>
+    * with underlying {@link FileImpl}.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
+    * @param item {@link FileImpl}
     */
-   protected FileResource(FileImpl file, VirtualFileSystem vfs)
+   protected FileResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, FileImpl item)
    {
-      super(file, vfs);
+      this(path, workspace, vfs);
+      this.delegate = item;
    }
 
    /**
@@ -105,9 +114,10 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void create(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
+      File file = null;
       try
       {
-         vfs.createFile(delegate.getParentId(), getName(), MediaType.TEXT_PLAIN_TYPE, source);
+         file = vfs.createFile(delegate.getParentId(), getName(), MediaType.TEXT_PLAIN_TYPE, source);
       }
       catch (ItemNotFoundException e)
       {
@@ -119,7 +129,8 @@ public class FileResource extends ItemResource implements IFile
       }
       catch (ItemAlreadyExistException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "Folder already exists in the workspace.", e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+            "Folder already exists in the workspace.", e));
       }
       catch (PermissionDeniedException e)
       {
@@ -129,6 +140,7 @@ public class FileResource extends ItemResource implements IFile
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
+      delegate = (ItemImpl)file;
    }
 
    /**
@@ -200,26 +212,26 @@ public class FileResource extends ItemResource implements IFile
       // TODO Auto-generated method stub
       return null;
 
-//      try
-//      {
-//         return vfs.getContent(delegate.getId()).getStream();
-//      }
-//      catch (ItemNotFoundException e)
-//      {
-//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-//      }
-//      catch (InvalidArgumentException e)
-//      {
-//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-//      }
-//      catch (PermissionDeniedException e)
-//      {
-//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-//      }
-//      catch (VirtualFileSystemException e)
-//      {
-//         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-//      }
+      //      try
+      //      {
+      //         return vfs.getContent(delegate.getId()).getStream();
+      //      }
+      //      catch (ItemNotFoundException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
+      //      catch (InvalidArgumentException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
+      //      catch (PermissionDeniedException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
+      //      catch (VirtualFileSystemException e)
+      //      {
+      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      //      }
    }
 
    /**

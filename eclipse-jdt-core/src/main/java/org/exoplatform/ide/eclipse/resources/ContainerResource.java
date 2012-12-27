@@ -43,19 +43,26 @@ public class ContainerResource extends ItemResource implements IContainer
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
+    * @param vfs {@link VirtualFileSystem}
     */
-   protected ContainerResource(IPath path, WorkspaceResource workspace)
+   protected ContainerResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
    {
-      super(path, workspace);
+      super(path, workspace, vfs);
    }
 
    /**
-    * @param item {@link ItemImpl}
+    * Creates new {@link ContainerResource} with the specified <code>path</code> in the pointed <code>workspace</code>
+    * with underlying {@link ItemImpl}.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
+    * @param item {@link ItemImpl}
     */
-   protected ContainerResource(ItemImpl item, VirtualFileSystem vfs)
+   protected ContainerResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, ItemImpl item)
    {
-      super(item, vfs);
+      this(path, workspace, vfs);
+      this.delegate = item;
    }
 
    /**

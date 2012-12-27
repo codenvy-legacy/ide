@@ -78,21 +78,28 @@ public class ItemResource implements IResource
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
+    * @param vfs {@link VirtualFileSystem}
     */
-   protected ItemResource(IPath path, WorkspaceResource workspace)
+   protected ItemResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
    {
       this.path = path.removeTrailingSeparator();
       this.workspace = workspace;
+      this.vfs = vfs;
    }
 
    /**
-    * @param item {@link ItemImpl}
+    * Creates new {@link ItemResource} with the specified <code>path</code> in yje pointed <code>workspace</code>
+    * with underlying {@link ItemImpl}.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
+    * @param item {@link ItemImpl}
     */
-   protected ItemResource(ItemImpl item, VirtualFileSystem vfs)
+   protected ItemResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, ItemImpl item)
    {
+      this(path, workspace, vfs);
       this.delegate = item;
-      this.vfs = vfs;
    }
 
    /**
@@ -281,6 +288,7 @@ public class ItemResource implements IResource
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
+      delegate = null;
    }
 
    /**

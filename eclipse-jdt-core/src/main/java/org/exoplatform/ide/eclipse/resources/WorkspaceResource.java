@@ -43,6 +43,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -56,8 +57,11 @@ import java.util.Map;
 public class WorkspaceResource implements IWorkspace
 {
 
-   public WorkspaceResource()
+   private VirtualFileSystem vfs;
+
+   public WorkspaceResource(VirtualFileSystem vfs)
    {
+      this.vfs = vfs;
    }
 
    /**
@@ -396,16 +400,17 @@ public class WorkspaceResource implements IWorkspace
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
-            return new FolderResource(path.makeAbsolute(), this);
+            return new FolderResource(path.makeAbsolute(), this, vfs);
          case IResource.FILE :
             if (path.segmentCount() < ICoreConstants.MINIMUM_FILE_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
-            return new FileResource(path.makeAbsolute(), this);
+            return new FileResource(path.makeAbsolute(), this, vfs);
          case IResource.PROJECT :
-            return (ItemResource)getRoot().getProject(path.lastSegment());
+            //return (ItemResource)getRoot().getProject(path.lastSegment());
+            return new ProjectResource(path.makeAbsolute(), this, vfs);
          case IResource.ROOT :
             return (ItemResource)getRoot();
       }

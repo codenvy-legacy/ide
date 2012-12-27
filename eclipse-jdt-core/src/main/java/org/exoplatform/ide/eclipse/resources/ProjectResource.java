@@ -54,19 +54,26 @@ public class ProjectResource extends ContainerResource implements IProject
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
+    * @param vfs {@link VirtualFileSystem}
     */
-   protected ProjectResource(IPath path, WorkspaceResource workspace)
+   protected ProjectResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
    {
-      super(path, workspace);
+      super(path, workspace, vfs);
    }
 
    /**
-    * @param project {@link ProjectImpl}
+    * Creates new {@link ProjectResource} with the specified <code>path</code> in the pointed <code>workspace</code>
+    * with underlying {@link ProjectImpl}.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
+    * @param item {@link ProjectImpl}
     */
-   protected ProjectResource(ProjectImpl project, VirtualFileSystem vfs)
+   protected ProjectResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, ProjectImpl item)
    {
-      super(project, vfs);
+      this(path, workspace, vfs);
+      this.delegate = item;
    }
 
    /**
@@ -148,7 +155,8 @@ public class ProjectResource extends ContainerResource implements IProject
       }
       catch (ItemAlreadyExistException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "Project already exists in the workspace.", e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+            "Project already exists in the workspace.", e));
       }
       catch (PermissionDeniedException e)
       {

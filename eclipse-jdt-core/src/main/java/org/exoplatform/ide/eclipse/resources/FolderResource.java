@@ -31,7 +31,9 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.FolderImpl;
+import org.exoplatform.ide.vfs.shared.ItemImpl;
 
 import java.net.URI;
 
@@ -48,19 +50,26 @@ public class FolderResource extends ContainerResource implements IFolder
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
+    * @param vfs {@link VirtualFileSystem}
     */
-   protected FolderResource(IPath path, WorkspaceResource workspace)
+   protected FolderResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
    {
-      super(path, workspace);
+      super(path, workspace, vfs);
    }
 
    /**
-    * @param folder {@link FolderImpl}
+    * Creates new {@link FolderResource} with the specified <code>path</code> in the pointed <code>workspace</code>
+    * with underlying {@link FolderImpl}.
+    * 
+    * @param path {@link IPath}
+    * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
+    * @param item {@link FolderImpl}
     */
-   protected FolderResource(FolderImpl folder, VirtualFileSystem vfs)
+   protected FolderResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, FolderImpl item)
    {
-      super(folder, vfs);
+      this(path, workspace, vfs);
+      this.delegate = item;
    }
 
    /**
@@ -78,9 +87,10 @@ public class FolderResource extends ContainerResource implements IFolder
    @Override
    public void create(int updateFlags, boolean local, IProgressMonitor monitor) throws CoreException
    {
+      Folder folder = null;
       try
       {
-         vfs.createFolder(delegate.getParentId(), getName());
+         folder = vfs.createFolder(delegate.getParentId(), getName());
       }
       catch (ItemNotFoundException e)
       {
@@ -92,7 +102,8 @@ public class FolderResource extends ContainerResource implements IFolder
       }
       catch (ItemAlreadyExistException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "Folder already exists in the workspace.", e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+            "Folder already exists in the workspace.", e));
       }
       catch (PermissionDeniedException e)
       {
@@ -102,6 +113,7 @@ public class FolderResource extends ContainerResource implements IFolder
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
+      delegate = (ItemImpl)folder;
    }
 
    /**
