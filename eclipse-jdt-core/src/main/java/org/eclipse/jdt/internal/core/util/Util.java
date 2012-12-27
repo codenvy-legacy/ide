@@ -10,8 +10,6 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core.util;
 
-import org.eclipse.core.filesystem.EFS;
-import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -26,7 +24,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.content.IContentType;
 import org.eclipse.jdt.core.Flags;
 import org.eclipse.jdt.core.IAnnotation;
 import org.eclipse.jdt.core.IClassFile;
@@ -99,7 +96,6 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -1589,29 +1585,29 @@ public class Util
       // workaround https://bugs.eclipse.org/bugs/show_bug.cgi?id=130736 by using java.io.File if possible
       IPath location = file.getLocation();
       long length;
-      if (location == null)
-      {
-         // non local file
-         try
-         {
-            URI locationURI = file.getLocationURI();
-            if (locationURI == null)
-            {
-               throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID,
-                  Messages.bind(Messages.file_notFound, file.getFullPath().toString())));
-            }
-            length = EFS.getStore(locationURI).fetchInfo().getLength();
-         }
-         catch (CoreException e)
-         {
-            throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
-         }
-      }
-      else
-      {
-         // local file
+//      if (location == null)
+//      {
+//         // non local file
+//         try
+//         {
+//            URI locationURI = file.getLocationURI();
+//            if (locationURI == null)
+//            {
+//               throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID,
+//                  Messages.bind(Messages.file_notFound, file.getFullPath().toString())));
+//            }
+//            length = EFS.getStore(locationURI).fetchInfo().getLength();
+//         }
+//         catch (CoreException e)
+//         {
+//            throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+//         }
+//      }
+//      else
+//      {
+//         // local file
          length = location.toFile().length();
-      }
+//      }
 
       // Get resource contents
       InputStream stream = null;
