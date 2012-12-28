@@ -36,7 +36,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.ProjectImpl;
+import org.exoplatform.ide.vfs.shared.Project;
 
 import java.net.URI;
 import java.util.Map;
@@ -63,14 +63,14 @@ public class ProjectResource extends ContainerResource implements IProject
 
    /**
     * Creates new {@link ProjectResource} with the specified <code>path</code> in the pointed <code>workspace</code>
-    * with underlying {@link ProjectImpl}.
+    * with underlying {@link Project}.
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
-    * @param item {@link ProjectImpl}
+    * @param item {@link Project}
     */
-   protected ProjectResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, ProjectImpl item)
+   protected ProjectResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, Project item)
    {
       this(path, workspace, vfs);
       this.delegate = item;

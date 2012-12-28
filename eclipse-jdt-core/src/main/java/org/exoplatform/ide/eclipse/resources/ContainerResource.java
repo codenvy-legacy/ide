@@ -28,7 +28,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.shared.ItemImpl;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -52,14 +52,14 @@ public class ContainerResource extends ItemResource implements IContainer
 
    /**
     * Creates new {@link ContainerResource} with the specified <code>path</code> in the pointed <code>workspace</code>
-    * with underlying {@link ItemImpl}.
+    * with underlying {@link Item}.
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
-    * @param item {@link ItemImpl}
+    * @param item {@link Item}
     */
-   protected ContainerResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, ItemImpl item)
+   protected ContainerResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, Item item)
    {
       this(path, workspace, vfs);
       this.delegate = item;

@@ -34,8 +34,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.FileImpl;
-import org.exoplatform.ide.vfs.shared.ItemImpl;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -65,14 +64,14 @@ public class FileResource extends ItemResource implements IFile
 
    /**
     * Creates new {@link FileResource} with the specified <code>path</code> in the pointed <code>workspace</code>
-    * with underlying {@link FileImpl}.
+    * with underlying {@link File}.
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
-    * @param item {@link FileImpl}
+    * @param item {@link File}
     */
-   protected FileResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, FileImpl item)
+   protected FileResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, File item)
    {
       this(path, workspace, vfs);
       this.delegate = item;
@@ -114,7 +113,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void create(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      File file = null;
+      Item file = null;
       try
       {
          file = vfs.createFile(delegate.getParentId(), getName(), MediaType.TEXT_PLAIN_TYPE, source);
@@ -140,7 +139,7 @@ public class FileResource extends ItemResource implements IFile
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
-      delegate = (ItemImpl)file;
+      delegate = file;
    }
 
    /**
@@ -209,29 +208,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public InputStream getContents() throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
-
-      //      try
-      //      {
-      //         return vfs.getContent(delegate.getId()).getStream();
-      //      }
-      //      catch (ItemNotFoundException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (InvalidArgumentException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (PermissionDeniedException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (VirtualFileSystemException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
+      return getContents(true);
    }
 
    /**
@@ -240,8 +217,26 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public InputStream getContents(boolean force) throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
+      try
+      {
+         return vfs.getContent(delegate.getId()).getStream();
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
    }
 
    /**

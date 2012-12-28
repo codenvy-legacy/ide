@@ -32,8 +32,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
-import org.exoplatform.ide.vfs.shared.FolderImpl;
-import org.exoplatform.ide.vfs.shared.ItemImpl;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.net.URI;
 
@@ -59,14 +58,14 @@ public class FolderResource extends ContainerResource implements IFolder
 
    /**
     * Creates new {@link FolderResource} with the specified <code>path</code> in the pointed <code>workspace</code>
-    * with underlying {@link FolderImpl}.
+    * with underlying {@link Folder}.
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
-    * @param item {@link FolderImpl}
+    * @param item {@link Folder}
     */
-   protected FolderResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, FolderImpl item)
+   protected FolderResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, Folder item)
    {
       this(path, workspace, vfs);
       this.delegate = item;
@@ -87,7 +86,7 @@ public class FolderResource extends ContainerResource implements IFolder
    @Override
    public void create(int updateFlags, boolean local, IProgressMonitor monitor) throws CoreException
    {
-      Folder folder = null;
+      Item folder = null;
       try
       {
          folder = vfs.createFolder(delegate.getParentId(), getName());
@@ -113,7 +112,7 @@ public class FolderResource extends ContainerResource implements IFolder
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
-      delegate = (ItemImpl)folder;
+      delegate = folder;
    }
 
    /**
