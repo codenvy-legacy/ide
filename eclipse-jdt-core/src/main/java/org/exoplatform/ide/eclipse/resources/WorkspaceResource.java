@@ -498,16 +498,13 @@ public class WorkspaceResource implements IWorkspace
     * @param path {@link IPath}
     * @return {@link Item} identifier
     * @throws CoreException
+    * @throws ItemNotFoundException
     */
-   String getVfsIdByFullPath(IPath path) throws CoreException
+   String getVfsIdByFullPath(IPath path) throws CoreException, ItemNotFoundException
    {
       try
       {
          return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
       }
       catch (PermissionDeniedException e)
       {
@@ -779,10 +776,23 @@ public class WorkspaceResource implements IWorkspace
     */
    void moveResource(IResource resource, IPath destination) throws CoreException
    {
+      // workspace root cannot be deleted
+      if (resource.getType() == IResource.ROOT)
+         return;
+
+//      String destinationId = null;
+//      try
+//      {
+//         destinationId = getVfsIdByFullPath(destination);
+//      }
+//      catch (ItemNotFoundException e1)
+//      {
+//         // TODO create destination
+//         // TODO Unable move item. Item specified as parent is not a folder
+//      }
+
       try
       {
-         // TODO create destination if it not exist
-
          String id = getVfsIdByFullPath(resource.getFullPath());
          String destinationId = getVfsIdByFullPath(destination);
          vfs.move(id, destinationId, null);
@@ -824,6 +834,10 @@ public class WorkspaceResource implements IWorkspace
     */
    void deleteResource(IResource resource) throws CoreException
    {
+      // workspace root cannot be deleted
+      if (resource.getType() == IResource.ROOT)
+         return;
+
       try
       {
          vfs.delete(getVfsIdByFullPath(resource.getFullPath()), null);
