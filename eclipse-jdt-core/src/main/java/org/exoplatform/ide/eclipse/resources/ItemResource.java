@@ -46,7 +46,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.ItemImpl;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.net.URI;
 import java.util.Map;
@@ -64,9 +64,9 @@ public class ItemResource implements IResource
    protected WorkspaceResource workspace;
 
    /**
-    * Wrapped {@link ItemImpl}.
+    * Wrapped {@link Item}.
     */
-   protected ItemImpl delegate;
+   protected Item delegate;
 
    /**
     * {@link VirtualFileSystem} instance.
@@ -89,14 +89,14 @@ public class ItemResource implements IResource
 
    /**
     * Creates new {@link ItemResource} with the specified <code>path</code> in yje pointed <code>workspace</code>
-    * with underlying {@link ItemImpl}.
+    * with underlying {@link Item}.
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
     * @param vfs {@link VirtualFileSystem}
-    * @param item {@link ItemImpl}
+    * @param item {@link Item}
     */
-   protected ItemResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, ItemImpl item)
+   protected ItemResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, Item item)
    {
       this(path, workspace, vfs);
       this.delegate = item;
