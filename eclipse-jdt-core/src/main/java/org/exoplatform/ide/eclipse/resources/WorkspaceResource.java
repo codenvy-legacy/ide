@@ -50,6 +50,7 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -458,7 +459,7 @@ public class WorkspaceResource implements IWorkspace
          switch (resource.getType())
          {
             case IResource.FILE :
-               return vfs.createFile(parentId, resource.getName(), MediaType.TEXT_PLAIN_TYPE,
+               return vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/MediaType.TEXT_PLAIN_TYPE,
                   ((IFile)resource).getContents());
             case IResource.FOLDER :
                return vfs.createFolder(parentId, resource.getName());
@@ -491,16 +492,30 @@ public class WorkspaceResource implements IWorkspace
    }
 
    /**
-    * @param path
-    * @return
-    * @throws ItemNotFoundException
-    * @throws PermissionDeniedException
-    * @throws VirtualFileSystemException
+    * Returns VFS {@link Item} identifier by provided {@link IPath}.
+    * 
+    * @param path {@link IPath}
+    * @return {@link Item} identifier
+    * @throws CoreException
     */
-   String getVfsIdByFullPath(IPath path) throws ItemNotFoundException, PermissionDeniedException,
-      VirtualFileSystemException
+   String getVfsIdByFullPath(IPath path) throws CoreException
    {
-      return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
+      try
+      {
+         return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
    }
 
    /**
@@ -677,6 +692,80 @@ public class WorkspaceResource implements IWorkspace
    protected VirtualFileSystem getVFS()
    {
       return vfs;
+   }
+
+   /**
+    * Returns an open input stream on the contents of provided {@link IFile}.
+    * The client is responsible for closing the stream when finished.
+    * 
+    * @param file {@link IFile} to get contents
+    * @return an input stream containing the contents of the file
+    * @throws CoreException
+    */
+   InputStream getFileContents(IFile file) throws CoreException
+   {
+      try
+      {
+         String id = getVfsIdByFullPath(file.getFullPath());
+         return vfs.getContent(id).getStream();
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+   }
+
+   /**
+    * Update binary contents of specified {@link IFile}.
+    * 
+    * @param file {@link IFile} to update contents
+    * @param newContent new content of {@link IFile}
+    * @throws CoreException
+    */
+   void setFileContents(IFile file, InputStream newContent) throws CoreException
+   {
+      try
+      {
+         vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/MediaType.TEXT_PLAIN_TYPE, newContent, null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+   }
+
+   void deleteResource(IResource resource)
+   {
+      // TODO
+      
    }
 
 }
