@@ -481,6 +481,19 @@
             <type>war</type>
             <version>${project.version}</version> 
          </dependency>
+         
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-shell</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+      
+        <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-shell-war</artifactId>
+            <type>war</type>
+            <version>${project.version}</version>
+        </dependency>
 
          <dependency>
             <groupId>org.exoplatform.log-reader</groupId>
