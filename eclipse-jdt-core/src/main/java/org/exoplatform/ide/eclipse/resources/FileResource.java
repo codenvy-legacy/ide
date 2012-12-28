@@ -27,20 +27,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.Item;
 
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
-
-import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -55,26 +49,10 @@ public class FileResource extends ItemResource implements IFile
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
     */
-   protected FileResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
+   protected FileResource(IPath path, WorkspaceResource workspace)
    {
-      super(path, workspace, vfs);
-   }
-
-   /**
-    * Creates new {@link FileResource} with the specified <code>path</code> in the pointed <code>workspace</code>
-    * with underlying {@link File}.
-    * 
-    * @param path {@link IPath}
-    * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
-    * @param item {@link File}
-    */
-   protected FileResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, File item)
-   {
-      this(path, workspace, vfs);
-      this.delegate = item;
+      super(path, workspace);
    }
 
    /**
@@ -113,33 +91,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void create(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      Item file = null;
-      try
-      {
-         file = vfs.createFile(delegate.getParentId(), getName(), MediaType.TEXT_PLAIN_TYPE, source);
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (ItemAlreadyExistException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
-            "Folder already exists in the workspace.", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      delegate = file;
+      workspace.createResource(this);
    }
 
    /**
@@ -219,7 +171,8 @@ public class FileResource extends ItemResource implements IFile
    {
       try
       {
-         return vfs.getContent(delegate.getId()).getStream();
+         String id = workspace.getVfsIdByFullPath(getFullPath());
+         return workspace.getVFS().getContent(id).getStream();
       }
       catch (ItemNotFoundException e)
       {
@@ -319,6 +272,15 @@ public class FileResource extends ItemResource implements IFile
    {
       // TODO Auto-generated method stub
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.eclipse.resources.ItemResource#getType()
+    */
+   @Override
+   public int getType()
+   {
+      return FILE;
    }
 
 }

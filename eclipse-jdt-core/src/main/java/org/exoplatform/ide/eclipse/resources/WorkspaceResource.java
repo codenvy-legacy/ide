@@ -20,6 +20,7 @@ package org.exoplatform.ide.eclipse.resources;
 
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.resources.IBuildConfiguration;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFilterMatcherDescriptor;
 import org.eclipse.core.resources.IMarker;
@@ -42,12 +43,23 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Map;
+
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -56,7 +68,11 @@ import java.util.Map;
  */
 public class WorkspaceResource implements IWorkspace
 {
+   protected final IWorkspaceRoot defaultRoot = new WorkspaceRootResource(Path.ROOT, this);
 
+   /**
+    * {@link VirtualFileSystem} instance.
+    */
    private VirtualFileSystem vfs;
 
    public WorkspaceResource(VirtualFileSystem vfs)
@@ -283,8 +299,7 @@ public class WorkspaceResource implements IWorkspace
    @Override
    public IWorkspaceRoot getRoot()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return defaultRoot;
    }
 
    /**
@@ -389,6 +404,13 @@ public class WorkspaceResource implements IWorkspace
       return null;
    }
 
+   /**
+    * Creates new {@link ItemResource} of the specified <code>type</code>.
+    * 
+    * @param path {@link IPath} of resource to create
+    * @param type type of resource to create
+    * @return created resource
+    */
    public ItemResource newResource(IPath path, int type)
    {
       String message;
@@ -400,23 +422,85 @@ public class WorkspaceResource implements IWorkspace
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
-            return new FolderResource(path.makeAbsolute(), this, vfs);
+            return new FolderResource(path.makeAbsolute(), this);
          case IResource.FILE :
             if (path.segmentCount() < ICoreConstants.MINIMUM_FILE_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
-            return new FileResource(path.makeAbsolute(), this, vfs);
+            return new FileResource(path.makeAbsolute(), this);
          case IResource.PROJECT :
             //return (ItemResource)getRoot().getProject(path.lastSegment());
-            return new ProjectResource(path.makeAbsolute(), this, vfs);
+            return new ProjectResource(path.makeAbsolute(), this);
          case IResource.ROOT :
             return (ItemResource)getRoot();
       }
       Assert.isLegal(false);
       // will never get here because of assertion.
       return null;
+   }
+
+   /**
+    * Creates provided {@link IResource} in the {@link VirtualFileSystem}.
+    * 
+    * @param resource {@link IResource} to create in {@link VirtualFileSystem}
+    */
+   public Item createResource(IResource resource) throws CoreException
+   {
+      IContainer parent = resource.getParent();
+      if (!parent.exists())
+         createResource(parent);
+
+      try
+      {
+         String parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
+         switch (resource.getType())
+         {
+            case IResource.FILE :
+               return vfs.createFile(parentId, resource.getName(), MediaType.TEXT_PLAIN_TYPE,
+                  ((IFile)resource).getContents());
+            case IResource.FOLDER :
+               return vfs.createFolder(parentId, resource.getName());
+            case IResource.PROJECT :
+               return vfs.createProject(parentId, resource.getName(), null, null);
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+            "Resource already exists in the workspace.", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      return null;
+   }
+
+   /**
+    * @param path
+    * @return
+    * @throws ItemNotFoundException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
+    */
+   String getVfsIdByFullPath(IPath path) throws ItemNotFoundException, PermissionDeniedException,
+      VirtualFileSystemException
+   {
+      return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
    }
 
    /**
@@ -588,6 +672,11 @@ public class WorkspaceResource implements IWorkspace
    {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   protected VirtualFileSystem getVFS()
+   {
+      return vfs;
    }
 
 }

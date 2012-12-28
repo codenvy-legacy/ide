@@ -19,6 +19,7 @@
 package org.exoplatform.ide.eclipse.resources;
 
 import org.eclipse.core.resources.IBuildConfiguration;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNature;
@@ -27,16 +28,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentTypeMatcher;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Project;
 
 import java.net.URI;
 import java.util.Map;
@@ -54,26 +46,10 @@ public class ProjectResource extends ContainerResource implements IProject
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
     */
-   protected ProjectResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
+   protected ProjectResource(IPath path, WorkspaceResource workspace)
    {
-      super(path, workspace, vfs);
-   }
-
-   /**
-    * Creates new {@link ProjectResource} with the specified <code>path</code> in the pointed <code>workspace</code>
-    * with underlying {@link Project}.
-    * 
-    * @param path {@link IPath}
-    * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
-    * @param item {@link Project}
-    */
-   protected ProjectResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, Project item)
-   {
-      this(path, workspace, vfs);
-      this.delegate = item;
+      super(path, workspace);
    }
 
    /**
@@ -141,31 +117,7 @@ public class ProjectResource extends ContainerResource implements IProject
    @Override
    public void create(IProjectDescription description, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      try
-      {
-         vfs.createProject(delegate.getParentId(), getName(), null, null);
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (ItemAlreadyExistException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
-            "Project already exists in the workspace.", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
+      workspace.createResource(this);
    }
 
    /**
@@ -376,6 +328,24 @@ public class ProjectResource extends ContainerResource implements IProject
    {
       // TODO Auto-generated method stub
 
+   }
+
+   /**
+    * @see org.exoplatform.ide.eclipse.resources.ItemResource#getType()
+    */
+   @Override
+   public int getType()
+   {
+      return PROJECT;
+   }
+
+   /**
+    * @see org.eclipse.core.resources.IResource#getParent()
+    */
+   @Override
+   public IContainer getParent()
+   {
+      return workspace.getRoot();
    }
 
 }

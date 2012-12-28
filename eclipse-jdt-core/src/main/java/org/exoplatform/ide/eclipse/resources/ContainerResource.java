@@ -27,15 +27,13 @@ import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ContainerResource.java Dec 26, 2012 5:32:18 PM azatsarynnyy $
  *
  */
-public class ContainerResource extends ItemResource implements IContainer
+public abstract class ContainerResource extends ItemResource implements IContainer
 {
 
    /**
@@ -43,26 +41,10 @@ public class ContainerResource extends ItemResource implements IContainer
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
     */
-   protected ContainerResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
+   protected ContainerResource(IPath path, WorkspaceResource workspace)
    {
-      super(path, workspace, vfs);
-   }
-
-   /**
-    * Creates new {@link ContainerResource} with the specified <code>path</code> in the pointed <code>workspace</code>
-    * with underlying {@link Item}.
-    * 
-    * @param path {@link IPath}
-    * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
-    * @param item {@link Item}
-    */
-   protected ContainerResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, Item item)
-   {
-      this(path, workspace, vfs);
-      this.delegate = item;
+      super(path, workspace);
    }
 
    /**
@@ -198,7 +180,7 @@ public class ContainerResource extends ItemResource implements IContainer
 
       //      try
       //      {
-      //         ItemList<Item> childrenList = vfs.getChildren(delegate.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
+      //         ItemList<Item> childrenList = workspace.getVFS().getChildren(delegate.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
       //         if (childrenList.getNumItems() > 0)
       //         {
       //            IResource[] resourceArray = new IResource[childrenList.getNumItems()];

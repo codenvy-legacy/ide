@@ -21,6 +21,7 @@ package org.exoplatform.ide.eclipse.resources;
 import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IPathVariableManager;
 import org.eclipse.core.resources.IProject;
@@ -39,14 +40,13 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.net.URI;
 import java.util.Map;
@@ -56,7 +56,7 @@ import java.util.Map;
  * @version $Id: ItemResource.java Dec 26, 2012 12:20:07 PM azatsarynnyy $
  *
  */
-public class ItemResource implements IResource
+public abstract class ItemResource implements IResource
 {
 
    protected IPath path;
@@ -64,42 +64,15 @@ public class ItemResource implements IResource
    protected WorkspaceResource workspace;
 
    /**
-    * Wrapped {@link Item}.
-    */
-   protected Item delegate;
-
-   /**
-    * {@link VirtualFileSystem} instance.
-    */
-   protected VirtualFileSystem vfs;
-
-   /**
     * Creates new {@link ItemResource} with the specified <code>path</code> in pointed <code>workspace</code>.
     * 
     * @param path {@link IPath}
     * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
     */
-   protected ItemResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs)
+   protected ItemResource(IPath path, WorkspaceResource workspace)
    {
       this.path = path.removeTrailingSeparator();
       this.workspace = workspace;
-      this.vfs = vfs;
-   }
-
-   /**
-    * Creates new {@link ItemResource} with the specified <code>path</code> in yje pointed <code>workspace</code>
-    * with underlying {@link Item}.
-    * 
-    * @param path {@link IPath}
-    * @param workspace {@link WorkspaceResource}
-    * @param vfs {@link VirtualFileSystem}
-    * @param item {@link Item}
-    */
-   protected ItemResource(IPath path, WorkspaceResource workspace, VirtualFileSystem vfs, Item item)
-   {
-      this(path, workspace, vfs);
-      this.delegate = item;
    }
 
    /**
@@ -266,7 +239,8 @@ public class ItemResource implements IResource
    {
       try
       {
-         vfs.delete(delegate.getId(), null);
+         String id = workspace.getVfsIdByFullPath(getFullPath());
+         workspace.getVFS().delete(id, null);
       }
       catch (ItemNotFoundException e)
       {
@@ -288,7 +262,6 @@ public class ItemResource implements IResource
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
-      delegate = null;
    }
 
    /**
@@ -321,8 +294,23 @@ public class ItemResource implements IResource
    @Override
    public boolean exists()
    {
-      // TODO Auto-generated method stub
-      return false;
+      try
+      {
+         workspace.getVFS().getItemByPath(getFullPath().toString(), null, PropertyFilter.NONE_FILTER);
+      }
+      catch (ItemNotFoundException e)
+      {
+         return false;
+      }
+      catch (PermissionDeniedException e)
+      {
+         return true;
+      }
+      catch (VirtualFileSystemException e)
+      {
+         return false;
+      }
+      return true;
    }
 
    /**
@@ -435,7 +423,7 @@ public class ItemResource implements IResource
    @Override
    public String getName()
    {
-      return delegate.getName();
+      return path.lastSegment();
    }
 
    /**
@@ -454,8 +442,14 @@ public class ItemResource implements IResource
    @Override
    public IContainer getParent()
    {
-      // TODO Auto-generated method stub
-      return null;
+      int segments = path.segmentCount();
+      //zero segment handled by subclasses
+      if (segments < 1)
+         Assert.isLegal(false, path.toString());
+      if (segments == 1)
+         //return workspace.getRoot().getProject(path.segment(0));
+         return (IProject)workspace.newResource(path.removeLastSegments(1), IResource.PROJECT);
+      return (IFolder)workspace.newResource(path.removeLastSegments(1), IResource.FOLDER);
    }
 
    /**
@@ -541,20 +535,7 @@ public class ItemResource implements IResource
     * @see org.eclipse.core.resources.IResource#getType()
     */
    @Override
-   public int getType()
-   {
-      switch (delegate.getItemType())
-      {
-         case FILE :
-            return IResource.FILE;
-         case FOLDER :
-            return IResource.FOLDER;
-         case PROJECT :
-            return IResource.PROJECT;
-         default :
-            return 0;
-      }
-   }
+   public abstract int getType();
 
    /**
     * @see org.eclipse.core.resources.IResource#getWorkspace()
@@ -678,8 +659,7 @@ public class ItemResource implements IResource
    @Override
    public boolean isSynchronized(int depth)
    {
-      // TODO Auto-generated method stub
-      return false;
+      return true;
    }
 
    /**
@@ -719,7 +699,9 @@ public class ItemResource implements IResource
    {
       try
       {
-         vfs.move(delegate.getId(), delegate.getParentId(), null);
+         String id = workspace.getVfsIdByFullPath(getFullPath());
+         String parentId = workspace.getVfsIdByFullPath(getParent().getFullPath());
+         workspace.getVFS().move(id, parentId, null);
       }
       catch (ItemNotFoundException e)
       {
