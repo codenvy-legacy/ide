@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 14, 2011 11:11:34 AM anya $
- * 
+ *
  */
 public class ApplicationGrid extends ListGrid<AppInfo>
 {
@@ -86,7 +86,7 @@ public class ApplicationGrid extends ListGrid<AppInfo>
 
    /**
     * Handler for deleting applications.
-    * 
+    *
     * @param handler
     * @return
     */
@@ -128,7 +128,8 @@ public class ApplicationGrid extends ListGrid<AppInfo>
       super.setValue(value);
       if (value != null && value.size() > 0)
       {
-         selectItem(value.get(0));
+         selectItem(getValue().get(0));
+         updateGrid();
       }
    }
 
