@@ -32,16 +32,6 @@ public class CreateProjectEvent extends GwtEvent<CreateProjectHandler>
    public static final GwtEvent.Type<CreateProjectHandler> TYPE = new GwtEvent.Type<CreateProjectHandler>();
    
    /**
-    * Predefined project name
-    */
-   private String projectName;
-   
-   /**
-    * Predefined project type
-    */
-   private String projectType;
-
-   /**
     * Creates new instance of this event
     */
    public CreateProjectEvent()
@@ -56,28 +46,6 @@ public class CreateProjectEvent extends GwtEvent<CreateProjectHandler>
     */
    public CreateProjectEvent(String projectName, String projectType)
    {
-      this.projectName = projectName;
-      this.projectType = projectType;
-   }
-
-   /**
-    * Returns predefined project name
-    * 
-    * @return
-    */
-   public String getProjectName()
-   {
-      return projectName;
-   }
-
-   /**
-    * Returns predefined project type
-    * 
-    * @return
-    */
-   public String getProjectType()
-   {
-      return projectType;
    }
 
    @Override

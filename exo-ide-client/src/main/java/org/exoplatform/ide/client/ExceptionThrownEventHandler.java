@@ -73,7 +73,8 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler
 
       if (error instanceof ServerException)
       {
-         processServerError((ServerException)error, event.getErrorMessage());
+         ServerException serverException = (ServerException)error;
+         processServerError(serverException, event.getErrorMessage());
       }
       else
       {

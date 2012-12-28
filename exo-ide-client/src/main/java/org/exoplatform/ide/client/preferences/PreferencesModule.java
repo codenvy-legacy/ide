@@ -20,7 +20,6 @@ package org.exoplatform.ide.client.preferences;
 
 import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.ide.client.about.AboutIDEPresenter;
-import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -33,7 +32,6 @@ import org.exoplatform.ide.client.framework.preference.Preferences;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter;
 import org.exoplatform.ide.client.hotkeys.CustomizeHotKeysPresenter;
 import org.exoplatform.ide.client.hotkeys.HotKeyManager;
 import org.exoplatform.ide.client.hotkeys.HotKeysPreferenceItem;
@@ -42,8 +40,6 @@ import org.exoplatform.ide.client.operation.autocompletion.AutocompletionHandler
 import org.exoplatform.ide.client.restdiscovery.RestServicesDiscoveryPresenter;
 import org.exoplatform.ide.client.toolbar.CustomizeToolbarPresenter;
 import org.exoplatform.ide.client.toolbar.ToolbarPreferenceItem;
-import org.exoplatform.ide.client.workspace.SelectWorkspacePresenter;
-import org.exoplatform.ide.client.workspace.WorkspacePreferenceItem;
 import org.exoplatform.ide.vfs.client.VirtualFileSystemFactory;
 
 import java.util.List;

@@ -29,7 +29,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
@@ -59,7 +58,6 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
@@ -81,11 +79,14 @@ import java.util.List;
  * @version $Id: Jul 24, 2012 3:38:19 PM anya $
  *
  */
-public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedHandler, ViewClosedHandler,
-   DeployResultHandler
+public class CreateProjectPresenter implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler, ViewClosedHandler,
+   DeployResultHandler, ItemsSelectedHandler
 {
    interface Display extends IsView
    {
+      
+      void switchToCreateModule();
+      
       HasValue<String> getNameField();
 
       HasValue<String> getErrorLabel();
@@ -197,6 +198,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
 
    private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
+   
+   private boolean createModule = false;
+   
+   private ProjectModel parentProject;   
 
    private class NoneTarget extends PaaS
    {
@@ -210,10 +215,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    public CreateProjectPresenter()
    {
       IDE.getInstance().addControl(new CreateProjectControl());
+      IDE.getInstance().addControl(new CreateModuleControl());
 
       IDE.addHandler(CreateProjectEvent.TYPE, this);
+      IDE.addHandler(CreateModuleEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -252,7 +260,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       display.getNextButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -386,10 +393,34 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    @Override
    public void onCreateProject(CreateProjectEvent event)
    {
+      openCreateProjectView(false);      
+   }
+      
+   @Override
+   public void onCreateModule(CreateModuleEvent event)
+   {
+      if (MavenModuleCreationCallback.getInstance().isPomXMLOpened(parentProject))
+      {
+         Dialogs.getInstance().showError("First close pom.xml.");
+         return;
+      }
+      
+      openCreateProjectView(true);
+   }
+   
+   private void openCreateProjectView(boolean createModule)
+   {
+      this.createModule = createModule;
+      
       if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
+         if (createModule)
+         {
+            display.switchToCreateModule();
+         }
+         
          bindDisplay();
       }
 
@@ -463,10 +494,25 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                new ArrayList<ProjectTemplate>()))
             {
                @Override
-               protected void onSuccess(List<ProjectTemplate> result)
-               {
-                  allProjectTemplates = result;
-                  List<ProjectType> list = getProjectTypesFromTemplates(result);
+               protected void onSuccess(List<ProjectTemplate> templates)
+               {                  
+                  if (createModule)
+                  {
+                     allProjectTemplates = new ArrayList<ProjectTemplate>();
+                     for (ProjectTemplate template : templates)
+                     {
+                        if (AvailableModluleTypes.contains(template.getType()))
+                        {
+                           allProjectTemplates.add(template);
+                        }
+                     }                     
+                  }
+                  else
+                  {
+                     allProjectTemplates = templates;
+                  }
+                  
+                  List<ProjectType> list = getProjectTypesFromTemplates(allProjectTemplates);
                   setProjectTypes(list);
 
                   if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty())
@@ -694,6 +740,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       try
       {
          String parentId = vfsInfo.getRoot().getId();
+
+         if (createModule && parentProject != null)
+         {
+            parentId = parentProject.getId();
+         }
+         
          String projectName = display.getNameField().getValue();
          IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
          IDELoader.getInstance().show();
@@ -712,7 +764,15 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
                   IDELoader.getInstance().hide();
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new ProjectCreatedEvent(result));
+                  
+                  if (createModule)
+                  {
+                     MavenModuleCreationCallback.getInstance().moduleCreated(parentProject, result);
+                  }
+                  else
+                  {                     
+                     IDE.fireEvent(new ProjectCreatedEvent(result));
+                  }
                }
 
                @Override
@@ -874,7 +934,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    {
       try
       {
-         VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+         Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
+         if (createModule)
+         {
+            parent = parentProject;
+         }
+
+         VirtualFileSystem.getInstance().getChildren(parent,
             ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
          {
             @Override
@@ -1025,4 +1091,20 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems() == null || 
+               event.getSelectedItems().size() != 1 || 
+               !(event.getSelectedItems().get(0) instanceof ItemContext))
+      {
+         parentProject = null;
+         return;
+      }
+      
+      ItemContext context = (ItemContext)event.getSelectedItems().get(0);
+      parentProject = context.getProject();
+   }
+
 }

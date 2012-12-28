@@ -24,11 +24,13 @@ import org.eclipse.jdt.client.event.CreatePackageEvent;
 import org.eclipse.jdt.client.event.CreatePackageHandler;
 import org.eclipse.jdt.client.event.PackageCreatedEvent;
 import org.eclipse.jdt.client.packaging.ProjectTreeParser;
+import org.eclipse.jdt.client.packaging.ProjectTreeUnmarshaller;
 import org.eclipse.jdt.client.packaging.model.ProjectItem;
 import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -60,9 +62,6 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -163,8 +162,7 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
          display = GWT.create(Display.class);
       }
 
-      IDE.getInstance().openView(display.asView());
-      bind();
+      readProjectTreeAndBindDisplay("Reading project structure...");
    }
 
    /**
@@ -219,65 +217,82 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
       display.focusInPackageNameField();
    }
 
+   private void readProjectTreeAndBindDisplay(final String loaderMessage)
+   {
+      IDELoader.show(loaderMessage);
+
+      try
+      {
+         ProjectTreeUnmarshaller unmarshaller = new ProjectTreeUnmarshaller(currentProject);
+         AsyncRequestCallback<ProjectModel> callback = new AsyncRequestCallback<ProjectModel>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(ProjectModel result)
+            {
+               IDELoader.hide();
+
+               ProjectTreeParser treeParser = new ProjectTreeParser(currentProject, new ProjectItem(currentProject));
+               treeParser.parseProjectStructure(new ProjectTreeParser.ParsingCompleteListener()
+               {
+                  @Override
+                  public void onParseComplete(ProjectItem resultItem)
+                  {
+                     currentProjectItem = resultItem;
+                     IDE.getInstance().openView(display.asView());
+                     bind();
+                  }
+               });
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDELoader.hide();
+               IDE.fireEvent(new ExceptionThrownEvent("Error loading project structure"));
+               exception.printStackTrace();
+            }
+         };
+
+         VirtualFileSystem.getInstance().getProjectTree(currentProject, callback);
+      }
+      catch (Exception e)
+      {
+         IDELoader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    private void showSelectedPackageName()
    {
-      List<ProjectModel> q = new ArrayList<ProjectModel>();
-      q.add(currentProject);
-      ProjectModel modelForParse = currentProject;
-      while (!q.isEmpty())
+      if (selectedItem == null)
       {
-         ProjectModel model = q.remove(0);
+         return;
+      }
 
-         List<ProjectModel> projectModels = model.getModules();
-         if (selectedItem.getPath().startsWith(model.getPath()))
+      FolderModel resourceDirectoryFolder = null;
+
+      for (ResourceDirectoryItem resourceDirectory : currentProjectItem.getResourceDirectories())
+      {
+         if (selectedItem.getPath().startsWith(resourceDirectory.getFolder().getPath()))
          {
-            modelForParse = model;
-         }
-         if (projectModels.size() != 0)
-         {
-            q.addAll(projectModels);
+            resourceDirectoryFolder = resourceDirectory.getFolder();
+            break;
          }
       }
 
-      ProjectTreeParser treeParser = new ProjectTreeParser(modelForParse, new ProjectItem(modelForParse));
-      treeParser.parseProjectStructure(new ProjectTreeParser.ParsingCompleteListener()
+      if (resourceDirectoryFolder == null)
       {
-         @Override
-         public void onParseComplete(ProjectItem resultItem)
-         {
-            currentProjectItem = resultItem;
-            if (selectedItem == null)
-            {
-               return;
-            }
+         return;
+      }
 
-            FolderModel resourceDirectoryFolder = null;
+      String packageName = selectedItem.getPath().substring(resourceDirectoryFolder.getPath().length());
+      packageName = packageName.replaceAll("/", "\\.");
+      if (packageName.startsWith("."))
+      {
+         packageName = packageName.substring(1);
+      }
 
-            for (ResourceDirectoryItem resourceDirectory : resultItem.getResourceDirectories())
-            {
-               if (selectedItem.getPath().startsWith(resourceDirectory.getFolder().getPath()))
-               {
-                  resourceDirectoryFolder = resourceDirectory.getFolder();
-                  break;
-               }
-            }
-
-            if (resourceDirectoryFolder == null)
-            {
-               return;
-            }
-
-            String packageName = selectedItem.getPath().substring(resourceDirectoryFolder.getPath().length());
-            packageName = packageName.replaceAll("/", "\\.");
-
-            if (packageName.startsWith("."))
-            {
-               packageName = packageName.substring(1);
-            }
-
-            display.getPackageNameField().setValue(packageName);
-         }
-      });
+      display.getPackageNameField().setValue(packageName);
    }
 
    /**
