@@ -47,6 +47,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -459,8 +460,8 @@ public class WorkspaceResource implements IWorkspace
          switch (resource.getType())
          {
             case IResource.FILE :
-               return vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/MediaType.TEXT_PLAIN_TYPE,
-                  ((IFile)resource).getContents());
+               return vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
+                  MediaType.TEXT_PLAIN_TYPE, ((IFile)resource).getContents());
             case IResource.FOLDER :
                return vfs.createFolder(parentId, resource.getName());
             case IResource.PROJECT :
@@ -701,6 +702,8 @@ public class WorkspaceResource implements IWorkspace
     * @param file {@link IFile} to get contents
     * @return an input stream containing the contents of the file
     * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IFile#getContents(boolean)
     */
    InputStream getFileContents(IFile file) throws CoreException
    {
@@ -733,12 +736,15 @@ public class WorkspaceResource implements IWorkspace
     * @param file {@link IFile} to update contents
     * @param newContent new content of {@link IFile}
     * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IFile#setContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    void setFileContents(IFile file, InputStream newContent) throws CoreException
    {
       try
       {
-         vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/MediaType.TEXT_PLAIN_TYPE, newContent, null);
+         vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/
+            MediaType.TEXT_PLAIN_TYPE, newContent, null);
       }
       catch (ItemNotFoundException e)
       {
@@ -762,10 +768,86 @@ public class WorkspaceResource implements IWorkspace
       }
    }
 
-   void deleteResource(IResource resource)
+   /**
+    * Move provided {@link IResource} by <code>destination</code> path.
+    * 
+    * @param resource {@link IResource} to move
+    * @param destination the destination path
+    * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   void moveResource(IResource resource, IPath destination) throws CoreException
    {
-      // TODO
-      
+      try
+      {
+         // TODO create destination if it not exist
+
+         String id = getVfsIdByFullPath(resource.getFullPath());
+         String destinationId = getVfsIdByFullPath(destination);
+         vfs.move(id, destinationId, null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+   }
+
+   /**
+    * Deletes specified {@link IResource} from the workspace.
+    * Deletion applies recursively to all members of specified {@link IResource}.
+    * 
+    * @param resource {@link IResource} to delete
+    * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IResource#delete(int, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   void deleteResource(IResource resource) throws CoreException
+   {
+      try
+      {
+         vfs.delete(getVfsIdByFullPath(resource.getFullPath()), null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         return;
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
    }
 
 }

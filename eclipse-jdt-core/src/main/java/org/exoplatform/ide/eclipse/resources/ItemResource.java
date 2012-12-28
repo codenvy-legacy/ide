@@ -36,14 +36,9 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -237,31 +232,7 @@ public abstract class ItemResource implements IResource
    @Override
    public void delete(int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      try
-      {
-         String id = workspace.getVfsIdByFullPath(getFullPath());
-         workspace.getVFS().delete(id, null);
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (ConstraintException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (LockException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
+      workspace.deleteResource(this);
    }
 
    /**
@@ -697,36 +668,7 @@ public abstract class ItemResource implements IResource
    @Override
    public void move(IPath destination, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      try
-      {
-         String id = workspace.getVfsIdByFullPath(getFullPath());
-         String parentId = workspace.getVfsIdByFullPath(getParent().getFullPath());
-         workspace.getVFS().move(id, parentId, null);
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (ConstraintException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (ItemAlreadyExistException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (LockException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
+      workspace.moveResource(this, destination);
    }
 
    /**
