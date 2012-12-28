@@ -32,6 +32,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ModuleCreatedEvent;
 import org.exoplatform.ide.client.framework.util.Utils;
@@ -96,7 +97,7 @@ public class MavenModuleCreationCallback implements EditorFileOpenedHandler, Edi
       return false;
    }
 
-   public void moduleCreated(ProjectModel parent, final ProjectModel module)
+   public void moduleCreated(final ProjectModel parent, final ProjectModel module)
    {
       // ask server to add module in pom.xml
       try
@@ -114,6 +115,7 @@ public class MavenModuleCreationCallback implements EditorFileOpenedHandler, Edi
                protected void onSuccess(Void result)
                {
                   IDE.fireEvent(new ModuleCreatedEvent(module));
+                  IDE.fireEvent(new RefreshBrowserEvent(parent));
                }
 
                @Override
