@@ -34,7 +34,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ToggleButton;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -49,12 +48,8 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.event.CreateProjectHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
-import org.exoplatform.ide.client.framework.project.CreateModuleEvent;
-import org.exoplatform.ide.client.framework.project.CreateModuleHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
@@ -67,10 +62,8 @@ import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -165,9 +158,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
 
       void setDeployView(Composite deployView);
 
-      void setJRebelErrorFillingMessageLabel(String message);
+      void setJRebelErrorMessageLabel(String message);
 
-      void setJRebelProfileFieldsVisible(boolean visible);
+      void setJRebelFormVisible(boolean visible);
+
+      void setJRebelStoredFormVisible(boolean visible);
    }
 
    private Display display;
@@ -277,12 +272,17 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                }
                else
                {
+                  if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+                  {
+                     getJRebelUserProfileInfo();
+                  }
                   validateProjectName(display.getNameField().getValue());
                }
             }
             else
             {
-               if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
+               if (display.getUseJRebelPlugin().getValue()
+                  && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
                {
                   if (!checkJRebelFieldFill())
                   {
@@ -310,7 +310,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          @Override
          public void onClick(ClickEvent event)
          {
-            if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
+            if (display.getUseJRebelPlugin().getValue()
+               && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
             {
                if (!checkJRebelFieldFill())
                {
@@ -349,11 +350,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          {
             if (event.getValue())
             {
-               display.setJRebelProfileFieldsVisible(true);
+               display.setJRebelFormVisible(true);
             }
             else
             {
-               display.setJRebelProfileFieldsVisible(false);
+               display.setJRebelFormVisible(false);
             }
          }
       });
@@ -431,7 +432,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
       isChooseTemplateStep = false;
       getProjectTemplates();
       setTargets(IDE.getInstance().getPaaSes());
-      updateNavigationButtonsState();      
+      updateNavigationButtonsState();
    }
 
    /**
@@ -480,7 +481,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
    {
       this.vfsInfo = event.getVfsInfo();
    }
-   
+
    /**
     * Get the list of available project templates.
     */
@@ -513,6 +514,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                   
                   List<ProjectType> list = getProjectTypesFromTemplates(allProjectTemplates);
                   setProjectTypes(list);
+
                   if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty())
                   {
                      display.getNameField().setValue("untitled");
@@ -624,7 +626,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          goToProjectStep();
       }
       updateNavigationButtonsState();
-      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -647,7 +648,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          }
       }
       updateNavigationButtonsState();
-      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -747,7 +747,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          }
          
          String projectName = display.getNameField().getValue();
-         
          IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
          IDELoader.getInstance().show();
          TemplateService.getInstance().createProjectFromTemplate(vfsInfo.getId(), parentId, projectName,
@@ -987,7 +986,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
 
    private void sendProfileInfoToZeroTurnaround()
    {
-      String url = Utils.getRestContext() + "/ide/jrebel/profile/info";
+      String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
 
       JSONObject json = new JSONObject();
       json.put("first_name", new JSONString(display.getJRebelFirstNameField().getValue()));
@@ -1029,22 +1028,70 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          {
             String phone = display.getJRebelPhoneNumberField().getValue();
 
-            boolean phoneMatched = phone.matches("\\+\\d{2}\\s?-?\\s?[(]?\\d{3}[)]?\\s?-?\\s?\\d{3}\\s?-?\\s?\\d{4}");
+            boolean phoneMatched = phone.matches("^[+]?[\\d\\-\\s().]+$");
             if (!phoneMatched)
             {
-               display.setJRebelErrorFillingMessageLabel("Phone must be: +xx-(xxx)-xxxxxxx");
+               display.setJRebelErrorMessageLabel("Valid phone number consists of digits or special characters '+', '(', ')', '-' only.");
             }
             else
             {
-               display.setJRebelErrorFillingMessageLabel("");
+               display.setJRebelErrorMessageLabel("");
             }
             return phoneMatched;
          }
-         display.setJRebelErrorFillingMessageLabel("All field are required!");
+         display.setJRebelErrorMessageLabel("All field are required!");
       }
       return false;
    }
-   
+
+   private void getJRebelUserProfileInfo()
+   {
+      String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
+
+      try
+      {
+         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+         AsyncRequest.build(RequestBuilder.GET, url)
+            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+            .send(new AsyncRequestCallback<StringBuilder>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  JSONObject jsonObject = JSONParser.parseStrict(result.toString()).isObject();
+                  String firstName = jsonObject.get("first_name").isString().stringValue();
+                  String lastName = jsonObject.get("last_name").isString().stringValue();
+                  String phone = jsonObject.get("phone").isString().stringValue();
+
+                  if (firstName != null && lastName != null && phone != null)
+                  {
+                     display.getJRebelFirstNameField().setValue(firstName);
+                     display.getJRebelLastNameField().setValue(lastName);
+                     display.getJRebelPhoneNumberField().setValue(phone);
+
+                     display.setJRebelStoredFormVisible(false);
+                  }
+                  else
+                  {
+                     display.setJRebelStoredFormVisible(true);
+                  }
+                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  display.setJRebelStoredFormVisible(true);
+                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {

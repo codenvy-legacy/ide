@@ -20,8 +20,9 @@
 
 -->
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
 <!--
 ***************************************************************************************
@@ -29,7 +30,7 @@
 ***************************************************************************************
 -->
 
-<component>
+   <component>
   <type>org.exoplatform.ide.invite.IdeInviteMessagePropertiesProvider</type>
 </component>
 
@@ -83,8 +84,8 @@
          </init-params>
    </component>
 
-    <!-- Support for mail sending ability -->
-    <component>
+   <!-- Support for mail sending ability -->
+   <component>
         <key>org.exoplatform.services.mail.MailService</key>
         <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
         <init-params>
@@ -111,5 +112,14 @@
     </value-param>
   </init-params>
 </component>
+
+   <!-- JRebel profiler service -->
+   <component>
+      <type>org.exoplatform.ide.jrebel.server.JRebelProfilerApplication</type>
+   </component>
+
+   <component>
+      <type>org.exoplatform.ide.jrebel.server.JRebelProfiler</type>
+   </component>
 
 </configuration>

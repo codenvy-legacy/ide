@@ -18,37 +18,23 @@
  */
 package org.exoplatform.ide.extension.java.client;
 
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
-import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.module.Extension;
-import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
- * Java extention for IDE.
+ * Java extension for IDE.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: JavaExtension.java Jun 21, 2011 12:29:16 PM vereshchaka $
  * 
  */
-public class JavaExtension extends Extension implements InitializeServicesHandler
+public class JavaExtension extends Extension 
 {
 
-   /**
-    * @see org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler#onInitializeServices(org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent)
-    */
-   @Override
-   public void onInitializeServices(InitializeServicesEvent event)
-   {
-//      new JavaClasspathCreator(event.getApplicationConfiguration().getContext());
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
-    */
    @Override
    public void initialize()
    {
-      IDE.addHandler(InitializeServicesEvent.TYPE, this);
+      
    }
+
 
 }

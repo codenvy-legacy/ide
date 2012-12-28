@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -50,6 +51,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.AutoBeanUnmarshallerWS;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -106,7 +108,7 @@ import java.util.Set;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
@@ -414,6 +416,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    {
       if (debuggerInfo != null)
       {
+         stopCheckingEvents();
          try
          {
             DebuggerClientService.getInstance().disconnect(debuggerInfo.getId(), new AsyncRequestCallback<String>()
@@ -422,7 +425,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(String result)
                {
-                  stopCheckingEvents();
                   disableButtons();
                   debuggerInfo = null;
                   breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
@@ -460,7 +462,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                {
                   List<Variable> variables = new ArrayList<Variable>(result.getFields());
                   if (result.getLocalVariables() != null)
+                  {
                      variables.addAll(result.getLocalVariables());
+                  }
                   display.setVariables(variables);
                }
 
@@ -492,20 +496,26 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    private void disableButtons()
    {
-      display.setEnableResumeButton(false);
-      display.setStepIntoButton(false);
-      display.setStepOverButton(false);
-      display.setStepReturnButton(false);
-      display.setEvaluateExpressionButtonEnable(false);
+      if (display != null)
+      {
+         display.setEnableResumeButton(false);
+         display.setStepIntoButton(false);
+         display.setStepOverButton(false);
+         display.setStepReturnButton(false);
+         display.setEvaluateExpressionButtonEnable(false);
+      }
    }
 
    private void enabelButtons()
    {
-      display.setEnableResumeButton(true);
-      display.setStepIntoButton(true);
-      display.setStepOverButton(true);
-      display.setStepReturnButton(true);
-      display.setEvaluateExpressionButtonEnable(true);
+      if (display != null)
+      {
+         display.setEnableResumeButton(true);
+         display.setStepIntoButton(true);
+         display.setStepOverButton(true);
+         display.setStepReturnButton(true);
+         display.setEvaluateExpressionButtonEnable(true);
+      }
    }
 
    /**
@@ -534,7 +544,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   protected void onFailure(Throwable exception)
                   {
                      cancel();
-                     IDE.getInstance().closeView(display.asView().getId());
+                     if (display != null)
+                        IDE.getInstance().closeView(display.asView().getId());
                      if (runningApp != null)
                      {
                         if (exception instanceof ServerException)
@@ -545,7 +556,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                               && serverException.getMessage().contains("not found"))
                            {
                               IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT
-                                 .debuggeDisconnected(), Type.WARNING));
+                                 .debuggerDisconnected(), Type.WARNING));
                               IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
                               return;
                            }
@@ -610,7 +621,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Performs actions when event list was received.
-    * 
+    *
     * @param eventList debugger event list
     */
    private void onEventListReceived(DebuggerEventList eventList)
@@ -627,7 +638,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                location = stepEvent.getLocation();
                filePath = resolveFilePath(location);
                if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+               {
                   openFile(location);
+               }
                currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
             }
             else if (event instanceof BreakPointEvent)
@@ -636,14 +649,18 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                location = breakPointEvent.getBreakPoint().getLocation();
                filePath = resolveFilePath(location);
                if (!filePath.equalsIgnoreCase(activeFile.getPath()))
+               {
                   openFile(location);
+               }
                currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
             }
             doGetDump();
             enabelButtons();
          }
          if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath()))
+         {
             breakpointsManager.markCurrentBreakPoint(currentBreakPoint);
+         }
       }
    }
 
@@ -720,7 +737,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    @Override
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
-      IDE.getInstance().closeView(display.asView().getId());
+      if (display != null)
+         IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -827,13 +845,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application in debug mode by sending request over WebSocket or HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void debugApplication(String warUrl)
    {
-      AutoBean<ApplicationInstance> debugApplicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
-      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(debugApplicationInstance);
+      AutoBean<ApplicationInstance> debugApplicationInstance =
+         DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshallerWS<ApplicationInstance>(debugApplicationInstance);
 
       try
       {
@@ -843,6 +863,18 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(ApplicationInstance result)
                {
+                  //Need this temporary fix because with using websocket we get stopURL like:
+                  //ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
+                  //but it must be like:
+                  //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
+                  if (!result.getStopURL().matches("http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+"))
+                  {
+                     String fixedStopURL =
+                        Window.Location.getProtocol() + "//" + Window.Location.getHost() + Utils.getRestContext() + "/"
+                           + result.getStopURL();
+                     result.setStopURL(fixedStopURL);
+                  }
+
                   onDebugStarted(result);
                }
 
@@ -861,13 +893,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application in debug mode by sending request over HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void debugApplicationREST(String warUrl)
    {
-      AutoBean<ApplicationInstance> debugApplicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
-      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(debugApplicationInstance);
+      AutoBean<ApplicationInstance> debugApplicationInstance =
+         DebuggerExtension.AUTO_BEAN_FACTORY.debugApplicationInstance();
+      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshaller<ApplicationInstance>(debugApplicationInstance);
 
       try
       {
@@ -895,13 +929,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application by sending request over WebSocket or HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void runApplication(String warUrl)
    {
       AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
-      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller = new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
+      AutoBeanUnmarshallerWS<ApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshallerWS<ApplicationInstance>(applicationInstance);
 
       try
       {
@@ -911,6 +946,18 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(ApplicationInstance result)
                {
+                  //Need this temporary fix because with using websocket we get stopURL like:
+                  //ide/java/runner/stop?name=app-zcuz5b5wawcn5u23
+                  //but it must be like:
+                  //http://127.0.0.1:8080/IDE/rest/private/ide/java/runner/stop?name=app-8gkiomg9q4qrhkxz
+                  if (!result.getStopURL().matches("http[s]?://.+/IDE/rest/private/.*/stop\\?name=.+"))
+                  {
+                     String fixedStopURL =
+                        Window.Location.getProtocol() + "//" + Window.Location.getHost() + Utils.getRestContext() + "/"
+                           + result.getStopURL();
+                     result.setStopURL(fixedStopURL);
+                  }
+
                   onApplicationStarted(result);
                }
 
@@ -929,13 +976,14 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Run application by sending request over HTTP.
-    * 
+    *
     * @param warUrl location of .war file
     */
    private void runApplicationREST(String warUrl)
    {
       AutoBean<ApplicationInstance> applicationInstance = DebuggerExtension.AUTO_BEAN_FACTORY.applicationInstance();
-      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller = new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
+      AutoBeanUnmarshaller<ApplicationInstance> unmarshaller =
+         new AutoBeanUnmarshaller<ApplicationInstance>(applicationInstance);
 
       try
       {
@@ -991,7 +1039,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Update deployed application using JRebel.
-    * 
+    *
     * @param warUrl URL to download project WAR
     */
    private void updateApplication(String warUrl)
@@ -1101,7 +1149,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), true));
+                  if (runningApp != null)
+                     IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), true));
                }
 
                @Override
@@ -1116,7 +1165,8 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   {
                      ServerException serverException = (ServerException)exception;
                      if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus()
-                        && serverException.getMessage() != null && serverException.getMessage().contains("not found"))
+                        && serverException.getMessage() != null && serverException.getMessage().contains("not found")
+                        && runningApp != null)
                      {
                         IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
                      }
@@ -1134,11 +1184,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    @Override
    public void onAppStopped(AppStoppedEvent appStopedEvent)
    {
-      if (appStopedEvent.isManually())
-      {
-         String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStoped(appStopedEvent.getAppName());
-         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-      }
+
+      String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStoped(appStopedEvent.getAppName());
+      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       runningApp = null;
    }
 
@@ -1274,7 +1322,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 
    /**
     * Whether to use JRebel feature for the current project.
-    * 
+    *
     * @return <code>true</code> if need to use JRebel
     */
    private boolean isUseJRebel()
@@ -1358,10 +1406,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             // nothing to do
          }
 
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+            IDE.getInstance().closeView(display.asView().getId());
          if (runningApp != null)
          {
-            IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(), Type.WARNING));
+            IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(), Type.INFO));
             IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
          }
       }
@@ -1415,7 +1464,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                if (HTTPStatus.INTERNAL_ERROR == serverException.getHTTPStatus() && serverException.getMessage() != null
                   && serverException.getMessage().contains("not found"))
                {
-                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggeDisconnected(),
+                  IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(),
                      Type.WARNING));
                   IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
                   return;

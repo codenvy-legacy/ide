@@ -289,7 +289,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Debug
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       debuggerInfo = null;
-      if (breakPoints.containsKey(file.getId()))
+      if (file != null && breakPoints.containsKey(file.getId()))
       {
          for (EditorBreakPoint p : breakPoints.get(file.getId()))
          {

@@ -37,7 +37,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.ShowLogsEvent;
 
 public class ShowLogsControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStoppedHandler, ActiveProjectChangedHandler
+   AppStartedHandler, AppStoppedHandler
 {
    private static final String ID = "Run/Java Logs";
 
@@ -74,13 +74,6 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
       String projectType = event.getProject().getProjectType();
       updateState(projectType);
    }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      String projectType = event.getProject().getProjectType();
-      updateState(projectType);
-   }
 
    /**
     * @param projectType
@@ -90,7 +83,7 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
       boolean isJavaProject =
          ProjectResolver.SPRING.equals(projectType) || ProjectResolver.SERVLET_JSP.equals(projectType)
             || ProjectResolver.APP_ENGINE_JAVA.equals(projectType) || ProjectType.JAVA.value().equals(projectType)
-            || ProjectType.WAR.value().equals(projectType) 
+            || ProjectType.WAR.value().equals(projectType)
             || ProjectType.JSP.value().equals(projectType);
       setVisible(isJavaProject);
       setEnabled(false);
@@ -110,7 +103,6 @@ public class ShowLogsControl extends SimpleControl implements IDEControl, Projec
       IDE.addHandler(AppStoppedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    @Override

@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.jrebel.server;
 
-import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.registry.RegistryEntry;
@@ -30,7 +29,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
@@ -40,53 +38,74 @@ import javax.jcr.RepositoryException;
  */
 public class JRebelProfiler
 {
-   private Log logger = ExoLogger.getLogger(JRebelProfiler.class);
+   private RegistryService registryService;
 
-   @Inject
-   private RegistryService registry;
-
-   @Inject
    private SessionProviderService sessionProviderService;
 
    private final static String IDE = RegistryService.EXO_APPLICATIONS + "/IDE";
 
    private final static String INVITES_ROOT = IDE + "/jrebel";
 
-   public JRebelProfiler(SessionProviderService sessionProviderService, RegistryService registry)
+   private static final Log LOG_JREBEL_PROP = ExoLogger.getLogger("JRebel");
+
+   public JRebelProfiler(SessionProviderService sessionProviderService, RegistryService registryService)
    {
+      this.registryService = registryService;
       this.sessionProviderService = sessionProviderService;
-      this.registry = registry;
    }
 
    public void sendProfileInfo(String userId, String firstName, String lastName, String phone)
       throws JRebelProfilerException
    {
-      logger.debug("Info for jRebel: " + userId + ":" + firstName + ":" + lastName + ":" + phone);
-//      saveProfileInfo(firstName, lastName, phone);
+      SessionProvider sessionProvider = sessionProviderService.getSystemSessionProvider(null);
+      RegistryEntry registryEntry = getOrCreateProfileRoot(sessionProvider);
 
-      //Work with sending profile field to zeroTurnaround
-
-//      getProfileInfo();
+      saveProfileInfoIfNotExistAndSend(registryEntry, sessionProvider, userId, firstName, lastName, phone);
    }
 
-   private void saveProfileInfo(String firstName, String lastName, String phone)
-      throws JRebelProfilerException
+   private void saveProfileInfoIfNotExistAndSend(RegistryEntry entry,
+                                                 SessionProvider sessionProvider,
+                                                 String userId,
+                                                 String firstName,
+                                                 String lastName,
+                                                 String phone) throws JRebelProfilerException
    {
-      SessionProvider sessionProvider = sessionProviderService.getSystemSessionProvider(null);
-
       try
       {
-         RegistryEntry jrebelProfileEntry = getOrCreateProfileRoot(sessionProvider);
+         RegistryEntry jrebelProfileEntry = entry;
          Document profileDocument = jrebelProfileEntry.getDocument();
          Element profileElement = profileDocument.getDocumentElement();
+         NodeList allInvites = profileElement.getChildNodes();
+         int length = allInvites.getLength();
 
+         if (length > 0)
+         {
+            //if node is not null, it means that user has stored info about it self for zeroturnaround
+            return;
+         }
+
+         //otherwise we write to registry service information about user
          Element profileInfo = profileDocument.createElement("profileInfo");
          profileInfo.setAttribute("first_name", firstName);
          profileInfo.setAttribute("last_name", lastName);
          profileInfo.setAttribute("phone", phone);
 
          profileElement.appendChild(profileInfo);
-         registry.recreateEntry(sessionProvider, IDE, new RegistryEntry(profileDocument));
+         registryService.recreateEntry(sessionProvider, IDE, new RegistryEntry(profileDocument));
+
+         firstName = firstName.replaceAll("\"", "'");
+         lastName = lastName.replaceAll("\"", "'");
+
+         String formatted =
+            String.format(
+               "\"userId\",\"firstName\",\"lastName\",\"phone\"\n\"%s\",\"%s\",\"%s\",\"%s\"",
+               userId,
+               firstName,
+               lastName,
+               phone
+            );
+
+         LOG_JREBEL_PROP.error(formatted);
       }
       catch (RepositoryException e)
       {
@@ -94,64 +113,62 @@ public class JRebelProfiler
       }
    }
 
-   private void getProfileInfo() throws JRebelProfilerException
+   public Map<String, String> getProfileInfo() throws JRebelProfilerException
    {
       SessionProvider sessionProvider = sessionProviderService.getSystemSessionProvider(null);
+      RegistryEntry registryEntry = getOrCreateProfileRoot(sessionProvider);
 
-      try
-      {
-         RegistryEntry jrebelProfileEntry = getOrCreateProfileRoot(sessionProvider);
-         Document profileDocument = jrebelProfileEntry.getDocument();
-         Element profileElement = profileDocument.getDocumentElement();
-         NodeList nodes = profileElement.getChildNodes();
-
-         Map<String, String> profileInfo = new HashMap<String, String>();
-         if (nodes.getLength() == 1)
-         {
-            profileInfo.put(
-               "first_name",
-               nodes.item(0).getAttributes().getNamedItem("first_name").getNodeValue()
-            );
-            profileInfo.put(
-               "last_name",
-               nodes.item(0).getAttributes().getNamedItem("last_name").getNodeValue()
-            );
-            profileInfo.put(
-               "phone",
-               nodes.item(0).getAttributes().getNamedItem("phone").getNodeValue()
-            );
-         }
-
-         //TODO create json and send to responce to client to check if profile info is already exist in registry service
-         registry.recreateEntry(sessionProvider, IDE, new RegistryEntry(profileDocument));
-      }
-      catch (RepositoryException e)
-      {
-         throw new JRebelProfilerException("Unable to register profile info. Please contact support.", e);
-      }
+      return getProfileInfo(registryEntry);
    }
 
-   protected RegistryEntry getOrCreateProfileRoot(SessionProvider sessionProvider) throws JRebelProfilerException
+   private Map<String, String> getProfileInfo(RegistryEntry entry)
+   {
+      RegistryEntry jrebelProfileEntry = entry;
+      Document profileDocument = jrebelProfileEntry.getDocument();
+      Element profileElement = profileDocument.getDocumentElement();
+      NodeList nodes = profileElement.getChildNodes();
+
+      Map<String, String> profileInfo = new HashMap<String, String>();
+      if (nodes.getLength() == 1)
+      {
+         profileInfo.put(
+            "first_name",
+            nodes.item(0).getAttributes().getNamedItem("first_name").getNodeValue()
+         );
+         profileInfo.put(
+            "last_name",
+            nodes.item(0).getAttributes().getNamedItem("last_name").getNodeValue()
+         );
+         profileInfo.put(
+            "phone",
+            nodes.item(0).getAttributes().getNamedItem("phone").getNodeValue()
+         );
+      }
+
+      return profileInfo;
+   }
+
+   private RegistryEntry getOrCreateProfileRoot(SessionProvider sessionProvider) throws JRebelProfilerException
    {
       try
       {
-         return registry.getEntry(sessionProvider, INVITES_ROOT);
+         return registryService.getEntry(sessionProvider, INVITES_ROOT);
       }
       catch (PathNotFoundException e)
       {
          try
          {
-            registry.createEntry(sessionProvider, IDE, new RegistryEntry("jrebel"));
-            return registry.getEntry(sessionProvider, INVITES_ROOT);
+            registryService.createEntry(sessionProvider, IDE, new RegistryEntry("jrebel"));
+            return registryService.getEntry(sessionProvider, INVITES_ROOT);
          }
          catch (Exception e1)
          {
-            throw new JRebelProfilerException("Unable to save information about jrebel profile");//NOSONAR
+            throw new JRebelProfilerException("Unable to save information about jrebel profile");
          }
       }
       catch (RepositoryException e)
       {
-         throw new JRebelProfilerException("Unable to get information about jrebel profile");//NOSONAR
+         throw new JRebelProfilerException("Unable to get information about jrebel profile");
       }
    }
 }

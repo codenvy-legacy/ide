@@ -20,8 +20,9 @@
 
 -->
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+               xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
 
 <!-- 
@@ -55,7 +56,7 @@
       </init-params>
    </component>
 
-<!-- VirtualFileSystem -->
+   <!-- VirtualFileSystem -->
    <component>
       <type>org.exoplatform.ide.vfs.server.VirtualFileSystemApplication</type>
    </component>
@@ -114,10 +115,10 @@
          </value-param>
       </init-params>
    </component>
-   
-<!-- End VirtualFileSystem -->  
 
-<!-- LogReader -->   
+   <!-- End VirtualFileSystem -->
+
+   <!-- LogReader -->
    <component>
       <type>org.exoplatform.logreader.LogReaderServiceApplication</type>
    </component>
@@ -126,9 +127,9 @@
       <key>org.exoplatform.logreader.LogPathProvider</key>
       <type>org.exoplatform.logreader.SystemLogPathProvider</type>
    </component>
-<!-- End LogReader -->
+   <!-- End LogReader -->
 
-<!-- SSH Keys -->
+   <!-- SSH Keys -->
 
    <component>
       <type>org.exoplatform.ide.extension.ssh.server.KeyApplication</type>
@@ -152,17 +153,17 @@
          </value-param>
       </init-params>
    </component>
-   
-<!-- End SSH Keys -->   
+
+   <!-- End SSH Keys -->
 
 
-<!-- 
-***************************************************************************************
-********************** Language & Technology Supporting *******************************
-***************************************************************************************
--->
+   <!--
+   ***************************************************************************************
+   ********************** Language & Technology Supporting *******************************
+   ***************************************************************************************
+   -->
 
-<!-- Groovy Support -->
+   <!-- Groovy Support -->
    <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyScriptServiceApplication</type>
    </component>
@@ -190,10 +191,10 @@
     <component>
       <type>org.exoplatform.ide.extension.groovy.server.GroovyCodeAssistant</type>
    </component>
-   
-<!-- End Groovy Support -->
 
-<!-- Chromattic Support -->
+   <!-- End Groovy Support -->
+
+   <!-- Chromattic Support -->
    <component>
       <type>org.chromattic.dataobject.DataObjectService</type>
    </component>
@@ -220,10 +221,10 @@
       <type>org.exoplatform.ide.extension.chromattic.server.ChromatticServiceApplication</type>
    </component>
 
-<!-- End Chromattic Support -->
+   <!-- End Chromattic Support -->
 
-<!--  Java  Support-->
-    <component>
+   <!--  Java  Support-->
+   <component>
       <type>org.exoplatform.ide.extension.java.server.JavaServiceApplication</type>
    </component>
    
@@ -249,10 +250,10 @@
       <key>org.exoplatform.ide.extension.java.jdi.server.ApplicationRunner</key>
       <type>org.exoplatform.ide.extension.java.jdi.server.CloudfoundryApplicationRunner</type>
    </component>
-   
-<!-- End Java Support -->
 
-<!-- Python Support -->   
+   <!-- End Java Support -->
+
+   <!-- Python Support -->
 
    <component>
       <key>org.exoplatform.ide.extension.python.server.ApplicationRunner</key>
@@ -263,23 +264,23 @@
       <type>org.exoplatform.ide.extension.python.server.AppRunnerApplication</type>
    </component>
 
-<!-- End Python Support -->   
+   <!-- End Python Support -->
 
-<!-- Google Gadgets support-->   
+   <!-- Google Gadgets support-->
 
    <component>
       <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
    </component>
-   
-<!-- End Google Gadgets support-->   
 
-<!-- 
-***************************************************************************************
-********************** Version Control System Supporting ******************************
-***************************************************************************************
--->
+   <!-- End Google Gadgets support-->
 
-<!-- GitHub support -->
+   <!--
+   ***************************************************************************************
+   ********************** Version Control System Supporting ******************************
+   ***************************************************************************************
+   -->
+
+   <!-- GitHub support -->
    <component>
       <type>org.exoplatform.ide.git.server.rest.GitHubServiceApplication</type>
    </component>
@@ -303,15 +304,15 @@
          </value-param>
       </init-params>
    </component>
-   
-<!-- End GitHub Support-->
+
+   <!-- End GitHub Support-->
 
 
-<!-- 
-***************************************************************************************
-**************************** Builder System Supporting ********************************
-***************************************************************************************
--->
+   <!--
+   ***************************************************************************************
+   **************************** Builder System Supporting ********************************
+   ***************************************************************************************
+   -->
 
    <component>
       <type>org.exoplatform.ide.extension.jenkins.server.rest.JenkinsApplication</type>
@@ -330,14 +331,14 @@
          </value-param>
       </init-params>
    </component>
-   
-<!-- 
-***************************************************************************************
-********************************** PaaS's *********************************************
-***************************************************************************************
--->
 
-<!-- Cloudbees -->
+   <!--
+   ***************************************************************************************
+   ********************************** PaaS's *********************************************
+   ***************************************************************************************
+   -->
+
+   <!-- Cloudbees -->
    <component>
       <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
    </component>
@@ -364,10 +365,10 @@
          </value-param>
       </init-params>
    </component>
-   
-<!-- End Cloudbees -->   
 
-<!-- CloudFoundry -->
+   <!-- End Cloudbees -->
+
+   <!-- CloudFoundry -->
 
    <component>
       <type>org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryAuthenticator</type>
@@ -381,55 +382,50 @@
       <type>org.exoplatform.ide.extension.cloudfoundry.server.rest.CloudfoundryServiceApplication</type>
    </component>
    
-    <component>
-      <type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
-      <init-params>
-         <object-param>
-            <name>CF0</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.apprun0.exoplatform.com</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>N31IuH4Rj6Bmc21PyunE</string>
-               </field>
-            </object>
-         </object-param>
-         <object-param>
-            <name>CF1</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.apprun1.exoplatform.com</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>N31IuH4Rj6Bmc21PyunE</string>
-               </field>
-            </object>
-         </object-param>
-         <object-param>
-            <name>CF2</name>
-            <object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
-               <field name="target">
-                  <string>http://api.apprun2.exoplatform.com</string>
-               </field>
-               <field name="user">
-                  <string>support@cloud-ide.com</string>
-               </field>
-               <field name="password">
-                  <string>N31IuH4Rj6Bmc21PyunE</string>
-               </field>
-            </object>
-         </object-param>
-      </init-params>
-   </component>
+   <component>
 
-<!-- End CloudFoundry -->
+<type>org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryPool</type>
+
+<init-params>
+
+<object-param>
+
+<name>CF0</name>
+
+<object type="org.exoplatform.ide.extension.cloudfoundry.server.ext.CloudfoundryServerConfiguration">
+
+<field name="target">
+
+<string>http://api.javarun2.exoplatform.com</string>
+
+
+
+</field>
+
+<field name="user">
+
+<string>exoidedev@exoplatform.com</string>
+
+
+
+</field>
+
+<field name="password">
+
+<string>1234qwer</string>
+
+</field>
+
+</object>
+
+</object-param>
+
+
+
+</init-params>
+
+</component>
+   <!-- End CloudFoundry -->
 
    <component>
       <type>org.exoplatform.ide.git.server.rest.GitApplication</type>
@@ -445,7 +441,7 @@
       <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
    </component>
 
-<!-- Heroku -->
+   <!-- Heroku -->
 
    <component>
       <type>org.exoplatform.ide.extension.heroku.server.Heroku</type>
@@ -464,10 +460,10 @@
          </value-param>
       </init-params>
    </component>
-   
-<!-- End Heroku -->   
 
-<!-- OpenShift -->
+   <!-- End Heroku -->
+
+   <!-- OpenShift -->
 
    <component>
       <type>org.exoplatform.ide.extension.openshift.server.rest.ExpressApplication</type>
@@ -487,9 +483,9 @@
       </init-params>
    </component>
 
-<!-- End OpenShift -->
+   <!-- End OpenShift -->
 
-<!-- Google AppEngine  -->
+   <!-- Google AppEngine  -->
    <component>
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineClient</type>
    </component>
@@ -498,9 +494,9 @@
       <type>org.exoplatform.ide.extension.googleappengine.server.AppEngineApplication</type>
    </component>
 
-<!-- End Google AppEngine  -->   
+   <!-- End Google AppEngine  -->
 
-<!-- Amazon Web Services -->
+   <!-- Amazon Web Services -->
 
    <component>
       <type>org.exoplatform.ide.extension.aws.server.rest.AWSApplication</type>
@@ -510,38 +506,38 @@
       <key>org.exoplatform.ide.extension.aws.server.AWSAuthenticator</key>
       <type>org.exoplatform.ide.extension.aws.server.AWSAuthenticatorImpl</type>
    </component>
-   
-<!--  Beanstalk -->
+
+   <!--  Beanstalk -->
    <component>
       <type>org.exoplatform.ide.extension.aws.server.beanstalk.Beanstalk</type>
    </component>
-   
-<!--  Beanstalk End -->
 
-<!--  S3 -->
+   <!--  Beanstalk End -->
+
+   <!--  S3 -->
    <component>
       <type>org.exoplatform.ide.extension.aws.server.s3.S3</type>
    </component>
-   
-<!--  S3 End -->
 
-<!-- EC2 -->
+   <!--  S3 End -->
+
+   <!-- EC2 -->
    <component>
       <type>org.exoplatform.ide.extension.aws.server.ec2.EC2</type>
    </component>
-   
-<!-- End EC2 -->
 
-<!-- End Amazon Web Services -->
+   <!-- End EC2 -->
+
+   <!-- End Amazon Web Services -->
 
 
-<!-- 
-***************************************************************************************
-********************************* IDE Shell *******************************************
-***************************************************************************************
--->
+   <!--
+   ***************************************************************************************
+   ********************************* IDE Shell *******************************************
+   ***************************************************************************************
+   -->
 
- <component>
+   <component>
       <type>org.exoplatform.ide.shell.server.rest.ShellApplication</type>
       <init-params>
          <value-param>
@@ -586,11 +582,11 @@
       <type>org.exoplatform.ide.security.login.FederatedLoginList</type>
    </component>
 
-<!--
-***************************************************************************************
-********************************** OAuth Support *************************************
-***************************************************************************************
--->
+   <!--
+   ***************************************************************************************
+   ********************************** OAuth Support *************************************
+   ***************************************************************************************
+   -->
 
    <component>
       <type>org.exoplatform.ide.security.oauth.ExoOAuthAuthenticatorProvider</type>
@@ -602,15 +598,6 @@
 
    <component>
       <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
-   </component>
-
-   <!-- JRebel profiler service -->
-   <component>
-      <type>org.exoplatform.ide.jrebel.server.JRebelProfilerApplication</type>
-   </component>
-
-   <component>
-      <type>org.exoplatform.ide.jrebel.server.JRebelProfiler</type>
    </component>
 
 </configuration>
