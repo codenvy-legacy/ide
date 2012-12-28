@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,32 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.project.create.empty;
+package org.exoplatform.ide.extension.samples.client.githubimport;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Created by The eXo Platform SAS .
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: ShowImportFromGithubHandler.java Dec 7, 2011 3:20:15 PM vereshchaka $
  * 
- * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
- * @version $
  */
-
-public class CreateEmptyProjectEvent extends GwtEvent<CreateEmptyProjectHandler>
+public interface ImportFromGithubHandler extends EventHandler
 {
-
-   public static final GwtEvent.Type<CreateEmptyProjectHandler> TYPE = new GwtEvent.Type<CreateEmptyProjectHandler>();
-
-   @Override
-   protected void dispatch(CreateEmptyProjectHandler handler)
-   {
-      handler.onCreateProject(this);
-   }
-
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CreateEmptyProjectHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
+   void onImportFromGithub(ImportFromGithubEvent event);
 }

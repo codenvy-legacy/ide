@@ -30,10 +30,10 @@ import org.exoplatform.ide.client.framework.template.TemplateService;
 import org.exoplatform.ide.client.framework.template.TemplateServiceImpl;
 import org.exoplatform.ide.client.model.IDEConfigurationLoader;
 import org.exoplatform.ide.client.project.create.CreateProjectPresenter;
-import org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter;
-import org.exoplatform.ide.client.project.create.empty.NewProjectMenuGroup;
-import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
+import org.exoplatform.ide.client.project.create.MavenModuleCreationCallback;
+import org.exoplatform.ide.client.project.create.NewProjectMenuGroup;
 import org.exoplatform.ide.client.project.explorer.ProjectExplorerPresenter;
+import org.exoplatform.ide.client.project.explorer.ShowProjectExplorerControl;
 import org.exoplatform.ide.client.project.list.ShowProjectsPresenter;
 import org.exoplatform.ide.client.project.properties.ProjectPropertiesPresenter;
 import org.exoplatform.ide.client.project.resource.OpenResourcePresenter;
@@ -60,14 +60,13 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
       IDE.getInstance().addControl(new ProjectPaaSControl());
 
       new CreateProjectPresenter();
+      new MavenModuleCreationCallback();
       new ShowProjectsPresenter();
 
       new ProjectExplorerPresenter();
 
       IDE.getInstance().addControl(new ShowProjectExplorerControl());
       IDE.getInstance().addControl(new CloseProjectControl());
-
-      new CreateEmptyProjectPresenter();
 
       new ProjectPropertiesPresenter();
 

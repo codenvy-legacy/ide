@@ -26,16 +26,16 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ShowImportFromGithubEvent.java Dec 7, 2011 3:19:59 PM vereshchaka $
  */
-public class ShowImportFromGithubEvent extends GwtEvent<ShowImportFromGithubHandler>
+public class ImportFromGithubEvent extends GwtEvent<ImportFromGithubHandler>
 {
-   public static final GwtEvent.Type<ShowImportFromGithubHandler> TYPE =
-      new GwtEvent.Type<ShowImportFromGithubHandler>();
+   public static final GwtEvent.Type<ImportFromGithubHandler> TYPE =
+      new GwtEvent.Type<ImportFromGithubHandler>();
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<ShowImportFromGithubHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<ImportFromGithubHandler> getAssociatedType()
    {
       return TYPE;
    }
@@ -44,9 +44,9 @@ public class ShowImportFromGithubEvent extends GwtEvent<ShowImportFromGithubHand
     * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
     */
    @Override
-   protected void dispatch(ShowImportFromGithubHandler handler)
+   protected void dispatch(ImportFromGithubHandler handler)
    {
-      handler.onShowImportFromGithub(this);
+      handler.onImportFromGithub(this);
    }
 
 }

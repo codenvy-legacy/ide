@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 import org.exoplatform.ide.extension.samples.client.SamplesExtension;
-import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent;
+import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -58,7 +58,7 @@ public class ImportFromGithubControl extends SimpleControl implements IDEControl
       setPrompt(PROMPT);
       setImages(SamplesClientBundle.INSTANCE.importFromGithubControl(),
          SamplesClientBundle.INSTANCE.importFromGithubDisabledControl());
-      setEvent(new ShowImportFromGithubEvent());
+      setEvent(new ImportFromGithubEvent());
    }
 
    /**

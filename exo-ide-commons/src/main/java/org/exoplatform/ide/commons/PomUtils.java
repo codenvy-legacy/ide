@@ -18,11 +18,18 @@
  */
 package org.exoplatform.ide.commons;
 
+import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,6 +67,7 @@ public class PomUtils
       Document doc = builder.parse(stream);
       XPathFactory factory = XPathFactory.newInstance();
       XPath xpath = factory.newXPath();
+
       return new Pom(
          getVersionId(xpath, doc),
          getGroupId(xpath, doc),
@@ -69,7 +77,7 @@ public class PomUtils
          getSourcePath(xpath, doc)
       );
    }
-
+   
    /**
     * @param xpath
     * @param doc
@@ -112,7 +120,6 @@ public class PomUtils
     */
    private static String getVersionId(XPath xpath, Document doc) throws XPathExpressionException
    {
-
       String version = xpath.compile("/project/version/text()").evaluate(doc);
       if (version == null || version.isEmpty())
       {
@@ -137,7 +144,6 @@ public class PomUtils
    private static List<String> getModules(XPath xpath, Document doc) throws XPathExpressionException
    {
       String[] rawModules = xpath.compile("/project/modules").evaluate(doc).split("\n");
-
       List<String> modules = new ArrayList<String>();
       if (rawModules.length > 0)
       {
