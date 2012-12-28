@@ -77,7 +77,7 @@ import java.util.List;
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
  *
  */
-public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler,
+public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewClosedHandler,
    UserInfoReceivedHandler, VfsChangedHandler
 {
    public interface Display extends IsView
@@ -144,7 +144,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    public ImportFromGithubPresenter()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ShowImportFromGithubEvent.TYPE, this);
+      IDE.addHandler(ImportFromGithubEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
@@ -255,10 +255,10 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubHandler#onShowImportFromGithub(org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent)
+    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubHandler#onImportFromGithub(org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent)
     */
    @Override
-   public void onShowImportFromGithub(ShowImportFromGithubEvent event)
+   public void onImportFromGithub(ImportFromGithubEvent event)
    {
       if (userInfo != null)
       {

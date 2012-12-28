@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2012 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,16 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.samples.client.githubimport;
+package org.exoplatform.ide.client.framework.project;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: ShowImportFromGithubHandler.java Dec 7, 2011 3:20:15 PM vereshchaka $
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
  * 
  */
-public interface ShowImportFromGithubHandler extends EventHandler
+public class CreateModuleEvent extends GwtEvent<CreateModuleHandler>
 {
-   void onShowImportFromGithub(ShowImportFromGithubEvent event);
+
+   public static final GwtEvent.Type<CreateModuleHandler> TYPE = new GwtEvent.Type<CreateModuleHandler>();
+
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<CreateModuleHandler> getAssociatedType()
+   {
+      return TYPE;
+   }
+
+   @Override
+   protected void dispatch(CreateModuleHandler handler)
+   {
+      handler.onCreateModule(this);
+   }
+
 }

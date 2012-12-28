@@ -31,7 +31,7 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesEvent;
-import org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent;
+import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent;
 import org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersEvent;
 
 /**
@@ -88,10 +88,10 @@ public class StartPagePresenter implements OpenStartPageHandler, ViewClosedHandl
          @Override
          public void onClick(ClickEvent event)
          {
-           IDE.fireEvent(new ShowImportFromGithubEvent());
+           IDE.fireEvent(new ImportFromGithubEvent());
          }
       });
-      
+
       display.getInvitationsLink().addClickHandler(new ClickHandler()
       {
          @Override

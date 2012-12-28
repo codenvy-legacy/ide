@@ -188,6 +188,15 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       deployProjectStep.setVisible(false);
       jRebelErrorMessageLabel.setValue("");
    }
+   
+   /**
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#switchToCreateModule()
+    */
+   @Override
+   public void switchToCreateModule()
+   {
+      setTitle(IDE.TEMPLATE_CONSTANT.createProjectFromTemplateNewModuleTitle());
+   }
 
    /**
     * @see org.exoplatform.ide.client.project.create2.CreateProjectPresenter.Display#getCancelButton()

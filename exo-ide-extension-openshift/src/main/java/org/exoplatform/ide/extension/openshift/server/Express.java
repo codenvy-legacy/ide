@@ -209,6 +209,49 @@ public class Express
          int status = http.getResponseCode();
          if (status != 200)
          {
+            ExpressException ex = fault(http);
+            if (ex.getExitCode() == 118)
+            {
+               //means that ssh key not found
+               uploadSshKeyIfNotExist(rhCloudCredentials, publicKey);
+               createDomain(rhCloudCredentials, namespace, alter);
+            }
+            else
+            {
+               throw ex;
+            }
+         }
+      }
+      finally
+      {
+         http.disconnect();
+      }
+   }
+
+   public void uploadSshKeyIfNotExist(RHCloudCredentials rhCloudCredentials, SshKey publicKey)
+      throws VirtualFileSystemException, IOException, ExpressException, ParsingResponseException
+   {
+      String data = new JsonRequestBuilder()
+         .addProperty("key_name", "default")
+         .addProperty("ssh", readSshKeyBody(publicKey))
+         .addProperty("key_type", readSshKeyType(publicKey))
+         .addProperty("action", "add-key")
+         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
+         .build();
+
+      URL url = new URL(EXPRESS_API + "/ssh_keys");
+      HttpURLConnection http = (HttpURLConnection)url.openConnection();
+      http.setRequestProperty("password", rhCloudCredentials.getPassword());
+      try
+      {
+         http.setDoOutput(true);
+         http.setRequestMethod("POST");
+
+         writeFormData(http, data, rhCloudCredentials.getPassword());
+
+         int status = http.getResponseCode();
+         if (status != 200)
+         {
             throw fault(http);
          }
       }
