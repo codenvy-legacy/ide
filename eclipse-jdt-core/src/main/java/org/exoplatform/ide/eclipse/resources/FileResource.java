@@ -209,29 +209,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public InputStream getContents() throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
-
-      //      try
-      //      {
-      //         return vfs.getContent(delegate.getId()).getStream();
-      //      }
-      //      catch (ItemNotFoundException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (InvalidArgumentException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (PermissionDeniedException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (VirtualFileSystemException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
+      return getContents(true);
    }
 
    /**
@@ -240,8 +218,26 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public InputStream getContents(boolean force) throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
+      try
+      {
+         return vfs.getContent(delegate.getId()).getStream();
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
    }
 
    /**
