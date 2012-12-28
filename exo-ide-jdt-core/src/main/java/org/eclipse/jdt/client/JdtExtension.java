@@ -18,9 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
 
 import org.eclipse.jdt.client.NameEnvironment.JSONTypesInfoUnmarshaller;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
@@ -86,9 +85,9 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAss
 import org.exoplatform.ide.editor.java.hover.HoverResources;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.Window;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -217,7 +216,6 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new JavaClasspathResolver(this);
       new OrganizeImportsPresenter(IDE.eventBus());
       IDE.getInstance().addControl(new CleanProjectControl());
-      IDE.getInstance().addControl(new FormatterProfilesControl());
       IDE.getInstance().addControl(new OrganizeImportsControl());
       IDE.getInstance().addControl(new CreatePackageControl());
       IDE.getInstance().addControl(new QuickFixControl());
