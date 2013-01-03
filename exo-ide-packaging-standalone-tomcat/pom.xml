@@ -36,9 +36,8 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-websocket-war</artifactId>
+         <artifactId>exo-ide-websocket</artifactId>
          <version>${project.version}</version>
-         <type>war</type>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -883,7 +882,6 @@
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-site-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/site.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-shell-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/shell.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
-                        <copy file="${project.build.directory}/packager-conf/war/exo-ide-websocket-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/websocket.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />
                         <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />

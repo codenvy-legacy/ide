@@ -259,8 +259,13 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-server</artifactId>
-			<scope>runtime</scope>
 		</dependency>
+		
+		<dependency>
+         <groupId>org.exoplatform.ws</groupId>
+         <artifactId>exo.ws.rest.core</artifactId>
+      </dependency>
+		
 
 		<dependency>
 			<groupId>javax.inject</groupId>
@@ -273,6 +278,7 @@
 			<classifier>sources</classifier>
 			<scope>compile</scope>
 		</dependency>
+		
 		<dependency>
 			<groupId>com.google.gwt.inject</groupId>
 			<artifactId>gin</artifactId>
