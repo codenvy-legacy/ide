@@ -19,24 +19,36 @@
 package org.exoplatform.ide.vfs.server.cache;
 
 /**
+ * Concurrent segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented
+ * LRU cache</a>.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class ConcurrentSLRUCache<K, V> implements Cache<K, V>
+public final class ConcurrentSLRUCache<K, V> implements Cache<K, V>
 {
    private final int mask;
    private final SLRUCache<K, V>[] partitions;
 
+   /**
+    * @param partitionsNum
+    *    number of partitions. Cache are partitioned to try to permit the specified number of concurrent access without
+    *    contention.
+    * @param protectedSize
+    *    size of protected area.
+    * @param probationarySize
+    *    size of probationary area.
+    */
    @SuppressWarnings("unchecked")
-   private ConcurrentSLRUCache(int partitionsNum, int protectedSize, int probationarySize)
+   public ConcurrentSLRUCache(int partitionsNum, int protectedSize, int probationarySize)
    {
       int p = 1;
       while (p < partitionsNum)
       {
          p <<= 2;
       }
-      int partitionProtectedSize = protectedSize / p;
-      int partitionProbationarySize = probationarySize / p;
+      final int partitionProtectedSize = protectedSize / p;
+      final int partitionProbationarySize = probationarySize / p;
       partitions = new SLRUCache[p];
       for (int i = 0; i < partitions.length; i++)
       {

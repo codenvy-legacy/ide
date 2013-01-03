@@ -18,11 +18,19 @@
  */
 package org.exoplatform.ide.vfs.server.cache;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
+ * Segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented
+ * LRU cache</a>
+ * <p/>
+ * Implementation is threadsafe.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SLRUCache<K, V> implements Cache<K, V>
+public final class SLRUCache<K, V> implements Cache<K, V>
 {
    private final Map<K, V> protectedSegment;
    private final Map<K, V> probationarySegment;
@@ -33,7 +41,13 @@ public class SLRUCache<K, V> implements Cache<K, V>
    private int protectedHits;
    private int probationaryHits;
 
-   private SLRUCache(int protectedSize, int probationarySize)
+   /**
+    * @param protectedSize
+    *    size of protected area.
+    * @param probationarySize
+    *    size of probationary area.
+    */
+   public SLRUCache(int protectedSize, int probationarySize)
    {
       this.protectedSize = protectedSize;
       this.probationarySize = probationarySize;

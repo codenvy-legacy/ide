@@ -19,9 +19,20 @@
 package org.exoplatform.ide.vfs.server.cache;
 
 /**
+ * Cache abstraction.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Cache
+public interface Cache<K, V>
 {
+   V get(K key);
+
+   V put(K key, V value);
+
+   V remove(K key);
+
+   boolean contains(K key);
+
+   void clear();
 }
