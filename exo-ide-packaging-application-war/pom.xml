@@ -105,6 +105,14 @@
 					<artifactId>guice</artifactId>
 					<groupId>com.google.code.guice</groupId>
 				</exclusion>
+				<exclusion>
+					<artifactId>xstream</artifactId>
+					<groupId>com.thoughtworks.xstream</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>xstream</artifactId>
+					<groupId>xstream</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
@@ -117,16 +125,38 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-groovy</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>exo.tool.framework.junit</artifactId>
+					<groupId>org.exoplatform.tool</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-java</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>stax-api</artifactId>
+					<groupId>javax.xml.stream</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>antlr</artifactId>
+					<groupId>antlr</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-java-runtime</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>antlr</artifactId>
+					<groupId>antlr</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -142,6 +172,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-cloudbees</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>xstream</artifactId>
+					<groupId>com.thoughtworks.xstream</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -323,7 +359,7 @@
 						<phase>process-resources</phase>
 						<configuration>
 							<tasks>
-								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
+								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share,
 							</tasks>
 						</configuration>
 						<goals>
@@ -353,7 +389,7 @@
 						<configuration>
 							<tasks>
 								<move todir="${project.build.directory}/${project.artifactId}-${project.version}">
-									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE" />
+									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE,
 								</move>
 							</tasks>
 						</configuration>
@@ -427,14 +463,6 @@
 								**/hosted.html,**/applicationInitializer.js,**/init_preload_gadget.js,
 								**/IDEShell.html,**/IDEGadget.html,**/ShowCase.html,**/preload.html,
 								**/preloadIDE.js,
-								**/lib/a*,
-								**/lib/b*,
-								**/lib/c*,
-								**/lib/d*,
-								**/lib/ehcache*,
-								**/lib/ejb3*,
-								**/lib/everrest*,
-								**/lib/exo.*,
 								**/lib/exo-ide-client*,
 								**/lib/exo-ide-collabeditor*,
 								**/lib/exo-ide-editor-*,
@@ -443,21 +471,37 @@
 								**/lib/exo-ide-jdt-core*,
 								**/lib/exo-jcr-services*,
 								**/lib/exo-gwtframework*,
-								**/lib/f*,
-								**/lib/g*,
-								**/lib/h*,
-								**/lib/j*,
-								**/lib/l*,
-								**/lib/m*,
-								**/lib/o*,
-								**/lib/p*,
-								**/lib/q*,
-								**/lib/r*,
-								**/lib/s*,
-								**/lib/t*,
-								**/lib/v*,
-								**/lib/w*,
-								**/lib/x*
+								 **/lib/slf4j-log4j*,
+                                    **/lib/log4j*,
+                                    **/lib/commons-logging-api*,
+                                    **/lib/commons-logging*,
+                                    **/lib/servlet-api*,
+                                    **/lib/hsqldb-1.*,
+                                    **/lib/carol*,
+                                    **/lib/jacorb*,
+                                    **/lib/ow2*,
+                                    **/lib/irmi*,
+                                    **/lib/avalon*,
+                                    **/lib/logkit*,
+                                    **/lib/howl*,
+                                    **/lib/hibernate*,
+                                    **/lib/infinispan*,
+                                    **/lib/c3p0*,
+                                    **/lib/stax-api*,
+                                    **/lib/gwt-dev*,
+                                    **/lib/sjsxp*,
+                                    **/lib/*junit*,
+                                    **/lib/jotm*,
+                                    **/lib/xdoclet*,
+                                    **/lib/activation*,
+                                    **/lib/annotations-api*,
+                                    **/lib/sjsxp*,
+                                    **/lib/gwt-user*,
+                                    **/lib/postgresql*,
+                                    **/lib/tools.jar,
+                                    **/lib/guice-2.0.jar,
+                                    **/lib/antlr-2.*,
+                                    **/lib/xstream-1.0.2.jar
 							</packagingExcludes>
 						</configuration>
 					</execution>
