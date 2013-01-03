@@ -55,6 +55,7 @@ import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.InputStream;
@@ -766,7 +767,7 @@ public class WorkspaceResource implements IWorkspace
    }
 
    /**
-    * Move provided {@link IResource} by <code>destination</code> path.
+    * Move provided {@link IResource} to <code>destination</code> path.
     * 
     * @param resource {@link IResource} to move
     * @param destination the destination path
@@ -776,25 +777,15 @@ public class WorkspaceResource implements IWorkspace
     */
    void moveResource(IResource resource, IPath destination) throws CoreException
    {
-      // workspace root cannot be deleted
+      // workspace root cannot be moved
       if (resource.getType() == IResource.ROOT)
          return;
 
-//      String destinationId = null;
-//      try
-//      {
-//         destinationId = getVfsIdByFullPath(destination);
-//      }
-//      catch (ItemNotFoundException e1)
-//      {
-//         // TODO create destination
-//         // TODO Unable move item. Item specified as parent is not a folder
-//      }
+      String destinationId = prepareDestiantionToMove(destination);
 
       try
       {
          String id = getVfsIdByFullPath(resource.getFullPath());
-         String destinationId = getVfsIdByFullPath(destination);
          vfs.move(id, destinationId, null);
       }
       catch (ItemNotFoundException e)
@@ -821,6 +812,47 @@ public class WorkspaceResource implements IWorkspace
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
+   }
+
+   /**
+    * Check <code>destination</code> path and throws {@link CoreException} if any error has occurred.
+    * 
+    * @param destination
+    * @return identifier of prepared VFS {@link Item}
+    * @throws CoreException if unable to create destination folder or destination is not a folder/project
+    */
+   private String prepareDestiantionToMove(IPath destination) throws CoreException
+   {
+      String destinationId = null;
+      try
+      {
+         destinationId = getVfsIdByFullPath(destination);
+         Item destinationItem = vfs.getItem(destinationId, PropertyFilter.NONE_FILTER);
+         if (destinationItem.getItemType() != ItemType.FOLDER && destinationItem.getItemType() != ItemType.PROJECT)
+         {
+            throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+               "Unable to move resource. Destination resource is not a folder.", null));
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+         // TODO check segments length
+         String parentId = destination.segment(destination.segmentCount() - 2);
+         try
+         {
+            destinationId = vfs.createFolder(parentId, destination.lastSegment()).getId();
+         }
+         catch (VirtualFileSystemException e1)
+         {
+            throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+               "Unable to move resource. Failed to create destination folder.", e1));
+         }
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      return destinationId;
    }
 
    /**
