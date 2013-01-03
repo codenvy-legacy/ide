@@ -18,13 +18,28 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.everrest.core.RequestHandler;
+import org.everrest.core.ResourceBinder;
+import org.everrest.core.impl.ApplicationContextImpl;
+import org.everrest.core.impl.ApplicationProviderBinder;
+import org.everrest.core.impl.ApplicationPublisher;
+import org.everrest.core.impl.EverrestConfiguration;
+import org.everrest.core.impl.ProviderBinder;
+import org.everrest.core.impl.RequestDispatcher;
+import org.everrest.core.impl.RequestHandlerImpl;
+import org.everrest.core.impl.ResourceBinderImpl;
+import org.everrest.core.tools.DependencySupplierImpl;
+import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
+import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.impl.memory.MemoryFileSystemProvider;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFileSystemContext;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 import org.junit.Before;
 
 /**
@@ -52,6 +67,8 @@ public abstract class ResourcesBaseTest
 
    protected String TEST_ROOT_NAME = "TESTROOT";
 
+   private ResourceLauncher launcher;
+
    @Before
    public void stUp() throws VirtualFileSystemException
    {
@@ -66,6 +83,23 @@ public abstract class ResourcesBaseTest
       memoryContext.putItem(testRoot);
 
       virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
+
+      DependencySupplierImpl dependencies = new DependencySupplierImpl();
+      dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
+      dependencies.addComponent(EventListenerList.class, eventListenerList);
+      ResourceBinder resources = new ResourceBinderImpl();
+      ProviderBinder providers = new ApplicationProviderBinder();
+      RequestHandler requestHandler = new RequestHandlerImpl(new RequestDispatcher(resources), providers, dependencies,
+         new EverrestConfiguration());
+      ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
+      launcher = new ResourceLauncher(requestHandler);
+
+      ApplicationPublisher deployer = new ApplicationPublisher(resources, providers);
+      deployer.publish(new VirtualFileSystemApplication());
+
+      // RUNTIME VARIABLES
+      ConversationState user = new ConversationState(new Identity("john"));
+      ConversationState.setCurrent(user);
    }
 
 }
