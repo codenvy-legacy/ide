@@ -54,6 +54,8 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -500,6 +502,8 @@ public class WorkspaceResource implements IWorkspace
     * @return {@link Item} identifier
     * @throws CoreException
     * @throws ItemNotFoundException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
     */
    String getVfsIdByFullPath(IPath path) throws CoreException, ItemNotFoundException
    {
@@ -896,4 +900,110 @@ public class WorkspaceResource implements IWorkspace
       }
    }
 
+   private Item getItemByPath(IPath path) throws VirtualFileSystemException
+   {
+      return vfs.getItemByPath(path.toString(), null, PropertyFilter.ALL_FILTER);
+   }
+
+   /**
+    * Get all children's from path.
+    *
+    * @param fullPath    path to parent
+    * @param memberFlags the member flags
+    * @return array of the children resources
+    * @throws CoreException if parent not exist
+    */
+   public IResource[] getMembers(IPath fullPath, int memberFlags) throws CoreException
+   {
+      try
+      {
+         Item item = getItemByPath(fullPath);
+         if (item instanceof Folder)
+         {
+            ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+            IResource[] childrens = new IResource[children.getNumItems()];
+            List<Item> items = children.getItems();
+            for (int i = 0; i < items.size(); i++)
+            {
+               Item c = items.get(i);
+               if (c instanceof Folder)
+               {
+                  childrens[i] = new FolderResource(new Path(c.getPath()), this);
+               }
+               else if (c instanceof File)
+               {
+                  childrens[i] = new FileResource(new Path(c.getPath()), this);
+               }
+               else if (c instanceof Project)
+               {
+                  childrens[i] = new ProjectResource(new Path(c.getPath()), this);
+               }
+               else
+               {
+                  throw new CoreException(
+                     new Status(IStatus.ERROR, "", "Unknown type of item: " + c.getItemType().toString()));
+               }
+            }
+            return childrens;
+         }
+         else
+         {
+            throw new CoreException(new Status(IStatus.ERROR, "", "Resource no a folder"));
+         }
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+
+   }
+
+   /**
+    * Finds and returns the member resource identified by the given path in this path,
+    * or null if no such resource exists. The supplied path may be absolute or relative;
+    * Trailing separators and the path's device are ignored.
+    * Parent references in the supplied path are discarded if they go above the workspace root.
+    *
+    * @param containerResource
+    * @param path              the path for resource
+    * @return the resource
+    */
+   public IResource findMember(ContainerResource containerResource, IPath path)
+   {
+      try
+      {
+         if (path.isAbsolute())
+         {
+            Item item = getItemByPath(containerResource.getFullPath());
+            Folder f = (Folder)item;
+            ItemList<Item> children = vfs.getChildren(f.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+            String segment = path.segment(path.segmentCount() - 1);
+            for (Item i : children.getItems())
+            {
+               if (i.getName().equals(segment))
+               {
+                  Path resPath = new Path(i.getPath());
+                  if (i instanceof File)
+                  {
+                     return new FileResource(resPath, this);
+                  }
+                  else if (i instanceof Folder)
+                  {
+                     return new FolderResource(resPath, this);
+                  }
+                  else
+                  {
+                     return new ProjectResource(resPath, this);
+                  }
+               }
+            }
+         }
+      }
+      catch (VirtualFileSystemException e)
+      {
+         e.printStackTrace();
+         return null;
+      }
+      return null;
+   }
 }
