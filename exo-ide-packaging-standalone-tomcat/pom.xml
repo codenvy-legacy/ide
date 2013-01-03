@@ -866,8 +866,6 @@
                         <move file="${project.build.directory}/tomcat-ide/lib/slf4j-api-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/slf4j-api.jar" />
                         <move file="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j-${org.slf4j.version}.jar" tofile="${project.build.directory}/tomcat-ide/lib/jul-to-slf4j.jar" />
                         
-		                 <copy file="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/IDE.war" overwrite="true" />
-		
 							  <unwar src="${project.build.directory}/packager-conf/war/exo-ide-packaging-application-war-${project.version}.war" dest="${project.build.directory}/packager-conf/war/IDE">
 								<patternset>
 									<exclude name="**/lib/**" />

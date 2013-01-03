@@ -219,7 +219,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
       String message =
          "If you want to invite someone from your Google contact list, <br> "
-            + "press OK button and you will be redirected to Google authorization page. <br>";
+            + "press Yes button and you will be redirected to Google authorization page. <br>";
 
       Dialogs.getInstance().ask("You have to be logged in Google account!", message, new BooleanValueReceivedHandler()
       {
