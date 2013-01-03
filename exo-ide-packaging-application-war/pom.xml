@@ -359,7 +359,7 @@
 						<phase>process-resources</phase>
 						<configuration>
 							<tasks>
-								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share,
+								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
 							</tasks>
 						</configuration>
 						<goals>
@@ -389,7 +389,7 @@
 						<configuration>
 							<tasks>
 								<move todir="${project.build.directory}/${project.artifactId}-${project.version}">
-									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE,
+									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE" />
 								</move>
 							</tasks>
 						</configuration>
@@ -471,37 +471,37 @@
 								**/lib/exo-ide-jdt-core*,
 								**/lib/exo-jcr-services*,
 								**/lib/exo-gwtframework*,
-								 **/lib/slf4j-log4j*,
-                                    **/lib/log4j*,
-                                    **/lib/commons-logging-api*,
-                                    **/lib/commons-logging*,
-                                    **/lib/servlet-api*,
-                                    **/lib/hsqldb-1.*,
-                                    **/lib/carol*,
-                                    **/lib/jacorb*,
-                                    **/lib/ow2*,
-                                    **/lib/irmi*,
-                                    **/lib/avalon*,
-                                    **/lib/logkit*,
-                                    **/lib/howl*,
-                                    **/lib/hibernate*,
-                                    **/lib/infinispan*,
-                                    **/lib/c3p0*,
-                                    **/lib/stax-api*,
-                                    **/lib/gwt-dev*,
-                                    **/lib/sjsxp*,
-                                    **/lib/*junit*,
-                                    **/lib/jotm*,
-                                    **/lib/xdoclet*,
-                                    **/lib/activation*,
-                                    **/lib/annotations-api*,
-                                    **/lib/sjsxp*,
-                                    **/lib/gwt-user*,
-                                    **/lib/postgresql*,
-                                    **/lib/tools.jar,
-                                    **/lib/guice-2.0.jar,
-                                    **/lib/antlr-2.*,
-                                    **/lib/xstream-1.0.2.jar
+								**/lib/slf4j-log4j*,
+                        **/lib/log4j*,
+                        **/lib/commons-logging-api*,
+                        **/lib/commons-logging*,
+                        **/lib/servlet-api*,
+                        **/lib/hsqldb-1.*,
+                        **/lib/carol*,
+                        **/lib/jacorb*,
+                        **/lib/ow2*,
+                        **/lib/irmi*,
+                        **/lib/avalon*,
+                        **/lib/logkit*,
+                        **/lib/howl*,
+                        **/lib/hibernate*,
+                        **/lib/infinispan*,
+                        **/lib/c3p0*,
+                        **/lib/stax-api*,
+                        **/lib/gwt-dev*,
+                        **/lib/sjsxp*,
+                        **/lib/*junit*,
+                        **/lib/jotm*,
+                        **/lib/xdoclet*,
+                        **/lib/activation*,
+                        **/lib/annotations-api*,
+                        **/lib/sjsxp*,
+                        **/lib/gwt-user*,
+                        **/lib/postgresql*,
+                        **/lib/tools.jar,
+                        **/lib/guice-2.0.jar,
+                        **/lib/antlr-2.*,
+                        **/lib/xstream-1.0.2.jar
 							</packagingExcludes>
 						</configuration>
 					</execution>
