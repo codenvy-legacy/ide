@@ -31,15 +31,16 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.impl.memory.MemoryFileSystemProvider;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFileSystemContext;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
+import org.junit.After;
 import org.junit.Before;
 
 /**
@@ -63,6 +64,8 @@ public abstract class ResourcesBaseTest
 
    protected MemoryFileSystemContext memoryContext;
 
+   protected VirtualFileSystem vfs;
+
    protected MemoryFolder testRoot;
 
    protected String TEST_ROOT_NAME = "TESTROOT";
@@ -70,7 +73,7 @@ public abstract class ResourcesBaseTest
    private ResourceLauncher launcher;
 
    @Before
-   public void stUp() throws VirtualFileSystemException
+   public void setUp() throws Exception
    {
       System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
 
@@ -83,6 +86,7 @@ public abstract class ResourcesBaseTest
       memoryContext.putItem(testRoot);
 
       virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
+      vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);
 
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
@@ -100,6 +104,12 @@ public abstract class ResourcesBaseTest
       // RUNTIME VARIABLES
       ConversationState user = new ConversationState(new Identity("john"));
       ConversationState.setCurrent(user);
+   }
+
+   @After
+   public void tearDown() throws Exception
+   {
+      virtualFileSystemRegistry.unregisterProvider(ID);
    }
 
 }

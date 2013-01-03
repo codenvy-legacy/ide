@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import static org.junit.Assert.assertFalse;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -27,8 +29,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
