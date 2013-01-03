@@ -831,4 +831,9 @@ public abstract class ItemResource implements IResource
 
    }
 
+   protected void setPath(IPath newPath)
+   {
+      path = newPath;
+   }
+
 }

@@ -272,7 +272,8 @@ public class ProjectResource extends ContainerResource implements IProject
    }
 
    /**
-    * @see org.eclipse.core.resources.IProject#move(org.eclipse.core.resources.IProjectDescription, boolean, org.eclipse.core.runtime.IProgressMonitor)
+    * @see org.eclipse.core.resources.IProject#move(org.eclipse.core.resources.IProjectDescription, boolean,
+    *       org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
    public void move(IProjectDescription description, boolean force, IProgressMonitor monitor) throws CoreException

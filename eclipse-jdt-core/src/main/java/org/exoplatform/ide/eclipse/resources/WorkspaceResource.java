@@ -47,18 +47,13 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.LockException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
@@ -453,12 +448,27 @@ public class WorkspaceResource implements IWorkspace
     * Creates provided {@link IResource} in the {@link VirtualFileSystem}.
     * 
     * @param resource {@link IResource} to create in {@link VirtualFileSystem}
+    * @return created {@link Item}
+    * @throws CoreException
     */
    public Item createResource(IResource resource) throws CoreException
    {
+      return createResource(resource, null);
+   }
+
+   /**
+    * Creates provided {@link IResource} in the {@link VirtualFileSystem} with provided <code>contents</code>.
+    * 
+    * @param resource {@link IResource} to create in {@link VirtualFileSystem}
+    * @param contents make sense only for file
+    * @return created {@link Item}
+    * @throws CoreException
+    */
+   public Item createResource(IResource resource, InputStream contents) throws CoreException
+   {
       IContainer parent = resource.getParent();
       if (!parent.exists())
-         createResource(parent);
+         createResource(parent, null);
 
       try
       {
@@ -467,29 +477,17 @@ public class WorkspaceResource implements IWorkspace
          {
             case IResource.FILE :
                return vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
-                  MediaType.TEXT_PLAIN_TYPE, ((IFile)resource).getContents());
+                  MediaType.TEXT_PLAIN_TYPE, contents);
             case IResource.FOLDER :
                return vfs.createFolder(parentId, resource.getName());
             case IResource.PROJECT :
                return vfs.createProject(parentId, resource.getName(), null, null);
          }
       }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
       catch (ItemAlreadyExistException e)
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
             "Resource already exists in the workspace.", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
       catch (VirtualFileSystemException e)
       {
@@ -505,8 +503,6 @@ public class WorkspaceResource implements IWorkspace
     * @return {@link Item} identifier
     * @throws CoreException
     * @throws ItemNotFoundException
-    * @throws PermissionDeniedException
-    * @throws VirtualFileSystemException
     */
    String getVfsIdByFullPath(IPath path) throws CoreException, ItemNotFoundException
    {
@@ -514,13 +510,13 @@ public class WorkspaceResource implements IWorkspace
       {
          return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
       }
-      catch (PermissionDeniedException e)
+      catch (ItemNotFoundException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+         throw e;
       }
       catch (VirtualFileSystemException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
       }
    }
 
@@ -717,21 +713,9 @@ public class WorkspaceResource implements IWorkspace
          String id = getVfsIdByFullPath(file.getFullPath());
          return vfs.getContent(id).getStream();
       }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
       catch (VirtualFileSystemException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
       }
    }
 
@@ -751,25 +735,9 @@ public class WorkspaceResource implements IWorkspace
          vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/
             MediaType.TEXT_PLAIN_TYPE, newContent, null);
       }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (LockException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
       catch (VirtualFileSystemException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
       }
    }
 
@@ -788,78 +756,65 @@ public class WorkspaceResource implements IWorkspace
       if (resource.getType() == IResource.ROOT)
          return;
 
-      String destinationId = prepareDestiantionToMove(destination);
+      String destinationParentId = prepareDestiantionToMove(destination, resource.getParent().getType());
 
       try
       {
          String id = getVfsIdByFullPath(resource.getFullPath());
-         vfs.move(id, destinationId, null);
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (ConstraintException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (ItemAlreadyExistException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (LockException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+         vfs.move(id, destinationParentId, null);
+         ((ItemResource)resource).setPath(destination);
       }
       catch (VirtualFileSystemException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
       }
    }
 
    /**
-    * Check <code>destination</code> path and throws {@link CoreException} if any error has occurred.
+    * Check that a <code>destination</code> path is exist and creates destination parent if it not exist.
     * 
-    * @param destination
+    * @param destination destination path to check
+    * @param destinationParentType type of parent of destination
     * @return identifier of prepared VFS {@link Item}
-    * @throws CoreException if unable to create destination folder or destination is not a folder/project
+    * 
+    * @throws CoreException
     */
-   private String prepareDestiantionToMove(IPath destination) throws CoreException
+   private String prepareDestiantionToMove(IPath destination, int destinationParentType) throws CoreException
    {
-      String destinationId = null;
+      IPath destinationParentPath = destination.removeLastSegments(1);
       try
       {
-         destinationId = getVfsIdByFullPath(destination);
-         Item destinationItem = vfs.getItem(destinationId, PropertyFilter.NONE_FILTER);
-         if (destinationItem.getItemType() != ItemType.FOLDER && destinationItem.getItemType() != ItemType.PROJECT)
+         String parentId = null;
+         String rootId = vfs.getItemByPath("/", null, PropertyFilter.NONE_FILTER).getId();
+         if (IResource.FOLDER == destinationParentType)
          {
-            throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
-               "Unable to move resource. Destination resource is not a folder.", null));
+            parentId = vfs.createFolder(rootId, destinationParentPath.toString()).getParentId();
          }
+         else if (IResource.PROJECT == destinationParentType)
+         {
+            parentId = vfs.createProject(rootId, destinationParentPath.toString(), null, null).getParentId();
+         }
+         else if (IResource.ROOT == destinationParentType)
+         {
+            parentId = rootId;
+         }
+         return parentId;
       }
-      catch (ItemNotFoundException e)
+      catch (ItemAlreadyExistException e)
       {
-         // TODO check segments length
-         String parentId = destination.segment(destination.segmentCount() - 2);
          try
          {
-            destinationId = vfs.createFolder(parentId, destination.lastSegment()).getId();
+            return getVfsIdByFullPath(destinationParentPath);
          }
-         catch (VirtualFileSystemException e1)
+         catch (ItemNotFoundException e1)
          {
-            throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
-               "Unable to move resource. Failed to create destination folder.", e1));
+            throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e1.getMessage(), e1));
          }
       }
       catch (VirtualFileSystemException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
       }
-      return destinationId;
    }
 
    /**
@@ -885,21 +840,9 @@ public class WorkspaceResource implements IWorkspace
       {
          return;
       }
-      catch (ConstraintException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (LockException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
-      }
       catch (VirtualFileSystemException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
       }
    }
 
@@ -951,7 +894,7 @@ public class WorkspaceResource implements IWorkspace
          }
          else
          {
-            throw new CoreException(new Status(IStatus.ERROR, "", "Resource no a folder"));
+            throw new CoreException(new Status(IStatus.ERROR, "", "Resource is not a folder"));
          }
       }
       catch (VirtualFileSystemException e)

@@ -85,7 +85,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void create(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      workspace.createResource(this);
+      workspace.createResource(this, source);
    }
 
    /**
