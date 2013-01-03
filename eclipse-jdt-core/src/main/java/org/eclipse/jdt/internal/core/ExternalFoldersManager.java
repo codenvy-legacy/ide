@@ -11,9 +11,22 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.internal.core.util.Util;
+
 import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,25 +36,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceStatus;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.util.Messages;
-import org.eclipse.jdt.internal.core.util.Util;
 
 public class ExternalFoldersManager
 {
@@ -62,10 +56,10 @@ public class ExternalFoldersManager
    {
       // Prevent instantiation
       // https://bugs.eclipse.org/bugs/show_bug.cgi?id=377806
-//      if (Platform.isRunning())
-//      {
-//         getFolders();
-//      }
+      //      if (Platform.isRunning())
+      //      {
+      //         getFolders();
+      //      }
    }
 
    public static synchronized ExternalFoldersManager getExternalFoldersManager()
@@ -393,71 +387,72 @@ public class ExternalFoldersManager
     */
    private void openExternalFoldersProject(IProject project, IProgressMonitor monitor) throws CoreException
    {
-//      try
-//      {
-//         project.open(monitor);
-//      }
-//      catch (CoreException e1)
-//      {
-//         if (e1.getStatus().getCode() == IResourceStatus.FAILED_READ_METADATA)
-//         {
-//            // workspace was moved
-//            // (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=241400 and https://bugs.eclipse.org/bugs/show_bug.cgi?id=252571 )
-//            project.delete(false/*don't delete content*/, true/*force*/, monitor);
-//            createExternalFoldersProject(project, monitor);
-//         }
-//         else
-//         {
-//            // .project or folder on disk have been deleted, recreate them
-//            IPath stateLocation = JavaCore.getPlugin().getStateLocation();
-//            IPath projectPath = stateLocation.append(EXTERNAL_PROJECT_NAME);
-//            projectPath.toFile().mkdirs();
-//            try
-//            {
-//               FileOutputStream output = new FileOutputStream(
-//                  projectPath.append(".project").toOSString()); //$NON-NLS-1$
-//               try
-//               {
-//                  output.write(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + //$NON-NLS-1$
-//                     "<projectDescription>\n" + //$NON-NLS-1$
-//                     "	<name>" + EXTERNAL_PROJECT_NAME + "</name>\n" + //$NON-NLS-1$ //$NON-NLS-2$
-//                     "	<comment></comment>\n" + //$NON-NLS-1$
-//                     "	<projects>\n" + //$NON-NLS-1$
-//                     "	</projects>\n" + //$NON-NLS-1$
-//                     "	<buildSpec>\n" + //$NON-NLS-1$
-//                     "	</buildSpec>\n" + //$NON-NLS-1$
-//                     "	<natures>\n" + //$NON-NLS-1$
-//                     "	</natures>\n" + //$NON-NLS-1$
-//                     "</projectDescription>").getBytes()); //$NON-NLS-1$
-//               }
-//               finally
-//               {
-//                  output.close();
-//               }
-//            }
-//            catch (IOException e)
-//            {
-//               // fallback to re-creating the project
-//               project.delete(false/*don't delete content*/, true/*force*/, monitor);
-//               createExternalFoldersProject(project, monitor);
-//            }
-//         }
-//         project.open(monitor);
-//      }
+      //      try
+      //      {
+      //         project.open(monitor);
+      //      }
+      //      catch (CoreException e1)
+      //      {
+      //         if (e1.getStatus().getCode() == IResourceStatus.FAILED_READ_METADATA)
+      //         {
+      //            // workspace was moved
+      //            // (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=241400 and https://bugs.eclipse.org/bugs/show_bug.cgi?id=252571 )
+      //            project.delete(false/*don't delete content*/, true/*force*/, monitor);
+      //            createExternalFoldersProject(project, monitor);
+      //         }
+      //         else
+      //         {
+      //            // .project or folder on disk have been deleted, recreate them
+      //            IPath stateLocation = JavaCore.getPlugin().getStateLocation();
+      //            IPath projectPath = stateLocation.append(EXTERNAL_PROJECT_NAME);
+      //            projectPath.toFile().mkdirs();
+      //            try
+      //            {
+      //               FileOutputStream output = new FileOutputStream(
+      //                  projectPath.append(".project").toOSString()); //$NON-NLS-1$
+      //               try
+      //               {
+      //                  output.write(("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + //$NON-NLS-1$
+      //                     "<projectDescription>\n" + //$NON-NLS-1$
+      //                     "	<name>" + EXTERNAL_PROJECT_NAME + "</name>\n" + //$NON-NLS-1$ //$NON-NLS-2$
+      //                     "	<comment></comment>\n" + //$NON-NLS-1$
+      //                     "	<projects>\n" + //$NON-NLS-1$
+      //                     "	</projects>\n" + //$NON-NLS-1$
+      //                     "	<buildSpec>\n" + //$NON-NLS-1$
+      //                     "	</buildSpec>\n" + //$NON-NLS-1$
+      //                     "	<natures>\n" + //$NON-NLS-1$
+      //                     "	</natures>\n" + //$NON-NLS-1$
+      //                     "</projectDescription>").getBytes()); //$NON-NLS-1$
+      //               }
+      //               finally
+      //               {
+      //                  output.close();
+      //               }
+      //            }
+      //            catch (IOException e)
+      //            {
+      //               // fallback to re-creating the project
+      //               project.delete(false/*don't delete content*/, true/*force*/, monitor);
+      //               createExternalFoldersProject(project, monitor);
+      //            }
+      //         }
+      //         project.open(monitor);
+      //      }
    }
 
 
    private void createExternalFoldersProject(IProject project, IProgressMonitor monitor) throws CoreException
    {
-//      IProjectDescription desc = project.getWorkspace().newProjectDescription(project.getName());
-//      IPath stateLocation = JavaCore.getPlugin().getStateLocation();
-//      desc.setLocation(stateLocation.append(EXTERNAL_PROJECT_NAME));
-//      project.create(desc, IResource.HIDDEN, monitor);
+      //      IProjectDescription desc = project.getWorkspace().newProjectDescription(project.getName());
+      //      IPath stateLocation = JavaCore.getPlugin().getStateLocation();
+      //      desc.setLocation(stateLocation.append(EXTERNAL_PROJECT_NAME));
+      //      project.create(desc, IResource.HIDDEN, monitor);
    }
 
    public IFolder getFolder(IPath externalFolderPath)
    {
-      return (IFolder)getFolders().get(externalFolderPath);
+      // return (IFolder)getFolders().get(externalFolderPath);
+      return null;
    }
 
    private Map getFolders()
@@ -506,30 +501,30 @@ public class ExternalFoldersManager
    // Use the same RefreshJob if the job is still available
    private void runRefreshJob(Collection paths)
    {
-//      Job[] jobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_MANUAL_REFRESH);
-//      RefreshJob refreshJob = null;
-//      if (jobs != null)
-//      {
-//         for (int index = 0; index < jobs.length; index++)
-//         {
-//            // We are only concerned about ExternalFolderManager.RefreshJob
-//            if (jobs[index] instanceof RefreshJob)
-//            {
-//               refreshJob = (RefreshJob)jobs[index];
-//               refreshJob.addFoldersToRefresh(paths);
-//               if (refreshJob.getState() == Job.NONE)
-//               {
-//                  refreshJob.schedule();
-//               }
-//               break;
-//            }
-//         }
-//      }
-//      if (refreshJob == null)
-//      {
-//         refreshJob = new RefreshJob(new Vector(paths));
-//         refreshJob.schedule();
-//      }
+      //      Job[] jobs = Job.getJobManager().find(ResourcesPlugin.FAMILY_MANUAL_REFRESH);
+      //      RefreshJob refreshJob = null;
+      //      if (jobs != null)
+      //      {
+      //         for (int index = 0; index < jobs.length; index++)
+      //         {
+      //            // We are only concerned about ExternalFolderManager.RefreshJob
+      //            if (jobs[index] instanceof RefreshJob)
+      //            {
+      //               refreshJob = (RefreshJob)jobs[index];
+      //               refreshJob.addFoldersToRefresh(paths);
+      //               if (refreshJob.getState() == Job.NONE)
+      //               {
+      //                  refreshJob.schedule();
+      //               }
+      //               break;
+      //            }
+      //         }
+      //      }
+      //      if (refreshJob == null)
+      //      {
+      //         refreshJob = new RefreshJob(new Vector(paths));
+      //         refreshJob.schedule();
+      //      }
    }
 
    /*
@@ -614,75 +609,75 @@ public class ExternalFoldersManager
       return (IFolder)getFolders().remove(externalFolderPath);
    }
 
-//   class RefreshJob extends Job
-//   {
-//      Vector externalFolders = null;
-//
-//      RefreshJob(Vector externalFolders)
-//      {
-//         super(Messages.refreshing_external_folders);
-//         this.externalFolders = externalFolders;
-//      }
-//
-//      public boolean belongsTo(Object family)
-//      {
-//         return family == ResourcesPlugin.FAMILY_MANUAL_REFRESH;
-//      }
-//
-//      /*
-//       * Add the collection of paths to be refreshed to the already
-//       * existing list of paths.
-//       */
-//      public void addFoldersToRefresh(Collection paths)
-//      {
-//         if (!paths.isEmpty() && this.externalFolders == null)
-//         {
-//            this.externalFolders = new Vector();
-//         }
-//         Iterator it = paths.iterator();
-//         while (it.hasNext())
-//         {
-//            Object path = it.next();
-//            if (!this.externalFolders.contains(path))
-//            {
-//               this.externalFolders.add(path);
-//            }
-//         }
-//      }
-//
-//      protected IStatus run(IProgressMonitor pm)
-//      {
-//         try
-//         {
-//            if (this.externalFolders == null)
-//            {
-//               return Status.OK_STATUS;
-//            }
-//            IPath externalPath = null;
-//            for (int index = 0; index < this.externalFolders.size(); index++)
-//            {
-//               if ((externalPath = (IPath)this.externalFolders.get(index)) != null)
-//               {
-//                  IFolder folder = getFolder(externalPath);
-//                  // https://bugs.eclipse.org/bugs/show_bug.cgi?id=321358
-//                  if (folder != null)
-//                  {
-//                     folder.refreshLocal(IResource.DEPTH_INFINITE, pm);
-//                  }
-//               }
-//               // Set the processed ones to null instead of removing the element altogether,
-//               // so that they will not be considered as duplicates.
-//               // This will also avoid elements being shifted to the left every time an element
-//               // is removed. However, there is a risk of Collection size to be increased more often.
-//               this.externalFolders.setElementAt(null, index);
-//            }
-//         }
-//         catch (CoreException e)
-//         {
-//            return e.getStatus();
-//         }
-//         return Status.OK_STATUS;
-//      }
-//   }
+   //   class RefreshJob extends Job
+   //   {
+   //      Vector externalFolders = null;
+   //
+   //      RefreshJob(Vector externalFolders)
+   //      {
+   //         super(Messages.refreshing_external_folders);
+   //         this.externalFolders = externalFolders;
+   //      }
+   //
+   //      public boolean belongsTo(Object family)
+   //      {
+   //         return family == ResourcesPlugin.FAMILY_MANUAL_REFRESH;
+   //      }
+   //
+   //      /*
+   //       * Add the collection of paths to be refreshed to the already
+   //       * existing list of paths.
+   //       */
+   //      public void addFoldersToRefresh(Collection paths)
+   //      {
+   //         if (!paths.isEmpty() && this.externalFolders == null)
+   //         {
+   //            this.externalFolders = new Vector();
+   //         }
+   //         Iterator it = paths.iterator();
+   //         while (it.hasNext())
+   //         {
+   //            Object path = it.next();
+   //            if (!this.externalFolders.contains(path))
+   //            {
+   //               this.externalFolders.add(path);
+   //            }
+   //         }
+   //      }
+   //
+   //      protected IStatus run(IProgressMonitor pm)
+   //      {
+   //         try
+   //         {
+   //            if (this.externalFolders == null)
+   //            {
+   //               return Status.OK_STATUS;
+   //            }
+   //            IPath externalPath = null;
+   //            for (int index = 0; index < this.externalFolders.size(); index++)
+   //            {
+   //               if ((externalPath = (IPath)this.externalFolders.get(index)) != null)
+   //               {
+   //                  IFolder folder = getFolder(externalPath);
+   //                  // https://bugs.eclipse.org/bugs/show_bug.cgi?id=321358
+   //                  if (folder != null)
+   //                  {
+   //                     folder.refreshLocal(IResource.DEPTH_INFINITE, pm);
+   //                  }
+   //               }
+   //               // Set the processed ones to null instead of removing the element altogether,
+   //               // so that they will not be considered as duplicates.
+   //               // This will also avoid elements being shifted to the left every time an element
+   //               // is removed. However, there is a risk of Collection size to be increased more often.
+   //               this.externalFolders.setElementAt(null, index);
+   //            }
+   //         }
+   //         catch (CoreException e)
+   //         {
+   //            return e.getStatus();
+   //         }
+   //         return Status.OK_STATUS;
+   //      }
+   //   }
 
 }

@@ -318,11 +318,11 @@ public final class ResourcesPlugin
     */
    private static ResourcesPlugin plugin;
 
-   //	/**
-   //	 * The workspace managed by the single instance of this
-   //	 * plug-in runtime class, or <code>null</code> is there is none.
-   //	 */
-   //	private static Workspace workspace = null;
+   /**
+    * The workspace managed by the single instance of this
+    * plug-in runtime class, or <code>null</code> is there is none.
+    */
+   public static IWorkspace workspace = null;
    //
    //	private ServiceRegistration<IWorkspace> workspaceRegistration;
 
@@ -401,9 +401,11 @@ public final class ResourcesPlugin
     */
    public static IWorkspace getWorkspace()
    {
-      //		if (workspace == null)
-      throw new IllegalStateException("Workspace not defined."/*Messages.resources_workspaceClosed*/);
-      //		return workspace;
+      if (workspace == null)
+      {
+         throw new IllegalStateException("Workspace not defined."/*Messages.resources_workspaceClosed*/);
+      }
+      return workspace;
    }
 
    //	/**

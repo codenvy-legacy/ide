@@ -31,15 +31,14 @@ import org.eclipse.core.runtime.IProgressMonitor;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ContainerResource.java Dec 26, 2012 5:32:18 PM azatsarynnyy $
- *
  */
 public abstract class ContainerResource extends ItemResource implements IContainer
 {
 
    /**
     * Creates new {@link ContainerResource} with the specified <code>path</code> in pointed <code>workspace</code>.
-    * 
-    * @param path {@link IPath}
+    *
+    * @param path      {@link IPath}
     * @param workspace {@link WorkspaceResource}
     */
    protected ContainerResource(IPath path, WorkspaceResource workspace)
@@ -91,8 +90,11 @@ public abstract class ContainerResource extends ItemResource implements IContain
    @Override
    public IResource findMember(IPath path, boolean includePhantoms)
    {
-      // TODO Auto-generated method stub
-      return null;
+      if (path.isEmpty())
+      {
+         return this;
+      }
+      return workspace.findMember(this, path);
    }
 
    /**
@@ -169,58 +171,14 @@ public abstract class ContainerResource extends ItemResource implements IContain
       return members(includePhantoms ? INCLUDE_PHANTOMS : IResource.NONE);
    }
 
+
    /**
-    * @see org.eclipse.core.resources.IContainer#members(int)
+    * {@inheritDoc}
     */
    @Override
    public IResource[] members(int memberFlags) throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
-
-      //      try
-      //      {
-      //         ItemList<Item> childrenList = workspace.getVFS().getChildren(delegate.getId(), -1, 0, null, PropertyFilter.NONE_FILTER);
-      //         if (childrenList.getNumItems() > 0)
-      //         {
-      //            IResource[] resourceArray = new IResource[childrenList.getNumItems()];
-      //            int i = 0;
-      //            for (Item item : childrenList.getItems())
-      //            {
-      //               switch (item.getItemType())
-      //               {
-      //                  case FILE :
-      //                     resourceArray[i++] = (FileResource)item;
-      //                     break;
-      //                  case FOLDER :
-      //                     resourceArray[i++] = (FolderResource)item;
-      //                     break;
-      //                  case PROJECT :
-      //                     resourceArray[i++] = (ProjectResource)item;
-      //                     break;
-      //               }
-      //            }
-      //            return resourceArray;
-      //         }
-      //
-      //         return new IResource[0];
-      //      }
-      //      catch (ItemNotFoundException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (InvalidArgumentException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (PermissionDeniedException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
-      //      catch (VirtualFileSystemException e)
-      //      {
-      //         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      //      }
+      return workspace.getMembers(getFullPath(), memberFlags);
    }
 
    /**

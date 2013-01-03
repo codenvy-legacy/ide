@@ -11,9 +11,13 @@
  *******************************************************************************/
 package org.eclipse.core.resources;
 
-import java.net.URI;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
 
-import org.eclipse.core.runtime.*;
+import java.net.URI;
 
 /**
  * Folders may be leaf or non-leaf resources and may contain files and/or other folders.
@@ -27,8 +31,6 @@ import org.eclipse.core.runtime.*;
  * Folders implement the <code>IAdaptable</code> interface;
  * extensions are managed by the platform's adapter manager.
  * </p>
- *
- * @see Platform#getAdapterManager()
  */
 public interface IFolder extends IContainer, IAdaptable
 {

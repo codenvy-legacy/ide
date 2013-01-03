@@ -52,11 +52,16 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -64,7 +69,6 @@ import javax.ws.rs.core.MediaType;
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: WorkspaceResource.java Dec 27, 2012 12:47:21 PM azatsarynnyy $
- *
  */
 public class WorkspaceResource implements IWorkspace
 {
@@ -134,8 +138,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#build(org.eclipse.core.resources.IBuildConfiguration[], int, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void build(IBuildConfiguration[] buildConfigs, int kind, boolean buildReferences, IProgressMonitor monitor)
-      throws CoreException
+   public void build(IBuildConfiguration[] buildConfigs, int kind, boolean buildReferences,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
 
@@ -175,8 +179,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#copy(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus copy(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus copy(IResource[] resources, IPath destination, boolean force,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -186,8 +190,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#copy(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus copy(IResource[] resources, IPath destination, int updateFlags, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus copy(IResource[] resources, IPath destination, int updateFlags,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -366,8 +370,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#move(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus move(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus move(IResource[] resources, IPath destination, boolean force,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -377,8 +381,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#move(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus move(IResource[] resources, IPath destination, int updateFlags, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus move(IResource[] resources, IPath destination, int updateFlags,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -406,7 +410,7 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Creates new {@link ItemResource} of the specified <code>type</code>.
-    * 
+    *
     * @param path {@link IPath} of resource to create
     * @param type type of resource to create
     * @return created resource
@@ -416,24 +420,24 @@ public class WorkspaceResource implements IWorkspace
       String message;
       switch (type)
       {
-         case IResource.FOLDER :
+         case IResource.FOLDER:
             if (path.segmentCount() < ICoreConstants.MINIMUM_FOLDER_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
             return new FolderResource(path.makeAbsolute(), this);
-         case IResource.FILE :
+         case IResource.FILE:
             if (path.segmentCount() < ICoreConstants.MINIMUM_FILE_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
             return new FileResource(path.makeAbsolute(), this);
-         case IResource.PROJECT :
+         case IResource.PROJECT:
             //return (ItemResource)getRoot().getProject(path.lastSegment());
             return new ProjectResource(path.makeAbsolute(), this);
-         case IResource.ROOT :
+         case IResource.ROOT:
             return (ItemResource)getRoot();
       }
       Assert.isLegal(false);
@@ -443,26 +447,28 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Creates provided {@link IResource} in the {@link VirtualFileSystem}.
-    * 
+    *
     * @param resource {@link IResource} to create in {@link VirtualFileSystem}
     */
    public Item createResource(IResource resource) throws CoreException
    {
       IContainer parent = resource.getParent();
       if (!parent.exists())
+      {
          createResource(parent);
+      }
 
       try
       {
          String parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
          switch (resource.getType())
          {
-            case IResource.FILE :
+            case IResource.FILE:
                return vfs.createFile(parentId, resource.getName(), MediaType.TEXT_PLAIN_TYPE,
                   ((IFile)resource).getContents());
-            case IResource.FOLDER :
+            case IResource.FOLDER:
                return vfs.createFolder(parentId, resource.getName());
-            case IResource.PROJECT :
+            case IResource.PROJECT:
                return vfs.createProject(parentId, resource.getName(), null, null);
          }
       }
@@ -476,8 +482,9 @@ public class WorkspaceResource implements IWorkspace
       }
       catch (ItemAlreadyExistException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
-            "Resource already exists in the workspace.", e));
+         throw new CoreException(
+            new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "Resource already exists in the workspace.",
+               e));
       }
       catch (PermissionDeniedException e)
       {
@@ -497,8 +504,8 @@ public class WorkspaceResource implements IWorkspace
     * @throws PermissionDeniedException
     * @throws VirtualFileSystemException
     */
-   String getVfsIdByFullPath(IPath path) throws ItemNotFoundException, PermissionDeniedException,
-      VirtualFileSystemException
+   String getVfsIdByFullPath(
+      IPath path) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
    {
       return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
    }
@@ -527,8 +534,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#run(org.eclipse.core.resources.IWorkspaceRunnable, org.eclipse.core.runtime.jobs.ISchedulingRule, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void run(IWorkspaceRunnable action, ISchedulingRule rule, int flags, IProgressMonitor monitor)
-      throws CoreException
+   public void run(IWorkspaceRunnable action, ISchedulingRule rule, int flags,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
 
@@ -621,7 +628,7 @@ public class WorkspaceResource implements IWorkspace
    public IStatus validateName(String segment, int typeMask)
    {
       // TODO Auto-generated method stub
-      return null;
+      return new Status(IStatus.OK, "exo", "OK");
    }
 
    /**
@@ -679,4 +686,110 @@ public class WorkspaceResource implements IWorkspace
       return vfs;
    }
 
+   private Item getItemByPath(IPath path) throws VirtualFileSystemException
+   {
+      return vfs.getItemByPath(path.toString(), null, PropertyFilter.ALL_FILTER);
+   }
+
+   /**
+    * Get all children's from path.
+    *
+    * @param fullPath    path to parent
+    * @param memberFlags the member flags
+    * @return array of the children resources
+    * @throws CoreException if parent not exist
+    */
+   public IResource[] getMembers(IPath fullPath, int memberFlags) throws CoreException
+   {
+      try
+      {
+         Item item = getItemByPath(fullPath);
+         if (item instanceof Folder)
+         {
+            ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+            IResource[] childrens = new IResource[children.getNumItems()];
+            List<Item> items = children.getItems();
+            for (int i = 0; i < items.size(); i++)
+            {
+               Item c = items.get(i);
+               if (c instanceof Folder)
+               {
+                  childrens[i] = new FolderResource(new Path(c.getPath()), this);
+               }
+               else if (c instanceof File)
+               {
+                  childrens[i] = new FileResource(new Path(c.getPath()), this);
+               }
+               else if (c instanceof Project)
+               {
+                  childrens[i] = new ProjectResource(new Path(c.getPath()), this);
+               }
+               else
+               {
+                  throw new CoreException(
+                     new Status(IStatus.ERROR, "", "Unknown type of item: " + c.getItemType().toString()));
+               }
+            }
+            return childrens;
+         }
+         else
+         {
+            throw new CoreException(new Status(IStatus.ERROR, "", "Resource no a folder"));
+         }
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+
+   }
+
+   /**
+    * Finds and returns the member resource identified by the given path in this path,
+    * or null if no such resource exists. The supplied path may be absolute or relative;
+    * Trailing separators and the path's device are ignored.
+    * Parent references in the supplied path are discarded if they go above the workspace root.
+    *
+    * @param containerResource
+    * @param path              the path for resource
+    * @return the resource
+    */
+   public IResource findMember(ContainerResource containerResource, IPath path)
+   {
+      try
+      {
+         if (path.isAbsolute())
+         {
+            Item item = getItemByPath(containerResource.getFullPath());
+            Folder f = (Folder)item;
+            ItemList<Item> children = vfs.getChildren(f.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+            String segment = path.segment(path.segmentCount() - 1);
+            for (Item i : children.getItems())
+            {
+               if (i.getName().equals(segment))
+               {
+                  Path resPath = new Path(i.getPath());
+                  if (i instanceof File)
+                  {
+                     return new FileResource(resPath, this);
+                  }
+                  else if (i instanceof Folder)
+                  {
+                     return new FolderResource(resPath, this);
+                  }
+                  else
+                  {
+                     return new ProjectResource(resPath, this);
+                  }
+               }
+            }
+         }
+      }
+      catch (VirtualFileSystemException e)
+      {
+         e.printStackTrace();
+         return null;
+      }
+      return null;
+   }
 }
