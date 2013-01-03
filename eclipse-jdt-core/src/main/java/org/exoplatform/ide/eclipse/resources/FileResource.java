@@ -24,13 +24,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 import java.io.InputStream;
 import java.io.Reader;
@@ -169,27 +163,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public InputStream getContents(boolean force) throws CoreException
    {
-      try
-      {
-         String id = workspace.getVfsIdByFullPath(getFullPath());
-         return workspace.getVFS().getContent(id).getStream();
-      }
-      catch (ItemNotFoundException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (InvalidArgumentException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (PermissionDeniedException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
-      }
+      return workspace.getFileContents(this);
    }
 
    /**
@@ -239,8 +213,9 @@ public class FileResource extends ItemResource implements IFile
    public void setContents(InputStream source, boolean force, boolean keepHistory, IProgressMonitor monitor)
       throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
+      setContents(source, updateFlags, monitor);
    }
 
    /**
@@ -250,8 +225,9 @@ public class FileResource extends ItemResource implements IFile
    public void setContents(IFileState source, boolean force, boolean keepHistory, IProgressMonitor monitor)
       throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
+      setContents(source.getContents(), updateFlags, monitor);
    }
 
    /**
@@ -260,8 +236,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void setContents(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      workspace.setFileContents(this, source);
    }
 
    /**
@@ -270,8 +245,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void setContents(IFileState source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      setContents(source.getContents(), updateFlags, monitor);
    }
 
    /**

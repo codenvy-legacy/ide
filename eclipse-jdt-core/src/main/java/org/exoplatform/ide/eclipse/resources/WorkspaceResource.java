@@ -47,9 +47,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
@@ -138,8 +140,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#build(org.eclipse.core.resources.IBuildConfiguration[], int, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void build(IBuildConfiguration[] buildConfigs, int kind, boolean buildReferences,
-      IProgressMonitor monitor) throws CoreException
+   public void build(IBuildConfiguration[] buildConfigs, int kind, boolean buildReferences, IProgressMonitor monitor)
+      throws CoreException
    {
       // TODO Auto-generated method stub
 
@@ -179,8 +181,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#copy(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus copy(IResource[] resources, IPath destination, boolean force,
-      IProgressMonitor monitor) throws CoreException
+   public IStatus copy(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor)
+      throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -190,8 +192,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#copy(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus copy(IResource[] resources, IPath destination, int updateFlags,
-      IProgressMonitor monitor) throws CoreException
+   public IStatus copy(IResource[] resources, IPath destination, int updateFlags, IProgressMonitor monitor)
+      throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -370,8 +372,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#move(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus move(IResource[] resources, IPath destination, boolean force,
-      IProgressMonitor monitor) throws CoreException
+   public IStatus move(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor)
+      throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -381,8 +383,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#move(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus move(IResource[] resources, IPath destination, int updateFlags,
-      IProgressMonitor monitor) throws CoreException
+   public IStatus move(IResource[] resources, IPath destination, int updateFlags, IProgressMonitor monitor)
+      throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -410,7 +412,7 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Creates new {@link ItemResource} of the specified <code>type</code>.
-    *
+    * 
     * @param path {@link IPath} of resource to create
     * @param type type of resource to create
     * @return created resource
@@ -420,24 +422,24 @@ public class WorkspaceResource implements IWorkspace
       String message;
       switch (type)
       {
-         case IResource.FOLDER:
+         case IResource.FOLDER :
             if (path.segmentCount() < ICoreConstants.MINIMUM_FOLDER_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
             return new FolderResource(path.makeAbsolute(), this);
-         case IResource.FILE:
+         case IResource.FILE :
             if (path.segmentCount() < ICoreConstants.MINIMUM_FILE_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
             return new FileResource(path.makeAbsolute(), this);
-         case IResource.PROJECT:
+         case IResource.PROJECT :
             //return (ItemResource)getRoot().getProject(path.lastSegment());
             return new ProjectResource(path.makeAbsolute(), this);
-         case IResource.ROOT:
+         case IResource.ROOT :
             return (ItemResource)getRoot();
       }
       Assert.isLegal(false);
@@ -447,28 +449,26 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Creates provided {@link IResource} in the {@link VirtualFileSystem}.
-    *
+    * 
     * @param resource {@link IResource} to create in {@link VirtualFileSystem}
     */
    public Item createResource(IResource resource) throws CoreException
    {
       IContainer parent = resource.getParent();
       if (!parent.exists())
-      {
          createResource(parent);
-      }
 
       try
       {
          String parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
          switch (resource.getType())
          {
-            case IResource.FILE:
-               return vfs.createFile(parentId, resource.getName(), MediaType.TEXT_PLAIN_TYPE,
-                  ((IFile)resource).getContents());
-            case IResource.FOLDER:
+            case IResource.FILE :
+               return vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
+                  MediaType.TEXT_PLAIN_TYPE, ((IFile)resource).getContents());
+            case IResource.FOLDER :
                return vfs.createFolder(parentId, resource.getName());
-            case IResource.PROJECT:
+            case IResource.PROJECT :
                return vfs.createProject(parentId, resource.getName(), null, null);
          }
       }
@@ -498,16 +498,29 @@ public class WorkspaceResource implements IWorkspace
    }
 
    /**
-    * @param path
-    * @return
+    * Returns VFS {@link Item} identifier by provided {@link IPath}.
+    * 
+    * @param path {@link IPath}
+    * @return {@link Item} identifier
+    * @throws CoreException
     * @throws ItemNotFoundException
     * @throws PermissionDeniedException
     * @throws VirtualFileSystemException
     */
-   String getVfsIdByFullPath(
-      IPath path) throws ItemNotFoundException, PermissionDeniedException, VirtualFileSystemException
+   String getVfsIdByFullPath(IPath path) throws CoreException, ItemNotFoundException
    {
-      return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
+      try
+      {
+         return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
    }
 
    /**
@@ -534,8 +547,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#run(org.eclipse.core.resources.IWorkspaceRunnable, org.eclipse.core.runtime.jobs.ISchedulingRule, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void run(IWorkspaceRunnable action, ISchedulingRule rule, int flags,
-      IProgressMonitor monitor) throws CoreException
+   public void run(IWorkspaceRunnable action, ISchedulingRule rule, int flags, IProgressMonitor monitor)
+      throws CoreException
    {
       // TODO Auto-generated method stub
 
@@ -628,7 +641,7 @@ public class WorkspaceResource implements IWorkspace
    public IStatus validateName(String segment, int typeMask)
    {
       // TODO Auto-generated method stub
-      return new Status(IStatus.OK, "exo", "OK");
+      return null;
    }
 
    /**
@@ -684,6 +697,178 @@ public class WorkspaceResource implements IWorkspace
    protected VirtualFileSystem getVFS()
    {
       return vfs;
+   }
+
+   /**
+    * Returns an open input stream on the contents of provided {@link IFile}.
+    * The client is responsible for closing the stream when finished.
+    * 
+    * @param file {@link IFile} to get contents
+    * @return an input stream containing the contents of the file
+    * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IFile#getContents(boolean)
+    */
+   InputStream getFileContents(IFile file) throws CoreException
+   {
+      try
+      {
+         String id = getVfsIdByFullPath(file.getFullPath());
+         return vfs.getContent(id).getStream();
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+   }
+
+   /**
+    * Update binary contents of specified {@link IFile}.
+    * 
+    * @param file {@link IFile} to update contents
+    * @param newContent new content of {@link IFile}
+    * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IFile#setContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   void setFileContents(IFile file, InputStream newContent) throws CoreException
+   {
+      try
+      {
+         vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/
+            MediaType.TEXT_PLAIN_TYPE, newContent, null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+   }
+
+   /**
+    * Move provided {@link IResource} by <code>destination</code> path.
+    * 
+    * @param resource {@link IResource} to move
+    * @param destination the destination path
+    * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   void moveResource(IResource resource, IPath destination) throws CoreException
+   {
+      // workspace root cannot be deleted
+      if (resource.getType() == IResource.ROOT)
+         return;
+
+//      String destinationId = null;
+//      try
+//      {
+//         destinationId = getVfsIdByFullPath(destination);
+//      }
+//      catch (ItemNotFoundException e1)
+//      {
+//         // TODO create destination
+//         // TODO Unable move item. Item specified as parent is not a folder
+//      }
+
+      try
+      {
+         String id = getVfsIdByFullPath(resource.getFullPath());
+         String destinationId = getVfsIdByFullPath(destination);
+         vfs.move(id, destinationId, null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+   }
+
+   /**
+    * Deletes specified {@link IResource} from the workspace.
+    * Deletion applies recursively to all members of specified {@link IResource}.
+    * 
+    * @param resource {@link IResource} to delete
+    * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IResource#delete(int, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   void deleteResource(IResource resource) throws CoreException
+   {
+      // workspace root cannot be deleted
+      if (resource.getType() == IResource.ROOT)
+         return;
+
+      try
+      {
+         vfs.delete(getVfsIdByFullPath(resource.getFullPath()), null);
+      }
+      catch (ItemNotFoundException e)
+      {
+         return;
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
    }
 
    private Item getItemByPath(IPath path) throws VirtualFileSystemException
