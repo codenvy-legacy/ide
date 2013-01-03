@@ -57,11 +57,14 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -940,8 +943,8 @@ public class WorkspaceResource implements IWorkspace
                }
                else
                {
-                  throw new CoreException(
-                     new Status(IStatus.ERROR, "", "Unknown type of item: " + c.getItemType().toString()));
+                  throw new CoreException(new Status(IStatus.ERROR, "", "Unknown type of item: "
+                     + c.getItemType().toString()));
                }
             }
             return childrens;
