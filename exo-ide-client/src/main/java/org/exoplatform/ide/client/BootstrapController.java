@@ -19,6 +19,7 @@ package org.exoplatform.ide.client;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
+import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 
 import org.exoplatform.ide.client.workspace.WorkspacePresenter;
@@ -55,7 +56,10 @@ public class BootstrapController
             // instantiate extensions
             extensionManager.startExtensions();
             // Start UI
-            workspacePeresenter.go(RootLayoutPanel.get());
+            SimplePanel mainPanel = new SimplePanel();
+            RootLayoutPanel.get().add(mainPanel);
+
+            workspacePeresenter.go(mainPanel);
          }
 
          @Override

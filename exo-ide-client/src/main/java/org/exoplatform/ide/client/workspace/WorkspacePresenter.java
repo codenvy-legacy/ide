@@ -17,17 +17,16 @@
 package org.exoplatform.ide.client.workspace;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
@@ -146,9 +145,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     * {@inheritDoc}
     */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-      container.clear();
       // Expose Project Explorer into Tools Panel
       menuPresenter.go(view.getMenuPanel());
 
@@ -156,7 +154,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
       partAgent.go(PartStackType.EDITING, view.getCenterPanel());
       partAgent.go(PartStackType.TOOLING, view.getRightPanel());
 
-      container.add(view.asWidget());
+      container.setWidget(view);
    }
 
    protected void bind()
@@ -527,8 +525,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
          dialogBox.setText("Open the project");
 
          ScrollPanel listPanel = new ScrollPanel();
-         listPanel.setSize("100%", "100%");
-         listPanel.getElement().appendChild((Node)list.getView().getElement());
+         listPanel.setStyleName(resources.coreCss().simpleListContainer());
+         listPanel.add(list);
          dialogBox.setTitle("Select a project");
          dialogBox.setText("Select a project, please");
 

@@ -40,6 +40,8 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate,
 
    private JsonArray<PreferencesPagePresenter> preferences;
 
+   private boolean hasDirtyPage;
+
    /**
     * Create presenter.
     * 
@@ -72,7 +74,12 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate,
    @Override
    public void onDirtyChanged()
    {
-      view.setApplyButtonEnabled(currentPage.isDirty());
+      if (currentPage != null && !hasDirtyPage)
+      {
+         hasDirtyPage = currentPage.isDirty();
+      }
+
+      view.setApplyButtonEnabled(hasDirtyPage);
    }
 
    /**
@@ -98,6 +105,8 @@ public class PreferencesPresenter implements PreferencesView.ActionDelegate,
             page.doApply();
          }
       }
+
+      hasDirtyPage = false;
 
       onDirtyChanged();
    }

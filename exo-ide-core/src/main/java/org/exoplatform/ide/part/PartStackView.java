@@ -3,7 +3,7 @@ package org.exoplatform.ide.part;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.HasCloseHandlers;
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.view.View;
@@ -28,7 +28,7 @@ public interface PartStackView extends View<PartStackView.ActionDelegate>
    public void setActiveTabButton(int index);
 
    /** Get Content Panel */
-   public HasWidgets getContentPanel();
+   public AcceptsOneWidget getContentPanel();
 
    /** Set PartStack focused */
    public void setFocus(boolean focused);

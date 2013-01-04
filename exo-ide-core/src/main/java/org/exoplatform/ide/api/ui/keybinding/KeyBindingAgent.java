@@ -16,51 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.workspace;
+package org.exoplatform.ide.api.ui.keybinding;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
-import org.exoplatform.ide.view.View;
+import org.exoplatform.ide.extension.SDK;
 
 /**
- * Workspace view interface. 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * Public interface of the key binding management.
+ * The key binding defines the key sequence that should be used to invoke the command.
+ * A key binding may reference a scheme which is used to group key bindings into different
+ * named schemes that the user may activate.
+ *
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
+@SDK(title = "ide.api.ui.keyBinding")
+public interface KeyBindingAgent
 {
-   /**
-    * Returns central panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getCenterPanel();
+
 
    /**
-    * Returns left panel.
-    * 
+    * Global scheme, bindings added in this scheme always
+    *
     * @return
     */
-   AcceptsOneWidget getLeftPanel();
+   Scheme getGlobal();
 
    /**
-    * Returns menu panel.
-    * 
-    * @return
+    * Get build in Eclipse key binding scheme.
+    *
+    * @return the Eclipse scheme.
     */
-   AcceptsOneWidget getMenuPanel();
+   Scheme getEclipse();
 
-   /**
-    * Returns right panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getRightPanel();
 
-   /**
-    * Needs for delegate some function into Workspace view.
-    */
-   public interface ActionDelegate
-   {
-   }
 }

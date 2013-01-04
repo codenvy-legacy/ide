@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.texteditor;
 
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.editor.AbstractTextEditorPresenter;
 import org.exoplatform.ide.editor.DocumentProvider;
@@ -142,9 +143,9 @@ public class TextEditorPresenter extends AbstractTextEditorPresenter
     * @see org.exoplatform.ide.presenter.Presenter#go(com.google.gwt.user.client.ui.HasWidgets)
     */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-      container.add(getWidget());
+      container.setWidget(getWidget());
    }
 
    /**

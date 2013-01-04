@@ -4,6 +4,12 @@
 
 .container {
   box-sizing: border-box;
+  
+  border:1px solid rgba(0, 0, 0, 0.2);
+	
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .items {
@@ -18,7 +24,13 @@
   font-family: arial, sans-serif;
   color: #666;
   background-color: #F7F7F7;
-  border-top: solid 1px #ECECEC;
+
+  border:1px solid rgba(0, 0, 0, 0.2);
+
+  -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
   text-align: center;
   line-height: 16px;
   padding: 0 3px;

@@ -19,14 +19,15 @@
 package org.exoplatform.ide.wizard;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
+
+import org.exoplatform.ide.presenter.Presenter;
 
 /**
  * Interface of wizard page.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WizardPagePresenter
+public interface WizardPagePresenter extends Presenter
 {
    /**
     * Needs for delegate updateControls function into PagePresenter.
@@ -145,11 +146,4 @@ public interface WizardPagePresenter
     * having pressed the Cancel button.
     */
    void doCancel();
-
-   /**
-    * Expose wizard's page into given container
-    * 
-    * @param container place where wizard's page will be exposed
-    */
-   void go(AcceptsOneWidget container);
 }

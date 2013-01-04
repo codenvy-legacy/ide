@@ -17,7 +17,7 @@
 package org.exoplatform.ide.client.projectExplorer;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -69,10 +69,9 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter implements P
     * {@inheritDoc}
     */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-      container.clear();
-      container.add(view.asWidget());
+      container.setWidget(view);
    }
 
    /**

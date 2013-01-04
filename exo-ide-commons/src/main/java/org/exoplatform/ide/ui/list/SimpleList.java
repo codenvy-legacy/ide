@@ -14,8 +14,12 @@
 
 package org.exoplatform.ide.ui.list;
 
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
@@ -37,7 +41,7 @@ import org.exoplatform.ide.util.loging.Log;
  */
 // TODO: When we hit a place where a componenet wants to ditch all of
 // the default simple list styles, figure out a way to make that easy.
-public class SimpleList<M> extends UiComponent<SimpleList.View>
+public class SimpleList<M> extends UiComponent<SimpleList.View> implements IsWidget
 {
 
    /**
@@ -400,6 +404,8 @@ public class SimpleList<M> extends UiComponent<SimpleList.View>
    private final Element container;
 
    private final Element itemHolder;
+   
+   private HTML widget;
 
    private SimpleList(View view, Element container, Element itemHolder, Css css, ListItemRenderer<M> itemRenderer,
       ListEventDelegate<M> eventDelegate)
@@ -509,5 +515,20 @@ public class SimpleList<M> extends UiComponent<SimpleList.View>
    public M get(int i)
    {
       return model.listItems.get(i).getData();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Widget asWidget()
+   {
+      if (widget == null)
+      {
+         widget = new HTML();
+         widget.getElement().appendChild((Node)getView().getElement());
+      }
+
+      return widget;
    }
 }

@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.outline;
 
-import com.google.gwt.dom.client.Node;
-
-import com.google.gwt.user.client.ui.HTML;
-
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.Resources;
@@ -40,8 +36,6 @@ public class OutlineViewImpl implements OutlineView
 
    private Tree<CodeBlock> tree;
 
-   private HTML wrapper;
-
    /**
     * @param codeBlockDataAdapter 
     * @param resources 
@@ -58,12 +52,7 @@ public class OutlineViewImpl implements OutlineView
    @Override
    public Widget asWidget()
    {
-      if (wrapper == null)
-      {
-         wrapper = new HTML();
-         wrapper.getElement().appendChild((Node)tree.getView().getElement());
-      }
-      return wrapper;
+      return tree.asWidget();
    }
 
    /**

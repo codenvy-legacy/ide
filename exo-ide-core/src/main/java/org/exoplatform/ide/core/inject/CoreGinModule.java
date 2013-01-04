@@ -26,6 +26,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.part.PartAgent;
 import org.exoplatform.ide.api.ui.preferences.PreferencesAgent;
@@ -38,6 +39,7 @@ import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.editor.DocumentProvider;
 import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.extension.ExtensionRegistry;
+import org.exoplatform.ide.keybinding.KeyBindingManager;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
@@ -66,8 +68,8 @@ public class CoreGinModule extends AbstractGinModule
 {
 
    /**
-   * {@inheritDoc}
-   */
+    * {@inheritDoc}
+    */
    @Override
    protected void configure()
    {
@@ -126,6 +128,9 @@ public class CoreGinModule extends AbstractGinModule
       bind(PartAgent.class).to(PartAgentPresenter.class).in(Singleton.class);
       // resources: images and css
       bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
+
+      // key binding
+      bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
    }
 
    @Provides

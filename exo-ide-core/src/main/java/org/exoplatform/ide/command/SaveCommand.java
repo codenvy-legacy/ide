@@ -27,9 +27,9 @@ import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
  * Command for "Save" action
+ *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 @Singleton
 public class SaveCommand implements ExtendedCommand
@@ -72,7 +72,7 @@ public class SaveCommand implements ExtendedCommand
     * {@inheritDoc}
     */
    @Override
-   public Expression visibleWhen()
+   public Expression inContext()
    {
       return null;
    }
@@ -81,7 +81,7 @@ public class SaveCommand implements ExtendedCommand
     * {@inheritDoc}
     */
    @Override
-   public Expression enabledWhen()
+   public Expression canExecute()
    {
       return expression;
    }

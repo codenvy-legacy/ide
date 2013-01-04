@@ -19,7 +19,6 @@
 package org.exoplatform.ide.wizard.newresource;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Node;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -121,7 +120,8 @@ public class NewResourcePageViewImpl extends Composite implements NewResourcePag
       tableElement.setAttribute("style", "width: 100%");
       list = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
 
-      this.resources.getElement().appendChild((Node)list.getView().getElement());
+      this.resources.setStyleName(resources.coreCss().simpleListContainer());
+      this.resources.add(list);
 
       list.render(wizards);
    }

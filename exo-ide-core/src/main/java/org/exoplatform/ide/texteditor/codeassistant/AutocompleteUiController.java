@@ -416,11 +416,13 @@ public class AutocompleteUiController implements AutocompleteBox
       {
          hint.setTextContent("");
          CssUtils.setDisplayVisibility2(hint, false);
+         CssUtils.setDisplayVisibility2(container, true);
       }
       else
       {
          hint.setTextContent(hintText);
          CssUtils.setDisplayVisibility2(hint, true);
+         CssUtils.setDisplayVisibility2(container, false);
       }
 
       autoHideController.show();

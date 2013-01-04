@@ -16,51 +16,40 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.workspace;
+package org.exoplatform.ide.api.ui.keybinding;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
-import org.exoplatform.ide.view.View;
+import org.exoplatform.ide.menu.ExtendedCommand;
+import org.exoplatform.ide.util.input.CharCodeWithModifiers;
 
 /**
- * Workspace view interface. 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * Scheme is set of the key bindings
+ *
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
+public interface Scheme
 {
-   /**
-    * Returns central panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getCenterPanel();
 
    /**
-    * Returns left panel.
-    * 
-    * @return
+    * Get id of the scheme.
+    *
+    * @return the scheme id
     */
-   AcceptsOneWidget getLeftPanel();
+   String getSchemeId();
 
    /**
-    * Returns menu panel.
-    * 
-    * @return
+    * Get scheme description
+    *
+    * @return the scheme description
     */
-   AcceptsOneWidget getMenuPanel();
+   String getDescription();
 
    /**
-    * Returns right panel.
-    * 
-    * @return
+    * Add key binding for command.
+    *
+    * @param keyBinging the key sequence.
+    * @param command    the command which keys bind.
     */
-   AcceptsOneWidget getRightPanel();
+   void addKeyBinding(CharCodeWithModifiers keyBinging, ExtendedCommand command);
 
-   /**
-    * Needs for delegate some function into Workspace view.
-    */
-   public interface ActionDelegate
-   {
-   }
 }

@@ -14,8 +14,12 @@
 
 package org.exoplatform.ide.ui;
 
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import elemental.html.Element;
 
 import org.exoplatform.ide.runtime.Assert;
@@ -29,7 +33,7 @@ import org.exoplatform.ide.util.dom.Elements;
  * Represents a floating popup, that can be attached to any element.
  *
  */
-public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoHideModel>
+public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoHideModel> implements IsWidget
 {
 
    public interface Css extends CssResource
@@ -82,6 +86,8 @@ public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoH
    }
 
    private PositionController positionController;
+   
+   private HTML widget;
 
    private Popup(View view)
    {
@@ -123,5 +129,20 @@ public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoH
       forceHide();
       setContentElement(null);
       positionController = null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Widget asWidget()
+   {
+      if (widget == null)
+      {
+         widget = new HTML();
+         widget.getElement().appendChild((Node)getView().getElement());
+      }
+
+      return widget;
    }
 }

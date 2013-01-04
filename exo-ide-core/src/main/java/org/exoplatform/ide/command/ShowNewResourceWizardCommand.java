@@ -21,7 +21,6 @@ package org.exoplatform.ide.command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.menu.ExtendedCommand;
@@ -31,7 +30,7 @@ import org.exoplatform.ide.wizard.newresource.NewResourcePagePresenter;
 
 /**
  * Command for "New/File" action.
- * 
+ *
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
@@ -45,7 +44,7 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
 
    /**
     * Create command.
-    * 
+    *
     * @param resources
     * @param wizardAgent
     * @param expression
@@ -81,7 +80,7 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
-   public Expression visibleWhen()
+   public Expression inContext()
    {
       // TODO Auto-generated method stub
       return null;
@@ -90,7 +89,7 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
-   public Expression enabledWhen()
+   public Expression canExecute()
    {
       return expression;
    }

@@ -19,7 +19,7 @@
 package org.exoplatform.ide.outline;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -40,7 +40,7 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
 
    public interface OutlinePartView extends IsWidget
    {
-      HasWidgets getContainer();
+      AcceptsOneWidget getContainer();
 
       void showNoOutline();
    }
@@ -92,9 +92,9 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
     * {@inheritDoc}
     */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-      container.add(view.asWidget());
+      container.setWidget(view);
    }
 
    /**
@@ -110,7 +110,6 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
             activePart = (TextEditorPartPresenter)event.getActivePart();
             if (activePart.getOutline() != null)
             {
-               view.getContainer().clear();
                activePart.getOutline().go(view.getContainer());
             }
             else

@@ -17,8 +17,8 @@
 package org.exoplatform.ide.client.extensionsPart;
 
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.gwt.user.client.ui.HasWidgets;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -54,9 +54,8 @@ public class ExtensionsPage implements PartPresenter
    * {@inheritDoc}
    */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-
       final StringBuilder builder = new StringBuilder();
 
       manager.getExtensionDescriptions().iterate(new IterationCallback<ExtensionDescription>()
@@ -97,7 +96,7 @@ public class ExtensionsPage implements PartPresenter
       });
 
       HTMLPanel htmlPanel = new HTMLPanel(builder.toString());
-      container.add(htmlPanel);
+      container.setWidget(htmlPanel);
    }
 
    /**

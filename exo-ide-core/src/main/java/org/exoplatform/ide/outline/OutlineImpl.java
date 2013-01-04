@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.outline;
 
-import com.google.gwt.user.client.ui.HasWidgets;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
 import elemental.html.DragEvent;
 
@@ -217,9 +217,9 @@ public class OutlineImpl implements OutlinePresenter
     * {@inheritDoc}
     */
    @Override
-   public void go(HasWidgets container)
+   public void go(AcceptsOneWidget container)
    {
-      container.add(view.asWidget());
+      container.setWidget(view);
    }
 
 }
