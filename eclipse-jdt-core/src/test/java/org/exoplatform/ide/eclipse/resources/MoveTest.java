@@ -18,12 +18,13 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.junit.Test;
 
 /**
@@ -48,41 +49,48 @@ public class MoveTest extends ResourcesBaseTest
       super.setUp();
       ws = new WorkspaceResource(vfs);
 
-      projectForMove = (ProjectResource)ws.newResource(new Path("/project"), IResource.PROJECT);
+      projectForMove = (ProjectResource)ws.newResource(new Path("/project1"), IResource.PROJECT);
       ws.createResource(projectForMove);
 
-      folderForMove = (FolderResource)ws.newResource(new Path("/project/folder"), IResource.FOLDER);
+      folderForMove = (FolderResource)ws.newResource(new Path("/project2/folder2"), IResource.FOLDER);
       ws.createResource(folderForMove);
 
-      fileForMove = (FileResource)ws.newResource(new Path("/project/folder/file"), IResource.FILE);
+      fileForMove = (FileResource)ws.newResource(new Path("/project3/folder3/file3"), IResource.FILE);
       ws.createResource(fileForMove);
    }
 
    @Test
    public void testMoveProject() throws Exception
    {
-      IPath destinationPath = new Path("/project1");
+      IPath destinationPath = new Path("/project1_moved");
 
       projectForMove.move(destinationPath, true, new NullProgressMonitor());
-      assertEquals(projectForMove.getFullPath(), destinationPath);
+      assertFalse(projectForMove.exists());
+      vfs.getItemByPath(destinationPath.toString(), null, PropertyFilter.NONE_FILTER).getPath();
    }
 
    @Test
-   public void tetsMoveFolder() throws Exception
+   public void testMoveFolder() throws Exception
    {
-      IPath destinationPath = new Path("/project1/folder1");
+      IPath destinationPath = new Path("/project2_moved/folder2_moved/folder3_moved");
+      IResource parentDestinationFolder = ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      ws.createResource(parentDestinationFolder);
 
       folderForMove.move(destinationPath, true, new NullProgressMonitor());
-      assertEquals(folderForMove.getFullPath(), destinationPath);
+      assertFalse(folderForMove.exists());
+      vfs.getItemByPath(destinationPath.toString(), null, PropertyFilter.NONE_FILTER).getPath();
    }
 
    @Test
    public void testMoveFile() throws Exception
    {
-      IPath destinationPath = new Path("/project1/folder1/file1");
+      IPath destinationPath = new Path("/project3_testMoveFile/folder3_testMoveFile/file3_testMoveFile");
+      IResource parentDestinationFolder = ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      ws.createResource(parentDestinationFolder);
 
       fileForMove.move(destinationPath, true, new NullProgressMonitor());
-      assertEquals(fileForMove.getFullPath(), destinationPath);
+      assertFalse(fileForMove.exists());
+      vfs.getItemByPath(destinationPath.toString(), null, PropertyFilter.NONE_FILTER).getPath();
    }
 
 }

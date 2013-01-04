@@ -756,13 +756,13 @@ public class WorkspaceResource implements IWorkspace
       if (resource.getType() == IResource.ROOT)
          return;
 
-      IPath destinationParent = destination.removeLastSegments(1);
+      IPath parentDestinationPath = destination.removeLastSegments(1);
       try
       {
-         String destinationParentId = getVfsIdByFullPath(destinationParent);
+         String destinationParentId = getVfsIdByFullPath(parentDestinationPath);
          String id = getVfsIdByFullPath(resource.getFullPath());
-         vfs.move(id, destinationParentId, null);
-         ((ItemResource)resource).setPath(destination);
+         Item movedItem = vfs.move(id, destinationParentId, null);
+         vfs.rename(movedItem.getId(), null, destination.segment(destination.segmentCount()-1), null);
       }
       catch (VirtualFileSystemException e)
       {
