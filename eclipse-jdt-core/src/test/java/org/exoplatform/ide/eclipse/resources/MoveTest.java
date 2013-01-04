@@ -32,6 +32,7 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: MoveTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
+ * 
  */
 public class MoveTest extends ResourcesBaseTest
 {

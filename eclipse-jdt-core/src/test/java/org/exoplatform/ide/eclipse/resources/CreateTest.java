@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -64,7 +65,7 @@ public class CreateTest extends ResourcesBaseTest
    }
 
    @Test
-   public void tetsCreateFolder() throws Exception
+   public void testCreateFolder() throws Exception
    {
       String path = "/project/folder";
 
@@ -94,8 +95,8 @@ public class CreateTest extends ResourcesBaseTest
       assertTrue(fileResource.getType() == IResource.FILE);
       assertTrue(fileResource.getFullPath().toString().equals(path));
 
-      String resourceContents = StringUtils.toString(fileResource.getContents());
-      assertTrue(resourceContents.equals(content));
+      String actualContents = StringUtils.toString(fileResource.getContents());
+      assertEquals(actualContents, content);
    }
 
 }
