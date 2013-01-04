@@ -34,6 +34,8 @@ import java.net.URI;
 import java.util.Map;
 
 /**
+ * Implementation of {@link IProject}.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ProjectResource.java Dec 27, 2012 11:17:10 AM azatsarynnyy $
  *

@@ -47,6 +47,8 @@ import java.net.URI;
 import java.util.Map;
 
 /**
+ * Implementation of {@link IResource}.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ItemResource.java Dec 26, 2012 12:20:07 PM azatsarynnyy $
  *

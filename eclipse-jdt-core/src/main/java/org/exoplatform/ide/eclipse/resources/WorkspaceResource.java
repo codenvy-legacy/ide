@@ -65,6 +65,8 @@ import java.util.Map;
 import javax.ws.rs.core.MediaType;
 
 /**
+ * Implementation of {@link IWorkspace}.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: WorkspaceResource.java Dec 27, 2012 12:47:21 PM azatsarynnyy $
  *
@@ -879,7 +881,7 @@ public class WorkspaceResource implements IWorkspace
             String segment = path.segment(path.segmentCount() - 1);
             for (Item i : children.getItems())
             {
-               if (i.getName().equals(segment))
+               if (i.getPath().equals(path.toString()))
                {
                   Path resPath = new Path(i.getPath());
                   if (i instanceof File)

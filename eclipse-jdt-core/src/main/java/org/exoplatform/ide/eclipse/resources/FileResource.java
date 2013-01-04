@@ -31,6 +31,8 @@ import java.io.Reader;
 import java.net.URI;
 
 /**
+ * Implementation of {@link IFile}.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: FileResource.java Dec 26, 2012 12:27:39 PM azatsarynnyy $
  *

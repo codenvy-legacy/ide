@@ -29,6 +29,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 
 /**
+ * Implementation of {@link IContainer}.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ContainerResource.java Dec 26, 2012 5:32:18 PM azatsarynnyy $
  */

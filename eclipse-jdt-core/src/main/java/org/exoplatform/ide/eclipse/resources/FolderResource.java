@@ -27,6 +27,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import java.net.URI;
 
 /**
+ * Implementation of {@link IFolder}.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: FolderResource.java Dec 26, 2012 12:31:12 PM azatsarynnyy $
  *

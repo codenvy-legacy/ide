@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.resources.IContainer;
@@ -79,6 +81,20 @@ public class MembersTest extends ResourcesBaseTest
       assertTrue(memberPathList.contains(children2.getFullPath().toString()));
       assertFalse("Members of a project or folder are the files and folders immediately contained within it.",
          memberPathList.contains(children3.getFullPath().toString()));
+   }
+
+   @Test
+   public void testFindMember() throws Exception
+   {
+      IResource foundMember1 = containerResource.findMember(children1.getFullPath());
+      assertEquals(children1.getFullPath(), foundMember1.getFullPath());
+
+      IResource foundMember2 = containerResource.findMember(children2.getFullPath());
+      assertEquals(children2.getFullPath(), foundMember2.getFullPath());
+
+      IResource foundMember3 = containerResource.findMember(children3.getFullPath());
+      assertNull("Members of a project or folder are the files and folders immediately contained within it.",
+         foundMember3);
    }
 
 }
