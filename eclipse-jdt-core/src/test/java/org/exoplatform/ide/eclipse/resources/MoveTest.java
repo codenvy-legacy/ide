@@ -21,12 +21,13 @@ package org.exoplatform.ide.eclipse.resources;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -55,19 +56,20 @@ public class MoveTest extends ResourcesBaseTest
       ws = new WorkspaceResource(vfs);
 
       projectForMove = (ProjectResource)ws.newResource(new Path("/project"), IResource.PROJECT);
-      ws.createResource(projectForMove);
+      projectForMove.create(new NullProgressMonitor());
 
       emptyFolderForMove =
          (FolderResource)ws.newResource(projectForMove.getFullPath().append("empty_folder"), IResource.FOLDER);
-      ws.createResource(emptyFolderForMove);
+      emptyFolderForMove.create(true, true, new NullProgressMonitor());
 
       nonEmptyFolderForMove =
          (FolderResource)ws.newResource(projectForMove.getFullPath().append("non_empty_folder"), IResource.FOLDER);
-      ws.createResource(nonEmptyFolderForMove);
-      ws.createResource(ws.newResource(nonEmptyFolderForMove.getFullPath().append("file"), IResource.FILE));
+      nonEmptyFolderForMove.create(true, true, new NullProgressMonitor());
+      ((IFile)ws.newResource(nonEmptyFolderForMove.getFullPath().append("file"), IResource.FILE)).create(null, true,
+         new NullProgressMonitor());
 
       fileForMove = (FileResource)ws.newResource(projectForMove.getFullPath().append("file"), IResource.FILE);
-      ws.createResource(fileForMove);
+      fileForMove.create(null, true, new NullProgressMonitor());
    }
 
    @Test
@@ -84,8 +86,9 @@ public class MoveTest extends ResourcesBaseTest
    public void testMoveEmptyFolder() throws Exception
    {
       IPath destinationPath = new Path("/project2_moved/folder2_moved/folder3_moved");
-      IResource parentDestinationFolder = ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
-      ws.createResource(parentDestinationFolder);
+      IFolder parentDestinationFolder =
+         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       emptyFolderForMove.move(destinationPath, true, new NullProgressMonitor());
       assertFalse(emptyFolderForMove.exists());
@@ -93,13 +96,12 @@ public class MoveTest extends ResourcesBaseTest
    }
 
    @Test
-   @Ignore
    public void testMoveNonEmptyFolder() throws Exception
    {
       IPath destinationPath = new Path("/project_moved/folder_moved/folder1_moved");
       IFolder parentDestinationFolder =
          (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
-      ws.createResource(parentDestinationFolder);
+      parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       IResource[] members = nonEmptyFolderForMove.members();
       for (IResource member : members)
@@ -120,12 +122,20 @@ public class MoveTest extends ResourcesBaseTest
    public void testMoveFile() throws Exception
    {
       IPath destinationPath = new Path("/project_moved/folder_moved/file_moved");
-      IResource parentDestinationFolder = ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
-      ws.createResource(parentDestinationFolder);
+      IFolder parentDestinationFolder =
+         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       fileForMove.move(destinationPath, true, new NullProgressMonitor());
       assertFalse(fileForMove.exists());
       assertTrue(ws.newResource(destinationPath, IResource.FILE).exists());
+   }
+
+   @Test(expected = CoreException.class)
+   public void testMoveFileToNonExistingParentDestination() throws Exception
+   {
+      IPath destinationPath = new Path("/project_moved/folder_moved/file_moved");
+      fileForMove.move(destinationPath, true, new NullProgressMonitor());
    }
 
 }

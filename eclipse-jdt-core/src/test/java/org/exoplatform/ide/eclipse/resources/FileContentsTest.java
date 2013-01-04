@@ -56,11 +56,11 @@ public class FileContentsTest extends ResourcesBaseTest
 
       fileResourceWithoutContent =
          (IFile)ws.newResource(new Path("/project/folder/file_without_content"), IResource.FILE);
-      ws.createResource(fileResourceWithoutContent);
+      fileResourceWithoutContent.create(null, true, new NullProgressMonitor());
 
       fileResourceWithContent = (IFile)ws.newResource(new Path("/project/folder/file_with_content"), IResource.FILE);
       InputStream contentsStream = new ByteArrayInputStream(DEFAULT_CONTENT.getBytes());
-      ws.createResource(fileResourceWithContent, contentsStream);
+      fileResourceWithContent.create(contentsStream, true, new NullProgressMonitor());
    }
 
    @Test

@@ -23,8 +23,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.core.resources.IContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
@@ -42,13 +45,13 @@ public class MembersTest extends ResourcesBaseTest
 {
    private WorkspaceResource ws;
 
-   private IContainer containerResource;
+   private IProject projectResource;
 
-   private IResource children1;
+   private IFolder children1;
 
-   private IResource children2;
+   private IFile children2;
 
-   private IResource children3;
+   private IFile children3;
 
    @Override
    public void setUp() throws Exception
@@ -56,21 +59,21 @@ public class MembersTest extends ResourcesBaseTest
       super.setUp();
       ws = new WorkspaceResource(vfs);
 
-      containerResource = (IContainer)ws.newResource(new Path("/project"), IResource.PROJECT);
-      ws.createResource(containerResource);
+      projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
+      projectResource.create(new NullProgressMonitor());
 
-      children1 = ws.newResource(containerResource.getFullPath().append("folder"), IResource.FOLDER);
-      ws.createResource(children1);
-      children2 = ws.newResource(containerResource.getFullPath().append("file"), IResource.FILE);
-      ws.createResource(children2);
-      children3 = ws.newResource(containerResource.getFullPath().append("folder/file"), IResource.FILE);
-      ws.createResource(children3);
+      children1 = (IFolder)ws.newResource(projectResource.getFullPath().append("folder"), IResource.FOLDER);
+      children1.create(true, true, new NullProgressMonitor());
+      children2 = (IFile)ws.newResource(projectResource.getFullPath().append("file"), IResource.FILE);
+      children2.create(null, true, new NullProgressMonitor());
+      children3 = (IFile)ws.newResource(projectResource.getFullPath().append("folder/file"), IResource.FILE);
+      children3.create(null, true, new NullProgressMonitor());
    }
 
    @Test
    public void testGetMembers() throws Exception
    {
-      IResource[] members = containerResource.members();
+      IResource[] members = projectResource.members();
       List<String> memberPathList = new ArrayList<String>(members.length);
       for (IResource member : members)
       {
@@ -86,13 +89,13 @@ public class MembersTest extends ResourcesBaseTest
    @Test
    public void testFindMember() throws Exception
    {
-      IResource foundMember1 = containerResource.findMember(children1.getFullPath());
+      IResource foundMember1 = projectResource.findMember(children1.getFullPath());
       assertEquals(children1.getFullPath(), foundMember1.getFullPath());
 
-      IResource foundMember2 = containerResource.findMember(children2.getFullPath());
+      IResource foundMember2 = projectResource.findMember(children2.getFullPath());
       assertEquals(children2.getFullPath(), foundMember2.getFullPath());
 
-      IResource foundMember3 = containerResource.findMember(children3.getFullPath());
+      IResource foundMember3 = projectResource.findMember(children3.getFullPath());
       assertNull("Members of a project or folder are the files and folders immediately contained within it.",
          foundMember3);
    }

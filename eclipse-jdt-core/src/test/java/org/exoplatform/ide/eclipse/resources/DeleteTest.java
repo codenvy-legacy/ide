@@ -56,19 +56,20 @@ public class DeleteTest extends ResourcesBaseTest
       ws = new WorkspaceResource(vfs);
 
       projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
-      ws.createResource(projectResource);
+      projectResource.create(new NullProgressMonitor());
 
       emptyFolderResource =
          (IFolder)ws.newResource(projectResource.getFullPath().append("empty_folder"), IResource.FOLDER);
-      ws.createResource(emptyFolderResource);
+      emptyFolderResource.create(true, true, new NullProgressMonitor());
 
       nonEmptyFolderResource =
          (IFolder)ws.newResource(projectResource.getFullPath().append("non_empty_folder"), IResource.FOLDER);
-      ws.createResource(nonEmptyFolderResource);
-      ws.createResource(ws.newResource(nonEmptyFolderResource.getFullPath().append("file"), IResource.FILE));
+      nonEmptyFolderResource.create(true, true, new NullProgressMonitor());
+      ((IFile)ws.newResource(nonEmptyFolderResource.getFullPath().append("file"), IResource.FILE)).create(null, true,
+         new NullProgressMonitor());
 
       fileResource = (IFile)ws.newResource(projectResource.getFullPath().append("file"), IResource.FILE);
-      ws.createResource(fileResource);
+      fileResource.create(null, true, new NullProgressMonitor());
    }
 
    @Test

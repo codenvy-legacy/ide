@@ -23,6 +23,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.exoplatform.ide.commons.StringUtils;
@@ -97,6 +98,19 @@ public class CreateTest extends ResourcesBaseTest
 
       String actualContents = StringUtils.toString(fileResource.getContents());
       assertEquals(actualContents, content);
+   }
+
+   @Test(expected = CoreException.class)
+   public void testCreateFileAlreadyExist() throws Exception
+   {
+      String path = "/project/folder/file";
+
+      FileResource fileResource = (FileResource)ws.newResource(new Path(path), IResource.FILE);
+      assertFalse(fileResource.exists());
+
+      fileResource.create(null, true, new NullProgressMonitor());
+      assertTrue(fileResource.exists());
+      fileResource.create(null, true, new NullProgressMonitor());
    }
 
 }

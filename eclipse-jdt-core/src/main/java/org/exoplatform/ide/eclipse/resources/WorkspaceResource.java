@@ -764,7 +764,32 @@ public class WorkspaceResource implements IWorkspace
          String destinationParentId = getVfsIdByFullPath(parentDestinationPath);
          String id = getVfsIdByFullPath(resource.getFullPath());
          Item movedItem = vfs.move(id, destinationParentId, null);
-         vfs.rename(movedItem.getId(), null, destination.segment(destination.segmentCount()-1), null);
+         vfs.rename(movedItem.getId(), null, destination.segment(destination.segmentCount() - 1), null);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
+      }
+   }
+
+   /**
+    * Copy provided {@link IResource} to <code>destination</code> path.
+    * 
+    * @param resource {@link IResource} to copy
+    * @param destination the destination path
+    * @throws CoreException
+    * 
+    * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
+    */
+   void copyResource(IResource resource, IPath destination) throws CoreException
+   {
+      IPath parentDestinationPath = destination.removeLastSegments(1);
+      try
+      {
+         String parentDestinationId = getVfsIdByFullPath(parentDestinationPath);
+         String id = getVfsIdByFullPath(resource.getFullPath());
+         Item copiedItem = vfs.copy(id, parentDestinationId);
+         vfs.rename(copiedItem.getId(), null, destination.segment(destination.segmentCount() - 1), null);
       }
       catch (VirtualFileSystemException e)
       {

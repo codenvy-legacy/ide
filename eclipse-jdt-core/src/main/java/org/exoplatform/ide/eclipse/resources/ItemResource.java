@@ -175,8 +175,7 @@ public abstract class ItemResource implements IResource
    @Override
    public void copy(IPath destination, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      workspace.copyResource(this, destination);
    }
 
    /**
@@ -831,11 +830,6 @@ public abstract class ItemResource implements IResource
    {
       // TODO Auto-generated method stub
 
-   }
-
-   protected void setPath(IPath newPath)
-   {
-      path = newPath;
    }
 
 }
