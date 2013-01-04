@@ -57,14 +57,6 @@
 					<artifactId>crsh.shell.packaging</artifactId>
 					<groupId>org.crsh</groupId>
 				</exclusion>
-				<exclusion>
-					<artifactId>sshd-core</artifactId>
-					<groupId>org.apache.sshd</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>sshd-pam</artifactId>
-					<groupId>org.apache.sshd</groupId>
-				</exclusion>
 			</exclusions>
 		</dependency>
 	</dependencies>
