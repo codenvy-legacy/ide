@@ -756,60 +756,13 @@ public class WorkspaceResource implements IWorkspace
       if (resource.getType() == IResource.ROOT)
          return;
 
-      String destinationParentId = prepareDestiantionToMove(destination, resource.getParent().getType());
-
+      IPath destinationParent = destination.removeLastSegments(1);
       try
       {
+         String destinationParentId = getVfsIdByFullPath(destinationParent);
          String id = getVfsIdByFullPath(resource.getFullPath());
          vfs.move(id, destinationParentId, null);
          ((ItemResource)resource).setPath(destination);
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
-      }
-   }
-
-   /**
-    * Check that a <code>destination</code> path is exist and creates destination parent if it not exist.
-    * 
-    * @param destination destination path to check
-    * @param destinationParentType type of parent of destination
-    * @return identifier of prepared VFS {@link Item}
-    * 
-    * @throws CoreException
-    */
-   private String prepareDestiantionToMove(IPath destination, int destinationParentType) throws CoreException
-   {
-      IPath destinationParentPath = destination.removeLastSegments(1);
-      try
-      {
-         String parentId = null;
-         String rootId = vfs.getItemByPath("/", null, PropertyFilter.NONE_FILTER).getId();
-         if (IResource.FOLDER == destinationParentType)
-         {
-            parentId = vfs.createFolder(rootId, destinationParentPath.toString()).getParentId();
-         }
-         else if (IResource.PROJECT == destinationParentType)
-         {
-            parentId = vfs.createProject(rootId, destinationParentPath.toString(), null, null).getParentId();
-         }
-         else if (IResource.ROOT == destinationParentType)
-         {
-            parentId = rootId;
-         }
-         return parentId;
-      }
-      catch (ItemAlreadyExistException e)
-      {
-         try
-         {
-            return getVfsIdByFullPath(destinationParentPath);
-         }
-         catch (ItemNotFoundException e1)
-         {
-            throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e1.getMessage(), e1));
-         }
       }
       catch (VirtualFileSystemException e)
       {
