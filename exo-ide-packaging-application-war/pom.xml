@@ -313,7 +313,6 @@
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
 			<version>12.0.1</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.guava</groupId>
@@ -482,12 +481,14 @@
 								**/lib/exo-ide-jdt-core*,
 								**/lib/exo-jcr-services*,
 								**/lib/exo-gwtframework*,
+								**/lib/gwt-elemental-collide*,
+								**/lib/gwt-gadgets*,
 								**/lib/slf4j-log4j*,
                         **/lib/log4j*,
                         **/lib/commons-logging-api*,
                         **/lib/commons-logging*,
                         **/lib/servlet-api*,
-                        **/lib/hsqldb-1.*,
+                        **/lib/hsqldb.*,
                         **/lib/carol*,
                         **/lib/jacorb*,
                         **/lib/ow2*,
@@ -512,7 +513,8 @@
                         **/lib/tools.jar,
                         **/lib/guice-2.0.jar,
                         **/lib/antlr-2.*,
-                        **/lib/xstream-1.0.2.jar
+                        **/lib/xstream-1.0.2.jar,
+                        **/lib/xml-apis*
 							</packagingExcludes>
 						</configuration>
 					</execution>
