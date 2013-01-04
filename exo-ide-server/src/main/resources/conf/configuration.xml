@@ -19,11 +19,6 @@
 	</component>
 
 	<component>
-		<key>org.exoplatform.ide.invite.InviteUserService</key>
-		<type>org.exoplatform.ide.invite.IdeInviteUserService</type>
-	</component>
-
-	<component>
 		<type>org.exoplatform.ide.invite.DummyDSASignatureChecker</type>
 	</component>
 
