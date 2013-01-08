@@ -718,11 +718,6 @@ public class WorkspaceResource implements IWorkspace
       return null;
    }
 
-   protected VirtualFileSystem getVFS()
-   {
-      return vfs;
-   }
-
    /**
     * Returns an open input stream on the contents of provided {@link IFile}.
     * The client is responsible for closing the stream when finished.

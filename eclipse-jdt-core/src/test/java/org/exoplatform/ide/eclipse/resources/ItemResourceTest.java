@@ -19,7 +19,9 @@
 package org.exoplatform.ide.eclipse.resources;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -46,6 +48,17 @@ public class ItemResourceTest extends ResourcesBaseTest
    {
       super.setUp();
       ws = new WorkspaceResource(vfs);
+   }
+
+   @Test
+   public void testExistence() throws Exception
+   {
+      IPath originPath = new Path("/project/folder/file");
+      IFile fileResource = (IFile)ws.newResource(originPath, IResource.FILE);
+      assertFalse(fileResource.exists());
+
+      fileResource.create(null, false, new NullProgressMonitor());
+      assertTrue(fileResource.exists());
    }
 
    @Test

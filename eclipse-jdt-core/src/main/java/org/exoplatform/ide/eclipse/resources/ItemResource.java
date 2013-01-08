@@ -39,9 +39,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.net.URI;
 import java.util.Map;
@@ -268,17 +265,13 @@ public abstract class ItemResource implements IResource
    {
       try
       {
-         workspace.getVFS().getItemByPath(getFullPath().toString(), null, PropertyFilter.NONE_FILTER);
+         workspace.getVfsItemByFullPath(getFullPath());
       }
       catch (ItemNotFoundException e)
       {
          return false;
       }
-      catch (PermissionDeniedException e)
-      {
-         return true;
-      }
-      catch (VirtualFileSystemException e)
+      catch (CoreException e)
       {
          return false;
       }
@@ -610,7 +603,6 @@ public abstract class ItemResource implements IResource
    @Override
    public boolean isPhantom()
    {
-      // TODO Auto-generated method stub
       return false;
    }
 
