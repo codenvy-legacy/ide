@@ -159,6 +159,15 @@ public class CopyTest extends ResourcesBaseTest
    }
 
    @Test(expected = CoreException.class)
+   public void testCopyFile_AlreadyExist() throws Exception
+   {
+      IPath destinationPath = new Path("/project_copy/folder_copy/file_copy");
+      IFile destinationFile = (IFile)ws.newResource(destinationPath, IResource.FILE);
+      destinationFile.create(null, true, new NullProgressMonitor());
+      fileForCopy.copy(destinationPath, true, new NullProgressMonitor());
+   }
+
+   @Test(expected = CoreException.class)
    public void testCopyFile_ResourceNotExist() throws Exception
    {
       IPath destinationPath = new Path("/project_copy/folder_copy/file_copy");

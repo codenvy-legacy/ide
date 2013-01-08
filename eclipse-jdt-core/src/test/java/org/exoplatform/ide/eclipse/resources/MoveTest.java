@@ -149,6 +149,15 @@ public class MoveTest extends ResourcesBaseTest
    }
 
    @Test(expected = CoreException.class)
+   public void testMoveFile_AlreadyExist() throws Exception
+   {
+      IPath destinationPath = new Path("/project_moved/folder_moved/file_moved");
+      IFile destinationFile = (IFile)ws.newResource(destinationPath, IResource.FILE);
+      destinationFile.create(null, true, new NullProgressMonitor());
+      fileForMove.move(destinationPath, true, new NullProgressMonitor());
+   }
+
+   @Test(expected = CoreException.class)
    public void testMoveFile_ResourceNotExist() throws Exception
    {
       IPath destinationPath = new Path("/project_moved/folder_moved/file_moved");

@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -348,8 +349,7 @@ public abstract class ItemResource implements IResource
    @Override
    public IPath getLocation()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return getFullPath();
    }
 
    /**
@@ -442,8 +442,7 @@ public abstract class ItemResource implements IResource
    @Override
    public IProject getProject()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return (IProject)workspace.newResource(new Path(path.segment(0)), PROJECT);
    }
 
    /**
@@ -603,6 +602,7 @@ public abstract class ItemResource implements IResource
    @Override
    public boolean isPhantom()
    {
+      // TODO Auto-generated method stub
       return false;
    }
 
