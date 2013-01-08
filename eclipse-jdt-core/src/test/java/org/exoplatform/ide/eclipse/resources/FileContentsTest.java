@@ -112,4 +112,17 @@ public class FileContentsTest extends ResourcesBaseTest
       assertEquals(expectedContents, actualContents);
    }
 
+   @Test
+   public void testAppendContents() throws Exception
+   {
+      String existingContents = StringUtils.toString(fileResourceWithContent.getContents());
+      String contentsToAppend = "test_append_content";
+
+      InputStream contentStream = new ByteArrayInputStream(contentsToAppend.getBytes());
+      fileResourceWithContent.appendContents(contentStream, true, true, new NullProgressMonitor());
+
+      String actualContents = StringUtils.toString(fileResourceWithContent.getContents());
+      assertEquals(existingContents + contentsToAppend, actualContents);
+   }
+
 }

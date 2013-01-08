@@ -24,8 +24,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.exoplatform.ide.commons.StringUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
@@ -55,21 +60,37 @@ public class FileResource extends ItemResource implements IFile
     * @see org.eclipse.core.resources.IFile#appendContents(java.io.InputStream, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void appendContents(InputStream source, boolean force, boolean keepHistory, IProgressMonitor monitor)
+   public void appendContents(InputStream content, boolean force, boolean keepHistory, IProgressMonitor monitor)
       throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      int updateFlags = force ? IResource.FORCE : IResource.NONE;
+      updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
+      appendContents(content, updateFlags, monitor);
    }
 
    /**
     * @see org.eclipse.core.resources.IFile#appendContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void appendContents(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
+   public void appendContents(InputStream content, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
+      if (content == null)
+      {
+         throw new CoreException(
+            new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), "Content may not be null."));
+      }
 
+      try
+      {
+         String existingContent = StringUtils.toString(getContents());
+         String contentToAppend = StringUtils.toString(content);
+         InputStream newContentStream = new ByteArrayInputStream((existingContent + contentToAppend).getBytes());
+         setContents(newContentStream, true, true, monitor);
+      }
+      catch (IOException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), e.getMessage(), e));
+      }
    }
 
    /**
