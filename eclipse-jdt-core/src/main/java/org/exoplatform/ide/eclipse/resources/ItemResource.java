@@ -385,8 +385,7 @@ public abstract class ItemResource implements IResource
    @Override
    public long getModificationStamp()
    {
-      // TODO Auto-generated method stub
-      return 0;
+      return workspace.getModificationStamp(this);
    }
 
    /**

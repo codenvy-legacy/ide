@@ -51,6 +51,7 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
@@ -523,6 +524,30 @@ public class WorkspaceResource implements IWorkspace
    }
 
    /**
+    * Returns VFS {@link Item} by provided {@link IPath}.
+    * 
+    * @param path {@link IPath}
+    * @return {@link Item}
+    * @throws CoreException
+    * @throws ItemNotFoundException
+    */
+   Item getVfsItemByFullPath(IPath path) throws CoreException, ItemNotFoundException
+   {
+      try
+      {
+         return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER);
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw e;
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
+      }
+   }
+
+   /**
     * @see org.eclipse.core.resources.IWorkspace#removeResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
     */
    @Override
@@ -947,4 +972,33 @@ public class WorkspaceResource implements IWorkspace
       }
       return null;
    }
+
+   /**
+    * Returns a non-negative modification stamp, or <code>NULL_STAMP</code> if
+    * the resource does not exist or is not accessible.
+    * 
+    * @param resource {@link IResource}
+    * @return the modification stamp, or <code>NULL_STAMP</code> if this resource either does not exist or is not accessible
+    */
+   public long getModificationStamp(IResource resource)
+   {
+      try
+      {
+         Item item = getVfsItemByFullPath(resource.getFullPath());
+         if (item instanceof FileImpl)
+         {
+            return ((FileImpl)item).getLastModificationDate();
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+         return IResource.NULL_STAMP;
+      }
+      catch (CoreException e)
+      {
+         return IResource.NULL_STAMP;
+      }
+      return IResource.NULL_STAMP;
+   }
+
 }
