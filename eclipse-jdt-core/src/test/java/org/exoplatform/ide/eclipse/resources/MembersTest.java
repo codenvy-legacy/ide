@@ -92,7 +92,7 @@ public class MembersTest extends ResourcesBaseTest
    }
 
    @Test
-   public void testFindMember() throws Exception
+   public void testFindMemberByPath() throws Exception
    {
       IResource foundMember1 = projectResource.findMember(children1.getFullPath());
       assertEquals(children1.getFullPath(), foundMember1.getFullPath());
@@ -101,6 +101,20 @@ public class MembersTest extends ResourcesBaseTest
       assertEquals(children2.getFullPath(), foundMember2.getFullPath());
 
       IResource foundMember3 = projectResource.findMember(children3.getFullPath());
+      assertNull("Members of a project or folder are the files and folders immediately contained within it.",
+         foundMember3);
+   }
+
+   @Test
+   public void testFindMemberByStringPath() throws Exception
+   {
+      IResource foundMember1 = projectResource.findMember(children1.getFullPath().toString());
+      assertEquals(children1.getFullPath(), foundMember1.getFullPath());
+
+      IResource foundMember2 = projectResource.findMember(children2.getFullPath().toString());
+      assertEquals(children2.getFullPath(), foundMember2.getFullPath());
+
+      IResource foundMember3 = projectResource.findMember(children3.getFullPath().toString());
       assertNull("Members of a project or folder are the files and folders immediately contained within it.",
          foundMember3);
    }

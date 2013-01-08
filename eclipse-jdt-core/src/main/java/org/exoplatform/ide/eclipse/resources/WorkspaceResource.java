@@ -58,6 +58,8 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -495,6 +497,10 @@ public class WorkspaceResource implements IWorkspace
       catch (VirtualFileSystemException e)
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      finally
+      {
+         safeClose(contents);
       }
       return null;
    }
@@ -994,6 +1000,24 @@ public class WorkspaceResource implements IWorkspace
          return IResource.NULL_STAMP;
       }
       return IResource.NULL_STAMP;
+   }
+
+   /**
+    * Closes a stream and ignores any resulting exception. This is useful
+    * when doing stream cleanup in a finally block where secondary exceptions
+    * are not worth logging.
+    */
+   private static void safeClose(Closeable stream)
+   {
+      try
+      {
+         if (stream != null)
+            stream.close();
+      }
+      catch (IOException e)
+      {
+         //ignore
+      }
    }
 
 }
