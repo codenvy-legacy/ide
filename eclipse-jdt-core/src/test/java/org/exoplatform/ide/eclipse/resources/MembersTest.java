@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
@@ -47,6 +48,8 @@ public class MembersTest extends ResourcesBaseTest
 
    private IProject projectResource;
 
+   private IProject projectResourceNotExist;
+
    private IFolder children1;
 
    private IFile children2;
@@ -61,6 +64,8 @@ public class MembersTest extends ResourcesBaseTest
 
       projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
       projectResource.create(new NullProgressMonitor());
+
+      projectResourceNotExist = (IProject)ws.newResource(new Path("/project_not_exist"), IResource.PROJECT);
 
       children1 = (IFolder)ws.newResource(projectResource.getFullPath().append("folder"), IResource.FOLDER);
       children1.create(true, true, new NullProgressMonitor());
@@ -82,7 +87,7 @@ public class MembersTest extends ResourcesBaseTest
 
       assertTrue(memberPathList.contains(children1.getFullPath().toString()));
       assertTrue(memberPathList.contains(children2.getFullPath().toString()));
-      assertFalse("Members of a project or folder are the files and folders immediately contained within it.",
+      assertFalse("Members of a project or folder must be are the files and folders immediately contained within it.",
          memberPathList.contains(children3.getFullPath().toString()));
    }
 
@@ -98,6 +103,12 @@ public class MembersTest extends ResourcesBaseTest
       IResource foundMember3 = projectResource.findMember(children3.getFullPath());
       assertNull("Members of a project or folder are the files and folders immediately contained within it.",
          foundMember3);
+   }
+
+   @Test(expected = CoreException.class)
+   public void testGetMembers_ContainerNotExist() throws Exception
+   {
+      projectResourceNotExist.members();
    }
 
 }

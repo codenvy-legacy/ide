@@ -754,9 +754,11 @@ public class WorkspaceResource implements IWorkspace
     */
    void moveResource(IResource resource, IPath destination) throws CoreException
    {
-      // workspace root cannot be moved
-      if (resource.getType() == IResource.ROOT)
-         return;
+      if (resource.getType() == IResource.ROOT || destination.isRoot())
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+            "The workspace root may not be the source or destination location of a move operation", null));
+      }
 
       IPath parentDestinationPath = destination.removeLastSegments(1);
       try
@@ -783,6 +785,12 @@ public class WorkspaceResource implements IWorkspace
     */
    void copyResource(IResource resource, IPath destination) throws CoreException
    {
+      if (resource.getType() == IResource.ROOT || destination.isRoot())
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
+            "The workspace root may not be the source or destination location of a copy operation", null));
+      }
+
       IPath parentDestinationPath = destination.removeLastSegments(1);
       try
       {
@@ -808,9 +816,15 @@ public class WorkspaceResource implements IWorkspace
     */
    void deleteResource(IResource resource) throws CoreException
    {
-      // workspace root cannot be deleted
       if (resource.getType() == IResource.ROOT)
+      {
+         IResource[] members = ((IContainer)resource).members();
+         for (IResource member : members)
+         {
+            deleteResource(member);
+         }
          return;
+      }
 
       try
       {
@@ -818,6 +832,7 @@ public class WorkspaceResource implements IWorkspace
       }
       catch (ItemNotFoundException e)
       {
+         // The method does not fail if resources do not exist; it fails only if resources could not be deleted.
          return;
       }
       catch (VirtualFileSystemException e)

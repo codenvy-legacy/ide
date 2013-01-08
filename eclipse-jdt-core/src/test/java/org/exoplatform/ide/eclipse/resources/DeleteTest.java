@@ -26,6 +26,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
@@ -41,6 +42,8 @@ public class DeleteTest extends ResourcesBaseTest
 {
    private WorkspaceResource ws;
 
+   private IWorkspaceRoot workspaceRootResource;
+
    private IProject projectResource;
 
    private IFolder emptyFolderResource;
@@ -54,6 +57,8 @@ public class DeleteTest extends ResourcesBaseTest
    {
       super.setUp();
       ws = new WorkspaceResource(vfs);
+
+      workspaceRootResource = (IWorkspaceRoot)ws.newResource(new Path("/"), IResource.ROOT);
 
       projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
       projectResource.create(new NullProgressMonitor());
@@ -70,6 +75,14 @@ public class DeleteTest extends ResourcesBaseTest
 
       fileResource = (IFile)ws.newResource(projectResource.getFullPath().append("file"), IResource.FILE);
       fileResource.create(null, true, new NullProgressMonitor());
+   }
+
+   @Test
+   public void testDeleteWorkspaceRoot() throws Exception
+   {
+      assertTrue(workspaceRootResource.members().length > 0);
+      workspaceRootResource.delete(true, true, new NullProgressMonitor());
+      assertEquals(0, workspaceRootResource.members().length);
    }
 
    @Test

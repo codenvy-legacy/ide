@@ -22,8 +22,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.exoplatform.ide.commons.StringUtils;
@@ -43,58 +47,62 @@ public class CreateTest extends ResourcesBaseTest
 {
    private WorkspaceResource ws;
 
+   private IProject projectResource;
+
+   private IFolder folderResource;
+
+   private IFile fileResource;
+
    @Override
    public void setUp() throws Exception
    {
       super.setUp();
       ws = new WorkspaceResource(vfs);
+
+      projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
+      folderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("folder"), IResource.FOLDER);
+      fileResource = (IFile)ws.newResource(folderResource.getFullPath().append("file"), IResource.FILE);
    }
 
    @Test
    public void testCreateProject() throws Exception
    {
-      String path = "/project";
+      IPath originPath = projectResource.getFullPath();
 
-      ProjectResource projectResource = (ProjectResource)ws.newResource(new Path(path), IResource.PROJECT);
       assertFalse(projectResource.exists());
-
       projectResource.create(new NullProgressMonitor());
       assertTrue(projectResource.exists());
 
       assertTrue(projectResource.getType() == IResource.PROJECT);
-      assertTrue(projectResource.getFullPath().toString().equals(path));
+      assertEquals(originPath, projectResource.getFullPath());
    }
 
    @Test
    public void testCreateFolder() throws Exception
    {
-      String path = "/project/folder";
+      IPath originPath = folderResource.getFullPath();
 
-      FolderResource folderResource = (FolderResource)ws.newResource(new Path(path), IResource.FOLDER);
       assertFalse(folderResource.exists());
-
       folderResource.create(true, true, new NullProgressMonitor());
       assertTrue(folderResource.exists());
 
       assertTrue(folderResource.getType() == IResource.FOLDER);
-      assertTrue(folderResource.getFullPath().toString().equals(path));
+      assertEquals(originPath, folderResource.getFullPath());
    }
 
    @Test
    public void testCreateFile() throws Exception
    {
-      String path = "/project/folder/file";
+      IPath originPath = fileResource.getFullPath();
       String content = "test create file";
 
-      FileResource fileResource = (FileResource)ws.newResource(new Path(path), IResource.FILE);
       assertFalse(fileResource.exists());
-
       InputStream contentsStream = new ByteArrayInputStream(content.getBytes());
       fileResource.create(contentsStream, true, new NullProgressMonitor());
       assertTrue(fileResource.exists());
 
       assertTrue(fileResource.getType() == IResource.FILE);
-      assertTrue(fileResource.getFullPath().toString().equals(path));
+      assertEquals(originPath, fileResource.getFullPath());
 
       String actualContents = StringUtils.toString(fileResource.getContents());
       assertEquals(actualContents, content);
@@ -103,11 +111,7 @@ public class CreateTest extends ResourcesBaseTest
    @Test(expected = CoreException.class)
    public void testCreateFileAlreadyExist() throws Exception
    {
-      String path = "/project/folder/file";
-
-      FileResource fileResource = (FileResource)ws.newResource(new Path(path), IResource.FILE);
       assertFalse(fileResource.exists());
-
       fileResource.create(null, true, new NullProgressMonitor());
       assertTrue(fileResource.exists());
       fileResource.create(null, true, new NullProgressMonitor());

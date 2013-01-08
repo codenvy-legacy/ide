@@ -23,6 +23,7 @@ import static org.junit.Assert.assertFalse;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.exoplatform.ide.commons.StringUtils;
@@ -46,6 +47,8 @@ public class FileContentsTest extends ResourcesBaseTest
 
    private IFile fileResourceWithContent;
 
+   private IFile fileResourceNonExist;
+
    private static final String DEFAULT_CONTENT = "test_content";
 
    @Override
@@ -61,6 +64,8 @@ public class FileContentsTest extends ResourcesBaseTest
       fileResourceWithContent = (IFile)ws.newResource(new Path("/project/folder/file_with_content"), IResource.FILE);
       InputStream contentsStream = new ByteArrayInputStream(DEFAULT_CONTENT.getBytes());
       fileResourceWithContent.create(contentsStream, true, new NullProgressMonitor());
+
+      fileResourceNonExist = (IFile)ws.newResource(new Path("/project/folder/file_non_exist"), IResource.FILE);
    }
 
    @Test
@@ -68,6 +73,12 @@ public class FileContentsTest extends ResourcesBaseTest
    {
       String actualContents = StringUtils.toString(fileResourceWithContent.getContents());
       assertEquals(DEFAULT_CONTENT, actualContents);
+   }
+
+   @Test(expected = CoreException.class)
+   public void testGetContentsFileNotExist() throws Exception
+   {
+      fileResourceNonExist.getContents();
    }
 
    @Test
@@ -78,6 +89,13 @@ public class FileContentsTest extends ResourcesBaseTest
 
       String actualContents = StringUtils.toString(fileResourceWithoutContent.getContents());
       assertEquals(DEFAULT_CONTENT, actualContents);
+   }
+
+   @Test(expected = CoreException.class)
+   public void testSetContentsFileNotExist() throws Exception
+   {
+      InputStream contentsStream = new ByteArrayInputStream(DEFAULT_CONTENT.getBytes());
+      fileResourceNonExist.setContents(contentsStream, true, true, new NullProgressMonitor());
    }
 
    @Test
