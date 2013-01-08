@@ -90,9 +90,9 @@ public class CopyTest extends ResourcesBaseTest
    }
 
    @Test(expected = CoreException.class)
-   public void testMoveWorkspaceRoot() throws Exception
+   public void testCopyWorkspaceRoot() throws Exception
    {
-      workspaceRootForMove.move(new Path("/"), true, new NullProgressMonitor());
+      workspaceRootForMove.copy(new Path("/"), true, new NullProgressMonitor());
    }
 
    @Test

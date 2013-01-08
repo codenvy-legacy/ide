@@ -943,7 +943,6 @@ public class WorkspaceResource implements IWorkspace
             Item item = getItemByPath(containerResource.getFullPath());
             Folder f = (Folder)item;
             ItemList<Item> children = vfs.getChildren(f.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
-            String segment = path.segment(path.segmentCount() - 1);
             for (Item i : children.getItems())
             {
                if (i.getPath().equals(path.toString()))
@@ -979,6 +978,7 @@ public class WorkspaceResource implements IWorkspace
     * 
     * @param resource {@link IResource}
     * @return the modification stamp, or <code>NULL_STAMP</code> if this resource either does not exist or is not accessible
+    * @see org.eclipse.core.resources.IResource#getModificationStamp()
     */
    public long getModificationStamp(IResource resource)
    {
