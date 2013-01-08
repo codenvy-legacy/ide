@@ -27,7 +27,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -80,10 +79,13 @@ public class CopyTest extends ResourcesBaseTest
    }
 
    @Test
-   @Ignore
    public void testCopyProject() throws Exception
    {
-      IPath destinationPath = new Path("/project_copy");
+      IPath destinationPath = new Path("/parent_project/project_copy");
+
+      IFolder parentDestinationFolder =
+         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       projectForCopy.copy(destinationPath, true, new NullProgressMonitor());
       assertTrue(projectForCopy.exists());
