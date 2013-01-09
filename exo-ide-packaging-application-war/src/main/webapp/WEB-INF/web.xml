@@ -66,6 +66,11 @@
 	</filter-mapping>
 
 	<filter-mapping>
+		<filter-name>SetCurrentIdentityFilter</filter-name>
+		<url-pattern>/websocket</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
 		<filter-name>StandaloneAuthenticationFilter</filter-name>
 		<url-pattern>/rest/private/*</url-pattern>
 	</filter-mapping>
