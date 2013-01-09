@@ -28,21 +28,20 @@ import java.net.URI;
 
 /**
  * Implementation of {@link IFolder}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: FolderResource.java Dec 26, 2012 12:31:12 PM azatsarynnyy $
- *
  */
 public class FolderResource extends ContainerResource implements IFolder
 {
 
    /**
     * Creates new {@link FolderResource} with the specified <code>path</code> in pointed <code>workspace</code>.
-    * 
-    * @param path {@link IPath}
+    *
+    * @param path      {@link IPath}
     * @param workspace {@link WorkspaceResource}
     */
-   protected FolderResource(IPath path, WorkspaceResource workspace)
+   public FolderResource(IPath path, WorkspaceResource workspace)
    {
       super(path, workspace);
    }

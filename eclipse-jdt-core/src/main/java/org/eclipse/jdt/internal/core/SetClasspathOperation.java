@@ -95,10 +95,11 @@ public class SetClasspathOperation extends ChangeClasspathOperation
          IResourceRuleFactory ruleFactory = ResourcesPlugin.getWorkspace().getRuleFactory();
          return new MultiRule(new ISchedulingRule[]{
             // use project modification rule as this is needed to create the .classpath file if it doesn't exist yet, or to update project references
-            ruleFactory.modifyRule(this.project.getProject()),
+            ruleFactory.modifyRule(this.project.getProject())
 
-            // and external project modification rule in case the external folders are modified
-            ruleFactory.modifyRule(JavaModelManager.getExternalManager().getExternalFoldersProject())});
+            //            // and external project modification rule in case the external folders are modified
+            //            ruleFactory.modifyRule(JavaModelManager.getExternalManager().getExternalFoldersProject())
+         });
       }
       return super.getSchedulingRule();
    }

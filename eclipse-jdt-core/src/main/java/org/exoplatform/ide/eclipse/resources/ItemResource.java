@@ -19,6 +19,7 @@
 package org.exoplatform.ide.eclipse.resources;
 
 import org.eclipse.core.internal.resources.ICoreConstants;
+import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
@@ -38,6 +39,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.core.runtime.jobs.MultiRule;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -48,10 +50,9 @@ import java.util.Map;
 
 /**
  * Implementation of {@link IResource}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ItemResource.java Dec 26, 2012 12:20:07 PM azatsarynnyy $
- *
  */
 public abstract class ItemResource implements IResource
 {
@@ -62,8 +63,8 @@ public abstract class ItemResource implements IResource
 
    /**
     * Creates new {@link ItemResource} with the specified <code>path</code> in pointed <code>workspace</code>.
-    * 
-    * @param path {@link IPath}
+    *
+    * @param path      {@link IPath}
     * @param workspace {@link WorkspaceResource}
     */
    protected ItemResource(IPath path, WorkspaceResource workspace)
@@ -88,8 +89,38 @@ public abstract class ItemResource implements IResource
    @Override
    public boolean contains(ISchedulingRule rule)
    {
-      // TODO Auto-generated method stub
-      return false;
+      if (this == rule)
+      {
+         return true;
+      }
+      //must allow notifications to nest in all resource rules
+      if (rule.getClass().equals(WorkManager.NotifyRule.class))
+      {
+         return true;
+      }
+      if (rule instanceof MultiRule)
+      {
+         MultiRule multi = (MultiRule)rule;
+         ISchedulingRule[] children = multi.getChildren();
+         for (int i = 0; i < children.length; i++)
+         {
+            if (!contains(children[i]))
+            {
+               return false;
+            }
+         }
+         return true;
+      }
+      if (!(rule instanceof IResource))
+      {
+         return false;
+      }
+      IResource resource = (IResource)rule;
+      if (!workspace.equals(resource.getWorkspace()))
+      {
+         return false;
+      }
+      return path.isPrefixOf(resource.getFullPath());
    }
 
    /**
@@ -98,8 +129,30 @@ public abstract class ItemResource implements IResource
    @Override
    public boolean isConflicting(ISchedulingRule rule)
    {
-      // TODO Auto-generated method stub
-      return false;
+      if (this == rule)
+      {
+         return true;
+      }
+      //must not schedule at same time as notification
+      if (rule.getClass().equals(WorkManager.NotifyRule.class))
+      {
+         return true;
+      }
+      if (rule instanceof MultiRule)
+      {
+         return rule.isConflicting(this);
+      }
+      if (!(rule instanceof IResource))
+      {
+         return false;
+      }
+      IResource resource = (IResource)rule;
+      if (!workspace.equals(resource.getWorkspace()))
+      {
+         return false;
+      }
+      IPath otherPath = resource.getFullPath();
+      return path.isPrefixOf(otherPath) || otherPath.isPrefixOf(path);
    }
 
    /**
@@ -204,8 +257,8 @@ public abstract class ItemResource implements IResource
    @Override
    public IMarker createMarker(String type) throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
+
+      return new Marker(this, 0);
    }
 
    /**
@@ -238,7 +291,7 @@ public abstract class ItemResource implements IResource
 
    /**
     * This is not an IResource method.
-    * 
+    *
     * @see org.eclipse.core.resources.IFile#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     * @see org.eclipse.core.resources.IFolder#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     * @see org.eclipse.core.resources.IProject#delete(boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
@@ -302,7 +355,7 @@ public abstract class ItemResource implements IResource
    public IMarker[] findMarkers(String type, boolean includeSubtypes, int depth) throws CoreException
    {
       // TODO Auto-generated method stub
-      return null;
+      return new IMarker[0];
    }
 
    /**
@@ -324,9 +377,13 @@ public abstract class ItemResource implements IResource
       String name = getName();
       int index = name.lastIndexOf('.');
       if (index == -1)
+      {
          return null;
+      }
       if (index == (name.length() - 1))
+      {
          return "";
+      }
       return name.substring(index + 1);
    }
 
@@ -355,8 +412,7 @@ public abstract class ItemResource implements IResource
    @Override
    public IPath getLocation()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return path;
    }
 
    /**
@@ -417,10 +473,14 @@ public abstract class ItemResource implements IResource
       int segments = path.segmentCount();
       //zero segment handled by subclasses
       if (segments < 1)
+      {
          Assert.isLegal(false, path.toString());
+      }
       if (segments == 1)
-         //return workspace.getRoot().getProject(path.segment(0));
+      //return workspace.getRoot().getProject(path.segment(0));
+      {
          return (IProject)workspace.newResource(path.removeLastSegments(1), IResource.PROJECT);
+      }
       return (IFolder)workspace.newResource(path.removeLastSegments(1), IResource.FOLDER);
    }
 
@@ -450,8 +510,7 @@ public abstract class ItemResource implements IResource
    @Override
    public IProject getProject()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return workspace.getRoot().getProject(path.segment(0));
    }
 
    /**
@@ -676,8 +735,8 @@ public abstract class ItemResource implements IResource
     * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.resources.IProjectDescription, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void move(IProjectDescription description, boolean force, boolean keepHistory, IProgressMonitor monitor)
-      throws CoreException
+   public void move(IProjectDescription description, boolean force, boolean keepHistory,
+      IProgressMonitor monitor) throws CoreException
    {
       int updateFlags = force ? IResource.FORCE : IResource.NONE;
       updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
@@ -693,8 +752,7 @@ public abstract class ItemResource implements IResource
       Assert.isNotNull(description);
       if (getType() != IResource.PROJECT)
       {
-         String message =
-            "Cannot move " + getFullPath() + " to " + description.getName() + ".  Source must be a project."; //NLS.bind(Messages.resources_moveNotProject, getFullPath(), description.getName());
+         String message = "Cannot move " + getFullPath() + " to " + description.getName() + ".  Source must be a project."; //NLS.bind(Messages.resources_moveNotProject, getFullPath(), description.getName());
          throw new ResourceException(IResourceStatus.INVALID_VALUE, getFullPath(), message, null);
       }
       ((ProjectResource)this).move(description, updateFlags, monitor);
@@ -704,8 +762,8 @@ public abstract class ItemResource implements IResource
     * @see org.eclipse.core.resources.IFile#move(IPath, boolean, boolean, IProgressMonitor)
     * @see org.eclipse.core.resources.IFolder#move(IPath, boolean, boolean, IProgressMonitor)
     */
-   public void move(IPath destination, boolean force, boolean keepHistory, IProgressMonitor monitor)
-      throws CoreException
+   public void move(IPath destination, boolean force, boolean keepHistory,
+      IProgressMonitor monitor) throws CoreException
    {
       int updateFlags = force ? IResource.FORCE : IResource.NONE;
       updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;

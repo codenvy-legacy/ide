@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.internal.Policy;
 import org.eclipse.core.internal.resources.ICoreConstants;
+import org.eclipse.core.internal.resources.ResourceException;
+import org.eclipse.core.internal.resources.ResourceStatus;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -31,6 +34,7 @@ import org.eclipse.core.resources.IProjectNatureDescriptor;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceRuleFactory;
+import org.eclipse.core.resources.IResourceStatus;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ISavedState;
 import org.eclipse.core.resources.ISynchronizer;
@@ -38,27 +42,36 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.team.ResourceRuleFactory;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
+import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.LockException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -66,10 +79,9 @@ import javax.ws.rs.core.MediaType;
 
 /**
  * Implementation of {@link IWorkspace}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: WorkspaceResource.java Dec 27, 2012 12:47:21 PM azatsarynnyy $
- *
  */
 public class WorkspaceResource implements IWorkspace
 {
@@ -80,9 +92,21 @@ public class WorkspaceResource implements IWorkspace
     */
    private VirtualFileSystem vfs;
 
+   private IResourceRuleFactory ruleFactory;
+
+   private WorkManager _workManager;
+
    public WorkspaceResource(VirtualFileSystem vfs)
    {
       this.vfs = vfs;
+      _workManager = new WorkManager(this);
+      _workManager.startup(null);
+   }
+
+   public void shutdown()
+   {
+      _workManager.shutdown(null);
+      _workManager = null;
    }
 
    /**
@@ -93,6 +117,11 @@ public class WorkspaceResource implements IWorkspace
    {
       // TODO Auto-generated method stub
       return null;
+   }
+
+   public void setVfs(VirtualFileSystem vfs)
+   {
+      this.vfs = vfs;
    }
 
    /**
@@ -139,8 +168,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#build(org.eclipse.core.resources.IBuildConfiguration[], int, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void build(IBuildConfiguration[] buildConfigs, int kind, boolean buildReferences, IProgressMonitor monitor)
-      throws CoreException
+   public void build(IBuildConfiguration[] buildConfigs, int kind, boolean buildReferences,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
 
@@ -180,8 +209,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#copy(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus copy(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus copy(IResource[] resources, IPath destination, boolean force,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -191,8 +220,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#copy(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus copy(IResource[] resources, IPath destination, int updateFlags, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus copy(IResource[] resources, IPath destination, int updateFlags,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -313,8 +342,13 @@ public class WorkspaceResource implements IWorkspace
    @Override
    public IResourceRuleFactory getRuleFactory()
    {
-      // TODO Auto-generated method stub
-      return null;
+      //note that the rule factory is created lazily because it
+      //requires loading the teamHook extension
+      if (ruleFactory == null)
+      {
+         ruleFactory = new ResourceRuleFactory();
+      }
+      return ruleFactory;
    }
 
    /**
@@ -371,8 +405,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#move(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus move(IResource[] resources, IPath destination, boolean force, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus move(IResource[] resources, IPath destination, boolean force,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -382,8 +416,8 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#move(org.eclipse.core.resources.IResource[], org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public IStatus move(IResource[] resources, IPath destination, int updateFlags, IProgressMonitor monitor)
-      throws CoreException
+   public IStatus move(IResource[] resources, IPath destination, int updateFlags,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -411,7 +445,7 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Creates new {@link ItemResource} of the specified <code>type</code>.
-    * 
+    *
     * @param path {@link IPath} of resource to create
     * @param type type of resource to create
     * @return created resource
@@ -421,24 +455,24 @@ public class WorkspaceResource implements IWorkspace
       String message;
       switch (type)
       {
-         case IResource.FOLDER :
+         case IResource.FOLDER:
             if (path.segmentCount() < ICoreConstants.MINIMUM_FOLDER_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
             return new FolderResource(path.makeAbsolute(), this);
-         case IResource.FILE :
+         case IResource.FILE:
             if (path.segmentCount() < ICoreConstants.MINIMUM_FILE_SEGMENT_LENGTH)
             {
                message = "Path must include project and resource name: " + path.toString();
                Assert.isLegal(false, message);
             }
             return new FileResource(path.makeAbsolute(), this);
-         case IResource.PROJECT :
+         case IResource.PROJECT:
             //return (ItemResource)getRoot().getProject(path.lastSegment());
             return new ProjectResource(path.makeAbsolute(), this);
-         case IResource.ROOT :
+         case IResource.ROOT:
             return (ItemResource)getRoot();
       }
       Assert.isLegal(false);
@@ -448,7 +482,7 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Creates provided {@link IResource} in the {@link VirtualFileSystem}.
-    * 
+    *
     * @param resource {@link IResource} to create in {@link VirtualFileSystem}
     * @return created {@link Item}
     * @throws CoreException
@@ -460,7 +494,7 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Creates provided {@link IResource} in the {@link VirtualFileSystem} with provided <code>contents</code>.
-    * 
+    *
     * @param resource {@link IResource} to create in {@link VirtualFileSystem}
     * @param contents make sense only for file
     * @return created {@link Item}
@@ -470,26 +504,41 @@ public class WorkspaceResource implements IWorkspace
    {
       IContainer parent = resource.getParent();
       if (!parent.exists())
+      {
          createResource(parent, null);
+      }
 
       try
       {
          String parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
          switch (resource.getType())
          {
-            case IResource.FILE :
+            case IResource.FILE:
                return vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
                   MediaType.TEXT_PLAIN_TYPE, contents);
-            case IResource.FOLDER :
+            case IResource.FOLDER:
                return vfs.createFolder(parentId, resource.getName());
-            case IResource.PROJECT :
+            case IResource.PROJECT:
                return vfs.createProject(parentId, resource.getName(), null, null);
          }
       }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
       catch (ItemAlreadyExistException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1,
-            "Resource already exists in the workspace.", e));
+         throw new CoreException(
+            new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "Resource already exists in the workspace.",
+               e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
       catch (VirtualFileSystemException e)
       {
@@ -500,11 +549,13 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Returns VFS {@link Item} identifier by provided {@link IPath}.
-    * 
+    *
     * @param path {@link IPath}
     * @return {@link Item} identifier
     * @throws CoreException
     * @throws ItemNotFoundException
+    * @throws PermissionDeniedException
+    * @throws VirtualFileSystemException
     */
    String getVfsIdByFullPath(IPath path) throws CoreException, ItemNotFoundException
    {
@@ -546,11 +597,195 @@ public class WorkspaceResource implements IWorkspace
     * @see org.eclipse.core.resources.IWorkspace#run(org.eclipse.core.resources.IWorkspaceRunnable, org.eclipse.core.runtime.jobs.ISchedulingRule, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void run(IWorkspaceRunnable action, ISchedulingRule rule, int flags, IProgressMonitor monitor)
-      throws CoreException
+   public void run(IWorkspaceRunnable action, ISchedulingRule rule, int options,
+      IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
+      monitor = Policy.monitorFor(monitor);
+      try
+      {
+         monitor.beginTask("", Policy.totalWork); //$NON-NLS-1$
+         int depth = -1;
+         boolean avoidNotification = (options & IWorkspace.AVOID_UPDATE) != 0;
+         try
+         {
+            prepareOperation(rule, monitor);
+            beginOperation(true);
+            //            if (avoidNotification)
+            //            {
+            //               avoidNotification = notificationManager.beginAvoidNotify();
+            //            }
+            depth = getWorkManager().beginUnprotected();
+            action.run(Policy.subMonitorFor(monitor, Policy.opWork, SubProgressMonitor.PREPEND_MAIN_LABEL_TO_SUBTASK));
+         }
+         catch (OperationCanceledException e)
+         {
+            getWorkManager().operationCanceled();
+            throw e;
+         }
+         finally
+         {
+            //            if (avoidNotification)
+            //            {
+            //               notificationManager.endAvoidNotify();
+            //            }
+            if (depth >= 0)
+            {
+               getWorkManager().endUnprotected(depth);
+            }
+            endOperation(rule, false, Policy.subMonitorFor(monitor, Policy.endOpWork));
+         }
+      }
+      finally
+      {
+         monitor.done();
+      }
+   }
 
+   public void beginOperation(boolean createNewTree) throws CoreException
+   {
+      WorkManager workManager = getWorkManager();
+      workManager.incrementNestedOperations();
+      if (!workManager.isBalanced())
+      {
+         Assert.isTrue(false, "Operation was not prepared."); //$NON-NLS-1$
+      }
+      if (workManager.getPreparedOperationDepth() > 1)
+      {
+         //         if (createNewTree && tree.isImmutable())
+         //         {
+         //            newWorkingTree();
+         //         }
+         return;
+      }
+      //      // stash the current tree as the basis for this operation.
+      //      operationTree = tree;
+      //      if (createNewTree && tree.isImmutable())
+      //      {
+      //         newWorkingTree();
+      //      }
+   }
+
+   /**
+    * Called before checking the pre-conditions of an operation.  Optionally supply
+    * a scheduling rule to determine when the operation is safe to run.  If a scheduling
+    * rule is supplied, this method will block until it is safe to run.
+    *
+    * @param rule the scheduling rule that describes what this operation intends to modify.
+    */
+   public void prepareOperation(ISchedulingRule rule, IProgressMonitor monitor) throws CoreException
+   {
+      try
+      {
+         //make sure autobuild is not running if it conflicts with this operation
+         //         if (rule != null && rule.isConflicting(getRuleFactory().buildRule()))
+         //            buildManager.interrupt();
+      }
+      finally
+      {
+         getWorkManager().checkIn(rule, monitor);
+      }
+      if (!isOpen())
+      {
+         String message = "Workspace is closed.";
+         throw new ResourceException(IResourceStatus.OPERATION_FAILED, null, message, null);
+      }
+   }
+
+   /**
+    * End an operation (group of resource changes).
+    * Notify interested parties that resource changes have taken place.  All
+    * registered resource change listeners are notified.  If autobuilding is
+    * enabled, a build is run.
+    */
+   public void endOperation(ISchedulingRule rule, boolean build, IProgressMonitor monitor) throws CoreException
+   {
+      WorkManager workManager = getWorkManager();
+      //don't do any end operation work if we failed to check in
+      if (workManager.checkInFailed(rule))
+      {
+         return;
+      }
+      // This is done in a try finally to ensure that we always decrement the operation count
+      // and release the workspace lock.  This must be done at the end because snapshot
+      // and "hasChanges" comparison have to happen without interference from other threads.
+      boolean hasTreeChanges = false;
+      boolean depthOne = false;
+      try
+      {
+         workManager.setBuild(build);
+         // if we are not exiting a top level operation then just decrement the count and return
+         depthOne = workManager.getPreparedOperationDepth() == 1;
+         //         if (!(notificationManager.shouldNotify() || depthOne))
+         //         {
+         //            notificationManager.requestNotify();
+         //            return;
+         //         }
+         // do the following in a try/finally to ensure that the operation tree is nulled at the end
+         // as we are completing a top level operation.
+         try
+         {
+            //            notificationManager.beginNotify();
+            // check for a programming error on using beginOperation/endOperation
+            Assert.isTrue(workManager.getPreparedOperationDepth() > 0, "Mismatched begin/endOperation"); //$NON-NLS-1$
+
+            // At this time we need to re-balance the nested operations. It is necessary because
+            // build() and snapshot() should not fail if they are called.
+            workManager.rebalanceNestedOperations();
+
+            //find out if any operation has potentially modified the tree
+            hasTreeChanges = workManager.shouldBuild();
+            //double check if the tree has actually changed
+            //            if (hasTreeChanges)
+            //            {
+            //               hasTreeChanges = operationTree != null && ElementTree.hasChanges(tree, operationTree,
+            //                  ResourceComparator.getBuildComparator(), true);
+            //            }
+            //            broadcastPostChange();
+            //            // Request a snapshot if we are sufficiently out of date.
+            //            saveManager.snapshotIfNeeded(hasTreeChanges);
+         }
+         finally
+         {
+            //            // make sure the tree is immutable if we are ending a top-level operation.
+            //            if (depthOne)
+            //            {
+            //               tree.immutable();
+            //               operationTree = null;
+            //            }
+            //            else
+            //            {
+            //               newWorkingTree();
+            //            }
+         }
+      }
+      finally
+      {
+         workManager.checkOut(rule);
+      }
+      if (depthOne)
+      {
+         //         buildManager.endTopLevel(hasTreeChanges);
+      }
+   }
+
+
+   private boolean isOpen()
+   {
+      return true;
+   }
+
+   /**
+    * We should not have direct references to this field. All references should go through
+    * this method.
+    */
+   public WorkManager getWorkManager() throws CoreException
+   {
+      if (_workManager == null)
+      {
+         String message = "Workspace was not properly initialized or has already shutdown.";
+         throw new ResourceException(new ResourceStatus(IResourceStatus.INTERNAL_ERROR, null, message));
+      }
+      return _workManager;
    }
 
    /**
@@ -639,8 +874,7 @@ public class WorkspaceResource implements IWorkspace
    @Override
    public IStatus validateName(String segment, int typeMask)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return new Status(IStatus.OK, "exo", "");
    }
 
    /**
@@ -701,11 +935,10 @@ public class WorkspaceResource implements IWorkspace
    /**
     * Returns an open input stream on the contents of provided {@link IFile}.
     * The client is responsible for closing the stream when finished.
-    * 
+    *
     * @param file {@link IFile} to get contents
     * @return an input stream containing the contents of the file
     * @throws CoreException
-    * 
     * @see org.eclipse.core.resources.IFile#getContents(boolean)
     */
    InputStream getFileContents(IFile file) throws CoreException
@@ -723,11 +956,10 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Update binary contents of specified {@link IFile}.
-    * 
-    * @param file {@link IFile} to update contents
+    *
+    * @param file       {@link IFile} to update contents
     * @param newContent new content of {@link IFile}
     * @throws CoreException
-    * 
     * @see org.eclipse.core.resources.IFile#setContents(java.io.InputStream, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    void setFileContents(IFile file, InputStream newContent) throws CoreException
@@ -737,6 +969,22 @@ public class WorkspaceResource implements IWorkspace
          vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/
             MediaType.TEXT_PLAIN_TYPE, newContent, null);
       }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (InvalidArgumentException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, "", e));
+      }
       catch (VirtualFileSystemException e)
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
@@ -745,11 +993,10 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Move provided {@link IResource} to <code>destination</code> path.
-    * 
-    * @param resource {@link IResource} to move
+    *
+    * @param resource    {@link IResource} to move
     * @param destination the destination path
     * @throws CoreException
-    * 
     * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    void moveResource(IResource resource, IPath destination) throws CoreException
@@ -768,6 +1015,26 @@ public class WorkspaceResource implements IWorkspace
          Item movedItem = vfs.move(id, destinationParentId, null);
          vfs.rename(movedItem.getId(), null, destination.segment(destination.segmentCount() - 1), null);
       }
+      catch (ItemNotFoundException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
       catch (VirtualFileSystemException e)
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
@@ -776,11 +1043,10 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Copy provided {@link IResource} to <code>destination</code> path.
-    * 
-    * @param resource {@link IResource} to copy
+    *
+    * @param resource    {@link IResource} to copy
     * @param destination the destination path
     * @throws CoreException
-    * 
     * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    void copyResource(IResource resource, IPath destination) throws CoreException
@@ -808,10 +1074,9 @@ public class WorkspaceResource implements IWorkspace
    /**
     * Deletes specified {@link IResource} from the workspace.
     * Deletion applies recursively to all members of specified {@link IResource}.
-    * 
+    *
     * @param resource {@link IResource} to delete
     * @throws CoreException
-    * 
     * @see org.eclipse.core.resources.IResource#delete(int, org.eclipse.core.runtime.IProgressMonitor)
     */
    void deleteResource(IResource resource) throws CoreException
@@ -832,12 +1097,23 @@ public class WorkspaceResource implements IWorkspace
       }
       catch (ItemNotFoundException e)
       {
-         // The method does not fail if resources do not exist; it fails only if resources could not be deleted.
          return;
+      }
+      catch (ConstraintException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (LockException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
+      }
+      catch (PermissionDeniedException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
       catch (VirtualFileSystemException e)
       {
-         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
    }
 
@@ -881,15 +1157,15 @@ public class WorkspaceResource implements IWorkspace
                }
                else
                {
-                  throw new CoreException(new Status(IStatus.ERROR, "", "Unknown type of item: "
-                     + c.getItemType().toString()));
+                  throw new CoreException(
+                     new Status(IStatus.ERROR, "", "Unknown type of item: " + c.getItemType().toString()));
                }
             }
             return childrens;
          }
          else
          {
-            throw new CoreException(new Status(IStatus.ERROR, "", "Resource is not a folder"));
+            throw new CoreException(new Status(IStatus.ERROR, "", "Resource no a folder"));
          }
       }
       catch (VirtualFileSystemException e)
@@ -918,7 +1194,6 @@ public class WorkspaceResource implements IWorkspace
             Item item = getItemByPath(containerResource.getFullPath());
             Folder f = (Folder)item;
             ItemList<Item> children = vfs.getChildren(f.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
-            String segment = path.segment(path.segmentCount() - 1);
             for (Item i : children.getItems())
             {
                if (i.getPath().equals(path.toString()))
@@ -946,5 +1221,68 @@ public class WorkspaceResource implements IWorkspace
          return null;
       }
       return null;
+   }
+
+   public Property getProjectProperty(String propertyId, ProjectResource projectResource)
+   {
+      try
+      {
+         Item item = getItemByPath(projectResource.getFullPath());
+         return item.getProperty(propertyId);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      return null;
+   }
+
+   public void setProjectProperty(Property property, ProjectResource projectResource)
+   {
+      try
+      {
+         Item item = getItemByPath(projectResource.getFullPath());
+         vfs.updateItem(item.getId(), Arrays.asList(property), null);
+      }
+      catch (VirtualFileSystemException e)
+      {
+         //TODO
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+   }
+
+   public void createFile(FileResource resource, InputStream source)
+   {
+      String parentId = null;
+      try
+      {
+         parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
+         vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
+            MediaType.TEXT_PLAIN_TYPE, source);
+      }
+      catch (CoreException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (ItemNotFoundException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (InvalidArgumentException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (PermissionDeniedException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (VirtualFileSystemException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
    }
 }

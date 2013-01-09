@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -32,17 +29,17 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 /**
  * Tests moving resources.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: MoveTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
- * 
  */
 public class MoveTest extends ResourcesBaseTest
 {
-   private WorkspaceResource ws;
-
    private IWorkspaceRoot workspaceRootForMove;
 
    private IProject projectForMove;
@@ -59,19 +56,17 @@ public class MoveTest extends ResourcesBaseTest
    public void setUp() throws Exception
    {
       super.setUp();
-      ws = new WorkspaceResource(vfs);
-
       workspaceRootForMove = (IWorkspaceRoot)ws.newResource(new Path("/"), IResource.ROOT);
 
       projectForMove = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
       projectForMove.create(new NullProgressMonitor());
 
-      emptyFolderForMove =
-         (IFolder)ws.newResource(projectForMove.getFullPath().append("empty_folder"), IResource.FOLDER);
+      emptyFolderForMove = (IFolder)ws.newResource(projectForMove.getFullPath().append("empty_folder"),
+         IResource.FOLDER);
       emptyFolderForMove.create(true, true, new NullProgressMonitor());
 
-      nonEmptyFolderForMove =
-         (IFolder)ws.newResource(projectForMove.getFullPath().append("non_empty_folder"), IResource.FOLDER);
+      nonEmptyFolderForMove = (IFolder)ws.newResource(projectForMove.getFullPath().append("non_empty_folder"),
+         IResource.FOLDER);
       nonEmptyFolderForMove.create(true, true, new NullProgressMonitor());
       ((IFile)ws.newResource(nonEmptyFolderForMove.getFullPath().append("file"), IResource.FILE)).create(null, true,
          new NullProgressMonitor());
@@ -79,8 +74,8 @@ public class MoveTest extends ResourcesBaseTest
       fileForMove = (FileResource)ws.newResource(projectForMove.getFullPath().append("file"), IResource.FILE);
       fileForMove.create(null, true, new NullProgressMonitor());
 
-      nonExistingFileForMove =
-         (FileResource)ws.newResource(projectForMove.getFullPath().append("file_not_exist"), IResource.FILE);
+      nonExistingFileForMove = (FileResource)ws.newResource(projectForMove.getFullPath().append("file_not_exist"),
+         IResource.FILE);
    }
 
    @Test(expected = CoreException.class)
@@ -103,8 +98,8 @@ public class MoveTest extends ResourcesBaseTest
    public void testMoveEmptyFolder() throws Exception
    {
       IPath destinationPath = new Path("/project2_moved/folder2_moved/folder3_moved");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       emptyFolderForMove.move(destinationPath, true, new NullProgressMonitor());
@@ -116,8 +111,8 @@ public class MoveTest extends ResourcesBaseTest
    public void testMoveNonEmptyFolder() throws Exception
    {
       IPath destinationPath = new Path("/project_moved/folder_moved/folder1_moved");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       IResource[] members = nonEmptyFolderForMove.members();
@@ -139,8 +134,8 @@ public class MoveTest extends ResourcesBaseTest
    public void testMoveFile() throws Exception
    {
       IPath destinationPath = new Path("/project_moved/folder_moved/file_moved");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       fileForMove.move(destinationPath, true, new NullProgressMonitor());
@@ -152,8 +147,8 @@ public class MoveTest extends ResourcesBaseTest
    public void testMoveFile_ResourceNotExist() throws Exception
    {
       IPath destinationPath = new Path("/project_moved/folder_moved/file_moved");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
       nonExistingFileForMove.move(destinationPath, true, new NullProgressMonitor());
    }

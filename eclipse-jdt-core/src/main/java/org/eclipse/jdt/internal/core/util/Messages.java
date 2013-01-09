@@ -10,10 +10,12 @@
  *******************************************************************************/
 package org.eclipse.jdt.internal.core.util;
 
+import org.eclipse.core.internal.NLS;
+
 import java.text.MessageFormat;
 
 
-public final class Messages
+public final class Messages extends NLS
 {
 
    private static final String BUNDLE_NAME = "org.eclipse.jdt.internal.core.util.messages";//$NON-NLS-1$
@@ -705,7 +707,7 @@ public final class Messages
 
    static
    {
-      //      NLS.initializeMessages(BUNDLE_NAME, Messages.class);
+      NLS.initializeMessages(BUNDLE_NAME, Messages.class);
    }
 
    /**

@@ -18,31 +18,27 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /**
  * General tests for {@link ItemResource}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ItemResourceTest.java Jan 8, 2013 12:54:02 PM azatsarynnyy $
- *
  */
 public class ItemResourceTest extends ResourcesBaseTest
 {
-   private WorkspaceResource ws;
-
    @Override
    public void setUp() throws Exception
    {
       super.setUp();
-      ws = new WorkspaceResource(vfs);
    }
 
    @Test

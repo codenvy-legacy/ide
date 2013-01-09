@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import static org.junit.Assert.assertTrue;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -34,17 +32,16 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Tests copying resources.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: CopyTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
- * 
  */
 public class CopyTest extends ResourcesBaseTest
 {
-   private WorkspaceResource ws;
-
    private IWorkspaceRoot workspaceRootForMove;
 
    private IProject projectForCopy;
@@ -63,19 +60,17 @@ public class CopyTest extends ResourcesBaseTest
    public void setUp() throws Exception
    {
       super.setUp();
-      ws = new WorkspaceResource(vfs);
-
       workspaceRootForMove = (IWorkspaceRoot)ws.newResource(new Path("/"), IResource.ROOT);
 
       projectForCopy = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
       projectForCopy.create(new NullProgressMonitor());
 
-      emptyFolderForCopy =
-         (IFolder)ws.newResource(projectForCopy.getFullPath().append("empty_folder"), IResource.FOLDER);
+      emptyFolderForCopy = (IFolder)ws.newResource(projectForCopy.getFullPath().append("empty_folder"),
+         IResource.FOLDER);
       emptyFolderForCopy.create(true, true, new NullProgressMonitor());
 
-      nonEmptyFolderForCopy =
-         (IFolder)ws.newResource(projectForCopy.getFullPath().append("non_empty_folder"), IResource.FOLDER);
+      nonEmptyFolderForCopy = (IFolder)ws.newResource(projectForCopy.getFullPath().append("non_empty_folder"),
+         IResource.FOLDER);
       nonEmptyFolderForCopy.create(true, true, new NullProgressMonitor());
       InputStream contentsStream1 = new ByteArrayInputStream(DEFAULT_CONTENT.getBytes());
       ((IFile)ws.newResource(nonEmptyFolderForCopy.getFullPath().append("file"), IResource.FILE)).create(
@@ -85,8 +80,8 @@ public class CopyTest extends ResourcesBaseTest
       InputStream contentsStream2 = new ByteArrayInputStream(DEFAULT_CONTENT.getBytes());
       fileForCopy.create(contentsStream2, true, new NullProgressMonitor());
 
-      nonExistingFileForCopy =
-         (IFile)ws.newResource(projectForCopy.getFullPath().append("file_not_exist"), IResource.FILE);
+      nonExistingFileForCopy = (IFile)ws.newResource(projectForCopy.getFullPath().append("file_not_exist"),
+         IResource.FILE);
    }
 
    @Test(expected = CoreException.class)
@@ -100,8 +95,8 @@ public class CopyTest extends ResourcesBaseTest
    {
       IPath destinationPath = new Path("/parent_project/project_copy");
 
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       projectForCopy.copy(destinationPath, true, new NullProgressMonitor());
@@ -113,8 +108,8 @@ public class CopyTest extends ResourcesBaseTest
    public void testCopyEmptyFolder() throws Exception
    {
       IPath destinationPath = new Path("/project2_copy/folder2_copy/folder3_copy");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       emptyFolderForCopy.copy(destinationPath, true, new NullProgressMonitor());
@@ -126,8 +121,8 @@ public class CopyTest extends ResourcesBaseTest
    public void testCopyNonEmptyFolder() throws Exception
    {
       IPath destinationPath = new Path("/project_copy/folder_copy/folder1_copy");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       IResource[] members = nonEmptyFolderForCopy.members();
@@ -149,8 +144,8 @@ public class CopyTest extends ResourcesBaseTest
    public void testCopyFile() throws Exception
    {
       IPath destinationPath = new Path("/project_copy/folder_copy/file_copy");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       fileForCopy.copy(destinationPath, true, new NullProgressMonitor());
@@ -162,8 +157,8 @@ public class CopyTest extends ResourcesBaseTest
    public void testCopyFile_ResourceNotExist() throws Exception
    {
       IPath destinationPath = new Path("/project_copy/folder_copy/file_copy");
-      IFolder parentDestinationFolder =
-         (IFolder)ws.newResource(destinationPath.removeLastSegments(1), IResource.FOLDER);
+      IFolder parentDestinationFolder = (IFolder)ws.newResource(destinationPath.removeLastSegments(1),
+         IResource.FOLDER);
       parentDestinationFolder.create(true, true, new NullProgressMonitor());
 
       nonExistingFileForCopy.copy(destinationPath, true, new NullProgressMonitor());

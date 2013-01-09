@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -36,16 +32,16 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import static org.junit.Assert.*;
+
 /**
  * Tests creating resources.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: CreateTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
- *
  */
 public class CreateTest extends ResourcesBaseTest
 {
-   private WorkspaceResource ws;
 
    private IProject projectResource;
 
@@ -57,7 +53,6 @@ public class CreateTest extends ResourcesBaseTest
    public void setUp() throws Exception
    {
       super.setUp();
-      ws = new WorkspaceResource(vfs);
 
       projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
       folderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("folder"), IResource.FOLDER);

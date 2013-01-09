@@ -33,10 +33,9 @@ import java.net.URI;
 
 /**
  * Implementation of root of the workspace.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: WorkspaceRootResource.java Dec 28, 2012 2:41:24 PM azatsarynnyy $
- *
  */
 public class WorkspaceRootResource extends ContainerResource implements IWorkspaceRoot
 {
@@ -140,8 +139,7 @@ public class WorkspaceRootResource extends ContainerResource implements IWorkspa
    @Override
    public IProject getProject(String name)
    {
-      // TODO Auto-generated method stub
-      return null;
+      return new ProjectResource(new Path("/" + name), workspace);
    }
 
    /**
@@ -160,7 +158,7 @@ public class WorkspaceRootResource extends ContainerResource implements IWorkspa
    public IProject[] getProjects(int memberFlags)
    {
       // TODO Auto-generated method stub
-      return null;
+      return new IProject[0];
    }
 
    /**
@@ -308,14 +306,16 @@ public class WorkspaceRootResource extends ContainerResource implements IWorkspa
    public long setLocalTimeStamp(long value)
    {
       if (value < 0)
+      {
          throw new IllegalArgumentException("Illegal time stamp: " + value); //$NON-NLS-1$
+      }
       //can't set local time for root
       return value;
    }
 
    /**
-    * @deprecated
     * @see org.exoplatform.ide.eclipse.resources.ItemResource#setReadOnly(boolean)
+    * @deprecated
     */
    @Override
    public void setReadOnly(boolean readonly)

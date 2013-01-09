@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
@@ -32,17 +29,17 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 /**
  * Tests for getting, setting and updating contents of file resources.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: FileContentsTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
- *
  */
 public class FileContentsTest extends ResourcesBaseTest
 {
-   private WorkspaceResource ws;
-
    private IFile fileResourceWithoutContent;
 
    private IFile fileResourceWithContent;
@@ -55,10 +52,8 @@ public class FileContentsTest extends ResourcesBaseTest
    public void setUp() throws Exception
    {
       super.setUp();
-      ws = new WorkspaceResource(vfs);
-
-      fileResourceWithoutContent =
-         (IFile)ws.newResource(new Path("/project/folder/file_without_content"), IResource.FILE);
+      fileResourceWithoutContent = (IFile)ws.newResource(new Path("/project/folder/file_without_content"),
+         IResource.FILE);
       fileResourceWithoutContent.create(null, true, new NullProgressMonitor());
 
       fileResourceWithContent = (IFile)ws.newResource(new Path("/project/folder/file_with_content"), IResource.FILE);

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.internal.resources.ProjectDescription;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
@@ -29,37 +30,57 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.content.IContentTypeMatcher;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
  * Implementation of {@link IProject}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ProjectResource.java Dec 27, 2012 11:17:10 AM azatsarynnyy $
- *
  */
 public class ProjectResource extends ContainerResource implements IProject
 {
 
+   public static final String NATURES_ID = "NATURES_ID";
+
+   private IProjectDescription description;
+
    /**
     * Creates new {@link ProjectResource} with the specified <code>path</code> in pointed <code>workspace</code>.
-    * 
-    * @param path {@link IPath}
+    *
+    * @param path      {@link IPath}
     * @param workspace {@link WorkspaceResource}
     */
    protected ProjectResource(IPath path, WorkspaceResource workspace)
    {
       super(path, workspace);
+      readDescription();
+   }
+
+   private void readDescription()
+   {
+      description = new ProjectDescription();
+      if (exists())
+      {
+         Property property = workspace.getProjectProperty(NATURES_ID, this);
+         if (property != null)
+         {
+            description.setNatureIds(property.getValue().toArray(new String[property.getValue().size()]));
+         }
+      }
    }
 
    /**
     * @see org.eclipse.core.resources.IProject#build(int, java.lang.String, java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void build(int kind, String builderName, Map<String, String> args, IProgressMonitor monitor)
-      throws CoreException
+   public void build(int kind, String builderName, Map<String, String> args,
+      IProgressMonitor monitor) throws CoreException
    {
       // TODO Auto-generated method stub
 
@@ -168,8 +189,7 @@ public class ProjectResource extends ContainerResource implements IProject
    @Override
    public IProjectDescription getDescription() throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
+      return description;
    }
 
    /**
@@ -216,8 +236,8 @@ public class ProjectResource extends ContainerResource implements IProject
     * @see org.eclipse.core.resources.IProject#getReferencedBuildConfigs(java.lang.String, boolean)
     */
    @Override
-   public IBuildConfiguration[] getReferencedBuildConfigs(String configName, boolean includeMissing)
-      throws CoreException
+   public IBuildConfiguration[] getReferencedBuildConfigs(String configName,
+      boolean includeMissing) throws CoreException
    {
       // TODO Auto-generated method stub
       return null;
@@ -239,8 +259,7 @@ public class ProjectResource extends ContainerResource implements IProject
    @Override
    public boolean hasNature(String natureId) throws CoreException
    {
-      // TODO Auto-generated method stub
-      return false;
+      return description.hasNature(natureId);
    }
 
    /**
@@ -275,7 +294,7 @@ public class ProjectResource extends ContainerResource implements IProject
 
    /**
     * @see org.eclipse.core.resources.IProject#move(org.eclipse.core.resources.IProjectDescription, boolean,
-    *       org.eclipse.core.runtime.IProgressMonitor)
+    *      org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
    public void move(IProjectDescription description, boolean force, IProgressMonitor monitor) throws CoreException
@@ -326,11 +345,12 @@ public class ProjectResource extends ContainerResource implements IProject
     * @see org.eclipse.core.resources.IProject#setDescription(org.eclipse.core.resources.IProjectDescription, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void setDescription(IProjectDescription description, int updateFlags, IProgressMonitor monitor)
-      throws CoreException
+   public void setDescription(IProjectDescription description, int updateFlags,
+      IProgressMonitor monitor) throws CoreException
    {
-      // TODO Auto-generated method stub
-
+      Property p = new PropertyImpl(NATURES_ID, Arrays.asList(description.getNatureIds()));
+      workspace.setProjectProperty(p, this);
+      this.description = description;
    }
 
    /**

@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -31,17 +27,16 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.junit.Test;
 
+import static org.junit.Assert.*;
+
 /**
  * Tests deleting resources.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: DeleteTest.java Jan 3, 2013 11:10:48 AM azatsarynnyy $
- *
  */
 public class DeleteTest extends ResourcesBaseTest
 {
-   private WorkspaceResource ws;
-
    private IWorkspaceRoot workspaceRootResource;
 
    private IProject projectResource;
@@ -56,19 +51,17 @@ public class DeleteTest extends ResourcesBaseTest
    public void setUp() throws Exception
    {
       super.setUp();
-      ws = new WorkspaceResource(vfs);
-
       workspaceRootResource = (IWorkspaceRoot)ws.newResource(new Path("/"), IResource.ROOT);
 
       projectResource = (IProject)ws.newResource(new Path("/project"), IResource.PROJECT);
       projectResource.create(new NullProgressMonitor());
 
-      emptyFolderResource =
-         (IFolder)ws.newResource(projectResource.getFullPath().append("empty_folder"), IResource.FOLDER);
+      emptyFolderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("empty_folder"),
+         IResource.FOLDER);
       emptyFolderResource.create(true, true, new NullProgressMonitor());
 
-      nonEmptyFolderResource =
-         (IFolder)ws.newResource(projectResource.getFullPath().append("non_empty_folder"), IResource.FOLDER);
+      nonEmptyFolderResource = (IFolder)ws.newResource(projectResource.getFullPath().append("non_empty_folder"),
+         IResource.FOLDER);
       nonEmptyFolderResource.create(true, true, new NullProgressMonitor());
       ((IFile)ws.newResource(nonEmptyFolderResource.getFullPath().append("file"), IResource.FILE)).create(null, true,
          new NullProgressMonitor());

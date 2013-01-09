@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.impl.ApplicationContextImpl;
@@ -34,6 +35,7 @@ import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.impl.memory.MemoryFileSystemProvider;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFileSystemContext;
 import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
@@ -62,19 +64,20 @@ public abstract class ResourcesBaseTest
    }
 
 
-   protected MemoryFileSystemContext memoryContext;
+   protected static MemoryFileSystemContext memoryContext;
 
-   protected VirtualFileSystem vfs;
+   protected static MemoryFolder testRoot;
 
-   protected MemoryFolder testRoot;
+   protected static String TEST_ROOT_NAME = "TESTROOT";
 
-   protected String TEST_ROOT_NAME = "TESTROOT";
+   protected static VirtualFileSystem vfs;
 
-   private ResourceLauncher launcher;
+   protected static WorkspaceResource ws;
 
    @Before
    public void setUp() throws Exception
    {
+
       System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
 
       eventListenerList = new EventListenerList();
@@ -87,7 +90,15 @@ public abstract class ResourcesBaseTest
 
       virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
       vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);
-
+      if (ws == null)
+      {
+         ws = new WorkspaceResource(vfs);
+         ResourcesPlugin.workspace = ws;
+      }
+      else
+      {
+         ws.setVfs(vfs);
+      }
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
       dependencies.addComponent(EventListenerList.class, eventListenerList);
@@ -96,7 +107,7 @@ public abstract class ResourcesBaseTest
       RequestHandler requestHandler = new RequestHandlerImpl(new RequestDispatcher(resources), providers, dependencies,
          new EverrestConfiguration());
       ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
-      launcher = new ResourceLauncher(requestHandler);
+      ResourceLauncher launcher = new ResourceLauncher(requestHandler);
 
       ApplicationPublisher deployer = new ApplicationPublisher(resources, providers);
       deployer.publish(new VirtualFileSystemApplication());
@@ -104,12 +115,12 @@ public abstract class ResourcesBaseTest
       // RUNTIME VARIABLES
       ConversationState user = new ConversationState(new Identity("john"));
       ConversationState.setCurrent(user);
+
    }
 
    @After
-   public void tearDown() throws Exception
+   public void clean() throws VirtualFileSystemException
    {
       virtualFileSystemRegistry.unregisterProvider(ID);
    }
-
 }
