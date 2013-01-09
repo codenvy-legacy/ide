@@ -85,9 +85,9 @@ public class CopyTest extends ResourcesBaseTest
    }
 
    @Test(expected = CoreException.class)
-   public void testMoveWorkspaceRoot() throws Exception
+   public void testCopyWorkspaceRoot() throws Exception
    {
-      workspaceRootForMove.move(new Path("/"), true, new NullProgressMonitor());
+      workspaceRootForMove.copy(new Path("/"), true, new NullProgressMonitor());
    }
 
    @Test
@@ -151,6 +151,15 @@ public class CopyTest extends ResourcesBaseTest
       fileForCopy.copy(destinationPath, true, new NullProgressMonitor());
       assertTrue(fileForCopy.exists());
       assertTrue(ws.newResource(destinationPath, IResource.FILE).exists());
+   }
+
+   @Test(expected = CoreException.class)
+   public void testCopyFile_AlreadyExist() throws Exception
+   {
+      IPath destinationPath = new Path("/project_copy/folder_copy/file_copy");
+      IFile destinationFile = (IFile)ws.newResource(destinationPath, IResource.FILE);
+      destinationFile.create(null, true, new NullProgressMonitor());
+      fileForCopy.copy(destinationPath, true, new NullProgressMonitor());
    }
 
    @Test(expected = CoreException.class)

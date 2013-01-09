@@ -37,6 +37,7 @@ import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.QualifiedName;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.core.runtime.jobs.MultiRule;
@@ -53,6 +54,7 @@ import java.util.Map;
  *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ItemResource.java Dec 26, 2012 12:20:07 PM azatsarynnyy $
+ *
  */
 public abstract class ItemResource implements IResource
 {
@@ -321,17 +323,13 @@ public abstract class ItemResource implements IResource
    {
       try
       {
-         workspace.getVFS().getItemByPath(getFullPath().toString(), null, PropertyFilter.NONE_FILTER);
+         workspace.getVfsItemByFullPath(getFullPath());
       }
       catch (ItemNotFoundException e)
       {
          return false;
       }
-      catch (PermissionDeniedException e)
-      {
-         return true;
-      }
-      catch (VirtualFileSystemException e)
+      catch (CoreException e)
       {
          return false;
       }
@@ -412,7 +410,7 @@ public abstract class ItemResource implements IResource
    @Override
    public IPath getLocation()
    {
-      return path;
+      return getFullPath();
    }
 
    /**
@@ -441,8 +439,7 @@ public abstract class ItemResource implements IResource
    @Override
    public long getModificationStamp()
    {
-      // TODO Auto-generated method stub
-      return 0;
+      return workspace.getModificationStamp(this);
    }
 
    /**
@@ -735,8 +732,8 @@ public abstract class ItemResource implements IResource
     * @see org.eclipse.core.resources.IResource#move(org.eclipse.core.resources.IProjectDescription, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void move(IProjectDescription description, boolean force, boolean keepHistory,
-      IProgressMonitor monitor) throws CoreException
+   public void move(IProjectDescription description, boolean force, boolean keepHistory, IProgressMonitor monitor)
+      throws CoreException
    {
       int updateFlags = force ? IResource.FORCE : IResource.NONE;
       updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
@@ -752,7 +749,8 @@ public abstract class ItemResource implements IResource
       Assert.isNotNull(description);
       if (getType() != IResource.PROJECT)
       {
-         String message = "Cannot move " + getFullPath() + " to " + description.getName() + ".  Source must be a project."; //NLS.bind(Messages.resources_moveNotProject, getFullPath(), description.getName());
+         String message =
+            "Cannot move " + getFullPath() + " to " + description.getName() + ".  Source must be a project."; //NLS.bind(Messages.resources_moveNotProject, getFullPath(), description.getName());
          throw new ResourceException(IResourceStatus.INVALID_VALUE, getFullPath(), message, null);
       }
       ((ProjectResource)this).move(description, updateFlags, monitor);
@@ -762,8 +760,8 @@ public abstract class ItemResource implements IResource
     * @see org.eclipse.core.resources.IFile#move(IPath, boolean, boolean, IProgressMonitor)
     * @see org.eclipse.core.resources.IFolder#move(IPath, boolean, boolean, IProgressMonitor)
     */
-   public void move(IPath destination, boolean force, boolean keepHistory,
-      IProgressMonitor monitor) throws CoreException
+   public void move(IPath destination, boolean force, boolean keepHistory, IProgressMonitor monitor)
+      throws CoreException
    {
       int updateFlags = force ? IResource.FORCE : IResource.NONE;
       updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;

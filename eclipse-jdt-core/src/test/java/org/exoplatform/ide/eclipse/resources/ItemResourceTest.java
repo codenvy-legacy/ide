@@ -18,20 +18,26 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.exoplatform.ide.vfs.shared.FileImpl;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 /**
  * General tests for {@link ItemResource}.
- *
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ItemResourceTest.java Jan 8, 2013 12:54:02 PM azatsarynnyy $
+ *
  */
 public class ItemResourceTest extends ResourcesBaseTest
 {
@@ -42,7 +48,18 @@ public class ItemResourceTest extends ResourcesBaseTest
    }
 
    @Test
-   public void testGetName()
+   public void testExistence() throws Exception
+   {
+      IPath originPath = new Path("/project/folder/file");
+      IFile fileResource = (IFile)ws.newResource(originPath, IResource.FILE);
+      assertFalse(fileResource.exists());
+
+      fileResource.create(null, false, new NullProgressMonitor());
+      assertTrue(fileResource.exists());
+   }
+
+   @Test
+   public void testGetName() throws Exception
    {
       IPath originPath = new Path("/project/folder/file");
       IFile fileResource = (IFile)ws.newResource(originPath, IResource.FILE);
@@ -50,7 +67,7 @@ public class ItemResourceTest extends ResourcesBaseTest
    }
 
    @Test
-   public void testGetFileExtension()
+   public void testGetFileExtension() throws Exception
    {
       IPath originPath = new Path("/project/folder/file.bin");
       IFile fileResource = (IFile)ws.newResource(originPath, IResource.FILE);
@@ -66,11 +83,25 @@ public class ItemResourceTest extends ResourcesBaseTest
    }
 
    @Test
-   public void testGetFullPath()
+   public void testGetFullPath() throws Exception
    {
       IPath originPath = new Path("/project/folder/file");
       IFile fileResource = (IFile)ws.newResource(originPath, IResource.FILE);
       assertEquals(originPath, fileResource.getFullPath());
+   }
+
+   @Test
+   public void testGetModificationStamp() throws Exception
+   {
+      IPath originPath = new Path("/project/folder/file");
+      IFile fileResource = (IFile)ws.newResource(originPath, IResource.FILE);
+      fileResource.create(null, true, new NullProgressMonitor());
+
+      long actualModificationStamp = fileResource.getModificationStamp();
+      FileImpl file = (FileImpl)vfs.getItemByPath(originPath.toString(), null, PropertyFilter.NONE_FILTER);
+      long expectedModificationStamp = file.getLastModificationDate();
+
+      assertEquals(expectedModificationStamp, actualModificationStamp);
    }
 
 }

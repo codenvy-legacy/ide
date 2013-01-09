@@ -27,6 +27,7 @@ import org.eclipse.core.resources.IResourceFilterDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 
 /**
  * Implementation of {@link IContainer}.
@@ -73,8 +74,11 @@ public abstract class ContainerResource extends ItemResource implements IContain
    @Override
    public IResource findMember(String path, boolean includePhantoms)
    {
-      // TODO Auto-generated method stub
-      return null;
+      if (path.isEmpty())
+      {
+         return this;
+      }
+      return workspace.findMember(this, new Path(path));
    }
 
    /**
@@ -172,7 +176,6 @@ public abstract class ContainerResource extends ItemResource implements IContain
    {
       return members(includePhantoms ? INCLUDE_PHANTOMS : IResource.NONE);
    }
-
 
    /**
     * {@inheritDoc}

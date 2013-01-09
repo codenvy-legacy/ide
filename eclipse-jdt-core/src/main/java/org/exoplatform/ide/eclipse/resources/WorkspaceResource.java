@@ -62,6 +62,7 @@ import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.File;
+import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
@@ -69,6 +70,8 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
@@ -82,6 +85,7 @@ import javax.ws.rs.core.MediaType;
  *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: WorkspaceResource.java Dec 27, 2012 12:47:21 PM azatsarynnyy $
+ *
  */
 public class WorkspaceResource implements IWorkspace
 {
@@ -544,6 +548,10 @@ public class WorkspaceResource implements IWorkspace
       {
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, null, e));
       }
+      finally
+      {
+         safeClose(contents);
+      }
       return null;
    }
 
@@ -562,6 +570,30 @@ public class WorkspaceResource implements IWorkspace
       try
       {
          return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER).getId();
+      }
+      catch (ItemNotFoundException e)
+      {
+         throw e;
+      }
+      catch (VirtualFileSystemException e)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
+      }
+   }
+
+   /**
+    * Returns VFS {@link Item} by provided {@link IPath}.
+    * 
+    * @param path {@link IPath}
+    * @return {@link Item}
+    * @throws CoreException
+    * @throws ItemNotFoundException
+    */
+   Item getVfsItemByFullPath(IPath path) throws CoreException, ItemNotFoundException
+   {
+      try
+      {
+         return vfs.getItemByPath(path.toString(), null, PropertyFilter.NONE_FILTER);
       }
       catch (ItemNotFoundException e)
       {
@@ -1047,6 +1079,7 @@ public class WorkspaceResource implements IWorkspace
     * @param resource    {@link IResource} to copy
     * @param destination the destination path
     * @throws CoreException
+    * 
     * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    void copyResource(IResource resource, IPath destination) throws CoreException
@@ -1285,4 +1318,52 @@ public class WorkspaceResource implements IWorkspace
          e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
       }
    }
+
+   /**
+    * Returns a non-negative modification stamp, or <code>NULL_STAMP</code> if
+    * the resource does not exist or is not accessible.
+    * 
+    * @param resource {@link IResource}
+    * @return the modification stamp, or <code>NULL_STAMP</code> if this resource either does not exist or is not accessible
+    * @see org.eclipse.core.resources.IResource#getModificationStamp()
+    */
+   public long getModificationStamp(IResource resource)
+   {
+      try
+      {
+         Item item = getVfsItemByFullPath(resource.getFullPath());
+         if (item instanceof FileImpl)
+         {
+            return ((FileImpl)item).getLastModificationDate();
+         }
+      }
+      catch (ItemNotFoundException e)
+      {
+         return IResource.NULL_STAMP;
+      }
+      catch (CoreException e)
+      {
+         return IResource.NULL_STAMP;
+      }
+      return IResource.NULL_STAMP;
+   }
+
+   /**
+    * Closes a stream and ignores any resulting exception. This is useful
+    * when doing stream cleanup in a finally block where secondary exceptions
+    * are not worth logging.
+    */
+   private static void safeClose(Closeable stream)
+   {
+      try
+      {
+         if (stream != null)
+            stream.close();
+      }
+      catch (IOException e)
+      {
+         //ignore
+      }
+   }
+
 }
