@@ -71,4 +71,10 @@ public class IdeInviteUserService implements InviteUserService
       return userHandler.findUserByName(userId) != null;
    }
 
+   @Override
+   public boolean isUserRegisteredGlobally(String userId) throws Exception
+   {
+      return isUserRegistered(userId);
+   }
+
 }

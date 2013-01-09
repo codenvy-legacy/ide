@@ -117,7 +117,29 @@ public class InviteService
     * @return -true if user already registered in organization service
     * @throws InviteException
     */
-   private boolean isUserRegisteredInOrganizationService(String userName) throws InviteException
+   private boolean isUserRegisteredGlobally(String userName) throws InviteException
+   {
+      try
+      {
+         return inviteUserService.isUserRegisteredGlobally(userName);
+      }
+      catch (Exception e)//NOSONAR
+      {
+         LOG.error(e.getLocalizedMessage(), e);
+         throw new InviteException(403, "Error during searching user with email address: " + userName, e);
+      }
+
+   }
+
+   /**
+    * Check if user already registered in the organization service.
+    * 
+    * @param userName
+    *           - name of the user
+    * @return -true if user already registered in organization service
+    * @throws InviteException
+    */
+   private boolean isUserRegisteredInOrganization(String userName) throws InviteException
    {
       try
       {
@@ -177,7 +199,7 @@ public class InviteService
    {
       // check if specified user is already registered
 
-      if (isUserRegisteredInOrganizationService(to))
+      if (isUserRegisteredInOrganization(to))
       {
          throw new InviteException(403, to + " already registered in the system");
       }
@@ -199,22 +221,22 @@ public class InviteService
          inviteMessageProperties.put("user.password", newInvite.getPassword());
          inviteMessageProperties.put("inviter.email", from);
 
-         //         Map<String, Object> messageProperties = new HashMap<String, Object>();
-         //         messageProperties.put("tenant.masterhost", TenantNameResolver.getMasterUrl());
-         //         messageProperties.put("tenant.repository.name", tenant);
-         //         messageProperties.put("id", newInvite.getUuid());
-         //         messageProperties.put("user.name", to);
-         //         messageProperties.put("user.password", newInvite.getPassword());
-         //         messageProperties.put("inviter.email", from);
-
          if (mailBody != null && mailBody.length() > 0)
          {
             inviteMessageProperties.put("personal-message", "<td><p><strong>Personal message</strong></p><p>"
                + mailBody + "</p></td>");
          }
 
-         mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
-            "template-mail-invitation", inviteMessageProperties);
+         if (isUserRegisteredGlobally(to))
+         {
+            mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
+               "template-mail-invitation-registered-user", inviteMessageProperties);
+         }
+         else
+         {
+            mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
+               "template-mail-invitation", inviteMessageProperties);
+         }
       }
       catch (SendingIdeMailException e)
       {
