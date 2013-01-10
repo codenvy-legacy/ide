@@ -18,6 +18,8 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.shared.document.LineFinder;
+
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -464,7 +466,12 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void selectRange(int startLine, int startChar, int endLine, int endChar)
    {
-      throw new UnsupportedOperationException();
+      LineFinder lineFinder = editor.getDocument().getLineFinder();
+      LineInfo baseLineInfo = lineFinder.findLine(startLine-1);
+      LineInfo cursorLineInfo = lineFinder.findLine(endLine-1);
+      int baseColumn = startChar;
+      int cursorColumn = endChar;
+      editor.getSelection().setSelection(baseLineInfo, baseColumn, cursorLineInfo, cursorColumn);
    }
 
    /**
@@ -509,7 +516,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void delete()
    {
-      throw new UnsupportedOperationException();
+      editor.getSelection().deleteSelection(editor.getEditorDocumentMutator());
    }
 
    /**
