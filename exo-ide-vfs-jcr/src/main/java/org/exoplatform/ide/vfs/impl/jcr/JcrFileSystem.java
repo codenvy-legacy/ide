@@ -158,6 +158,8 @@ public class JcrFileSystem implements VirtualFileSystem
    private VirtualFileSystemInfo vfsInfo;
    private final String vfsID;
 
+   private final Log LOG = ExoLogger.getLogger(JcrFileSystem.class);
+     
    public JcrFileSystem(Repository repository,
                         String workspaceName,
                         String rootNodePath,
@@ -334,15 +336,6 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData parentData = getItemData(session, parentId);
-//         if (ItemType.PROJECT == parentData.getType())
-//         {
-//            throw new ConstraintException("Unable create project. Item specified as parent is a project. "
-//               + "Project cannot contains another project.");
-//         }
-//         if (ItemType.FOLDER != parentData.getType())
-//         {
-//            throw new InvalidArgumentException("Unable create project. Item specified as parent is not a folder. ");
-//         }
          if (properties == null)
          {
             properties = new ArrayList<Property>(2);
@@ -364,6 +357,7 @@ public class JcrFileSystem implements VirtualFileSystem
             project.getMimeType(), //
             ChangeEvent.ChangeType.CREATED)
          );
+         LOG.info("EVENT#project-created# PROJECT#" + name + "#");
          return project;
       }
       finally
@@ -386,11 +380,17 @@ public class JcrFileSystem implements VirtualFileSystem
          ItemData data = getItemData(session, id);
          String path = data.getPath();
          MediaType mediaType = data.getMediaType();
-         if (listeners != null && data.getType() == ItemType.PROJECT)
+         ItemType type = data.getType();
+         String name = data.getName();
+         if (listeners != null && type == ItemType.PROJECT)
          {
             listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)data), new ProjectUpdateListener(id));
          }
          data.delete(lockToken);
+         if (type == ItemType.PROJECT)
+         {
+            LOG.info("EVENT#project-destroyed# PROJECT#"+ name +"#");
+         }
          notifyListeners(new ChangeEvent(this, //
             id, //
             path, //
@@ -1260,6 +1260,7 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       Session session = session();
+      boolean convertToProject = false;
       try
       {
          ItemData data = getItemData(session, id);
@@ -1285,11 +1286,16 @@ public class JcrFileSystem implements VirtualFileSystem
                            data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                               : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
                      }
+                     if (value.equals(Project.PROJECT_MIME_TYPE))
+                     {
+                        convertToProject = true;
+                     }
                   }
                }
             }
             data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
             data = getItemData(session, id);
+            LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
             MediaType mediaType = data.getMediaType();
             notifyListeners(new ChangeEvent(this, //
                data.getId(), //
@@ -1502,6 +1508,8 @@ public class JcrFileSystem implements VirtualFileSystem
                   null, //
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
+               
+               LOG.info("EVENT#project-created# PROJECT#" + parentData.getName() + "#");
                List<Property> properties;
                try
                {

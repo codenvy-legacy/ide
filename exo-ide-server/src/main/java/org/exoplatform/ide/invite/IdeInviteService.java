@@ -48,21 +48,17 @@ public class IdeInviteService
 {
    private static final Log LOG = ExoLogger.getLogger(IdeInviteService.class);
    
-   private final String sender;
+   private final String sender = "Cloud-IDE <noreply@cloud-ide.com>";
 
    private final InviteService inviteService;
    
    private DSASignatureChecker dsaSignatureChecker;
 
-   public IdeInviteService(InviteService inviteService, InitParams params, DSASignatureChecker dsaSignatureChecker) throws ConfigurationException
-   {
-      this(inviteService, getParameterValue(params, "mail-sender"), dsaSignatureChecker);
-   }
 
-   public IdeInviteService(InviteService inviteService, String sender, DSASignatureChecker dsaSignatureChecker)
+   public IdeInviteService(InviteService inviteService, DSASignatureChecker dsaSignatureChecker)
    {
       this.inviteService = inviteService;
-      this.sender = sender;
+      this.dsaSignatureChecker = dsaSignatureChecker;
    }
 
    /**

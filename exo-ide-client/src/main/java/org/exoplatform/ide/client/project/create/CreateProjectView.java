@@ -375,7 +375,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
             projectTypeButtonsList.add(projectTypeButton);
             projectTypesMap.put(projectTypeButton, projectType);
-            dock.getElement().setId("CREATE-PROJECT-" + projectType);
+            projectTypeButton.getElement().setId("CREATE-PROJECT-" + projectType);
             projectTypesGrid.setWidget(rowNum, colNum, dock);
          }
       }

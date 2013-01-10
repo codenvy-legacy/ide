@@ -25,6 +25,11 @@
                xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
 
+  <component>
+      <key>org.exoplatform.ide.invite.InviteUserService</key>
+      <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
+   </component>
+
 <!-- 
 ***************************************************************************************
 ********************** eXo IDE Commons Components *************************************

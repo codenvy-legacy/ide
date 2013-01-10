@@ -913,7 +913,6 @@
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
-      <module>exo-ide-packaging-websocket-war</module>
 
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>
