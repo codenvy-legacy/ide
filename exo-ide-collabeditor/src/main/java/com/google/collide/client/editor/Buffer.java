@@ -14,8 +14,6 @@
 
 package com.google.collide.client.editor;
 
-import java.util.ListResourceBundle;
-
 import com.google.collide.client.AppContext;
 import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.common.Constants;
@@ -109,7 +107,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * text buffer area of the editor.
    */
   public interface MouseDragListener {
-    void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld);
+    void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, short button);
 
     void onMouseDrag(Buffer buffer, int x, int y);
 
@@ -345,7 +343,8 @@ public class Buffer extends UiComponent<Buffer.View>
               event.getClientY(),
               bufferClientLeft,
               bufferClientTop,
-              event.isShiftKey());
+              event.isShiftKey(),
+              event.getButton());
 
           return true;
         }
@@ -512,7 +511,8 @@ public class Buffer extends UiComponent<Buffer.View>
         int clientY,
         int bufferClientLeft,
         int bufferClientTop,
-        boolean isShiftHeld);
+        boolean isShiftHeld,
+        short button);
 
     void onMouseDrag(int clientX, int clientY);
 
@@ -620,7 +620,8 @@ public class Buffer extends UiComponent<Buffer.View>
           int clientY,
           int bufferClientLeft,
           int bufferClientTop,
-          final boolean isShiftHeld) {
+          final boolean isShiftHeld,
+          final short button) {
 
         this.bufferLeft = bufferClientLeft;
         this.bufferTop = bufferClientTop;
@@ -640,7 +641,7 @@ public class Buffer extends UiComponent<Buffer.View>
           @Override
           public void dispatch(MouseDragListener listener) {
             listener.onMouseClick(
-                Buffer.this, clickCount, bufferRelativeX, bufferRelativeY, isShiftHeld);
+                Buffer.this, clickCount, bufferRelativeX, bufferRelativeY, isShiftHeld, button);
           }
         });
       }
