@@ -58,6 +58,10 @@
 				<value>/template-invitation-mail.html</value>
 			</value-param>
 			<value-param>
+            <name>template-mail-invitation-registered-user</name>
+            <value>/template-mail-invitation-registered-user.html</value>
+         </value-param>
+			<value-param>
 				<name>template-mail-password-restoring</name>
 				<value>/template-mail-password-restoring.html</value>
 			</value-param>
