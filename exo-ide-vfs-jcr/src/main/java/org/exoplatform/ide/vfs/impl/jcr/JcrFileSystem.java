@@ -1286,7 +1286,7 @@ public class JcrFileSystem implements VirtualFileSystem
                            data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                               : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
                      }
-                     if (value.equals(Project.PROJECT_MIME_TYPE))
+                     if (value.get(0).equals(Project.PROJECT_MIME_TYPE) && !data.getType().equals(Project.PROJECT_MIME_TYPE))
                      {
                         convertToProject = true;
                      }
@@ -1295,7 +1295,10 @@ public class JcrFileSystem implements VirtualFileSystem
             }
             data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
             data = getItemData(session, id);
-            LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
+            if (convertToProject)
+            {
+              LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
+            }
             MediaType mediaType = data.getMediaType();
             notifyListeners(new ChangeEvent(this, //
                data.getId(), //
