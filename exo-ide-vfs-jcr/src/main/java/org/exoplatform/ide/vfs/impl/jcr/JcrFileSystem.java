@@ -1260,6 +1260,7 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       Session session = session();
+      boolean convertToProject = false;
       try
       {
          ItemData data = getItemData(session, id);
@@ -1285,11 +1286,16 @@ public class JcrFileSystem implements VirtualFileSystem
                            data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                               : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
                      }
+                     if (value.equals(Project.PROJECT_MIME_TYPE))
+                     {
+                        convertToProject = true;
+                     }
                   }
                }
             }
             data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
             data = getItemData(session, id);
+            LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
             MediaType mediaType = data.getMediaType();
             notifyListeners(new ChangeEvent(this, //
                data.getId(), //
@@ -1502,6 +1508,8 @@ public class JcrFileSystem implements VirtualFileSystem
                   null, //
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
+               
+               LOG.info("EVENT#project-created# PROJECT#" + parentData.getName() + "#");
                List<Property> properties;
                try
                {
