@@ -25,12 +25,12 @@ import java.util.Map;
  * Segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented
  * LRU cache</a>
  * <p/>
- * Implementation is threadsafe.
+ * Implementation is not threadsafe. In need concurrent access use {@link SynchronizedSLRUCache}
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class SLRUCache<K, V> implements Cache<K, V>
+public class SLRUCache<K, V> implements Cache<K, V>
 {
    private final Map<K, V> protectedSegment;
    private final Map<K, V> probationarySegment;
@@ -75,7 +75,7 @@ public final class SLRUCache<K, V> implements Cache<K, V>
    }
 
    @Override
-   public synchronized V get(K key)
+   public V get(K key)
    {
       V value = protectedSegment.get(key);
       if (value != null)
@@ -95,7 +95,7 @@ public final class SLRUCache<K, V> implements Cache<K, V>
    }
 
    @Override
-   public synchronized V put(K key, V value)
+   public V put(K key, V value)
    {
       V oldValue1 = protectedSegment.remove(key);
       V oldValue2 = probationarySegment.put(key, value);
@@ -103,7 +103,7 @@ public final class SLRUCache<K, V> implements Cache<K, V>
    }
 
    @Override
-   public synchronized V remove(K key)
+   public V remove(K key)
    {
       V oldValue = protectedSegment.remove(key);
       if (oldValue == null)
@@ -114,19 +114,19 @@ public final class SLRUCache<K, V> implements Cache<K, V>
    }
 
    @Override
-   public synchronized boolean contains(K key)
+   public boolean contains(K key)
    {
       return probationarySegment.containsKey(key) || protectedSegment.containsKey(key);
    }
 
    @Override
-   public synchronized void clear()
+   public void clear()
    {
       protectedSegment.clear();
       probationarySegment.clear();
    }
 
-   public synchronized void printStats()
+   public void printStats()
    {
       System.out.println("-------------------------------------------");
       System.out.printf("misses:            %d\n", misses);
