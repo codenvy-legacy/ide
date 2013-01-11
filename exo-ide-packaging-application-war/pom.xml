@@ -172,12 +172,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-cloudbees</artifactId>
-			<exclusions>
+			<!--exclusions>
 				<exclusion>
 					<artifactId>xstream</artifactId>
 					<groupId>com.thoughtworks.xstream</groupId>
 				</exclusion>
-			</exclusions>
+			</exclusions-->
 		</dependency>
 
 		<dependency>
