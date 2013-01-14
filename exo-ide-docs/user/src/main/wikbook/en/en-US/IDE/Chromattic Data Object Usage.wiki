@@ -1,4 +1,4 @@
-_Chromattic Data Object_ files has MIME type *application/x-chromattic+groovy*. With eXo IDE you can create _Chromattic Data Object_ file, create and preview node type.
+_Chromattic Data Object_ files has MIME type *application/x-chromattic+groovy*. With Codenvy you can create _Chromattic Data Object_ file, create and preview node type.
 
 
 h1. Create Data Object
