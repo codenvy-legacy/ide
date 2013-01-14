@@ -44,8 +44,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
-import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -116,7 +114,7 @@ import java.util.Set;
  */
 public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisconnectedHandler, ViewClosedHandler,
    BreakPointsUpdatedHandler, RunAppHandler, DebugAppHandler, ProjectBuiltHandler, StopAppHandler, UpdateAppHandler,
-   AppStoppedHandler, ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler, CloseProjectHandler,
+   AppStoppedHandler, ProjectClosedHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler,
    UpdateVariableValueInTreeHandler, ActiveProjectChangedHandler
 {
 
@@ -216,7 +214,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    {
       this.breakpointsManager = breakpointsManager;
       IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-      IDE.addHandler(CloseProjectEvent.TYPE, this); 
    }
 
    void bindDisplay(Display d)
@@ -1193,28 +1190,16 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       runningApp = null;
    }
 
-   @Override
-   public void onCloseProject(CloseProjectEvent event)
-   {
-      Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.dialogCloseProjectTitle(),
-         DebuggerExtension.LOCALIZATION_CONSTANT.dialogCloseProjectMsg(), new BooleanValueReceivedHandler()
-         {
-
-            @Override
-            public void booleanValueReceived(Boolean value)
-            {
-               if (value)
-               {
-                  doStopApp();
-               }
-
-            }
-         });
-   }
+   //   @Override
+   //   public void onCloseProject(final CloseProjectEvent event)
+   //   {
+   //      doStopApp();
+   //   }
 
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
+      doStopApp();
       project = null;
    }
 
