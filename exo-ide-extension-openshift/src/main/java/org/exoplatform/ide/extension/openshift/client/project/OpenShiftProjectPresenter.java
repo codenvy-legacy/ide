@@ -26,6 +26,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -41,6 +42,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftClientService;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExceptionThrownEvent;
 import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
@@ -52,19 +54,23 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationEvent;
+import org.exoplatform.ide.extension.openshift.client.start.RestartApplicationEvent;
+import org.exoplatform.ide.extension.openshift.client.start.StartApplicationEvent;
+import org.exoplatform.ide.extension.openshift.client.start.StopApplicationEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for managing project, deployed on OpenShift.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 9:39:29 AM anya $
- * 
+ *
  */
 public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler, ApplicationDeletedHandler, ActiveProjectChangedHandler
+   ViewClosedHandler, ManageOpenShiftProjectHandler, LoggedInHandler, ApplicationDeletedHandler, ActiveProjectChangedHandler,
+   ApplicationInfoChangedHandler
 {
 
    interface Display extends IsView
@@ -78,7 +84,15 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
 
       HasClickHandlers getInfoButton();
 
+      HasClickHandlers getStartButton();
+
+      HasClickHandlers getStopButton();
+
+      HasClickHandlers getRestartButton();
+
       HasValue<String> getApplicationName();
+
+      void setControlsActivity(boolean active);
 
       void setApplicationURL(String URL);
 
@@ -99,6 +113,7 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+      IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
    }
 
    /**
@@ -139,6 +154,33 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
          public void onClick(ClickEvent event)
          {
             IDE.eventBus().fireEvent(new ShowApplicationInfoEvent());
+         }
+      });
+
+      display.getStartButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new StartApplicationEvent(display.getApplicationName().getValue()));
+         }
+      });
+
+      display.getStopButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new StopApplicationEvent(display.getApplicationName().getValue()));
+         }
+      });
+
+      display.getRestartButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new RestartApplicationEvent(display.getApplicationName().getValue()));
          }
       });
    }
@@ -187,7 +229,7 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
    {
       openedProject = event.getProject();
    }
-   
+
    @Override
    public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
@@ -213,6 +255,7 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
                   display.getApplicationName().setValue(result.getName());
                   display.setApplicationURL(result.getPublicUrl());
                   display.getApplicationType().setValue(result.getType());
+                  setControlsButtonState(openedProject.getName());
                }
 
                /**
@@ -276,6 +319,44 @@ public class OpenShiftProjectPresenter extends GitPresenter implements ProjectOp
          && openedProject.getId().equals(event.getProjectId()))
       {
          IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+
+   @Override
+   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
+   {
+      setControlsButtonState(event.getAppName());
+   }
+
+   private void setControlsButtonState(String appName)
+   {
+      try
+      {
+         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+         OpenShiftClientService.getInstance().getApplicationHealth(appName, new AsyncRequestCallback<StringBuilder>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(StringBuilder result)
+            {
+               if (result.toString().equals("STARTED"))
+               {
+                  display.setControlsActivity(true);
+               }
+               else
+               {
+                  display.setControlsActivity(false);
+               }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 }

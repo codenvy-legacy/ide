@@ -61,9 +61,16 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
+import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -72,7 +79,7 @@ import java.util.List;
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: DeployApplicationPresenter.java Dec 5, 2011 1:58:22 PM vereshchaka $
- * 
+ *
  */
 public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHandler
 {
@@ -114,20 +121,19 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
 
    /**
     * Forms the message to be shown, when application is created.
-    * 
+    *
     * @param appInfo application information
     * @return {@link String} message
     */
    protected String formApplicationCreatedMessage(AppInfo appInfo)
    {
-      String applicationStr = "<br> [";
+      String applicationStr = "<br> ";
       applicationStr += "<b>Name</b>" + " : " + appInfo.getName() + "<br>";
       applicationStr += "<b>Git URL</b>" + " : " + appInfo.getGitUrl() + "<br>";
       applicationStr +=
          "<b>Public URL</b>" + " : <a href=\"" + appInfo.getPublicUrl() + "\" target=\"_blank\">"
             + appInfo.getPublicUrl() + "</a><br>";
       applicationStr += "<b>Type</b>" + " : " + appInfo.getType() + "<br>";
-      applicationStr += "] ";
 
       return lb.createApplicationSuccess(applicationStr);
    }
@@ -159,14 +165,49 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                @Override
                protected void onSuccess(List<String> result)
                {
-                  display.setTypeValues(result.toArray(new String[result.size()]));
-                  display.getTypeField().setValue(detectType(projectType.value(), result));
+                  fillTypeField(projectType, result);
                }
             });
       }
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void fillTypeField(ProjectType projectType, List<String> availableTypes)
+   {
+      List<String> types = new ArrayList<String>();
+
+      for (String availableType : availableTypes)
+      {
+         if (projectType == ProjectType.JSP && availableType.startsWith("jboss"))
+         {
+            types.add(availableType);
+         }
+         else if (projectType == ProjectType.SPRING && availableType.startsWith("jboss"))
+         {
+            types.add(availableType);
+         }
+         else if (projectType == ProjectType.RUBY_ON_RAILS && availableType.startsWith("ruby"))
+         {
+            types.add(availableType);
+         }
+         else if (projectType == ProjectType.PYTHON && availableType.startsWith("python"))
+         {
+            types.add(availableType);
+         }
+         else if (projectType == ProjectType.PHP && availableType.startsWith("php"))
+         {
+            types.add(availableType);
+         }
+      }
+
+      display.setTypeValues(types.toArray(new String[types.size()]));
+
+      if (types.size() != 0)
+      {
+         display.getTypeField().setValue(types.get(0));
       }
    }
 
@@ -185,7 +226,247 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       }
       else
       {
-         createEmptyProject();
+         createFolder();
+      }
+   }
+
+
+   private void createFolder()
+   {
+      final Loader loader = new GWTLoader();
+      loader.setMessage(lb.creatingProject());
+      try
+      {
+         loader.show();
+         FolderModel newFolder = new FolderModel();
+         newFolder.setName(projectName);
+
+         VirtualFileSystem.getInstance().createFolder(vfs.getRoot(), new AsyncRequestCallback<FolderModel>(new FolderUnmarshaller(newFolder))
+         {
+            @Override
+            protected void onSuccess(FolderModel result)
+            {
+               loader.hide();
+
+               setPropertiesToFolder(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               loader.hide();
+               deployResultHandler.onDeployFinished(false);
+               cleanUpFolder();
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (Exception e)
+      {
+         loader.hide();
+         deployResultHandler.onDeployFinished(false);
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void setPropertiesToFolder(Item item)
+   {
+      try
+      {
+         final List<Property> properties = new ArrayList<Property>();
+         properties.add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
+         properties.add(new PropertyImpl("openshift-express-application", display.getApplicationNameField().getValue()));
+         item.getProperties().addAll(properties);
+
+         VirtualFileSystem.getInstance().updateItem(item,
+            null,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  project = (ProjectModel)result.getItem();
+                  deployResultHandler.onDeployFinished(true);
+                  createApplication();
+               }
+
+               @Override
+               protected void onFailure(Throwable e)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(e));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   /**
+    * Perform creation of application on OpenShift by sending request over WebSocket or HTTP.
+    */
+   private void createApplication()
+   {
+      String applicationName = display.getApplicationNameField().getValue();
+      String applicationType = display.getTypeField().getValue();
+      JobManager.get().showJobSeparated();
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
+
+      try
+      {
+         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
+            applicationType, new RequestCallback<AppInfo>(unmarshaller)
+         {
+
+            @Override
+            protected void onSuccess(AppInfo result)
+            {
+               onCreatedAppSuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               cleanUpFolder();
+               handleError(exception);
+            }
+         });
+      }
+      catch (WebSocketException e)
+      {
+         createApplicationREST(applicationName, applicationType);
+      }
+   }
+
+   /**
+    * Perform creation of application on OpenShift by sending request over HTTP.
+    *
+    * @param applicationName application's name
+    * @param applicationType type of the application
+    */
+   private void createApplicationREST(String applicationName, String applicationType)
+   {
+      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
+      AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
+
+      try
+      {
+         OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
+            applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)
+         {
+
+            @Override
+            protected void onSuccess(AppInfo result)
+            {
+               onCreatedAppSuccess(result);
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               cleanUpFolder();
+               handleError(exception);
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
+         deployResultHandler.onDeployFinished(false);
+      }
+   }
+
+   /**
+    * Performs actions after application successfully created on OpenShift.
+    *
+    * @param app {@link AppInfo}
+    */
+   private void onCreatedAppSuccess(AppInfo app)
+   {
+      IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            updateSSHPublicKey();
+         }
+      });
+   }
+
+   private void updateSSHPublicKey()
+   {
+      UpdatePublicKeyCommandHandler.getInstance().updatePublicKey(new UpdatePublicKeyCallback()
+      {
+         @Override
+         public void onPublicKeyUpdated(boolean success)
+         {
+            if (!success)
+            {
+               cleanUpFolder();
+               Dialogs.getInstance().showError("Unable to update ssh public key.");
+            }
+            else
+            {
+               pullSources();
+            }
+         }
+      });
+   }
+
+   private void pullSources()
+   {
+      new PullApplicationSourcesHandler().pullApplicationSources(vfs, project, new PullCompleteCallback()
+      {
+         @Override
+         public void onPullComplete(boolean success)
+         {
+            if (!success)
+            {
+               cleanUpFolder();
+               Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.pullSourceFailed());
+            }
+            else
+            {
+//               if (projectType == ProjectType.SPRING)
+//               {
+//                  addUpstreamSpringSources();
+//               }
+               setProjectType();
+            }
+         }
+      });
+   }
+
+   private void setProjectType()
+   {
+      try
+      {
+         project.getProperties().add(new PropertyImpl("vfs:projectType", projectType.value()));
+
+         VirtualFileSystem.getInstance().updateItem(project,
+            null,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  project = (ProjectModel)result.getItem();
+                  IDE.fireEvent(new ProjectCreatedEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable e)
+               {
+                  Dialogs.getInstance().showError("Unable to set project type property.");
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -208,122 +489,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       return display.getView();
    }
 
-   private String detectType(String projectType, List<String> types)
-   {
-      // Try to detect by starting symbols:
-      for (String type : types)
-      {
-         if (type.toLowerCase().startsWith(projectType.toLowerCase()))
-         {
-            return type;
-         }
-      }
-
-      // Try to detect by containing symbols:
-      for (String type : types)
-      {
-         if (type.toLowerCase().contains(projectType.toLowerCase()))
-         {
-            return type;
-         }
-      }
-      return types.get(0);
-   }
-
-   /**
-    * Perform creation of application on OpenShift by sending request over WebSocket or HTTP.
-    */
-   private void createApplication()
-   {
-      String applicationName = display.getApplicationNameField().getValue();
-      String applicationType = display.getTypeField().getValue();
-      JobManager.get().showJobSeparated();
-      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-      AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
-
-      try
-      {
-         OpenShiftClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
-            applicationType, new RequestCallback<AppInfo>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(AppInfo result)
-               {
-                  onCreatedSuccess(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         createApplicationREST(applicationName, applicationType);
-      }
-   }
-
-   /**
-    * Perform creation of application on OpenShift by sending request over HTTP.
-    * 
-    * @param applicationName application's name 
-    * @param applicationType type of the application 
-    */
-   private void createApplicationREST(String applicationName, String applicationType)
-   {
-      AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
-      AutoBeanUnmarshaller<AppInfo> unmarshaller = new AutoBeanUnmarshaller<AppInfo>(appInfo);
-
-      try
-      {
-         OpenShiftClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(),
-            applicationType, new AsyncRequestCallback<AppInfo>(unmarshaller)
-            {
-
-               @Override
-               protected void onSuccess(AppInfo result)
-               {
-                  onCreatedSuccess(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  handleError(exception);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, lb.createApplicationFail(applicationName)));
-         deployResultHandler.onDeployFinished(false);
-      }
-   }
-
-   /**
-    * Performs actions after application successfully created on OpenShift.
-    * 
-    * @param app {@link AppInfo}
-    */
-   private void onCreatedSuccess(AppInfo app)
-   {
-      IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            updateSSHPublicKey();
-         }
-      });
-   }
-
    /**
     * Handle error while creating an application.
-    * 
+    *
     * @param exception {@link Throwable}
     */
    private void handleError(Throwable exception)
@@ -344,89 +512,28 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       deployResultHandler.onDeployFinished(false);
    }
 
-   private void updateSSHPublicKey()
+   private void addUpstreamSpringSources() //TODO review this
    {
-      UpdatePublicKeyCommandHandler.getInstance().updatePublicKey(new UpdatePublicKeyCallback()
-      {
-         @Override
-         public void onPublicKeyUpdated(boolean success)
-         {
-            if (!success)
-            {
-               return;
-            }
-
-            Scheduler.get().scheduleDeferred(new ScheduledCommand()
-            {
-
-               @Override
-               public void execute()
-               {
-                  pullAppSources();
-               }
-            });
-         }
-      });
-   }
-
-   private void pullAppSources()
-   {
-      new PullApplicationSourcesHandler().pullApplicationSources(vfs, project, new PullCompleteCallback()
-      {
-         @Override
-         public void onPullComplete(boolean success)
-         {
-            if (!success)
-            {
-               Dialogs.getInstance().showError(OpenShiftExtension.LOCALIZATION_CONSTANT.pullSourceFailed());
-            }
-            else
-            {
-               IDE.fireEvent(new ProjectCreatedEvent(project));
-               deployResultHandler.onDeployFinished(true);
-            }
-         }
-      });
-
-   }
-
-   private void createEmptyProject()
-   {
-      final Loader loader = new GWTLoader();
-      loader.setMessage(lb.creatingProject());
+      String gitUrl = "git://github.com/openshift/spring-eap6-quickstart.git";
       try
       {
-         loader.show();
-         final ProjectModel newProject = new ProjectModel();
-         newProject.setName(projectName);
-         newProject.setProjectType(projectType.value());
-
-         VirtualFileSystem.getInstance().createProject(vfs.getRoot(),
-            new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(newProject))
+         GitClientService.getInstance().remoteAdd(vfs.getId(), project.getId(), "spring-eap6-quickstart", gitUrl, new AsyncRequestCallback<String>()
+         {
+            @Override
+            protected void onSuccess(String result)
             {
+               IDE.fireEvent(new OutputEvent("Spring sources pulled successfully"));
+            }
 
-               @Override
-               protected void onSuccess(ProjectModel result)
-               {
-                  loader.hide();
-                  project = result;
-                  deployResultHandler.onProjectCreated(project);
-                  createApplication();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  loader.hide();
-                  deployResultHandler.onDeployFinished(false);
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               Dialogs.getInstance().showError("Failed to fetch spring sources");
+            }
+         });
       }
-      catch (Exception e)
+      catch (RequestException e)
       {
-         loader.hide();
-         deployResultHandler.onDeployFinished(false);
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
@@ -452,5 +559,33 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       return display.getApplicationNameField().getValue() != null
          && !display.getApplicationNameField().getValue().isEmpty() && display.getTypeField().getValue() != null
          && !display.getTypeField().getValue().isEmpty();
+   }
+
+   private void cleanUpFolder()
+   {
+      if (project != null)
+      {
+         try
+         {
+            VirtualFileSystem.getInstance().delete(project, new AsyncRequestCallback<String>()
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  //nothing to do
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  //nothing to do
+               }
+            });
+         }
+         catch (RequestException exception)
+         {
+            //ignore this exception
+         }
+      }
    }
 }

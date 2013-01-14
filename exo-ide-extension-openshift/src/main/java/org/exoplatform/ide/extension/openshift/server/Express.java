@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.openshift.server;
 
+import com.openshift.client.IApplication;
+import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.OpenShiftConnectionFactory;
+import com.openshift.client.OpenShiftException;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
@@ -83,6 +87,8 @@ public class Express
    private final SshKeyProvider keyProvider;
    private final String workspace;
    private String config = "/ide-home/users/";
+
+   private static final String OPENSHIFT_URL = "https://openshift.redhat.com";
 
    public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, InitParams initParams)
    {
@@ -739,5 +745,165 @@ public class Express
             out.close();
          }
       }
+   }
+
+
+   //------------------
+   private IOpenShiftConnection getOpenShiftConnection() throws VirtualFileSystemException, IOException, ExpressException
+   {
+      RHCloudCredentials credentials = readCredentials();
+      try
+      {
+         return new OpenShiftConnectionFactory()
+            .getConnection("show-domain-info", credentials.getRhlogin(), credentials.getPassword(), OPENSHIFT_URL);
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
+      }
+   }
+
+   public void stopApplication(String appName) throws ExpressException, VirtualFileSystemException, IOException
+   {
+      if (appName != null && !appName.isEmpty())
+      {
+         stopApplication(getOpenShiftConnection(), appName);
+         return;
+      }
+      throw new ExpressException(200, "Application name null", MediaType.TEXT_PLAIN);
+   }
+
+   private void stopApplication(IOpenShiftConnection connection, String appName) throws ExpressException
+   {
+      try
+      {
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+
+         if (application == null)
+         {
+            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
+         }
+
+         application.stop();
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
+      }
+   }
+
+   public void startApplication(String appName) throws ExpressException, VirtualFileSystemException, IOException
+   {
+      if (appName != null && !appName.isEmpty())
+      {
+         startApplication(getOpenShiftConnection(), appName);
+         return;
+      }
+      throw new ExpressException(200, "Application name null", MediaType.TEXT_PLAIN);
+   }
+
+   private void startApplication(IOpenShiftConnection connection, String appName) throws ExpressException
+   {
+      try
+      {
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+
+         if (application == null)
+         {
+            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
+         }
+
+         application.start();
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
+      }
+   }
+
+   public void restartApplication(String appName) throws ExpressException, VirtualFileSystemException, IOException
+   {
+      if (appName != null && !appName.isEmpty())
+      {
+         restartApplication(getOpenShiftConnection(), appName);
+         return;
+      }
+      throw new ExpressException(500, "Application name null", MediaType.TEXT_PLAIN);
+   }
+
+   private void restartApplication(IOpenShiftConnection connection, String appName) throws ExpressException
+   {
+      try
+      {
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+
+         if (application == null)
+         {
+            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
+         }
+
+         application.restart();
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
+      }
+   }
+
+   public String getApplicationHealth(String appName) throws ExpressException, VirtualFileSystemException, IOException
+   {
+      if (appName != null && !appName.isEmpty())
+      {
+         return getApplicationHealth(getOpenShiftConnection(), appName);
+      }
+      throw new ExpressException(500, "Application name null", MediaType.TEXT_PLAIN);
+   }
+
+   //Need to improve this checking
+   private String getApplicationHealth(IOpenShiftConnection connection, String appName) throws ExpressException
+   {
+      InputStream checkStream = null;
+
+      try
+      {
+         IApplication application = connection.getUser().getDefaultDomain().getApplicationByName(appName);
+
+         if (application == null)
+         {
+            throw new ExpressException(500, "Application null", MediaType.TEXT_PLAIN);
+         }
+
+         String appUrl = application.getApplicationUrl();
+
+         checkStream = new URL(appUrl).openStream();
+
+         return "STARTED";
+      }
+      catch (OpenShiftException e)
+      {
+         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
+      }
+      catch (IOException e)
+      {
+         if (e.getMessage().startsWith("Server returned HTTP response code: 503"))
+         {
+            return "STOPPED";
+         }
+      }
+      finally
+      {
+         if (checkStream != null)
+         {
+            try
+            {
+               checkStream.close();
+            }
+            catch (IOException e)
+            {
+            }
+         }
+      }
+
+      return "STOPPED";
    }
 }
