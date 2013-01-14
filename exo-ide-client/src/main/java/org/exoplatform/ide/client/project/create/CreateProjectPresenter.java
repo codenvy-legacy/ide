@@ -88,14 +88,15 @@ import java.util.List;
  * @version $Id: Jul 24, 2012 3:38:19 PM anya $
  *
  */
-public class CreateProjectPresenter implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler, ViewClosedHandler,
+public class CreateProjectPresenter
+   implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler, ViewClosedHandler,
    DeployResultHandler, ItemsSelectedHandler
 {
    interface Display extends IsView
    {
-      
+
       void switchToCreateModule();
-      
+
       HasValue<String> getNameField();
 
       HasValue<String> getErrorLabel();
@@ -207,10 +208,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
    private static final Comparator<ProjectType> PROJECT_TYPES_COMPARATOR = new ProjectTypesComparator();
 
    private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
-   
+
    private boolean createModule = false;
-   
-   private ProjectModel parentProject;   
+
+   private ProjectModel parentProject;
 
    private class NoneTarget extends PaaS
    {
@@ -402,9 +403,9 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
    @Override
    public void onCreateProject(CreateProjectEvent event)
    {
-      openCreateProjectView(false);      
+      openCreateProjectView(false);
    }
-      
+
    @Override
    public void onCreateModule(CreateModuleEvent event)
    {
@@ -413,14 +414,14 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          Dialogs.getInstance().showError("First close pom.xml.");
          return;
       }
-      
+
       openCreateProjectView(true);
    }
-   
+
    private void openCreateProjectView(boolean createModule)
    {
       this.createModule = createModule;
-      
+
       if (display == null)
       {
          display = GWT.create(Display.class);
@@ -429,7 +430,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          {
             display.switchToCreateModule();
          }
-         
+
          bindDisplay();
       }
 
@@ -504,7 +505,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
             {
                @Override
                protected void onSuccess(List<ProjectTemplate> templates)
-               {                  
+               {
                   if (createModule)
                   {
                      allProjectTemplates = new ArrayList<ProjectTemplate>();
@@ -514,13 +515,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                         {
                            allProjectTemplates.add(template);
                         }
-                     }                     
+                     }
                   }
                   else
                   {
                      allProjectTemplates = templates;
                   }
-                  
+
                   List<ProjectType> list = getProjectTypesFromTemplates(allProjectTemplates);
                   setProjectTypes(list);
 
@@ -674,6 +675,28 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
    private void goToTemplatesStep()
    {
       isChooseTemplateStep = true;
+
+      // This code need to detect openshift template and hide it if user choosen none target.
+      // Specification of working openshift is that application created on server side of openshift for example if
+      // if will be simple jsp project, openshift will put into source directory own web.xml and pom.xml and our
+      // project templates that pulling from git repository are conflicting with their and to undestruct all project
+      // we create it on openshift paas and after creation it will be fetched by git to our project directory for
+      // feature working on it. That's why we created a few simple empty project templates that allow IDE to create
+      // project waiting to create application on openshift and then to fetch all source files of this application
+      // into our local directory.
+      List<ProjectTemplate> templatesToTempHide = new ArrayList<ProjectTemplate>();
+      for (ProjectTemplate template : availableProjectTemplates)
+      {
+         if (selectedTarget instanceof NoneTarget
+            && template.getTargets() != null
+            && template.getTargets().contains("OpenShift")
+            && template.getTargets().size() == 1)
+         {
+            templatesToTempHide.add(template);
+         }
+      }
+      availableProjectTemplates.removeAll(templatesToTempHide);
+
       display.getTemplatesGrid().setValue(availableProjectTemplates);
       updateJRebelPanelVisibility();
       display.showChooseTemlateStep();
@@ -754,7 +777,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          {
             parentId = parentProject.getId();
          }
-         
+
          String projectName = display.getNameField().getValue();
          IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
          IDELoader.getInstance().show();
@@ -773,13 +796,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
 
                   IDELoader.getInstance().hide();
                   IDE.getInstance().closeView(display.asView().getId());
-                  
+
                   if (createModule)
                   {
                      MavenModuleCreationCallback.getInstance().moduleCreated(parentProject, result);
                   }
                   else
-                  {                     
+                  {
                      IDE.fireEvent(new ProjectCreatedEvent(result));
                   }
                }
@@ -1104,14 +1127,14 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems() == null || 
-               event.getSelectedItems().size() != 1 || 
-               !(event.getSelectedItems().get(0) instanceof ItemContext))
+      if (event.getSelectedItems() == null ||
+         event.getSelectedItems().size() != 1 ||
+         !(event.getSelectedItems().get(0) instanceof ItemContext))
       {
          parentProject = null;
          return;
       }
-      
+
       ItemContext context = (ItemContext)event.getSelectedItems().get(0);
       parentProject = context.getProject();
    }

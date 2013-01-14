@@ -25,6 +25,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
+import com.google.gwt.user.client.Timer;
 
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.event.CleanProjectEvent;
@@ -44,8 +45,6 @@ import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -55,7 +54,6 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -84,7 +82,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    private final SupportedProjectResolver projectResolver;
 
    /**
-    * 
+    *
     */
    public JavaClasspathResolver(SupportedProjectResolver projectResolver)
    {
@@ -98,8 +96,8 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    }
 
    /**
-   * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
-   */
+    * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
+    */
    @Override
    public void onFileSaved(FileSavedEvent event)
    {
@@ -146,11 +144,11 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    }
 
    @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
+   public void onProjectOpened(final ProjectOpenedEvent event)
    {
       saveFileHandler = IDE.addHandler(FileSavedEvent.TYPE, this);
       this.project = event.getProject();
-      ArrayList<ProjectModel> mvnModules = new ArrayList<ProjectModel>();
+      final ArrayList<ProjectModel> mvnModules = new ArrayList<ProjectModel>();
       if (project.getProjectType().equals(ProjectType.MultiModule.value()))
       {
          List<ProjectModel> children = project.getModules();
@@ -166,8 +164,16 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       {
          mvnModules.add(project);
       }
-      resolveDependencies(mvnModules.toArray(new ProjectModel[mvnModules.size()]));
 
+      Timer t = new Timer()
+      {
+         @Override
+         public void run()
+         {
+            resolveDependencies(mvnModules.toArray(new ProjectModel[mvnModules.size()]));
+         }
+      };
+      t.schedule(4000);
    }
 
    /**
@@ -179,12 +185,14 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       FolderModel parentFolder = event.getParentFolder();
       ProjectModel project = parentFolder.getProject();
       String sourcePath =
-         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
+         project.hasProperty("sourceFolder") ? project.getPropertyValue("sourceFolder")
             : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
       String path = project.getPath() + "/" + sourcePath;
       String pack = "";
       if (!path.equals(parentFolder.getPath()))
+      {
          pack = parentFolder.getPath().substring(path.length() + 1);
+      }
       pack = pack.replaceAll("\\\\", ".");
       String newPackage = event.getPack();
       if (newPackage.contains("."))
@@ -194,13 +202,17 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
          for (String fragment : packageFragments)
          {
             if (builder.length() != 0)
+            {
                builder.append('.');
+            }
             builder.append(fragment);
             TypeInfoStorage.get().getPackages(project.getId()).add(builder.toString());
          }
       }
       else
+      {
          TypeInfoStorage.get().getPackages(project.getId()).add(pack + '.' + newPackage);
+      }
 
    }
 
@@ -294,7 +306,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    }
 
    /**
-    * 
+    *
     */
    private void doClean()
    {
@@ -308,7 +320,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
     * @param result
     */
    private void dependenciesResolvedSuccessed(final UpdateDependencyStatusHandler updateDependencyStatusHandler,
-      final String projectId, StringBuilder result)
+                                              final String projectId, StringBuilder result)
    {
       updateDependencyStatusHandler.requestFinished(projectId);
       if (result != null && result.length() > 0)
