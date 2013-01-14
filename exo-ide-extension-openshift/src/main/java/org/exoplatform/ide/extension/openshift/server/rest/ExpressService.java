@@ -107,12 +107,6 @@ public class ExpressService
          express.createApplication(appName, type,
             (projectId != null) ? new File(localPathResolver.resolve(vfs, projectId)) : null);
 
-      // Update VFS properties. Need it to uniform client.
-      Property p = new PropertyImpl("openshift-express-application", application.getName());
-      List<Property> properties = new ArrayList<Property>(1);
-      properties.add(p);
-      vfs.updateItem(projectId, properties, null);
-
       return application;
    }
 
@@ -148,7 +142,7 @@ public class ExpressService
       if (projectId != null)
       {
          // Update VFS properties. Need it to uniform client.
-         Property p = new PropertyImpl("openshift-express-application", Collections.<String> emptyList());
+         Property p = new PropertyImpl("openshift-express-application", Collections.<String>emptyList());
          List<Property> properties = new ArrayList<Property>(1);
          properties.add(p);
          vfs.updateItem(projectId, properties, null);
@@ -162,5 +156,37 @@ public class ExpressService
       ParsingResponseException, VirtualFileSystemException
    {
       return express.userInfo(appsInfo);
+   }
+
+   @POST
+   @Path("apps/stop")
+   public void stopApplication(@QueryParam("appname") String appName)
+      throws IOException, ExpressException, VirtualFileSystemException
+   {
+      express.stopApplication(appName);
+   }
+
+   @POST
+   @Path("apps/start")
+   public void startApplication(@QueryParam("appname") String appName)
+      throws IOException, ExpressException, VirtualFileSystemException
+   {
+      express.startApplication(appName);
+   }
+
+   @POST
+   @Path("apps/restart")
+   public void restartApplication(@QueryParam("appname") String appName)
+      throws IOException, ExpressException, VirtualFileSystemException
+   {
+      express.restartApplication(appName);
+   }
+
+   @GET
+   @Path("apps/health")
+   public String getApplicationHealth(@QueryParam("appname") String appName)
+      throws IOException, ExpressException, VirtualFileSystemException
+   {
+      return express.getApplicationHealth(appName);
    }
 }

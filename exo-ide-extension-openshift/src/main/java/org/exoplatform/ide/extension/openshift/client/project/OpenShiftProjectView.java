@@ -38,16 +38,16 @@ import org.exoplatform.ide.extension.openshift.client.OpenShiftExtension;
 
 /**
  * View for managing application, deployed on OpenShift. View must be pointed in <b>Views.gwt.xml</b>
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Dec 8, 2011 9:40:02 AM anya $
- * 
+ *
  */
 public class OpenShiftProjectView extends ViewImpl implements OpenShiftProjectPresenter.Display
 {
    private static final int WIDTH = 580;
 
-   private static final int HEIGHT = 240;
+   private static final int HEIGHT = 270;
 
    private static final String ID = "ideOpenShiftProjectView";
 
@@ -65,6 +65,14 @@ public class OpenShiftProjectView extends ViewImpl implements OpenShiftProjectPr
 
    private static final String TYPE_FIELD_ID = "ideOpenShiftProjectViewTypeField";
 
+   private static final String START_BUTTON_ID = "ideOpenShiftProjectViewStartButton";
+
+   private static final String STOP_BUTTON_ID = "ideOpenShiftProjectViewStopButton";
+
+   private static final String RESTART_BUTTON_ID = "ideOpenShiftProjectViewRestartButton";
+
+   private static final String STATUS_LABEL_ID = "ideOpenShiftProjectViewStatusLabel";
+
    private static OpenShiftProjectViewUiBinder uiBinder = GWT.create(OpenShiftProjectViewUiBinder.class);
 
    @UiField
@@ -78,6 +86,18 @@ public class OpenShiftProjectView extends ViewImpl implements OpenShiftProjectPr
 
    @UiField
    ImageButton closeButton;
+
+   @UiField
+   ImageButton startButton;
+
+   @UiField
+   ImageButton stopButton;
+
+   @UiField
+   ImageButton restartButton;
+
+   @UiField
+   Label statusField;
 
    @UiField
    TextInput nameField;
@@ -105,6 +125,10 @@ public class OpenShiftProjectView extends ViewImpl implements OpenShiftProjectPr
       nameField.setName(NAME_FIELD_ID);
       urlField.setName(URL_FIELD_ID);
       typeField.setID(TYPE_FIELD_ID);
+      startButton.setButtonId(START_BUTTON_ID);
+      stopButton.setButtonId(STOP_BUTTON_ID);
+      restartButton.setButtonId(RESTART_BUTTON_ID);
+      statusField.setID(STATUS_LABEL_ID);
    }
 
    /**
@@ -163,5 +187,42 @@ public class OpenShiftProjectView extends ViewImpl implements OpenShiftProjectPr
    public HasValue<String> getApplicationType()
    {
       return typeField;
+   }
+
+   @Override
+   public HasClickHandlers getStartButton()
+   {
+      return startButton;
+   }
+
+   @Override
+   public HasClickHandlers getStopButton()
+   {
+      return stopButton;
+   }
+
+   @Override
+   public HasClickHandlers getRestartButton()
+   {
+      return restartButton;
+   }
+
+   @Override
+   public void setControlsActivity(boolean active)
+   {
+      if (active)
+      {
+         startButton.setEnabled(false);
+         stopButton.setEnabled(true);
+         restartButton.setEnabled(true);
+         statusField.setValue("STARTED");
+      }
+      else
+      {
+         startButton.setEnabled(true);
+         stopButton.setEnabled(false);
+         restartButton.setEnabled(false);
+         statusField.setValue("STOPPED");
+      }
    }
 }
