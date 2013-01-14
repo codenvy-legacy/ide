@@ -1,4 +1,4 @@
-eXo IDE supports the following programming and scripting languages: JavaScript, HTML, XML, CSS, Java, Groovy, PHP, Python, Ruby and JSP. Editing files in the IDE you have such editing functions as Syntax Highlighting, Code formatting, Code Autocompletion, Error Marking and Outliner. There are also preview mode for HTML, Javascript and OpenSocial gadget files. Finally IDE makes online development simple, providing deployment of your Java, PHP and Ruby applications to such cloud platforms (PaaS) as Google App Engine, Cloud Foundry, Heroku, OpenShift and CloudBees out of the box.
+Codenvy supports the following programming and scripting languages: JavaScript, HTML, XML, CSS, Java, Groovy, PHP, Python, Ruby and JSP. Editing files in the Codenvy you have such editing functions as Syntax Highlighting, Code formatting, Code Autocompletion, Error Marking and Outliner. There are also preview mode for HTML, Javascript and OpenSocial gadget files. Finally Codenvy makes online development simple, providing deployment of your Java, PHP and Ruby applications to such cloud platforms (PaaS) as Google App Engine, Cloud Foundry, Heroku, OpenShift and CloudBees out of the box.
 
 h1. Java
 
@@ -20,7 +20,7 @@ You can also view JavaDoc and autocomplete the object's fields and methods as fo
 
 h3. Static Fields and Methods Autocompletion
 
-eXo IDE supports the autocompletion of static fields, methods and object's fields and methods.
+Codenvy supports the autocompletion of static fields, methods and object's fields and methods.
 
 {info}
 The autocompletion for methods and fields of the class or instance can only work, if it is called after the symbol ".".
@@ -28,7 +28,7 @@ The autocompletion for methods and fields of the class or instance can only work
 
 h3. Java keywords autocomplete
 
-eXo IDE supports autocomplete for Java keywords ({{abstract, assert class, continue, synchronized}}, etc.) as shown below:
+Codenvy supports autocomplete for Java keywords ({{abstract, assert class, continue, synchronized}}, etc.) as shown below:
 
 !java_keywords_autocomplete.png|border=0!
 
@@ -46,7 +46,7 @@ It is possible to autocomplete the annotations, followed by symbol "@". The Auto
 
 h3. Local Variables and Parameters Autocompletion
 
-Local variables and method's parameters are marked with the special icon in the autocomplete form - !local.png!. eXo IDE supports the autocompletion for local variables and method's parameters.
+Local variables and method's parameters are marked with the special icon in the autocomplete form - !local.png!. Codenvy supports the autocompletion for local variables and method's parameters.
 
 
 
@@ -80,7 +80,7 @@ Groovy is the Java based language, therefore Groovy code supports Java Autocompl
 * @<annotation name>\_
 * in the line after the space.
 
-IDE compiles classes, which are described in the project's classpath, before generation of _Autocomplete list_. If the compilation of some class is failed, the error message will appear in _Output Panel_ instead of *Autocomplete Form* as shown below:
+Codenvy compiles classes, which are described in the project's classpath, before generation of _Autocomplete list_. If the compilation of some class is failed, the error message will appear in _Output Panel_ instead of *Autocomplete Form* as shown below:
 {code}
 [ERROR] Error (500: Internal Server Error)
 startup failed, /ide-project/data/Pojo.groovy: 9: unexpected token: vpid @ line 9, column 3.
@@ -95,7 +95,7 @@ To display classes from folder, described as _folder source_ in the project's cl
 
 h3. Class Name Autocomplete
 
-You can view class's JavaDoc and class name from the autocomplete form. eXo IDE provides appropriate import statement into the file header automatically, if needed.
+You can view class's JavaDoc and class name from the autocomplete form. Codenvy provides appropriate import statement into the file header automatically, if needed.
 There is a list of default packages for the Groovy code:
 * *java.lang.*\*
 * *java.io.\**
@@ -159,7 +159,7 @@ Outside these tags the supported autocomplete is for HTML.
 
 h1. HTML
 
-eXo IDE allows to edit and preview HTML files.
+Codenvy allows to edit and preview HTML files.
 
 h2. Create new HTML file
 
@@ -194,7 +194,7 @@ To create a new Python file go to *File > New > Python File* to create new Pytho
 
 h1. PHP
 
-For PHP files the following editing functions are available: Code Autocompletion, Code Formatting, Error Marking, Outliner and Syntax Highlighting. Exo IDE allows you also to edit PHP files and provides with tools to deploy your applications to OpenShift PaaS. 
+For PHP files the following editing functions are available: Code Autocompletion, Code Formatting, Error Marking, Outliner and Syntax Highlighting. Codenvy allows you also to edit PHP files and provides with tools to deploy your applications to OpenShift PaaS. 
 
 To create a new PHP file, go to *File > New > PHP File*
 

@@ -265,7 +265,7 @@ h2.  Delete Cloud Foundry application
 {screen}
 vmc delete [application-name] [-d/--delete-services]
 {screen}
-Use *-d* or *\--delete-services* option to delete services bounded to application.
+Use *-d* or *"--delete-services"* option to delete services bounded to application.
 
 
 h2. Display resource usage for the Cloud Foundry application
@@ -318,8 +318,7 @@ test@cloud-ide.com:Spring1$ vmc resource_limits_info
     "max_total_file_size" : 1073741824,
     "max_files_to_clone" : 1000
 }
-
-{code}
+{code}
 
 h2. Create or update an app version
 {screen}
@@ -356,8 +355,7 @@ appcfg backend configure <backend_name>
 
 h3. Update backend
 {screen}
-appcfg backend update
- <backend_name>
+appcfg backend update <backend_name>
 {screen}
 
 h3. Set start/stop state of backend.

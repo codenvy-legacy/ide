@@ -1,4 +1,4 @@
-eXo IDE provides support for Git version control system. Git allows you to perform versioning operations with files and projects.
+Codenvy provides support for Git version control system. Git allows you to perform versioning operations with files and projects.
 
 h1. Initializing local repository
 

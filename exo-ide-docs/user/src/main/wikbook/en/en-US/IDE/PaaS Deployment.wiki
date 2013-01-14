@@ -1,4 +1,4 @@
-eXo IDE provides all necessary tools for easy deployment your projects on Google App Engine, Cloud Foundry, Heroku, OpenShift and CloudBees PaaS.
+Codenvy provides all necessary tools for easy deployment your projects on Google App Engine, Cloud Foundry, Heroku, OpenShift and CloudBees PaaS.
 
 h1. Google App Engine
 
@@ -26,7 +26,7 @@ In the appeared *Not Authorized* window click the *Authenticate* button.
 
 *Illustration. Google App Engine authorization page*
 
-In this page you will be asked to allow the access for eXo IDE to manage your applications. Press *Allow access* button, wait for *Authentication successful* message and switch to eXo IDE tab.
+In this page you will be asked to allow the access for Codenvy to manage your applications. Press *Allow access* button, wait for *Authentication successful* message and switch to Codenvy tab.
 
 !GAE_authentication_successful_page.png|border=0!
 
@@ -42,7 +42,7 @@ In this page you will be asked to allow the access for eXo IDE to manage your ap
 
 *Illustration. Google App Engine page*
 
-Wait for *Application created* message and switch to eXo IDE tab.
+Wait for *Application created* message and switch to Codenvy tab.
 
 !GAE_app_created_message.png|border=0!
 
@@ -119,7 +119,7 @@ OpenShift is a PaaS for Java, Perl, PHP, Python, Ruby and Node.js applications d
 
 * *Step 3:* On the first usage, the application will prompt you for your OpenShift credentials.
 
-* *Step 4:* Enter your credentials and validate to create your domain. At this point, the IDE will create an SSH public and private keys and deploy the public key to your OpenShift account. You can view you SSH keys in the SSH Key Manager.
+* *Step 4:* Enter your credentials and validate to create your domain. At this point, the Codenvy will create an SSH public and private keys and deploy the public key to your OpenShift account. You can view you SSH keys in the SSH Key Manager.
 
 * *Step 5:* You can now create an application. Create a new project and open it. In the OpenShift menu, choose Create Application. You will be asked to choose an application name and an application type. After validation, OpenShift will generate the default structure of your application in its remote repository. The repository will automatically be added to the list of remotes and named as "express".
 
@@ -216,11 +216,11 @@ CloudBees is a cloud platform to deploy Java applications. To deploy application
 
 *Illustration. Output message about application initialization*
 
-* *Step 6:* We now need to push our code to a remote repository, in order to build it on Dev@Cloud. For this, we will use GitHub as an intermediary. If you haven't set up your GitHub account to work with your IDE yet, generate a new SSH key for [github.com|http://github.com/] and copy the public key to your GitHub account (Account Settings).
+* *Step 6:* We now need to push our code to a remote repository, in order to build it on Dev@Cloud. For this, we will use GitHub as an intermediary. If you haven't set up your GitHub account to work with your Codenvy yet, generate a new SSH key for [github.com|http://github.com/] and copy the public key to your GitHub account (Account Settings).
 
 * *Step 7:* Create a new repository in GitHub and copy the SSH url.
 
-* *Step 8:* Go to the IDE: *Git > Remote > Remotes...*, add GitHub as a remote repository and paste the SSH url.
+* *Step 8:* Go to the Codenvy: *Git > Remote > Remotes...*, add GitHub as a remote repository and paste the SSH url.
 
 * *Step 9:* Push your project to GitHub.
 
