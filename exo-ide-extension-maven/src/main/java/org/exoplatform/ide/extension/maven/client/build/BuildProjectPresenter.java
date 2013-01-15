@@ -537,7 +537,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          if (projectId != null)
          {
             writeBuildInfo(buildStatus);
-            startWatchingProjectChanges();
+            checkIfProjectIsUnderWatching();
          }
 //         message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
 //            .append("\">here</a>");
@@ -650,6 +650,41 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          e.printStackTrace();
       }
 
+   }
+
+   private void checkIfProjectIsUnderWatching()
+   {
+      try
+      {
+         final ProjectModel p = new ProjectModel();
+         p.setId(project.getId());
+
+         VirtualFileSystem.getInstance().getItemById(project.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(p)))
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               for (Property property : result.getItem().getProperties())
+               {
+                  if ("vfs:lastUpdateTime".equals(property.getName()))
+                  {
+                     return;
+                  }
+               }
+               startWatchingProjectChanges();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    private void startWatchingProjectChanges()

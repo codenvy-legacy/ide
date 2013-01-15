@@ -74,7 +74,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Field to select target (domain, server), where to login.
     */
    @UiField
-   ComboBoxField targetField;
+   TextBox targetField;
 
    /**
     * Email field.
@@ -114,6 +114,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       passwordField.setName(PASSWORD_FIELD_ID);
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      targetField.setReadOnly(true);
    }
 
    @Override
@@ -166,9 +167,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    @Override
-   public void setTargetValues(String[] targets)
+   public void setTargetValues(String target)
    {
-      targetField.setValueMap(targets);
+      targetField.setValue(target);
    }
 
    @Override
