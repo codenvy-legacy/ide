@@ -26,11 +26,7 @@ In the appeared *Not Authorized* window click the *Authenticate* button.
 
 *Illustration. Google App Engine authorization page*
 
-In this page you will be asked to allow the access for Codenvy to manage your applications. Press *Allow access* button, wait for *Authentication successful* message and switch to Codenvy tab.
-
-!GAE_authentication_successful_page.png|border=0!
-
-*Illustration. Authentication Successful page*
+In this page you will be asked to allow the access for Codenvy to manage your applications. Press *Allow access* button, wait for *Authentication successful* message, close browser's tab with message and switch to Codenvy tab.
 
 * *Step 5:* Go to *PaaS > Google App Engine > Create Application...*. In the appeared *Create Application on Google App Engine* window click the *Create* button.
 
@@ -42,11 +38,7 @@ In this page you will be asked to allow the access for Codenvy to manage your ap
 
 *Illustration. Google App Engine page*
 
-Wait for *Application created* message and switch to Codenvy tab.
-
-!GAE_app_created_message.png|border=0!
-
-*Illustration. Application created page*
+Wait for *Application created* message, close browser's tab with message and switch to Codenvy tab.
 
 * *Step 8:* Click *Deploy* button in the *Create Application on Google App Engine* window. Your application will be builded and deployed to Google App Engine. The build and deploy status displays in the *Output* window. If it is successful, you will receive a message with your application URL.
 
