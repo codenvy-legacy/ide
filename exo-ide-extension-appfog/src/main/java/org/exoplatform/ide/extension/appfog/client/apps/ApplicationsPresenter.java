@@ -122,7 +122,6 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onClick(ClickEvent event)
          {
-            currentServer = display.getServerSelectField().getValue();
             getApplicationList();
          }
       });
@@ -163,7 +162,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onSelection(SelectionEvent<AppfogApplication> event)
          {
-            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));
+            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), display.getServerSelectField().getValue()));
          }
       });
    }
@@ -237,8 +236,6 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
       }
       display.setServerValue(AppfogExtension.DEFAULT_SERVER);
-      // fill the list of applications
-      currentServer = servers.get(0);
       getApplicationList();
    }
 
@@ -247,7 +244,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       try
       {
          AppfogClientService.getInstance().getApplicationList(
-            currentServer,
+            display.getServerSelectField().getValue(),
             new AppfogAsyncRequestCallback<List<AppfogApplication>>(new ApplicationListUnmarshaller(
                new ArrayList<AppfogApplication>()), new LoggedInHandler()//
             {
@@ -256,14 +253,14 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                {
                   getApplicationList();
                }
-            }, null, currentServer)
+            }, null, display.getServerSelectField().getValue())
             {
 
                @Override
                protected void onSuccess(List<AppfogApplication> result)
                {
                   display.getAppsGrid().setValue(result);
-                  display.getServerSelectField().setValue(currentServer);
+                  display.getServerSelectField().setValue(display.getServerSelectField().getValue());
                   display.setServerValue(AppfogExtension.DEFAULT_SERVER);
                }
             });
