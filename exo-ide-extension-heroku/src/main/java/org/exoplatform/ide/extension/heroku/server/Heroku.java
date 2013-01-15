@@ -1143,7 +1143,6 @@ public class Heroku
          URL url = new URL(HEROKU_API + "/apps/" + appName + "/ps?attach=true");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("POST");
-         http.setRequestProperty("Content-type", "application/xml, */*");
          http.setRequestProperty("Accept", "application/xml, */*");
 
          authenticate(herokuCredentials, http);
@@ -1152,7 +1151,7 @@ public class Heroku
          OutputStream output = http.getOutputStream();
          try
          {
-            output.write(("<?xml version='1.0' encoding='UTF-8'?><command>" + command + "</command>").getBytes());
+            output.write(("attach=true&command=" + command).getBytes());
             output.flush();
          }
          finally
