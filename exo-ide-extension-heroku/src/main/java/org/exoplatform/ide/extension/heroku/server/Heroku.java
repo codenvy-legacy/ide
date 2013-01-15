@@ -441,11 +441,10 @@ public class Heroku
          if (name != null)
          {
             http.setDoOutput(true);
-            http.setRequestProperty("Content-type", "application/xml, */*");
             OutputStream output = http.getOutputStream();
             try
             {
-               output.write(("<?xml version='1.0' encoding='UTF-8'?><app><name>" + name + "</name></app>").getBytes());
+               output.write(("app[name]=" + name).getBytes());
                output.flush();
             }
             finally
