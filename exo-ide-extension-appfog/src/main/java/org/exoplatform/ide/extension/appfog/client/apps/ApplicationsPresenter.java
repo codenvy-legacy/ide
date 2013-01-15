@@ -82,9 +82,9 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       /**
        * Set the list of servers to ServerSelectField.
        *
-       * @param servers
+       * @param server
        */
-      void setServerValues(String[] servers);
+      void setServerValue(String server);
    }
 
    private Display display;
@@ -122,7 +122,6 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onClick(ClickEvent event)
          {
-            currentServer = display.getServerSelectField().getValue();
             getApplicationList();
          }
       });
@@ -163,7 +162,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          @Override
          public void onSelection(SelectionEvent<AppfogApplication> event)
          {
-            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));
+            IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), display.getServerSelectField().getValue()));
          }
       });
    }
@@ -236,9 +235,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          IDE.getInstance().openView(display.asView());
          IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
       }
-      display.setServerValues(servers.toArray(new String[servers.size()]));
-      // fill the list of applications
-      currentServer = servers.get(0);
+      display.setServerValue(AppfogExtension.DEFAULT_SERVER);
       getApplicationList();
    }
 
@@ -247,7 +244,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       try
       {
          AppfogClientService.getInstance().getApplicationList(
-            currentServer,
+            display.getServerSelectField().getValue(),
             new AppfogAsyncRequestCallback<List<AppfogApplication>>(new ApplicationListUnmarshaller(
                new ArrayList<AppfogApplication>()), new LoggedInHandler()//
             {
@@ -256,47 +253,15 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                {
                   getApplicationList();
                }
-            }, null, currentServer)
+            }, null, display.getServerSelectField().getValue())
             {
 
                @Override
                protected void onSuccess(List<AppfogApplication> result)
                {
                   display.getAppsGrid().setValue(result);
-                  display.getServerSelectField().setValue(currentServer);
-
-                  // update the list of servers, if was enter value, that doesn't present in list
-                  if (!servers.contains(currentServer))
-                  {
-                     getServers();
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void getServers()
-   {
-      try
-      {
-         AppfogClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  servers = result;
-                  display.setServerValues(result.toArray(new String[result.size()]));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  display.getServerSelectField().setValue(display.getServerSelectField().getValue());
+                  display.setServerValue(AppfogExtension.DEFAULT_SERVER);
                }
             });
       }
