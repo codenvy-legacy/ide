@@ -124,9 +124,9 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       /**
        * Set the list of available targets.
        *
-       * @param targets
+       * @param target
        */
-      void setTargetValues(String[] targets);
+      void setTargetValues(String target);
    }
 
    private static final AppfogLocalizationConstant lb = AppfogExtension.LOCALIZATION_CONSTANT;
@@ -232,7 +232,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          server = event.getLoginUrl();
          if (server != null && !server.startsWith("http"))
          {
-            server = "http://" + server;
+            server = "https://" + server;
          }
       }
       if (display == null)
@@ -242,6 +242,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          IDE.getInstance().openView(display.asView());
          display.enableLoginButton(false);
          display.focusInEmailField();
+         display.setTargetValues(AppfogExtension.DEFAULT_SERVER);
          getSystemInformation();
       }
    }
@@ -255,14 +256,13 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
       {
          AutoBean<SystemInfo> systemInfo = AppfogExtension.AUTO_BEAN_FACTORY.systemInfo();
          AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
-         AppfogClientService.getInstance().getSystemInfo(server,
+         AppfogClientService.getInstance().getSystemInfo(AppfogExtension.DEFAULT_SERVER,
             new AsyncRequestCallback<SystemInfo>(unmarshaller)
             {
                @Override
                protected void onSuccess(SystemInfo result)
                {
                   display.getEmailField().setValue(result.getUser());
-                  getTargets();
                }
 
                /**
@@ -271,65 +271,7 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-                  if (exception instanceof UnmarshallerException)
-                  {
-                     Dialogs.getInstance().showError(exception.getMessage());
-                  }
-                  else
-                  {
-                     getTargets();
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void getTargets()
-   {
-      try
-      {
-         AppfogClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  if (result.isEmpty())
-                  {
-                     display.setTargetValues(new String[]{AppfogExtension.DEFAULT_SERVER});
-                     if (server == null || server.isEmpty())
-                     {
-                        display.getTargetSelectField().setValue(AppfogExtension.DEFAULT_SERVER);
-                     }
-                     else
-                     {
-                        display.getTargetSelectField().setValue(server);
-                     }
-                  }
-                  else
-                  {
-                     String[] targets = new String[result.size()];
-                     targets = result.toArray(targets);
-                     display.setTargetValues(targets);
-                     if (server == null || server.isEmpty())
-                     {
-                        display.getTargetSelectField().setValue(result.get(0));
-                     }
-                     else
-                     {
-                        display.getTargetSelectField().setValue(server);
-                     }
-                  }
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  Dialogs.getInstance().showError(exception.getMessage());
                }
             });
       }

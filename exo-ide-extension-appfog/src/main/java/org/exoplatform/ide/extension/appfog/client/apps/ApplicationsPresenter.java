@@ -82,9 +82,9 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
       /**
        * Set the list of servers to ServerSelectField.
        *
-       * @param servers
+       * @param server
        */
-      void setServerValues(String[] servers);
+      void setServerValue(String server);
    }
 
    private Display display;
@@ -236,7 +236,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
          IDE.getInstance().openView(display.asView());
          IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
       }
-      display.setServerValues(servers.toArray(new String[servers.size()]));
+      display.setServerValue(AppfogExtension.DEFAULT_SERVER);
       // fill the list of applications
       currentServer = servers.get(0);
       getApplicationList();
@@ -264,39 +264,7 @@ public class ApplicationsPresenter implements ViewClosedHandler, ShowApplication
                {
                   display.getAppsGrid().setValue(result);
                   display.getServerSelectField().setValue(currentServer);
-
-                  // update the list of servers, if was enter value, that doesn't present in list
-                  if (!servers.contains(currentServer))
-                  {
-                     getServers();
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void getServers()
-   {
-      try
-      {
-         AppfogClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  servers = result;
-                  display.setServerValues(result.toArray(new String[result.size()]));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  display.setServerValue(AppfogExtension.DEFAULT_SERVER);
                }
             });
       }
