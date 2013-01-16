@@ -754,14 +754,13 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("PUT");
          http.setRequestProperty("Accept", "application/xml, */*");
-         http.setRequestProperty("Content-type", "application/xml");
          http.setDoOutput(true);
          authenticate(herokuCredentials, http);
 
          OutputStream output = http.getOutputStream();
          try
          {
-            output.write(("<app><name>" + newname + "</name></app>").getBytes());
+            output.write(("app[name]=" + newname).getBytes());
             output.flush();
          }
          finally
@@ -1139,7 +1138,7 @@ public class Heroku
       {
          // "attach" parameter points to use rendezvous to access stdin/stdout or
          // to stream process output to the application log:
-         URL url = new URL(HEROKU_API + "/apps/" + appName + "/ps?attach=true");
+         URL url = new URL(HEROKU_API + "/apps/" + appName + "/ps");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("POST");
          http.setRequestProperty("Accept", "application/xml, */*");
