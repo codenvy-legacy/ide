@@ -654,7 +654,7 @@ public class Heroku
          {
             info.put("name", (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING));
             info.put("webUrl", (String)xPath.evaluate("/app/web-url", xmlDoc, XPathConstants.STRING));
-            info.put("domainName", (String)xPath.evaluate("/app/domain_name", xmlDoc, XPathConstants.STRING));
+            info.put("domainName", (String)xPath.evaluate("/app/domain-name", xmlDoc, XPathConstants.STRING));
             info.put("gitUrl", (String)xPath.evaluate("/app/git-url", xmlDoc, XPathConstants.STRING));
             info.put("dynos", (String)xPath.evaluate("/app/dynos", xmlDoc, XPathConstants.STRING));
             info.put("workers", (String)xPath.evaluate("/app/workers", xmlDoc, XPathConstants.STRING));
