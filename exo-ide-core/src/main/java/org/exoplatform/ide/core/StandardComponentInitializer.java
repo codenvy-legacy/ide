@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -29,9 +30,11 @@ import org.exoplatform.ide.command.ShowNewFolderWizardCommand;
 import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.command.ShowNewResourceWizardCommand;
 import org.exoplatform.ide.command.ShowPreferenceCommand;
+import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.keybinding.KeyBuilder;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.toolbar.ToolbarPresenter;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.newfile.NewTextFilePagePresenter;
 import org.exoplatform.ide.wizard.newfolder.NewFolderPagePresenter;
@@ -55,7 +58,8 @@ public class StandardComponentInitializer
       ShowNewFolderWizardCommand newFolderCommand, ShowNewProjectWizardCommand newProjectCommand,
       WizardAgentImpl wizardAgent, Provider<NewGenericProjectPagePresenter> genericProjectProvider,
       Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
-      Resources resources, KeyBindingAgent keyBindingAgent,  ShowPreferenceCommand showPreferencesCommand)
+      Resources resources, KeyBindingAgent keyBindingAgent, ShowPreferenceCommand showPreferencesCommand,
+      ToolbarPresenter toolbarPresenter, ExpressionManager expressionManager)
    {
       wizardAgent.registerNewProjectWizard("Generic Project", "Create generic project", "",
          resources.genericProjectIcon(), genericProjectProvider, JsonCollections.<String> createArray());
@@ -74,5 +78,14 @@ public class StandardComponentInitializer
 
       keyBindingAgent.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
       keyBindingAgent.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
+
+      // add items to Toolbar
+      toolbarPresenter.addDropDownItem("General/New", new Image(resources.file()), "Create new resources");
+      toolbarPresenter.addItem("General/New/Project", newProjectCommand);
+      toolbarPresenter.addItem("General/New/File", newFileCommand);
+      toolbarPresenter.addItem("General/New/Folder", newFolderCommand);
+
+      toolbarPresenter.addItem("General/Save", saveCommand);
+      toolbarPresenter.addItem("General/Save All", saveAllCommand);
    }
 }

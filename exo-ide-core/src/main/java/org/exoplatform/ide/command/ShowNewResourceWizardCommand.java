@@ -21,6 +21,7 @@ package org.exoplatform.ide.command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.menu.ExtendedCommand;
@@ -42,6 +43,8 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
 
    private final ProjectOpenedExpression expression;
 
+   private final Image icon;
+
    /**
     * Create command.
     *
@@ -56,6 +59,7 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
       this.resources = resources;
       this.wizardAgent = wizardAgent;
       this.expression = expression;
+      this.icon = new Image(resources.file());
    }
 
    /**
@@ -73,8 +77,7 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
     */
    public Image getIcon()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return icon;
    }
 
    /**
@@ -92,5 +95,14 @@ public class ShowNewResourceWizardCommand implements ExtendedCommand
    public Expression canExecute()
    {
       return expression;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return "Create new resource";
    }
 }

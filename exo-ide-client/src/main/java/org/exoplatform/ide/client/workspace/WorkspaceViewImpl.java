@@ -48,6 +48,9 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
 
    @UiField
    SimplePanel topPanel;
+
+   @UiField
+   SimplePanel secondTopPanel;
    
    @UiField
    SimplePanel rightPanel;
@@ -109,5 +112,14 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    {
       // ok
       // there are no events for now
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public AcceptsOneWidget getToolbarPanel()
+   {
+      return secondTopPanel;
    }
 }

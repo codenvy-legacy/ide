@@ -21,6 +21,8 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.core.event.ActivePartChangedEvent;
 import org.exoplatform.ide.core.event.ActivePartChangedHandler;
+import org.exoplatform.ide.core.event.ChangeToggleItemStateEvent;
+import org.exoplatform.ide.core.event.ChangeToggleItemStateHandler;
 import org.exoplatform.ide.core.event.EditorDirtyStateChangedEvent;
 import org.exoplatform.ide.core.event.EditorDirtyStateChangedHandler;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
@@ -32,6 +34,7 @@ import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
 import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.resources.model.Project;
+import org.exoplatform.ide.toolbar.ToggleStateExpression;
 
 /**
  *
@@ -62,6 +65,7 @@ public class ExpressionManager
       eventBus.addHandler(ProjectActionEvent.TYPE, new ProjectChangedHandler());
       eventBus.addHandler(ActivePartChangedEvent.TYPE, new PartChangedHandler());
       eventBus.addHandler(EditorDirtyStateChangedEvent.TYPE, new EditorDirtyChangedHandler());
+      eventBus.addHandler(ChangeToggleItemStateEvent.TYPE, new ChangeItemStateHandler());
    }
 
    /**
@@ -236,5 +240,39 @@ public class ExpressionManager
          calculateEditorDirtyStateChanged(event.getEditor());
       }
 
+   }
+
+   /**
+    * Process {@link ChangeToggleItemStateEvent}
+    */
+   private final class ChangeItemStateHandler implements ChangeToggleItemStateHandler
+   {
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void onStateChanged(ChangeToggleItemStateEvent event)
+      {
+         final JsonIntegerMap<Boolean> changedExpressions = JsonCollections.createIntegerMap();
+         final int idExpression = event.getIdExpression();
+         expressions.iterate(new IterationCallback<Expression>()
+         {
+            @Override
+            public void onIteration(int id, Expression expression)
+            {
+               if (expression instanceof ToggleStateExpression && expression.getId() == idExpression)
+               {
+                  // value changed
+                  changedExpressions.put(id, expression.getValue());
+               }
+            }
+         });
+
+         if (!changedExpressions.isEmpty())
+         {
+            fireChangedExpressions(changedExpressions);
+         }
+      }
    }
 }

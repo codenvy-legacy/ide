@@ -21,6 +21,8 @@ package org.exoplatform.ide.command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.menu.ExtendedCommand;
@@ -39,14 +41,18 @@ public class SaveCommand implements ExtendedCommand
 
    private EditorAgent editorAgent;
 
+   private final Image icon;
+
    /**
     *
     */
    @Inject
-   public SaveCommand(EditorAgent editorAgent, EditorDirtyExpression expression)
+   public SaveCommand(EditorAgent editorAgent, EditorDirtyExpression expression, Resources resources)
    {
       this.editorAgent = editorAgent;
       this.expression = expression;
+      // TODO need correct image
+      this.icon = new Image(resources.file());
    }
 
    /**
@@ -64,8 +70,7 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public Image getIcon()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return icon;
    }
 
    /**
@@ -86,4 +91,12 @@ public class SaveCommand implements ExtendedCommand
       return expression;
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return "Save changes for current file";
+   }
 }

@@ -21,6 +21,8 @@ package org.exoplatform.ide.command;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.editor.EditorPartPresenter;
@@ -35,18 +37,30 @@ import org.exoplatform.ide.menu.ExtendedCommand;
 public class SaveAllCommand implements ExtendedCommand
 {
 
-
    private EditorAgent editorAgent;
 
    private EditorsDirtyExpression expression;
 
+   private final Image icon;
+
+   /**
+    * Create command.
+    * 
+    * @param editorAgent
+    * @param expression
+    */
    @Inject
-   public SaveAllCommand(EditorAgent editorAgent, EditorsDirtyExpression expression)
+   public SaveAllCommand(EditorAgent editorAgent, EditorsDirtyExpression expression, Resources resources)
    {
       this.editorAgent = editorAgent;
       this.expression = expression;
+      // TODO need correct image
+      this.icon = new Image(resources.file());
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void execute()
    {
@@ -64,22 +78,39 @@ public class SaveAllCommand implements ExtendedCommand
       });
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Image getIcon()
    {
-      //TODO
-      return null;
+      return icon;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Expression inContext()
    {
       return null;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Expression canExecute()
    {
       return expression;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return "Save all changes for project";
    }
 }

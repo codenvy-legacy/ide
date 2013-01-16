@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPresenter;
 import org.exoplatform.ide.wizard.newproject.NewProjectPagePresenter;
@@ -33,11 +35,13 @@ import org.exoplatform.ide.wizard.newproject.NewProjectPagePresenter;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowNewProjectWizardCommand implements Command
+public class ShowNewProjectWizardCommand implements ExtendedCommand
 {
    private final WizardAgentImpl wizardAgent;
 
    private final Resources resources;
+
+   private final Image icon;
 
    /**
     * Create command
@@ -50,6 +54,8 @@ public class ShowNewProjectWizardCommand implements Command
    {
       this.wizardAgent = wizardAgent;
       this.resources = resources;
+      // TODO need correct image
+      this.icon = new Image(resources.project());
    }
 
    /**
@@ -60,5 +66,41 @@ public class ShowNewProjectWizardCommand implements Command
       NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources);
       WizardPresenter wizardDialog = new WizardPresenter(firstPage, "Create project");
       wizardDialog.showWizard();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Image getIcon()
+   {
+      return icon;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return "Create new porject";
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Expression inContext()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Expression canExecute()
+   {
+      return null;
    }
 }

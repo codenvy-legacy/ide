@@ -64,6 +64,7 @@ import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.ProjectDescription;
 import org.exoplatform.ide.resources.model.Property;
 import org.exoplatform.ide.rest.MimeType;
+import org.exoplatform.ide.toolbar.ToolbarPresenter;
 import org.exoplatform.ide.ui.list.SimpleList;
 import org.exoplatform.ide.ui.list.SimpleList.View;
 import org.exoplatform.ide.util.dom.Elements;
@@ -91,6 +92,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
    private final MainMenuPresenter menuPresenter;
 
+   private final ToolbarPresenter toolbarPresenter;
+
    private final PartAgentPresenter partAgent;
 
    private final EditorAgent editorAgent;
@@ -99,11 +102,11 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
    @Inject
    protected WorkspacePresenter(WorkspaceView view, final ProjectExplorerPresenter projectExplorerPresenter,
-                                EventBus eventBus, MainMenuPresenter menuPresenter, EditorAgent editorAgent, Resources resources,
-                                final ResourceProvider resourceProvider, final ExpressionManager expressionManager, PartAgentPresenter partAgent,
-                                ExtensionsPage extensionsPage, PageResources pageResources,
-                                OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
-                                EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
+      EventBus eventBus, MainMenuPresenter menuPresenter, ToolbarPresenter toolbarPresenter, EditorAgent editorAgent,
+      Resources resources, final ResourceProvider resourceProvider, final ExpressionManager expressionManager,
+      PartAgentPresenter partAgent, ExtensionsPage extensionsPage, PageResources pageResources,
+      OutlinePartPresenter outlinePresenter, NoProjectOpenedExpression noProjectOpenedExpression,
+      EditorActiveExpression editorActiveExpression, ProjectOpenedExpression projectOpenedExpression)
    {
       super();
       this.view = view;
@@ -111,6 +114,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
       this.projectExplorerPresenter = projectExplorerPresenter;
       this.eventBus = eventBus;
       this.menuPresenter = menuPresenter;
+      this.toolbarPresenter = toolbarPresenter;
       this.editorAgent = editorAgent;
       this.partAgent = partAgent;
       this.resources = resources;
@@ -149,6 +153,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
    {
       // Expose Project Explorer into Tools Panel
       menuPresenter.go(view.getMenuPanel());
+      toolbarPresenter.go(view.getToolbarPanel());
 
       partAgent.go(PartStackType.NAVIGATION, view.getLeftPanel());
       partAgent.go(PartStackType.EDITING, view.getCenterPanel());

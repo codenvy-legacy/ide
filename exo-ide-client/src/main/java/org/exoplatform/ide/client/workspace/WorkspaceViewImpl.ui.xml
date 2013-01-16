@@ -15,6 +15,9 @@
          <g:north size="22">
             <g:SimplePanel width="100%" ui:field="topPanel" />
          </g:north>
+         <g:north size="22">
+         	<g:SimplePanel width="100%" ui:field="secondTopPanel"/>
+         </g:north>
          <g:center>
             <g:SplitLayoutPanel ui:field="splitPanel">
                <g:west size="240">
