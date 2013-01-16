@@ -317,7 +317,7 @@ public class HerokuClientServiceImpl extends HerokuClientService
       String url = restServiceContext + STACK_MIGRATE;
 
       String params = (applicationName != null && !applicationName.isEmpty()) ? "name=" + applicationName + "&" : "";
-      params = (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
+      params += (stack != null && !stack.isEmpty()) ? "stack=" + stack + "&" : "";
       params += (vfsId != null && !vfsId.trim().isEmpty()) ? "vfsid=" + vfsId + "&" : "";
       params += (projectid != null && !projectid.trim().isEmpty()) ? "projectid=" + projectid : "";
 
