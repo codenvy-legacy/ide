@@ -358,7 +358,7 @@ appcfg backend update
 
 h3. Set start/stop state of backend.
 {screen}
-appcfg backend set_state <backend_name> [-s/--state start/stop]
+appcfg backend set_state <backend_name> -s/--state START/STOP
 {screen}
 
 h3. Roll back a previously in-progress update
