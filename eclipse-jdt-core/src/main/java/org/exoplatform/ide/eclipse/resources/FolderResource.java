@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.internal.utils.Policy;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 
 import java.net.URI;
 
@@ -61,7 +63,17 @@ public class FolderResource extends ContainerResource implements IFolder
    @Override
    public void create(int updateFlags, boolean local, IProgressMonitor monitor) throws CoreException
    {
-      workspace.createResource(this);
+      final ISchedulingRule rule = workspace.getRuleFactory().createRule(this);
+      try
+      {
+         workspace.prepareOperation(rule, monitor);
+         workspace.beginOperation(true);
+         workspace.createResource(this);
+      }
+      finally
+      {
+         workspace.endOperation(rule, true, Policy.subMonitorFor(monitor, Policy.endOpWork));
+      }
    }
 
    /**

@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import static org.junit.Assert.*;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -29,8 +31,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests getting members of container resource.
@@ -93,8 +93,7 @@ public class MembersTest extends ResourcesBaseTest
       assertEquals(children2.getFullPath(), foundMember2.getFullPath());
 
       IResource foundMember3 = projectResource.findMember(children3.getFullPath());
-      assertNull("Members of a project or folder are the files and folders immediately contained within it.",
-         foundMember3);
+      assertNotNull(foundMember3);
    }
 
    @Test
@@ -107,8 +106,7 @@ public class MembersTest extends ResourcesBaseTest
       assertEquals(children2.getFullPath(), foundMember2.getFullPath());
 
       IResource foundMember3 = projectResource.findMember(children3.getFullPath().toString());
-      assertNull("Members of a project or folder are the files and folders immediately contained within it.",
-         foundMember3);
+      assertNotNull(foundMember3);
    }
 
    @Test(expected = CoreException.class)

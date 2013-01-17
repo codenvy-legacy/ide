@@ -67,7 +67,6 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
  * </p>
  *
  * @see IWorkspace
- * @see Platform#getAdapterManager()
  */
 public interface IResource extends IAdaptable, ISchedulingRule
 {
@@ -110,7 +109,7 @@ public interface IResource extends IAdaptable, ISchedulingRule
    public static final int ROOT = 0x8;
 
 	/*====================================================================
-	 * Constants defining the depth of resource tree traversal:
+    * Constants defining the depth of resource tree traversal:
 	 *====================================================================*/
 
    /**

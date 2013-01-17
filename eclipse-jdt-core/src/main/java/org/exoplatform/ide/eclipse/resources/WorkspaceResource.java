@@ -18,10 +18,20 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.internal.NLS;
 import org.eclipse.core.internal.Policy;
+import org.eclipse.core.internal.events.ILifecycleListener;
+import org.eclipse.core.internal.events.LifecycleEvent;
+import org.eclipse.core.internal.events.NotificationManager;
+import org.eclipse.core.internal.events.ResourceChangeEvent;
+import org.eclipse.core.internal.events.ResourceComparator;
 import org.eclipse.core.internal.resources.ICoreConstants;
+import org.eclipse.core.internal.resources.ProjectInfo;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.internal.resources.ResourceStatus;
+import org.eclipse.core.internal.resources.RootInfo;
+import org.eclipse.core.internal.utils.Messages;
+import org.eclipse.core.internal.watson.ElementTree;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -32,6 +42,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IProjectNatureDescriptor;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceRuleFactory;
 import org.eclipse.core.resources.IResourceStatus;
@@ -66,6 +77,7 @@ import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -77,6 +89,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ws.rs.core.MediaType;
 
@@ -85,10 +98,11 @@ import javax.ws.rs.core.MediaType;
  *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: WorkspaceResource.java Dec 27, 2012 12:47:21 PM azatsarynnyy $
- *
  */
 public class WorkspaceResource implements IWorkspace
 {
+   static final int M_PHANTOM = 0x8;
+
    protected final IWorkspaceRoot defaultRoot = new WorkspaceRootResource(Path.ROOT, this);
 
    /**
@@ -100,11 +114,58 @@ public class WorkspaceResource implements IWorkspace
 
    private WorkManager _workManager;
 
+   private IWorkspaceDescription description;
+
+   protected NotificationManager notificationManager;
+
+
+   protected final CopyOnWriteArrayList<ILifecycleListener> lifecycleListeners = new CopyOnWriteArrayList<ILifecycleListener>();
+
+   /**
+    * The workspace tree.  The tree is an in-memory representation
+    * of the resources that make up the workspace.  The tree caches
+    * the structure and state of files and directories on disk (their existence
+    * and last modified times).  When external parties make changes to
+    * the files on disk, this representation becomes out of sync. A local refresh
+    * reconciles the state of the files on disk with this tree (@link {@link IResource#refreshLocal(int, IProgressMonitor)}).
+    * The tree is also used to store metadata associated with resources in
+    * the workspace (markers, properties, etc).
+    *
+    * While the ElementTree data structure can handle both concurrent
+    * reads and concurrent writes, write access to the tree is governed
+    * by {@link WorkManager}.
+    */
+   protected volatile ElementTree tree;
+
+   /**
+    * This field is used to control access to the workspace tree during
+    * resource change notifications. It tracks which thread, if any, is
+    * in the middle of a resource change notification.  This is used to cause
+    * attempts to modify the workspace during notifications to fail.
+    */
+   protected Thread treeLocked = null;
+
+   protected ElementTree operationTree; // tree at the start of the current operation
+
+   protected long nextNodeId = 1;
+
+   //   private MarkerManager markerManager;
+
    public WorkspaceResource(VirtualFileSystem vfs)
    {
       this.vfs = vfs;
       _workManager = new WorkManager(this);
       _workManager.startup(null);
+      notificationManager = new NotificationManager(this);
+      notificationManager.startup(null);
+      description = new WorkspaceDescription();
+      tree = new ElementTree();
+      /* tree should only be modified during operations */
+      tree.immutable();
+      //      treeLocked = Thread.currentThread();
+      tree.setTreeData(newElement(IResource.ROOT));
+      //      markerManager = new MarkerManager(this);
+      //      markerManager.startup(null);
    }
 
    public void shutdown()
@@ -129,23 +190,78 @@ public class WorkspaceResource implements IWorkspace
    }
 
    /**
-    * @see org.eclipse.core.resources.IWorkspace#addResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener)
+    * Adds a listener for internal workspace lifecycle events.  There is no way to
+    * remove lifecycle listeners.
     */
-   @Override
-   public void addResourceChangeListener(IResourceChangeListener listener)
+   public void addLifecycleListener(ILifecycleListener listener)
    {
-      // TODO Auto-generated method stub
-
+      lifecycleListeners.addIfAbsent(listener);
    }
 
-   /**
-    * @see org.eclipse.core.resources.IWorkspace#addResourceChangeListener(org.eclipse.core.resources.IResourceChangeListener, int)
+   /* (non-Javadoc)
+    * @see IWorkspace#addResourceChangeListener(IResourceChangeListener)
     */
-   @Override
+   public void addResourceChangeListener(IResourceChangeListener listener)
+   {
+      notificationManager.addListener(listener,
+         IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.POST_CHANGE);
+   }
+
+   /* (non-Javadoc)
+    * @see IWorkspace#addResourceChangeListener(IResourceChangeListener, int)
+    */
    public void addResourceChangeListener(IResourceChangeListener listener, int eventMask)
    {
-      // TODO Auto-generated method stub
+      notificationManager.addListener(listener, eventMask);
+   }
 
+
+   /**
+    * Create and return a new tree element of the given type.
+    */
+   protected ResourceInfo newElement(int type)
+   {
+      ResourceInfo result = null;
+      switch (type)
+      {
+         case IResource.FILE:
+         case IResource.FOLDER:
+            result = new ResourceInfo();
+            break;
+         case IResource.PROJECT:
+            result = new ProjectInfo();
+            break;
+         case IResource.ROOT:
+            result = new RootInfo();
+            break;
+      }
+      result.setNodeId(nextNodeId());
+      updateModificationStamp(result);
+      result.setType(type);
+      return result;
+   }
+
+   protected long nextNodeId()
+   {
+      return nextNodeId++;
+   }
+
+   public void updateModificationStamp(ResourceInfo info)
+   {
+      info.incrementModificationStamp();
+   }
+   //   /**
+   //    * Returns the marker manager for this workspace
+   //    */
+   //   public MarkerManager getMarkerManager()
+   //   {
+   //      return markerManager;
+   //   }
+
+   public void broadcastPostChange()
+   {
+      ResourceChangeEvent event = new ResourceChangeEvent(this, IResourceChangeEvent.POST_CHANGE, 0, null);
+      notificationManager.broadcastChanges(tree, event, true);
    }
 
    /**
@@ -185,8 +301,24 @@ public class WorkspaceResource implements IWorkspace
    @Override
    public void checkpoint(boolean build)
    {
-      // TODO Auto-generated method stub
-
+      try
+      {
+         final ISchedulingRule rule = getWorkManager().getNotifyRule();
+         try
+         {
+            prepareOperation(rule, null);
+            beginOperation(true);
+            broadcastPostChange();
+         }
+         finally
+         {
+            endOperation(rule, build, null);
+         }
+      }
+      catch (CoreException e)
+      {
+         org.eclipse.core.internal.utils.Policy.log(e.getStatus());
+      }
    }
 
    /**
@@ -327,8 +459,7 @@ public class WorkspaceResource implements IWorkspace
    @Override
    public IWorkspaceDescription getDescription()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return description;
    }
 
    /**
@@ -375,14 +506,12 @@ public class WorkspaceResource implements IWorkspace
       return false;
    }
 
-   /**
-    * @see org.eclipse.core.resources.IWorkspace#isTreeLocked()
+   /* (non-Javadoc)
+    * @see IWorkspace#isTreeLocked()
     */
-   @Override
    public boolean isTreeLocked()
    {
-      // TODO Auto-generated method stub
-      return false;
+      return treeLocked == Thread.currentThread();
    }
 
    /**
@@ -515,16 +644,35 @@ public class WorkspaceResource implements IWorkspace
       try
       {
          String parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
+         Item i = null;
          switch (resource.getType())
          {
             case IResource.FILE:
-               return vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
+               i = vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
                   MediaType.TEXT_PLAIN_TYPE, contents);
+               break;
             case IResource.FOLDER:
-               return vfs.createFolder(parentId, resource.getName());
+               i = vfs.createFolder(parentId, resource.getName());
+               break;
             case IResource.PROJECT:
-               return vfs.createProject(parentId, resource.getName(), null, null);
+               i = vfs.createProject(parentId, resource.getName(), null, null);
+               break;
          }
+         ResourceInfo info = newElement(resource.getType());
+         ResourceInfo original = getResourceInfo(resource.getFullPath(), true, false);
+         // if nothing existed at the destination then just create the resource in the tree
+         if (original == null)
+         {
+            info.setSyncInfo(null);
+            tree.createElement(resource.getFullPath(), info);
+         }
+         else
+         {
+
+            info.set(ICoreConstants.M_MARKERS_SNAP_DIRTY);
+            tree.setElementData(resource.getFullPath(), info);
+         }
+         return i;
       }
       catch (ItemNotFoundException e)
       {
@@ -552,7 +700,6 @@ public class WorkspaceResource implements IWorkspace
       {
          safeClose(contents);
       }
-      return null;
    }
 
    /**
@@ -583,7 +730,7 @@ public class WorkspaceResource implements IWorkspace
 
    /**
     * Returns VFS {@link Item} by provided {@link IPath}.
-    * 
+    *
     * @param path {@link IPath}
     * @return {@link Item}
     * @throws CoreException
@@ -683,18 +830,31 @@ public class WorkspaceResource implements IWorkspace
       }
       if (workManager.getPreparedOperationDepth() > 1)
       {
-         //         if (createNewTree && tree.isImmutable())
-         //         {
-         //            newWorkingTree();
-         //         }
+         if (createNewTree && tree.isImmutable())
+         {
+            newWorkingTree();
+         }
          return;
       }
-      //      // stash the current tree as the basis for this operation.
-      //      operationTree = tree;
-      //      if (createNewTree && tree.isImmutable())
-      //      {
-      //         newWorkingTree();
-      //      }
+      // stash the current tree as the basis for this operation.
+      operationTree = tree;
+      if (createNewTree && tree.isImmutable())
+      {
+         newWorkingTree();
+      }
+   }
+
+
+   /**
+    * Broadcasts an internal workspace lifecycle event to interested
+    * internal listeners.
+    */
+   protected void broadcastEvent(LifecycleEvent event) throws CoreException
+   {
+      for (ILifecycleListener listener : lifecycleListeners)
+      {
+         listener.handleEvent(event);
+      }
    }
 
    /**
@@ -747,11 +907,11 @@ public class WorkspaceResource implements IWorkspace
          workManager.setBuild(build);
          // if we are not exiting a top level operation then just decrement the count and return
          depthOne = workManager.getPreparedOperationDepth() == 1;
-         //         if (!(notificationManager.shouldNotify() || depthOne))
-         //         {
-         //            notificationManager.requestNotify();
-         //            return;
-         //         }
+         if (!(notificationManager.shouldNotify() || depthOne))
+         {
+            notificationManager.requestNotify();
+            return;
+         }
          // do the following in a try/finally to ensure that the operation tree is nulled at the end
          // as we are completing a top level operation.
          try
@@ -767,27 +927,27 @@ public class WorkspaceResource implements IWorkspace
             //find out if any operation has potentially modified the tree
             hasTreeChanges = workManager.shouldBuild();
             //double check if the tree has actually changed
-            //            if (hasTreeChanges)
-            //            {
-            //               hasTreeChanges = operationTree != null && ElementTree.hasChanges(tree, operationTree,
-            //                  ResourceComparator.getBuildComparator(), true);
-            //            }
-            //            broadcastPostChange();
+            if (hasTreeChanges)
+            {
+               hasTreeChanges = operationTree != null && ElementTree.hasChanges(tree, operationTree,
+                  ResourceComparator.getBuildComparator(), true);
+            }
+            broadcastPostChange();
             //            // Request a snapshot if we are sufficiently out of date.
             //            saveManager.snapshotIfNeeded(hasTreeChanges);
          }
          finally
          {
-            //            // make sure the tree is immutable if we are ending a top-level operation.
-            //            if (depthOne)
-            //            {
-            //               tree.immutable();
-            //               operationTree = null;
-            //            }
-            //            else
-            //            {
-            //               newWorkingTree();
-            //            }
+            // make sure the tree is immutable if we are ending a top-level operation.
+            if (depthOne)
+            {
+               tree.immutable();
+               operationTree = null;
+            }
+            else
+            {
+               newWorkingTree();
+            }
          }
       }
       finally
@@ -800,6 +960,16 @@ public class WorkspaceResource implements IWorkspace
       }
    }
 
+
+   /**
+    * Opens a new mutable element tree layer, thus allowing
+    * modifications to the tree.
+    */
+   public ElementTree newWorkingTree()
+   {
+      tree = tree.newEmptyDelta();
+      return tree;
+   }
 
    private boolean isOpen()
    {
@@ -926,7 +1096,7 @@ public class WorkspaceResource implements IWorkspace
    public IStatus validatePath(String path, int typeMask)
    {
       // TODO Auto-generated method stub
-      return null;
+      return Status.OK_STATUS;
    }
 
    /**
@@ -1079,7 +1249,6 @@ public class WorkspaceResource implements IWorkspace
     * @param resource    {@link IResource} to copy
     * @param destination the destination path
     * @throws CoreException
-    * 
     * @see org.eclipse.core.resources.IResource#copy(org.eclipse.core.runtime.IPath, int, org.eclipse.core.runtime.IProgressMonitor)
     */
    void copyResource(IResource resource, IPath destination) throws CoreException
@@ -1127,6 +1296,19 @@ public class WorkspaceResource implements IWorkspace
       try
       {
          vfs.delete(getVfsIdByFullPath(resource.getFullPath()), null);
+         IPath path = resource.getFullPath();
+         if (path.equals(Path.ROOT))
+         {
+            IProject[] children = getRoot().getProjects(IContainer.INCLUDE_HIDDEN);
+            for (int i = 0; i < children.length; i++)
+            {
+               tree.deleteElement(children[i].getFullPath());
+            }
+         }
+         else
+         {
+            tree.deleteElement(path);
+         }
       }
       catch (ItemNotFoundException e)
       {
@@ -1224,29 +1406,33 @@ public class WorkspaceResource implements IWorkspace
       {
          if (path.isAbsolute())
          {
-            Item item = getItemByPath(containerResource.getFullPath());
-            Folder f = (Folder)item;
-            ItemList<Item> children = vfs.getChildren(f.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
-            for (Item i : children.getItems())
+            Item item = getItemByPath(path);
+            //            Folder f = (Folder)item;
+            //            ItemList<Item> children = vfs.getChildren(f.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+            //            for (Item i : children.getItems())
+            //            {
+            if (item.getPath().equals(path.toString()))
             {
-               if (i.getPath().equals(path.toString()))
+               Path resPath = new Path(item.getPath());
+               if (item instanceof File)
                {
-                  Path resPath = new Path(i.getPath());
-                  if (i instanceof File)
-                  {
-                     return new FileResource(resPath, this);
-                  }
-                  else if (i instanceof Folder)
-                  {
-                     return new FolderResource(resPath, this);
-                  }
-                  else
-                  {
-                     return new ProjectResource(resPath, this);
-                  }
+                  return new FileResource(resPath, this);
+               }
+               else if (item instanceof Folder)
+               {
+                  return new FolderResource(resPath, this);
+               }
+               else
+               {
+                  return new ProjectResource(resPath, this);
                }
             }
          }
+         //         }
+      }
+      catch (ItemNotFoundException e)
+      {
+         return null;
       }
       catch (VirtualFileSystemException e)
       {
@@ -1322,7 +1508,7 @@ public class WorkspaceResource implements IWorkspace
    /**
     * Returns a non-negative modification stamp, or <code>NULL_STAMP</code> if
     * the resource does not exist or is not accessible.
-    * 
+    *
     * @param resource {@link IResource}
     * @return the modification stamp, or <code>NULL_STAMP</code> if this resource either does not exist or is not accessible
     * @see org.eclipse.core.resources.IResource#getModificationStamp()
@@ -1358,7 +1544,9 @@ public class WorkspaceResource implements IWorkspace
       try
       {
          if (stream != null)
+         {
             stream.close();
+         }
       }
       catch (IOException e)
       {
@@ -1366,4 +1554,90 @@ public class WorkspaceResource implements IWorkspace
       }
    }
 
+   /**
+    * Returns the resource info for the identified resource.
+    * null is returned if no such resource can be found.
+    * If the phantom flag is true, phantom resources are considered.
+    * If the mutable flag is true, the info is opened for change.
+    *
+    * This method DOES NOT throw an exception if the resource is not found.
+    */
+   public ResourceInfo getResourceInfo(IPath path, boolean phantom, boolean mutable)
+   {
+      try
+      {
+         if (path.segmentCount() == 0)
+         {
+            ResourceInfo info = (ResourceInfo)tree.getTreeData();
+            Assert.isNotNull(info, "Tree root info must never be null"); //$NON-NLS-1$
+            return info;
+         }
+         ResourceInfo result = null;
+         if (!tree.includes(path))
+         {
+            return null;
+         }
+         if (mutable)
+         {
+            result = (ResourceInfo)tree.openElementData(path);
+         }
+         else
+         {
+            result = (ResourceInfo)tree.getElementData(path);
+         }
+         if (result != null && (!phantom && result.isSet(M_PHANTOM)))
+         {
+            return null;
+         }
+         return result;
+      }
+      catch (IllegalArgumentException e)
+      {
+         return null;
+      }
+   }
+
+   public void setTreeLocked(boolean locked)
+   {
+      Assert.isTrue(!locked || treeLocked == null, "The workspace tree is already locked"); //$NON-NLS-1$
+      treeLocked = locked ? Thread.currentThread() : null;
+   }
+
+   /**
+    * Returns the current element tree for this workspace
+    */
+   public ElementTree getElementTree()
+   {
+      return tree;
+   }
+
+   public IProject[] getProjects()
+   {
+      try
+      {
+         Item rootItem = getVfsItemByFullPath(defaultRoot.getFullPath());
+         ItemList<Item> childrens = vfs.getChildren(rootItem.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
+         IProject[] projects = new IProject[childrens.getItems().size()];
+
+         for (int i = 0; i < childrens.getItems().size(); i++)
+         {
+
+            Item item = childrens.getItems().get(i);
+            if (item instanceof Project)
+            {
+               projects[i] = new ProjectResource(new Path(item.getPath()), this);
+            }
+         }
+         return projects;
+      }
+      catch (VirtualFileSystemException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (CoreException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      return new IProject[0];
+   }
 }

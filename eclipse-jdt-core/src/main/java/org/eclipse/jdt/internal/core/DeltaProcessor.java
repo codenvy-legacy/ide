@@ -265,70 +265,70 @@ public class DeltaProcessor
 
    /*
     * Answer a combination of the lastModified stamp and the size.
-	 * Used for detecting external JAR changes
-	 */
+    * Used for detecting external JAR changes
+    */
    public static long getTimeStamp(File file)
    {
       return file.lastModified() + file.length();
    }
 
    /*
-	 * The global state of delta processing.
-	 */
+    * The global state of delta processing.
+    */
    private DeltaProcessingState state;
 
    /*
-	 * The Java model manager
-	 */ JavaModelManager manager;
+    * The Java model manager
+    */ JavaModelManager manager;
 
    /*
-	 * The <code>JavaElementDelta</code> corresponding to the <code>IResourceDelta</code> being translated.
-	 */
+    * The <code>JavaElementDelta</code> corresponding to the <code>IResourceDelta</code> being translated.
+    */
    private JavaElementDelta currentDelta;
 
    /* The java element that was last created (see createElement(IResource)).
-	 * This is used as a stack of java elements (using getParent() to pop it, and
-	 * using the various get*(...) to push it. */
+    * This is used as a stack of java elements (using getParent() to pop it, and
+    * using the various get*(...) to push it. */
    private Openable currentElement;
 
    /*
-	 * Queue of deltas created explicily by the Java Model that
-	 * have yet to be fired.
-	 */
+    * Queue of deltas created explicily by the Java Model that
+    * have yet to be fired.
+    */
    public ArrayList javaModelDeltas = new ArrayList();
 
    /*
-	 * Queue of reconcile deltas on working copies that have yet to be fired.
-	 * This is a table form IWorkingCopy to IJavaElementDelta
-	 */
+    * Queue of reconcile deltas on working copies that have yet to be fired.
+    * This is a table form IWorkingCopy to IJavaElementDelta
+    */
    public HashMap reconcileDeltas = new HashMap();
 
    /*
-	 * Turns delta firing on/off. By default it is on.
-	 */
+    * Turns delta firing on/off. By default it is on.
+    */
    private boolean isFiring = true;
 
    /*
-	 * Used to update the JavaModel for <code>IJavaElementDelta</code>s.
-	 */
+    * Used to update the JavaModel for <code>IJavaElementDelta</code>s.
+    */
    private final ModelUpdater modelUpdater = new ModelUpdater();
 
    /* A set of IJavaProject whose caches need to be reset */
    public HashSet projectCachesToReset = new HashSet();
 
    /* A table from IJavaProject to an array of IPackageFragmentRoot.
-	 * This table contains the pkg fragment roots of the project that are being deleted.
-	 */
+    * This table contains the pkg fragment roots of the project that are being deleted.
+    */
    public Map oldRoots;
 
    /*
-	 * Type of event that should be processed no matter what the real event type is.
-	 */
+    * Type of event that should be processed no matter what the real event type is.
+    */
    public int overridenEventType = -1;
 
    /*
-	 * Cache SourceElementParser for the project being visited
-	 */
+    * Cache SourceElementParser for the project being visited
+    */
    private SourceElementParser sourceElementParserCache;
 
    public DeltaProcessor(DeltaProcessingState state, JavaModelManager manager)
@@ -338,9 +338,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Adds the dependents of the given project to the list of the projects
-	 * to update.
-	 */
+    * Adds the dependents of the given project to the list of the projects
+    * to update.
+    */
    private void addDependentProjects(IJavaProject project, HashMap projectDependencies, HashSet result)
    {
       IJavaProject[] dependents = (IJavaProject[])projectDependencies.get(project);
@@ -361,8 +361,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Adds the given child handle to its parent's cache of children.
-	 */
+    * Adds the given child handle to its parent's cache of children.
+    */
    private void addToParentInfo(Openable child)
    {
       Openable parent = (Openable)child.getParent();
@@ -457,12 +457,12 @@ public class DeltaProcessor
    }
 
    /*
-	 * Process the given delta and look for projects being added, opened, closed or
-	 * with a java nature being added or removed.
-	 * Note that projects being deleted are checked in deleting(IProject).
-	 * In all cases, add the project's dependents to the list of projects to update
-	 * so that the classpath related markers can be updated.
-	 */
+    * Process the given delta and look for projects being added, opened, closed or
+    * with a java nature being added or removed.
+    * Note that projects being deleted are checked in deleting(IProject).
+    * In all cases, add the project's dependents to the list of projects to update
+    * so that the classpath related markers can be updated.
+    */
    private void checkProjectsAndClasspathChanges(IResourceDelta delta)
    {
       IResource resource = delta.getResource();
@@ -627,7 +627,7 @@ public class DeltaProcessor
             RootInfo rootInfo;
             if (file.getName().equals(JavaProject.CLASSPATH_FILENAME))
             {
-					/* classpath file change */
+               /* classpath file change */
                this.manager.forceBatchInitializations(false/*not initAfterLoad*/);
                switch (kind)
                {
@@ -748,8 +748,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Closes the given element, which removes it from the cache of open elements.
-	 */
+    * Closes the given element, which removes it from the cache of open elements.
+    */
    private void close(Openable element)
    {
       try
@@ -763,13 +763,13 @@ public class DeltaProcessor
    }
 
    /*
-	 * Generic processing for elements with changed contents:<ul>
-	 * <li>The element is closed such that any subsequent accesses will re-open
-	 * the element reflecting its new structure.
-	 * <li>An entry is made in the delta reporting a content change (K_CHANGE with F_CONTENT flag set).
-	 * </ul>
-	 * Delta argument could be null if processing an external JAR change
-	 */
+    * Generic processing for elements with changed contents:<ul>
+    * <li>The element is closed such that any subsequent accesses will re-open
+    * the element reflecting its new structure.
+    * <li>An entry is made in the delta reporting a content change (K_CHANGE with F_CONTENT flag set).
+    * </ul>
+    * Delta argument could be null if processing an external JAR change
+    */
    private void contentChanged(Openable element)
    {
 
@@ -807,9 +807,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Creates the openables corresponding to this resource.
-	 * Returns null if none was found.
-	 */
+    * Creates the openables corresponding to this resource.
+    * Returns null if none was found.
+    */
    private Openable createElement(IResource resource, int elementType, RootInfo rootInfo)
    {
       if (resource == null)
@@ -971,144 +971,103 @@ public class DeltaProcessor
    }
 
    /*
-	 * Check all external archive (referenced by given roots, projects or model) status and issue a corresponding root delta.
-	 * Also triggers index updates
-	 */
+    * Check all external archive (referenced by given roots, projects or model) status and issue a corresponding root delta.
+    * Also triggers index updates
+    */
    private void checkExternalArchiveChanges(IJavaElement[] elementsScope, boolean asynchronous,
       IProgressMonitor monitor) throws JavaModelException
    {
-      if (monitor != null && monitor.isCanceled())
-      {
-         throw new OperationCanceledException();
-      }
-      try
-      {
-         if (monitor != null)
-         {
-            monitor.beginTask("", 1); //$NON-NLS-1$
-         }
-
-         boolean hasExternalWorkingCopyProject = false;
-         for (int i = 0, length = elementsScope.length; i < length; i++)
-         {
-            IJavaElement element = elementsScope[i];
-            this.state.addForRefresh(elementsScope[i]);
-            if (element.getElementType() == IJavaElement.JAVA_MODEL)
-            {
-               // ensure external working copies' projects' caches are reset
-               HashSet projects = JavaModelManager.getJavaModelManager().getExternalWorkingCopyProjects();
-               if (projects != null)
-               {
-                  hasExternalWorkingCopyProject = true;
-                  Iterator iterator = projects.iterator();
-                  while (iterator.hasNext())
-                  {
-                     JavaProject project = (JavaProject)iterator.next();
-                     project.resetCaches();
-                  }
-               }
-            }
-         }
-         HashSet elementsToRefresh = this.state.removeExternalElementsToRefresh();
-         boolean hasDelta = elementsToRefresh != null && createExternalArchiveDelta(elementsToRefresh, monitor);
-         if (hasDelta)
-         {
-            IJavaElementDelta[] projectDeltas = this.currentDelta.getAffectedChildren();
-            final int length = projectDeltas.length;
-            final IProject[] projectsToTouch = new IProject[length];
-            for (int i = 0; i < length; i++)
-            {
-               IJavaElementDelta delta = projectDeltas[i];
-               JavaProject javaProject = (JavaProject)delta.getElement();
-               projectsToTouch[i] = javaProject.getProject();
-            }
-            if (projectsToTouch.length > 0)
-            {
-               if (asynchronous)
-               {
-//                  WorkspaceJob touchJob = new WorkspaceJob(Messages.updating_external_archives_jobName)
-//                  {
-//
-//                     public IStatus runInWorkspace(IProgressMonitor progressMonitor) throws CoreException
-//                     {
-//                        try
-//                        {
-//                           if (progressMonitor != null)
-//                           {
-//                              progressMonitor.beginTask("", projectsToTouch.length); //$NON-NLS-1$
-//                           }
-//                           touchProjects(projectsToTouch, progressMonitor);
-//                        }
-//                        finally
-//                        {
-//                           if (progressMonitor != null)
-//                           {
-//                              progressMonitor.done();
-//                           }
-//                        }
-//                        return Status.OK_STATUS;
-//                     }
-//
-//                     public boolean belongsTo(Object family)
-//                     {
-//                        return ResourcesPlugin.FAMILY_MANUAL_REFRESH == family;
-//                     }
-//                  };
-//                  touchJob.schedule();
-               }
-               else
-               {
-                  // touch the projects to force them to be recompiled while taking the workspace lock
-                  //	 so that there is no concurrency with the Java builder
-                  // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=96575
-                  IWorkspaceRunnable runnable = new IWorkspaceRunnable()
-                  {
-                     public void run(IProgressMonitor progressMonitor) throws CoreException
-                     {
-                        for (int i = 0; i < projectsToTouch.length; i++)
-                        {
-                           IProject project = projectsToTouch[i];
-
-                           // touch to force a build of this project
-                           if (JavaBuilder.DEBUG)
-                           {
-                              System.out.println(
-                                 "Touching project " + project.getName() + " due to external jar file change"); //$NON-NLS-1$ //$NON-NLS-2$
-                           }
-                           project.touch(progressMonitor);
-                        }
-                     }
-                  };
-                  try
-                  {
-                     ResourcesPlugin.getWorkspace().run(runnable, monitor);
-                  }
-                  catch (CoreException e)
-                  {
-                     throw new JavaModelException(e);
-                  }
-               }
-            }
-
-            if (this.currentDelta != null)
-            { // if delta has not been fired while creating markers
-               fire(this.currentDelta, DEFAULT_CHANGE_EVENT);
-            }
-         }
-         else if (hasExternalWorkingCopyProject)
-         {
-            // flush jar type cache
-            JavaModelManager.getJavaModelManager().resetJarTypeCache();
-         }
-      }
-      finally
-      {
-         this.currentDelta = null;
-         if (monitor != null)
-         {
-            monitor.done();
-         }
-      }
+      //      if (monitor != null && monitor.isCanceled())
+      //         throw new OperationCanceledException();
+      //      try {
+      //         if (monitor != null) monitor.beginTask("", 1); //$NON-NLS-1$
+      //
+      //         boolean hasExternalWorkingCopyProject = false;
+      //         for (int i = 0, length = elementsScope.length; i < length; i++) {
+      //            IJavaElement element = elementsScope[i];
+      //            this.state.addForRefresh(elementsScope[i]);
+      //            if (element.getElementType() == IJavaElement.JAVA_MODEL) {
+      //               // ensure external working copies' projects' caches are reset
+      //               HashSet projects = JavaModelManager.getJavaModelManager().getExternalWorkingCopyProjects();
+      //               if (projects != null) {
+      //                  hasExternalWorkingCopyProject = true;
+      //                  Iterator iterator = projects.iterator();
+      //                  while (iterator.hasNext()) {
+      //                     JavaProject project = (JavaProject) iterator.next();
+      //                     project.resetCaches();
+      //                  }
+      //               }
+      //            }
+      //         }
+      //         HashSet elementsToRefresh = this.state.removeExternalElementsToRefresh();
+      //         boolean hasDelta = elementsToRefresh != null && createExternalArchiveDelta(elementsToRefresh, monitor);
+      //         if (hasDelta){
+      //            IJavaElementDelta[] projectDeltas = this.currentDelta.getAffectedChildren();
+      //            final int length = projectDeltas.length;
+      //            final IProject[] projectsToTouch = new IProject[length];
+      //            for (int i = 0; i < length; i++) {
+      //               IJavaElementDelta delta = projectDeltas[i];
+      //               JavaProject javaProject = (JavaProject)delta.getElement();
+      //               projectsToTouch[i] = javaProject.getProject();
+      //            }
+      //            if (projectsToTouch.length > 0) {
+      //               if (asynchronous){
+      //                  WorkspaceJob touchJob = new WorkspaceJob(Messages.updating_external_archives_jobName) {
+      //
+      //                     public IStatus runInWorkspace(IProgressMonitor progressMonitor) throws CoreException {
+      //                        try {
+      //                           if (progressMonitor != null)
+      //                              progressMonitor.beginTask("", projectsToTouch.length); //$NON-NLS-1$
+      //                           touchProjects(projectsToTouch, progressMonitor);
+      //                        }
+      //                        finally {
+      //                           if (progressMonitor != null)
+      //                              progressMonitor.done();
+      //                        }
+      //                        return Status.OK_STATUS;
+      //                     }
+      //
+      //                     public boolean belongsTo(Object family) {
+      //                        return ResourcesPlugin.FAMILY_MANUAL_REFRESH == family;
+      //                     }
+      //                  };
+      //                  touchJob.schedule();
+      //               }
+      //               else {
+      //                  // touch the projects to force them to be recompiled while taking the workspace lock
+      //                  //	 so that there is no concurrency with the Java builder
+      //                  // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=96575
+      //                  IWorkspaceRunnable runnable = new IWorkspaceRunnable() {
+      //                     public void run(IProgressMonitor progressMonitor) throws CoreException {
+      //                        for (int i = 0; i < projectsToTouch.length; i++) {
+      //                           IProject project = projectsToTouch[i];
+      //
+      //                           // touch to force a build of this project
+      //                           if (JavaBuilder.DEBUG)
+      //                              System.out.println("Touching project " + project.getName() + " due to external jar file change"); //$NON-NLS-1$ //$NON-NLS-2$
+      //                           project.touch(progressMonitor);
+      //                        }
+      //                     }
+      //                  };
+      //                  try {
+      //                     ResourcesPlugin.getWorkspace().run(runnable, monitor);
+      //                  } catch (CoreException e) {
+      //                     throw new JavaModelException(e);
+      //                  }
+      //               }
+      //            }
+      //
+      //            if (this.currentDelta != null) { // if delta has not been fired while creating markers
+      //               fire(this.currentDelta, DEFAULT_CHANGE_EVENT);
+      //            }
+      //         } else if (hasExternalWorkingCopyProject) {
+      //            // flush jar type cache
+      //            JavaModelManager.getJavaModelManager().resetJarTypeCache();
+      //         }
+      //      } finally {
+      //         this.currentDelta = null;
+      //         if (monitor != null) monitor.done();
+      //      }
    }
 
    protected void touchProjects(final IProject[] projectsToTouch, IProgressMonitor progressMonitor) throws CoreException
@@ -1128,9 +1087,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Check if external archives have changed for the given elements and create the corresponding deltas.
-	 * Returns whether at least one delta was created.
-	 */
+    * Check if external archives have changed for the given elements and create the corresponding deltas.
+    * Returns whether at least one delta was created.
+    */
    private boolean createExternalArchiveDelta(HashSet refreshedElements, IProgressMonitor monitor)
    {
 
@@ -1403,8 +1362,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Note that the project is about to be deleted.
-	 */
+    * Note that the project is about to be deleted.
+    */
    private void deleting(IProject project)
    {
 
@@ -1449,15 +1408,15 @@ public class DeltaProcessor
    }
 
    /*
-	 * Processing for an element that has been added:<ul>
-	 * <li>If the element is a project, do nothing, and do not process
-	 * children, as when a project is created it does not yet have any
-	 * natures - specifically a java nature.
-	 * <li>If the elemet is not a project, process it as added (see
-	 * <code>basicElementAdded</code>.
-	 * </ul>
-	 * Delta argument could be null if processing an external JAR change
-	 */
+    * Processing for an element that has been added:<ul>
+    * <li>If the element is a project, do nothing, and do not process
+    * children, as when a project is created it does not yet have any
+    * natures - specifically a java nature.
+    * <li>If the elemet is not a project, process it as added (see
+    * <code>basicElementAdded</code>.
+    * </ul>
+    * Delta argument could be null if processing an external JAR change
+    */
    private void elementAdded(Openable element, IResourceDelta delta, RootInfo rootInfo)
    {
       int elementType = element.getElementType();
@@ -1589,13 +1548,13 @@ public class DeltaProcessor
    }
 
    /*
-	 * Generic processing for a removed element:<ul>
-	 * <li>Close the element, removing its structure from the cache
-	 * <li>Remove the element from its parent's cache of children
-	 * <li>Add a REMOVED entry in the delta
-	 * </ul>
-	 * Delta argument could be null if processing an external JAR change
-	 */
+    * Generic processing for a removed element:<ul>
+    * <li>Close the element, removing its structure from the cache
+    * <li>Remove the element from its parent's cache of children
+    * <li>Add a REMOVED entry in the delta
+    * </ul>
+    * Delta argument could be null if processing an external JAR change
+    */
    private void elementRemoved(Openable element, IResourceDelta delta, RootInfo rootInfo)
    {
 
@@ -1691,9 +1650,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Returns the type of the java element the given delta matches to.
-	 * Returns NON_JAVA_RESOURCE if unknown (e.g. a non-java resource or excluded .java file)
-	 */
+    * Returns the type of the java element the given delta matches to.
+    * Returns NON_JAVA_RESOURCE if unknown (e.g. a non-java resource or excluded .java file)
+    */
    private int elementType(IResource res, int kind, int parentType, RootInfo rootInfo)
    {
       switch (parentType)
@@ -1784,8 +1743,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Flushes all deltas without firing them.
-	 */
+    * Flushes all deltas without firing them.
+    */
    public void flush()
    {
       this.javaModelDeltas = new ArrayList();
@@ -1801,9 +1760,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Finds the root info this path is included in.
-	 * Returns null if not found.
-	 */
+    * Finds the root info this path is included in.
+    * Returns null if not found.
+    */
    private RootInfo enclosingRootInfo(IPath path, int kind)
    {
       while (path != null && path.segmentCount() > 0)
@@ -1829,9 +1788,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Fire Java Model delta, flushing them after the fact after post_change notification.
-	 * If the firing mode has been turned off, this has no effect.
-	 */
+    * Fire Java Model delta, flushing them after the fact after post_change notification.
+    * If the firing mode has been turned off, this has no effect.
+    */
    public void fire(IJavaElementDelta customDelta, int eventType)
    {
       if (!this.isFiring)
@@ -1937,9 +1896,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Returns whether a given delta contains some information relevant to the JavaModel,
-	 * in particular it will not consider SYNC or MARKER only deltas.
-	 */
+    * Returns whether a given delta contains some information relevant to the JavaModel,
+    * in particular it will not consider SYNC or MARKER only deltas.
+    */
    private boolean isAffectedBy(IResourceDelta rootDelta)
    {
       //if (rootDelta == null) System.out.println("NULL DELTA");
@@ -1989,8 +1948,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Returns whether the given element is a primary compilation unit in working copy mode.
-	 */
+    * Returns whether the given element is a primary compilation unit in working copy mode.
+    */
    private boolean isPrimaryWorkingCopy(IJavaElement element, int elementType)
    {
       if (elementType == IJavaElement.COMPILATION_UNIT)
@@ -2002,9 +1961,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Returns whether the given resource is in one of the given output folders and if
-	 * it is filtered out from this output folder.
-	 */
+    * Returns whether the given resource is in one of the given output folders and if
+    * it is filtered out from this output folder.
+    */
    private boolean isResFilteredFromOutput(RootInfo rootInfo, OutputsInfo info, IResource res, int elementType)
    {
       if (info != null)
@@ -2056,8 +2015,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Merges all awaiting deltas.
-	 */
+    * Merges all awaiting deltas.
+    */
    private IJavaElementDelta mergeDeltas(Collection deltas)
    {
       if (deltas.size() == 0)
@@ -2144,17 +2103,15 @@ public class DeltaProcessor
 
                public void run() throws Exception
                {
-//                  PerformanceStats stats = null;
-//                  if (PERF)
-//                  {
-//                     stats = PerformanceStats.getStats(JavaModelManager.DELTA_LISTENER_PERF, listener);
-//                     stats.startRun();
-//                  }
+                  //                  PerformanceStats stats = null;
+                  //                  if(PERF) {
+                  //                     stats = PerformanceStats.getStats(JavaModelManager.DELTA_LISTENER_PERF, listener);
+                  //                     stats.startRun();
+                  //                  }
                   listener.elementChanged(extraEvent);
-//                  if (PERF)
-//                  {
-//                     stats.endRun();
-//                  }
+                  //                  if(PERF) {
+                  //                     stats.endRun();
+                  //                  }
                }
             });
             if (VERBOSE)
@@ -2198,12 +2155,12 @@ public class DeltaProcessor
    }
 
    /*
-	 * Generic processing for elements with changed contents:<ul>
-	 * <li>The element is closed such that any subsequent accesses will re-open
-	 * the element reflecting its new structure.
-	 * <li>An entry is made in the delta reporting a content change (K_CHANGE with F_CONTENT flag set).
-	 * </ul>
-	 */
+    * Generic processing for elements with changed contents:<ul>
+    * <li>The element is closed such that any subsequent accesses will re-open
+    * the element reflecting its new structure.
+    * <li>An entry is made in the delta reporting a content change (K_CHANGE with F_CONTENT flag set).
+    * </ul>
+    */
    private void nonJavaResourcesChanged(Openable element, IResourceDelta delta) throws JavaModelException
    {
       // reset non-java resources if element was open
@@ -2253,8 +2210,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Returns the old root info for the given path and project.
-	 */
+    * Returns the old root info for the given path and project.
+    */
    private RootInfo oldRootInfo(IPath path, JavaProject project)
    {
       RootInfo oldInfo = (RootInfo)this.state.oldRoots.get(path);
@@ -2283,8 +2240,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Returns the other root infos for the given path. Look in the old other roots table if kind is REMOVED.
-	 */
+    * Returns the other root infos for the given path. Look in the old other roots table if kind is REMOVED.
+    */
    private ArrayList otherRootsInfo(IPath path, int kind)
    {
       if (kind == IResourceDelta.REMOVED)
@@ -2383,10 +2340,10 @@ public class DeltaProcessor
    }
 
    /*
-	 * Converts a <code>IResourceDelta</code> rooted in a <code>Workspace</code> into
-	 * the corresponding set of <code>IJavaElementDelta</code>, rooted in the
-	 * relevant <code>JavaModel</code>s.
-	 */
+    * Converts a <code>IResourceDelta</code> rooted in a <code>Workspace</code> into
+    * the corresponding set of <code>IJavaElementDelta</code>, rooted in the
+    * relevant <code>JavaModel</code>s.
+    */
    private IJavaElementDelta processResourceDelta(IResourceDelta changes)
    {
 
@@ -2472,9 +2429,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Traverse the set of projects which have changed namespace, and reset their
-	 * caches and their dependents
-	 */
+    * Traverse the set of projects which have changed namespace, and reset their
+    * caches and their dependents
+    */
    public void resetProjectCaches()
    {
       if (this.projectCachesToReset.size() == 0)
@@ -2505,18 +2462,18 @@ public class DeltaProcessor
    }
 
    /*
-	 * Registers the given delta with this delta processor.
-	 */
+    * Registers the given delta with this delta processor.
+    */
    public void registerJavaModelDelta(IJavaElementDelta delta)
    {
       this.javaModelDeltas.add(delta);
    }
 
    /*
-	 * Removes the given element from its parents cache of children. If the
-	 * element does not have a parent, or the parent is not currently open,
-	 * this has no effect.
-	 */
+    * Removes the given element from its parents cache of children. If the
+    * element does not have a parent, or the parent is not currently open,
+    * this has no effect.
+    */
    private void removeFromParentInfo(Openable child)
    {
 
@@ -2536,21 +2493,21 @@ public class DeltaProcessor
    }
 
    /*
-	 * Notification that some resource changes have happened
-	 * on the platform, and that the Java Model should update any required
-	 * internal structures such that its elements remain consistent.
-	 * Translates <code>IResourceDeltas</code> into <code>IJavaElementDeltas</code>.
-	 *
-	 * @see IResourceDelta
-	 * @see IResource
-	 */
+    * Notification that some resource changes have happened
+    * on the platform, and that the Java Model should update any required
+    * internal structures such that its elements remain consistent.
+    * Translates <code>IResourceDeltas</code> into <code>IJavaElementDeltas</code>.
+    *
+    * @see IResourceDelta
+    * @see IResource
+    */
    public void resourceChanged(IResourceChangeEvent event)
    {
 
       int eventType = this.overridenEventType == -1 ? event.getType() : this.overridenEventType;
       IResource resource = event.getResource();
       IResourceDelta delta = event.getDelta();
-
+      this.state.initializeRoots(false);
       switch (eventType)
       {
          case IResourceChangeEvent.PRE_DELETE:
@@ -2785,8 +2742,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Returns the root info for the given path. Look in the old roots table if kind is REMOVED.
-	 */
+    * Returns the root info for the given path. Look in the old roots table if kind is REMOVED.
+    */
    private RootInfo rootInfo(IPath path, int kind)
    {
       if (kind == IResourceDelta.REMOVED)
@@ -2797,27 +2754,27 @@ public class DeltaProcessor
    }
 
    /*
-	 * Turns the firing mode to on. That is, deltas that are/have been
-	 * registered will be fired.
-	 */
+    * Turns the firing mode to on. That is, deltas that are/have been
+    * registered will be fired.
+    */
    private void startDeltas()
    {
       this.isFiring = true;
    }
 
    /*
-	 * Turns the firing mode to off. That is, deltas that are/have been
-	 * registered will not be fired until deltas are started again.
-	 */
+    * Turns the firing mode to off. That is, deltas that are/have been
+    * registered will not be fired until deltas are started again.
+    */
    private void stopDeltas()
    {
       this.isFiring = false;
    }
 
    /*
-	 * Converts an <code>IResourceDelta</code> and its children into
-	 * the corresponding <code>IJavaElementDelta</code>s.
-	 */
+    * Converts an <code>IResourceDelta</code> and its children into
+    * the corresponding <code>IJavaElementDelta</code>s.
+    */
    private void traverseDelta(IResourceDelta delta, int elementType, RootInfo rootInfo, OutputsInfo outputsInfo)
    {
 
@@ -3070,7 +3027,7 @@ public class DeltaProcessor
             }
             break;
          case IResource.FILE:
-				/* check classpath or prefs files change */
+            /* check classpath or prefs files change */
             IFile file = (IFile)resource;
             String fileName = file.getName();
             RootInfo rootInfo = null;
@@ -3096,10 +3053,10 @@ public class DeltaProcessor
    }
 
    /*
-	 * Validate the classpaths of the projects affected by the given delta.
-	 * Create markers if necessary.
-	 * Returns whether cycle markers should be recomputed.
-	 */
+    * Validate the classpaths of the projects affected by the given delta.
+    * Create markers if necessary.
+    * Returns whether cycle markers should be recomputed.
+    */
    private boolean validateClasspaths(IResourceDelta delta)
    {
       HashSet affectedProjects = new HashSet(5);
@@ -3155,10 +3112,10 @@ public class DeltaProcessor
    }
 
    /*
-	 * Update the current delta (i.e. add/remove/change the given element) and update the correponding index.
-	 * Returns whether the children of the given delta must be processed.
-	 * @throws a JavaModelException if the delta doesn't correspond to a java element of the given type.
-	 */
+    * Update the current delta (i.e. add/remove/change the given element) and update the correponding index.
+    * Returns whether the children of the given delta must be processed.
+    * @throws a JavaModelException if the delta doesn't correspond to a java element of the given type.
+    */
    public boolean updateCurrentDeltaAndIndex(IResourceDelta delta, int elementType, RootInfo rootInfo)
    {
       Openable element;
@@ -3503,8 +3460,8 @@ public class DeltaProcessor
    }
 
    /*
-	 * Update Java Model given some delta
-	 */
+    * Update Java Model given some delta
+    */
    public void updateJavaModel(IJavaElementDelta customDelta)
    {
 
@@ -3523,9 +3480,9 @@ public class DeltaProcessor
    }
 
    /*
-	 * Updates the index of the given root (assuming it's an addition or a removal).
-	 * This is done recusively, pkg being the current package.
-	 */
+    * Updates the index of the given root (assuming it's an addition or a removal).
+    * This is done recusively, pkg being the current package.
+    */
    private void updateRootIndex(PackageFragmentRoot root, String[] pkgName, IResourceDelta delta)
    {
       Openable pkg = root.getPackageFragment(pkgName);

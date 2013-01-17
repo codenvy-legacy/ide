@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.internal.utils.Policy;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFileState;
 import org.eclipse.core.resources.IResource;
@@ -27,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.content.IContentDescription;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.commons.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -37,18 +39,17 @@ import java.net.URI;
 
 /**
  * Implementation of {@link IFile}.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: FileResource.java Dec 26, 2012 12:27:39 PM azatsarynnyy $
- *
  */
 public class FileResource extends ItemResource implements IFile
 {
 
    /**
     * Creates new {@link FileResource} with the specified <code>path</code> in pointed <code>workspace</code>.
-    * 
-    * @param path {@link IPath}
+    *
+    * @param path      {@link IPath}
     * @param workspace {@link WorkspaceResource}
     */
    protected FileResource(IPath path, WorkspaceResource workspace)
@@ -60,8 +61,8 @@ public class FileResource extends ItemResource implements IFile
     * @see org.eclipse.core.resources.IFile#appendContents(java.io.InputStream, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void appendContents(InputStream content, boolean force, boolean keepHistory, IProgressMonitor monitor)
-      throws CoreException
+   public void appendContents(InputStream content, boolean force, boolean keepHistory,
+      IProgressMonitor monitor) throws CoreException
    {
       int updateFlags = force ? IResource.FORCE : IResource.NONE;
       updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
@@ -108,7 +109,17 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public void create(InputStream source, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      workspace.createResource(this, source);
+      final ISchedulingRule rule = workspace.getRuleFactory().createRule(this);
+      try
+      {
+         workspace.prepareOperation(rule, monitor);
+         workspace.beginOperation(true);
+         workspace.createResource(this, source);
+      }
+      finally
+      {
+         workspace.endOperation(rule, true, Policy.subMonitorFor(monitor, Policy.endOpWork));
+      }
    }
 
    /**
@@ -147,8 +158,7 @@ public class FileResource extends ItemResource implements IFile
    @Override
    public String getCharset(boolean checkImplicit) throws CoreException
    {
-      // TODO Auto-generated method stub
-      return null;
+      return "UTF-8";
    }
 
    /**
@@ -233,8 +243,8 @@ public class FileResource extends ItemResource implements IFile
     * @see org.eclipse.core.resources.IFile#setContents(java.io.InputStream, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void setContents(InputStream source, boolean force, boolean keepHistory, IProgressMonitor monitor)
-      throws CoreException
+   public void setContents(InputStream source, boolean force, boolean keepHistory,
+      IProgressMonitor monitor) throws CoreException
    {
       int updateFlags = force ? IResource.FORCE : IResource.NONE;
       updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;
@@ -245,8 +255,8 @@ public class FileResource extends ItemResource implements IFile
     * @see org.eclipse.core.resources.IFile#setContents(org.eclipse.core.resources.IFileState, boolean, boolean, org.eclipse.core.runtime.IProgressMonitor)
     */
    @Override
-   public void setContents(IFileState source, boolean force, boolean keepHistory, IProgressMonitor monitor)
-      throws CoreException
+   public void setContents(IFileState source, boolean force, boolean keepHistory,
+      IProgressMonitor monitor) throws CoreException
    {
       int updateFlags = force ? IResource.FORCE : IResource.NONE;
       updateFlags |= keepHistory ? IResource.KEEP_HISTORY : IResource.NONE;

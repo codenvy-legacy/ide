@@ -4049,6 +4049,10 @@ public final class JavaCore
     */
    public static JavaCore getJavaCore()
    {
+      if (JAVA_CORE == null)
+      {
+         new JavaCore();
+      }
       return JAVA_CORE;
    }
 
@@ -5996,7 +6000,8 @@ public final class JavaCore
    public final IPath getStateLocation() throws IllegalStateException
    {
       //TODO
-      return null; // InternalPlatform.getDefault().getStateLocation(getBundle(), true);
+      return new Path(
+         System.getProperty("java.io.tmpdir")); // InternalPlatform.getDefault().getStateLocation(getBundle(), true);
    }
 
    //   /* (non-Javadoc)

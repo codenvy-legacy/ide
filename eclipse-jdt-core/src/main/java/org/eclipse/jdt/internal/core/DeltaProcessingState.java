@@ -280,6 +280,7 @@ public class DeltaProcessingState implements IResourceChangeListener
 
       // recompute root infos only if necessary
       HashMap[] rootInfos = null;
+      //      rootsAreStale = true;
       if (this.rootsAreStale)
       {
          Thread currentThread = Thread.currentThread();

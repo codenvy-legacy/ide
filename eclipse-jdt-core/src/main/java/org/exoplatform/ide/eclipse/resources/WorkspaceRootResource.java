@@ -158,7 +158,7 @@ public class WorkspaceRootResource extends ContainerResource implements IWorkspa
    public IProject[] getProjects(int memberFlags)
    {
       // TODO Auto-generated method stub
-      return new IProject[0];
+      return workspace.getProjects();
    }
 
    /**

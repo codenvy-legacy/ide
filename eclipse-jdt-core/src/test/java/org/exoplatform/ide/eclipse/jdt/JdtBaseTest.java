@@ -50,7 +50,6 @@ public abstract class JdtBaseTest extends ResourcesBaseTest
       description.setNatureIds(new String[]{JavaCore.NATURE_ID});
       project.setDescription(description, null);
       IJavaProject javaProject = JavaCore.create(project);
-      javaProject.open(null);
       IFolder binFolder = project.getFolder("bin");
       binFolder.create(false, true, null);
       javaProject.setOutputLocation(binFolder.getFullPath(), null);
@@ -71,6 +70,7 @@ public abstract class JdtBaseTest extends ResourcesBaseTest
       System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
       newEntries[oldEntries.length] = JavaCore.newSourceEntry(packageRoot.getPath());
       javaProject.setRawClasspath(newEntries, null);
+      javaProject.open(null);
       packageRoot.open(null);
 
       //      FileResource classPath = (FileResource)ws.newResource(new Path("/" + name + "/.classpath"), IResource.FILE);

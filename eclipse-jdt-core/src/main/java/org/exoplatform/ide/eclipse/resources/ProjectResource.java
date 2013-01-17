@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import org.eclipse.core.internal.events.LifecycleEvent;
 import org.eclipse.core.internal.resources.ProjectDescription;
+import org.eclipse.core.internal.utils.Policy;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
@@ -30,6 +32,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.content.IContentTypeMatcher;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
@@ -140,7 +143,22 @@ public class ProjectResource extends ContainerResource implements IProject
    @Override
    public void create(IProjectDescription description, int updateFlags, IProgressMonitor monitor) throws CoreException
    {
-      workspace.createResource(this);
+      final ISchedulingRule rule = workspace.getRuleFactory().createRule(this);
+      try
+      {
+         workspace.prepareOperation(rule, monitor);
+         workspace.broadcastEvent(LifecycleEvent.newEvent(LifecycleEvent.PRE_PROJECT_CREATE, this));
+         workspace.beginOperation(true);
+         workspace.createResource(this);
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+      finally
+      {
+         workspace.endOperation(rule, true, Policy.subMonitorFor(monitor, Policy.endOpWork));
+      }
    }
 
    /**
@@ -229,7 +247,7 @@ public class ProjectResource extends ContainerResource implements IProject
    public IProject[] getReferencingProjects()
    {
       // TODO Auto-generated method stub
-      return null;
+      return new IProject[0];
    }
 
    /**

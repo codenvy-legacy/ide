@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import static org.junit.Assert.assertTrue;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -31,8 +33,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests copying resources.

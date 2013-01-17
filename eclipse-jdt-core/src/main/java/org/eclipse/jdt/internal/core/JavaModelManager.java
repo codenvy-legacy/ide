@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.ISaveContext;
 import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.IWorkspace;
@@ -234,7 +235,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
    //   private IConfigurationElement annotationProcessorManagerFactory = null;
 
    /*
-	 * Map from a package fragment root's path to a source attachment property (source path + ATTACHMENT_PROPERTY_DELIMITER + source root path)
+    * Map from a package fragment root's path to a source attachment property (source path + ATTACHMENT_PROPERTY_DELIMITER + source root path)
 	 */
    public Map rootPathToAttachments = new Hashtable();
 
@@ -411,7 +412,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
       private final static int MAX_SOURCE_LEVEL = 7; // 1.1 to 1.7
 
       /*
-		 * The registered compilation participants (a table from int (source level) to Object[])
+       * The registered compilation participants (a table from int (source level) to Object[])
 		 * The Object array contains first IConfigurationElements when not resolved yet, then
 		 * it contains CompilationParticipants.
 		 */
@@ -2110,13 +2111,14 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
 		 */
       //      if (Platform.isRunning())
       //      {
-      //         this.indexManager = new IndexManager();
-      //         this.nonChainingJars = loadClasspathListCache(NON_CHAINING_JARS_CACHE);
+      this.indexManager = new IndexManager();
+      //               this.nonChainingJars = loadClasspathListCache(NON_CHAINING_JARS_CACHE);
       //         this.invalidArchives = loadClasspathListCache(INVALID_ARCHIVES_CACHE);
       //         String includeContainerReferencedLib = System.getProperty(RESOLVE_REFERENCED_LIBRARIES_FOR_CONTAINERS);
-      //         this.resolveReferencedLibrariesForContainers = TRUE.equalsIgnoreCase(includeContainerReferencedLib);
+      //               this.resolveReferencedLibrariesForContainers = TRUE.equalsIgnoreCase(includeContainerReferencedLib);
       //      }
       this.cache = new JavaModelCache();
+      startup();
    }
 
    /**
@@ -6421,7 +6423,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
       this.optionsCache = cachedValue;
    }
 
-   public void startup() throws CoreException
+   public void startup()
    {
       //      try
       //      {
@@ -6477,12 +6479,12 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
       //
       //         // listen for resource changes
       //         this.deltaState.initializeRootsWithPreviousSession();
-      //         final IWorkspace workspace = ResourcesPlugin.getWorkspace();
-      //         workspace.addResourceChangeListener(this.deltaState,
-      //				/* update spec in JavaCore#addPreProcessingResourceChangedListener(...) if adding more event types */
-      //            IResourceChangeEvent.PRE_BUILD | IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_REFRESH);
+      final IWorkspace workspace = ResourcesPlugin.getWorkspace();
+      workspace.addResourceChangeListener(this.deltaState,
+      				/* update spec in JavaCore#addPreProcessingResourceChangedListener(...) if adding more event types */
+         IResourceChangeEvent.PRE_BUILD | IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_REFRESH);
       //
-      //         startIndexing();
+      startIndexing();
       //
       //         // process deltas since last activated in indexer thread so that indexes are up-to-date.
       //         // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=38658

@@ -38,7 +38,7 @@ public abstract class IndexLocation
       //		}
       if (localUrl.getProtocol().equals("file"))
       { //$NON-NLS-1$
-         return new FileIndexLocation(url, new File(localUrl.getPath()));
+         return new FileIndexLocation(url, new File("." + localUrl.getPath()));
       }
       return new JarIndexLocation(url, localUrl);
    }

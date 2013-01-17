@@ -386,6 +386,7 @@ public class IndexManager extends JobManager implements IIndexConstants
                   Util.verbose(
                      "-> unable to create empty index: " + indexLocation + " path: " + containerPathString); //$NON-NLS-1$ //$NON-NLS-2$
                }
+               e.printStackTrace();
                // The file could not be created. Possible reason: the project has been deleted.
                return null;
             }

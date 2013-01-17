@@ -66,9 +66,6 @@ public abstract class ResourcesBaseTest
 
    protected static MemoryFileSystemContext memoryContext;
 
-   protected static MemoryFolder testRoot;
-
-   protected static String TEST_ROOT_NAME = "TESTROOT";
 
    protected static VirtualFileSystem vfs;
 
@@ -82,11 +79,6 @@ public abstract class ResourcesBaseTest
 
       eventListenerList = new EventListenerList();
       memoryContext = new MemoryFileSystemContext();
-
-      MemoryFolder root = memoryContext.getRoot();
-      testRoot = new MemoryFolder(TEST_ROOT_NAME);
-      root.addChild(testRoot);
-      memoryContext.putItem(testRoot);
 
       virtualFileSystemRegistry.registerProvider(ID, new MemoryFileSystemProvider(ID, memoryContext));
       vfs = virtualFileSystemRegistry.getProvider(ID).newInstance(null, eventListenerList);
