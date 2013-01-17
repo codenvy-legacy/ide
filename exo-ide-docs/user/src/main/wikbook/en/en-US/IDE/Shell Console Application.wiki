@@ -8,21 +8,17 @@ Type {{help}} command and press *Enter* key to see the all command list with des
 
 2. {{git}} commands refer to operations with GIT version control system. 
 
-3. {{jcr}} commands refer to operations with JCR - inbuild Codenvy repository.
+3. {{vmc}} commands refer to operations with CloudFoundry PaaS. 
 
-4. {{vmc}} commands refer to operations with CloudFoundry PaaS. 
+4. {{appcfg}} commands refer to configure of applications deployed to Google Application Engine.
 
-5. {{appcfg}} commands refer to configure of applications deployed to Google Application Engine.
-
-You can also view the command usage information by using {{-h}} key after the command name. For example: to learn more about {{jcr mixin}} command, type {{jcr mixin}} {{-h}} and press Enter. The following message will appear:
+You can also view the command usage information by using {{-h}} key after the command name. For example: to learn more about {{rm}} command, type {{rm}} {{-h}} and press Enter. The following message will appear:
 
 {code}
-exo:op$ jcr mixin -h
-usage: mixin[-h | --help] COMMAND [ARGS]
-
-The most commonly used mixin commands are:
-   add              add a mixin to one or several nodes
-   remove           removes a mixin from one or several nodes
+codevny:op$ rm -h
+usage: rm FILE(FOLDER)...
+Remove the FILE(s) or FOLDER(s).
+ -h   display this help
 {code}
 
 To navigate the command history, press *Up* or *Down* keys. 
