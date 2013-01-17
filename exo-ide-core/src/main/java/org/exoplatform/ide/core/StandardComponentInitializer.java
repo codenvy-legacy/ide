@@ -21,6 +21,7 @@ package org.exoplatform.ide.core;
 import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
@@ -30,10 +31,12 @@ import org.exoplatform.ide.command.ShowNewFolderWizardCommand;
 import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.command.ShowNewResourceWizardCommand;
 import org.exoplatform.ide.command.ShowPreferenceCommand;
+import org.exoplatform.ide.command.ToggleItemCommand;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.keybinding.KeyBuilder;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.toolbar.ToggleItemExpression;
 import org.exoplatform.ide.toolbar.ToolbarPresenter;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.newfile.NewTextFilePagePresenter;
@@ -59,7 +62,7 @@ public class StandardComponentInitializer
       WizardAgentImpl wizardAgent, Provider<NewGenericProjectPagePresenter> genericProjectProvider,
       Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
       Resources resources, KeyBindingAgent keyBindingAgent, ShowPreferenceCommand showPreferencesCommand,
-      ToolbarPresenter toolbarPresenter, ExpressionManager expressionManager)
+      ToolbarPresenter toolbarPresenter, ExpressionManager expressionManager, EventBus eventBus)
    {
       wizardAgent.registerNewProjectWizard("Generic Project", "Create generic project", "",
          resources.genericProjectIcon(), genericProjectProvider, JsonCollections.<String> createArray());
@@ -67,6 +70,10 @@ public class StandardComponentInitializer
       wizardAgent.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
       wizardAgent.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
 
+      ToggleItemExpression toggleState = new ToggleItemExpression(expressionManager, true);
+      ToggleItemCommand command = new ToggleItemCommand(resources, eventBus, null, null, toggleState);
+      menuPresenter.addMenuItem("File/Checked item", command);
+      
       menuPresenter.addMenuItem("File/New/Project", newProjectCommand);
       menuPresenter.addMenuItem("File/New/Folder", newFolderCommand);
       menuPresenter.addMenuItem("File/New/Other", newFileCommand);

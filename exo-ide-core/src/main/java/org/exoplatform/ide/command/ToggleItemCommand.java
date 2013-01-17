@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,26 +19,28 @@
 package org.exoplatform.ide.command;
 
 import com.google.gwt.user.client.ui.Image;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.core.event.ChangeToggleItemStateEvent;
 import org.exoplatform.ide.core.expressions.Expression;
-import org.exoplatform.ide.menu.ExtendedCommand;
-import org.exoplatform.ide.preferences.PreferencesAgentImpl;
-import org.exoplatform.ide.preferences.PreferencesPresenter;
+import org.exoplatform.ide.toolbar.ToggleCommand;
+import org.exoplatform.ide.toolbar.ToggleItemExpression;
 
 /**
- * Command to show preferences dialog.
+ * Command to change toggle item.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@Singleton
-public class ShowPreferenceCommand implements ExtendedCommand
+public class ToggleItemCommand implements ToggleCommand
 {
-   private final Resources resources;
+   private final Expression inContext;
 
-   private final PreferencesAgentImpl agent;
+   private final Expression canExecute;
+
+   private final ToggleItemExpression stateExpression;
+
+   private final EventBus eventBus;
 
    private final Image icon;
 
@@ -46,15 +48,19 @@ public class ShowPreferenceCommand implements ExtendedCommand
     * Create command.
     * 
     * @param resources
-    * @param agent
+    * @param eventBus
+    * @param inContext
+    * @param canExecute
+    * @param stateExpression
     */
-   @Inject
-   public ShowPreferenceCommand(Resources resources, PreferencesAgentImpl agent)
+   public ToggleItemCommand(Resources resources, EventBus eventBus, Expression inContext, Expression canExecute,
+      ToggleItemExpression stateExpression)
    {
-      this.resources = resources;
-      this.agent = agent;
-      // TODO icon is incorrect
-      this.icon = new Image(resources.file());
+      this.eventBus = eventBus;
+      this.inContext = inContext;
+      this.canExecute = canExecute;
+      this.stateExpression = stateExpression;
+      this.icon = new Image(resources.folderOpen());
    }
 
    /**
@@ -63,8 +69,8 @@ public class ShowPreferenceCommand implements ExtendedCommand
    @Override
    public void execute()
    {
-      PreferencesPresenter dialog = new PreferencesPresenter(resources, agent);
-      dialog.showPreferences();
+      stateExpression.onStateChanged();
+      eventBus.fireEvent(new ChangeToggleItemStateEvent(stateExpression.getId()));
    }
 
    /**
@@ -80,18 +86,9 @@ public class ShowPreferenceCommand implements ExtendedCommand
     * {@inheritDoc}
     */
    @Override
-   public String getToolTip()
-   {
-      return "Preferences";
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public Expression inContext()
    {
-      return null;
+      return inContext;
    }
 
    /**
@@ -100,6 +97,24 @@ public class ShowPreferenceCommand implements ExtendedCommand
    @Override
    public Expression canExecute()
    {
-      return null;
+      return canExecute;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ToggleItemExpression getState()
+   {
+      return stateExpression;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return "ToolTip";
    }
 }

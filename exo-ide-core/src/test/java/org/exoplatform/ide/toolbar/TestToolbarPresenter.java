@@ -31,6 +31,7 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.core.expressions.ToggleStateExpression;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.menu.ExtendedCommand;

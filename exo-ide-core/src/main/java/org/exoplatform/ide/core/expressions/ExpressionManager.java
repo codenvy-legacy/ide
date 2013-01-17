@@ -34,7 +34,6 @@ import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
 import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.resources.model.Project;
-import org.exoplatform.ide.toolbar.ToggleStateExpression;
 
 /**
  *

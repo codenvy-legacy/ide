@@ -16,12 +16,14 @@
  */
 package org.exoplatform.ide.extension.demo;
 
-import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
+import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.extension.Extension;
+import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
  *
@@ -35,14 +37,37 @@ public class DemoExtension
    @Inject
    public DemoExtension(MainMenuAgent menuAgent)
    {
-      menuAgent.addMenuItem("DemoExtension", new Command()
+      menuAgent.addMenuItem("DemoExtension", new ExtendedCommand()
       {
+         @Override
+         public Expression inContext()
+         {
+            return null;
+         }
+         
+         @Override
+         public String getToolTip()
+         {
+            return null;
+         }
+         
+         @Override
+         public Image getIcon()
+         {
+            return null;
+         }
+         
          @Override
          public void execute()
          {
             alert("From Demo Extension");
          }
-
+         
+         @Override
+         public Expression canExecute()
+         {
+            return null;
+         }
       });
    }
 

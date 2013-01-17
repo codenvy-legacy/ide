@@ -19,7 +19,6 @@ package org.exoplatform.ide.menu;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
@@ -27,8 +26,10 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
+import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
+import org.exoplatform.ide.toolbar.ToggleItem;
 
 /**
  * Implements {@link MainMenuView} using standard GWT Menu Widgets
@@ -46,6 +47,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
    /** Map storing Path and corresponding menu item  */
    private final JsonStringMap<MenuItem> menuItems;
 
+   private final Resources resources;
+
    interface MainMenuUiBinder extends UiBinder<Widget, MainMenuViewImpl>
    {
    }
@@ -54,10 +57,12 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
     * Create new {@link MainMenuViewImpl}
     */
    @Inject
-   public MainMenuViewImpl()
+   public MainMenuViewImpl(Resources resources)
    {
       initWidget(uiBinder.createAndBindUi(this));
+      parentMenuBar.addStyleName(resources.toolbarCSS().menuHorizontal());
       this.menuItems = JsonCollections.createStringMap();
+      this.resources = resources;
    }
 
    /**
@@ -88,17 +93,57 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
     * {@inheritDoc}
     */
    @Override
-   public void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled)
+   public void setSelected(String path, boolean selected)
+   {
+      if (menuItems.containsKey(path))
+      {
+         MenuItem item = menuItems.get(path);
+         if (item instanceof ToggleItem)
+         {
+            ((ToggleItem)item).setSelected(selected);
+         }
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled)
    {
       MenuPath menuPath = new MenuPath(path);
       // Recursively get destination menu bar
       MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1);
       // create new item
-      MenuItem newItem = dstMenuBar.addItem(menuPath.getPathElementAt(menuPath.getSize() - 1), command);
+      String content = getItemContent(menuPath, command.getIcon());
+      MenuItem newItem = dstMenuBar.addItem(content, true, command);
       newItem.setVisible(visible);
       newItem.setEnabled(enabled);
+      newItem.addStyleName(resources.toolbarCSS().toolbarItem());
       // store item in the map
       menuItems.put(path, newItem);
+   }
+
+   /**
+    * Create item content.
+    * 
+    * @param menuPath
+    * @param icon
+    * @return
+    */
+   private String getItemContent(MenuPath menuPath, Image icon)
+   {
+      int depth = menuPath.getSize() - 1;
+      String title = menuPath.getPathElementAt(depth);
+
+      if (icon != null)
+      {
+         return (depth != 0 ? icon.toString() : "") + " <span>" + title + "</span>";
+      }
+      else
+      {
+         return "<span>" + title + "</span>";
+      }
    }
 
    /**
@@ -146,7 +191,28 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
       MenuBar menuBar = new MenuBar(true);
       menuBar.setAnimationEnabled(true);
       menuBar.setAutoOpen(true);
+      menuBar.addStyleName(resources.toolbarCSS().menuVertical());
       return menuBar;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected)
+   {
+      MenuPath menuPath = new MenuPath(path);
+      // Recursively get destination menu bar
+      MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1);
+      // create new item
+      String content = getItemContent(menuPath, command.getIcon());
+      ToggleItem newItem = new ToggleItem(content, true, command, selected, resources);
+      dstMenuBar.addItem(newItem);
+      newItem.setVisible(visible);
+      newItem.setEnabled(enabled);
+      newItem.setSelected(selected);
+      // store item in the map
+      menuItems.put(path, newItem);
    }
 
    /**
@@ -158,4 +224,5 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
       // ok
       // there are no events for now
    }
+
 }

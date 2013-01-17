@@ -18,20 +18,35 @@
  */
 package org.exoplatform.ide.toolbar;
 
+import org.exoplatform.ide.core.expressions.AbstractExpression;
+import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.core.expressions.ToggleStateExpression;
-import org.exoplatform.ide.menu.ExtendedCommand;
 
 /**
- * The command's interface include toggle state expression.
+ * The implementation of {@link ToggleStateExpression}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface ToggleCommand extends ExtendedCommand
+public class ToggleItemExpression extends AbstractExpression implements ToggleStateExpression
 {
    /**
-    * @return a Expression, it's result will be used
-    *         to determine item state. In UI this expression 
-    *         used for show selected/unselected item.
+    * Create expression.
+    * 
+    * @param expressionManager
+    * @param value
     */
-   public ToggleStateExpression getState();
+   public ToggleItemExpression(ExpressionManager expressionManager, boolean value)
+   {
+      super(expressionManager, value);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean onStateChanged()
+   {
+      value = !value;
+      return value;
+   }
 }

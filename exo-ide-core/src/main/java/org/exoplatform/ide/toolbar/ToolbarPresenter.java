@@ -28,6 +28,7 @@ import org.exoplatform.ide.api.ui.toolbar.ToolbarAgent;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.event.ExpressionsChangedHandler;
 import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.core.expressions.ToggleStateExpression;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
@@ -109,20 +110,30 @@ public class ToolbarPresenter implements Presenter, ToolbarAgent, ToolbarView.Ac
    {
       if (command == null)
       {
-         view.addItem(path, command, true, true);
+         addItem(path, command, null, null);
       }
       else
       {
-         Expression visibleWhen = command.inContext();
-         Expression enabledWhen = command.canExecute();
-
-         view.addItem(path, command, visibleWhen == null ? true : visibleWhen.getValue(), enabledWhen == null ? true
-            : enabledWhen.getValue());
-         
-         // put Toolbar item in relation to Expressions
-         addExpression(visibileWhenExpressions, visibleWhen, path);
-         addExpression(enabledWhenExpressions, enabledWhen, path);
+         addItem(path, command, command.inContext(), command.canExecute());
       }
+   }
+
+   /**
+    * Adds item to Toolbar.
+    * 
+    * @param path
+    * @param command
+    * @param visible
+    * @param enabled
+    */
+   private void addItem(String path, ExtendedCommand command, Expression visibleWhen, Expression enabledWhen)
+   {
+      view.addItem(path, command, visibleWhen == null ? true : visibleWhen.getValue(), enabledWhen == null ? true
+         : enabledWhen.getValue());
+
+      // put Toolbar item in relation to Expressions
+      addExpression(visibileWhenExpressions, visibleWhen, path);
+      addExpression(enabledWhenExpressions, enabledWhen, path);
    }
 
    /**
@@ -152,22 +163,32 @@ public class ToolbarPresenter implements Presenter, ToolbarAgent, ToolbarView.Ac
    {
       if (command == null)
       {
-         view.addToggleItem(path, command, true, true, true);
+         addToggleItem(path, command, null, null, null);
       }
       else
       {
-         Expression visibleWhen = command.inContext();
-         Expression enabledWhen = command.canExecute();
-         ToggleStateExpression selectedWhen = command.getState();
-
-         view.addToggleItem(path, command, visibleWhen == null ? true : visibleWhen.getValue(), enabledWhen == null
-            ? true : enabledWhen.getValue(), selectedWhen.getValue());
-
-         // put Toolbar item in relation to Expressions
-         addExpression(visibileWhenExpressions, visibleWhen, path);
-         addExpression(enabledWhenExpressions, enabledWhen, path);
-         addExpression(selectedWhenExpressions, selectedWhen, path);
+         addToggleItem(path, command, command.inContext(), command.canExecute(), command.getState());
       }
+   }
+
+   /**
+    * Adds toggle item to Toolbar.
+    * 
+    * @param path
+    * @param command
+    * @param visible
+    * @param enabled
+    */
+   private void addToggleItem(String path, ToggleCommand command, Expression visibleWhen, Expression enabledWhen,
+      ToggleStateExpression selectedWhen)
+   {
+      view.addToggleItem(path, command, visibleWhen == null ? true : visibleWhen.getValue(), enabledWhen == null ? true
+         : enabledWhen.getValue(), selectedWhen == null ? true : selectedWhen.getValue());
+
+      // put Toolbar item in relation to Expressions
+      addExpression(visibileWhenExpressions, visibleWhen, path);
+      addExpression(enabledWhenExpressions, enabledWhen, path);
+      addExpression(selectedWhenExpressions, selectedWhen, path);
    }
 
    /**

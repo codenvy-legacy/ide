@@ -16,9 +16,6 @@
  */
 package org.exoplatform.ide.menu;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Image;
-
 import org.exoplatform.ide.view.View;
 
 /**
@@ -26,6 +23,13 @@ import org.exoplatform.ide.view.View;
  */
 public interface MainMenuView extends View<MainMenuView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into MainMenu view.
+    */
+   public interface ActionDelegate
+   {
+   }
+
    /**
     * Set Menu Item by given path visible or invisible.
     * 
@@ -43,6 +47,14 @@ public interface MainMenuView extends View<MainMenuView.ActionDelegate>
    void setEnabled(String path, boolean enabled);
 
    /**
+    * Sets Menu Item by given path selected or unselected.
+    * 
+    * @param path
+    * @param enabled
+    */
+   void setSelected(String path, boolean enabled);
+
+   /**
     * Add menu item with the following path, icon, command, visible and enabled states
     * 
     * @param path
@@ -51,12 +63,17 @@ public interface MainMenuView extends View<MainMenuView.ActionDelegate>
     * @param visible
     * @param enabled
     */
-   void addMenuItem(String path, Image icon, Command command, boolean visible, boolean enabled);
+   void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled);
 
    /**
-    * Needs for delegate some function into MainMenu view.
+    * Adds toggle menu item with the following path, command with expression, visible, enabled
+    * and selected states.
+    * 
+    * @param path
+    * @param command
+    * @param visible
+    * @param enabled
+    * @param selected
     */
-   public interface ActionDelegate
-   {
-   }
+   void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected);
 }

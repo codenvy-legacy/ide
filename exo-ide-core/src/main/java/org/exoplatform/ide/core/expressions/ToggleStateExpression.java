@@ -23,7 +23,7 @@ package org.exoplatform.ide.core.expressions;
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface ToggleItemExpression extends Expression
+public interface ToggleStateExpression extends Expression
 {
    /**
     * Execute different operation when the item state is changing.

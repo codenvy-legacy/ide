@@ -83,10 +83,10 @@ public interface ToolbarView extends View<ToolbarView.ActionDelegate>
     * @param command
     * @param visible
     * @param enabled
-    * @param toggleState
+    * @param selected
     * @throws IllegalStateException throws when item isn't exist
     */
-   public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled, boolean toggleState)
+   public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled, boolean selected)
       throws IllegalStateException;
 
    /**

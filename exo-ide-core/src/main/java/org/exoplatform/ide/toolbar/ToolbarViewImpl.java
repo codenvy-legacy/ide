@@ -331,7 +331,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
     */
    @Override
    public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled,
-      boolean toggleState) throws IllegalStateException
+      boolean selected) throws IllegalStateException
    {
       MenuPath menuPath = new MenuPath(path);
 
@@ -349,7 +349,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
          if (items.size() == 0)
          {
             // if it is the first item into the group
-            menuItem = new ToggleItem(item, true, command, toggleState, resources);
+            menuItem = new ToggleItem(item, true, command, selected, resources);
             menu.addItem(menuItem);
             items.add(menuItem);
          }
@@ -358,7 +358,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
             // when the group has items needs to insert item after last
             // because could be situation when other group was created after the current group
             MenuItem previousItem = items.get(items.size() - 1);
-            menuItem = new ToggleItem(item, true, command, toggleState, resources);
+            menuItem = new ToggleItem(item, true, command, selected, resources);
 
             // insert after last item into current group
             int previousItemIndex = menu.getItemIndex(previousItem);
@@ -379,7 +379,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
       else
       {
          // in order to create item into the dropdown item/popup menu
-         menuItem = new ToggleItem(item, true, command, toggleState, resources);
+         menuItem = new ToggleItem(item, true, command, selected, resources);
          dstMenuBar.addItem(menuItem);
       }
 

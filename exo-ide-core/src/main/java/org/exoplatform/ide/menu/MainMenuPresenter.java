@@ -16,9 +16,7 @@
  */
 package org.exoplatform.ide.menu;
 
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 
@@ -26,11 +24,13 @@ import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.event.ExpressionsChangedHandler;
 import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.core.expressions.ToggleStateExpression;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonIntegerMap;
 import org.exoplatform.ide.json.JsonIntegerMap.IterationCallback;
 import org.exoplatform.ide.presenter.Presenter;
+import org.exoplatform.ide.toolbar.ToggleCommand;
 
 /**
  * Manages Main Menu Items, their runtime visibility and enabled state.
@@ -48,6 +48,11 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
     * Map Expression ID <--> MenuItemPath
     */
    private final JsonIntegerMap<JsonArray<String>> enabledWhenExpressions;
+
+   /**
+    * Map Expression ID <--> MenuItemPath
+    */
+   private final JsonIntegerMap<JsonArray<String>> selectedWhenExpressions;
 
    private final EventBus eventBus;
 
@@ -69,6 +74,8 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
 
       this.visibileWhenExpressions = JsonCollections.createIntegerMap();
       this.enabledWhenExpressions = JsonCollections.createIntegerMap();
+      this.selectedWhenExpressions = JsonCollections.createIntegerMap();
+
       bind();
    }
 
@@ -85,24 +92,47 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
     * {@inheritDoc}
     */
    @Override
-   public void addMenuItem(String path, Command command)
-   {
-      addMenuItem(path, null, command, null, null);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public void addMenuItem(String path, ExtendedCommand command)
    {
       if (command == null)
       {
-         addMenuItem(path, null, null, null, null);
+         addMenuItem(path, null, null, null);
       }
       else
       {
-         addMenuItem(path, command.getIcon(), command, command.inContext(), command.canExecute());
+         addMenuItem(path, command, command.inContext(), command.canExecute());
+      }
+   }
+
+   /**
+    * Adds item to the Main Menu.
+    */
+   private void addMenuItem(String path, ExtendedCommand command, Expression visibleWhen, Expression enabledWhen)
+   {
+      view.addMenuItem(path, command, visibleWhen == null ? true : visibleWhen.getValue(),
+         enabledWhen == null ? true : enabledWhen.getValue());
+
+      // put MenuItem in relation to Expressions
+      addExpression(visibileWhenExpressions, visibleWhen, path);
+      addExpression(enabledWhenExpressions, enabledWhen, path);
+   }
+
+   /**
+    * Adds expression into map of expressions. 
+    * 
+    * @param expressions
+    * @param expression
+    * @param path
+    */
+   private void addExpression(JsonIntegerMap<JsonArray<String>> expressions, Expression expression, String path)
+   {
+      if (expression != null)
+      {
+         if (!expressions.hasKey(expression.getId()))
+         {
+            expressions.put(expression.getId(), JsonCollections.<String> createArray());
+         }
+         expressions.get(expression.getId()).add(path);
       }
    }
 
@@ -110,28 +140,31 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
     * {@inheritDoc}
     */
    @Override
-   public void addMenuItem(String path, Image icon, Command command, Expression visibleWhen, Expression enabledWhen)
+   public void addMenuItem(String path, ToggleCommand command)
    {
+      if (command == null)
+      {
+         addMenuItem(path, command, null, null, null);
+      }
+      else
+      {
+         addMenuItem(path, command, command.inContext(), command.canExecute(), command.getState());
+      }
+   }
+   
+   /**
+    * Adds checked item to the Main Menu.
+    */
+   private void addMenuItem(String path, ToggleCommand command, Expression visibleWhen, Expression enabledWhen,
+      ToggleStateExpression selectedWhen)
+   {
+      view.addMenuItem(path, command, visibleWhen == null ? true : visibleWhen.getValue(), enabledWhen == null ? true
+         : enabledWhen.getValue(), selectedWhen == null ? true : selectedWhen.getValue());
 
-      view.addMenuItem(path, icon, command, visibleWhen == null ? true : visibleWhen.getValue(),
-         enabledWhen == null ? true : enabledWhen.getValue());
       // put MenuItem in relation to Expressions
-      if (visibleWhen != null)
-      {
-         if (!visibileWhenExpressions.hasKey(visibleWhen.getId()))
-         {
-            visibileWhenExpressions.put(visibleWhen.getId(), JsonCollections.<String>createArray());
-         }
-         visibileWhenExpressions.get(visibleWhen.getId()).add(path);
-      }
-      if (enabledWhen != null)
-      {
-         if (!enabledWhenExpressions.hasKey(enabledWhen.getId()))
-         {
-            enabledWhenExpressions.put(enabledWhen.getId(), JsonCollections.<String>createArray());
-         }
-         enabledWhenExpressions.get(enabledWhen.getId()).add(path);
-      }
+      addExpression(visibileWhenExpressions, visibleWhen, path);
+      addExpression(enabledWhenExpressions, enabledWhen, path);
+      addExpression(selectedWhenExpressions, selectedWhen, path);
    }
 
    /**
@@ -167,6 +200,7 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
                      view.setVisible(itemsPath.get(i), val);
                   }
                }
+
                // get the list of MenuItems registered with this expression
                if (enabledWhenExpressions.hasKey(key))
                {
@@ -177,9 +211,17 @@ public class MainMenuPresenter implements Presenter, MainMenuAgent, MainMenuView
                   }
                }
 
+               // get the list of MenuItems registered with this expression
+               if (selectedWhenExpressions.hasKey(key))
+               {
+                  JsonArray<String> itemsPath = selectedWhenExpressions.get(key);
+                  for (int i = 0; i < itemsPath.size(); i++)
+                  {
+                     view.setSelected(itemsPath.get(i), val);
+                  }
+               }
             }
          });
       }
    }
-
 }

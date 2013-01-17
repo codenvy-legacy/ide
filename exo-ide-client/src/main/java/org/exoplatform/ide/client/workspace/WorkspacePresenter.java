@@ -20,13 +20,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
@@ -49,11 +49,13 @@ import org.exoplatform.ide.command.EditorActiveExpression;
 import org.exoplatform.ide.command.NoProjectOpenedExpression;
 import org.exoplatform.ide.command.ProjectOpenedExpression;
 import org.exoplatform.ide.core.editor.EditorAgent;
+import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
 import org.exoplatform.ide.java.client.projectmodel.JavaProjectDesctiprion;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.outline.OutlinePartPresenter;
 import org.exoplatform.ide.part.PartAgentPresenter;
@@ -122,19 +124,11 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
       // FOR DEMO
 
       // CREATE STATIC MENU CONTENT
-      menuPresenter.addMenuItem("File/Open Project", null, new OpenProjectCommand(resourceProvider), null,
-         noProjectOpenedExpression);
+      menuPresenter.addMenuItem("File/Open Project", new OpenProjectCommand(resourceProvider));
 
       // CREATE DYNAMIC MENU CONTENT
-      menuPresenter.addMenuItem("File/Create Demo Content", null, new CreateDemoContentCommand(resourceProvider), null,
-         noProjectOpenedExpression);
+      menuPresenter.addMenuItem("File/Create Demo Content", new CreateDemoContentCommand(resourceProvider));
 
-      menuPresenter.addMenuItem("Edit", null, null, editorActiveExpression, null);
-      menuPresenter.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
-
-      menuPresenter.addMenuItem("Project", null, null, projectOpenedExpression, null);
-      menuPresenter.addMenuItem("Project/Some Project Operation", null, null, projectOpenedExpression,
-         noProjectOpenedExpression);
       bind();
 
       //XXX DEMO
@@ -203,7 +197,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
    }
 
    // FOR DEMO:
-   private final class CreateDemoContentCommand implements Command
+   private final class CreateDemoContentCommand implements ExtendedCommand
    {
       private final ResourceProvider resourceManager;
 
@@ -433,17 +427,43 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
             }
          });
       }
+
+      @Override
+      public Image getIcon()
+      {
+         return null;
+      }
+
+      @Override
+      public String getToolTip()
+      {
+         return "Create Demo content";
+      }
+
+      @Override
+      public Expression inContext()
+      {
+         return null;
+      }
+
+      @Override
+      public Expression canExecute()
+      {
+         return null;
+      }
    }
 
    /**
     * Opens new project.
     * TODO : Extract dialog as framework UI component
     */
-   private final class OpenProjectCommand implements Command
+   private final class OpenProjectCommand implements ExtendedCommand
    {
       private final ResourceProvider resourceProvider;
 
       private SimpleList<String> list;
+
+      private final Image icon;
 
       private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>()
       {
@@ -486,8 +506,9 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
       @Inject
       public OpenProjectCommand(ResourceProvider resourceProvider)
       {
-         // TODO : create list wrapper, so it can be used as GWT Widget
          this.resourceProvider = resourceProvider;
+         // TODO change image
+         this.icon = new Image(resources.folderOpen());
 
          TableElement tableElement = Elements.createTableElement();
          tableElement.setAttribute("style", "width: 100%");
@@ -581,6 +602,42 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
          bottomPanel.add(okButton);
          list.render(projects);
          return dialogBox;
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public Image getIcon()
+      {
+         return icon;
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public String getToolTip()
+      {
+         return "Open project";
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public Expression inContext()
+      {
+         return null;
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public Expression canExecute()
+      {
+         return null;
       }
    }
 
