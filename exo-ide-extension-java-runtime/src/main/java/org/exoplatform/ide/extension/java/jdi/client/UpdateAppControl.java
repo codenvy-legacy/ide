@@ -22,8 +22,6 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -34,6 +32,8 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -48,7 +48,7 @@ import java.util.List;
  *
  */
 public class UpdateAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStoppedHandler
+   AppStartedHandler, AppStoppedHandler, DebuggerActivityHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
@@ -81,6 +81,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStoppedEvent.TYPE, this);
+      IDE.addHandler(DebuggerActivityEvent.TYPE, this);
    }
 
    /**
@@ -153,5 +154,16 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
          }
       }
       return false;
+   }
+
+   /**
+    * Set update button enable if in current state debugger is not stopped on breakpoint.
+    *
+    * @param event
+    */
+   @Override
+   public void onDebuggerActivityChanged(DebuggerActivityEvent event)
+   {
+      setEnabled(event.getState());
    }
 }

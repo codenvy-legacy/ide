@@ -64,6 +64,7 @@ import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHa
 import org.exoplatform.ide.extension.java.jdi.client.events.ChangeValueEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebugAppHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerDisconnectedEvent;
@@ -498,6 +499,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    {
       if (display != null)
       {
+         IDE.fireEvent(new DebuggerActivityEvent(true));
          display.setEnableResumeButton(false);
          display.setStepIntoButton(false);
          display.setStepOverButton(false);
@@ -510,6 +512,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    {
       if (display != null)
       {
+         IDE.fireEvent(new DebuggerActivityEvent(false));
          display.setEnableResumeButton(true);
          display.setStepIntoButton(true);
          display.setStepOverButton(true);
@@ -801,6 +804,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          IDE.addHandler(ProjectBuiltEvent.TYPE, this);
       }
       updateApp = true;
+      if (startDebugger)
+      {
+         doRemoveAllBreakPoints();
+      }
       IDE.fireEvent(new BuildProjectEvent());
    }
 
