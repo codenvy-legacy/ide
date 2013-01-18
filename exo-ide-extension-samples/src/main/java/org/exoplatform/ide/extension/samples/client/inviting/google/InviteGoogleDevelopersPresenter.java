@@ -219,7 +219,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
       String message =
          "If you want to invite someone from your Google contact list, <br> "
-            + "press OK button and you will be redirected to Google authorization page. <br>";
+            + "press Yes button and you will be redirected to Google authorization page. <br>";
 
       Dialogs.getInstance().ask("You have to be logged in Google account!", message, new BooleanValueReceivedHandler()
       {
@@ -437,7 +437,8 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       if (emails == 1)
          display.setInviteButtonTitle("Invite 1 developer");
       else
-         display.setInviteButtonTitle("Invite" + (emails > 0 ? " " + emails + " " : "") + "developers");
+         display.setInviteButtonTitle("Invite" + (emails > 0 ? " " + emails + " " : " ") + "developers");
+
    }
 
    public void sendNextEmail()

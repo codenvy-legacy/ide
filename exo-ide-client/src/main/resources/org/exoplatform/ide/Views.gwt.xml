@@ -109,10 +109,6 @@
       <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display"/>
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectForm">
-      <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display"/>
-   </replace-with>
-
    <replace-with class="org.exoplatform.ide.client.project.template.CreateProjectTemplateView">
       <when-type-is class="org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter.Display"/>
    </replace-with>

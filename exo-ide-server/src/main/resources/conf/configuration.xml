@@ -1,115 +1,107 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!--
+<!-- Copyright (C) 2010 eXo Platform SAS. This is free software; you can redistribute it and/or modify it under the terms 
+	of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+	or (at your option) any later version. This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+	License for more details. You should have received a copy of the GNU Lesser General Public License along with this software; 
+	if not, write to the Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA, or see the FSF 
+	site: http://www.fsf.org. -->
 
-    Copyright (C) 2010 eXo Platform SAS.
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
+	xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
 
-    This is free software; you can redistribute it and/or modify it
-    under the terms of the GNU Lesser General Public License as
-    published by the Free Software Foundation; either version 2.1 of
-    the License, or (at your option) any later version.
+	<!-- *************************************************************************************** ******************************** 
+		Invitations Support ********************************** *************************************************************************************** -->
 
-    This software is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-    Lesser General Public License for more details.
+	<component>
+		<type>org.exoplatform.ide.invite.IdeInviteMessagePropertiesProvider</type>
+	</component>
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this software; if not, write to the Free
-    Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-    02110-1301 USA, or see the FSF site: http://www.fsf.org.
+	<component>
+		<type>org.exoplatform.ide.invite.DummyDSASignatureChecker</type>
+	</component>
 
--->
+	<component>
+		<type>org.exoplatform.ide.googlecontacts.GoogleContactsClient</type>
+	</component>
 
-<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd http://www.exoplaform.org/xml/ns/kernel_1_0.xsd"
-   xmlns="http://www.exoplaform.org/xml/ns/kernel_1_0.xsd">
+	<component>
+		<type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
+		<init-params>
+			<properties-param>
+				<name>locations</name>
+			</properties-param>
+		</init-params>
+	</component>
 
-<!--
-***************************************************************************************
-******************************** Invitations Support **********************************
-***************************************************************************************
--->
+	<component>
+		<type>org.exoplatform.ide.invite.ExoMailSender</type>
+	</component>
 
-<component>
-  <type>org.exoplatform.ide.invite.IdeInviteMessagePropertiesProvider</type>
-</component>
+	<component>
+		<type>org.exoplatform.ide.invite.InviteService</type>
+	</component>
 
-<component>
-  <type>org.exoplatform.ide.invite.DummyDSASignatureChecker</type>
-</component>
+	<component>
+		<key>org.exoplatform.ide.invite.HttpResponseExceptionMapper</key>
+		<type>org.exoplatform.ide.invite.HttpResponseExceptionMapper</type>
+	</component>
 
-<component>
-   <type>org.exoplatform.ide.googlecontacts.GoogleContactsClient</type>
-</component>
-
-<component>
-  <type>org.exoplatform.services.jcr.ext.registry.RegistryService</type>
-  <init-params>
-    <properties-param>
-      <name>locations</name>
-    </properties-param>
-  </init-params>
-</component>
-
-<component>
-  <type>org.exoplatform.ide.invite.ExoMailSender</type>
-</component>
-
-<component>
-  <type>org.exoplatform.ide.invite.InviteService</type>
-</component>
-
-<component>
-  <key>org.exoplatform.ide.invite.HttpResponseExceptionMapper</key>
-  <type>org.exoplatform.ide.invite.HttpResponseExceptionMapper</type>
-</component>
-
-   <!-- TemplateResolver configuration -->
-   <component>
-      <key>org.exoplatform.ide.invite.TemplateResolver</key>
-      <type>org.exoplatform.ide.invite.TemplateResolver</type>
-      <init-params>
-         <value-param>
-            <name>template-mail-invitation</name>
-            <value>/template-invitation-mail.html</value>
+	<!-- TemplateResolver configuration -->
+	<component>
+		<key>org.exoplatform.ide.invite.TemplateResolver</key>
+		<type>org.exoplatform.ide.invite.TemplateResolver</type>
+		<init-params>
+			<value-param>
+				<name>template-mail-invitation</name>
+				<value>/template-invitation-mail.html</value>
+			</value-param>
+			<value-param>
+            <name>template-mail-invitation-registered-user</name>
+            <value>/template-mail-invitation-registered-user.html</value>
          </value-param>
-         <value-param>
-            <name>template-mail-password-restoring</name>
-            <value>/template-mail-password-restoring.html</value>
-         </value-param>
-         <value-param>
-            <name>template-contact-us-mail</name>
-            <value>/template-contact-us-mail.html</value>
-         </value-param>
-         </init-params>
-   </component>
+			<value-param>
+				<name>template-mail-password-restoring</name>
+				<value>/template-mail-password-restoring.html</value>
+			</value-param>
+			<value-param>
+				<name>template-contact-us-mail</name>
+				<value>/template-contact-us-mail.html</value>
+			</value-param>
+		</init-params>
+	</component>
 
-    <!-- Support for mail sending ability -->
-    <component>
-        <key>org.exoplatform.services.mail.MailService</key>
-        <type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
-        <init-params>
-            <properties-param>
-                <name>config</name>
-                <property name="mail.smtp.host" value="smtp.gmail.com"/>
-                <property name="mail.smtp.port" value="465"/>
-                <property name="mail.transport.protocol" value="smtp"/>
-                <property name="mail.smtp.auth" value="true"/>
-                <property name="mail.smtp.auth.username" value="exo.cloud.ide1@gmail.com"/>
-                <property name="mail.smtp.auth.password" value="cloudIDEuAeXo2"/>
-                <property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory"/>
-                <property name="mail.smtp.socketFactory.fallback" value="false"/>
-            </properties-param>
-        </init-params>
-    </component>
+	<!-- Support for mail sending ability -->
+	<component>
+		<key>org.exoplatform.services.mail.MailService</key>
+		<type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
+		<init-params>
+			<properties-param>
+				<name>config</name>
+				<property name="mail.smtp.host" value="smtp.gmail.com" />
+				<property name="mail.smtp.port" value="465" />
+				<property name="mail.transport.protocol" value="smtp" />
+				<property name="mail.smtp.auth" value="true" />
+				<property name="mail.smtp.auth.username" value="exo.cloud.ide1@gmail.com" />
+				<property name="mail.smtp.auth.password" value="cloudIDEuAeXo2" />
+				<property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory" />
+				<property name="mail.smtp.socketFactory.fallback" value="false" />
+			</properties-param>
+		</init-params>
+	</component>
 
-<component>
-  <type>org.exoplatform.ide.invite.IdeInviteService</type>
-  <init-params>
-    <value-param>
-      <name>mail-sender</name>
-      <value><![CDATA[Cloud-IDE <noreply@cloud-ide.com>]]></value>
-    </value-param>
-  </init-params>
-</component>
+	<component>
+		<type>org.exoplatform.ide.invite.IdeInviteService</type>
+	</component>
+
+	<!-- JRebel profiler service -->
+	<component>
+		<type>org.exoplatform.ide.jrebel.server.JRebelProfilerApplication</type>
+	</component>
+
+	<component>
+		<type>org.exoplatform.ide.jrebel.server.JRebelProfiler</type>
+	</component>
 
 </configuration>

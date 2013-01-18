@@ -82,6 +82,9 @@ public interface IdeTemplateLocalizationConstant extends Messages
    @Key("createProjectFromTemplate.formTitle")
    String createProjectFromTemplateTitle();
 
+   @Key("createProjectFromTemplate.newModule.formTitle")
+   String createProjectFromTemplateNewModuleTitle();   
+   
    @Key("createProjectFromTemplate.nameField")
    String createProjectFromTemplateName();
 

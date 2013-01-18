@@ -40,7 +40,7 @@ public class DeployApplicationView extends Composite implements DeployApplicatio
    private static DeployApplicationViewUiBinder uiBinder = GWT.create(DeployApplicationViewUiBinder.class);
 
    @UiField
-   ComboBoxField targetField;
+   TextInput targetField;
 
    @UiField
    TextInput nameField;
@@ -59,6 +59,7 @@ public class DeployApplicationView extends Composite implements DeployApplicatio
       super();
       initWidget(uiBinder.createAndBindUi(this));
       setHeight("220px");
+      targetField.setReadOnly(true);
    }
 
    /**
@@ -98,9 +99,9 @@ public class DeployApplicationView extends Composite implements DeployApplicatio
     * @see org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter.Display#setServerValues(java.lang.String[])
     */
    @Override
-   public void setServerValues(String[] servers)
+   public void setServerValue(String server)
    {
-      targetField.setValueMap(servers);
+      targetField.setValue(server);
    }
 
    @Override

@@ -26,7 +26,7 @@
       <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.9-GA</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M15</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M16-SNAPSHOT</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
@@ -481,6 +481,19 @@
             <type>war</type>
             <version>${project.version}</version> 
          </dependency>
+         
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-shell</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+      
+        <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-shell-war</artifactId>
+            <type>war</type>
+            <version>${project.version}</version>
+        </dependency>
 
          <dependency>
             <groupId>org.exoplatform.log-reader</groupId>
@@ -905,7 +918,6 @@
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
-      <module>exo-ide-packaging-websocket-war</module>
 
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>

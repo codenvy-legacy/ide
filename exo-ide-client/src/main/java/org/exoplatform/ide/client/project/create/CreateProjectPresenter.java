@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.create;
 
+import com.google.gwt.json.client.JSONParser;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -48,8 +50,12 @@ import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.event.CreateProjectEvent;
 import org.exoplatform.ide.client.framework.event.CreateProjectHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
+import org.exoplatform.ide.client.framework.project.CreateModuleEvent;
+import org.exoplatform.ide.client.framework.project.CreateModuleHandler;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.template.ProjectTemplate;
@@ -58,12 +64,15 @@ import org.exoplatform.ide.client.framework.template.marshal.ProjectTemplateList
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ProjectUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -79,11 +88,15 @@ import java.util.List;
  * @version $Id: Jul 24, 2012 3:38:19 PM anya $
  *
  */
-public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedHandler, ViewClosedHandler,
-   DeployResultHandler
+public class CreateProjectPresenter
+   implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler, ViewClosedHandler,
+   DeployResultHandler, ItemsSelectedHandler
 {
    interface Display extends IsView
    {
+
+      void switchToCreateModule();
+
       HasValue<String> getNameField();
 
       HasValue<String> getErrorLabel();
@@ -155,9 +168,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       void setDeployView(Composite deployView);
 
-      void setJRebelErrorFillingMessageLabel(String message);
+      void setJRebelErrorMessageLabel(String message);
 
-      void setJRebelProfileFieldsVisible(boolean visible);
+      void setJRebelFormVisible(boolean visible);
+
+      void setJRebelStoredFormVisible(boolean visible);
    }
 
    private Display display;
@@ -194,6 +209,10 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    private static final Comparator<PaaS> PAAS_COMPARATOR = new PaaSComparator();
 
+   private boolean createModule = false;
+
+   private ProjectModel parentProject;
+
    private class NoneTarget extends PaaS
    {
       public NoneTarget()
@@ -206,10 +225,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    public CreateProjectPresenter()
    {
       IDE.getInstance().addControl(new CreateProjectControl());
+      IDE.getInstance().addControl(new CreateModuleControl());
 
       IDE.addHandler(CreateProjectEvent.TYPE, this);
+      IDE.addHandler(CreateModuleEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    public void bindDisplay()
@@ -248,7 +270,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
       display.getNextButton().addClickHandler(new ClickHandler()
       {
-
          @Override
          public void onClick(ClickEvent event)
          {
@@ -261,12 +282,17 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                }
                else
                {
+                  if (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
+                  {
+                     getJRebelUserProfileInfo();
+                  }
                   validateProjectName(display.getNameField().getValue());
                }
             }
             else
             {
-               if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
+               if (display.getUseJRebelPlugin().getValue()
+                  && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
                {
                   if (!checkJRebelFieldFill())
                   {
@@ -294,7 +320,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          @Override
          public void onClick(ClickEvent event)
          {
-            if (display.getUseJRebelPlugin().getValue() && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
+            if (display.getUseJRebelPlugin().getValue()
+               && (selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
             {
                if (!checkJRebelFieldFill())
                {
@@ -333,11 +360,11 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          {
             if (event.getValue())
             {
-               display.setJRebelProfileFieldsVisible(true);
+               display.setJRebelFormVisible(true);
             }
             else
             {
-               display.setJRebelProfileFieldsVisible(false);
+               display.setJRebelFormVisible(false);
             }
          }
       });
@@ -376,10 +403,34 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    @Override
    public void onCreateProject(CreateProjectEvent event)
    {
+      openCreateProjectView(false);
+   }
+
+   @Override
+   public void onCreateModule(CreateModuleEvent event)
+   {
+      if (MavenModuleCreationCallback.getInstance().isPomXMLOpened(parentProject))
+      {
+         Dialogs.getInstance().showError("First close pom.xml.");
+         return;
+      }
+
+      openCreateProjectView(true);
+   }
+
+   private void openCreateProjectView(boolean createModule)
+   {
+      this.createModule = createModule;
+
       if (display == null)
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
+         if (createModule)
+         {
+            display.switchToCreateModule();
+         }
+
          bindDisplay();
       }
 
@@ -453,10 +504,25 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
                new ArrayList<ProjectTemplate>()))
             {
                @Override
-               protected void onSuccess(List<ProjectTemplate> result)
+               protected void onSuccess(List<ProjectTemplate> templates)
                {
-                  allProjectTemplates = result;
-                  List<ProjectType> list = getProjectTypesFromTemplates(result);
+                  if (createModule)
+                  {
+                     allProjectTemplates = new ArrayList<ProjectTemplate>();
+                     for (ProjectTemplate template : templates)
+                     {
+                        if (AvailableModluleTypes.contains(template.getType()))
+                        {
+                           allProjectTemplates.add(template);
+                        }
+                     }
+                  }
+                  else
+                  {
+                     allProjectTemplates = templates;
+                  }
+
+                  List<ProjectType> list = getProjectTypesFromTemplates(allProjectTemplates);
                   setProjectTypes(list);
 
                   if (display.getNameField().getValue() == null || display.getNameField().getValue().isEmpty())
@@ -570,7 +636,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          goToProjectStep();
       }
       updateNavigationButtonsState();
-      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -593,7 +658,6 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          }
       }
       updateNavigationButtonsState();
-      display.setJRebelProfileFieldsVisible(display.getUseJRebelPlugin().getValue());
    }
 
    /**
@@ -611,6 +675,28 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    private void goToTemplatesStep()
    {
       isChooseTemplateStep = true;
+
+      // This code need to detect openshift template and hide it if user choosen none target.
+      // Specification of working openshift is that application created on server side of openshift for example if
+      // if will be simple jsp project, openshift will put into source directory own web.xml and pom.xml and our
+      // project templates that pulling from git repository are conflicting with their and to undestruct all project
+      // we create it on openshift paas and after creation it will be fetched by git to our project directory for
+      // feature working on it. That's why we created a few simple empty project templates that allow IDE to create
+      // project waiting to create application on openshift and then to fetch all source files of this application
+      // into our local directory.
+      List<ProjectTemplate> templatesToTempHide = new ArrayList<ProjectTemplate>();
+      for (ProjectTemplate template : availableProjectTemplates)
+      {
+         if (selectedTarget instanceof NoneTarget
+            && template.getTargets() != null
+            && template.getTargets().contains("OpenShift")
+            && template.getTargets().size() == 1)
+         {
+            templatesToTempHide.add(template);
+         }
+      }
+      availableProjectTemplates.removeAll(templatesToTempHide);
+
       display.getTemplatesGrid().setValue(availableProjectTemplates);
       updateJRebelPanelVisibility();
       display.showChooseTemlateStep();
@@ -686,6 +772,12 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
       try
       {
          String parentId = vfsInfo.getRoot().getId();
+
+         if (createModule && parentProject != null)
+         {
+            parentId = parentProject.getId();
+         }
+
          String projectName = display.getNameField().getValue();
          IDELoader.getInstance().setMessage(org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT.creatingProject());
          IDELoader.getInstance().show();
@@ -704,7 +796,15 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
                   IDELoader.getInstance().hide();
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new ProjectCreatedEvent(result));
+
+                  if (createModule)
+                  {
+                     MavenModuleCreationCallback.getInstance().moduleCreated(parentProject, result);
+                  }
+                  else
+                  {
+                     IDE.fireEvent(new ProjectCreatedEvent(result));
+                  }
                }
 
                @Override
@@ -866,7 +966,13 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
    {
       try
       {
-         VirtualFileSystem.getInstance().getChildren(VirtualFileSystem.getInstance().getInfo().getRoot(),
+         Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
+         if (createModule)
+         {
+            parent = parentProject;
+         }
+
+         VirtualFileSystem.getInstance().getChildren(parent,
             ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
          {
             @Override
@@ -912,7 +1018,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
 
    private void sendProfileInfoToZeroTurnaround()
    {
-      String url = Utils.getRestContext() + "/ide/jrebel/profile/info";
+      String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
 
       JSONObject json = new JSONObject();
       json.put("first_name", new JSONString(display.getJRebelFirstNameField().getValue()));
@@ -954,19 +1060,83 @@ public class CreateProjectPresenter implements CreateProjectHandler, VfsChangedH
          {
             String phone = display.getJRebelPhoneNumberField().getValue();
 
-            boolean phoneMatched = phone.matches("\\+\\d{2}\\s?-?\\s?[(]?\\d{3}[)]?\\s?-?\\s?\\d{3}\\s?-?\\s?\\d{4}");
+            boolean phoneMatched = phone.matches("^[+]?[\\d\\-\\s().]+$");
             if (!phoneMatched)
             {
-               display.setJRebelErrorFillingMessageLabel("Phone must be: +xx-(xxx)-xxxxxxx");
+               display.setJRebelErrorMessageLabel("Valid phone number consists of digits or special characters '+', '(', ')', '-' only.");
             }
             else
             {
-               display.setJRebelErrorFillingMessageLabel("");
+               display.setJRebelErrorMessageLabel("");
             }
             return phoneMatched;
          }
-         display.setJRebelErrorFillingMessageLabel("All field are required!");
+         display.setJRebelErrorMessageLabel("All field are required!");
       }
       return false;
    }
+
+   private void getJRebelUserProfileInfo()
+   {
+      String url = Utils.getRestContext() + "/ide/jrebel/profile/get";
+
+      try
+      {
+         StringUnmarshaller unmarshaller = new StringUnmarshaller(new StringBuilder());
+         AsyncRequest.build(RequestBuilder.GET, url)
+            .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
+            .send(new AsyncRequestCallback<StringBuilder>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(StringBuilder result)
+               {
+                  JSONObject jsonObject = JSONParser.parseStrict(result.toString()).isObject();
+                  String firstName = jsonObject.get("first_name").isString().stringValue();
+                  String lastName = jsonObject.get("last_name").isString().stringValue();
+                  String phone = jsonObject.get("phone").isString().stringValue();
+
+                  if (firstName != null && lastName != null && phone != null)
+                  {
+                     display.getJRebelFirstNameField().setValue(firstName);
+                     display.getJRebelLastNameField().setValue(lastName);
+                     display.getJRebelPhoneNumberField().setValue(phone);
+
+                     display.setJRebelStoredFormVisible(false);
+                  }
+                  else
+                  {
+                     display.setJRebelStoredFormVisible(true);
+                  }
+                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  display.setJRebelStoredFormVisible(true);
+                  display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems() == null ||
+         event.getSelectedItems().size() != 1 ||
+         !(event.getSelectedItems().get(0) instanceof ItemContext))
+      {
+         parentProject = null;
+         return;
+      }
+
+      ItemContext context = (ItemContext)event.getSelectedItems().get(0);
+      parentProject = context.getProject();
+   }
+
 }

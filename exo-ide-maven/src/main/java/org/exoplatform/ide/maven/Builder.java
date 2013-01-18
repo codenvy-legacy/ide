@@ -67,6 +67,23 @@ public class Builder
             .type(MediaType.TEXT_PLAIN).build());
       }
    }
+   
+   
+   @GET
+   @Path("state")
+   public Response getSizeOfBuilderQueue(){
+      int size = tasks.getSize();
+      String resp = "{\"current_queue_size\":\"" + size 
+                    + "\",\"clean_build_result_delay_millis\":\"" + tasks.getCleanBuildResultDelayMillis()
+                    + "\",\"publish_repository\":\"" +  tasks.getPublishRepository()
+                    + "\",\"publish_repository_url\":\"" + tasks.getPublishRepositoryUrl()
+                    + "\",\"max_size_of_build_queue\":\""+ tasks.getMaxSizeOfBuildQueue()
+                    + "\",\"builder_repository\":\"" + tasks.getRepository()
+                    + "\",\"builder_timeout\":\"" + tasks.getTimeoutMillis()
+                    + "\",\"builder_workers_number\":\"" + tasks.getWorkerNumber() + "\"}";
+     
+      return Response.ok(resp).build();
+   }
 
    @POST
    @Path("build")

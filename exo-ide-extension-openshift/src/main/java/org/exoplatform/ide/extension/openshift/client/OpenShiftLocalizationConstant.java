@@ -23,7 +23,7 @@ import com.google.gwt.i18n.client.Messages;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 6, 2011 11:16:02 AM anya $
- * 
+ *
  */
 public interface OpenShiftLocalizationConstant extends Messages
 {
@@ -239,6 +239,7 @@ public interface OpenShiftLocalizationConstant extends Messages
    String userInfoViewApplications();
 
    /* Messages */
+
    /**
     * @param domainName domain name
     * @return {@link String}
@@ -371,4 +372,17 @@ public interface OpenShiftLocalizationConstant extends Messages
 
    @Key("manage.project.application.actions")
    String manageProjectApplicationActions();
+
+   //Application control
+   @Key("application.start")
+   String startApplication();
+
+   @Key("application.stop")
+   String stopApplication();
+
+   @Key("application.restart")
+   String restartApplication();
+
+   @Key("application.status.label")
+   String statusLabel();
 }

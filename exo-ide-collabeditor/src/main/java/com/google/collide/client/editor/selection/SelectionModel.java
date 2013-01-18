@@ -17,6 +17,8 @@ package com.google.collide.client.editor.selection;
 import static com.google.collide.shared.document.util.LineUtils.getLastCursorColumn;
 import static com.google.collide.shared.document.util.LineUtils.rubberbandColumn;
 
+import elemental.events.MouseEvent;
+
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.ViewportModel;
@@ -532,7 +534,12 @@ public class SelectionModel implements Buffer.MouseDragListener {
   }
 
   @Override
-  public void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld) {
+  public void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, short button) {
+    // (artem) if right mouse button pressed, not need to process click
+    if (button == MouseEvent.Button.SECONDARY) {
+       return;
+    }
+
     int lineNumber = buffer.convertYToLineNumber(y, true);
     LineInfo newLineInfo =
         buffer.getDocument().getLineFinder().findLine(cursorAnchor.getLineInfo(), lineNumber);
@@ -541,7 +548,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     clickCount = (clickCount - 1) % 3 + 1;
 
     selectionGranularity = SelectionGranularity.forClickCount(clickCount);
-
+    
     if (clickCount == 1) {
       moveCursor(newLineInfo, newColumn, true, isShiftHeld, getSelectionRangeForCallback());
     } else {

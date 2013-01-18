@@ -1,4 +1,4 @@
-The eXo IDE application provides the original approach to operate with _REST Service_ to *validate*, *deploy/undeploy* and *launch* applications, which are compatible with the JSR-311 specification without restarting the server, or installing additional programs:
+The Codenvy application provides the original approach to operate with _REST Service_ to *validate*, *deploy/undeploy* and *launch* applications, which are compatible with the JSR-311 specification without restarting the server, or installing additional programs:
 
 *Table. Accessibility of REST Service Operations*
 || Operation || User with "developer" role || User with "administrator" role ||
@@ -10,7 +10,7 @@ The eXo IDE application provides the original approach to operate with _REST Ser
 | *Run in Sandbox* | Enabled | Enabled |
 | *Launch REST Service* | Disabled | Enabled |
 
-With eXo IDE, you can validate REST Service before saving, deploying, launching or undeploying the service. The feedback from server is displayed in the _Output Tab_:
+With Codenvy, you can validate REST Service before saving, deploying, launching or undeploying the service. The feedback from server is displayed in the _Output Tab_:
 
 
 !groovy_script_operations.png|border=0!
@@ -43,7 +43,7 @@ startup failed, rennes.groovy: 4: unable to resolve class javax.ws.rs.Path1
 {code}
 
 
-You can click the error message in the _Output Panel_ to go to the line with error in the REST Service file. In case the file has been closed, eXo IDE will automatically open it. Make sure that you do not delete or rename this file after the error message has been displayed in the _Outline Panel_.
+You can click the error message in the _Output Panel_ to go to the line with error in the REST Service file. In case the file has been closed, Codenvy will automatically open it. Make sure that you do not delete or rename this file after the error message has been displayed in the _Outline Panel_.
 
 
 h1. Deploy/Undeploy REST Service
@@ -106,7 +106,7 @@ Deleting the service will not make it undeploy. Please undeploy the service befo
 
 h1. Launch REST Service with set parameters and Preview Server Console Messages in the _Output Tab_
 
-With eXo IDE, you can not only write and deploy services, but launch these services and view service response in the _Output Tab_. You can view _WADL-description_ of methods, make requests with your own _header_, _query_, _path parameters_ and _body content_ using one of the _supported methods_.  To do that, simply call the *Launch REST Service...* button on the toolbar, or select *Run > Launch REST Service...* on the top menu as follows:
+With Codenvy, you can not only write and deploy services, but launch these services and view service response in the _Output Tab_. You can view _WADL-description_ of methods, make requests with your own _header_, _query_, _path parameters_ and _body content_ using one of the _supported methods_.  To do that, simply call the *Launch REST Service...* button on the toolbar, or select *Run > Launch REST Service...* on the top menu as follows:
 * *Step 1:* Select the deployed REST Service.
 * *Step 2:* Click the *Launch REST Service...* button to get the REST Service form which is relied on the WADL-description of _REST Service_.
 * *Step 3:* Select and type the path to the service in the *Path* field. Path parameters are enclosed in curly braces.
@@ -164,7 +164,7 @@ h1. Deploy to Sandbox, Undeploy from Sandbox, Run in Sandbox
 
 This function is for users with both developer and administrator role.
 
-In eXo IDE, developers can secure deploy untested REST Service for testing in an isolated environment named _Sandbox_. To do this, click the *Deploy REST Service to Sandbox* button on the toolbar or go to *Run > Deploy to Sandbox* on the top menu.
+In Codenvy, developers can secure deploy untested REST Service for testing in an isolated environment named _Sandbox_. To do this, click the *Deploy REST Service to Sandbox* button on the toolbar or go to *Run > Deploy to Sandbox* on the top menu.
 
 To undeploy from sandbox, select the *Undeploy REST Service from Sandbox* button on the toolbar, or go to *Run > Undeploy from Sandbox* on the top menu.
 
@@ -184,7 +184,7 @@ To run REST Service faster, you can use the special command *Run > Run in Sandbo
 
 h1. REST Service Discovery
 
-In the eXo IDE, you can explore all REST Services which are available from the server. To open _REST Service Discovery_ form, select *Help > REST Service Discovery...* from the top menu.
+In the Codenvy, you can explore all REST Services which are available from the server. To open _REST Service Discovery_ form, select *Help > REST Service Discovery...* from the top menu.
 
 !RestServiceDiscovery.png|border=0!
 

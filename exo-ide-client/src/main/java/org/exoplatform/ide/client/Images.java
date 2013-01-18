@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.client;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.ClientBundle.Source;
+
 import org.exoplatform.gwtframework.ui.client.util.UIHelper;
 
 /**
@@ -128,7 +131,9 @@ public interface Images
    public interface Logos
    {
 
-      public static final String ABOUT_LOGO = IMAGE_URL + "logo/eXo-IDE-Logo.png";
+      public static final String ABOUT_LOGO = IMAGE_URL + "logo/codenvy-welcome.png";
+      
+      public static final String ABOUT_BG = IMAGE_URL + "logo/background.png";
 
    }
 

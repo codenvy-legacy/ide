@@ -28,6 +28,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
+import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
@@ -63,12 +64,13 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
    ApplicationsListGrid applicationsGrid;
 
    @UiField
-   ComboBoxField serverField;
+   TextInput serverField;
 
    public ApplicationsView()
    {
       super(ID, ViewType.MODAL, AppfogExtension.LOCALIZATION_CONSTANT.appsViewTitle(), null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
+      serverField.setReadOnly(true);
    }
 
    /**
@@ -111,9 +113,9 @@ public class ApplicationsView extends ViewImpl implements ApplicationsPresenter.
     * @see org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsPresenter.Display#setServerValues(java.lang.String[])
     */
    @Override
-   public void setServerValues(String[] servers)
+   public void setServerValue(String server)
    {
-      serverField.setValueMap(servers);
+      serverField.setValue(server);
    }
 
    /**

@@ -1,4 +1,4 @@
-Project is one of the fundamental IDE's entity. From the IDE standpoint Project it is a special type of folder, containing meta-information necessary for describing nature of it to manage further activities. For instance it may contain main programming language of source files, type of target to deploy to, some features for its building etc.
+Project is one of the fundamental Codenvy's entity. From the Codenvy standpoint Project it is a special type of folder, containing meta-information necessary for describing nature of it to manage further activities. For instance it may contain main programming language of source files, type of target to deploy to, some features for its building etc.
 
 h1. Create Project
 
@@ -28,7 +28,7 @@ To close a project which is currently opened go to *Project > Close*.
 
 h1. Import a Sample Project
 
-You can import a sample project to the Cloud IDE, go to *Project > Import a Sample Project*. All the steps for import a sample project are similar to creating a new project.
+You can import a sample project to the Codenvy, go to *Project > Import a Sample Project*. All the steps for import a sample project are similar to creating a new project.
 
 
 h1. Import from GitHub
@@ -47,7 +47,7 @@ To import an existing project from your GitHub repository, do as follow:
 
 *Illustration. Import project parameters*
 
-* *Step 3:* On the next step, you can deploy your project to the PaaS if necessary. After you click *Finish*, GitHub repository will be cloned to eXo IDE. You can watch the clonning status in the *Progress...* window.
+* *Step 3:* On the next step, you can deploy your project to the PaaS if necessary. After you click *Finish*, GitHub repository will be cloned to Codenvy. You can watch the clonning status in the *Progress...* window.
 
 !clonning_repo_from_github.png!
 

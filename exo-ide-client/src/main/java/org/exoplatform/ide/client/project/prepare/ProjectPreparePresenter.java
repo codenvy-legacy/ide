@@ -24,13 +24,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.ide.client.IDE;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -48,6 +49,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +59,7 @@ import java.util.List;
  */
 public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHandler
 {
+   
    public interface Display extends IsView
    {
       HasClickHandlers getOkButton();
@@ -86,10 +89,8 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    public void onConvertToProject(final ConvertToProjectEvent event)
    {
       folderId = event.getFolderId();
-      Loader loader = new GWTLoader();
       String url =
          Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId();
-
       
       properties = event.getProperties();
       String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
@@ -97,7 +98,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
       try
       {
          AsyncRequest.build(RequestBuilder.POST, url, false)
-            .loader(loader)
+            .loader(IDELoader.get())
             .data(data)
             .header("Content-Type", "application/json")
             .send(new AsyncRequestCallback<Void>()
@@ -107,7 +108,14 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
                {
                   //Conversion successful, open project
                   IDE.fireEvent(new OutputEvent("Project preparing successful.", OutputMessage.Type.INFO));
-                  openPreparedProject(event.getFolderId());
+                  new Timer()
+                  {
+                     @Override
+                     public void run()
+                     {
+                        openPreparedProject(event.getFolderId());
+                     }
+                  }.schedule(500);
                }
 
                @Override
@@ -121,34 +129,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
       catch (RequestException e)
       {
          IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
-      }
-   }
-
-   private void openPreparedProject(String folderId)
-   {
-      try
-      {
-         ProjectModel project = new ProjectModel();
-         ItemWrapper item = new ItemWrapper(project);
-         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
-         VirtualFileSystem.getInstance().getItemById(folderId, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
-         {
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent("Failed to opened prepared project."));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -257,4 +237,34 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
          IDE.getInstance().closeView(display.asView().getId());
       }
    }
+   
+   private void openPreparedProject(String folderId)
+   {
+      try
+      {
+         ProjectModel project = new ProjectModel();
+         ItemWrapper item = new ItemWrapper(project);
+         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+         VirtualFileSystem.getInstance().getItemById(folderId, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new ExceptionThrownEvent("Failed to opened prepared project."));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+   
+   
 }

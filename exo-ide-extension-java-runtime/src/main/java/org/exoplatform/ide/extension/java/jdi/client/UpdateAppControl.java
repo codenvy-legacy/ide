@@ -22,8 +22,6 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -34,6 +32,8 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityEvent;
+import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerActivityHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.UpdateAppEvent;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Property;
@@ -42,13 +42,13 @@ import java.util.List;
 
 /**
  * Control for updating deployed application using JRebel.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: UpdateAppControl.java Oct 30, 2012 2:53:32 PM azatsarynnyy $
  *
  */
 public class UpdateAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStoppedHandler, ActiveProjectChangedHandler
+   AppStartedHandler, AppStoppedHandler, DebuggerActivityHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.updateAppControlId();
 
@@ -81,7 +81,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStoppedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+      IDE.addHandler(DebuggerActivityEvent.TYPE, this);
    }
 
    /**
@@ -102,7 +102,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
    {
       updateState(event.getProject());
    }
-   
+
 
    /**
     * @param project
@@ -121,12 +121,6 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
       setEnabled(false);
       setShowInContextMenu(isJavaProject && useJRebel);
    }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      updateState(event.getProject());
-   }
 
    @Override
    public void onAppStopped(AppStoppedEvent appStopedEvent)
@@ -142,7 +136,7 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
 
    /**
     * Read projects property 'jrebel'.
-    * 
+    *
     * @return <code>true</code> if need to use JRebel
     */
    private boolean isUseJRebel(ProjectModel project)
@@ -160,5 +154,16 @@ public class UpdateAppControl extends SimpleControl implements IDEControl, Proje
          }
       }
       return false;
+   }
+
+   /**
+    * Set update button enable if in current state debugger is not stopped on breakpoint.
+    *
+    * @param event
+    */
+   @Override
+   public void onDebuggerActivityChanged(DebuggerActivityEvent event)
+   {
+      setEnabled(event.getState());
    }
 }

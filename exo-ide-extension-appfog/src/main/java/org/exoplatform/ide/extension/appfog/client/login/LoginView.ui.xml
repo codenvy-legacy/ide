@@ -80,8 +80,8 @@
                   <g:Label text="{locale.loginViewTargetField}" styleName="{style.label}"></g:Label>
                </g:west>
                <g:center>
-                  <f:ComboBoxField ui:field="targetField" height="22px" width="100%"
-                                   addStyleNames="{style.spacing}"></f:ComboBoxField>
+                  <g:TextBox ui:field="targetField" height="22px" width="100%"
+                             addStyleNames="{style.spacing}"></g:TextBox>
                </g:center>
             </g:DockLayoutPanel>
 

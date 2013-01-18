@@ -441,11 +441,10 @@ public class Heroku
          if (name != null)
          {
             http.setDoOutput(true);
-            http.setRequestProperty("Content-type", "application/xml, */*");
             OutputStream output = http.getOutputStream();
             try
             {
-               output.write(("<?xml version='1.0' encoding='UTF-8'?><app><name>" + name + "</name></app>").getBytes());
+               output.write(("app[name]=" + name).getBytes());
                output.flush();
             }
             finally
@@ -655,7 +654,7 @@ public class Heroku
          {
             info.put("name", (String)xPath.evaluate("/app/name", xmlDoc, XPathConstants.STRING));
             info.put("webUrl", (String)xPath.evaluate("/app/web-url", xmlDoc, XPathConstants.STRING));
-            info.put("domainName", (String)xPath.evaluate("/app/domain_name", xmlDoc, XPathConstants.STRING));
+            info.put("domainName", (String)xPath.evaluate("/app/domain-name", xmlDoc, XPathConstants.STRING));
             info.put("gitUrl", (String)xPath.evaluate("/app/git-url", xmlDoc, XPathConstants.STRING));
             info.put("dynos", (String)xPath.evaluate("/app/dynos", xmlDoc, XPathConstants.STRING));
             info.put("workers", (String)xPath.evaluate("/app/workers", xmlDoc, XPathConstants.STRING));
@@ -755,14 +754,13 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("PUT");
          http.setRequestProperty("Accept", "application/xml, */*");
-         http.setRequestProperty("Content-type", "application/xml");
          http.setDoOutput(true);
          authenticate(herokuCredentials, http);
 
          OutputStream output = http.getOutputStream();
          try
          {
-            output.write(("<app><name>" + newname + "</name></app>").getBytes());
+            output.write(("app[name]=" + newname).getBytes());
             output.flush();
          }
          finally
@@ -1140,10 +1138,9 @@ public class Heroku
       {
          // "attach" parameter points to use rendezvous to access stdin/stdout or
          // to stream process output to the application log:
-         URL url = new URL(HEROKU_API + "/apps/" + appName + "/ps?attach=true");
+         URL url = new URL(HEROKU_API + "/apps/" + appName + "/ps");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("POST");
-         http.setRequestProperty("Content-type", "application/xml, */*");
          http.setRequestProperty("Accept", "application/xml, */*");
 
          authenticate(herokuCredentials, http);
@@ -1152,7 +1149,7 @@ public class Heroku
          OutputStream output = http.getOutputStream();
          try
          {
-            output.write(("<?xml version='1.0' encoding='UTF-8'?><command>" + command + "</command>").getBytes());
+            output.write(("attach=true&command=" + command).getBytes());
             output.flush();
          }
          finally

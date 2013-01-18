@@ -147,8 +147,6 @@ public class JcrFileSystem implements VirtualFileSystem
    }
 
    static final Set<String> SKIPPED_QUERY_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:path", "jcr:score"));
-   
-   private static final Log LOG_JREBEL_PROP = ExoLogger.getLogger("JRebel");
 
    protected final Repository repository;
    protected final String workspaceName;
@@ -160,6 +158,8 @@ public class JcrFileSystem implements VirtualFileSystem
    private VirtualFileSystemInfo vfsInfo;
    private final String vfsID;
 
+   private final Log LOG = ExoLogger.getLogger(JcrFileSystem.class);
+     
    public JcrFileSystem(Repository repository,
                         String workspaceName,
                         String rootNodePath,
@@ -286,7 +286,7 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("folder/{parentId}")
    @Override
    public FolderImpl createFolder(@PathParam("parentId") String parentId, //
-                              @QueryParam("name") String name //
+                                  @QueryParam("name") String name //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
@@ -336,15 +336,6 @@ public class JcrFileSystem implements VirtualFileSystem
       try
       {
          ItemData parentData = getItemData(session, parentId);
-//         if (ItemType.PROJECT == parentData.getType())
-//         {
-//            throw new ConstraintException("Unable create project. Item specified as parent is a project. "
-//               + "Project cannot contains another project.");
-//         }
-//         if (ItemType.FOLDER != parentData.getType())
-//         {
-//            throw new InvalidArgumentException("Unable create project. Item specified as parent is not a folder. ");
-//         }
          if (properties == null)
          {
             properties = new ArrayList<Property>(2);
@@ -366,6 +357,7 @@ public class JcrFileSystem implements VirtualFileSystem
             project.getMimeType(), //
             ChangeEvent.ChangeType.CREATED)
          );
+         LOG.info("EVENT#project-created# PROJECT#" + name + "#");
          return project;
       }
       finally
@@ -388,11 +380,17 @@ public class JcrFileSystem implements VirtualFileSystem
          ItemData data = getItemData(session, id);
          String path = data.getPath();
          MediaType mediaType = data.getMediaType();
-         if (listeners != null && data.getType() == ItemType.PROJECT)
+         ItemType type = data.getType();
+         String name = data.getName();
+         if (listeners != null && type == ItemType.PROJECT)
          {
             listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)data), new ProjectUpdateListener(id));
          }
          data.delete(lockToken);
+         if (type == ItemType.PROJECT)
+         {
+            LOG.info("EVENT#project-destroyed# PROJECT#"+ name +"#");
+         }
          notifyListeners(new ChangeEvent(this, //
             id, //
             path, //
@@ -646,7 +644,7 @@ public class JcrFileSystem implements VirtualFileSystem
 
       templates.put(Link.REL_ITEM_BY_PATH, //
          new LinkImpl(createURI("itembypath", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
-      
+
       templates.put(Link.REL_TREE, //
          new LinkImpl(createURI("tree", "[id]"), Link.REL_TREE, MediaType.APPLICATION_JSON));
 
@@ -1262,6 +1260,7 @@ public class JcrFileSystem implements VirtualFileSystem
    ) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
    {
       Session session = session();
+      boolean convertToProject = false;
       try
       {
          ItemData data = getItemData(session, id);
@@ -1271,13 +1270,6 @@ public class JcrFileSystem implements VirtualFileSystem
             String[] addMixinTypes = null;
             for (Property property : properties)
             {
-               //TODO : need send user id to the JRebel according license agreement.
-               //This is temporary solution
-               if ("jrebel".equals(property.getName()) && property.getValue() != null && Boolean.parseBoolean(property.getValue().get(0)))
-               {
-                  LOG_JREBEL_PROP.error(ConversationState.getCurrent().getIdentity().getUserId());                  
-               }
-                  
                if ("vfs:mimeType".equals(property.getName()))
                {
                   List<String> value = property.getValue();
@@ -1294,11 +1286,19 @@ public class JcrFileSystem implements VirtualFileSystem
                            data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                               : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
                      }
+                     if (value.get(0).equals(Project.PROJECT_MIME_TYPE) && !data.getType().equals(Project.PROJECT_MIME_TYPE))
+                     {
+                        convertToProject = true;
+                     }
                   }
                }
             }
             data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
             data = getItemData(session, id);
+            if (convertToProject)
+            {
+              LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
+            }
             MediaType mediaType = data.getMediaType();
             notifyListeners(new ChangeEvent(this, //
                data.getId(), //
@@ -1511,6 +1511,8 @@ public class JcrFileSystem implements VirtualFileSystem
                   null, //
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
+               
+               LOG.info("EVENT#project-created# PROJECT#" + parentData.getName() + "#");
                List<Property> properties;
                try
                {

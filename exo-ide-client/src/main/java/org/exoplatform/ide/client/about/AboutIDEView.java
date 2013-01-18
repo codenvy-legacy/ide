@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.about;
 
+import com.google.gwt.dom.client.Style;
+
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.ide.client.BuildNumber;
@@ -100,10 +102,12 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
       HorizontalPanel logoLayout = new HorizontalPanel();
       logoLayout.setWidth("100%");
       logoLayout.setHeight(LOGO_HEIGHT + "px");
+      String style = logoLayout.getElement().getAttribute("style");
+      style += "background : url(\"" + Images.Logos.ABOUT_BG + "\") repeat-x scroll 0 0 transparent;";
+      logoLayout.getElement().setAttribute("style", style);
       Image logoImage = new Image();
       logoImage.setUrl(Images.Logos.ABOUT_LOGO);
-      logoImage.setHeight(LOGO_HEIGHT + "px");
-      logoImage.setWidth(LOGO_WIDTH + "px");
+      logoImage.getElement().setAttribute("style", "padding-left: 50px; padding-top: 30px;");
       logoLayout.add(logoImage);
       return logoLayout;
    }
