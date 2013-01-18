@@ -30,6 +30,10 @@
 
    <!-- To make button look like link -->
    <ui:style>
+   
+      .logo {
+        top:15px; 
+	    }
       .button-link, .a {
          cursor: pointer;
          border: none;
@@ -110,7 +114,7 @@
          <!-- About IDE -->
          <g:DockLayoutPanel unit="PX" height="75px" width="100%" stylePrimaryName="{resource.css.welcomeHeader}">
             <g:west size="140">
-               <g:Image resource="{resource.ideLogo}" styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
+               <g:Image ui:field="logo" resource="{resource.ideLogo}" styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
             </g:west>
             <g:center>
                <g:HTMLPanel>

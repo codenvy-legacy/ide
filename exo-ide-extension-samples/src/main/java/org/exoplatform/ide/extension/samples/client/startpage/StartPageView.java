@@ -72,6 +72,9 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
 
    @UiField
    Anchor surveyLink;
+   
+   @UiField
+   Image logo;
 
    public StartPageView()
    {
