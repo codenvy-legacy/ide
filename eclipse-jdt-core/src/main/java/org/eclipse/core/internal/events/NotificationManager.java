@@ -20,7 +20,6 @@ import org.eclipse.core.resources.IResourceChangeListener;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
@@ -28,11 +27,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.exoplatform.ide.eclipse.resources.MarkerSet;
 import org.exoplatform.ide.eclipse.resources.WorkspaceResource;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class NotificationManager implements ILifecycleListener
@@ -295,6 +292,10 @@ public class NotificationManager implements ILifecycleListener
       {
          // We don't have a delta or something changed so recompute the whole deal.
          ElementTree oldTree = postChange ? lastPostChangeTree : lastPostBuildTree;
+         if (oldTree == null)
+         {
+            oldTree = new ElementTree();
+         }
          long markerId = postChange ? lastPostChangeId : lastPostBuildId;
          lastDelta = ResourceDeltaFactory.computeDelta(workspace, oldTree, tree, Path.ROOT, markerId + 1);
       }

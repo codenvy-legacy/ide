@@ -23,19 +23,13 @@ import static org.junit.Assert.assertTrue;
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.exoplatform.ide.eclipse.jdt.JdtBaseTest;
-import org.exoplatform.ide.eclipse.resources.FolderResource;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
-import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.junit.Before;
 import org.junit.Test;
@@ -122,4 +116,58 @@ public class RenameTest extends JdtBaseTest
       assertTrue(ourContent.contains("My.get = null"));
    }
 
+   @Test
+   public void renameMethod() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
+   {
+      ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
+         "package com;\npublic class My{\n public void some(){\n}}", true, null);
+
+      ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
+         "import dsd.asds.Ass;\n" +
+         "public class Our{\npublic com.My fff; \n" +
+         "private Ass ddd(){" +
+         "fff.some();\n" +
+         "}\n }", true, null);
+
+      RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getMethods()[0], "bar",
+         RenameSupport.UPDATE_REFERENCES);
+      IStatus status = renameSupport.preCheck();
+      System.out.println(status.getMessage());
+      renameSupport.perform();
+
+      ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
+      String c = IOUtils.toString(content.getStream());
+      assertTrue(c.contains("public void bar()"));
+      content = vfs.getContent("/" + projectName + "/src/com/Our.java", null);
+
+      String ourContent = IOUtils.toString(content.getStream());
+      assertTrue(ourContent.contains("fff.bar();"));
+   }
+
+   @Test
+   public void renameVariable() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
+   {
+      ICompilationUnit myCUnit = packageFragment.createCompilationUnit("My.java",
+         "package com;\npublic class My{\n public void some(String name){System.out.print(\"Hello \" + name);\n}}",
+         true, null);
+
+      ICompilationUnit ourCUnit = packageFragment.createCompilationUnit("Our.java", "package com;\n" +
+         "import dsd.asds.Ass;\n" +
+         "public class Our{\npublic com.My fff; \n" +
+         "private Ass ddd(){" +
+         "fff.some(\"sdfsdf\");\n" +
+         "}\n }", true, null);
+
+      RenameSupport renameSupport = RenameSupport.create(myCUnit.getType("My").getMethods()[0].getParameters()[0],
+         "foo", RenameSupport.UPDATE_REFERENCES);
+      IStatus status = renameSupport.preCheck();
+      System.out.println(status.getMessage());
+      renameSupport.perform();
+
+      ContentStream content = vfs.getContent("/" + projectName + "/src/com/My.java", null);
+      String c = IOUtils.toString(content.getStream());
+      assertTrue(c.contains("public void some(String foo)"));
+      assertTrue(c.contains("System.out.print(\"Hello \" + foo);"));
+
+   }
 }

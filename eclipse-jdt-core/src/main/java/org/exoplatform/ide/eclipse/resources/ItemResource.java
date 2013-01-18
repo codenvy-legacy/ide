@@ -22,6 +22,8 @@ import org.eclipse.core.internal.resources.ICoreConstants;
 import org.eclipse.core.internal.resources.Marker;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.internal.utils.Policy;
+import org.eclipse.core.internal.utils.WrappedRuntimeException;
+import org.eclipse.core.internal.watson.IPathRequestor;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IMarker;
@@ -53,7 +55,7 @@ import java.util.Map;
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ItemResource.java Dec 26, 2012 12:20:07 PM azatsarynnyy $
  */
-public abstract class ItemResource implements IResource
+public abstract class ItemResource implements IResource, ICoreConstants
 {
 
    protected IPath path;
@@ -191,10 +193,97 @@ public abstract class ItemResource implements IResource
     * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceProxyVisitor, int, int)
     */
    @Override
-   public void accept(IResourceProxyVisitor visitor, int depth, int memberFlags) throws CoreException
+   public void accept(final IResourceProxyVisitor visitor, final int depth, final int memberFlags) throws CoreException
    {
-      // TODO Auto-generated method stub
+      final ResourceProxy proxy = new ResourceProxy();
+      IElementContentVisitor elementVisitor = new IElementContentVisitor()
+      {
+         public boolean visitElement(IPathRequestor requestor, Object contents)
+         {
+            ResourceInfo info = (ResourceInfo)contents;
+            if (!isMember(getFlags(info), memberFlags))
+            {
+               return false;
+            }
+            proxy.requestor = requestor;
+            proxy.info = info;
+            try
+            {
+               boolean shouldContinue = true;
+               switch (depth)
+               {
+                  case DEPTH_ZERO:
+                     shouldContinue = false;
+                     break;
+                  case DEPTH_ONE:
+                     shouldContinue = !path.equals(requestor.requestPath().removeLastSegments(1));
+                     break;
+                  case DEPTH_INFINITE:
+                     shouldContinue = true;
+                     break;
+               }
+               return visitor.visit(proxy) && shouldContinue;
+            }
+            catch (CoreException e)
+            {
+               //throw an exception to bail out of the traversal
+               throw new WrappedRuntimeException(e);
+            }
+            finally
+            {
+               proxy.reset();
+            }
+         }
+      };
+      try
+      {
+         new VfsTreeIterator(workspace, getFullPath()).iterate(elementVisitor);
+      }
+      catch (WrappedRuntimeException e)
+      {
+         throw (CoreException)e.getTargetException();
+      }
+      finally
+      {
+         proxy.requestor = null;
+         proxy.info = null;
+      }
+   }
 
+   public int getFlags(ResourceInfo info)
+   {
+      return (info == null) ? NULL_FLAG : info.getFlags();
+   }
+
+   /**
+    * Returns whether a resource should be included in a traversal
+    * based on the provided member flags.
+    *
+    * @param flags       The resource info flags
+    * @param memberFlags The member flag mask
+    * @return Whether the resource is included
+    */
+   protected boolean isMember(int flags, int memberFlags)
+   {
+      int excludeMask = 0;
+      if ((memberFlags & IContainer.INCLUDE_PHANTOMS) == 0)
+      {
+         excludeMask |= M_PHANTOM;
+      }
+      if ((memberFlags & IContainer.INCLUDE_HIDDEN) == 0)
+      {
+         excludeMask |= M_HIDDEN;
+      }
+      if ((memberFlags & IContainer.INCLUDE_TEAM_PRIVATE_MEMBERS) == 0)
+      {
+         excludeMask |= M_TEAM_PRIVATE_MEMBER;
+      }
+      if ((memberFlags & IContainer.EXCLUDE_DERIVED) != 0)
+      {
+         excludeMask |= M_DERIVED;
+      }
+      //the resource is a matching member if it matches none of the exclude flags
+      return flags != NULL_FLAG && (flags & excludeMask) == 0;
    }
 
    /**
@@ -219,10 +308,57 @@ public abstract class ItemResource implements IResource
     * @see org.eclipse.core.resources.IResource#accept(org.eclipse.core.resources.IResourceVisitor, int, int)
     */
    @Override
-   public void accept(IResourceVisitor visitor, int depth, int memberFlags) throws CoreException
+   public void accept(final IResourceVisitor visitor, int depth, int memberFlags) throws CoreException
    {
-      // TODO Auto-generated method stub
+      //use the fast visitor if visiting to infinite depth
+      if (depth == IResource.DEPTH_INFINITE)
+      {
+         accept(new IResourceProxyVisitor()
+         {
+            public boolean visit(IResourceProxy proxy) throws CoreException
+            {
+               return visitor.visit(proxy.requestResource());
+            }
+         }, memberFlags);
+         return;
+      }
+      // it is invalid to call accept on a phantom when INCLUDE_PHANTOMS is not specified
+      final boolean includePhantoms = (memberFlags & IContainer.INCLUDE_PHANTOMS) != 0;
+      ResourceInfo info = getResourceInfo(includePhantoms, false);
+      int flags = getFlags(info);
+      //      if ((memberFlags & IContainer.DO_NOT_CHECK_EXISTENCE) == 0)
+      //         checkAccessible(flags);
 
+      //check that this resource matches the member flags
+      if (!isMember(flags, memberFlags))
+      {
+         return;
+      }
+      // visit this resource
+      if (!visitor.visit(this) || depth == DEPTH_ZERO)
+      {
+         return;
+      }
+      // get the info again because it might have been changed by the visitor
+      info = getResourceInfo(includePhantoms, false);
+      if (info == null)
+      {
+         return;
+      }
+      // thread safety: (cache the type to avoid changes -- we might not be inside an operation)
+      int type = info.getType();
+      if (type == FILE)
+      {
+         return;
+      }
+      // if we had a gender change we need to fix up the resource before asking for its members
+      IContainer resource = getType() != type ? (IContainer)workspace.newResource(getFullPath(),
+         type) : (IContainer)this;
+      IResource[] members = resource.members(memberFlags);
+      for (int i = 0; i < members.length; i++)
+      {
+         members[i].accept(visitor, DEPTH_ZERO, memberFlags | IContainer.DO_NOT_CHECK_EXISTENCE);
+      }
    }
 
    /**

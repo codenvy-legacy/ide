@@ -237,7 +237,7 @@ public class ProjectResource extends ContainerResource implements IProject
    public IProject[] getReferencedProjects() throws CoreException
    {
       // TODO Auto-generated method stub
-      return null;
+      return new IProject[0];
    }
 
    /**

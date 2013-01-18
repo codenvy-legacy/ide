@@ -574,7 +574,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
       }
 
       /*
-		 * 1.1 -> 0
+       * 1.1 -> 0
 		 * 1.2 -> 1
 		 * ...
 		 * 1.6 -> 5
@@ -6429,8 +6429,8 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
       //      {
       //         configurePluginDebugOptions();
       //
-      //         // initialize Java model cache
-      //         this.cache = new JavaModelCache();
+      // initialize Java model cache
+      this.cache = new JavaModelCache();
       //
       //         // request state folder creation (workaround 19885)
       //         JavaCore.getPlugin().getStateLocation();

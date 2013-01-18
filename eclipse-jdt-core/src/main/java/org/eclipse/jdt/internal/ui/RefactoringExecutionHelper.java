@@ -27,6 +27,7 @@ import org.eclipse.ltk.core.refactoring.PerformChangeOperation;
 import org.eclipse.ltk.core.refactoring.Refactoring;
 import org.eclipse.ltk.core.refactoring.RefactoringCore;
 import org.eclipse.ltk.core.refactoring.RefactoringStatus;
+import org.eclipse.ltk.core.refactoring.RefactoringStatusEntry;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -117,7 +118,11 @@ public class RefactoringExecutionHelper
       {
          //			Dialog dialog= RefactoringUI.createRefactoringStatusDialog(status, fParent, fRefactoring.getName(), false);
          //			return dialog.open() == IDialogConstants.CANCEL_ID;
-         return false;
+         for (RefactoringStatusEntry stat : status.getEntries())
+         {
+            System.out.println(stat.getMessage());
+         }
+         return true;
       }
    }
 

@@ -99,21 +99,6 @@
 
 package org.eclipse.jdt.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Map;
-
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.OperationCanceledException;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.QualifiedName;
-import org.eclipse.core.runtime.SubProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -127,7 +112,14 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
-
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.QualifiedName;
+import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jdt.core.compiler.CharOperation;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.search.IJavaSearchConstants;
@@ -135,16 +127,39 @@ import org.eclipse.jdt.core.search.IJavaSearchScope;
 import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.core.search.SearchPattern;
 import org.eclipse.jdt.core.search.TypeNameRequestor;
-
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileConstants;
 import org.eclipse.jdt.internal.compiler.impl.CompilerOptions;
 import org.eclipse.jdt.internal.compiler.problem.ProblemReporter;
-import org.eclipse.jdt.internal.core.*;
+import org.eclipse.jdt.internal.core.BatchOperation;
+import org.eclipse.jdt.internal.core.BufferFactoryWrapper;
+import org.eclipse.jdt.internal.core.BufferManager;
+import org.eclipse.jdt.internal.core.ClasspathAccessRule;
+import org.eclipse.jdt.internal.core.ClasspathAttribute;
+import org.eclipse.jdt.internal.core.ClasspathEntry;
+import org.eclipse.jdt.internal.core.ClasspathValidation;
+import org.eclipse.jdt.internal.core.CreateTypeHierarchyOperation;
+import org.eclipse.jdt.internal.core.DefaultWorkingCopyOwner;
+import org.eclipse.jdt.internal.core.ExternalFoldersManager;
+import org.eclipse.jdt.internal.core.JavaCorePreferenceInitializer;
+import org.eclipse.jdt.internal.core.JavaModel;
+import org.eclipse.jdt.internal.core.JavaModelManager;
+import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.jdt.internal.core.Region;
+import org.eclipse.jdt.internal.core.SetContainerOperation;
+import org.eclipse.jdt.internal.core.SetVariablesOperation;
 import org.eclipse.jdt.internal.core.builder.JavaBuilder;
 import org.eclipse.jdt.internal.core.builder.State;
 import org.eclipse.jdt.internal.core.util.MementoTokenizer;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * The plug-in runtime class for the Java model plug-in containing the core
@@ -2882,6 +2897,8 @@ public final class JavaCore
     */
    public static final String JAVA_SOURCE_CONTENT_TYPE = JavaCore.PLUGIN_ID + ".javaSource"; //$NON-NLS-1$
 
+   private final String indexPath;
+
    /**
     * Creates the Java core plug-in.
     * <p>
@@ -2896,6 +2913,20 @@ public final class JavaCore
       super();
       //      JAVA_CORE_PLUGIN = this;
       JAVA_CORE = this;
+      String path = System.getProperty("com.codenvy.project.index");
+      if (path != null)
+      {
+         indexPath = path;
+      }
+      else
+      {
+         indexPath = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString();
+      }
+      File f = new File(indexPath);
+      if (!f.exists())
+      {
+         f.mkdirs();
+      }
    }
 
    /**
@@ -6000,8 +6031,7 @@ public final class JavaCore
    public final IPath getStateLocation() throws IllegalStateException
    {
       //TODO
-      return new Path(
-         System.getProperty("java.io.tmpdir")); // InternalPlatform.getDefault().getStateLocation(getBundle(), true);
+      return new Path(indexPath); // InternalPlatform.getDefault().getStateLocation(getBundle(), true);
    }
 
    //   /* (non-Javadoc)
