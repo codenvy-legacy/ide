@@ -20,7 +20,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.Widget;
@@ -29,7 +28,7 @@ import com.google.inject.Inject;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
-import org.exoplatform.ide.toolbar.ToggleItem;
+import org.exoplatform.ide.menu.Item.ConteinerType;
 
 /**
  * Implements {@link MainMenuView} using standard GWT Menu Widgets
@@ -45,7 +44,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
    MenuBar parentMenuBar;
 
    /** Map storing Path and corresponding menu item  */
-   private final JsonStringMap<MenuItem> menuItems;
+   private final JsonStringMap<Item> menuItems;
 
    private final Resources resources;
 
@@ -60,7 +59,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
    public MainMenuViewImpl(Resources resources)
    {
       initWidget(uiBinder.createAndBindUi(this));
-      parentMenuBar.addStyleName(resources.toolbarCSS().menuHorizontal());
+      parentMenuBar.addStyleName(resources.menuCSS().menuHorizontal());
       this.menuItems = JsonCollections.createStringMap();
       this.resources = resources;
    }
@@ -97,11 +96,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
    {
       if (menuItems.containsKey(path))
       {
-         MenuItem item = menuItems.get(path);
-         if (item instanceof ToggleItem)
-         {
-            ((ToggleItem)item).setSelected(selected);
-         }
+         menuItems.get(path).setSelected(selected);
       }
    }
 
@@ -111,39 +106,33 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
    @Override
    public void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled)
    {
+      addMainMenuItem(path, command, visible, enabled);
+   }
+
+   /**
+    * Create Main Menu item.
+    * 
+    * @param path
+    * @param command
+    * @param visible
+    * @param enabled
+    * @return
+    */
+   private Item addMainMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled)
+   {
       MenuPath menuPath = new MenuPath(path);
       // Recursively get destination menu bar
       MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1);
       // create new item
-      String content = getItemContent(menuPath, command.getIcon());
-      MenuItem newItem = dstMenuBar.addItem(content, true, command);
+      Item newItem = new Item(menuPath, null, command.getToolTip(), command, ConteinerType.MAIN_MENU, resources);
+      dstMenuBar.addItem(newItem);
+
       newItem.setVisible(visible);
       newItem.setEnabled(enabled);
-      newItem.addStyleName(resources.toolbarCSS().toolbarItem());
       // store item in the map
       menuItems.put(path, newItem);
-   }
 
-   /**
-    * Create item content.
-    * 
-    * @param menuPath
-    * @param icon
-    * @return
-    */
-   private String getItemContent(MenuPath menuPath, Image icon)
-   {
-      int depth = menuPath.getSize() - 1;
-      String title = menuPath.getPathElementAt(depth);
-
-      if (icon != null)
-      {
-         return (depth != 0 ? icon.toString() : "") + " <span>" + title + "</span>";
-      }
-      else
-      {
-         return "<span>" + title + "</span>";
-      }
+      return newItem;
    }
 
    /**
@@ -176,7 +165,9 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
          else
          {
             MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth - 1);
-            MenuItem newItem = dstMenuBar.addItem(menuPath.getPathElementAt(depth - 1), createSubMenuBar());
+            MenuPath path = new MenuPath(menuPath.getParentPath(depth));
+            Item newItem = new Item(path, null, null, createSubMenuBar(), ConteinerType.MAIN_MENU, resources);
+            dstMenuBar.addItem(newItem);
             menuItems.put(menuPath.getParentPath(depth), newItem);
             return newItem.getSubMenu();
          }
@@ -191,7 +182,7 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
       MenuBar menuBar = new MenuBar(true);
       menuBar.setAnimationEnabled(true);
       menuBar.setAutoOpen(true);
-      menuBar.addStyleName(resources.toolbarCSS().menuVertical());
+      menuBar.addStyleName(resources.menuCSS().menuVertical());
       return menuBar;
    }
 
@@ -201,18 +192,8 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
    @Override
    public void addMenuItem(String path, ExtendedCommand command, boolean visible, boolean enabled, boolean selected)
    {
-      MenuPath menuPath = new MenuPath(path);
-      // Recursively get destination menu bar
-      MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, menuPath.getSize() - 1);
-      // create new item
-      String content = getItemContent(menuPath, command.getIcon());
-      ToggleItem newItem = new ToggleItem(content, true, command, selected, resources);
-      dstMenuBar.addItem(newItem);
-      newItem.setVisible(visible);
-      newItem.setEnabled(enabled);
+      Item newItem = addMainMenuItem(path, command, visible, enabled);
       newItem.setSelected(selected);
-      // store item in the map
-      menuItems.put(path, newItem);
    }
 
    /**
@@ -224,5 +205,4 @@ public class MainMenuViewImpl extends Composite implements MainMenuView
       // ok
       // there are no events for now
    }
-
 }

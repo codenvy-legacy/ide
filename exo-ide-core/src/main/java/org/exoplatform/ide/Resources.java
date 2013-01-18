@@ -17,11 +17,11 @@ package org.exoplatform.ide;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 
+import org.exoplatform.ide.menu.MenuResources;
 import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.texteditor.EditableContentArea;
 import org.exoplatform.ide.texteditor.TextEditorViewImpl;
 import org.exoplatform.ide.texteditor.renderer.LineNumberRenderer;
-import org.exoplatform.ide.toolbar.ToolbarResources;
 import org.exoplatform.ide.tree.FileTreeNodeRenderer;
 import org.exoplatform.ide.tree.Tree;
 import org.exoplatform.ide.ui.list.SimpleList;
@@ -45,7 +45,7 @@ public interface Resources extends
    //    StatusPresenter.Resources,
    Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, LineNumberRenderer.Resources,
    EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources, NewProjectWizardResource,
-   NewGenericProjectWizardResource, NewResourceWizardResources, ToolbarResources
+   NewGenericProjectWizardResource, NewResourceWizardResources, MenuResources
 
 // TODO: Once we have actual consumers of the Tooltip class, we
 // can just have them extend it instead of doing it on the base interface.

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,7 +41,7 @@ public class SaveAllCommand implements ExtendedCommand
 
    private EditorsDirtyExpression expression;
 
-   private final Image icon;
+   private final Resources resources;
 
    /**
     * Create command.
@@ -54,8 +54,7 @@ public class SaveAllCommand implements ExtendedCommand
    {
       this.editorAgent = editorAgent;
       this.expression = expression;
-      // TODO need correct image
-      this.icon = new Image(resources.file());
+      this.resources = resources;
    }
 
    /**
@@ -82,9 +81,10 @@ public class SaveAllCommand implements ExtendedCommand
     * {@inheritDoc}
     */
    @Override
-   public Image getIcon()
+   public ImageResource getIcon()
    {
-      return icon;
+      // TODO need correct image
+      return resources.file();
    }
 
    /**

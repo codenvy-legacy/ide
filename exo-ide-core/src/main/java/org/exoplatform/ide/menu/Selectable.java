@@ -16,42 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.toolbar;
-
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.DataResource;
+package org.exoplatform.ide.menu;
 
 /**
- * Resources of toolbar.
+ * The interface provides additional state.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface ToolbarResources extends ClientBundle
+public interface Selectable
 {
-   public interface ToolbarCSS extends CssResource
-   {
-      String checkedToolbarItem();
+   /**
+    * Returns the state of item.
+    * 
+    * @return <code>true</code> if the item is selected and <code>false</code> otherwise 
+    */
+   public boolean isSelected();
 
-      String uncheckedToolbarItem();
-
-      String toolbarItem();
-
-      String disable();
-
-      String enable();
-
-      String menuHorizontal();
-      
-      String menuVertical();
-   }
-
-   @Source({"org/exoplatform/ide/toolbar/Toolbar.css", "org/exoplatform/ide/common/constants.css"})
-   ToolbarCSS toolbarCSS();
-
-   @Source("org/exoplatform/ide/toolbar/check.png")
-   DataResource checkIcon();
-
-   @Source("org/exoplatform/ide/toolbar/empty.png")
-   DataResource emptyIcon();
+   /**
+    * Sets state of item.
+    * 
+    * @param isSelected <code>true</code> to select the item, <code>false</code> to unselect it.
+    */
+   public void setSelected(boolean isSelected);
 }

@@ -16,26 +16,41 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.toolbar;
+package org.exoplatform.ide.menu;
+
+import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.DataResource;
 
 /**
- * The interface provides additional state.
+ * Resources of menu.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface Selectable
+public interface MenuResources extends ClientBundle
 {
-   /**
-    * Returns the state of item.
-    * 
-    * @return <code>true</code> if the item is selected and <code>false</code> otherwise 
-    */
-   public boolean isSelected();
+   public interface ToolbarCSS extends CssResource
+   {
+      String checkedItem();
 
-   /**
-    * Sets state of item.
-    * 
-    * @param isSelected <code>true</code> to select the item, <code>false</code> to unselect it.
-    */
-   public void setSelected(boolean isSelected);
+      String uncheckedItem();
+
+      String menuHorizontal();
+      
+      String menuVertical();
+
+      String itemIcon();
+
+      String itemTitle();
+
+      String hotKey();
+
+      String itemContainer();
+   }
+
+   @Source({"org/exoplatform/ide/menu/Menu.css", "org/exoplatform/ide/common/constants.css"})
+   ToolbarCSS menuCSS();
+
+   @Source("org/exoplatform/ide/menu/check.png")
+   DataResource checkIcon();
 }

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -41,8 +41,6 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand
 
    private final Resources resources;
 
-   private final Image icon;
-
    /**
     * Create command
     * 
@@ -54,8 +52,6 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand
    {
       this.wizardAgent = wizardAgent;
       this.resources = resources;
-      // TODO need correct image
-      this.icon = new Image(resources.project());
    }
 
    /**
@@ -72,9 +68,10 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand
     * {@inheritDoc}
     */
    @Override
-   public Image getIcon()
+   public ImageResource getIcon()
    {
-      return icon;
+      // TODO need correct image
+      return resources.project();
    }
 
    /**

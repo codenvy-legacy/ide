@@ -19,12 +19,11 @@
 package org.exoplatform.ide.toolbar;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
-import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -33,7 +32,10 @@ import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
 import org.exoplatform.ide.menu.ExtendedCommand;
+import org.exoplatform.ide.menu.Item;
+import org.exoplatform.ide.menu.Item.ConteinerType;
 import org.exoplatform.ide.menu.MenuPath;
+import org.exoplatform.ide.menu.MenuResources;
 
 /**
  * The implementation of {@link ToolbarView}
@@ -47,17 +49,13 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
    @UiField
    MenuBar menu;
 
-   private final JsonStringMap<MenuItem> toolbarItems;
+   private final JsonStringMap<Item> menuItems;
 
-   private final JsonStringMap<MenuItem> dropDownItems;
-
-   private final JsonStringMap<ToggleItem> toggleItems;
-
-   private final JsonStringMap<JsonArray<MenuItem>> groupItems;
+   private final JsonStringMap<JsonArray<Item>> groupItems;
 
    private final JsonStringMap<MenuItemSeparator> groupsSeparator;
 
-   private final ToolbarResources resources;
+   private final MenuResources resources;
 
    private int countGroupsItems = 0;
 
@@ -71,16 +69,14 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
     * @param resources
     */
    @Inject
-   public ToolbarViewImpl(ToolbarResources resources)
+   public ToolbarViewImpl(MenuResources resources)
    {
       initWidget(uiBinder.createAndBindUi(this));
 
-      this.addStyleName(resources.toolbarCSS().menuHorizontal());
+      this.addStyleName(resources.menuCSS().menuHorizontal());
 
       this.resources = resources;
-      this.toolbarItems = JsonCollections.createStringMap();
-      this.dropDownItems = JsonCollections.createStringMap();
-      this.toggleItems = JsonCollections.createStringMap();
+      this.menuItems = JsonCollections.createStringMap();
       this.groupItems = JsonCollections.createStringMap();
       this.groupsSeparator = JsonCollections.createStringMap();
    }
@@ -102,26 +98,16 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
    public void setVisible(String path, boolean visible)
    {
       // find item and change its state
-      if (toolbarItems.containsKey(path))
+      if (menuItems.containsKey(path))
       {
-         toolbarItems.get(path).setVisible(visible);
-      }
-
-      if (toggleItems.containsKey(path))
-      {
-         toggleItems.get(path).setVisible(visible);
-      }
-
-      if (dropDownItems.containsKey(path))
-      {
-         dropDownItems.get(path).setVisible(visible);
+         menuItems.get(path).setVisible(visible);
       }
 
       if (groupItems.containsKey(path))
       {
          groupsSeparator.get(path).setVisible(visible);
 
-         JsonArray<MenuItem> items = groupItems.get(path);
+         JsonArray<Item> items = groupItems.get(path);
          for (int i = 0; i < items.size(); i++)
          {
             items.get(i).setVisible(visible);
@@ -136,50 +122,18 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
    public void setEnabled(String path, boolean enabled)
    {
       // find item and change its state
-      if (toolbarItems.containsKey(path))
+      if (menuItems.containsKey(path))
       {
-         setEnable(toolbarItems.get(path), enabled);
-      }
-
-      if (toggleItems.containsKey(path))
-      {
-         setEnable(toggleItems.get(path), enabled);
-      }
-
-      if (dropDownItems.containsKey(path))
-      {
-         setEnable(dropDownItems.get(path), enabled);
+         menuItems.get(path).setEnabled(enabled);
       }
 
       if (groupItems.containsKey(path))
       {
-         JsonArray<MenuItem> items = groupItems.get(path);
+         JsonArray<Item> items = groupItems.get(path);
          for (int i = 0; i < items.size(); i++)
          {
-            setEnable(items.get(i), enabled);
+            items.get(i).setEnabled(enabled);
          }
-      }
-   }
-
-   /**
-    * Sets enabled state for item.
-    * 
-    * @param item
-    * @param enabled
-    */
-   private void setEnable(MenuItem item, boolean enabled)
-   {
-      item.setEnabled(enabled);
-      
-      if (enabled)
-      {
-         item.removeStyleName(resources.toolbarCSS().disable());
-         item.addStyleName(resources.toolbarCSS().enable());
-      }
-      else
-      {
-         item.removeStyleName(resources.toolbarCSS().enable());
-         item.addStyleName(resources.toolbarCSS().disable());
       }
    }
 
@@ -189,9 +143,9 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
    @Override
    public void setSelected(String path, boolean selected) throws IllegalStateException
    {
-      if (toggleItems.containsKey(path))
+      if (menuItems.containsKey(path))
       {
-         toggleItems.get(path).setSelected(selected);
+         menuItems.get(path).setSelected(selected);
       }
    }
 
@@ -202,72 +156,49 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
    public void addItem(String path, ExtendedCommand command, boolean visible, boolean enabled)
       throws IllegalStateException
    {
-      MenuPath menuPath = new MenuPath(path);
-
-      int depth = menuPath.getSize() - 1;
-      MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth, visible);
-      String item = getItemContent(menuPath, command.getIcon());
-
-      MenuItem menuItem;
-      if (depth == 1)
-      {
-         // in order to create item into the group
-         String parentName = menuPath.getParentPath(depth);
-         JsonArray<MenuItem> items = groupItems.get(parentName);
-
-         if (items.size() == 0)
-         {
-            // if it is the first item into the group
-            menuItem = dstMenuBar.addItem(item, true, command);
-            items.add(menuItem);
-         }
-         else
-         {
-            // when the group has items needs to insert item after last
-            // because could be situation when other group was created after the current group 
-            MenuItem previousItem = items.get(items.size() - 1);
-            menuItem = new MenuItem(item, true, command);
-
-            // insert after last item into current group
-            int previousItemIndex = menu.getItemIndex(previousItem);
-            if (previousItemIndex < countGroupsItems)
-            {
-               menu.insertItem(menuItem, previousItemIndex + 1);
-            }
-            else
-            {
-               menu.addItem(menuItem);
-            }
-
-            items.add(menuItem);
-         }
-
-         countGroupsItems++;
-      }
-      else
-      {
-         // in order to create item into the dropdown item/popup menu
-         menuItem = dstMenuBar.addItem(item, true, command);
-      }
-
-      menuItem.setVisible(visible);
-      setEnable(menuItem, enabled);
-      menuItem.setTitle(command.getToolTip());
-      menuItem.addStyleName(resources.toolbarCSS().toolbarItem());
-
-      toolbarItems.put(path, menuItem);
+      addToolbarItem(path, command.getIcon(), command.getToolTip(), command, visible, enabled);
    }
 
    /**
-    * Find corresponding menu bar, create new group or throw exception if nothing found.
-    * 
-    * @param menuPath
-    * @param depth
-    * @param visible
-    * @return
+    * {@inheritDoc}
     */
-   private MenuBar getOrCreateParentMenuBar(MenuPath menuPath, int depth, boolean visible) throws IllegalStateException
+   @Override
+   public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled, boolean selected)
+      throws IllegalStateException
    {
+      Item menuItem = addToolbarItem(path, command.getIcon(), command.getToolTip(), command, visible, enabled);
+      menuItem.setSelected(selected);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void addDropDownItem(String path, ImageResource icon, String tooltip, boolean visible, boolean enabled)
+      throws IllegalStateException
+   {
+      addToolbarItem(path, icon, tooltip, null, visible, enabled);
+   }
+
+   /**
+    * Create toolbar item.
+    * 
+    * @param path
+    * @param icon
+    * @param tooltip
+    * @param command
+    * @param visible
+    * @param enabled
+    * @return new item
+    * @throws IllegalStateException
+    */
+   private Item addToolbarItem(String path, ImageResource icon, String tooltip, ExtendedCommand command,
+      boolean visible, boolean enabled) throws IllegalStateException
+   {
+      MenuPath menuPath = new MenuPath(path);
+      int depth = menuPath.getSize() - 1;
+
+      Item menuItem;
       if (depth == 0)
       {
          // if path has only one name
@@ -283,82 +214,40 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
             // if group isn't exist then creates it 
             MenuItemSeparator newSeparator = menu.addSeparator();
             newSeparator.setVisible(visible);
-            JsonArray<MenuItem> items = JsonCollections.createArray();
+            JsonArray<Item> items = JsonCollections.createArray();
 
             groupsSeparator.put(groupName, newSeparator);
             groupItems.put(groupName, items);
-         }
 
-         return menu;
-      }
-      else
-      {
-         // in order to create item into the dropdown item/popup menu
-         MenuItem menuItem = dropDownItems.get(menuPath.getParentPath(depth));
-         if (menuItem == null)
-         {
-            throw new IllegalStateException("Parent item is not exist");
-         }
+            // it is the first item into the group
+            if (command != null)
+            {
+               menuItem = new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
+            }
+            else
+            {
+               menuItem = new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
+            }
 
-         return menuItem.getSubMenu();
-      }
-   }
-
-   /**
-    * Create item content.
-    * 
-    * @param menuPath
-    * @param icon
-    * @return
-    */
-   private String getItemContent(MenuPath menuPath, Image icon)
-   {
-      int depth = menuPath.getSize() - 1;
-      String title = menuPath.getPathElementAt(depth);
-
-      if (icon != null)
-      {
-         return icon.toString() + (depth != 1 ? " <span>" + title + "</span>" : "");
-      }
-      else
-      {
-         return "<span>" + title + "</span>";
-      }
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void addToggleItem(String path, ToggleCommand command, boolean visible, boolean enabled,
-      boolean selected) throws IllegalStateException
-   {
-      MenuPath menuPath = new MenuPath(path);
-
-      int depth = menuPath.getSize() - 1;
-      MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth, visible);
-      String item = getItemContent(menuPath, command.getIcon());
-
-      ToggleItem menuItem;
-      if (depth == 1)
-      {
-         // in order to create item into the group
-         String parentName = menuPath.getParentPath(depth);
-         JsonArray<MenuItem> items = groupItems.get(parentName);
-
-         if (items.size() == 0)
-         {
-            // if it is the first item into the group
-            menuItem = new ToggleItem(item, true, command, selected, resources);
             menu.addItem(menuItem);
             items.add(menuItem);
          }
          else
          {
             // when the group has items needs to insert item after last
-            // because could be situation when other group was created after the current group
-            MenuItem previousItem = items.get(items.size() - 1);
-            menuItem = new ToggleItem(item, true, command, selected, resources);
+            // because could be situation when other group was created after the current group 
+            String parentName = menuPath.getParentPath(depth);
+            JsonArray<Item> items = groupItems.get(parentName);
+
+            Item previousItem = items.get(items.size() - 1);
+            if (command != null)
+            {
+               menuItem = new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
+            }
+            else
+            {
+               menuItem = new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
+            }
 
             // insert after last item into current group
             int previousItemIndex = menu.getItemIndex(previousItem);
@@ -379,77 +268,30 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
       else
       {
          // in order to create item into the dropdown item/popup menu
-         menuItem = new ToggleItem(item, true, command, selected, resources);
-         dstMenuBar.addItem(menuItem);
-      }
-
-      menuItem.setVisible(visible);
-      setEnable(menuItem, enabled);
-      menuItem.setTitle(command.getToolTip());
-
-      toggleItems.put(path, menuItem);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void addDropDownItem(String path, Image icon, String tooltip, boolean visible, boolean enabled)
-   {
-      MenuPath menuPath = new MenuPath(path);
-
-      int depth = menuPath.getSize() - 1;
-      MenuBar dstMenuBar = getOrCreateParentMenuBar(menuPath, depth, visible);
-      String item = getItemContent(menuPath, icon);
-
-      MenuItem menuItem;
-      if (depth == 1)
-      {
-         // in order to create item into the group
-         String parentName = menuPath.getParentPath(depth);
-         JsonArray<MenuItem> items = groupItems.get(parentName);
-
-         if (items.size() == 0)
+         Item parentItem = menuItems.get(menuPath.getParentPath(depth));
+         if (parentItem == null)
          {
-            // if it is the first item into the group
-            menuItem = dstMenuBar.addItem(item, true, createSubMenuBar());
-            items.add(menuItem);
+            throw new IllegalStateException("Parent item is not exist");
+         }
+
+         if (command != null)
+         {
+            menuItem = new Item(menuPath, null, tooltip, command, ConteinerType.TOOLBAR, resources);
          }
          else
          {
-            // when the group has items needs to insert item after last
-            // because could be situation when other group was created after the current group
-            MenuItem previousItem = items.get(items.size() - 1);
-            menuItem = new MenuItem(item, true, createSubMenuBar());
-
-            // insert after last item into current group
-            int previousItemIndex = menu.getItemIndex(previousItem);
-            if (previousItemIndex < countGroupsItems)
-            {
-               menu.insertItem(menuItem, previousItemIndex + 1);
-            }
-            else
-            {
-               menu.addItem(menuItem);
-            }
-
-            items.add(menuItem);
+            menuItem = new Item(menuPath, icon, tooltip, createSubMenuBar(), ConteinerType.TOOLBAR, resources);
          }
 
-         countGroupsItems++;
-      }
-      else
-      {
-         // in order to create item into the dropdown item/popup menu
-         menuItem = dstMenuBar.addItem(item, true, createSubMenuBar());
+         parentItem.getSubMenu().addItem(menuItem);
       }
 
       menuItem.setVisible(visible);
-      setEnable(menuItem, enabled);
-      menuItem.setTitle(tooltip);
-      menuItem.addStyleName(resources.toolbarCSS().toolbarItem());
+      menuItem.setEnabled(enabled);
 
-      dropDownItems.put(path, menuItem);
+      menuItems.put(path, menuItem);
+
+      return menuItem;
    }
 
    /**
@@ -463,7 +305,7 @@ public class ToolbarViewImpl extends Composite implements ToolbarView
 
       menuBar.setAnimationEnabled(true);
       menuBar.setAutoOpen(true);
-      menuBar.addStyleName(resources.toolbarCSS().menuVertical());
+      menuBar.addStyleName(resources.menuCSS().menuVertical());
 
       return menuBar;
    }

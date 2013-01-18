@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 import com.google.gwt.event.shared.SimpleEventBus;
 import com.google.gwt.junit.GWTMockUtilities;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.core.event.ExpressionsChangedEvent;
 import org.exoplatform.ide.core.expressions.Expression;
@@ -172,9 +172,10 @@ public class TestToolbarPresenter
    @Test
    public void shouldAddDropDownItemWithOutEpressions()
    {
-      presenter.addDropDownItem(PATH, mock(Image.class), "toolTip");
+      presenter.addDropDownItem(PATH, mock(ImageResource.class), "toolTip");
       
-      verify(view).addDropDownItem(anyString(), (Image)anyObject(), anyString(), eq(IS_VISIBLE), eq(IS_ENABLED));
+      verify(view)
+         .addDropDownItem(anyString(), (ImageResource)anyObject(), anyString(), eq(IS_VISIBLE), eq(IS_ENABLED));
    }
    
    /**
@@ -190,9 +191,10 @@ public class TestToolbarPresenter
       Expression enabled = mock(Expression.class);
       when(enabled.getValue()).thenReturn(!IS_ENABLED);
 
-      presenter.addDropDownItem(PATH, mock(Image.class), "toolTip", visible, enabled);
+      presenter.addDropDownItem(PATH, mock(ImageResource.class), "toolTip", visible, enabled);
       
-      verify(view).addDropDownItem(anyString(), (Image)anyObject(), anyString(), eq(!IS_VISIBLE), eq(!IS_ENABLED));
+      verify(view).addDropDownItem(anyString(), (ImageResource)anyObject(), anyString(), eq(!IS_VISIBLE),
+         eq(!IS_ENABLED));
    }
 
    /**

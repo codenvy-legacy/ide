@@ -16,7 +16,7 @@
  */
 package org.exoplatform.ide.extension.demo;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -52,7 +52,7 @@ public class DemoExtension
          }
          
          @Override
-         public Image getIcon()
+         public ImageResource getIcon()
          {
             return null;
          }

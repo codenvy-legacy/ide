@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -43,8 +43,6 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
 
    private final ProjectOpenedExpression expression;
 
-   private final Image icon;
-
    /**
     * Create command.
     *
@@ -59,7 +57,6 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
       this.resources = resources;
       this.resourceProvider = resourceProvider;
       this.expression = expression;
-      this.icon = new Image(resources.folder());
    }
 
    /**
@@ -75,9 +72,9 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
-   public Image getIcon()
+   public ImageResource getIcon()
    {
-      return icon;
+      return resources.folder();
    }
 
    /**
@@ -85,7 +82,6 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
     */
    public Expression inContext()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 

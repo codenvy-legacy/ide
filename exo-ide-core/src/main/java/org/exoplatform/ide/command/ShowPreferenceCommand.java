@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -40,8 +40,6 @@ public class ShowPreferenceCommand implements ExtendedCommand
 
    private final PreferencesAgentImpl agent;
 
-   private final Image icon;
-
    /**
     * Create command.
     * 
@@ -53,8 +51,6 @@ public class ShowPreferenceCommand implements ExtendedCommand
    {
       this.resources = resources;
       this.agent = agent;
-      // TODO icon is incorrect
-      this.icon = new Image(resources.file());
    }
 
    /**
@@ -71,9 +67,10 @@ public class ShowPreferenceCommand implements ExtendedCommand
     * {@inheritDoc}
     */
    @Override
-   public Image getIcon()
+   public ImageResource getIcon()
    {
-      return icon;
+      // TODO icon is incorrect
+      return resources.file();
    }
 
    /**

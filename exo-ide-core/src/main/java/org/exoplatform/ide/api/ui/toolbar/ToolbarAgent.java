@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.api.ui.toolbar;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.extension.SDK;
@@ -69,7 +69,7 @@ public interface ToolbarAgent
     * @param tooltip
     * @throws IllegalStateException throws when item isn't exist
     */
-   public void addDropDownItem(String path, Image icon, String tooltip) throws IllegalStateException;
+   public void addDropDownItem(String path, ImageResource icon, String tooltip) throws IllegalStateException;
 
    /**
     * Adds new dropdown item to Toolbar, that shows menu with items on click.
@@ -84,8 +84,8 @@ public interface ToolbarAgent
     * @param enabledWhen
     * @throws IllegalStateException throws when item isn't exist
     */
-   public void addDropDownItem(String path, Image icon, String tooltip, Expression visibleWhen, Expression enabledWhen)
-      throws IllegalStateException;
+   public void addDropDownItem(String path, ImageResource icon, String tooltip, Expression visibleWhen,
+      Expression enabledWhen) throws IllegalStateException;
 
    /**
     * Copy item from MainMenu with all its states and behavior and add it to Toolbar.

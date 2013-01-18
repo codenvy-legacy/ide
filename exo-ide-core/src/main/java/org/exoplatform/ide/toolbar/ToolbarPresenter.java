@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.toolbar;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -195,7 +195,7 @@ public class ToolbarPresenter implements Presenter, ToolbarAgent, ToolbarView.Ac
     * {@inheritDoc}
     */
    @Override
-   public void addDropDownItem(String path, Image icon, String tooltip) throws IllegalStateException
+   public void addDropDownItem(String path, ImageResource icon, String tooltip) throws IllegalStateException
    {
       addDropDownItem(path, icon, tooltip, null, null);
    }
@@ -204,8 +204,8 @@ public class ToolbarPresenter implements Presenter, ToolbarAgent, ToolbarView.Ac
     * {@inheritDoc}
     */
    @Override
-   public void addDropDownItem(String path, Image icon, String tooltip, Expression visibleWhen, Expression enabledWhen)
-      throws IllegalStateException
+   public void addDropDownItem(String path, ImageResource icon, String tooltip, Expression visibleWhen,
+      Expression enabledWhen) throws IllegalStateException
    {
       view.addDropDownItem(path, icon, tooltip, visibleWhen == null ? true : visibleWhen.getValue(),
          enabledWhen == null ? true : enabledWhen.getValue());

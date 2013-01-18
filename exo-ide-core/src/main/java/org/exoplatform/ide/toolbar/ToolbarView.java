@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.toolbar;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.view.View;
@@ -99,7 +99,7 @@ public interface ToolbarView extends View<ToolbarView.ActionDelegate>
     * @param enabled
     * @throws IllegalStateException throws when item isn't exist
     */
-   public void addDropDownItem(String path, Image icon, String tooltip, boolean visible, boolean enabled)
+   public void addDropDownItem(String path, ImageResource icon, String tooltip, boolean visible, boolean enabled)
       throws IllegalStateException;
 
    /**

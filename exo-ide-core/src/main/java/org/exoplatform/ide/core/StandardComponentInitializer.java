@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -70,6 +69,7 @@ public class StandardComponentInitializer
       wizardAgent.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
       wizardAgent.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
 
+      // TODO test toggle item
       ToggleItemExpression toggleState = new ToggleItemExpression(expressionManager, true);
       ToggleItemCommand command = new ToggleItemCommand(resources, eventBus, null, null, toggleState);
       menuPresenter.addMenuItem("File/Checked item", command);
@@ -87,10 +87,14 @@ public class StandardComponentInitializer
       keyBindingAgent.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
 
       // add items to Toolbar
-      toolbarPresenter.addDropDownItem("General/New", new Image(resources.file()), "Create new resources");
+      toolbarPresenter.addDropDownItem("General/New", resources.file(), "Create new resources");
       toolbarPresenter.addItem("General/New/Project", newProjectCommand);
       toolbarPresenter.addItem("General/New/File", newFileCommand);
       toolbarPresenter.addItem("General/New/Folder", newFolderCommand);
+
+      // TODO test toggle items
+      toolbarPresenter.addToggleItem("General/Checked item", command);
+      toolbarPresenter.addToggleItem("General/New/Checked item", command);
 
       toolbarPresenter.addItem("General/Save", saveCommand);
       toolbarPresenter.addItem("General/Save All", saveAllCommand);

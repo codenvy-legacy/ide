@@ -20,13 +20,13 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
@@ -429,7 +429,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
       }
 
       @Override
-      public Image getIcon()
+      public ImageResource getIcon()
       {
          return null;
       }
@@ -462,8 +462,6 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
       private final ResourceProvider resourceProvider;
 
       private SimpleList<String> list;
-
-      private final Image icon;
 
       private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>()
       {
@@ -507,8 +505,6 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
       public OpenProjectCommand(ResourceProvider resourceProvider)
       {
          this.resourceProvider = resourceProvider;
-         // TODO change image
-         this.icon = new Image(resources.folderOpen());
 
          TableElement tableElement = Elements.createTableElement();
          tableElement.setAttribute("style", "width: 100%");
@@ -608,9 +604,10 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
        * {@inheritDoc}
        */
       @Override
-      public Image getIcon()
+      public ImageResource getIcon()
       {
-         return icon;
+         // TODO change image
+         return resources.folderOpen();
       }
 
       /**

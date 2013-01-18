@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.Resources;
@@ -42,7 +42,7 @@ public class ToggleItemCommand implements ToggleCommand
 
    private final EventBus eventBus;
 
-   private final Image icon;
+   private final Resources resources;
 
    /**
     * Create command.
@@ -60,7 +60,7 @@ public class ToggleItemCommand implements ToggleCommand
       this.inContext = inContext;
       this.canExecute = canExecute;
       this.stateExpression = stateExpression;
-      this.icon = new Image(resources.folderOpen());
+      this.resources = resources;
    }
 
    /**
@@ -77,9 +77,9 @@ public class ToggleItemCommand implements ToggleCommand
     * {@inheritDoc}
     */
    @Override
-   public Image getIcon()
+   public ImageResource getIcon()
    {
-      return icon;
+      return resources.folderOpen();
    }
 
    /**

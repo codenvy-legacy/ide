@@ -16,8 +16,8 @@
  */
 package org.exoplatform.ide.menu;
 
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Image;
 
 import org.exoplatform.ide.core.expressions.Expression;
 
@@ -39,7 +39,7 @@ public interface ExtendedCommand extends Command
     *
     * @return associated image
     */
-   public Image getIcon();
+   public ImageResource getIcon();
 
    /**
     * Command can provide a ToolTip. It will be displayed in
