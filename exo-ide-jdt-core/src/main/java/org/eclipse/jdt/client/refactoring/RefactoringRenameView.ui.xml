@@ -1,0 +1,49 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui"
+	xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+	<ui:style>
+		.floatRight {
+			float: right;
+			margin-left: 5px;
+		}
+
+		.rightAlign {
+			margin-left: auto;
+		}
+
+		.labelH {
+			margin-right: 5px;
+			font-size: 11px;
+			font-family: Verdana, Bitstream Vera Sans, sans-serif;
+			float: left;
+		}
+
+		.middle {
+			margin-top: 3px;
+		}
+
+		.right {
+			float: right;
+		}
+	</ui:style>
+
+	<f:Border margin="15" borderColor="transparent">
+		<f:layer top="0" bottom="35">
+			<g:FlowPanel>
+				<g:FlowPanel width="100%" height="30px">
+					<g:Label text="New Name:" addStyleNames="{style.labelH} {style.middle}" width="18%"></g:Label>
+					<f:TextInput ui:field="newNameField" width="80%" height="23px" addStyleNames="{style.right}"></f:TextInput>
+				</g:FlowPanel>
+			</g:FlowPanel>
+		</f:layer>
+		<f:layer height="22px" bottom="0">
+			<g:FlowPanel styleName="{style.rightAlign}">
+				<f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageName="cancel"
+					buttonId="ideRefactoringRenameViewCancelButton" addStyleNames="{style.floatRight}"></f:ImageButton>
+				<f:ImageButton ui:field="renameButton" width="90" height="22" text="Rename" imageName="ok"
+					buttonId="ideRefactoringRenameViewRenameButton" addStyleNames="{style.floatRight}"></f:ImageButton>
+			</g:FlowPanel>
+		</f:layer>
+	</f:Border>
+</ui:UiBinder>
