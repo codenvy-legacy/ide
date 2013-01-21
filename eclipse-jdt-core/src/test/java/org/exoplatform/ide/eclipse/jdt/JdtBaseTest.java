@@ -30,9 +30,6 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.exoplatform.ide.eclipse.resources.ResourcesBaseTest;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
@@ -53,7 +50,7 @@ public abstract class JdtBaseTest extends ResourcesBaseTest
       IFolder binFolder = project.getFolder("bin");
       binFolder.create(false, true, null);
       javaProject.setOutputLocation(binFolder.getFullPath(), null);
-      List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
+      //      List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
       //      IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
       //      LibraryLocation[] locations = JavaRuntime.getLibraryLocations(vmInstall);
       //      for (LibraryLocation element : locations) {

@@ -36,6 +36,7 @@ public class JavaServiceApplication extends Application
    {
       classes = new HashSet<Class<?>>(1);
       classes.add(RestCodeAssistantJava.class);
+      classes.add(RefactoringService.class);
    }
 
    /**

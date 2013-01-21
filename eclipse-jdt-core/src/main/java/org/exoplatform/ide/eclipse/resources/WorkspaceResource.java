@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import org.eclipse.core.internal.NLS;
 import org.eclipse.core.internal.Policy;
 import org.eclipse.core.internal.events.ILifecycleListener;
 import org.eclipse.core.internal.events.LifecycleEvent;
@@ -30,7 +29,6 @@ import org.eclipse.core.internal.resources.ProjectInfo;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.internal.resources.ResourceStatus;
 import org.eclipse.core.internal.resources.RootInfo;
-import org.eclipse.core.internal.utils.Messages;
 import org.eclipse.core.internal.watson.ElementTree;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
@@ -77,7 +75,6 @@ import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -1129,7 +1126,7 @@ public class WorkspaceResource implements IWorkspace
       return null;
    }
 
-   protected VirtualFileSystem getVFS()
+   public VirtualFileSystem getVFS()
    {
       return vfs;
    }
