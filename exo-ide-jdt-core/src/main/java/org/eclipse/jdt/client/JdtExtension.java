@@ -18,9 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.json.client.JSONObject;
 
 import org.eclipse.jdt.client.NameEnvironment.JSONTypesInfoUnmarshaller;
 import org.eclipse.jdt.client.codeassistant.ContentAssistHistory;
@@ -42,6 +41,9 @@ import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.outline.QuickOutlinePresenter;
 import org.eclipse.jdt.client.outline.ShowQuickOutlineControl;
 import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
+import org.eclipse.jdt.client.refactoring.RefactoringClientServiceImpl;
+import org.eclipse.jdt.client.refactoring.RefactoringRenameControl;
+import org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
 import org.eclipse.jdt.client.templates.ElementTypeResolver;
@@ -86,9 +88,9 @@ import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAss
 import org.exoplatform.ide.editor.java.hover.HoverResources;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.user.client.Window;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -216,6 +218,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new TypeInfoUpdater();
       new JavaClasspathResolver(this);
       new OrganizeImportsPresenter(IDE.eventBus());
+      new RefactoringRenamePresenter();
       IDE.getInstance().addControl(new CleanProjectControl());
       IDE.getInstance().addControl(new FormatterProfilesControl());
       IDE.getInstance().addControl(new OrganizeImportsControl());
@@ -225,6 +228,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new AddGetterSetterControl());
       IDE.getInstance().addControl(new GenerateNewConstructorUsingFieldsControl());
       IDE.getInstance().addControl(new ViewJavadocControl());
+      IDE.getInstance().addControl(new RefactoringRenameControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
@@ -250,7 +254,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       REST_CONTEXT = event.getApplicationConfiguration().getContext();
       DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
       new CreatePackagePresenter(IDE.eventBus(), VirtualFileSystem.getInstance());
-      new CreateJavaClassPresenter(IDE.eventBus(),VirtualFileSystem.getInstance());      
+      new CreateJavaClassPresenter(IDE.eventBus(),VirtualFileSystem.getInstance());
+      new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader());
    }
 
    private void loadWellKnownClasses(String[] fqns)
