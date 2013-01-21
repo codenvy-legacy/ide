@@ -59,7 +59,7 @@ public class ProjectResource extends ContainerResource implements IProject
     * @param path      {@link IPath}
     * @param workspace {@link WorkspaceResource}
     */
-   protected ProjectResource(IPath path, WorkspaceResource workspace)
+   public ProjectResource(IPath path, WorkspaceResource workspace)
    {
       super(path, workspace);
       readDescription();

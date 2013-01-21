@@ -15,8 +15,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
@@ -114,15 +116,24 @@ public class RefactoringExecutionHelper
        * @param status the status to show
        * @return <code>true</code> iff the operation should be cancelled
        */
-      private boolean showStatusDialog(RefactoringStatus status)
+      private boolean showStatusDialog(RefactoringStatus status) throws CoreException
       {
          //			Dialog dialog= RefactoringUI.createRefactoringStatusDialog(status, fParent, fRefactoring.getName(), false);
          //			return dialog.open() == IDialogConstants.CANCEL_ID;
-         for (RefactoringStatusEntry stat : status.getEntries())
+
+         if (status.getSeverity() == 3)
          {
-            System.out.println(stat.getMessage());
+            return false;
          }
-         return true;
+         else
+         {
+            StringBuilder b = new StringBuilder();
+            for (RefactoringStatusEntry stat : status.getEntries())
+            {
+               b.append(stat.getMessage()).append('\n');
+            }
+            throw new CoreException(new Status(IStatus.ERROR, "ide", b.toString()));
+         }
       }
    }
 

@@ -632,6 +632,7 @@ public class WorkspaceResource implements IWorkspace
     */
    public Item createResource(IResource resource, InputStream contents) throws CoreException
    {
+
       IContainer parent = resource.getParent();
       if (!parent.exists())
       {
@@ -640,6 +641,11 @@ public class WorkspaceResource implements IWorkspace
 
       try
       {
+         //some times jdt try create existed resource
+         if (resource.exists())
+         {
+            return getItemByPath(resource.getFullPath());
+         }
          String parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
          Item i = null;
          switch (resource.getType())

@@ -29,10 +29,9 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 
 /**
  * Implementation of {@link RefactoringClientService} service.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringClientServiceImpl.java Jan 17, 2013 4:16:29 PM azatsarynnyy $
- *
  */
 public class RefactoringClientServiceImpl extends RefactoringClientService
 {
@@ -40,7 +39,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
    /**
     * Base url.
     */
-   private static final String BASE_URL = "/ide/java/refactoring";
+   private static final String BASE_URL = "/ide/refactoring/java";
 
    /**
     * Build project method's path.
@@ -59,7 +58,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
 
    /**
     * @param restContext REST-service context
-    * @param loader loader to show on server request
+    * @param loader      loader to show on server request
     */
    public RefactoringClientServiceImpl(String restContext, Loader loader)
    {
@@ -68,10 +67,9 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringClientService#rename(java.lang.String, java.lang.String, java.lang.String,
-    *       int, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
-    * 
     * @throws RequestException
+    * @see org.eclipse.jdt.client.refactoring.RefactoringClientService#rename(java.lang.String, java.lang.String, java.lang.String,
+    *      int, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
    public void rename(String vfsId, String projectId, String fqn, int offset, String newName,
@@ -79,10 +77,9 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
    {
       final String requesrUrl = restServiceContext + RENAME;
 
-      String params =
-         "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
-         .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(callback);
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
+      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params).header(HTTPHeader.ACCEPT,
+         MimeType.APPLICATION_JSON).loader(loader).send(callback);
    }
 
 }

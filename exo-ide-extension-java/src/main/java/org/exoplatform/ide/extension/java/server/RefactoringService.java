@@ -18,13 +18,11 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IJavaElement;
@@ -37,9 +35,14 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaModelManager;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
+import org.exoplatform.ide.eclipse.resources.ProjectResource;
 import org.exoplatform.ide.eclipse.resources.WorkspaceResource;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
+import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
+import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -49,12 +52,14 @@ import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
+import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -76,7 +81,7 @@ public class RefactoringService
 
    private WorkspaceResource getWorkspace(String vfsid)
    {
-      if (ResourcesPlugin.getWorkspace() == null)
+      if (ResourcesPlugin.workspace == null)
       {
          try
          {
@@ -169,16 +174,13 @@ public class RefactoringService
          Item item = vfs.getItem(projectid, PropertyFilter.ALL_FILTER);
          if (item instanceof Project)
          {
-            IJavaProject project;
-            if (checkProjectInitialized(vfs, item))
+            if (!checkProjectInitialized(vfs, item))
             {
-               IProject iProject = workspace.getRoot().getProject(item.getName());
-               project = JavaCore.create(iProject);
+               initializeProject(item, workspace);
             }
-            else
-            {
-               project = initializeProject(item, workspace);
-            }
+
+            IProject iProject = workspace.getRoot().getProject(item.getName());
+            IJavaProject project = JavaCore.create(iProject);
             project.open(null);
             JavaModelManager.getIndexManager().indexAll(project.getProject());
             return project;
@@ -199,21 +201,20 @@ public class RefactoringService
 
    }
 
-   private IJavaProject initializeProject(Item vfsProject, WorkspaceResource workspace)
+   private void initializeProject(Item vfsProject, WorkspaceResource workspace)
    {
-      IProject project = workspace.getRoot().getProject(vfsProject.getName());
+      IProject project = new ProjectResource(new org.eclipse.core.runtime.Path(vfsProject.getPath()), workspace);
       try
       {
+         project.create(null);
+         project.open(null);
          IProjectDescription description = project.getDescription();
          description.setNatureIds(new String[]{JavaCore.NATURE_ID});
          project.setDescription(description, null);
-         IJavaProject javaProject = JavaCore.create(project);
-         IFolder binFolder = project.getFolder(".target");
-         binFolder.create(false, true, null);
-         javaProject.setOutputLocation(binFolder.getFullPath(), null);
-         IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-         IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
-         System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+
+         workspace.getVFS().createFolder(vfsProject.getId(), ".target");
+
+
          String sourcePath;
          if (vfsProject.hasProperty("sourceFolder"))
          {
@@ -223,20 +224,40 @@ public class RefactoringService
          {
             sourcePath = JavaCodeAssistant.DEFAULT_SOURCE_FOLDER;
          }
-         newEntries[oldEntries.length] = JavaCore.newSourceEntry(
-            new org.eclipse.core.runtime.Path(vfsProject.getPath() + "/" + sourcePath));
-         javaProject.setRawClasspath(newEntries, null);
-         return javaProject;
+
+         workspace.getVFS().createFile(vfsProject.getId(), ".classpath", MediaType.TEXT_PLAIN_TYPE,
+            new ByteArrayInputStream(
+               ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry kind=\"output\" path=\".target\"/>" + "<classpathentry kind=\"src\" path=\"" + sourcePath + "\"/></classpath>").getBytes()));
       }
       catch (CoreException e)
       {
          throw new WebApplicationException(e);
       }
+      catch (ItemNotFoundException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (InvalidArgumentException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (ItemAlreadyExistException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (PermissionDeniedException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
+      catch (VirtualFileSystemException e)
+      {
+         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+      }
    }
 
    private boolean checkProjectInitialized(VirtualFileSystem vfs, Item item) throws VirtualFileSystemException
    {
-      ItemList<Item> children = vfs.getChildren(item.getId(), 0, -1, null, PropertyFilter.ALL_FILTER);
+      ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
       for (Item i : children.getItems())
       {
          if (i.getName().equals(".classpath"))

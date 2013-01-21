@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.exoplatform.ide</groupId>
@@ -31,9 +31,9 @@
 			<artifactId>exo-ide-client</artifactId>
 		</dependency>
 
-		<!-- EDITOR EXTENSIONS -->
+      <!-- EDITOR EXTENSIONS -->
 
-		<dependency>
+      <dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-collabeditor</artifactId>
 		</dependency>
@@ -90,10 +90,10 @@
 			<artifactId>exo-ide-editor-yaml</artifactId>
 		</dependency>
 
-		<!-- EXTENSIONS -->
+      <!-- EXTENSIONS -->
 
 
-		<dependency>
+      <dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-gadget</artifactId>
 			<exclusions>
@@ -145,6 +145,11 @@
 					<artifactId>antlr</artifactId>
 					<groupId>antlr</groupId>
 				</exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>eclipse-jdt-core</artifactId>
+            </exclusion>
+
 			</exclusions>
 		</dependency>
 
@@ -172,12 +177,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-cloudbees</artifactId>
-			<!--exclusions>
-				<exclusion>
-					<artifactId>xstream</artifactId>
-					<groupId>com.thoughtworks.xstream</groupId>
-				</exclusion>
-			</exclusions-->
+         <!--exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>com.thoughtworks.xstream</groupId>
+            </exclusion>
+         </exclusions-->
 		</dependency>
 
 		<dependency>
@@ -369,7 +374,8 @@
 						<phase>process-resources</phase>
 						<configuration>
 							<tasks>
-								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
+								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
+                               dest="${project.build.directory}/share"/>
 							</tasks>
 						</configuration>
 						<goals>
@@ -385,7 +391,9 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
-								<echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
+								<echo
+                           file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties"
+                           append="false">
 									buildNumber = ${buildNumber}
 									buildTime = ${timestamp}
 									version = ${project.version}</echo>
@@ -399,7 +407,7 @@
 						<configuration>
 							<tasks>
 								<move todir="${project.build.directory}/${project.artifactId}-${project.version}">
-									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE" />
+									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE"/>
 								</move>
 							</tasks>
 						</configuration>
@@ -435,8 +443,8 @@
 				</executions>
 			</plugin>
 
-			<!-- configure the GWT-Maven plugin -->
-			<plugin>
+         <!-- configure the GWT-Maven plugin -->
+         <plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
 				<configuration>
