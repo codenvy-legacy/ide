@@ -94,10 +94,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
     * @param partStackResources
     */
    @Inject
-   public PartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus)
+   public PartStackPresenter(PartStackView view, PartStackUIResources partStackResources, EventBus eventBus,
+      PartStackEventHandler partStackEventHandler)
    {
       this.view = view;
       this.eventBus = eventBus;
+      partStackHandler = partStackEventHandler;
       view.setDelegate(this);
    }
 
@@ -108,19 +110,11 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
    private void updatePartTab(PartPresenter part)
    {
       if (!parts.contains(part))
+      {
          throw new IllegalArgumentException("This part stack not contains: " + part.getTitle());
+      }
       int index = parts.indexOf(part);
       view.updateTabItem(index, part.getTitleImage(), part.getTitle(), part.getTitleToolTip());
-   }
-
-   /**
-    * Set Handler that will listen to event when Active part changed
-    * 
-    * @param partStackHandler
-    */
-   public void setPartStackEventHandler(PartStackEventHandler partStackHandler)
-   {
-      this.partStackHandler = partStackHandler;
    }
 
    /**
@@ -130,6 +124,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);
+      if (activePart!=null)
+      {
+         activePart.go(view.getContentPanel());
+      }
    }
 
    /**
@@ -163,10 +161,12 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
       // include close button
       ImageResource titleImage = part.getTitleImage();
       TabItem tabItem =
-         view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(),
-            part.getTitleToolTip(), true);
+         view.addTabButton(titleImage == null ? null : new Image(titleImage), part.getTitle(), part.getTitleToolTip(),
+            true);
       bindEvents(tabItem, part);
       setActivePart(part);
+      // requst focus
+      onRequestFocus();
    }
 
    /**
@@ -224,11 +224,10 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
          view.setActiveTabButton(parts.indexOf(activePart));
          activePart.go(contentPanel);
       }
+      // request part stack to get the focus
+      onRequestFocus();
       // notify handler, that part changed
-      if (partStackHandler != null)
-      {
-         partStackHandler.onActivePartChanged(activePart);
-      }
+      partStackHandler.onActivePartChanged(activePart);
    }
 
    /**
@@ -289,9 +288,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
    public void onRequestFocus()
    {
       // notify partStackHandler
-      if (partStackHandler != null)
-      {
-         partStackHandler.onRequestFocus(PartStackPresenter.this);
-      }
+      // notify handler, that part changed
+      partStackHandler.onRequestFocus(PartStackPresenter.this);
    }
 }

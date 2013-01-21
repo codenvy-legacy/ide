@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.outline;
 
+import com.google.inject.Singleton;
+
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -35,7 +37,8 @@ import org.exoplatform.ide.part.AbstractPartPresenter;
  * @version $Id:
  *
  */
-public class OutlinePartPresenter extends AbstractPartPresenter implements ActivePartChangedHandler
+@Singleton
+public class OutlinePartPrenter extends AbstractPartPresenter implements ActivePartChangedHandler
 {
 
    public interface OutlinePartView extends IsWidget
@@ -53,7 +56,7 @@ public class OutlinePartPresenter extends AbstractPartPresenter implements Activ
     * 
     */
    @Inject
-   public OutlinePartPresenter(OutlinePartView view, EventBus eventBus)
+   public OutlinePartPrenter(OutlinePartView view, EventBus eventBus)
    {
       this.view = view;
       eventBus.addHandler(ActivePartChangedEvent.TYPE, this);

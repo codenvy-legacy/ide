@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.workspace;
+package org.exoplatform.ide.perspective;
 
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
@@ -34,14 +34,7 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
     * 
     * @return
     */
-   AcceptsOneWidget getCenterPanel();
-
-   /**
-    * Returns left panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getLeftPanel();
+   AcceptsOneWidget getPerspectivePanel();
 
    /**
     * Returns menu panel.
@@ -51,14 +44,7 @@ public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
    AcceptsOneWidget getMenuPanel();
 
    /**
-    * Returns right panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getRightPanel();
-
-   /**
-    * Needs for delegate some function into Workspace view.
+    * Handle View events
     */
    public interface ActionDelegate
    {

@@ -24,7 +24,7 @@ import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.outline.OutlinePartPresenter.OutlinePartView;
+import org.exoplatform.ide.outline.OutlinePartPrenter.OutlinePartView;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

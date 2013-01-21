@@ -40,15 +40,9 @@ import org.exoplatform.ide.wizard.newresource.NewResourceWizardResources;
  * impleList.Resources
  * 
  */
-public interface Resources extends
-   //    StatusPresenter.Resources,
-   Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources, LineNumberRenderer.Resources,
-   EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources, NewProjectWizardResource,
-   NewGenericProjectWizardResource, NewResourceWizardResources
-
-// TODO: Once we have actual consumers of the Tooltip class, we
-// can just have them extend it instead of doing it on the base interface.
-//    Tooltip.Resources,
+public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
+   LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
+   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources
 {
 
    /**

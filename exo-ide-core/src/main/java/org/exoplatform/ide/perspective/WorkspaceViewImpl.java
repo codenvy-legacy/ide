@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.workspace;
+package org.exoplatform.ide.perspective;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -22,7 +22,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.SplitLayoutPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
@@ -41,18 +40,10 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    private static WorspaceViewUiBinder uiBinder = GWT.create(WorspaceViewUiBinder.class);
 
    @UiField
-   SimplePanel centerPanel;
-
-   @UiField
-   SimplePanel leftPanel;
+   SimplePanel perspectivePanel;
 
    @UiField
    SimplePanel topPanel;
-   
-   @UiField
-   SimplePanel rightPanel;
-   
-   @UiField(provided=true) SplitLayoutPanel splitPanel = new SplitLayoutPanel(4);
 
    /**
     * Create view.
@@ -61,26 +52,6 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    protected WorkspaceViewImpl()
    {
       initWidget(uiBinder.createAndBindUi(this));
-      // add shadow from editor to all parts of ui
-      splitPanel.getWidgetContainerElement(centerPanel).addClassName("ide-editor-area");
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public AcceptsOneWidget getCenterPanel()
-   {
-      return centerPanel;
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public AcceptsOneWidget getLeftPanel()
-   {
-      return leftPanel;
    }
 
    /**
@@ -96,18 +67,18 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
     * {@inheritDoc}
     */
    @Override
-   public AcceptsOneWidget getRightPanel()
-   {
-      return rightPanel;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public void setDelegate(ActionDelegate delegate)
    {
       // ok
       // there are no events for now
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public AcceptsOneWidget getPerspectivePanel()
+   {
+      return perspectivePanel;
    }
 }

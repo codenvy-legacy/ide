@@ -14,54 +14,49 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.projectExplorer;
+package org.exoplatform.ide.part.projectexplorer;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.client.PageResources;
-import org.exoplatform.ide.client.event.FileEvent;
-import org.exoplatform.ide.client.event.FileEvent.FileOperation;
 import org.exoplatform.ide.core.event.ProjectActionEvent;
 import org.exoplatform.ide.core.event.ProjectActionHandler;
 import org.exoplatform.ide.core.event.ResourceChangedEvent;
 import org.exoplatform.ide.core.event.ResourceChangedHandler;
 import org.exoplatform.ide.part.AbstractPartPresenter;
+import org.exoplatform.ide.resources.FileEvent;
+import org.exoplatform.ide.resources.FileEvent.FileOperation;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Resource;
+import org.exoplatform.ide.util.loging.Log;
 
 /**
- * Tree-like project explorer.
- * TODO : should accept resource model objects.
+ * Project Explorer display Project Model in a dedicated Part (view).
  * 
- * Created by The eXo Platform SAS
- * Author : eXoPlatform
- *          exo@exoplatform.com
- * Jul 27, 2012  
+ * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
-public class ProjectExplorerPresenter extends AbstractPartPresenter implements ProjectExplorerView.ActionDelegate
+@Singleton
+public class ProjectExplorerPartPresenter extends AbstractPartPresenter implements ProjectExplorerView.ActionDelegate
 {
-   ProjectExplorerView view;
+   protected ProjectExplorerView view;
 
-   EventBus eventBus;
-
-   PageResources resources;
+   protected EventBus eventBus;
 
    /**
-    * Create presenter.
+    * Instantiates the ProjectExplorer Presenter
     * 
     * @param view
     * @param eventBus
-    * @param resources
     */
    @Inject
-   public ProjectExplorerPresenter(ProjectExplorerView view, EventBus eventBus, PageResources resources)
+   public ProjectExplorerPartPresenter(ProjectExplorerView view, EventBus eventBus)
    {
       this.view = view;
       this.eventBus = eventBus;
-      this.resources = resources;
+      Log.info(ProjectExplorerPartPresenter.class, "NEW PROJ PRESENTER CREATED");
       bind();
    }
 
@@ -97,40 +92,40 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter implements P
          {
             setContent(event.getProject().getParent());
          }
-         
+
          @Override
          public void onProjectDescriptionChanged(ProjectActionEvent event)
          {
          }
-         
+
          @Override
          public void onProjectClosed(ProjectActionEvent event)
          {
             setContent(null);
          }
       });
-      
+
       eventBus.addHandler(ResourceChangedEvent.TYPE, new ResourceChangedHandler()
       {
-         
+
          @Override
          public void onResourceRenamed(ResourceChangedEvent event)
          {
             // TODO handle it
          }
-         
+
          @Override
          public void onResourceMoved(ResourceChangedEvent event)
          {
             // TODO handle it
          }
-         
+
          @Override
          public void onResourceDeleted(ResourceChangedEvent event)
          {
             setContent(event.getResource().getProject().getParent());
          }
-         
+
          @Override
          public void onResourceCreated(ResourceChangedEvent event)
          {
@@ -152,9 +147,9 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter implements P
       }
    }
 
-    /**
-    * {@inheritDoc}
-    */
+   /**
+   * {@inheritDoc}
+   */
    @Override
    public String getTitle()
    {
@@ -167,7 +162,7 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter implements P
    @Override
    public ImageResource getTitleImage()
    {
-      return resources.projectExplorerIcon();
+      return null;
    }
 
    /**
@@ -176,7 +171,7 @@ public class ProjectExplorerPresenter extends AbstractPartPresenter implements P
    @Override
    public String getTitleToolTip()
    {
-      return "This page helps you to do basic operation with your projects. Following features are currently available:"
+      return "This View helps you to do basic operation with your projects. Following features are currently available:"
          + "\n\t- view project's tree" + "\n\t- select and open project's file";
    }
 

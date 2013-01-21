@@ -64,7 +64,7 @@ public class TestPartAgent
    @Mock
    PartStackUIResources resources;
 
-   PartAgentPresenter agent;
+   FocusManager agent;
 
    private PartStackPresenter editStack;
 
@@ -75,7 +75,7 @@ public class TestPartAgent
       GWTMockUtilities.disarm();
       when(provider.get()).thenReturn(mock(PartStackPresenter.class), mock(PartStackPresenter.class),
          mock(PartStackPresenter.class), mock(PartStackPresenter.class));
-      agent = new PartAgentPresenter(provider, eventBus);
+      agent = new FocusManager(provider, eventBus);
       editStack = agent.getPartStack(TYPE);
    }
 
@@ -89,7 +89,7 @@ public class TestPartAgent
    public void shouldAddToStack()
    {
       PartPresenter part = mock(PartPresenter.class);
-      agent.addPart(part, TYPE);
+      agent.showPart(part, TYPE);
       // verify part added to proper stack
       verify(editStack).addPart(eq(part));
    }
@@ -123,7 +123,7 @@ public class TestPartAgent
    public void shouldSetActivePartonStackAndSetFocus()
    {
       PartPresenter part = mock(PartPresenter.class);
-      agent.addPart(part, TYPE);
+      agent.showPart(part, TYPE);
       // move focus else where
       agent.setActivePartStack(agent.getPartStack(SECOND_TYPE));
       reset(editStack);
@@ -161,10 +161,10 @@ public class TestPartAgent
             count++;
             return null;
          }
-      }).when(partStack).setPartStackEventHandler((PartStackEventHandler)any());
+      }).when(partStack).addPartStackEventHandler((PartStackEventHandler)any());
 
       // create Part Agent
-      agent = new PartAgentPresenter(provider, eventBus);
+      agent = new FocusManager(provider, eventBus);
 
       // verify Event fired
       verify(eventBus).fireEvent(any(ActivePartChangedEvent.class));
@@ -180,12 +180,12 @@ public class TestPartAgent
          mock(PartStackPresenter.class), mock(PartStackPresenter.class));
 
       // create Part Agent
-      agent = new PartAgentPresenter(provider, eventBus);
+      agent = new FocusManager(provider, eventBus);
 
       PartStackPresenter partStack1 = agent.getPartStack(TYPE);
       
-      agent.addPart(part1, TYPE);
-      agent.addPart(part2, SECOND_TYPE);
+      agent.showPart(part1, TYPE);
+      agent.showPart(part2, SECOND_TYPE);
       // part2 and partStack2 are active now
       reset(eventBus);
       agent.setActivePartStack(partStack1); // focus requested

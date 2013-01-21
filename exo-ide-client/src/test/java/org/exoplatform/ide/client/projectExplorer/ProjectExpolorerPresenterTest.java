@@ -23,7 +23,9 @@ import com.google.gwt.junit.GWTMockUtilities;
 import com.google.web.bindery.event.shared.EventBus;
 import com.google.web.bindery.event.shared.SimpleEventBus;
 
-import org.exoplatform.ide.client.projectExplorer.ProjectExplorerView.ActionDelegate;
+import org.exoplatform.ide.part.projectexplorer.ProjectExplorerPartPresenter;
+import org.exoplatform.ide.part.projectexplorer.ProjectExplorerView;
+import org.exoplatform.ide.part.projectexplorer.ProjectExplorerView.ActionDelegate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +53,7 @@ public class ProjectExpolorerPresenterTest
    EventBus eventBus = new SimpleEventBus();
 
    @InjectMocks
-   ProjectExplorerPresenter explorerPresenter;
+   ProjectExplorerPartPresenter explorerPresenter;
 
    @Before
    public void disarm()

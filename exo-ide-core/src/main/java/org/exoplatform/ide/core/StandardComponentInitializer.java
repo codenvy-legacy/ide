@@ -18,11 +18,14 @@
  */
 package org.exoplatform.ide.core;
 
+import com.google.inject.Singleton;
+
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
+import org.exoplatform.ide.command.OpenProjectCommand;
 import org.exoplatform.ide.command.SaveAllCommand;
 import org.exoplatform.ide.command.SaveCommand;
 import org.exoplatform.ide.command.ShowNewFolderWizardCommand;
@@ -43,6 +46,7 @@ import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPagePresent
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@Singleton
 public class StandardComponentInitializer
 {
 
@@ -50,29 +54,31 @@ public class StandardComponentInitializer
     *
     */
    @Inject
-   public StandardComponentInitializer(MainMenuPresenter menuPresenter, SaveCommand saveCommand,
+   public StandardComponentInitializer(MainMenuPresenter menu, SaveCommand saveCommand,
       SaveAllCommand saveAllCommand, ShowNewResourceWizardCommand newFileCommand,
       ShowNewFolderWizardCommand newFolderCommand, ShowNewProjectWizardCommand newProjectCommand,
-      WizardAgentImpl wizardAgent, Provider<NewGenericProjectPagePresenter> genericProjectProvider,
+      WizardAgentImpl wizard, Provider<NewGenericProjectPagePresenter> genericProjectProvider,
       Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
-      Resources resources, KeyBindingAgent keyBindingAgent,  ShowPreferenceCommand showPreferencesCommand)
+      Resources resources, KeyBindingAgent keyBinding,  ShowPreferenceCommand showPreferencesCommand, OpenProjectCommand openProjectCommand)
    {
-      wizardAgent.registerNewProjectWizard("Generic Project", "Create generic project", "",
+      wizard.registerNewProjectWizard("Generic Project", "Create generic project", "",
          resources.genericProjectIcon(), genericProjectProvider, JsonCollections.<String> createArray());
       // TODO change icon
-      wizardAgent.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
-      wizardAgent.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
+      wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
+      wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
 
-      menuPresenter.addMenuItem("File/New/Project", newProjectCommand);
-      menuPresenter.addMenuItem("File/New/Folder", newFolderCommand);
-      menuPresenter.addMenuItem("File/New/Other", newFileCommand);
+      menu.addMenuItem("File/New/Project", newProjectCommand);
+      menu.addMenuItem("File/New/Folder", newFolderCommand);
+      menu.addMenuItem("File/New/Other", newFileCommand);
 
-      menuPresenter.addMenuItem("File/Save", saveCommand);
-      menuPresenter.addMenuItem("File/Save All", saveAllCommand);
+      menu.addMenuItem("File/Open Project", openProjectCommand);
+      
+      menu.addMenuItem("File/Save", saveCommand);
+      menu.addMenuItem("File/Save All", saveAllCommand);
 
-      menuPresenter.addMenuItem("Window/Preferences", showPreferencesCommand);
+      menu.addMenuItem("Window/Preferences", showPreferencesCommand);
 
-      keyBindingAgent.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
-      keyBindingAgent.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
+      keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
+      keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
    }
 }

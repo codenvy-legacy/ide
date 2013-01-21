@@ -22,9 +22,11 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.client.workspace.WorkspacePresenter;
+import org.exoplatform.ide.client.extensionsPart.ExtensionsPage;
 import org.exoplatform.ide.core.ComponentException;
 import org.exoplatform.ide.core.ComponentRegistry;
+import org.exoplatform.ide.perspective.PerspectivePresenter.PartStackType;
+import org.exoplatform.ide.perspective.WorkspacePresenter;
 
 /**
  * Performs initial application startup
@@ -43,7 +45,7 @@ public class BootstrapController
     */
    @Inject
    public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
-      StyleInjector styleInjector, final ExtensionManager extensionManager)
+      StyleInjector styleInjector, final ExtensionManager extensionManager, final ExtensionsPage extensionsPage)
    {
       styleInjector.inject();
 
@@ -58,8 +60,10 @@ public class BootstrapController
             // Start UI
             SimplePanel mainPanel = new SimplePanel();
             RootLayoutPanel.get().add(mainPanel);
-
+            // Display IDE 
             workspacePeresenter.go(mainPanel);
+            // TODO FOR DEMO
+            workspacePeresenter.showPart(extensionsPage, PartStackType.EDITING);
          }
 
          @Override

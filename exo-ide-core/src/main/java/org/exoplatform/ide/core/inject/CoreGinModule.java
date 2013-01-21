@@ -28,9 +28,9 @@ import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
-import org.exoplatform.ide.api.ui.part.PartAgent;
 import org.exoplatform.ide.api.ui.preferences.PreferencesAgent;
 import org.exoplatform.ide.api.ui.wizard.WizardAgent;
+import org.exoplatform.ide.api.ui.workspace.WorkspaceAgent;
 import org.exoplatform.ide.core.StandardComponentInitializer;
 import org.exoplatform.ide.core.editor.DefaultEditorProvider;
 import org.exoplatform.ide.core.editor.EditorRegistry;
@@ -45,13 +45,19 @@ import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.menu.MainMenuView;
 import org.exoplatform.ide.menu.MainMenuViewImpl;
-import org.exoplatform.ide.outline.OutlinePartPresenter;
+import org.exoplatform.ide.outline.OutlinePartPrenter;
 import org.exoplatform.ide.outline.OutlinePartViewImpl;
-import org.exoplatform.ide.part.PartAgentPresenter;
+import org.exoplatform.ide.part.FocusManager;
 import org.exoplatform.ide.part.PartStackPresenter;
+import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
 import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.part.PartStackView;
 import org.exoplatform.ide.part.PartStackViewImpl;
+import org.exoplatform.ide.part.projectexplorer.ProjectExplorerView;
+import org.exoplatform.ide.part.projectexplorer.ProjectExplorerViewImpl;
+import org.exoplatform.ide.perspective.WorkspacePresenter;
+import org.exoplatform.ide.perspective.WorkspaceView;
+import org.exoplatform.ide.perspective.WorkspaceViewImpl;
 import org.exoplatform.ide.preferences.PreferencesAgentImpl;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
@@ -78,9 +84,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(Resources.class).in(Singleton.class);
       bind(ExtensionRegistry.class).in(Singleton.class);
       bind(StandardComponentInitializer.class).in(Singleton.class);
-      bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
-      bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
-      
+
       resourcesAPIconfigure();
 
       uiAPIconfigure();
@@ -97,7 +101,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(EditorProvider.class).annotatedWith(Names.named("defaulEditor")).to(DefaultEditorProvider.class);
       bind(DocumentProvider.class).to(ResourceDocumentProvider.class).in(Singleton.class);
       bind(UserActivityManager.class).in(Singleton.class);
-      bind(OutlinePartPresenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
+      bind(OutlinePartPrenter.OutlinePartView.class).to(OutlinePartViewImpl.class).in(Singleton.class);
    }
 
    /**
@@ -112,6 +116,12 @@ public class CoreGinModule extends AbstractGinModule
 
    protected void uiAPIconfigure()
    {
+      bind(WizardAgent.class).to(WizardAgentImpl.class).in(Singleton.class);
+      bind(PreferencesAgent.class).to(PreferencesAgentImpl.class).in(Singleton.class);
+
+      bind(WorkspaceView.class).to(WorkspaceViewImpl.class).in(Singleton.class);
+      bind(WorkspaceAgent.class).to(WorkspacePresenter.class).in(Singleton.class);
+
       // expression manager
       bind(ExpressionManager.class).in(Singleton.class);
 
@@ -122,15 +132,15 @@ public class CoreGinModule extends AbstractGinModule
 
       // part agent
       bind(PartStackView.class).to(PartStackViewImpl.class);
-      bind(PartStackPresenter.class);
-      bind(PartAgentPresenter.class).in(Singleton.class);
-      
-      bind(PartAgent.class).to(PartAgentPresenter.class).in(Singleton.class);
+      bind(PartStackPresenter.class); // no need to bind here
+
       // resources: images and css
       bind(PartStackUIResources.class).to(Resources.class).in(Singleton.class);
 
       // key binding
       bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
+
+      bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
    }
 
    @Provides
@@ -140,5 +150,12 @@ public class CoreGinModule extends AbstractGinModule
    {
       //TODO add icon for unknown file 
       return new FileType(null, null);
+   }
+
+   @Provides
+   @Singleton
+   protected PartStackEventHandler providePartStackEventHandler(FocusManager partAgentPresenter)
+   {
+      return partAgentPresenter.getPartStackHandler();
    }
 }

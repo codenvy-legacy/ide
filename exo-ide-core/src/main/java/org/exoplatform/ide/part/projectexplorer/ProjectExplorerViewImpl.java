@@ -14,22 +14,25 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.projectExplorer;
+package org.exoplatform.ide.part.projectexplorer;
 
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import elemental.html.DragEvent;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.tree.Tree;
 import org.exoplatform.ide.tree.TreeNodeElement;
+import org.exoplatform.ide.util.loging.Log;
 
 /**
- * TODO: Use UIBinder, when GWT Widget wrappers are introduced for Collide UI elements (Tree)  
+ * Tree-based Project Explorer view.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
+@Singleton
 public class ProjectExplorerViewImpl implements ProjectExplorerView
 {
    protected Tree<Resource> tree;
@@ -45,6 +48,7 @@ public class ProjectExplorerViewImpl implements ProjectExplorerView
    public ProjectExplorerViewImpl(Resources resources)
    {
       tree = Tree.create(resources);
+      Log.info(ProjectExplorerViewImpl.class, "NEW PROJ VIEW CREATED");
    }
 
    /**

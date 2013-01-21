@@ -32,7 +32,8 @@ import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.part.PropertyListener;
 
 /**
- *
+ * For demo purposes. Displays the list of registered extensions and their dependensies.
+ * 
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
@@ -140,7 +141,7 @@ public class ExtensionsPage implements PartPresenter
    @Override
    public String getTitleToolTip()
    {
-      return "This page helps you to manage extensions.";
+      return "This view displays the list of extensions";
    }
 
    /**
@@ -149,8 +150,6 @@ public class ExtensionsPage implements PartPresenter
    @Override
    public void addPropertyListener(PropertyListener listener)
    {
-      // TODO Auto-generated method stub
-
    }
 
    /**
@@ -159,8 +158,6 @@ public class ExtensionsPage implements PartPresenter
    @Override
    public void removePropertyListener(PropertyListener listener)
    {
-      // TODO Auto-generated method stub
-
    }
 
 }

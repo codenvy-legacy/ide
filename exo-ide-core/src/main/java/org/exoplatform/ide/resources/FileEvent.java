@@ -1,4 +1,4 @@
-package org.exoplatform.ide.client.event;
+package org.exoplatform.ide.resources;
 
 import com.google.gwt.event.shared.GwtEvent;
 

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.client.welcome;
+package org.exoplatform.ide.welcome;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Element;
@@ -22,30 +22,32 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
-import org.exoplatform.ide.client.PageResources;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 
 /**
  * Simple Welcome Page
+ * TODO : reimplement MVP 
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class WelcomePage extends AbstractPartPresenter
+@Singleton
+public class WelcomePartPresenter extends AbstractPartPresenter
 {
 
-   private static WelcomePageUiBinder uiBinder = GWT.create(WelcomePageUiBinder.class);
+   private static WelcomePartPresenterUiBinder uiBinder = GWT.create(WelcomePartPresenterUiBinder.class);
+
    private Element element;
 
-   private PageResources resources;
-
-   interface WelcomePageUiBinder extends UiBinder<Element, WelcomePage>
+   interface WelcomePartPresenterUiBinder extends UiBinder<Element, WelcomePartPresenter>
    {
    }
 
-   public WelcomePage(PageResources resources)
+   @Inject
+   public WelcomePartPresenter()
    {
-      this.resources = resources;
       element = uiBinder.createAndBindUi(this);
    }
 
@@ -76,7 +78,7 @@ public class WelcomePage extends AbstractPartPresenter
    @Override
    public ImageResource getTitleImage()
    {
-      return resources.welcomePageIcon();
+      return null;
    }
 
    /**

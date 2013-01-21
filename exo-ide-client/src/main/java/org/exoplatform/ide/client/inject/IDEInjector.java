@@ -36,12 +36,8 @@ import org.exoplatform.ide.java.client.inject.JavaGinModule;
 @GinModules({IDEClientModule.class,CoreGinModule.class, JavaGinModule.class})
 public interface IDEInjector extends Ginjector
 {
+   /**
+    * @return the instance of BootstrapController
+    */
    BootstrapController getBootstrapController();
-
-   //   EventBus getEventBus();
-   //
-   //   Provider<MainPagePresenter> getMainPagePresenter();
-   //   AsyncProvider<HomePresenter> getHomePresenter();
-   //   AsyncProvider<ContactPresenter> getContactPresenter();
-   //   AsyncProvider<AboutUsPresenter> getAboutUsPresenter();
 }

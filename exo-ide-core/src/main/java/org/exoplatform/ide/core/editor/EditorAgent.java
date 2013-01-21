@@ -24,8 +24,7 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
-import org.exoplatform.ide.api.ui.part.PartAgent;
-import org.exoplatform.ide.api.ui.part.PartAgent.PartStackType;
+import org.exoplatform.ide.api.ui.workspace.WorkspaceAgent;
 import org.exoplatform.ide.core.event.ActivePartChangedEvent;
 import org.exoplatform.ide.core.event.ActivePartChangedHandler;
 import org.exoplatform.ide.editor.EditorInitException;
@@ -36,6 +35,10 @@ import org.exoplatform.ide.editor.EditorProvider;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
+import org.exoplatform.ide.perspective.PerspectivePresenter.PartStackType;
+import org.exoplatform.ide.resources.FileEvent;
+import org.exoplatform.ide.resources.FileEvent.FileOperation;
+import org.exoplatform.ide.resources.FileEventHandler;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.util.loging.Log;
@@ -68,9 +71,25 @@ public class EditorAgent
       @Override
       public void onActivePartChanged(ActivePartChangedEvent event)
       {
-         if(event.getActivePart() instanceof EditorPartPresenter)
+         if (event.getActivePart() instanceof EditorPartPresenter)
          {
             activeEditor = (EditorPartPresenter)event.getActivePart();
+         }
+      }
+   };
+
+   private final FileEventHandler fileEventHandler = new FileEventHandler()
+   {
+      @Override
+      public void onFileOperation(final FileEvent event)
+      {
+         if (event.getOperationType() == FileOperation.OPEN)
+         {
+            openEditor(event.getFile());
+         }
+         else if (event.getOperationType() == FileOperation.CLOSE)
+         {
+            // close associated editor. OR it can be closed itself TODO
          }
       }
    };
@@ -124,26 +143,37 @@ public class EditorAgent
 
    private ResourceProvider provider;
 
-   private PartAgent partAgent;
+   private final WorkspaceAgent workspace;
 
    private EditorPartPresenter activeEditor;
 
+   private final EventBus eventBus;
+
    @Inject
-   public EditorAgent(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider, PartAgent partAgent)
+   public EditorAgent(EventBus eventBus, EditorRegistry editorRegistry, ResourceProvider provider,
+      final WorkspaceAgent workspace)
    {
       super();
+      this.eventBus = eventBus;
       this.editorRegistry = editorRegistry;
       this.provider = provider;
-      this.partAgent = partAgent;
+      this.workspace = workspace;
       openedEditors = JsonCollections.createStringMap();
+
+      bind();
+   }
+
+   protected void bind()
+   {
       eventBus.addHandler(ActivePartChangedEvent.TYPE, activePartChangedHandler);
+      eventBus.addHandler(FileEvent.TYPE, fileEventHandler);
    }
 
    public void openEditor(final File file)
    {
       if (openedEditors.containsKey(file.getId()))
       {
-         partAgent.setActivePart(openedEditors.get(file.getId()));
+         workspace.setActivePart(openedEditors.get(file.getId()));
       }
       else
       {
@@ -159,7 +189,7 @@ public class EditorAgent
          {
             Log.error(getClass(), e);
          }
-         partAgent.addPart(editor, PartStackType.EDITING);
+         workspace.showPart(editor, PartStackType.EDITING);
          openedEditors.put(file.getId(), editor);
       }
    }

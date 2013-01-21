@@ -19,18 +19,25 @@
 package org.exoplatform.ide.java.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
+
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.wizard.WizardAgent;
+import org.exoplatform.ide.api.ui.workspace.WorkspaceAgent;
 import org.exoplatform.ide.core.editor.EditorRegistry;
+import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.extension.Extension;
 import org.exoplatform.ide.java.client.codeassistant.ContentAssistHistory;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.editor.JavaEditorProvider;
 import org.exoplatform.ide.java.client.internal.codeassist.impl.AssistOptions;
 import org.exoplatform.ide.java.client.internal.compiler.impl.CompilerOptions;
+import org.exoplatform.ide.java.client.perspective.DebugPerspectivePresenter;
+import org.exoplatform.ide.java.client.perspective.JavaPerspectivePresenter;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
 import org.exoplatform.ide.java.client.projectmodel.JavaProjectModelProvider;
 import org.exoplatform.ide.java.client.templates.CodeTemplateContextType;
@@ -53,10 +60,11 @@ import org.exoplatform.ide.java.client.wizard.NewJavaClassPagePresenter;
 import org.exoplatform.ide.java.client.wizard.NewJavaProjectPagePresenter;
 import org.exoplatform.ide.java.client.wizard.NewPackagePagePresenter;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.rest.MimeType;
-import java.util.HashMap;
 
+import java.util.HashMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -66,6 +74,9 @@ import java.util.HashMap;
 @Extension(title = "Java Support : syntax highlighting and autocomplete.", id = "ide.ext.java", version = "2.0.0")
 public class JavaExtension
 {
+   private static final String JAVA_PERSPECTIVE = "Java";
+
+   private static final String JAVA_DEBUG_PERSPECTIVE = "Java Debug";
 
    private static JavaExtension instance;
 
@@ -81,9 +92,11 @@ public class JavaExtension
     *
     */
    @Inject
-   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry, JavaEditorProvider javaEditorProvider,
-                        EventBus eventBus, WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider,
-                        Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider)
+   public JavaExtension(ResourceProvider resourceProvider, EditorRegistry editorRegistry,
+      final WorkspaceAgent workspace, JavaEditorProvider javaEditorProvider, EventBus eventBus,
+      WizardAgent wizardAgent, Provider<NewJavaProjectPagePresenter> wizardProvider, MainMenuAgent mainMenu,
+      Provider<NewPackagePagePresenter> packageProvider, Provider<NewJavaClassPagePresenter> classProvider,
+      Provider<JavaPerspectivePresenter> javaPerspProvider, Provider<DebugPerspectivePresenter> debugPerspProvider)
    {
       this();
       FileType javaFile = new FileType(JavaClientBundle.INSTANCE.java(), MimeType.APPLICATION_JAVA, "java");
@@ -92,10 +105,45 @@ public class JavaExtension
       resourceProvider.registerModelProvider(JavaProject.PRIMARY_NATURE, new JavaProjectModelProvider(eventBus));
       JavaClientBundle.INSTANCE.css().ensureInjected();
       wizardAgent.registerNewProjectWizard("Java Project", "Create new Java Project", JavaProject.PRIMARY_NATURE,
-         JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, JsonCollections.<String>createArray());
+         JavaClientBundle.INSTANCE.newJavaProject(), wizardProvider, JsonCollections.<String> createArray());
 
-      wizardAgent.registerNewResourceWizard("Java", "Package", JavaClientBundle.INSTANCE.packageItem(), packageProvider);
-      wizardAgent.registerNewResourceWizard("Java", "Java Class", JavaClientBundle.INSTANCE.newClassWizz(), classProvider);
+      wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Package", JavaClientBundle.INSTANCE.packageItem(),
+         packageProvider);
+      wizardAgent.registerNewResourceWizard(JAVA_PERSPECTIVE, "Java Class", JavaClientBundle.INSTANCE.newClassWizz(),
+         classProvider);
+
+      // register Perspectives
+      workspace.registerPerspective(JAVA_PERSPECTIVE, null, javaPerspProvider);
+      workspace.registerPerspective(JAVA_DEBUG_PERSPECTIVE, null, debugPerspProvider);
+
+      mainMenu.addMenuItem("Window/Open Java Debug Perspective(demo)", new ExtendedCommand()
+      {
+
+         @Override
+         public Expression inContext()
+         {
+            return null;
+         }
+
+         @Override
+         public Image getIcon()
+         {
+            return null;
+         }
+
+         @Override
+         public void execute()
+         {
+            workspace.openPerspective(JAVA_DEBUG_PERSPECTIVE);
+         }
+
+         @Override
+         public Expression canExecute()
+         {
+            return null;
+         }
+      });
+
    }
 
    /**
@@ -223,7 +271,7 @@ public class JavaExtension
       {
          Preferences preferences = GWT.create(Preferences.class);
          contentAssistHistory =
-            //TODO get user name
+         //TODO get user name
             ContentAssistHistory.load(preferences, Preferences.CODEASSIST_LRU_HISTORY + "todo");
 
          if (contentAssistHistory == null)

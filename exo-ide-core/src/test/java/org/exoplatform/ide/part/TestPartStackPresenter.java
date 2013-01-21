@@ -91,7 +91,7 @@ public class TestPartStackPresenter
    public void shoudNotifyPartChanged()
    {
       PartStackPresenter.PartStackEventHandler handler = mock(PartStackPresenter.PartStackEventHandler.class);
-      stack.setPartStackEventHandler(handler);
+      stack.addPartStackEventHandler(handler);
       when(part.getTitleImage()).thenReturn(null);
 
       stack.addPart(part);
@@ -164,7 +164,7 @@ public class TestPartStackPresenter
       when(part.onClose()).thenReturn(true);
       when(part2.onClose()).thenReturn(true);
       
-      stack.setPartStackEventHandler(handler);
+      stack.addPartStackEventHandler(handler);
       
       reset(handler);
       stack.addPart(part);
