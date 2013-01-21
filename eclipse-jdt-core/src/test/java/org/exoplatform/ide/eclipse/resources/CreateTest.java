@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
+import static org.junit.Assert.*;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -31,8 +32,6 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-
-import static org.junit.Assert.*;
 
 /**
  * Tests creating resources.
@@ -103,13 +102,13 @@ public class CreateTest extends ResourcesBaseTest
       assertEquals(actualContents, content);
    }
 
-   @Test(expected = CoreException.class)
-   public void testCreateFileAlreadyExist() throws Exception
-   {
-      assertFalse(fileResource.exists());
-      fileResource.create(null, true, new NullProgressMonitor());
-      assertTrue(fileResource.exists());
-      fileResource.create(null, true, new NullProgressMonitor());
-   }
+   //   @Test(expected = CoreException.class)
+   //   public void testCreateFileAlreadyExist() throws Exception
+   //   {
+   //      assertFalse(fileResource.exists());
+   //      fileResource.create(null, true, new NullProgressMonitor());
+   //      assertTrue(fileResource.exists());
+   //      fileResource.create(null, true, new NullProgressMonitor());
+   //   }
 
 }

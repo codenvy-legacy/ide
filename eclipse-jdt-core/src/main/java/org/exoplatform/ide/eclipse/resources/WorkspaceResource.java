@@ -83,6 +83,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -1215,10 +1216,15 @@ public class WorkspaceResource implements IWorkspace
       IPath parentDestinationPath = destination.removeLastSegments(1);
       try
       {
-         String destinationParentId = getVfsIdByFullPath(parentDestinationPath);
          String id = getVfsIdByFullPath(resource.getFullPath());
-         Item movedItem = vfs.move(id, destinationParentId, null);
-         vfs.rename(movedItem.getId(), null, destination.segment(destination.segmentCount() - 1), null);
+         //if just rename
+         if (!parentDestinationPath.equals(destination.removeLastSegments(1)))
+         {
+            String destinationParentId = getVfsIdByFullPath(parentDestinationPath);
+            vfs.move(id, destinationParentId, null);
+         }
+         vfs.rename(id, MediaType.valueOf("application/java"), destination.segment(destination.segmentCount() - 1),
+            null);
       }
       catch (ItemNotFoundException e)
       {
@@ -1356,7 +1362,7 @@ public class WorkspaceResource implements IWorkspace
          if (item instanceof Folder)
          {
             ItemList<Item> children = vfs.getChildren(item.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
-            IResource[] childrens = new IResource[children.getNumItems()];
+            IResource[] childrens = new IResource[children.getItems().size()];
             List<Item> items = children.getItems();
             for (int i = 0; i < items.size(); i++)
             {
@@ -1620,7 +1626,7 @@ public class WorkspaceResource implements IWorkspace
       {
          Item rootItem = getVfsItemByFullPath(defaultRoot.getFullPath());
          ItemList<Item> childrens = vfs.getChildren(rootItem.getId(), -1, 0, null, PropertyFilter.ALL_FILTER);
-         IProject[] projects = new IProject[childrens.getItems().size()];
+         List<IProject> projects = new ArrayList<IProject>();
 
          for (int i = 0; i < childrens.getItems().size(); i++)
          {
@@ -1628,10 +1634,10 @@ public class WorkspaceResource implements IWorkspace
             Item item = childrens.getItems().get(i);
             if (item instanceof Project)
             {
-               projects[i] = new ProjectResource(new Path(item.getPath()), this);
+               projects.add(new ProjectResource(new Path(item.getPath()), this));
             }
          }
-         return projects;
+         return projects.toArray(new IProject[projects.size()]);
       }
       catch (VirtualFileSystemException e)
       {

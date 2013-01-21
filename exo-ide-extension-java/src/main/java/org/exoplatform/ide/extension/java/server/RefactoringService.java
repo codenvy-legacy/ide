@@ -98,7 +98,7 @@ public class RefactoringService
 
    @Path("rename")
    public void rename(@QueryParam("vfsid") String vfsid, @QueryParam("projectid") String projectid,
-      @QueryParam("fqn") String fqn, @QueryParam("offset") int offset, @QueryParam("newname") String newname)
+      @QueryParam("fqn") String fqn, @QueryParam("offset") int offset, @QueryParam("newName") String newname)
    {
       WorkspaceResource workspace = getWorkspace(vfsid);
       IJavaProject project = getOrCreateJavaProject(workspace, projectid);
