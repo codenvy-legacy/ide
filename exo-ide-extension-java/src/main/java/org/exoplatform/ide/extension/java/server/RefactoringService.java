@@ -100,7 +100,7 @@ public class RefactoringService
    @Path("rename")
    @POST
    public void rename(@QueryParam("vfsid") String vfsid, @QueryParam("projectid") String projectid,
-      @QueryParam("fqn") String fqn, @QueryParam("offset") int offset, @QueryParam("newName") String newname)
+      @QueryParam("fqn") String fqn, @QueryParam("offset") int offset, @QueryParam("newName") String newname) throws CoreException
    {
       WorkspaceResource workspace = getWorkspace(vfsid);
       IJavaProject project = getOrCreateJavaProject(workspace, projectid);
@@ -149,14 +149,6 @@ public class RefactoringService
                throw new CoreException(status);
             }
          }
-      }
-      catch (JavaModelException e)
-      {
-         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-      }
-      catch (CoreException e)
-      {
-         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
       }
       catch (InterruptedException e)
       {
