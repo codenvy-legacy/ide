@@ -681,36 +681,36 @@ public class IndexManager extends JobManager implements IIndexConstants
     */
    public void indexLibrary(IPath path, IProject requestingProject, URL indexURL)
    {
-      // requestingProject is no longer used to cancel jobs but leave it here just in case
-      IndexLocation indexFile = indexURL != null ? IndexLocation.createIndexLocation(indexURL) : null;
-      if (JavaCore.getJavaCore() == null)
-      {
-         return;
-      }
-      IndexRequest request = null;
-      Object target = JavaModel.getTarget(path, true);
-      if (target instanceof IFile)
-      {
-         request = new AddJarFileToIndex((IFile)target, indexFile, this);
-      }
-      else if (target instanceof File)
-      {
-         request = new AddJarFileToIndex(path, indexFile, this);
-      }
-      else if (target instanceof IContainer)
-      {
-         request = new IndexBinaryFolder((IContainer)target, this);
-      }
-      else
-      {
-         return;
-      }
-
-      // check if the same request is not already in the queue
-      if (!isJobWaiting(request))
-      {
-         request(request);
-      }
+//      // requestingProject is no longer used to cancel jobs but leave it here just in case
+//      IndexLocation indexFile = indexURL != null ? IndexLocation.createIndexLocation(indexURL) : null;
+//      if (JavaCore.getJavaCore() == null)
+//      {
+//         return;
+//      }
+//      IndexRequest request = null;
+//      Object target = JavaModel.getTarget(path, true);
+//      if (target instanceof IFile)
+//      {
+//         request = new AddJarFileToIndex((IFile)target, indexFile, this);
+//      }
+//      else if (target instanceof File)
+//      {
+//         request = new AddJarFileToIndex(path, indexFile, this);
+//      }
+//      else if (target instanceof IContainer)
+//      {
+//         request = new IndexBinaryFolder((IContainer)target, this);
+//      }
+//      else
+//      {
+//         return;
+//      }
+//
+//      // check if the same request is not already in the queue
+//      if (!isJobWaiting(request))
+//      {
+//         request(request);
+//      }
    }
 
    synchronized boolean addIndex(IPath containerPath, IndexLocation indexFile)

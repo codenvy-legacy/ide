@@ -29,6 +29,7 @@ import org.eclipse.core.internal.resources.ProjectInfo;
 import org.eclipse.core.internal.resources.ResourceException;
 import org.eclipse.core.internal.resources.ResourceStatus;
 import org.eclipse.core.internal.resources.RootInfo;
+import org.eclipse.core.internal.resources.Rules;
 import org.eclipse.core.internal.watson.ElementTree;
 import org.eclipse.core.resources.IBuildConfiguration;
 import org.eclipse.core.resources.IContainer;
@@ -52,6 +53,7 @@ import org.eclipse.core.resources.IWorkspaceDescription;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.team.ResourceRuleFactory;
+import org.eclipse.core.resources.team.TeamHook;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -147,6 +149,8 @@ public class WorkspaceResource implements IWorkspace
 
    protected long nextNodeId = 1;
 
+   private TeamHook teamHook = null;
+
    //   private MarkerManager markerManager;
 
    public WorkspaceResource(VirtualFileSystem vfs)
@@ -154,6 +158,7 @@ public class WorkspaceResource implements IWorkspace
       this.vfs = vfs;
       _workManager = new WorkManager(this);
       _workManager.startup(null);
+      _workManager.postWorkspaceStartup();
       notificationManager = new NotificationManager(this);
       notificationManager.startup(null);
       description = new WorkspaceDescription();
@@ -194,6 +199,26 @@ public class WorkspaceResource implements IWorkspace
    public void addLifecycleListener(ILifecycleListener listener)
    {
       lifecycleListeners.addIfAbsent(listener);
+   }
+
+
+   /**
+    * Returns the installed team hook.  Never returns null.
+    */
+   public TeamHook getTeamHook() {
+      if (teamHook == null)
+         initializeTeamHook();
+      return teamHook;
+   }
+
+   private void initializeTeamHook()
+   {
+      // default to use Core's implementation
+      //create anonymous subclass because TeamHook is abstract
+      if (teamHook == null)
+         teamHook = new TeamHook() {
+            // empty
+         };
    }
 
    /* (non-Javadoc)
@@ -479,7 +504,7 @@ public class WorkspaceResource implements IWorkspace
       //requires loading the teamHook extension
       if (ruleFactory == null)
       {
-         ruleFactory = new ResourceRuleFactory();
+         ruleFactory = new Rules(this);
       }
       return ruleFactory;
    }
@@ -653,7 +678,7 @@ public class WorkspaceResource implements IWorkspace
          {
             case IResource.FILE:
                i = vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
-                  MediaType.TEXT_PLAIN_TYPE, contents);
+                  MediaType.valueOf("application/java"), contents);
                break;
             case IResource.FOLDER:
                i = vfs.createFolder(parentId, resource.getName());
@@ -1172,8 +1197,9 @@ public class WorkspaceResource implements IWorkspace
    {
       try
       {
+
          vfs.updateContent(getVfsIdByFullPath(file.getFullPath()), /* TODO use special resolver*/
-            MediaType.TEXT_PLAIN_TYPE, newContent, null);
+            MediaType.valueOf("application/java"), newContent, null);
       }
       catch (ItemNotFoundException e)
       {
@@ -1487,7 +1513,7 @@ public class WorkspaceResource implements IWorkspace
       {
          parentId = getVfsIdByFullPath(resource.getParent().getFullPath());
          vfs.createFile(parentId, resource.getName(), /* TODO use special resolver*/
-            MediaType.TEXT_PLAIN_TYPE, source);
+            MediaType.valueOf("application/java"), source);
       }
       catch (CoreException e)
       {

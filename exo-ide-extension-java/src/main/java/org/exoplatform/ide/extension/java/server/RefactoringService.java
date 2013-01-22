@@ -166,6 +166,19 @@ public class RefactoringService
       {
          e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
       }
+      finally
+      {
+         try
+         {
+            if (project != null)
+            {
+               project.close();
+            }
+         }
+         catch (JavaModelException ignore)
+         {
+         }
+      }
    }
 
    private IJavaProject getOrCreateJavaProject(WorkspaceResource workspace, String projectid)
@@ -186,7 +199,7 @@ public class RefactoringService
             project.open(null);
             JavaModelManager.getIndexManager().deleteIndexFiles();
             JavaModelManager.getIndexManager().indexAll(project.getProject());
-            JavaModelManager.getIndexManager().reset();
+            //            JavaModelManager.getIndexManager().reset();
             //            JavaModelManager.getIndexManager().enable();
             return project;
          }
