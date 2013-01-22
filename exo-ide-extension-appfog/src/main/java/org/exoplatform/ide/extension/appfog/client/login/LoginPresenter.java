@@ -27,35 +27,27 @@ import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.logging.client.ConsoleLogHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.extension.appfog.client.AppfogAsyncRequestCallback;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientService;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.AppfogLocalizationConstant;
-import org.exoplatform.ide.extension.appfog.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
 
 /**
  * Presenter for login view. The view must be pointed in Views.gwt.xml.
@@ -257,21 +249,12 @@ public class LoginPresenter implements LoginHandler, ViewClosedHandler
          AutoBean<SystemInfo> systemInfo = AppfogExtension.AUTO_BEAN_FACTORY.systemInfo();
          AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
          AppfogClientService.getInstance().getSystemInfo(AppfogExtension.DEFAULT_SERVER,
-            new AsyncRequestCallback<SystemInfo>(unmarshaller)
+            new AppfogAsyncRequestCallback<SystemInfo>(unmarshaller, loggedIn, null)
             {
                @Override
                protected void onSuccess(SystemInfo result)
                {
                   display.getEmailField().setValue(result.getUser());
-               }
-
-               /**
-                * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
-                */
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  Dialogs.getInstance().showError(exception.getMessage());
                }
             });
       }

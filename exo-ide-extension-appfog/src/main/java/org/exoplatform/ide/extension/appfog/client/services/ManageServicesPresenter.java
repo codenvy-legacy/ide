@@ -245,7 +245,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
    {
       try
       {
-         AppfogClientService.getInstance().services(null,
+         AppfogClientService.getInstance().services(AppfogExtension.DEFAULT_SERVER,
             new AsyncRequestCallback<AppfogServices>(new AppfogServicesUnmarshaller())
             {
 
@@ -296,7 +296,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
    {
       try
       {
-         AppfogClientService.getInstance().deleteService(null, service.getName(),
+         AppfogClientService.getInstance().deleteService(AppfogExtension.DEFAULT_SERVER, service.getName(),
             new AppfogAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null)
             {
                @Override
@@ -325,7 +325,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
    {
       try
       {
-         AppfogClientService.getInstance().bindService(null, service.getName(), application.getName(), null,
+         AppfogClientService.getInstance().bindService(AppfogExtension.DEFAULT_SERVER, service.getName(), application.getName(), null,
             null, new AppfogAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null)
          {
 
@@ -361,7 +361,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
    {
       try
       {
-         AppfogClientService.getInstance().unbindService(null, service, application.getName(), null, null,
+         AppfogClientService.getInstance().unbindService(AppfogExtension.DEFAULT_SERVER, service, application.getName(), null, null,
             new AppfogAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null)
             {
 
@@ -423,7 +423,7 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
             null,
             null,
             application.getName(),
-            null,
+            AppfogExtension.DEFAULT_SERVER,
             new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller,
                getApplicationInfoLoggedInHandler, null)
             {

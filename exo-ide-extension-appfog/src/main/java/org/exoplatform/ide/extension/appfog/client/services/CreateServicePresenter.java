@@ -125,7 +125,7 @@ public class CreateServicePresenter extends GitPresenter implements CreateServic
    {
       try
       {
-         AppfogClientService.getInstance().services(null,
+         AppfogClientService.getInstance().services(AppfogExtension.DEFAULT_SERVER,
             new AsyncRequestCallback<AppfogServices>(new AppfogServicesUnmarshaller())
             {
 
@@ -198,7 +198,7 @@ public class CreateServicePresenter extends GitPresenter implements CreateServic
          AutoBeanUnmarshaller<AppfogProvisionedService> unmarshaller =
             new AutoBeanUnmarshaller<AppfogProvisionedService>(provisionedService);
 
-         AppfogClientService.getInstance().createService(null, type, name, null, null, null, infraName,
+         AppfogClientService.getInstance().createService(AppfogExtension.DEFAULT_SERVER, type, name, null, null, null, infraName,
             new AppfogAsyncRequestCallback<AppfogProvisionedService>(unmarshaller, createServiceLoggedInHandler, null)
             {
 
