@@ -409,10 +409,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                BuildStatus buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.buildStatus().as();
                buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                buildStatus.setDownloadUrl(url);
-               StringBuilder message = new StringBuilder("\r\nYou can download the build result <a href=\"");
-               message.append(buildStatus.getDownloadUrl());
-               message.append("\">here</a>");
-               showBuildMessage(message.toString());
                IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
             }
 

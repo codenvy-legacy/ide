@@ -58,6 +58,8 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    private static final String ID = "ideDebuggerView";
    
    private static final String IDE_DEBUGGER_VARIABEL_PANEL_ID = "idedebuggervariabelpanelid";
+   
+   private static final String IDE_DEBUGGER_BREAKPOINTS_PANEL_ID = "idedebuggerbreakpointspanelid";
 
    private static DebugWindowUiBinder uiBinder = GWT.create(DebugWindowUiBinder.class);
 
@@ -122,6 +124,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer = new CellList<BreakPoint>(breakpointCell);
       breakpointsContainer.setHeight("100%");
       breakpointsContainer.setWidth("100%");
+      breakpointsContainer.getElement().setId(IDE_DEBUGGER_BREAKPOINTS_PANEL_ID);
 
       buildVariablesTreePanel(Collections.<Variable> emptyList());
       breakPointsPanel.addTab("breakpointstabid", new Image(DebuggerClientBundle.INSTANCE.breakPointsIcon()),
