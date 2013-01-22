@@ -31,7 +31,6 @@ import org.exoplatform.ide.resources.FileEvent;
 import org.exoplatform.ide.resources.FileEvent.FileOperation;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Resource;
-import org.exoplatform.ide.util.loging.Log;
 
 /**
  * Project Explorer display Project Model in a dedicated Part (view).
@@ -56,7 +55,6 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
    {
       this.view = view;
       this.eventBus = eventBus;
-      Log.info(ProjectExplorerPartPresenter.class, "NEW PROJ PRESENTER CREATED");
       bind();
    }
 

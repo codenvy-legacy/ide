@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,44 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.perspective;
+package org.exoplatform.ide.core.event;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
-import org.exoplatform.ide.view.View;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Workspace view interface. 
+ * Handles Changed Toggle Item State Event.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
+public interface ChangeToggleItemStateHandler extends EventHandler
 {
    /**
-    * Returns central panel.
+    * Toggle item state have changed.
     * 
-    * @return
+    * @param event
     */
-   AcceptsOneWidget getPerspectivePanel();
-
-   /**
-    * Returns menu panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getMenuPanel();
-
-   /**
-    * Returns toolbar panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getToolbarPanel();
-
-   /**
-    * Needs for delegate some function into Workspace view.
-    */
-   public interface ActionDelegate
-   {
-   }
+   public void onStateChanged(ChangeToggleItemStateEvent event);
 }

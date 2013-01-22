@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.core;
 
-import com.google.inject.Singleton;
-
 import com.google.inject.Inject;
 import com.google.inject.Provider;
+import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
+import org.exoplatform.ide.api.ui.toolbar.ToolbarAgent;
 import org.exoplatform.ide.command.OpenProjectCommand;
 import org.exoplatform.ide.command.SaveAllCommand;
 import org.exoplatform.ide.command.SaveCommand;
@@ -32,9 +33,12 @@ import org.exoplatform.ide.command.ShowNewFolderWizardCommand;
 import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.command.ShowNewResourceWizardCommand;
 import org.exoplatform.ide.command.ShowPreferenceCommand;
+import org.exoplatform.ide.command.ToggleItemCommand;
+import org.exoplatform.ide.core.expressions.ExpressionManager;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.keybinding.KeyBuilder;
 import org.exoplatform.ide.menu.MainMenuPresenter;
+import org.exoplatform.ide.toolbar.ToggleItemExpression;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.newfile.NewTextFilePagePresenter;
 import org.exoplatform.ide.wizard.newfolder.NewFolderPagePresenter;
@@ -44,25 +48,26 @@ import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPagePresent
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
  *
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
  */
 @Singleton
 public class StandardComponentInitializer
 {
 
    /**
-    *
+    * Instantiates {@link StandardComponentInitializer} an creates standard content
     */
    @Inject
-   public StandardComponentInitializer(MainMenuPresenter menu, SaveCommand saveCommand,
-      SaveAllCommand saveAllCommand, ShowNewResourceWizardCommand newFileCommand,
-      ShowNewFolderWizardCommand newFolderCommand, ShowNewProjectWizardCommand newProjectCommand,
-      WizardAgentImpl wizard, Provider<NewGenericProjectPagePresenter> genericProjectProvider,
+   public StandardComponentInitializer(MainMenuPresenter menu, SaveCommand saveCommand, SaveAllCommand saveAllCommand,
+      ShowNewResourceWizardCommand newFileCommand, ShowNewFolderWizardCommand newFolderCommand,
+      ShowNewProjectWizardCommand newProjectCommand, WizardAgentImpl wizard,
+      Provider<NewGenericProjectPagePresenter> genericProjectProvider,
       Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
-      Resources resources, KeyBindingAgent keyBinding,  ShowPreferenceCommand showPreferencesCommand, OpenProjectCommand openProjectCommand)
+      Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,
+      OpenProjectCommand openProjectCommand, ToolbarAgent toolbar, ExpressionManager expressionManager,
+      EventBus eventBus)
    {
-      wizard.registerNewProjectWizard("Generic Project", "Create generic project", "",
-         resources.genericProjectIcon(), genericProjectProvider, JsonCollections.<String> createArray());
+      wizard.registerNewProjectWizard("Generic Project", "Create generic project", "", resources.genericProjectIcon(),
+         genericProjectProvider, JsonCollections.<String> createArray());
       // TODO change icon
       wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
       wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
@@ -72,7 +77,7 @@ public class StandardComponentInitializer
       menu.addMenuItem("File/New/Other", newFileCommand);
 
       menu.addMenuItem("File/Open Project", openProjectCommand);
-      
+
       menu.addMenuItem("File/Save", saveCommand);
       menu.addMenuItem("File/Save All", saveAllCommand);
 
@@ -80,5 +85,24 @@ public class StandardComponentInitializer
 
       keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
       keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
+
+      // add items to Toolbar
+      toolbar.addDropDownItem("General/New", resources.file(), "Create new resources");
+      toolbar.addItem("General/New/Project", newProjectCommand);
+      toolbar.addItem("General/New/File", newFileCommand);
+      toolbar.addItem("General/New/Folder", newFolderCommand);
+
+      toolbar.addItem("General/Save", saveCommand);
+      toolbar.addItem("General/Save All", saveAllCommand);
+
+      // TODO test toggle items
+
+      // TODO test toggle item
+      ToggleItemExpression toggleState = new ToggleItemExpression(expressionManager, true);
+      ToggleItemCommand command = new ToggleItemCommand(resources, eventBus, null, null, toggleState);
+      menu.addMenuItem("File/Checked item", command);
+      toolbar.addToggleItem("Test/Checked item", command);
+      toolbar.addToggleItem("Test/New/Checked item", command);
+
    }
 }

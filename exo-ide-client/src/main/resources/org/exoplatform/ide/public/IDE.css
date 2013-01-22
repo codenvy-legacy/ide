@@ -14,6 +14,10 @@ body {
 	cursor: row-resize;
 }
 
+.gwt-MenuBar .gwt-MenuItem-disabled img{
+	opacity: 0.33;
+}
+
 .gwt-DialogBox {
 	border: solid 1px #BBB;
 	box-shadow : 0 0 30px -5px;

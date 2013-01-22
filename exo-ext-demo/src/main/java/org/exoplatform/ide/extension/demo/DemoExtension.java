@@ -16,8 +16,7 @@
  */
 package org.exoplatform.ide.extension.demo;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
@@ -57,28 +56,45 @@ public class DemoExtension
       Provider<ExtendedPerspectivePresenter> extendedPerspectivePresenter, MainMenuPresenter menu,
       EditorAgent editorAgent, final ResourceProvider resourceProvider, final ExpressionManager expressionManager,
       OutlinePartPrenter outlinePresenter, EditorActiveExpression editorActiveExpression,
-      final ProjectOpenedExpression projectOpenedExpression, 
-      CreateDemoCommand createDemoCommand)
+      final ProjectOpenedExpression projectOpenedExpression, CreateDemoCommand createDemoCommand)
    {
       workspace.registerPerspective(EXTENDED_PERSPECTIVE, null, extendedPerspectivePresenter);
 
-      menuAgent.addMenuItem("Window/Open Extended Perspective Demo", new Command()
+      menuAgent.addMenuItem("Window/Open extended perspective(demo)", new ExtendedCommand()
       {
+         @Override
+         public Expression inContext()
+         {
+            return null;
+         }
+
+         @Override
+         public String getToolTip()
+         {
+            return null;
+         }
+
+         @Override
+         public ImageResource getIcon()
+         {
+            return null;
+         }
+
          @Override
          public void execute()
          {
             workspace.openPerspective(EXTENDED_PERSPECTIVE);
          }
 
+         @Override
+         public Expression canExecute()
+         {
+            return null;
+         }
       });
 
       // CREATE DYNAMIC MENU CONTENT
       menu.addMenuItem("File/Create Demo Content", createDemoCommand);
-
-      menu.addMenuItem("Edit", null, null, editorActiveExpression, null);
-      menu.addMenuItem("Edit/Some Editor Operation", null, null, editorActiveExpression, null);
-
-      menu.addMenuItem("Project", null, null, projectOpenedExpression, null);
 
       menu.addMenuItem("Window/Open generic perspective(demo)", new ExtendedCommand()
       {
@@ -90,7 +106,7 @@ public class DemoExtension
          }
 
          @Override
-         public Image getIcon()
+         public ImageResource getIcon()
          {
             return null;
          }
@@ -106,6 +122,12 @@ public class DemoExtension
          {
             return null;
          }
+
+         @Override
+         public String getToolTip()
+         {
+            return null;
+         }
       });
 
       menu.addMenuItem("Project/Some Project Operation", new ExtendedCommand()
@@ -118,7 +140,7 @@ public class DemoExtension
          }
 
          @Override
-         public Image getIcon()
+         public ImageResource getIcon()
          {
             return null;
          }
@@ -131,6 +153,12 @@ public class DemoExtension
 
          @Override
          public Expression canExecute()
+         {
+            return null;
+         }
+
+         @Override
+         public String getToolTip()
          {
             return null;
          }

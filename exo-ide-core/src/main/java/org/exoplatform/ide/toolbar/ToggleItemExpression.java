@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,44 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.perspective;
+package org.exoplatform.ide.toolbar;
 
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
-import org.exoplatform.ide.view.View;
+import org.exoplatform.ide.core.expressions.AbstractExpression;
+import org.exoplatform.ide.core.expressions.ExpressionManager;
+import org.exoplatform.ide.core.expressions.ToggleStateExpression;
 
 /**
- * Workspace view interface. 
+ * The implementation of {@link ToggleStateExpression}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
+public class ToggleItemExpression extends AbstractExpression implements ToggleStateExpression
 {
    /**
-    * Returns central panel.
+    * Create expression.
     * 
-    * @return
+    * @param expressionManager
+    * @param value
     */
-   AcceptsOneWidget getPerspectivePanel();
-
-   /**
-    * Returns menu panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getMenuPanel();
-
-   /**
-    * Returns toolbar panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getToolbarPanel();
-
-   /**
-    * Needs for delegate some function into Workspace view.
-    */
-   public interface ActionDelegate
+   public ToggleItemExpression(ExpressionManager expressionManager, boolean value)
    {
+      super(expressionManager, value);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean onStateChanged()
+   {
+      value = !value;
+      return value;
    }
 }

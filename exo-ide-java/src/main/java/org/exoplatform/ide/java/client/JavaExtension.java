@@ -19,7 +19,7 @@
 package org.exoplatform.ide.java.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -126,7 +126,7 @@ public class JavaExtension
          }
 
          @Override
-         public Image getIcon()
+         public ImageResource getIcon()
          {
             return null;
          }
@@ -140,6 +140,13 @@ public class JavaExtension
          @Override
          public Expression canExecute()
          {
+            return null;
+         }
+
+         @Override
+         public String getToolTip()
+         {
+            // TODO Auto-generated method stub
             return null;
          }
       });

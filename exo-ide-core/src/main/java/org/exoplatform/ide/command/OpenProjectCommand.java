@@ -19,12 +19,12 @@ package org.exoplatform.ide.command;
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.inject.Inject;
@@ -201,7 +201,7 @@ public class OpenProjectCommand implements ExtendedCommand
    * {@inheritDoc}
    */
    @Override
-   public Image getIcon()
+   public ImageResource getIcon()
    {
       return null;
    }
@@ -220,6 +220,15 @@ public class OpenProjectCommand implements ExtendedCommand
    */
    @Override
    public Expression canExecute()
+   {
+      return null;
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public String getToolTip()
    {
       return null;
    }

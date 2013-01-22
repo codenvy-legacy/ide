@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -19,38 +19,47 @@
 package org.exoplatform.ide.command;
 
 import com.google.gwt.resources.client.ImageResource;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.Resources;
-import org.exoplatform.ide.core.editor.EditorAgent;
+import org.exoplatform.ide.core.event.ChangeToggleItemStateEvent;
 import org.exoplatform.ide.core.expressions.Expression;
-import org.exoplatform.ide.menu.ExtendedCommand;
+import org.exoplatform.ide.toolbar.ToggleCommand;
+import org.exoplatform.ide.toolbar.ToggleItemExpression;
 
 /**
- * Command for "Save" action
- *
- * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
- * @version $Id:
+ * Command to change toggle item.
+ * 
+ * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@Singleton
-public class SaveCommand implements ExtendedCommand
+public class ToggleItemCommand implements ToggleCommand
 {
+   private final Expression inContext;
 
-   private final EditorDirtyExpression expression;
+   private final Expression canExecute;
 
-   private EditorAgent editorAgent;
+   private final ToggleItemExpression stateExpression;
+
+   private final EventBus eventBus;
 
    private final Resources resources;
 
    /**
-    *
+    * Create command.
+    * 
+    * @param resources
+    * @param eventBus
+    * @param inContext
+    * @param canExecute
+    * @param stateExpression
     */
-   @Inject
-   public SaveCommand(EditorAgent editorAgent, EditorDirtyExpression expression, Resources resources)
+   public ToggleItemCommand(Resources resources, EventBus eventBus, Expression inContext, Expression canExecute,
+      ToggleItemExpression stateExpression)
    {
-      this.editorAgent = editorAgent;
-      this.expression = expression;
+      this.eventBus = eventBus;
+      this.inContext = inContext;
+      this.canExecute = canExecute;
+      this.stateExpression = stateExpression;
       this.resources = resources;
    }
 
@@ -60,7 +69,8 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public void execute()
    {
-      editorAgent.getActiveEditor().doSave();
+      stateExpression.onStateChanged();
+      eventBus.fireEvent(new ChangeToggleItemStateEvent(stateExpression.getId()));
    }
 
    /**
@@ -69,8 +79,7 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public ImageResource getIcon()
    {
-      // TODO need correct image
-      return resources.file();
+      return resources.folderOpen();
    }
 
    /**
@@ -79,7 +88,7 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public Expression inContext()
    {
-      return null;
+      return inContext;
    }
 
    /**
@@ -88,7 +97,16 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public Expression canExecute()
    {
-      return expression;
+      return canExecute;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ToggleItemExpression getState()
+   {
+      return stateExpression;
    }
 
    /**
@@ -97,6 +115,6 @@ public class SaveCommand implements ExtendedCommand
    @Override
    public String getToolTip()
    {
-      return "Save changes for current file";
+      return "ToolTip";
    }
 }

@@ -40,6 +40,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
@@ -54,8 +55,10 @@ public class TestNewGenericProjectPagePresenter
 {
    private static final boolean CAN_FINISH = true;
 
+   @Mock
    private NewGenericProjectPageView view;
 
+   @Mock
    private ResourceProvider resourceProvider;
 
    private NewGenericProjectPagePresenter presenter;
@@ -101,9 +104,6 @@ public class TestNewGenericProjectPagePresenter
    @SuppressWarnings("unchecked")
    private void createPresenter(final JsonArray<String> projects)
    {
-      view = mock(NewGenericProjectPageView.class);
-      resourceProvider = mock(ResourceProvider.class);
-
       // create answer in response for calls get all available projects.
       doAnswer(new Answer<JsonArray<String>>()
       {
@@ -186,8 +186,6 @@ public class TestNewGenericProjectPagePresenter
       String projectName = "Test";
 
       // create presenter
-      view = mock(NewGenericProjectPageView.class);
-      resourceProvider = mock(ResourceProvider.class);
       presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
 
       when(view.getProjectName()).thenReturn(projectName);
@@ -204,8 +202,6 @@ public class TestNewGenericProjectPagePresenter
    public void shouldBeCallCreateProject()
    {
       // create presenter
-      view = mock(NewGenericProjectPageView.class);
-      resourceProvider = mock(ResourceProvider.class);
       presenter = new NewGenericProjectPagePresenter(mock(ImageResource.class), view, resourceProvider);
 
       presenter.doFinish();

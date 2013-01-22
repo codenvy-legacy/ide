@@ -18,9 +18,10 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.core.expressions.Expression;
@@ -71,10 +72,9 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
-   public Image getIcon()
+   public ImageResource getIcon()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return resources.folder();
    }
 
    /**
@@ -82,7 +82,6 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
     */
    public Expression inContext()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -92,5 +91,14 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    public Expression canExecute()
    {
       return expression;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return "Create new folder";
    }
 }

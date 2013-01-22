@@ -17,8 +17,8 @@
 package org.exoplatform.ide.extension.demo;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -279,7 +279,7 @@ public class CreateDemoCommand implements ExtendedCommand
    * {@inheritDoc}
    */
    @Override
-   public Image getIcon()
+   public ImageResource getIcon()
    {
       return null;
    }
@@ -300,5 +300,14 @@ public class CreateDemoCommand implements ExtendedCommand
    public Expression canExecute()
    {
       return noProjectOpenedExpression;
+   }
+
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return null;
    }
 }

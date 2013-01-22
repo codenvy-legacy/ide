@@ -34,6 +34,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -44,14 +45,16 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class TestNewProjectPagePresenter
 {
-
+   @Mock
    private WizardAgentImpl wizardAgent;
 
+   @Mock
    private NewProjectPageView view;
 
-   private NewProjectPagePresenter presenter;
-
+   @Mock
    private WizardPagePresenter newPage;
+
+   private NewProjectPagePresenter presenter;
 
    @Before
    public void disarm()
@@ -66,15 +69,12 @@ public class TestNewProjectPagePresenter
    @SuppressWarnings("unchecked")
    private void setUp()
    {
-      newPage = mock(WizardPagePresenter.class);
       Provider<WizardPagePresenter> nextPage = mock(Provider.class);
       when(nextPage.get()).thenReturn(newPage);
 
       JsonArray<NewProjectWizardData> wizards = JsonCollections.createArray();
       wizards.add(new NewProjectWizardData("Title", "Description", "PrimaryType", null, nextPage, null));
 
-      view = mock(NewProjectPageView.class);
-      wizardAgent = mock(WizardAgentImpl.class);
       when(wizardAgent.getNewProjectWizards()).thenReturn(wizards);
 
       presenter = new NewProjectPagePresenter(wizardAgent, null, view);

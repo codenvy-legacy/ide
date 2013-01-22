@@ -18,11 +18,13 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.gwt.user.client.Command;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.Resources;
+import org.exoplatform.ide.core.expressions.Expression;
+import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.preferences.PreferencesAgentImpl;
 import org.exoplatform.ide.preferences.PreferencesPresenter;
 
@@ -32,7 +34,7 @@ import org.exoplatform.ide.preferences.PreferencesPresenter;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ShowPreferenceCommand implements Command
+public class ShowPreferenceCommand implements ExtendedCommand
 {
    private final Resources resources;
 
@@ -59,5 +61,42 @@ public class ShowPreferenceCommand implements Command
    {
       PreferencesPresenter dialog = new PreferencesPresenter(resources, agent);
       dialog.showPreferences();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ImageResource getIcon()
+   {
+      // TODO icon is incorrect
+      return resources.file();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getToolTip()
+   {
+      return "Preferences";
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Expression inContext()
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Expression canExecute()
+   {
+      return null;
    }
 }

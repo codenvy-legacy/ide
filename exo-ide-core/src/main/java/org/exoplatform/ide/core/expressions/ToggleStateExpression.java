@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,44 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.perspective;
-
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-
-import org.exoplatform.ide.view.View;
+package org.exoplatform.ide.core.expressions;
 
 /**
- * Workspace view interface. 
+ * The expression provides change toggle item state. 
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public interface WorkspaceView extends View<WorkspaceView.ActionDelegate>
+public interface ToggleStateExpression extends Expression
 {
    /**
-    * Returns central panel.
+    * Execute different operation when the item state is changing.
     * 
-    * @return
+    * @return the item state
     */
-   AcceptsOneWidget getPerspectivePanel();
-
-   /**
-    * Returns menu panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getMenuPanel();
-
-   /**
-    * Returns toolbar panel.
-    * 
-    * @return
-    */
-   AcceptsOneWidget getToolbarPanel();
-
-   /**
-    * Needs for delegate some function into Workspace view.
-    */
-   public interface ActionDelegate
-   {
-   }
+   public boolean onStateChanged();
 }

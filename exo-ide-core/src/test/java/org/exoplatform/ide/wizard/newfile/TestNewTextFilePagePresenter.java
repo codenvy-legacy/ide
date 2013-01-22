@@ -40,6 +40,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -54,11 +55,13 @@ public class TestNewTextFilePagePresenter
 
    private static final boolean IS_FILE = true;
 
-   private NewTextFilePagePresenter presenter;
-
+   @Mock
    private NewGenericFileView view;
 
+   @Mock
    private Project project;
+
+   private NewTextFilePagePresenter presenter;
 
    @Before
    public void disarm()
@@ -75,10 +78,8 @@ public class TestNewTextFilePagePresenter
    private void setUp()
    {
       ResourceProvider resourceProvider = mock(ResourceProvider.class);
-      project = mock(Project.class);
       when(resourceProvider.getActiveProject()).thenReturn(project);
 
-      view = mock(NewGenericFileView.class);
       presenter = new NewTextFilePagePresenter(null, view, resourceProvider);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
    }

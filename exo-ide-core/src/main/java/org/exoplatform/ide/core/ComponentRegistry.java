@@ -63,7 +63,11 @@ public class ComponentRegistry
             {
                Log.info(ComponentRegistry.class, "All services initialized. Starting.");
                //initialize standard components
+               try {
                componentInitializer.get();
+               } catch (Throwable e) {
+                  Log.error(ComponentRegistry.class, e);
+               }
                callback.onSuccess(null);
             }
          }

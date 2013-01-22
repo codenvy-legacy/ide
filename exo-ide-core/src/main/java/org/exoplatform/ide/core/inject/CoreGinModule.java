@@ -29,6 +29,7 @@ import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.preferences.PreferencesAgent;
+import org.exoplatform.ide.api.ui.toolbar.ToolbarAgent;
 import org.exoplatform.ide.api.ui.wizard.WizardAgent;
 import org.exoplatform.ide.api.ui.workspace.WorkspaceAgent;
 import org.exoplatform.ide.core.StandardComponentInitializer;
@@ -63,6 +64,9 @@ import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
+import org.exoplatform.ide.toolbar.ToolbarPresenter;
+import org.exoplatform.ide.toolbar.ToolbarView;
+import org.exoplatform.ide.toolbar.ToolbarViewImpl;
 import org.exoplatform.ide.util.executor.UserActivityManager;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 
@@ -129,6 +133,10 @@ public class CoreGinModule extends AbstractGinModule
       bind(MainMenuPresenter.class).in(Singleton.class);
       bind(MainMenuView.class).to(MainMenuViewImpl.class).in(Singleton.class);
       bind(MainMenuAgent.class).to(MainMenuPresenter.class).in(Singleton.class);
+
+      // toolbar
+      bind(ToolbarView.class).to(ToolbarViewImpl.class).in(Singleton.class);
+      bind(ToolbarAgent.class).to(ToolbarPresenter.class).in(Singleton.class);
 
       // part agent
       bind(PartStackView.class).to(PartStackViewImpl.class);

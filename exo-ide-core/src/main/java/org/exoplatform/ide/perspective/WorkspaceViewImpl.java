@@ -43,8 +43,11 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    SimplePanel perspectivePanel;
 
    @UiField
-   SimplePanel topPanel;
+   SimplePanel menuPanel;
 
+   @UiField
+   SimplePanel toolbarPanel;
+   
    /**
     * Create view.
     */
@@ -60,7 +63,7 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    @Override
    public AcceptsOneWidget getMenuPanel()
    {
-      return topPanel;
+      return menuPanel;
    }
 
    /**
@@ -80,5 +83,14 @@ public class WorkspaceViewImpl extends Composite implements WorkspaceView
    public AcceptsOneWidget getPerspectivePanel()
    {
       return perspectivePanel;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public AcceptsOneWidget getToolbarPanel()
+   {
+      return toolbarPanel;
    }
 }

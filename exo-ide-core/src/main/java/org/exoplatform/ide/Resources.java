@@ -17,6 +17,7 @@ package org.exoplatform.ide;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
 
+import org.exoplatform.ide.menu.MenuResources;
 import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.texteditor.EditableContentArea;
 import org.exoplatform.ide.texteditor.TextEditorViewImpl;
@@ -42,7 +43,7 @@ import org.exoplatform.ide.wizard.newresource.NewResourceWizardResources;
  */
 public interface Resources extends Tree.Resources, FileTreeNodeRenderer.Resources, TextEditorViewImpl.Resources,
    LineNumberRenderer.Resources, EditableContentArea.Resources, PartStackUIResources, SimpleList.Resources,
-   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources
+   NewProjectWizardResource, NewGenericProjectWizardResource, NewResourceWizardResources, MenuResources
 {
 
    /**

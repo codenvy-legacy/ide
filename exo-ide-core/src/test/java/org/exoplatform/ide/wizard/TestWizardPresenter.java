@@ -29,6 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -47,11 +48,13 @@ public class TestWizardPresenter
 
    private static final boolean CAN_FINISH = true;
 
+   @Mock
    private WizardPagePresenter currentPage;
 
-   private WizardPresenter presenter;
-
+   @Mock
    private WizardView view;
+
+   private WizardPresenter presenter;
 
    @Before
    public void disarm()
@@ -67,9 +70,6 @@ public class TestWizardPresenter
     */
    private void setUp()
    {
-      currentPage = mock(WizardPagePresenter.class);
-      view = mock(WizardView.class);
-
       presenter = new WizardPresenter(currentPage, view);
    }
 

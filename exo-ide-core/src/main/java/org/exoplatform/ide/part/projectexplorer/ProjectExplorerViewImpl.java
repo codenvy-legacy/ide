@@ -25,7 +25,6 @@ import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.tree.Tree;
 import org.exoplatform.ide.tree.TreeNodeElement;
-import org.exoplatform.ide.util.loging.Log;
 
 /**
  * Tree-based Project Explorer view.
@@ -48,7 +47,6 @@ public class ProjectExplorerViewImpl implements ProjectExplorerView
    public ProjectExplorerViewImpl(Resources resources)
    {
       tree = Tree.create(resources);
-      Log.info(ProjectExplorerViewImpl.class, "NEW PROJ VIEW CREATED");
    }
 
    /**

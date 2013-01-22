@@ -29,6 +29,7 @@ import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.perspective.PerspectivePresenter.PartStackType;
 import org.exoplatform.ide.presenter.Presenter;
+import org.exoplatform.ide.toolbar.ToolbarPresenter;
 
 /**
  * Root Presenter that implements Workspace logic. Descendant Presenters are injected via
@@ -52,6 +53,8 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
    private JsonStringMap<PerspectiveDescriptor> pespectives = JsonCollections.createStringMap();
 
+   private final ToolbarPresenter toolbarPresenter;
+
    /**
     * Instantiates Presenter
     * 
@@ -60,11 +63,12 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
     * @param genericPerspectiveProvider
     */
    @Inject
-   protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu,
+   protected WorkspacePresenter(WorkspaceView view, MainMenuPresenter menu, ToolbarPresenter toolbarPresenter,
       Provider<GenericPerspectivePresenter> genericPerspectiveProvider)
    {
       super();
       this.view = view;
+      this.toolbarPresenter = toolbarPresenter;
       this.view.setDelegate(this);
       this.menu = menu;
 
@@ -81,6 +85,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
    {
       // Expose Project Explorer into Tools Panel
       menu.go(view.getMenuPanel());
+      toolbarPresenter.go(view.getToolbarPanel());
       activePerspective.go(view.getPerspectivePanel());
       container.setWidget(view);
    }

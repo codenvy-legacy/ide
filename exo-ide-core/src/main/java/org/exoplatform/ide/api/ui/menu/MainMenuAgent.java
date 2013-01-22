@@ -16,11 +16,9 @@
  */
 package org.exoplatform.ide.api.ui.menu;
 
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.ui.Image;
-import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.extension.SDK;
 import org.exoplatform.ide.menu.ExtendedCommand;
+import org.exoplatform.ide.toolbar.ToggleCommand;
 
 /**
  * Public interface of the Main Menu is represented by {@link MainMenuAgent}. It allows 3rd party code
@@ -31,23 +29,12 @@ import org.exoplatform.ide.menu.ExtendedCommand;
 @SDK(title = "ide.api.ui.menu")
 public interface MainMenuAgent
 {
-
-   /**
-    * Adds new item to the Main Menu, that invokes given command on click.
-    * This item will always me visible (if parent menu is visible also)
-    * and always remains enabled. Use this with attention.
-    *
-    * @param path
-    * @param command
-    */
-   public void addMenuItem(String path, Command command);
-
    /**
     * Adds new item to the Main Menu, that invokes given command on click.
     * ExtendedCommand interface allows you to add Icon and define Expression
-    * that controls visible and enabled states of the item. This is the
-    * recommended way of adding the items. It is safe to provide Null as an
-    * expression. This is thought to be always visible and enabled.
+    * that controls visible and enabled states of the item. It is safe to
+    * provide Null as an expression. This is thought to be always visible
+    * and enabled.
     *
     * @param path
     * @param command
@@ -55,15 +42,14 @@ public interface MainMenuAgent
    public void addMenuItem(String path, ExtendedCommand command);
 
    /**
-    * Adds new item to the Main Menu, that invokes given command on click.
-    * Provided Icon and Expressions are used to maintain the Item. Please
-    * use ExtendedCommand instead of defining expressions by hand.
-    *
+    * Adds new toggle item to the Main Menu, that invokes given command on click.
+    * ToggleCommand interface allows to add Icon and define Expression
+    * that controls visible, enabled and selected states of the item. It is safe to provide
+    * Null as an expression. This is thought to be always visible and enabled. Selected expression
+    * don't have to be Null.
+    * 
     * @param path
     * @param command
-    * @param visibleWhen Value of this Core Expression is used to set Visible state of the menu item
-    * @param enabledWhen Value of this Core Expression is used to set Enabled state of the menu item
     */
-   public void addMenuItem(String path, Image icon, Command command, Expression visibleWhen, Expression enabledWhen);
-
+   public void addMenuItem(String path, ToggleCommand command);
 }

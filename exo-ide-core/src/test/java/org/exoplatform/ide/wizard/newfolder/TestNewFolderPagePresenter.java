@@ -39,6 +39,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
@@ -53,11 +54,13 @@ public class TestNewFolderPagePresenter
 
    private static final boolean IS_FOLDER = true;
 
-   private NewFolderPagePresenter presenter;
-
+   @Mock
    private Project project;
 
+   @Mock
    private NewFolderPageView view;
+
+   private NewFolderPagePresenter presenter;
 
    @Before
    public void disarm()
@@ -74,10 +77,7 @@ public class TestNewFolderPagePresenter
    private void setUp()
    {
       ResourceProvider resourceProvider = mock(ResourceProvider.class);
-      project = mock(Project.class);
       when(resourceProvider.getActiveProject()).thenReturn(project);
-
-      view = mock(NewFolderPageView.class);
 
       presenter = new NewFolderPagePresenter("Caption", null, view, resourceProvider);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
