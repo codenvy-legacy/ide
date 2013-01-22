@@ -254,7 +254,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
       new CreatePackagePresenter(IDE.eventBus(), VirtualFileSystem.getInstance());
       new CreateJavaClassPresenter(IDE.eventBus(),VirtualFileSystem.getInstance());
-      new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader());
+      new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader(), IDE.messageBus());
    }
 
    private void loadWellKnownClasses(String[] fqns)

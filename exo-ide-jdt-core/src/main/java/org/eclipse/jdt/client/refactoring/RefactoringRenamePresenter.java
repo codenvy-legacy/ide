@@ -22,16 +22,18 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyPressEvent;
+import com.google.gwt.event.dom.client.KeyPressHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
 
 import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
 import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.eclipse.jdt.client.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
-import org.eclipse.jdt.client.core.util.TypeFinder;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -43,8 +45,11 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
@@ -56,6 +61,8 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
@@ -66,7 +73,6 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -78,7 +84,7 @@ import java.util.Map;
  */
 public class RefactoringRenamePresenter implements RefactoringRenameHandler, ViewClosedHandler, VfsChangedHandler,
    ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler, EditorActiveFileChangedHandler,
-   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler
+   UpdateOutlineHandler, EditorFileOpenedHandler, EditorFileClosedHandler, EditorFileContentChangedHandler
 {
 
    public interface Display extends IsView
@@ -86,6 +92,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       TextFieldItem getNewNameField();
 
       HasClickHandlers getRenameButton();
+
+      void setEnableStateRenameButton(boolean enabled);
 
       HasClickHandlers getCancelButton();
 
@@ -121,11 +129,9 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private ProjectModel openedProject;
 
-   // org.osgi.foundation-1.2.0.jar (from dependencies) has the same java.util.Map class which is not generic
-   private Map openedFiles = new HashMap();
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
-   // org.osgi.foundation-1.2.0.jar (from dependencies) has the same java.util.Map class which is not generic
-   private Map openedEditors = new HashMap();
+   private Map<String, Editor> openedEditors = new HashMap<String, Editor>();
 
    /**
     * Current editor.
@@ -148,10 +154,37 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       IDE.addHandler(UpdateOutlineEvent.TYPE, this);
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
+      IDE.addHandler(EditorFileContentChangedEvent.TYPE, this);
    }
 
    public void bindDisplay()
    {
+      display.setEnableStateRenameButton(false);
+
+      display.getNewNameField().addValueChangeHandler(new ValueChangeHandler<String>()
+      {
+
+         @Override
+         public void onValueChange(ValueChangeEvent<String> event)
+         {
+            display.setEnableStateRenameButton(event.getValue() != null && !event.getValue().isEmpty());
+         }
+      });
+
+      display.getNewNameField().addKeyPressHandler(new KeyPressHandler()
+      {
+
+         @Override
+         public void onKeyPress(KeyPressEvent event)
+         {
+            if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
+            {
+               // TODO
+               doRenameREST();
+            }
+         }
+      });
+
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
 
@@ -168,7 +201,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          @Override
          public void onClick(ClickEvent event)
          {
-            rename();
+            // TODO
+            doRenameREST();
          }
       });
 
@@ -182,27 +216,34 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       if (isUnsavedFilesExist())
       {
+         Dialogs.getInstance().showInfo("Rename", "You should save all unsaved files to continue.");
          return;
       }
 
-      // TODO check type
-//      findType2();
+      ASTNode element = getElementToRename();
+      if (element == null)
+      {
+         Dialogs
+            .getInstance()
+            .showError("Rename",
+               "Rename operation unavailable on the current selection.<br>Select a local variable, parameter, method, or a type.");
+         return;
+      }
 
-      //      AbstractTypeDeclaration typeDeclaration = findType();
-      //      if (typeDeclaration == null)
-      //      {
-      //         Dialogs.getInstance().showError("Rename", "Rename operation unavailable on the current selection.");
-      //         return;
-      //      }
-      //
-      //      ITypeBinding type = typeDeclaration.resolveBinding();
-      //      if (!type.isMember())
-      //      {
-      //         Dialogs.getInstance().showError("Rename", "Rename operation unavailable on the current selection.");
-      //         return;
-      //      }
+      String elementName = null;
+      try
+      {
+         elementName = editor.getDocument().get(element.getStartPosition(), element.getLength());
+      }
+      catch (BadLocationException e)
+      {
+         e.printStackTrace();
+      }
 
       openView();
+      display.setNewNameFieldValue(elementName);
+      display.selectAllTextInNewNameField();
+      display.setFocusOnNewNameField();
    }
 
    /**
@@ -213,67 +254,99 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private boolean isUnsavedFilesExist()
    {
-      Iterator iterator = openedFiles.values().iterator();
-      while (iterator.hasNext())
+      for (FileModel file : openedFiles.values())
       {
-         FileModel file = (FileModel)iterator.next();
          if (file.isContentChanged())
          {
-            Dialogs.getInstance().showInfo("Rename", "You should save all unsaved files to continue.");
             return true;
          }
       }
       return false;
    }
 
-   private void findType2()
+   /**
+    * Returns Java-element to rename.
+    * 
+    * @return Java-element, or <code>null</null>
+    *          if rename operation unavailable on the current text selection
+    */
+   private ASTNode getElementToRename()
    {
       try
       {
          IDocument document = editor.getDocument();
          int offset = document.getLineOffset(editor.getCursorRow() - 1) + editor.getSelectionRange().getStartSymbol();
-         NodeFinder nf = new NodeFinder(compilationUnit, offset, offset);
-         ASTNode coveredNode = nf.getCoveredNode();
+         NodeFinder nf = new NodeFinder(compilationUnit, offset, 0);
          ASTNode coveringNode = nf.getCoveringNode();
 
-         if (coveredNode != null)
+         if (coveringNode == null)
          {
-            IDE.fireEvent(new OutputEvent("coveredNode"));
-            IDE.fireEvent(new OutputEvent("type  : " + Integer.toString(coveredNode.getNodeType())));
-            IDE.fireEvent(new OutputEvent("start : " + Integer.toString(coveredNode.getStartPosition())));
-            IDE.fireEvent(new OutputEvent("length: " + Integer.toString(coveredNode.getLength())));
+            return null;
          }
-         if (coveringNode != null)
+
+         if (coveringNode.getNodeType() == ASTNode.SIMPLE_NAME)
          {
-            IDE.fireEvent(new OutputEvent("covering"));
-            IDE.fireEvent(new OutputEvent("type  : " + Integer.toString(coveringNode.getNodeType())));
-            IDE.fireEvent(new OutputEvent("start : " + Integer.toString(coveringNode.getStartPosition())));
-            IDE.fireEvent(new OutputEvent("length: " + Integer.toString(coveringNode.getLength())));
+            IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
+            return coveringNode;
+            //            ASTNode parentNode = coveringNode.getParent();
+            //            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
+            //
+            //            if (parentNode instanceof SingleVariableDeclaration)
+            //            {
+            //               if (descriptor == SingleVariableDeclaration.NAME_PROPERTY)
+            //               {
+            //                  return coveringNode;
+            //               }
+            //            }
+            //            else if (parentNode instanceof VariableDeclarationFragment)
+            //            {
+            //               if (descriptor == VariableDeclarationFragment.NAME_PROPERTY)
+            //               {
+            //                  return coveringNode;
+            //               }
+            //            }
+            //            else if (parentNode instanceof MethodDeclaration)
+            //            {
+            //               MethodDeclaration p = (MethodDeclaration)parentNode;
+            //               // could be the name of the method or constructor
+            //               if (!p.isConstructor() && (descriptor == MethodDeclaration.NAME_PROPERTY))
+            //               {
+            //                  return coveringNode;
+            //               }
+            //            }
+            //            else if (parentNode instanceof MethodInvocation)
+            //            {
+            //               if (descriptor == MethodInvocation.NAME_PROPERTY)
+            //               {
+            //                  return coveringNode;
+            //               }
+            //            }
+            //            else if (parentNode instanceof TypeDeclaration)
+            //            {
+            //               if (descriptor == TypeDeclaration.NAME_PROPERTY)
+            //               {
+            //                  return coveringNode;
+            //               }
+            //            }
+            //            else if (parentNode instanceof SimpleType)
+            //            {
+            //               if (descriptor == SimpleType.NAME_PROPERTY)
+            //               {
+            //                  return coveringNode;
+            //               }
+            //            }
+            //            else if (parentNode instanceof ClassInstanceCreation)
+            //            {
+            //               if (descriptor == ClassInstanceCreation.NAME_PROPERTY)
+            //               {
+            //                  return coveringNode;
+            //               }
+            //            }
          }
       }
       catch (BadLocationException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
-      }
-   }
-
-   private AbstractTypeDeclaration findType()
-   {
-      if (editor != null)
-      {
-         IDocument document = editor.getDocument();
-
-         try
-         {
-            TypeFinder f = new TypeFinder(document.getLineOffset(editor.getCursorRow() - 1));
-            compilationUnit.accept(f);
-            return f.type;
-         }
-         catch (BadLocationException e)
-         {
-            e.printStackTrace();
-         }
       }
       return null;
    }
@@ -289,14 +362,53 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          IDE.getInstance().openView(display.asView());
          bindDisplay();
       }
-      display.selectAllTextInNewNameField();
-      display.setFocusOnNewNameField();
    }
 
    /**
-    * Sends request for rename refactoring to the server.
+    * Sends request for rename refactoring to the server (over WebSocket).
     */
-   private void rename()
+   private void doRename()
+   {
+      try
+      {
+         String fqn = getFqn();
+         int offset =
+            editor.getDocument().getLineOffset(editor.getCursorRow() - 1) + editor.getSelectionRange().getStartSymbol();
+         String newName = display.getNewNameField().getValue();
+
+         RefactoringClientService.getInstance().renameWS(vfsInfo.getId(), openedProject.getId(), fqn, offset, newName,
+            new RequestCallback<Object>()
+            {
+
+               @Override
+               protected void onSuccess(Object result)
+               {
+                  reloadOpenedFilesContent();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         doRenameREST();
+      }
+      catch (BadLocationException e)
+      {
+         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+      }
+
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+
+   /**
+    * Sends request for rename refactoring to the server (over HTTP).
+    */
+   private void doRenameREST()
    {
       try
       {
@@ -318,6 +430,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                @Override
                protected void onFailure(Throwable exception)
                {
+                  // TODO
+                  reloadOpenedFilesContent();
                   IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
                }
             });
@@ -339,10 +453,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private void reloadOpenedFilesContent()
    {
-      Iterator iterator = openedFiles.keySet().iterator();
-      while (iterator.hasNext())
+      for (FileModel file : openedFiles.values())
       {
-         final FileModel file = (FileModel)openedFiles.get(iterator.next());
          try
          {
             VirtualFileSystem.getInstance().getContent(
@@ -352,7 +464,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                   @Override
                   protected void onSuccess(FileModel result)
                   {
-                     Editor editor = (Editor)openedEditors.get(result.getId());
+                     Editor editor = openedEditors.get(result.getId());
                      if (editor != null)
                      {
                         editor.setText(result.getContent());
@@ -370,6 +482,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          {
             IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
          }
+
+         IDE.fireEvent(new RefreshBrowserEvent(file.getParent()));
       }
    }
 
@@ -384,13 +498,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       String sourcePath =
          project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
       String fqn = activeFile.getPath().substring((project.getPath() + "/" + sourcePath + "/").length());
-
-      // use workaround because org.osgi.foundation-1.2.0.jar (from dependencies) has the same java.lang.String class without replaceAll method
-      //pack = pack.replaceAll("/", ".");
-      while (fqn.indexOf('/') != -1)
-      {
-         fqn = fqn.replace('/', '.');
-      }
+      fqn = fqn.replaceAll("/", ".");
       fqn = fqn.substring(0, fqn.lastIndexOf('.'));
       return fqn;
    }
@@ -493,6 +601,16 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       openedFiles = event.getOpenedFiles();
       openedEditors.put(event.getFile().getId(), event.getEditor());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler#onEditorFileContentChanged(org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedEvent)
+    */
+   @Override
+   public void onEditorFileContentChanged(EditorFileContentChangedEvent event)
+   {
+      FileModel file = event.getFile();
+      openedFiles.put(file.getId(), file);
    }
 
 }

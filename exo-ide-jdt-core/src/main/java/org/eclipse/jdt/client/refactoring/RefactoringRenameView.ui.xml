@@ -3,13 +3,14 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui"
 	xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
 	<ui:style>
-		.floatRight {
+		.floatLeft {
 			float: right;
-			margin-left: 5px;
 		}
 
-		.rightAlign {
+		.center {
+			display: block;
 			margin-left: auto;
+			margin-right: auto;
 		}
 
 		.labelH {
@@ -38,11 +39,12 @@
 			</g:FlowPanel>
 		</f:layer>
 		<f:layer height="22px" bottom="0">
-			<g:FlowPanel styleName="{style.rightAlign}">
+			<g:FlowPanel styleName="{style.center}">
 				<f:ImageButton ui:field="cancelButton" width="90" height="22" text="Cancel" imageName="cancel"
-					buttonId="ideRefactoringRenameViewCancelButton" addStyleNames="{style.floatRight}"></f:ImageButton>
+					buttonId="ideRefactoringRenameViewCancelButton" addStyleNames="{style.floatLeft}"></f:ImageButton>
+				<g:FlowPanel width="5px" height="22px" styleName="{style.floatLeft}"></g:FlowPanel>
 				<f:ImageButton ui:field="renameButton" width="90" height="22" text="Rename" imageName="ok"
-					buttonId="ideRefactoringRenameViewRenameButton" addStyleNames="{style.floatRight}"></f:ImageButton>
+					buttonId="ideRefactoringRenameViewRenameButton" addStyleNames="{style.floatLeft}"></f:ImageButton>
 			</g:FlowPanel>
 		</f:layer>
 	</f:Border>

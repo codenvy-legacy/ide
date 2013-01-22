@@ -24,8 +24,11 @@ import com.google.gwt.http.client.RequestException;
 import org.exoplatform.gwtframework.commons.loader.Loader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
-import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 
 /**
  * Implementation of {@link RefactoringClientService} service.
@@ -57,13 +60,39 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
    private Loader loader;
 
    /**
+    * WebSocket message bus.
+    */
+   private MessageBus wsMessageBus;
+
+   /**
     * @param restContext REST-service context
     * @param loader      loader to show on server request
+    * @param wsMessageBus {@link MessageBus} to send messages over WebSocket
     */
-   public RefactoringClientServiceImpl(String restContext, Loader loader)
+   public RefactoringClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
+   }
+
+   /**
+    * @throws WebSocketException
+    * @see org.eclipse.jdt.client.refactoring.RefactoringClientService#renameWS(java.lang.String, java.lang.String, java.lang.String,
+    *      int, java.lang.String, org.exoplatform.ide.client.framework.websocket.rest.RequestCallback)
+    */
+   @Override
+   public void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
+      RequestCallback<Object> callback) throws WebSocketException
+   {
+      final String requesrUrl = RENAME;
+      callback.setLoader(loader);
+
+      String params =
+         "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
+      RequestMessage message =
+         RequestMessageBuilder.build(RequestBuilder.GET, requesrUrl + "?" + params).getRequestMessage();
+      wsMessageBus.send(message, callback);
    }
 
    /**
@@ -77,9 +106,9 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
    {
       final String requesrUrl = restServiceContext + RENAME;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params).header(HTTPHeader.ACCEPT,
-         MimeType.APPLICATION_JSON).loader(loader).send(callback);
+      String params =
+         "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
+      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params).loader(loader).send(callback);
    }
 
 }

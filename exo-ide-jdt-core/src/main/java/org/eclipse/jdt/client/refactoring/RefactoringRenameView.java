@@ -45,7 +45,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
 
    private static final String TITLE = "Rename";
 
-   private static final int HEIGHT = 140;
+   private static final int HEIGHT = 130;
 
    private static final int WIDTH = 450;
 
@@ -73,7 +73,6 @@ public class RefactoringRenameView extends ViewImpl implements Display
    public RefactoringRenameView()
    {
       super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
-      setCloseOnEscape(false);
       add(uiBinder.createAndBindUi(this));
 
       newNameField.setName(NEW_NAME_FIELD_ID);
@@ -133,6 +132,15 @@ public class RefactoringRenameView extends ViewImpl implements Display
    public void setNewNameFieldValue(String value)
    {
       newNameField.setText(value);
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#setEnableStateRenameButton(boolean)
+    */
+   @Override
+   public void setEnableStateRenameButton(boolean enabled)
+   {
+      renameButton.setEnabled(enabled);
    }
 
 }
