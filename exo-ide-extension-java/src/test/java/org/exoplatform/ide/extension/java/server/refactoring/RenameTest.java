@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.java.server.refactoring;
 
 import org.apache.commons.io.IOUtils;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.exoplatform.ide.eclipse.resources.WorkspaceResource;
 import org.exoplatform.ide.extension.java.server.JavaDocBuilderVfsTest;
 import org.exoplatform.ide.extension.java.server.RefactoringService;
@@ -66,7 +67,7 @@ public class RenameTest extends ResourcesBaseTest
    }
 
    @Test
-   public void renameTypeTest() throws VirtualFileSystemException, IOException
+   public void renameTypeTest() throws VirtualFileSystemException, IOException, CoreException
    {
       RefactoringService r = new RefactoringService();
       r.rename(ID, project.getId(), "org.exoplatform.ide.client.IDE", 1000 - 39, "MyIde");
