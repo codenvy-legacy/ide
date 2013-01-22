@@ -49,7 +49,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.job.JobManager;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
@@ -64,12 +66,16 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.HashMap;
@@ -120,8 +126,14 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
+   /**
+    * Display.
+    */
    private Display display;
 
+   /**
+    * Info about current {@link VirtualFileSystem}.
+    */
    private VirtualFileSystemInfo vfsInfo;
 
    /**
@@ -129,16 +141,30 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private ProjectModel openedProject;
 
+   /**
+    * The map of the opened Java files and their id.
+    */
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
+   /**
+    * The map of the opened Java files identifiers and their compilation units.
+    */
+   private Map<String, CompilationUnit> openedFilesToCompilationUnit = new HashMap<String, CompilationUnit>();
+
+   /**
+    * The map of the opened Java files identifiers and their editors.
+    */
    private Map<String, Editor> openedEditors = new HashMap<String, Editor>();
 
    /**
-    * Current editor.
+    * Active editor.
     */
-   private Editor editor;
+   private Editor activeEditor;
 
-   private CompilationUnit compilationUnit;
+   /**
+    * Current compilation unit.
+    */
+   private CompilationUnit currentCompilationUnit;
 
    private FileModel activeFile;
 
@@ -179,8 +205,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          {
             if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
             {
-               // TODO
-               doRenameREST();
+               doRename();
             }
          }
       });
@@ -201,8 +226,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          @Override
          public void onClick(ClickEvent event)
          {
-            // TODO
-            doRenameREST();
+            doRename();
          }
       });
 
@@ -214,6 +238,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    @Override
    public void onRename(RefactoringRenameEvent event)
    {
+      if (currentCompilationUnit == null)
+      {
+         Dialogs.getInstance().showInfo("Rename", "Wait for initialize Java tooling and try again.");
+      }
+
       if (isUnsavedFilesExist())
       {
          Dialogs.getInstance().showInfo("Rename", "You should save all unsaved files to continue.");
@@ -233,7 +262,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       String elementName = null;
       try
       {
-         elementName = editor.getDocument().get(element.getStartPosition(), element.getLength());
+         elementName = activeEditor.getDocument().get(element.getStartPosition(), element.getLength());
       }
       catch (BadLocationException e)
       {
@@ -274,9 +303,9 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       try
       {
-         IDocument document = editor.getDocument();
-         int offset = document.getLineOffset(editor.getCursorRow() - 1) + editor.getSelectionRange().getStartSymbol();
-         NodeFinder nf = new NodeFinder(compilationUnit, offset, 0);
+         IDocument document = activeEditor.getDocument();
+         int offset = document.getLineOffset(activeEditor.getCursorRow() - 1) + activeEditor.getSelectionRange().getStartSymbol();
+         NodeFinder nf = new NodeFinder(currentCompilationUnit, offset, 0);
          ASTNode coveringNode = nf.getCoveringNode();
 
          if (coveringNode == null)
@@ -286,7 +315,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
          if (coveringNode.getNodeType() == ASTNode.SIMPLE_NAME)
          {
-            IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
+//            IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
             return coveringNode;
             //            ASTNode parentNode = coveringNode.getParent();
             //            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
@@ -373,7 +402,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       {
          String fqn = getFqn();
          int offset =
-            editor.getDocument().getLineOffset(editor.getCursorRow() - 1) + editor.getSelectionRange().getStartSymbol();
+            activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1) + activeEditor.getSelectionRange().getStartSymbol();
          String newName = display.getNewNameField().getValue();
 
          RefactoringClientService.getInstance().renameWS(vfsInfo.getId(), openedProject.getId(), fqn, offset, newName,
@@ -383,7 +412,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                @Override
                protected void onSuccess(Object result)
                {
-                  reloadOpenedFilesContent();
+                  onRenameSuccess();
                }
 
                @Override
@@ -414,7 +443,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       {
          String fqn = getFqn();
          int offset =
-            editor.getDocument().getLineOffset(editor.getCursorRow() - 1) + editor.getSelectionRange().getStartSymbol();
+            activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1) + activeEditor.getSelectionRange().getStartSymbol();
          String newName = display.getNewNameField().getValue();
 
          RefactoringClientService.getInstance().rename(vfsInfo.getId(), openedProject.getId(), fqn, offset, newName,
@@ -424,14 +453,12 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                @Override
                protected void onSuccess(Object result)
                {
-                  reloadOpenedFilesContent();
+                  onRenameSuccess();
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  reloadOpenedFilesContent();
                   IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
                }
             });
@@ -449,11 +476,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    }
 
    /**
-    * Reload (re-read) content of all opened files.
+    * Perform actions when rename refactoring completed successfully.
     */
-   private void reloadOpenedFilesContent()
+   private void onRenameSuccess()
    {
-      for (FileModel file : openedFiles.values())
+      for (final FileModel file : openedFiles.values())
       {
          try
          {
@@ -468,7 +495,13 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                      if (editor != null)
                      {
                         editor.setText(result.getContent());
+                        if (activeEditor == editor)
+                        {
+                           activeEditor.setText(result.getContent());
+                        }
                      }
+
+                     updateActiveFileInfo();
                   }
 
                   @Override
@@ -487,6 +520,40 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       }
    }
 
+   private void updateActiveFileInfo()
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemById(activeFile.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(activeFile)))
+            {
+
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  Item item = result.getItem();
+                  if (item instanceof FileModel)
+                  {
+                     FileModel fileModel = (FileModel)item;
+                     activeFile.setName(fileModel.getName());
+                     activeFile.setPath(fileModel.getPath());
+                     IDE.fireEvent(new FileSavedEvent(activeFile, null));
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.eventBus().fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    /**
     * Returns the fully qualified name of the top-level class from <code>activeFile</code>.
     * 
@@ -495,8 +562,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    private String getFqn()
    {
       ProjectModel project = activeFile.getProject();
-      String sourcePath =
-         project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
+      String sourcePath = project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
       String fqn = activeFile.getPath().substring((project.getPath() + "/" + sourcePath + "/").length());
       fqn = fqn.replaceAll("/", ".");
       fqn = fqn.substring(0, fqn.lastIndexOf('.'));
@@ -557,21 +623,16 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      if (event.getFile() == null)
+      activeFile = event.getFile();
+
+      if (activeFile == null || !event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
+         activeEditor = null;
          return;
       }
 
-      activeFile = event.getFile();
-
-      if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
-      {
-         editor = event.getEditor();
-      }
-      else
-      {
-         editor = null;
-      }
+      activeEditor = event.getEditor();
+      currentCompilationUnit = openedFilesToCompilationUnit.get(activeFile.getId());
    }
 
    /**
@@ -580,7 +641,12 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    @Override
    public void onUpdateOutline(UpdateOutlineEvent event)
    {
-      compilationUnit = event.getCompilationUnit();
+      openedFilesToCompilationUnit.put(event.getFile().getId(), event.getCompilationUnit());
+
+      if (activeFile == event.getFile())
+      {
+         currentCompilationUnit = event.getCompilationUnit();
+      }
    }
 
    /**
@@ -591,6 +657,12 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       openedFiles = event.getOpenedFiles();
       openedEditors.remove(event.getFile().getId());
+
+      CompilationUnit cUnit = openedFilesToCompilationUnit.remove(event.getFile().getId());
+      if (currentCompilationUnit != null && currentCompilationUnit.equals(cUnit))
+      {
+         currentCompilationUnit = null;
+      }
    }
 
    /**
