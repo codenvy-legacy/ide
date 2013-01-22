@@ -91,7 +91,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
       String params =
          "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
       RequestMessage message =
-         RequestMessageBuilder.build(RequestBuilder.GET, requesrUrl + "?" + params).getRequestMessage();
+         RequestMessageBuilder.build(RequestBuilder.POST, requesrUrl + "?" + params).getRequestMessage();
       wsMessageBus.send(message, callback);
    }
 
@@ -108,7 +108,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
 
       String params =
          "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params).loader(loader).send(callback);
+      AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params).loader(loader).send(callback);
    }
 
 }

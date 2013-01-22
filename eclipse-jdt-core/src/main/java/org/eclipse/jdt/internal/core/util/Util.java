@@ -88,6 +88,8 @@ import org.eclipse.jdt.internal.core.PackageFragmentRoot;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -135,7 +137,7 @@ public class Util
 
    private static final String EMPTY_ARGUMENT = "   "; //$NON-NLS-1$
 
-   private static char[][] JAVA_LIKE_EXTENSIONS = new char[][]{new char[]{'j','a','v','a'}};
+   private static char[][] JAVA_LIKE_EXTENSIONS = new char[][]{new char[]{'j', 'a', 'v', 'a'}};
 
    private static final char[] BOOLEAN = "boolean".toCharArray(); //$NON-NLS-1$
 
@@ -160,6 +162,9 @@ public class Util
    private static final String TASK_PRIORITIES_PROBLEM = "TASK_PRIORITIES_PB"; //$NON-NLS-1$
 
    private static List fgRepeatedMessages = new ArrayList(5);
+
+
+   private static final Log LOG = ExoLogger.getLogger(Util.class);
 
    private Util()
    {
@@ -798,7 +803,7 @@ public class Util
    }
 
    /*
-	 * Returns whether the given file name equals to the given string ignoring the java like extension
+    * Returns whether the given file name equals to the given string ignoring the java like extension
 	 * of the file name.
 	 * Returns false if it is not a java like file name.
 	 */
@@ -1078,41 +1083,41 @@ public class Util
     */
    public static char[][] getJavaLikeExtensions()
    {
-//      if (JAVA_LIKE_EXTENSIONS == null)
-//      {
-//         IContentType javaContentType = Platform.getContentTypeManager().getContentType(
-//            JavaCore.JAVA_SOURCE_CONTENT_TYPE);
-//         HashSet fileExtensions = new HashSet();
-//         // content types derived from java content type should be included (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
-//         IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
-//         for (int i = 0, length = contentTypes.length; i < length; i++)
-//         {
-//            if (contentTypes[i].isKindOf(javaContentType))
-//            { // note that javaContentType.isKindOf(javaContentType) == true
-//               String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
-//               for (int j = 0, length2 = fileExtension.length; j < length2; j++)
-//               {
-//                  fileExtensions.add(fileExtension[j]);
-//               }
-//            }
-//         }
-//         int length = fileExtensions.size();
-//         // note that file extensions contains "java" as it is defined in JDT Core's plugin.xml
-//         char[][] extensions = new char[length][];
-//         extensions[0] = SuffixConstants.EXTENSION_java.toCharArray(); // ensure that "java" is first
-//         int index = 1;
-//         Iterator iterator = fileExtensions.iterator();
-//         while (iterator.hasNext())
-//         {
-//            String fileExtension = (String)iterator.next();
-//            if (SuffixConstants.EXTENSION_java.equals(fileExtension))
-//            {
-//               continue;
-//            }
-//            extensions[index++] = fileExtension.toCharArray();
-//         }
-//         JAVA_LIKE_EXTENSIONS = extensions;
-//      }
+      //      if (JAVA_LIKE_EXTENSIONS == null)
+      //      {
+      //         IContentType javaContentType = Platform.getContentTypeManager().getContentType(
+      //            JavaCore.JAVA_SOURCE_CONTENT_TYPE);
+      //         HashSet fileExtensions = new HashSet();
+      //         // content types derived from java content type should be included (https://bugs.eclipse.org/bugs/show_bug.cgi?id=121715)
+      //         IContentType[] contentTypes = Platform.getContentTypeManager().getAllContentTypes();
+      //         for (int i = 0, length = contentTypes.length; i < length; i++)
+      //         {
+      //            if (contentTypes[i].isKindOf(javaContentType))
+      //            { // note that javaContentType.isKindOf(javaContentType) == true
+      //               String[] fileExtension = contentTypes[i].getFileSpecs(IContentType.FILE_EXTENSION_SPEC);
+      //               for (int j = 0, length2 = fileExtension.length; j < length2; j++)
+      //               {
+      //                  fileExtensions.add(fileExtension[j]);
+      //               }
+      //            }
+      //         }
+      //         int length = fileExtensions.size();
+      //         // note that file extensions contains "java" as it is defined in JDT Core's plugin.xml
+      //         char[][] extensions = new char[length][];
+      //         extensions[0] = SuffixConstants.EXTENSION_java.toCharArray(); // ensure that "java" is first
+      //         int index = 1;
+      //         Iterator iterator = fileExtensions.iterator();
+      //         while (iterator.hasNext())
+      //         {
+      //            String fileExtension = (String)iterator.next();
+      //            if (SuffixConstants.EXTENSION_java.equals(fileExtension))
+      //            {
+      //               continue;
+      //            }
+      //            extensions[index++] = fileExtension.toCharArray();
+      //         }
+      //         JAVA_LIKE_EXTENSIONS = extensions;
+      //      }
       return JAVA_LIKE_EXTENSIONS;
    }
 
@@ -1236,30 +1241,30 @@ public class Util
          }
       }
 
-//      if (Platform.isRunning())
-//      {
-//         // line delimiter in project preference
-//         IScopeContext[] scopeContext;
-//         if (project != null)
-//         {
-//            scopeContext = new IScopeContext[]{new ProjectScope(project.getProject())};
-//            lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
-//               Platform.PREF_LINE_SEPARATOR, null, scopeContext);
-//            if (lineSeparator != null)
-//            {
-//               return lineSeparator;
-//            }
-//         }
-//
-//         // line delimiter in workspace preference
-//         scopeContext = new IScopeContext[]{InstanceScope.INSTANCE};
-//         lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
-//            null, scopeContext);
-//         if (lineSeparator != null)
-//         {
-//            return lineSeparator;
-//         }
-//      }
+      //      if (Platform.isRunning())
+      //      {
+      //         // line delimiter in project preference
+      //         IScopeContext[] scopeContext;
+      //         if (project != null)
+      //         {
+      //            scopeContext = new IScopeContext[]{new ProjectScope(project.getProject())};
+      //            lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME,
+      //               Platform.PREF_LINE_SEPARATOR, null, scopeContext);
+      //            if (lineSeparator != null)
+      //            {
+      //               return lineSeparator;
+      //            }
+      //         }
+      //
+      //         // line delimiter in workspace preference
+      //         scopeContext = new IScopeContext[]{InstanceScope.INSTANCE};
+      //         lineSeparator = Platform.getPreferencesService().getString(Platform.PI_RUNTIME, Platform.PREF_LINE_SEPARATOR,
+      //            null, scopeContext);
+      //         if (lineSeparator != null)
+      //         {
+      //            return lineSeparator;
+      //         }
+      //      }
 
       // system line delimiter
       return org.eclipse.jdt.internal.compiler.util.Util.LINE_SEPARATOR;
@@ -1585,29 +1590,29 @@ public class Util
       // workaround https://bugs.eclipse.org/bugs/show_bug.cgi?id=130736 by using java.io.File if possible
       IPath location = file.getLocation();
       long length;
-//      if (location == null)
-//      {
-//         // non local file
-//         try
-//         {
-//            URI locationURI = file.getLocationURI();
-//            if (locationURI == null)
-//            {
-//               throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID,
-//                  Messages.bind(Messages.file_notFound, file.getFullPath().toString())));
-//            }
-//            length = EFS.getStore(locationURI).fetchInfo().getLength();
-//         }
-//         catch (CoreException e)
-//         {
-//            throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
-//         }
-//      }
-//      else
-//      {
-//         // local file
-         length = location.toFile().length();
-//      }
+      //      if (location == null)
+      //      {
+      //         // non local file
+      //         try
+      //         {
+      //            URI locationURI = file.getLocationURI();
+      //            if (locationURI == null)
+      //            {
+      //               throw new CoreException(new Status(IStatus.ERROR, JavaCore.PLUGIN_ID,
+      //                  Messages.bind(Messages.file_notFound, file.getFullPath().toString())));
+      //            }
+      //            length = EFS.getStore(locationURI).fetchInfo().getLength();
+      //         }
+      //         catch (CoreException e)
+      //         {
+      //            throw new JavaModelException(e, IJavaModelStatusConstants.ELEMENT_DOES_NOT_EXIST);
+      //         }
+      //      }
+      //      else
+      //      {
+      //         // local file
+      length = location.toFile().length();
+      //      }
 
       // Get resource contents
       InputStream stream = null;
@@ -2234,15 +2239,15 @@ public class Util
     */
    public static boolean isReadOnly(IResource resource)
    {
-//      if (isReadOnlySupported())
-//      {
-//         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-//         if (resourceAttributes == null)
-//         {
-//            return false; // not supported on this platform for this resource
-//         }
-//         return resourceAttributes.isReadOnly();
-//      }
+      //      if (isReadOnlySupported())
+      //      {
+      //         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
+      //         if (resourceAttributes == null)
+      //         {
+      //            return false; // not supported on this platform for this resource
+      //         }
+      //         return resourceAttributes.isReadOnly();
+      //      }
       return false;
    }
 
@@ -2522,7 +2527,8 @@ public class Util
    {
       //TODO add logger
       //JavaCore.getPlugin().getLog().log(status);
-      System.out.println(status);
+      LOG.error(status.getMessage(), status.getException());
+
    }
 
    public static void log(Throwable e)
@@ -3017,20 +3023,20 @@ public class Util
    {
       if (isReadOnlySupported())
       {
-//         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
-//         if (resourceAttributes == null)
-//         {
-//            return; // not supported on this platform for this resource
-//         }
-//         resourceAttributes.setReadOnly(readOnly);
-//         try
-//         {
-//            resource.setResourceAttributes(resourceAttributes);
-//         }
-//         catch (CoreException e)
-//         {
-//            // ignore
-//         }
+         //         ResourceAttributes resourceAttributes = resource.getResourceAttributes();
+         //         if (resourceAttributes == null)
+         //         {
+         //            return; // not supported on this platform for this resource
+         //         }
+         //         resourceAttributes.setReadOnly(readOnly);
+         //         try
+         //         {
+         //            resource.setResourceAttributes(resourceAttributes);
+         //         }
+         //         catch (CoreException e)
+         //         {
+         //            // ignore
+         //         }
       }
    }
 
@@ -3220,14 +3226,14 @@ public class Util
 	 */
    public static File toLocalFile(URI uri, IProgressMonitor monitor) throws CoreException
    {
-//      IFileStore fileStore = EFS.getStore(uri);
-//      File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
-//      if (localFile == null)
-//      // non local file system
-//      {
-//         localFile = fileStore.toLocalFile(EFS.CACHE, monitor);
-//      }
-//      return localFile;
+      //      IFileStore fileStore = EFS.getStore(uri);
+      //      File localFile = fileStore.toLocalFile(EFS.NONE, monitor);
+      //      if (localFile == null)
+      //      // non local file system
+      //      {
+      //         localFile = fileStore.toLocalFile(EFS.CACHE, monitor);
+      //      }
+      //      return localFile;
       return null;
    }
 
