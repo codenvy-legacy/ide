@@ -18,69 +18,46 @@
  */
 package org.exoplatform.ide.invite;
 
+import org.codenvy.mail.MailSenderClient;
 import org.exoplatform.container.configuration.ConfigurationException;
-import org.exoplatform.services.mail.MailService;
 
 import java.io.IOException;
 import java.util.Map;
 
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
+import javax.mail.MessagingException;
 
-/**
- * Mail sender that use   org.exoplatform.services.mail.MailService to send mails, and TemplateResolver to
- * parse templates.
- * <p/>
- * Decoupled from MailSender for future use of MailSender in cloud-admin environment with other implementation
- * of mail sending and template resolver classes.
- */
-@Deprecated
-public class ExoMailSender extends MailSender
+public class ExoMailSenderClient
 {
-   private final MailService mailService;
-
    private final TemplateResolver templateResolver;
 
-   public ExoMailSender(MailService mailService, TemplateResolver templateResolver)
+   private final MailSenderClient mailSender;
+
+   public ExoMailSenderClient(MailSenderClient mailSender, TemplateResolver templateResolver)
    {
-      this.mailService = mailService;
       this.templateResolver = templateResolver;
+      this.mailSender = mailSender;
    }
 
-   @Override
-   public String getMessageBody(String templateName, Map<String, Object> templateProperties)
-      throws SendingIdeMailException
+   public void sendMail(String from, String to, String replyTo, String subject, String mimeType, String templateName,
+      Map<String, Object> templateProperties) throws SendingIdeMailException
    {
       try
       {
-         return templateResolver.resolveTemplate(templateName, templateProperties);
-      }
-      catch (ConfigurationException e)
-      {
-         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
+         mailSender.sendMail(from, to, replyTo, subject, mimeType,
+            templateResolver.resolveTemplate(templateName, templateProperties));
       }
       catch (IOException e)
       {
          throw new SendingIdeMailException(e.getLocalizedMessage(), e);
       }
-   }
-
-   @Override
-   public Session getMailSession()
-   {
-      return mailService.getMailSession();
-   }
-
-   @Override
-   public void doSendMail(MimeMessage message) throws SendingIdeMailException
-   {
-      try
+      catch (MessagingException e)
       {
-         mailService.sendMessage(message);
+         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
       }
-      catch (Exception e)
+      catch (ConfigurationException e)
       {
          throw new SendingIdeMailException(e.getLocalizedMessage(), e);
       }
    }
+
 }

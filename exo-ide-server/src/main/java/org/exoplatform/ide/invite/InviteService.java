@@ -52,7 +52,7 @@ public class InviteService
 
    private final RegistryService registry;
 
-   private final MailSender mailSender;
+   private final ExoMailSenderClient mailSender;
 
    private final SessionProviderService sessionProviderService;
 
@@ -60,8 +60,9 @@ public class InviteService
 
    private final InviteMessagePropertiesProvider inviteMessagePropertiesProvider;
 
-   public InviteService(RegistryService registry, SessionProviderService sessionProviderService, MailSender mailSender,
-      InviteUserService inviteUserService, InviteMessagePropertiesProvider messagePropertiesProvider)
+   public InviteService(RegistryService registry, SessionProviderService sessionProviderService,
+      ExoMailSenderClient mailSender, InviteUserService inviteUserService,
+      InviteMessagePropertiesProvider messagePropertiesProvider)
    {
       this.registry = registry;
       this.mailSender = mailSender;

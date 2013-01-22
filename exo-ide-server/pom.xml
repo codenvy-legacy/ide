@@ -19,6 +19,11 @@
 			<artifactId>exo-ide-commons</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.codenvy</groupId>
+			<artifactId>mail-client</artifactId>
+			<version>${org.codenvy.mailclient.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.exoplatform.kernel</groupId>
 			<artifactId>exo.kernel.container</artifactId>
 			<exclusions>
