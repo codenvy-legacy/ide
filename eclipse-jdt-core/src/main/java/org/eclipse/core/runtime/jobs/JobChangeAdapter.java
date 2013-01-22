@@ -22,59 +22,52 @@ package org.eclipse.core.runtime.jobs;
  * @see IJobChangeListener
  * @since 3.0
  */
-public class JobChangeAdapter implements IJobChangeListener
-{
-   /* (non-Javadoc)
-    * @see IJobChangeListener#aboutToRun(IJobChangeEvent)
-    * This default implementation does nothing
-    */
-   public void aboutToRun(IJobChangeEvent event)
-   {
-      // do nothing
-   }
+public class JobChangeAdapter implements IJobChangeListener {
+	/* (non-Javadoc)
+	 * @see IJobChangeListener#aboutToRun(IJobChangeEvent)
+	 * This default implementation does nothing
+	 */
+	public void aboutToRun(IJobChangeEvent event) {
+		// do nothing
+	}
 
-   /* (non-Javadoc)
-    * @see IJobChangeListener#awake(IJobChangeEvent)
-    * This default implementation does nothing
-    */
-   public void awake(IJobChangeEvent event)
-   {
-      // do nothing
-   }
+	/* (non-Javadoc)
+	 * @see IJobChangeListener#awake(IJobChangeEvent)
+	 * This default implementation does nothing
+	 */
+	public void awake(IJobChangeEvent event) {
+		// do nothing
+	}
 
-   /* (non-Javadoc)
-    * @see IJobChangeListener#done(IJobChangeEvent)
-    * This default implementation does nothing
-    */
-   public void done(IJobChangeEvent event)
-   {
-      // do nothing
-   }
+	/* (non-Javadoc)
+	 * @see IJobChangeListener#done(IJobChangeEvent)
+	 * This default implementation does nothing
+	 */
+	public void done(IJobChangeEvent event) {
+		// do nothing
+	}
 
-   /* (non-Javadoc)
-    * @see IJobChangeListener#running(IJobChangeEvent)
-    * This default implementation does nothing
-    */
-   public void running(IJobChangeEvent event)
-   {
-      // do nothing
-   }
+	/* (non-Javadoc)
+	 * @see IJobChangeListener#running(IJobChangeEvent)
+	 * This default implementation does nothing
+	 */
+	public void running(IJobChangeEvent event) {
+		// do nothing
+	}
 
-   /* (non-Javadoc)
-    * @see IJobChangeListener#scheduled(IJobChangeEvent)
-    * This default implementation does nothing
-    */
-   public void scheduled(IJobChangeEvent event)
-   {
-      // do nothing
-   }
+	/* (non-Javadoc)
+	 * @see IJobChangeListener#scheduled(IJobChangeEvent)
+	 * This default implementation does nothing
+	 */
+	public void scheduled(IJobChangeEvent event) {
+		// do nothing
+	}
 
-   /* (non-Javadoc)
-    * @see IJobChangeListener#sleeping(IJobChangeEvent)
-    * This default implementation does nothing
-    */
-   public void sleeping(IJobChangeEvent event)
-   {
-      // do nothing
-   }
+	/* (non-Javadoc)
+	 * @see IJobChangeListener#sleeping(IJobChangeEvent)
+	 * This default implementation does nothing
+	 */
+	public void sleeping(IJobChangeEvent event) {
+		// do nothing
+	}
 }

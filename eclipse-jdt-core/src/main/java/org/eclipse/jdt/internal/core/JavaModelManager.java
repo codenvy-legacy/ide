@@ -3010,6 +3010,10 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
       Map defaultOptionsMap = new CompilerOptions().getMap(); // compiler defaults
 
       // Override some compiler defaults
+      defaultOptionsMap.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_6);
+      defaultOptionsMap.put(JavaCore.CORE_ENCODING, "UTF-8");
+      defaultOptionsMap.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_6);
+      defaultOptionsMap.put(CompilerOptions.OPTION_TargetPlatform, JavaCore.VERSION_1_6);
       defaultOptionsMap.put(JavaCore.COMPILER_LOCAL_VARIABLE_ATTR, JavaCore.GENERATE);
       defaultOptionsMap.put(JavaCore.COMPILER_CODEGEN_UNUSED_LOCAL, JavaCore.PRESERVE);
       defaultOptionsMap.put(JavaCore.COMPILER_TASK_TAGS, JavaCore.DEFAULT_TASK_TAGS);
