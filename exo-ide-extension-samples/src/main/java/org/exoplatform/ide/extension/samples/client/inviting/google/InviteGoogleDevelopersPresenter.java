@@ -128,7 +128,9 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       {
          return;
       }
-
+      customEmailsList.clear();
+      selectedEmailsList.clear();
+      emailsToInvite.clear();    
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
       bindDisplay();

@@ -25,6 +25,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
@@ -59,10 +60,17 @@ public class UpdateStorage
    @Consumes("application/json")
    public Response updateTypeDependecys(@Context UriInfo uriInfo, Dependencys dependencys) throws IOException
    {
-      InputStream zip = doDownload(dependencys.getZipUrl());
-      UpdateStorageTask task = storageService.updateTypeIndex(dependencys.getDependencies(), zip);
-      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
-      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+      try
+      {
+         InputStream zip = doDownload(dependencys.getZipUrl());
+         UpdateStorageTask task = storageService.updateTypeIndex(dependencys.getDependencies(), zip);
+         final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+      }
+      catch (MalformedURLException e)
+      {
+         return Response.status(404).entity(e.getMessage()).build();
+      }
    }
 
    @Path("update/dock")
@@ -70,11 +78,17 @@ public class UpdateStorage
    @Consumes("application/json")
    public Response updateJavaDock(@Context UriInfo uriInfo, Dependencys dependencys) throws IOException
    {
-
-      InputStream zip = doDownload(dependencys.getZipUrl());
-      UpdateStorageTask task = storageService.updateDockIndex(dependencys.getDependencies(), zip);
-      final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
-      return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+      try
+      {
+         InputStream zip = doDownload(dependencys.getZipUrl());
+         UpdateStorageTask task = storageService.updateDockIndex(dependencys.getDependencies(), zip);
+         final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(task.getId());
+         return Response.status(202).location(location).entity(location.toString()).type(MediaType.TEXT_PLAIN).build();
+      }
+      catch (MalformedURLException e)
+      {
+         return Response.status(404).entity(e.getMessage()).build();
+      }
    }
 
    @GET
@@ -114,12 +128,12 @@ public class UpdateStorage
          .type(MediaType.TEXT_PLAIN).build());
    }
 
-   private InputStream doDownload(String downloadURL) throws IOException
+   private InputStream doDownload(String downloadURL) throws MalformedURLException, IOException
    {
-      URL url = new URL(downloadURL);
       HttpURLConnection http = null;
       try
       {
+         URL url = new URL(downloadURL);
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          int responseCode = http.getResponseCode();
@@ -131,6 +145,10 @@ public class UpdateStorage
          // If IOException or BuilderException occurs then connection closed immediately.
          return new HttpStream(http);
       }
+      catch (MalformedURLException e)
+      {
+         throw e;
+      }
       catch (IOException ioe)
       {
          if (http != null)
@@ -139,6 +157,7 @@ public class UpdateStorage
          }
          throw ioe;
       }
+
    }
 
    /** Stream that automatically close HTTP connection when all data ends. */
