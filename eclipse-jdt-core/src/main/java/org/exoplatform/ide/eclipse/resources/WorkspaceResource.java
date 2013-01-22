@@ -1216,15 +1216,15 @@ public class WorkspaceResource implements IWorkspace
       IPath parentDestinationPath = destination.removeLastSegments(1);
       try
       {
-         String id = getVfsIdByFullPath(resource.getFullPath());
+         Item item = getItemByPath(resource.getFullPath());
          //if just rename
-         if (!parentDestinationPath.equals(destination.removeLastSegments(1)))
+         if (!parentDestinationPath.equals(resource.getFullPath().removeLastSegments(1)))
          {
             String destinationParentId = getVfsIdByFullPath(parentDestinationPath);
-            vfs.move(id, destinationParentId, null);
+            vfs.move(item.getId(), destinationParentId, null);
          }
-         vfs.rename(id, MediaType.valueOf("application/java"), destination.segment(destination.segmentCount() - 1),
-            null);
+         vfs.rename(item.getId(), MediaType.valueOf(item.getMimeType()),
+            destination.segment(destination.segmentCount() - 1), null);
       }
       catch (ItemNotFoundException e)
       {
@@ -1274,7 +1274,8 @@ public class WorkspaceResource implements IWorkspace
          String parentDestinationId = getVfsIdByFullPath(parentDestinationPath);
          String id = getVfsIdByFullPath(resource.getFullPath());
          Item copiedItem = vfs.copy(id, parentDestinationId);
-         vfs.rename(copiedItem.getId(), null, destination.segment(destination.segmentCount() - 1), null);
+         vfs.rename(copiedItem.getId(), MediaType.valueOf(copiedItem.getMimeType()),
+            destination.segment(destination.segmentCount() - 1), null);
       }
       catch (VirtualFileSystemException e)
       {

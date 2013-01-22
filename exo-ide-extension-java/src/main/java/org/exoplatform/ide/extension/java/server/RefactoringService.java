@@ -56,6 +56,7 @@ import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 
 import javax.inject.Inject;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
@@ -97,6 +98,7 @@ public class RefactoringService
    }
 
    @Path("rename")
+   @POST
    public void rename(@QueryParam("vfsid") String vfsid, @QueryParam("projectid") String projectid,
       @QueryParam("fqn") String fqn, @QueryParam("offset") int offset, @QueryParam("newName") String newname)
    {
@@ -182,7 +184,10 @@ public class RefactoringService
             IProject iProject = workspace.getRoot().getProject(item.getName());
             IJavaProject project = JavaCore.create(iProject);
             project.open(null);
+            JavaModelManager.getIndexManager().deleteIndexFiles();
             JavaModelManager.getIndexManager().indexAll(project.getProject());
+            JavaModelManager.getIndexManager().reset();
+            //            JavaModelManager.getIndexManager().enable();
             return project;
          }
          else

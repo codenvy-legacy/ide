@@ -78,7 +78,7 @@ public class RefactoringClientServiceImpl extends RefactoringClientService
       final String requesrUrl = restServiceContext + RENAME;
 
       String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&fqn=" + fqn + "&offset=" + offset + "&newName=" + newName;
-      AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params).header(HTTPHeader.ACCEPT,
+      AsyncRequest.build(RequestBuilder.POST, requesrUrl + "?" + params).header(HTTPHeader.ACCEPT,
          MimeType.APPLICATION_JSON).loader(loader).send(callback);
    }
 
