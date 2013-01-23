@@ -31,13 +31,16 @@
          margin-right: auto;
          vertical-align: middle;
       }
+      .label {
+         margin-top: 4px;
+      }
    </ui:style>
    <f:Border margin="5" borderColor="transparent">
       <f:layer top="0" height="54px">
          <g:FlowPanel>
             <g:DockLayoutPanel width="100%" unit="PX" height="50%">
                <g:west size="50">
-                  <g:Label text="{locale.userInfoViewLoginField}" height="18px"></g:Label>
+                  <g:Label text="{locale.userInfoViewLoginField}" height="18px" addStyleNames="{style.label}"></g:Label>
                </g:west>
                <g:center>
                   <f:TextInput ui:field="loginField" width="100%" enabled="false"></f:TextInput>
@@ -45,7 +48,7 @@
             </g:DockLayoutPanel>
             <g:DockLayoutPanel width="100%" unit="PX" height="50%">
                <g:west size="50">
-                  <g:Label text="{locale.userInfoViewDomainField}" height="18px"></g:Label>
+                  <g:Label text="{locale.userInfoViewDomainField}" height="18px" addStyleNames="{style.label}"></g:Label>
                </g:west>
                <g:center>
                   <f:TextInput ui:field="domainField" width="100%" enabled="false"></f:TextInput>
