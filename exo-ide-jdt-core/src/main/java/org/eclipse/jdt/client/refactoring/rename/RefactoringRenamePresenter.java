@@ -196,6 +196,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
    private String originElementName;
 
+   private FileModel fileToRenameFromPackageExplorer;
+
    public RefactoringRenamePresenter()
    {
       IDE.addHandler(RefactoringRenameEvent.TYPE, this);
@@ -271,12 +273,6 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    @Override
    public void onRename(RefactoringRenameEvent event)
    {
-      if (currentCompilationUnit == null)
-      {
-         Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
-            JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameWait());
-      }
-
       if (isUnsavedFilesExist())
       {
          Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
@@ -284,17 +280,36 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          return;
       }
 
-      ASTNode element = getElementToRename();
-      if (element == null)
+      ASTNode element = null;
+      fileToRenameFromPackageExplorer = event.getFile();
+      if (fileToRenameFromPackageExplorer == null)
       {
-         Dialogs.getInstance().showError(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
-            JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameUnavailable());
-         return;
+         if (currentCompilationUnit == null)
+         {
+            Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
+               JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameWait());
+         }
+
+         element = getElementToRename();
+         if (element == null)
+         {
+            Dialogs.getInstance().showError(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
+               JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameUnavailable());
+            return;
+         }
       }
 
       try
       {
-         originElementName = activeEditor.getDocument().get(element.getStartPosition(), element.getLength());
+         if (fileToRenameFromPackageExplorer == null)
+         {
+            originElementName = activeEditor.getDocument().get(element.getStartPosition(), element.getLength());
+         }
+         else
+         {
+            String name = fileToRenameFromPackageExplorer.getName();
+            originElementName = name.substring(0, name.length()-5); // excluding ".java"
+         }
       }
       catch (BadLocationException e)
       {
@@ -433,10 +448,18 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       try
       {
-         String fqn = getFqn();
-         int offset =
-            activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
-               + activeEditor.getSelectionRange().getStartSymbol();
+         String fqn = null;
+         int offset = -1;
+         if (fileToRenameFromPackageExplorer == null)
+         {
+            fqn = getFqn(activeFile);
+            offset = activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
+                  + activeEditor.getSelectionRange().getStartSymbol();
+         }
+         else
+         {
+            fqn = getFqn(fileToRenameFromPackageExplorer);
+         }
          String newName = display.getNewNameField().getValue();
 
          RefactoringClientService.getInstance().renameWS(vfsInfo.getId(), openedProject.getId(), fqn, offset, newName,
@@ -446,6 +469,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                @Override
                protected void onSuccess(Object result)
                {
+                  IDE.getInstance().closeView(display.asView().getId());
                   onRenameSuccess();
                }
 
@@ -464,8 +488,6 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       {
          IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
-
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -475,10 +497,18 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       try
       {
-         String fqn = getFqn();
-         int offset =
-            activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
-               + activeEditor.getSelectionRange().getStartSymbol();
+         String fqn = null;
+         int offset = -1;
+         if (fileToRenameFromPackageExplorer == null)
+         {
+            fqn = getFqn(activeFile);
+            offset = activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
+                  + activeEditor.getSelectionRange().getStartSymbol();
+         }
+         else
+         {
+            fqn = getFqn(fileToRenameFromPackageExplorer);
+         }
          String newName = display.getNewNameField().getValue();
 
          RefactoringClientService.getInstance().rename(vfsInfo.getId(), openedProject.getId(), fqn, offset, newName,
@@ -488,6 +518,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                @Override
                protected void onSuccess(Object result)
                {
+                  IDE.getInstance().closeView(display.asView().getId());
                   onRenameSuccess();
                }
 
@@ -506,8 +537,6 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       {
          IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
-
-      IDE.getInstance().closeView(display.asView().getId());
    }
 
    /**
@@ -608,16 +637,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    }
 
    /**
-    * Returns the fully qualified name of the top-level class from <code>activeFile</code>.
+    * Returns the fully qualified name of the provided class.
     * 
+    * @param file {@link FileModel}
     * @return FQN of the top-level class from <code>activeFile</code>
     */
-   private String getFqn()
+   private String getFqn(FileModel file)
    {
-      ProjectModel project = activeFile.getProject();
+      ProjectModel project = file.getProject();
       String sourcePath =
          project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
-      String fqn = activeFile.getPath().substring((project.getPath() + "/" + sourcePath + "/").length());
+      String fqn = file.getPath().substring((project.getPath() + "/" + sourcePath + "/").length());
       fqn = fqn.replaceAll("/", ".");
       fqn = fqn.substring(0, fqn.lastIndexOf('.'));
       return fqn;

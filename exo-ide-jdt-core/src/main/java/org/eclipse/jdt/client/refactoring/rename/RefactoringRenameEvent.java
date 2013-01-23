@@ -20,6 +20,8 @@ package org.eclipse.jdt.client.refactoring.rename;
 
 import com.google.gwt.event.shared.GwtEvent;
 
+import org.exoplatform.ide.vfs.client.model.FileModel;
+
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -29,7 +31,22 @@ import com.google.gwt.event.shared.GwtEvent;
 public class RefactoringRenameEvent extends GwtEvent<RefactoringRenameHandler>
 {
 
+   private FileModel file;
+
    public static final GwtEvent.Type<RefactoringRenameHandler> TYPE = new Type<RefactoringRenameHandler>();
+
+   public RefactoringRenameEvent()
+   {
+   }
+
+   /**
+    * 
+    * @param file
+    */
+   public RefactoringRenameEvent(FileModel file)
+   {
+      this.file = file;
+   }
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
@@ -47,6 +64,16 @@ public class RefactoringRenameEvent extends GwtEvent<RefactoringRenameHandler>
    protected void dispatch(RefactoringRenameHandler handler)
    {
       handler.onRename(this);
+   }
+
+   /**
+    * Returns file to rename.
+    * 
+    * @return a file to rename
+    */
+   public FileModel getFile()
+   {
+      return file;
    }
 
 }
