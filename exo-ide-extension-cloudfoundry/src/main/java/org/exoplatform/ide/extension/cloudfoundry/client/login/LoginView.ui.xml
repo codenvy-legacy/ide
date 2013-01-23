@@ -98,7 +98,8 @@
                   <g:Label text="{locale.loginViewPasswordField}" styleName="{style.label}"></g:Label>
                </g:west>
                <g:center>
-                  <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%" addStyleNames="{style.spacing}"></f:PasswordTextInput>
+                  <f:PasswordTextInput ui:field="passwordField" height="22px" width="100%"
+                                       addStyleNames="{style.spacing}"></f:PasswordTextInput>
                </g:center>
             </g:DockLayoutPanel>
             <f:Label ui:field="errLabel" styleName="{style.errLabel}"></f:Label>
