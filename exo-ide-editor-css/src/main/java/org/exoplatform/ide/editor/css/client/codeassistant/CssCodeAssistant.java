@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.editor.api.CodeLine;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.CodeAssistant;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.codeassistant.JSONTokenParser;
@@ -52,7 +52,7 @@ public class CssCodeAssistant extends CodeAssistant
    private static List<Token> cssProperty;
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.api.Editor,
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#errorMarkClicked(org.exoplatform.ide.editor.client.api.Editor,
     *      java.util.List, int, int, java.lang.String)
     */
    public void errorMarkClicked(Editor editor, List<CodeLine> codeErrorList, int markOffsetX, int markOffsetY,
@@ -61,7 +61,7 @@ public class CssCodeAssistant extends CodeAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.api.Editor,
+    * @see org.exoplatform.ide.editor.api.codeassitant.CodeAssistant#autocompleteCalled(org.exoplatform.ide.editor.client.api.Editor,
     *      java.lang.String, int, int, java.lang.String, int, int, java.util.List, java.lang.String,
     *      org.exoplatform.ide.editor.api.codeassitant.Token)
     */

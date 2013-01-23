@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.templates;
 
 import org.eclipse.jdt.client.templates.api.TemplateVariable;
 import org.eclipse.jdt.client.templates.api.TemplateVariableType;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 import java.util.Arrays;
 import java.util.HashMap;

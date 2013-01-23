@@ -41,19 +41,19 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.marking.Markable;
-import org.exoplatform.ide.editor.marking.Marker;
-import org.exoplatform.ide.editor.marking.ProblemClickEvent;
-import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.client.marking.Markable;
+import org.exoplatform.ide.editor.client.marking.Marker;
+import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
+import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.Position;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
@@ -444,7 +444,7 @@ public class QuickFixPresenter implements IQuickAssistInvocationContext, EditorA
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler#onEditorHotKeyPressed(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent)
+    * @see org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler#onEditorHotKeyPressed(org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent)
     */
    @Override
    public void onEditorHotKeyPressed(EditorHotKeyPressedEvent event)

@@ -38,7 +38,7 @@ import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**

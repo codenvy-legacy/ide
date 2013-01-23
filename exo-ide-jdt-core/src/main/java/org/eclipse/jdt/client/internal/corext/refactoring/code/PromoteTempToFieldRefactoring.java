@@ -60,9 +60,9 @@ import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.ui.BindingLabelProvider;
 import org.eclipse.jdt.client.ui.JavaElementLabels;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -14,15 +14,11 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import com.google.collide.shared.util.MathUtils;
-
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.util.ScheduledCommandExecutor;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.codemirror2.SyntaxType;
-import com.google.collide.json.client.JsoStringMap;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.common.annotations.VisibleForTesting;
@@ -30,12 +26,12 @@ import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
-import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
-import org.exoplatform.ide.editor.api.contentassist.Point;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
+import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
+import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
 import org.waveprotocol.wave.client.common.util.UserAgent;
 
@@ -158,14 +154,14 @@ public class Autocompleter implements ContentAssistant
 
    private final OnSelectCommand onSelectCommand = new OnSelectCommand();
 
-   private final org.exoplatform.ide.editor.api.Editor exoEditor;
+   private final org.exoplatform.ide.editor.client.api.Editor exoEditor;
 
    /**
     * @param editor
     * @param contentAssistant 
     * @param exoEditor 
     */
-   Autocompleter(Editor editor, AutocompleteBox popup, org.exoplatform.ide.editor.api.Editor exoEditor)
+   Autocompleter(Editor editor, AutocompleteBox popup, org.exoplatform.ide.editor.client.api.Editor exoEditor)
    {
       this.editor = editor;
       this.popup = popup;
@@ -234,7 +230,7 @@ public class Autocompleter implements ContentAssistant
    //  private final OnSelectCommand onSelectCommand = new OnSelectCommand();
 
    public static Autocompleter create(Editor editor, AutocompleteBox popup,
-      org.exoplatform.ide.editor.api.Editor exoEditor)
+      org.exoplatform.ide.editor.client.api.Editor exoEditor)
    {
       return new Autocompleter(editor, popup, exoEditor);
    }
@@ -604,17 +600,17 @@ public class Autocompleter implements ContentAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#install(org.exoplatform.ide.editor.api.Editor)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant#install(org.exoplatform.ide.editor.client.api.Editor)
     */
    @Override
-   public void install(org.exoplatform.ide.editor.api.Editor textViewer)
+   public void install(org.exoplatform.ide.editor.client.api.Editor textViewer)
    {
       // TODO Auto-generated method stub
 
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#uninstall()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant#uninstall()
     */
    @Override
    public void uninstall()
@@ -624,7 +620,7 @@ public class Autocompleter implements ContentAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#showPossibleCompletions()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant#showPossibleCompletions()
     */
    @Override
    public String showPossibleCompletions()
@@ -634,7 +630,7 @@ public class Autocompleter implements ContentAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#showContextInformation()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant#showContextInformation()
     */
    @Override
    public String showContextInformation()
@@ -644,7 +640,7 @@ public class Autocompleter implements ContentAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#getContentAssistProcessor(java.lang.String)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant#getContentAssistProcessor(java.lang.String)
     */
    @Override
    public ContentAssistProcessor getContentAssistProcessor(String contentType)
@@ -653,7 +649,7 @@ public class Autocompleter implements ContentAssistant
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistant#addContentAssitProcessor(java.lang.String, org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant#addContentAssitProcessor(java.lang.String, org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor)
     */
    @Override
    public void addContentAssitProcessor(String contentType, ContentAssistProcessor processor)

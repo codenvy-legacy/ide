@@ -62,10 +62,10 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.WhileStatement;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.eclipse.jdt.client.ui.MembersOrderPreferenceCache;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.List;

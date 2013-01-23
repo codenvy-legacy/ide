@@ -33,8 +33,8 @@ import org.eclipse.jdt.client.env.PackageFragment;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.ArrayList;
 import java.util.Arrays;

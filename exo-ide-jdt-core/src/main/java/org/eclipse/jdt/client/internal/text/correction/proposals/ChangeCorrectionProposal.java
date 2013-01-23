@@ -26,9 +26,9 @@ import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
 import org.eclipse.jdt.client.runtime.Status;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.api.contentassist.Point;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Implementation of a Java completion proposal to be used for quick fix and quick assist
@@ -445,7 +445,7 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.text.IDocument, char, int)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument, char, int)
     */
    @Override
    public void apply(IDocument document, char trigger, int offset)
@@ -453,7 +453,7 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.text.IDocument, int)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.shared.text.IDocument, int)
     */
    @Override
    public boolean isValidFor(IDocument document, int offset)
@@ -462,7 +462,7 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getTriggerCharacters()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getTriggerCharacters()
     */
    @Override
    public char[] getTriggerCharacters()
@@ -471,7 +471,7 @@ public class ChangeCorrectionProposal implements IJavaCompletionProposal, IComma
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable()
     */
    @Override
    public boolean isAutoInsertable()

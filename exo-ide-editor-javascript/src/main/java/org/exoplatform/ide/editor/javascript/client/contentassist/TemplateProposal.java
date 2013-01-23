@@ -20,14 +20,14 @@ import com.google.collide.shared.util.StringUtils;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.api.contentassist.Point;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.javascript.client.JavaScriptEditorExtension;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.InsertEdit;
-import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
 
 /**
  * Proposal that contains template and knows how to process it.
@@ -88,7 +88,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.text.IDocument)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument)
     */
    @Override
    public void apply(IDocument document)
@@ -109,7 +109,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getSelection(org.exoplatform.ide.editor.text.IDocument)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getSelection(org.exoplatform.ide.editor.shared.text.IDocument)
     */
    @Override
    public Point getSelection(IDocument document)
@@ -118,7 +118,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getAdditionalProposalInfo()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalProposalInfo()
     */
    @Override
    public Widget getAdditionalProposalInfo()
@@ -127,7 +127,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getDisplayString()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString()
     */
    @Override
    public String getDisplayString()
@@ -136,7 +136,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getImage()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage()
     */
    @Override
    public Image getImage()
@@ -145,7 +145,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getContextInformation()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getContextInformation()
     */
    @Override
    public ContextInformation getContextInformation()
@@ -155,7 +155,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.text.IDocument, char, int)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument, char, int)
     */
    @Override
    public void apply(IDocument document, char trigger, int offset)
@@ -165,7 +165,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.text.IDocument, int)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.shared.text.IDocument, int)
     */
    @Override
    public boolean isValidFor(IDocument document, int offset)
@@ -175,7 +175,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getTriggerCharacters()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getTriggerCharacters()
     */
    @Override
    public char[] getTriggerCharacters()
@@ -185,7 +185,7 @@ public class TemplateProposal implements CompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable()
     */
    @Override
    public boolean isAutoInsertable()

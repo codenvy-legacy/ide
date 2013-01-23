@@ -19,7 +19,7 @@
 package org.exoplatform.ide.editor.api.codeassitant;
 
 import org.exoplatform.ide.editor.api.CodeLine;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.ui.AssistImportDeclarationForm;
 import org.exoplatform.ide.editor.api.codeassitant.ui.ImportDeclarationSelectedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.ui.AutocompletionForm;

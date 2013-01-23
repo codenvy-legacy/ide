@@ -31,11 +31,11 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.marking.Markable;
-import org.exoplatform.ide.editor.marking.Marker;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.marking.Markable;
+import org.exoplatform.ide.editor.client.marking.Marker;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;

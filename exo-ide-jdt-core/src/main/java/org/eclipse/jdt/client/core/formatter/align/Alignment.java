@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.core.formatter.align;
 
 import org.eclipse.jdt.client.core.formatter.Location;
 import org.eclipse.jdt.client.core.formatter.Scribe;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Alignment management

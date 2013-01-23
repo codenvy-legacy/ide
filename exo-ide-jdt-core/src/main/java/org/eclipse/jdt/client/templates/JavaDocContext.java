@@ -17,9 +17,9 @@ import org.eclipse.jdt.client.templates.api.TemplateBuffer;
 import org.eclipse.jdt.client.templates.api.TemplateContextType;
 import org.eclipse.jdt.client.templates.api.TemplateException;
 import org.eclipse.jdt.client.templates.api.TemplateTranslator;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  * A context for javadoc.

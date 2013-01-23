@@ -20,15 +20,15 @@ import org.eclipse.jdt.client.core.IJavaElement;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.api.contentassist.Point;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.BadPositionCategoryException;
-import org.exoplatform.ide.editor.text.DefaultPositionUpdater;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IPositionUpdater;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.BadPositionCategoryException;
+import org.exoplatform.ide.editor.shared.text.DefaultPositionUpdater;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IPositionUpdater;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  * 

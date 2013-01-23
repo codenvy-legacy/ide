@@ -11,10 +11,10 @@
 package org.eclipse.jdt.client.internal.text;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.Region;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.Region;
 
 public class JavaWordFinder
 {

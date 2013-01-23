@@ -13,7 +13,7 @@ package org.eclipse.jdt.client.templates.api;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
 
 /**
  * Provides the context for a <code>Template</code> being resolved. Keeps track of resolved variables.

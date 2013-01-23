@@ -18,11 +18,11 @@ import org.eclipse.jdt.client.core.dom.Expression;
 import org.eclipse.jdt.client.core.dom.Statement;
 import org.eclipse.jdt.client.core.formatter.CodeFormatter;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.Map;
 

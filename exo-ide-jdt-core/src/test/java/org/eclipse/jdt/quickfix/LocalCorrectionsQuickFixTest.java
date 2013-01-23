@@ -25,7 +25,7 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.CUCorrectionPro
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.emul.FileSystem;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.shared.text.Document;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;

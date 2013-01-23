@@ -27,8 +27,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
 
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;

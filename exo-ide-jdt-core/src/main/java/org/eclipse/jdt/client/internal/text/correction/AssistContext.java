@@ -15,7 +15,7 @@ import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class AssistContext implements IInvocationContext
 {

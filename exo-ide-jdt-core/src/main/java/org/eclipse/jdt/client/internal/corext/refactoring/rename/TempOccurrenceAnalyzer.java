@@ -24,7 +24,7 @@ import org.eclipse.jdt.client.core.dom.SimpleName;
 import org.eclipse.jdt.client.core.dom.VariableDeclaration;
 
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 public class TempOccurrenceAnalyzer extends ASTVisitor
 {

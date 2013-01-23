@@ -34,9 +34,9 @@ import org.eclipse.jdt.client.internal.text.correction.ProblemLocation;
 import org.eclipse.jdt.client.internal.text.correction.proposals.CUCorrectionProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.junit.Assert;
 
 import java.util.ArrayList;

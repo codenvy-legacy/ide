@@ -18,9 +18,9 @@ import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.List;
 

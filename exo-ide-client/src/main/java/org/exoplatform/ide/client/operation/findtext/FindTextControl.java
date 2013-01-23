@@ -29,7 +29,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
-import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * Created by The eXo Platform SAS.

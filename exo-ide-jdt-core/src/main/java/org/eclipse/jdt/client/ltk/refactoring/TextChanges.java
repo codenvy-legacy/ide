@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.ltk.refactoring;
 
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Helper class for text file changes.

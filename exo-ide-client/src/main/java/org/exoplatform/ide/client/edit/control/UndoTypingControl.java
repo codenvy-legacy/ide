@@ -34,7 +34,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileContentChange
 import org.exoplatform.ide.client.framework.editor.event.EditorUndoTypingEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 
 /**
  * Created by The eXo Platform SAS .

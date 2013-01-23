@@ -20,7 +20,7 @@ package org.eclipse.jdt.client;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 
 public interface AssistDisplay extends IsWidget
 {
