@@ -19,7 +19,6 @@
 package org.exoplatform.ide.java.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
@@ -29,7 +28,6 @@ import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.wizard.WizardAgent;
 import org.exoplatform.ide.api.ui.workspace.WorkspaceAgent;
 import org.exoplatform.ide.core.editor.EditorRegistry;
-import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.extension.Extension;
 import org.exoplatform.ide.java.client.codeassistant.ContentAssistHistory;
 import org.exoplatform.ide.java.client.core.JavaCore;
@@ -60,7 +58,6 @@ import org.exoplatform.ide.java.client.wizard.NewJavaClassPagePresenter;
 import org.exoplatform.ide.java.client.wizard.NewJavaProjectPagePresenter;
 import org.exoplatform.ide.java.client.wizard.NewPackagePagePresenter;
 import org.exoplatform.ide.json.JsonCollections;
-import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.rest.MimeType;
 
@@ -115,42 +112,6 @@ public class JavaExtension
       // register Perspectives
       workspace.registerPerspective(JAVA_PERSPECTIVE, null, javaPerspProvider);
       workspace.registerPerspective(JAVA_DEBUG_PERSPECTIVE, null, debugPerspProvider);
-
-      mainMenu.addMenuItem("Window/Open Java Debug Perspective(demo)", new ExtendedCommand()
-      {
-
-         @Override
-         public Expression inContext()
-         {
-            return null;
-         }
-
-         @Override
-         public ImageResource getIcon()
-         {
-            return null;
-         }
-
-         @Override
-         public void execute()
-         {
-            workspace.openPerspective(JAVA_DEBUG_PERSPECTIVE);
-         }
-
-         @Override
-         public Expression canExecute()
-         {
-            return null;
-         }
-
-         @Override
-         public String getToolTip()
-         {
-            // TODO Auto-generated method stub
-            return null;
-         }
-      });
-
    }
 
    /**

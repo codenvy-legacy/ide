@@ -23,8 +23,10 @@ import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.api.ui.workspace.WorkspaceAgent;
+import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.json.JsonStringMap;
+import org.exoplatform.ide.json.JsonStringMap.IterationCallback;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 import org.exoplatform.ide.part.PartPresenter;
 import org.exoplatform.ide.perspective.PerspectivePresenter.PartStackType;
@@ -51,7 +53,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
 
    private PerspectivePresenter activePerspective;
 
-   private JsonStringMap<PerspectiveDescriptor> pespectives = JsonCollections.createStringMap();
+   private JsonStringMap<PerspectiveDescriptor> perspectives = JsonCollections.createStringMap();
 
    private final ToolbarPresenter toolbarPresenter;
 
@@ -107,7 +109,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
    public void registerPerspective(String title, ImageResource icon,
       Provider<? extends PerspectivePresenter> pespectiveProvider)
    {
-      pespectives.put(title, new PerspectiveDescriptor(title, icon, pespectiveProvider));
+      perspectives.put(title, new PerspectiveDescriptor(title, icon, pespectiveProvider));
    }
 
    /**
@@ -118,7 +120,7 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
    {
       // SHOW IF ALREADY INITIALIZED
       // INITIALIZE AND SHOW IF NEW ONE
-      PerspectiveDescriptor perspectiveDescriptor = pespectives.get(title);
+      PerspectiveDescriptor perspectiveDescriptor = perspectives.get(title);
       // instantiate perspective or get the same thanks to @Singleton
       PerspectivePresenter newPerspective = perspectiveDescriptor.pespectiveProvider.get();
       activePerspective = newPerspective;
@@ -154,14 +156,33 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
    }
 
    /**
-    * Wrapper containing the insformation about Perspective and it's Provider.
+    * Returns registered perspectives.
+    * 
+    * @return
     */
-   private class PerspectiveDescriptor
+   public JsonArray<PerspectiveDescriptor> getPerspectives()
    {
-      @SuppressWarnings("unused")
+      final JsonArray<PerspectiveDescriptor> perspectives = JsonCollections.createArray();
+      
+      this.perspectives.iterate(new IterationCallback<PerspectiveDescriptor>()
+      {
+         @Override
+         public void onIteration(String key, PerspectiveDescriptor value)
+         {
+            perspectives.add(value);
+         }
+      });
+
+      return perspectives;
+   }
+
+   /**
+    * Wrapper containing the information about Perspective and it's Provider.
+    */
+   class PerspectiveDescriptor
+   {
       protected String title;
 
-      @SuppressWarnings("unused")
       protected ImageResource icon;
 
       protected Provider<? extends PerspectivePresenter> pespectiveProvider;
@@ -174,6 +195,25 @@ public class WorkspacePresenter implements Presenter, WorkspaceView.ActionDelega
          this.icon = icon;
          this.pespectiveProvider = pespectiveProvider;
       }
-   }
 
+      /**
+       * Returns title.
+       * 
+       * @return
+       */
+      public String getTitle()
+      {
+         return title;
+      }
+
+      /**
+       * Returns icon.
+       * 
+       * @return
+       */
+      public ImageResource getIcon()
+      {
+         return icon;
+      }
+   }
 }

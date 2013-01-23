@@ -32,6 +32,7 @@ import org.exoplatform.ide.command.SaveCommand;
 import org.exoplatform.ide.command.ShowNewFolderWizardCommand;
 import org.exoplatform.ide.command.ShowNewProjectWizardCommand;
 import org.exoplatform.ide.command.ShowNewResourceWizardCommand;
+import org.exoplatform.ide.command.ShowOpenPerspectiveDialog;
 import org.exoplatform.ide.command.ShowPreferenceCommand;
 import org.exoplatform.ide.command.ToggleItemCommand;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
@@ -64,7 +65,7 @@ public class StandardComponentInitializer
       Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
       Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,
       OpenProjectCommand openProjectCommand, ToolbarAgent toolbar, ExpressionManager expressionManager,
-      EventBus eventBus)
+      EventBus eventBus, ShowOpenPerspectiveDialog openPerspectiveCommand)
    {
       wizard.registerNewProjectWizard("Generic Project", "Create generic project", "", resources.genericProjectIcon(),
          genericProjectProvider, JsonCollections.<String> createArray());
@@ -82,6 +83,7 @@ public class StandardComponentInitializer
       menu.addMenuItem("File/Save All", saveAllCommand);
 
       menu.addMenuItem("Window/Preferences", showPreferencesCommand);
+      menu.addMenuItem("Window/Open perspective", openPerspectiveCommand);
 
       keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('s').build(), saveCommand);
       keyBinding.getGlobal().addKeyBinding(new KeyBuilder().action().charCode('S').build(), saveAllCommand);
@@ -96,13 +98,11 @@ public class StandardComponentInitializer
       toolbar.addItem("General/Save All", saveAllCommand);
 
       // TODO test toggle items
-
-      // TODO test toggle item
       ToggleItemExpression toggleState = new ToggleItemExpression(expressionManager, true);
       ToggleItemCommand command = new ToggleItemCommand(resources, eventBus, null, null, toggleState);
       menu.addMenuItem("File/Checked item", command);
       toolbar.addToggleItem("Test/Checked item", command);
+      toolbar.addDropDownItem("Test/New", resources.file(), "Test item");
       toolbar.addToggleItem("Test/New/Checked item", command);
-
    }
 }

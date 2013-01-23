@@ -19,5 +19,6 @@
    <source path="part" />
    <source path="preferences" />
    <source path="toolbar" />
+   <source path="perspective" />
    <source path="" />
 </module>

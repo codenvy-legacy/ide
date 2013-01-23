@@ -29,7 +29,6 @@ import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,11 +56,14 @@ public class TestPartStackPresenter
    @Mock
    EventBus eventBus;
 
+   @Mock
+   PartStackPresenter.PartStackEventHandler handler;
+
+   @Mock
+   PartPresenter part;
+
    @InjectMocks
    PartStackPresenter stack;
-
-   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-   PartPresenter part;
 
    @Before
    public void disarm()
@@ -90,8 +92,6 @@ public class TestPartStackPresenter
    @Test
    public void shoudNotifyPartChanged()
    {
-      PartStackPresenter.PartStackEventHandler handler = mock(PartStackPresenter.PartStackEventHandler.class);
-      stack.addPartStackEventHandler(handler);
       when(part.getTitleImage()).thenReturn(null);
 
       stack.addPart(part);
@@ -156,15 +156,11 @@ public class TestPartStackPresenter
    @Test
    public void shoudNotifyActivatePart()
    {
-      PartStackEventHandler handler = mock(PartStackEventHandler.class);
-
       PartPresenter part = mock(PartPresenter.class);
       PartPresenter part2 = mock(PartPresenter.class);
       
       when(part.onClose()).thenReturn(true);
       when(part2.onClose()).thenReturn(true);
-      
-      stack.addPartStackEventHandler(handler);
       
       reset(handler);
       stack.addPart(part);
