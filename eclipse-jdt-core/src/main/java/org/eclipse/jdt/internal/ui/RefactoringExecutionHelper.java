@@ -162,7 +162,7 @@ public class RefactoringExecutionHelper
     * @throws java.lang.reflect.InvocationTargetException
     *                              thrown when the operation failed to execute
     */
-   public void perform(boolean fork, boolean cancelable) throws InterruptedException, InvocationTargetException
+   public void perform(boolean fork, boolean cancelable) throws InterruptedException, InvocationTargetException, CoreException
    {
       perform(fork, false, cancelable);
    }
@@ -179,7 +179,7 @@ public class RefactoringExecutionHelper
     *                              thrown when the operation failed to execute
     */
    public void perform(boolean fork, boolean forkChangeExecution,
-      boolean cancelable) throws InterruptedException, InvocationTargetException
+      boolean cancelable) throws InterruptedException, InvocationTargetException, CoreException
    {
       //		Assert.isTrue(Display.getCurrent() != null);
       final IJobManager manager = Job.getJobManager();
@@ -252,10 +252,6 @@ public class RefactoringExecutionHelper
          {
             e.printStackTrace();
             throw new InterruptedException(e.getMessage());
-         }
-         catch (CoreException e)
-         {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
          }
          finally
          {

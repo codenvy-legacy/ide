@@ -164,10 +164,9 @@ public class RenameSupport
     *                              if an error occurred while executing the
     *                              operation.
     */
-   public void perform() throws InterruptedException, InvocationTargetException
+   public void perform() throws InterruptedException, InvocationTargetException, CoreException
    {
-      try
-      {
+
          ensureChecked();
          if (fPreCheckStatus.hasFatalError())
          {
@@ -182,11 +181,7 @@ public class RenameSupport
          helper.perform(true, true);
 
          //			restoreSelectionState(state);
-      }
-      catch (CoreException e)
-      {
-         throw new InvocationTargetException(e);
-      }
+
    }
 
    /**

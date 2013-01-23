@@ -31,12 +31,16 @@ public class JavaServiceApplication extends Application
 {
 
    private final Set<Class<?>> classes;
+   
+   private final Set<Object> singletons;
 
    public JavaServiceApplication()
    {
       classes = new HashSet<Class<?>>(1);
+      singletons = new HashSet<Object>(1);
       classes.add(RestCodeAssistantJava.class);
       classes.add(RefactoringService.class);
+      singletons.add(new RefactoringExceptionMapper());
    }
 
    /**
