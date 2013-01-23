@@ -777,6 +777,7 @@ public class WorkspaceResource implements IWorkspace
       }
       catch (VirtualFileSystemException e)
       {
+         e.printStackTrace();
          throw new CoreException(new Status(IStatus.ERROR, Status.CANCEL_STATUS.getPlugin(), 1, e.getMessage(), e));
       }
    }

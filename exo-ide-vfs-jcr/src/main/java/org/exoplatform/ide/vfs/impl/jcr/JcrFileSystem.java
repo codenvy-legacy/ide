@@ -68,6 +68,8 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ExtendedSession;
+import org.exoplatform.services.jcr.core.ManageableRepository;
+import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -2308,7 +2310,7 @@ public class JcrFileSystem implements VirtualFileSystem
       {
          try
          {
-            return repository.login(new CredentialsImpl(IdentityConstants.ANONIM, new char[0]), workspaceName);
+            return ((ManageableRepository)repository).getSystemSession(workspaceName);
          }
          catch (RepositoryException e1)
          {
