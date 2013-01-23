@@ -26,6 +26,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
+import org.eclipse.jdt.core.IInitializer;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.ILocalVariable;
@@ -57,6 +58,7 @@ import org.exoplatform.services.log.Log;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.concurrent.CountDownLatch;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -103,7 +105,8 @@ public class RefactoringService
    @Path("rename")
    @POST
    public void rename(@QueryParam("vfsid") String vfsid, @QueryParam("projectid") String projectid,
-      @QueryParam("fqn") String fqn, @QueryParam("offset") int offset, @QueryParam("newName") String newname) throws CoreException
+      @QueryParam("fqn") String fqn, @QueryParam("offset") int offset,
+      @QueryParam("newName") String newname) throws CoreException
    {
       WorkspaceResource workspace = getWorkspace(vfsid);
       IJavaProject project = getOrCreateJavaProject(workspace, projectid);
@@ -113,34 +116,45 @@ public class RefactoringService
          if (type.exists())
          {
             ICompilationUnit cUnit = type.getCompilationUnit();
-            IJavaElement elementAt = cUnit.getElementAt(offset);
             RenameSupport renameSupport;
-            switch (elementAt.getElementType())
+            if (offset != -1)
             {
-               case IJavaElement.COMPILATION_UNIT:
-                  renameSupport = RenameSupport.create((ICompilationUnit)elementAt, newname,
-                     RenameSupport.UPDATE_REFERENCES);
-                  break;
-               case IJavaElement.METHOD:
-                  renameSupport = RenameSupport.create((IMethod)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
-                  break;
-               case IJavaElement.FIELD:
-                  renameSupport = RenameSupport.create((IField)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
-                  break;
-               case IJavaElement.TYPE:
-                  renameSupport = RenameSupport.create((IType)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
-                  break;
-               case IJavaElement.LOCAL_VARIABLE:
-                  renameSupport = RenameSupport.create((ILocalVariable)elementAt, newname,
-                     RenameSupport.UPDATE_REFERENCES);
-                  break;
-               case IJavaElement.TYPE_PARAMETER:
-                  renameSupport = RenameSupport.create((ITypeParameter)elementAt, newname,
-                     RenameSupport.UPDATE_REFERENCES);
-                  break;
-               default:
-                  throw new IllegalArgumentException(
-                     "Rename of element '" + elementAt.getElementName() + "' is not supported");
+               IJavaElement elementAt = cUnit.getElementAt(offset);
+               switch (elementAt.getElementType())
+               {
+                  case IJavaElement.COMPILATION_UNIT:
+                     renameSupport = RenameSupport.create((ICompilationUnit)elementAt, newname,
+                        RenameSupport.UPDATE_REFERENCES);
+                     break;
+                  case IJavaElement.METHOD:
+                     renameSupport = RenameSupport.create((IMethod)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
+                     break;
+                  case IJavaElement.FIELD:
+                     renameSupport = RenameSupport.create((IField)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
+                     break;
+                  case IJavaElement.TYPE:
+                     renameSupport = RenameSupport.create((IType)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
+                     break;
+                  case IJavaElement.LOCAL_VARIABLE:
+                     renameSupport = RenameSupport.create((ILocalVariable)elementAt, newname,
+                        RenameSupport.UPDATE_REFERENCES);
+                     break;
+                  case IJavaElement.TYPE_PARAMETER:
+                     renameSupport = RenameSupport.create((ITypeParameter)elementAt, newname,
+                        RenameSupport.UPDATE_REFERENCES);
+                     break;
+                  case IJavaElement.INITIALIZER:
+                     renameSupport = RenameSupport.create(((IInitializer)elementAt).getDeclaringType(), newname,
+                        RenameSupport.UPDATE_REFERENCES);
+                     break;
+                  default:
+                     throw new IllegalArgumentException(
+                        "Rename of element '" + elementAt.getElementName() + "' is not supported");
+               }
+            }
+            else
+            {
+               renameSupport = RenameSupport.create(cUnit, newname, RenameSupport.UPDATE_REFERENCES);
             }
             IStatus status = renameSupport.preCheck();
             if (status.isOK())
@@ -194,8 +208,7 @@ public class RefactoringService
             project.open(null);
             JavaModelManager.getIndexManager().deleteIndexFiles();
             JavaModelManager.getIndexManager().indexAll(project.getProject());
-            //            JavaModelManager.getIndexManager().reset();
-            //            JavaModelManager.getIndexManager().enable();
+//            CountDownLatch
             return project;
          }
          else
@@ -229,18 +242,31 @@ public class RefactoringService
 
 
          String sourcePath;
+         StringBuilder b = new StringBuilder();
          if (vfsProject.hasProperty("sourceFolder"))
          {
-            sourcePath = vfsProject.getProperty("sourceFolder").getValue().get(0);
+            for (String s : vfsProject.getProperty("sourceFolder").getValue())
+            {
+               b.append("<classpathentry kind=\"src\" path=\"").append(s).append("\"/>");
+
+            }
          }
          else
          {
-            sourcePath = JavaCodeAssistant.DEFAULT_SOURCE_FOLDER;
+
+            b.append("<classpathentry kind=\"src\" path=\"").append(JavaCodeAssistant.DEFAULT_SOURCE_FOLDER).append(
+               "\"/>");
+            //            if (workspace.getRoot().getFolder(
+            //               new org.eclipse.core.runtime.Path(vfsProject.getPath() + "/src/test/java")).exists())
+            //            {
+            b.append("<classpathentry kind=\"src\" path=\"").append("src/test/java").append("\"/>");
+            //            }
          }
+         sourcePath = b.toString();
 
          workspace.getVFS().createFile(vfsProject.getId(), ".classpath", MediaType.TEXT_PLAIN_TYPE,
             new ByteArrayInputStream(
-               ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry kind=\"output\" path=\".target\"/>" + "<classpathentry kind=\"src\" path=\"" + sourcePath + "\"/></classpath>").getBytes()));
+               ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry kind=\"output\" path=\".target\"/>" + sourcePath + "</classpath>").getBytes()));
       }
       catch (CoreException e)
       {
