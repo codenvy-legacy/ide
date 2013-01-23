@@ -40,10 +40,6 @@
 	</component>
 
 	<component>
-		<type>org.exoplatform.ide.invite.ExoMailSenderClient</type>
-	</component>
-
-	<component>
 		<type>org.exoplatform.ide.invite.InviteService</type>
 	</component>
 
