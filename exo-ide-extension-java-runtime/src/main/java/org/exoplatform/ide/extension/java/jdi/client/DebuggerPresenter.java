@@ -1213,6 +1213,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
+      doStopApp();
       project = event.getProject();
    }
 
