@@ -113,7 +113,7 @@
       <f:layer>
          <!-- About IDE -->
          <g:DockLayoutPanel unit="PX" height="75px" width="100%" stylePrimaryName="{resource.css.welcomeHeader}">
-            <g:west size="140">
+            <g:west size="130">
                <g:Image ui:field="logo" resource="{resource.ideLogo}" styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
             </g:west>
             <g:center>

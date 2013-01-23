@@ -403,7 +403,7 @@ public class AppfogClientService
    }
 
    public void updateInstances(String vfsId, String projectId, String name, String server, String expression,
-      AppfogAsyncRequestCallback<String> callback) throws RequestException
+      AppfogAsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       final String url = restServiceContext + UPDATE_INSTANCES;
 

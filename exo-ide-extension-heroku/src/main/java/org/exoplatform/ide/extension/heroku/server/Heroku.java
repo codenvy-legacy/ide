@@ -754,6 +754,7 @@ public class Heroku
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("PUT");
          http.setRequestProperty("Accept", "application/xml, */*");
+         http.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
          http.setDoOutput(true);
          authenticate(herokuCredentials, http);
 
