@@ -16,37 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.refactoring;
+package org.eclipse.jdt.client.refactoring.rename;
 
-import com.google.gwt.event.shared.GwtEvent;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RefactoringRenameEvent.java Jan 17, 2013 4:51:38 PM azatsarynnyy $
+ * @version $Id: RefactoringRenameHandler.java Jan 17, 2013 4:51:04 PM azatsarynnyy $
  *
  */
-public class RefactoringRenameEvent extends GwtEvent<RefactoringRenameHandler>
+public interface RefactoringRenameHandler extends EventHandler
 {
 
-   public static final GwtEvent.Type<RefactoringRenameHandler> TYPE = new Type<RefactoringRenameHandler>();
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
-    */
-   @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RefactoringRenameHandler> getAssociatedType()
-   {
-      return TYPE;
-   }
-
-   /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
-    */
-   @Override
-   protected void dispatch(RefactoringRenameHandler handler)
-   {
-      handler.onRename(this);
-   }
+   void onRename(RefactoringRenameEvent event);
 
 }

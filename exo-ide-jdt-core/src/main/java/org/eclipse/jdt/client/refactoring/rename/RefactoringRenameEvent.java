@@ -16,29 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.refactoring;
+package org.eclipse.jdt.client.refactoring.rename;
 
-import org.eclipse.jdt.client.internal.corext.codemanipulation.JavaControl;
-import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Control for rename refactoring.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RefactoringRenameControl.java Jan 18, 2013 11:32:03 AM azatsarynnyy $
+ * @version $Id: RefactoringRenameEvent.java Jan 17, 2013 4:51:38 PM azatsarynnyy $
  *
  */
-public class RefactoringRenameControl extends JavaControl
+public class RefactoringRenameEvent extends GwtEvent<RefactoringRenameHandler>
 {
 
-   public RefactoringRenameControl()
+   public static final GwtEvent.Type<RefactoringRenameHandler> TYPE = new Type<RefactoringRenameHandler>();
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    */
+   @Override
+   public com.google.gwt.event.shared.GwtEvent.Type<RefactoringRenameHandler> getAssociatedType()
    {
-      super("Edit/Rename");
-      setTitle("Rename...");
-      setPrompt("Rename...");
-      setEvent(new RefactoringRenameEvent());
-      setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
-      setShowInContextMenu(true);
+      return TYPE;
+   }
+
+   /**
+    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    */
+   @Override
+   protected void dispatch(RefactoringRenameHandler handler)
+   {
+      handler.onRename(this);
    }
 
 }

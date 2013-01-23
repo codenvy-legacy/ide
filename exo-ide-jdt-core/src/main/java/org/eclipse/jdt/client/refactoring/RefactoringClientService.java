@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 
 /**
- * Client service for refactoring feature.
+ * Client service for refactoring features.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringClientService.java Jan 17, 2013 4:11:22 PM azatsarynnyy $

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.refactoring;
+package org.eclipse.jdt.client.refactoring.rename;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -24,7 +24,8 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display;
+import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display;
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
@@ -43,7 +44,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
 
    private static final String ID = "ideRefactoringRenameView";
 
-   private static final String TITLE = "Rename";
+   private static final String TITLE = JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle();
 
    private static final int HEIGHT = 130;
 
@@ -55,9 +56,9 @@ public class RefactoringRenameView extends ViewImpl implements Display
 
    private static final String CANCEL_BUTTON_ID = "ideRefactoringRenameViewCancelButton";
 
-   private static RefactoringRenameViewUiBinder uiBinder = GWT.create(RefactoringRenameViewUiBinder.class);
+   private static RenameViewUiBinder uiBinder = GWT.create(RenameViewUiBinder.class);
 
-   interface RefactoringRenameViewUiBinder extends UiBinder<Widget, RefactoringRenameView>
+   interface RenameViewUiBinder extends UiBinder<Widget, RefactoringRenameView>
    {
    }
 
@@ -73,6 +74,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    public RefactoringRenameView()
    {
       super(ID, ViewType.MODAL, TITLE, null, WIDTH, HEIGHT, false);
+      setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
 
       newNameField.setName(NEW_NAME_FIELD_ID);
@@ -81,7 +83,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#getNewNameField()
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getNewNameField()
     */
    @Override
    public TextFieldItem getNewNameField()
@@ -90,7 +92,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#getRenameButton()
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getRenameButton()
     */
    @Override
    public HasClickHandlers getRenameButton()
@@ -99,7 +101,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#getCancelButton()
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -108,7 +110,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#setFocusOnNewNameField()
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setFocusOnNewNameField()
     */
    @Override
    public void setFocusOnNewNameField()
@@ -117,7 +119,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#selectAllTextInNewNameField()
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#selectAllTextInNewNameField()
     */
    @Override
    public void selectAllTextInNewNameField()
@@ -126,7 +128,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#setNewNameFieldValue(java.lang.String)
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setNewNameFieldValue(java.lang.String)
     */
    @Override
    public void setNewNameFieldValue(String value)
@@ -135,7 +137,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
    }
 
    /**
-    * @see org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter.Display#setEnableStateRenameButton(boolean)
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#setEnableStateRenameButton(boolean)
     */
    @Override
    public void setEnableStateRenameButton(boolean enabled)
