@@ -75,10 +75,13 @@ import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -512,10 +515,14 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private void onRenameSuccess()
    {
+      List<Folder> foldersToRefresh = new ArrayList<Folder>();
+
       for (final FileModel file : openedFiles.values())
       {
-         // TODO
-         IDE.fireEvent(new RefreshBrowserEvent(file.getParent()));
+         if (!foldersToRefresh.contains(file.getParent()))
+         {
+            foldersToRefresh.add(file.getParent());
+         }
 
          try
          {
@@ -548,6 +555,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
          }
       }
+
+      IDE.fireEvent(new RefreshBrowserEvent(foldersToRefresh, null));
    }
 
    private void updateFileContent(final FileModel file)
@@ -571,8 +580,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
                   IDE.fireEvent(new FileSavedEvent(file, null));
 
-                  // TODO fire event once, after udating all editors
-                  IDE.fireEvent(new ReparseOpenedFilesEvent());
+                  // TODO do this once, after udating all editors
+                  reparseOpenedFiles();
                }
 
                @Override
@@ -586,6 +595,16 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       {
          IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
+   }
+
+   /**
+    * Reparse all opened files to get their {@link CompilationUnit}s.
+    */
+   private void reparseOpenedFiles()
+   {
+      openedFilesToCompilationUnit.clear();
+      currentCompilationUnit = null;
+      IDE.fireEvent(new ReparseOpenedFilesEvent());
    }
 
    /**
@@ -678,7 +697,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       openedFilesToCompilationUnit.put(event.getFile().getId(), event.getCompilationUnit());
 
-      if (activeFile == event.getFile())
+      if (event.getFile() == activeFile)
       {
          currentCompilationUnit = event.getCompilationUnit();
       }

@@ -38,6 +38,7 @@ public class RefactoringRenameControl extends JavaControl
       setTitle(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlTitle());
       setPrompt(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlPrompt());
       setEvent(new RefactoringRenameEvent());
+      setHotKey("Alt+Shift+R");
       setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
       setShowInContextMenu(true);
    }
