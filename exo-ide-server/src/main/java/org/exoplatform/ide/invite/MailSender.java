@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.invite;
 
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
 import java.util.Map;
 
 import javax.mail.Message;
@@ -27,12 +30,10 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-
 /**
  * Provide service of email sending.
  */
+@Deprecated
 public abstract class MailSender
 {
 
