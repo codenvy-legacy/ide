@@ -33,7 +33,7 @@ import org.eclipse.jdt.client.internal.compiler.lookup.TypeBinding;
 import org.eclipse.jdt.client.internal.compiler.lookup.TypeConstants;
 import org.eclipse.jdt.client.internal.compiler.problem.DefaultProblemFactory;
 import org.eclipse.jdt.client.internal.compiler.problem.ProblemReporter;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 import java.util.ArrayList;
 import java.util.Collections;

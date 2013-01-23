@@ -20,8 +20,8 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 
 import org.eclipse.jdt.client.internal.corext.dom.Selection;
 import org.eclipse.jdt.client.internal.corext.dom.SelectionAnalyzer;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.Region;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.Region;
 
 public class TempDeclarationFinder
 {

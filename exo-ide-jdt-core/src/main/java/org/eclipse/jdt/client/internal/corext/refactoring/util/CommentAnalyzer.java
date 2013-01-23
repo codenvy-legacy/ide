@@ -18,7 +18,7 @@ import org.eclipse.jdt.client.core.compiler.InvalidInputException;
 import org.eclipse.jdt.client.internal.corext.dom.Selection;
 import org.eclipse.jdt.client.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.jdt.client.ltk.refactoring.RefactoringStatus;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 public class CommentAnalyzer
 {

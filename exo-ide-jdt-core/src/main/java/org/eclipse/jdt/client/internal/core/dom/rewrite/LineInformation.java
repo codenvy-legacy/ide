@@ -12,8 +12,8 @@
 package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  *

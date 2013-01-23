@@ -19,8 +19,8 @@ import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ReplaceCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.TaskMarkerProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.Collection;

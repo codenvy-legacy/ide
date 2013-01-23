@@ -12,13 +12,13 @@ package org.eclipse.jdt.client.templates;
 
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.api.contentassist.Point;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.DocumentEvent;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.DocumentEvent;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import com.google.gwt.user.client.ui.Image;
 
@@ -210,7 +210,7 @@ public class MultiVariableGuess
       }
 
       /**
-       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.text.IDocument, char, int)
+       * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument, char, int)
        */
       @Override
       public void apply(IDocument document, char trigger, int offset)
@@ -219,7 +219,7 @@ public class MultiVariableGuess
       }
 
       /**
-       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.text.IDocument, int)
+       * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.shared.text.IDocument, int)
        */
       @Override
       public boolean isValidFor(IDocument document, int offset)
@@ -228,7 +228,7 @@ public class MultiVariableGuess
       }
 
       /**
-       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#getTriggerCharacters()
+       * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getTriggerCharacters()
        */
       @Override
       public char[] getTriggerCharacters()
@@ -237,7 +237,7 @@ public class MultiVariableGuess
       }
 
       /**
-       * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+       * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable()
        */
       @Override
       public boolean isAutoInsertable()

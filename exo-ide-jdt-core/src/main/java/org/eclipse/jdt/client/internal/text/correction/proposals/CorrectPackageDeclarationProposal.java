@@ -15,16 +15,11 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
-import org.eclipse.jdt.client.core.IPackageFragment;
-import org.eclipse.jdt.client.core.ISourceRange;
 
-import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
 import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.InsertEdit;
-import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 public class CorrectPackageDeclarationProposal extends CUCorrectionProposal
 {

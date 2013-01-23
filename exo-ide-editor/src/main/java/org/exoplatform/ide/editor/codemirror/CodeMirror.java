@@ -28,41 +28,41 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
-import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.api.codeassitant.CanInsertImportStatement;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
-import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
-import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickEvent;
-import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
-import org.exoplatform.ide.editor.marking.Markable;
-import org.exoplatform.ide.editor.marking.Marker;
-import org.exoplatform.ide.editor.marking.ProblemClickEvent;
-import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.DocumentEvent;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IDocumentListener;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberDoubleClickEvent;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.client.marking.Markable;
+import org.exoplatform.ide.editor.client.marking.Marker;
+import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
+import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.DocumentEvent;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocumentListener;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
@@ -309,7 +309,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getMimeType()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getMimeType()
     */
    @Override
    public String getMimeType()
@@ -927,7 +927,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getId()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getId()
     */
    @Override
    public String getId()
@@ -936,7 +936,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getText()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getText()
     */
    @Override
    public native String getText()
@@ -947,7 +947,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
    
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setText(java.lang.String)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setText(java.lang.String)
     */
    @Override
    public void setText(String text)
@@ -980,7 +980,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#isCapable(org.exoplatform.ide.editor.api.EditorCapability)
+    * @see org.exoplatform.ide.editor.client.api.Editor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability)
     */
    @Override
    public boolean isCapable(EditorCapability capability)
@@ -1009,7 +1009,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#formatSource()
+    * @see org.exoplatform.ide.editor.client.api.Editor#formatSource()
     */
    @Override
    public void formatSource()
@@ -1026,7 +1026,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#showLineNumbers(boolean)
+    * @see org.exoplatform.ide.editor.client.api.Editor#showLineNumbers(boolean)
     */
    public void showLineNumbers(boolean showLineNumbers)
    {
@@ -1055,7 +1055,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;   
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setFocus()
+    * @see org.exoplatform.ide.editor.client.api.Editor#setFocus()
     */
    @Override
    public void setFocus()
@@ -1075,7 +1075,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setCursorPosition(int, int)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setCursorPosition(int, int)
     */
    @Override
    public void setCursorPosition(int row, int column)
@@ -1121,7 +1121,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#deleteCurrentLine()
+    * @see org.exoplatform.ide.editor.client.api.Editor#deleteCurrentLine()
     */
    @Override
    public native void deleteCurrentLine()
@@ -1174,7 +1174,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#hasUndoChanges()
+    * @see org.exoplatform.ide.editor.client.api.Editor#hasUndoChanges()
     */
    @Override
    public boolean hasUndoChanges()
@@ -1193,7 +1193,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#undo()
+    * @see org.exoplatform.ide.editor.client.api.Editor#undo()
     */
    @Override
    public void undo()
@@ -1207,7 +1207,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#hasRedoChanges()
+    * @see org.exoplatform.ide.editor.client.api.Editor#hasRedoChanges()
     */
    @Override
    public boolean hasRedoChanges()
@@ -1226,7 +1226,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#redo()
+    * @see org.exoplatform.ide.editor.client.api.Editor#redo()
     */
    public native void redo()
    /*-{
@@ -1235,7 +1235,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#isReadOnly()
+    * @see org.exoplatform.ide.editor.client.api.Editor#isReadOnly()
     */
    @Override
    public boolean isReadOnly()
@@ -1250,7 +1250,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorRow()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorRow()
     */
    public native int getNativeCursorRow()
    /*-{
@@ -1275,7 +1275,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorColumn()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorColumn()
     */
    @Override
    public native int getCursorColumn()
@@ -1322,7 +1322,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getTokenList()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getTokenList()
     */
    public List<? extends Token> getTokenList()
    {
@@ -1330,7 +1330,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getTokenList()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getTokenList()
     */
    public void getTokenListInBackground()
    {
@@ -1382,7 +1382,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    };
    
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceTextAtCurrentLine(java.lang.String, int)
+    * @see org.exoplatform.ide.editor.client.api.Editor#replaceTextAtCurrentLine(java.lang.String, int)
     */
    @Override
    public native void replaceTextAtCurrentLine(String line, int cursorPosition)
@@ -1443,7 +1443,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getLineText(int)
+    * @see org.exoplatform.ide.editor.client.api.Editor#getLineText(int)
     */
    @Override
    public String getLineText(int line)
@@ -1487,7 +1487,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    private OverviewRuler overviewRuler;
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#markProblem(org.exoplatform.ide.editor.marking.Marker)
+    * @see org.exoplatform.ide.editor.client.marking.Markable#markProblem(org.exoplatform.ide.editor.client.marking.Marker)
     */
    @Override
    public void markProblem(Marker problem)
@@ -1575,7 +1575,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#unmarkAllProblems()
+    * @see org.exoplatform.ide.editor.client.marking.Markable#unmarkAllProblems()
     */
    @Override
    public void unmarkAllProblems()
@@ -1624,7 +1624,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#unmarkProblem(org.exoplatform.ide.editor.marking.Marker)
+    * @see org.exoplatform.ide.editor.client.marking.Markable#unmarkProblem(org.exoplatform.ide.editor.client.marking.Marker)
     */
    @Override
    public void unmarkProblem(Marker problem)
@@ -1816,7 +1816,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.text.DocumentEvent)
+    * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
     */
    @Override
    public void documentChanged(DocumentEvent event)
@@ -1858,7 +1858,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 		var startLine = editor.lineNumber(start.line);
 		var end = editor.cursorPosition(false);
 		var endLine = editor.lineNumber(end.line);
-		return @org.exoplatform.ide.editor.api.SelectionRange::new(IIII)(startLine, start.character, endLine, end.character);
+		return @org.exoplatform.ide.editor.client.api.SelectionRange::new(IIII)(startLine, start.character, endLine, end.character);
    }-*/;
 
    private native void addContextMenuListener()
@@ -1901,7 +1901,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#selectAll()
+    * @see org.exoplatform.ide.editor.client.api.Editor#selectAll()
     */
    @Override
    public void selectAll()
@@ -1910,7 +1910,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    };
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#cut()
+    * @see org.exoplatform.ide.editor.client.api.Editor#cut()
     */
    @Override
    public void cut()
@@ -1919,7 +1919,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#copy()
+    * @see org.exoplatform.ide.editor.client.api.Editor#copy()
     */
    @Override
    public void copy()
@@ -1928,7 +1928,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#paste()
+    * @see org.exoplatform.ide.editor.client.api.Editor#paste()
     */
    @Override
    public void paste()
@@ -1937,7 +1937,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#delete()
+    * @see org.exoplatform.ide.editor.client.api.Editor#delete()
     */
    @Override
    public void delete()
@@ -1960,7 +1960,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getNumberOfLines()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getNumberOfLines()
     */
    @Override
    public native int getNumberOfLines()
@@ -2000,7 +2000,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setReadOnly(boolean)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setReadOnly(boolean)
     */
    @Override
    public void setReadOnly(boolean readOnly)
@@ -2009,7 +2009,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getName()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getName()
     */
    @Override
    public String getName()
@@ -2018,7 +2018,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorOffsetLeft()
     */
    @Override
    public int getCursorOffsetLeft()
@@ -2027,7 +2027,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorOffsetTop()
     */
    @Override
    public int getCursorOffsetTop()
@@ -2036,7 +2036,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler)
     */
    @Override
    public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
@@ -2045,7 +2045,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler)
     */
    @Override
    public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
@@ -2054,7 +2054,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler)
     */
    @Override
    public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
@@ -2063,7 +2063,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler)
     */
    @Override
    public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
@@ -2072,7 +2072,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler)
     */
    @Override
    public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
@@ -2081,7 +2081,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler)
     */
    @Override
    public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
@@ -2090,7 +2090,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#addProblems(org.exoplatform.ide.editor.marking.Marker[])
+    * @see org.exoplatform.ide.editor.client.marking.Markable#addProblems(org.exoplatform.ide.editor.client.marking.Marker[])
     */
    @Override
    public void addProblems(Marker[] problems)
@@ -2100,7 +2100,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
+    * @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback)
     */
    @Override
    public void search(final String query, final boolean caseSensitive, final SearchCompleteCallback searchCompleteCallback)
@@ -2140,7 +2140,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceMatch(java.lang.String)
+    * @see org.exoplatform.ide.editor.client.api.Editor#replaceMatch(java.lang.String)
     */
    @Override
    public native void replaceMatch(String replacement)

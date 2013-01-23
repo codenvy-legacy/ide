@@ -14,11 +14,11 @@ import org.eclipse.jdt.client.ltk.refactoring.CategorizedTextEditGroup;
 import org.eclipse.jdt.client.ltk.refactoring.GroupCategorySet;
 import org.eclipse.jdt.client.ltk.refactoring.TextChange;
 import org.eclipse.jdt.client.ltk.refactoring.TextEditChangeGroup;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
-import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * A utility class to provide compatibility with the old

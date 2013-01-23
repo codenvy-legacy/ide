@@ -16,7 +16,7 @@ import org.eclipse.jdt.client.core.dom.AnonymousClassDeclaration;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.ParameterizedType;
 import org.eclipse.jdt.client.core.dom.VariableDeclarationFragment;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Proposal for a hashed serial version id.

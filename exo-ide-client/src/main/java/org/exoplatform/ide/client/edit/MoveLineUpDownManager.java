@@ -28,16 +28,16 @@ import org.exoplatform.ide.client.framework.editor.event.EditorMoveLineDownHandl
 import org.exoplatform.ide.client.framework.editor.event.EditorMoveLineUpEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorMoveLineUpHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
-import org.exoplatform.ide.editor.api.SelectionRange;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.edits.DeleteEdit;
-import org.exoplatform.ide.editor.text.edits.InsertEdit;
-import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.edits.DeleteEdit;
+import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
 
 /**
  * 

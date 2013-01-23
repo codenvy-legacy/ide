@@ -11,7 +11,7 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 
 import java.util.Comparator;
 

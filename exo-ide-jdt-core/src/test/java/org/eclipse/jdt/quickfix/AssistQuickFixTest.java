@@ -23,7 +23,7 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.AssignToVariabl
 import org.eclipse.jdt.client.internal.text.correction.proposals.CUCorrectionProposal;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.emul.FileSystem;
-import org.exoplatform.ide.editor.text.Document;
+import org.exoplatform.ide.editor.shared.text.Document;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

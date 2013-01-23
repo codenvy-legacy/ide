@@ -41,6 +41,9 @@ import org.eclipse.jdt.client.outline.OutlinePresenter;
 import org.eclipse.jdt.client.outline.QuickOutlinePresenter;
 import org.eclipse.jdt.client.outline.ShowQuickOutlineControl;
 import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
+import org.eclipse.jdt.client.refactoring.RefactoringClientServiceImpl;
+import org.eclipse.jdt.client.refactoring.rename.RefactoringRenameControl;
+import org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
 import org.eclipse.jdt.client.templates.ElementTypeResolver;
@@ -215,6 +218,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       new TypeInfoUpdater();
       new JavaClasspathResolver(this);
       new OrganizeImportsPresenter(IDE.eventBus());
+      new RefactoringRenamePresenter();
       IDE.getInstance().addControl(new CleanProjectControl());
       IDE.getInstance().addControl(new OrganizeImportsControl());
       IDE.getInstance().addControl(new CreatePackageControl());
@@ -223,6 +227,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().addControl(new AddGetterSetterControl());
       IDE.getInstance().addControl(new GenerateNewConstructorUsingFieldsControl());
       IDE.getInstance().addControl(new ViewJavadocControl());
+      IDE.getInstance().addControl(new RefactoringRenameControl());
       IDE.fireEvent(new AddCodeFormatterEvent(new JavaCodeFormatter(), MimeType.APPLICATION_JAVA));
 
       formatterProfileManager = new FormatterProfilePresenter(IDE.eventBus());
@@ -248,7 +253,8 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       REST_CONTEXT = event.getApplicationConfiguration().getContext();
       DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
       new CreatePackagePresenter(IDE.eventBus(), VirtualFileSystem.getInstance());
-      new CreateJavaClassPresenter(IDE.eventBus(),VirtualFileSystem.getInstance());      
+      new CreateJavaClassPresenter(IDE.eventBus(),VirtualFileSystem.getInstance());
+      new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader(), IDE.messageBus());
    }
 
    private void loadWellKnownClasses(String[] fqns)

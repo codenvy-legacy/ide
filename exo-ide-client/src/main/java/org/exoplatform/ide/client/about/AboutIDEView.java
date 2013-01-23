@@ -48,7 +48,7 @@ public class AboutIDEView extends ViewImpl implements org.exoplatform.ide.client
 
    private static final int WIDTH = 280;
 
-   private static final int HEIGHT = 345;
+   private static final int HEIGHT = 290;
 
    private static final String OK_BUTTON_ID = "ideAboutViewOkButton";
 

@@ -25,7 +25,7 @@ import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
-import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

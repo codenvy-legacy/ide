@@ -26,10 +26,10 @@ import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.DocumentMutator;
 
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.DocumentEvent;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IDocumentListener;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.DocumentEvent;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocumentListener;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -44,7 +44,7 @@ public class DocumentAdaptor implements IDocumentListener
    private Document editorDocument;
 
    /**
-    * @see org.exoplatform.ide.editor.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.text.DocumentEvent)
+    * @see org.exoplatform.ide.editor.shared.text.IDocumentListener#documentChanged(org.exoplatform.ide.editor.shared.text.DocumentEvent)
     */
    @Override
    public void documentChanged(DocumentEvent event)
