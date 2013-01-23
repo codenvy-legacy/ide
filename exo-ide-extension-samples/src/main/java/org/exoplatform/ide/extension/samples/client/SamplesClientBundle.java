@@ -100,7 +100,7 @@ public interface SamplesClientBundle extends ClientBundle
    /*
     * Welcome page images
     */
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/codenvy-welcome.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/logo.png")
    ImageResource ideLogo();
 
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/background.png")
