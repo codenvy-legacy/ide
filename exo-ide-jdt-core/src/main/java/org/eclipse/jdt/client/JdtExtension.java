@@ -42,8 +42,8 @@ import org.eclipse.jdt.client.outline.QuickOutlinePresenter;
 import org.eclipse.jdt.client.outline.ShowQuickOutlineControl;
 import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
 import org.eclipse.jdt.client.refactoring.RefactoringClientServiceImpl;
-import org.eclipse.jdt.client.refactoring.RefactoringRenameControl;
-import org.eclipse.jdt.client.refactoring.RefactoringRenamePresenter;
+import org.eclipse.jdt.client.refactoring.rename.RefactoringRenameControl;
+import org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter;
 import org.eclipse.jdt.client.templates.CodeTemplateContextType;
 import org.eclipse.jdt.client.templates.ContextTypeRegistry;
 import org.eclipse.jdt.client.templates.ElementTypeResolver;
@@ -254,7 +254,7 @@ public class JdtExtension extends Extension implements InitializeServicesHandler
       DOC_CONTEXT = REST_CONTEXT + "/ide/code-assistant/java/class-doc?fqn=";
       new CreatePackagePresenter(IDE.eventBus(), VirtualFileSystem.getInstance());
       new CreateJavaClassPresenter(IDE.eventBus(),VirtualFileSystem.getInstance());
-      new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader());
+      new RefactoringClientServiceImpl(REST_CONTEXT, event.getLoader(), IDE.messageBus());
    }
 
    private void loadWellKnownClasses(String[] fqns)

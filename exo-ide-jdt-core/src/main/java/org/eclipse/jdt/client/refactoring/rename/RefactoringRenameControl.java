@@ -16,19 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.refactoring;
+package org.eclipse.jdt.client.refactoring.rename;
 
-import com.google.gwt.event.shared.EventHandler;
+import org.eclipse.jdt.client.JdtExtension;
+import org.eclipse.jdt.client.internal.corext.codemanipulation.JavaControl;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**
+ * Control for rename refactoring.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: RefactoringRenameHandler.java Jan 17, 2013 4:51:04 PM azatsarynnyy $
+ * @version $Id: RefactoringRenameControl.java Jan 18, 2013 11:32:03 AM azatsarynnyy $
  *
  */
-public interface RefactoringRenameHandler extends EventHandler
+public class RefactoringRenameControl extends JavaControl
 {
 
-   void onRename(RefactoringRenameEvent event);
+   public RefactoringRenameControl()
+   {
+      super(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlId());
+      setTitle(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlTitle());
+      setPrompt(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameControlPrompt());
+      setEvent(new RefactoringRenameEvent());
+      setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
+      setShowInContextMenu(true);
+   }
 
 }

@@ -21,9 +21,11 @@ package org.eclipse.jdt.client.refactoring;
 import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 
 /**
- * Client service for refactoring feature.
+ * Client service for refactoring features.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: RefactoringClientService.java Jan 17, 2013 4:11:22 PM azatsarynnyy $
@@ -45,7 +47,22 @@ public abstract class RefactoringClientService
    }
 
    /**
-    * Rename a Java element using refactoring.
+    * Rename a Java element using refactoring. Send request over WebSocket.
+    * 
+    * @param vfsId
+    * @param projectId
+    * @param fqn
+    * @param offset
+    * @param newName
+    * @param callback
+    * 
+    * @throws WebSocketException
+    */
+   public abstract void renameWS(String vfsId, String projectId, String fqn, int offset, String newName,
+      RequestCallback<Object> callback) throws WebSocketException;
+
+   /**
+    * Rename a Java element using refactoring. Send request over HTTP.
     * 
     * @param vfsId
     * @param projectId
