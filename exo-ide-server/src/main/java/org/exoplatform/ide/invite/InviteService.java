@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.invite;
 
+import org.codenvy.mail.MailSenderClient;
+import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.registry.RegistryEntry;
@@ -30,6 +32,7 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +40,7 @@ import java.util.UUID;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.mail.MessagingException;
 
 /**
  * Sends invites to user join to the cloud-ide domain.
@@ -52,7 +56,9 @@ public class InviteService
 
    private final RegistryService registry;
 
-   private final MailSender mailSender;
+   private final MailSenderClient mailSender;
+
+   private final TemplateResolver templateResolver;
 
    private final SessionProviderService sessionProviderService;
 
@@ -60,14 +66,16 @@ public class InviteService
 
    private final InviteMessagePropertiesProvider inviteMessagePropertiesProvider;
 
-   public InviteService(RegistryService registry, SessionProviderService sessionProviderService, MailSender mailSender,
-      InviteUserService inviteUserService, InviteMessagePropertiesProvider messagePropertiesProvider)
+   public InviteService(RegistryService registry, SessionProviderService sessionProviderService,
+      MailSenderClient mailSender, InviteUserService inviteUserService,
+      InviteMessagePropertiesProvider messagePropertiesProvider, TemplateResolver templateResolver)
    {
       this.registry = registry;
       this.mailSender = mailSender;
       this.sessionProviderService = sessionProviderService;
       this.inviteUserService = inviteUserService;
       this.inviteMessagePropertiesProvider = messagePropertiesProvider;
+      this.templateResolver = templateResolver;
    }
 
    /**
@@ -212,7 +220,8 @@ public class InviteService
       newInvite.setUuid(UUID.randomUUID().toString());
 
       saveInvite(newInvite);
-      // send mail.
+
+      // send mail
       try
       {
          Map<String, Object> inviteMessageProperties = inviteMessagePropertiesProvider.getInviteMessageProperties();
@@ -227,20 +236,12 @@ public class InviteService
                + mailBody + "</p></td>");
          }
 
-         if (isUserRegisteredGlobally(to))
-         {
-            mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
-               "template-mail-invitation-registered-user", inviteMessageProperties);
-         }
-         else
-         {
-            mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
-               "template-mail-invitation", inviteMessageProperties);
-         }
+         doSendMail(to, from, inviteMessageProperties);
       }
       catch (SendingIdeMailException e)
       {
          LOG.error(e.getLocalizedMessage(), e);
+
          // remove invite from registry if sending failed.
          try
          {
@@ -248,11 +249,43 @@ public class InviteService
          }
          catch (InviteException ignored)
          {
-            LOG.error(e.getLocalizedMessage(), e);
+            LOG.error(ignored.getLocalizedMessage(), ignored);
          }
+
          throw new InviteException(e.getStatus(), e.getLocalizedMessage());
       }
+   }
 
+   private void doSendMail(String to, String from, Map<String, Object> inviteMessageProperties) throws InviteException,
+      SendingIdeMailException
+   {
+      try
+      {
+         String templateContent;
+         if (isUserRegisteredGlobally(to))
+         {
+            templateContent =
+               templateResolver.resolveTemplate("template-mail-invitation-registered-user", inviteMessageProperties);
+         }
+         else
+         {
+            templateContent = templateResolver.resolveTemplate("template-mail-invitation", inviteMessageProperties);
+         }
+         mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
+            templateContent);
+      }
+      catch (IOException e)
+      {
+         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
+      }
+      catch (MessagingException e)
+      {
+         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
+      }
+      catch (ConfigurationException e)
+      {
+         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
+      }
    }
 
    /**

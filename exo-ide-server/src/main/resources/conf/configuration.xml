@@ -36,7 +36,7 @@
 	</component>
 
 	<component>
-		<type>org.exoplatform.ide.invite.ExoMailSender</type>
+		<type>org.codenvy.mail.MailSenderClient</type>
 	</component>
 
 	<component>
@@ -69,25 +69,6 @@
 				<name>template-contact-us-mail</name>
 				<value>/template-contact-us-mail.html</value>
 			</value-param>
-		</init-params>
-	</component>
-
-	<!-- Support for mail sending ability -->
-	<component>
-		<key>org.exoplatform.services.mail.MailService</key>
-		<type>org.exoplatform.services.mail.impl.MailServiceImpl</type>
-		<init-params>
-			<properties-param>
-				<name>config</name>
-				<property name="mail.smtp.host" value="smtp.gmail.com" />
-				<property name="mail.smtp.port" value="465" />
-				<property name="mail.transport.protocol" value="smtp" />
-				<property name="mail.smtp.auth" value="true" />
-				<property name="mail.smtp.auth.username" value="exo.cloud.ide1@gmail.com" />
-				<property name="mail.smtp.auth.password" value="cloudIDEuAeXo2" />
-				<property name="mail.smtp.socketFactory.class" value="javax.net.ssl.SSLSocketFactory" />
-				<property name="mail.smtp.socketFactory.fallback" value="false" />
-			</properties-param>
 		</init-params>
 	</component>
 
