@@ -150,6 +150,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    private static final String DEFAULT_SOURCE_FOLDER = "src/main/java";
 
    /**
+    * Default Maven 'testSourceDirectory' value.
+    */
+   private static final String DEFAULT_TEST_SOURCE_FOLDER = "src/test/java";
+
+   /**
     * Display.
     */
    private Display display;
@@ -308,7 +313,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          else
          {
             String name = fileToRenameFromPackageExplorer.getName();
-            originElementName = name.substring(0, name.length()-5); // excluding ".java"
+            originElementName = name.substring(0, name.length() - 5); // excluding ".java"
          }
       }
       catch (BadLocationException e)
@@ -363,7 +368,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
          if (coveringNode.getNodeType() == ASTNode.SIMPLE_NAME)
          {
-            //            IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
+            //IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
             return coveringNode;
             //            ASTNode parentNode = coveringNode.getParent();
             //            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
@@ -453,7 +458,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          if (fileToRenameFromPackageExplorer == null)
          {
             fqn = getFqn(activeFile);
-            offset = activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
+            offset =
+               activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
                   + activeEditor.getSelectionRange().getStartSymbol();
          }
          else
@@ -502,7 +508,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          if (fileToRenameFromPackageExplorer == null)
          {
             fqn = getFqn(activeFile);
-            offset = activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
+            offset =
+               activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
                   + activeEditor.getSelectionRange().getStartSymbol();
          }
          else
@@ -637,17 +644,31 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    }
 
    /**
-    * Returns the fully qualified name of the provided class.
+    * Returns the fully-qualified name of the top-level class from provided file.
     * 
     * @param file {@link FileModel}
-    * @return FQN of the top-level class from <code>activeFile</code>
+    * @return fqn of the top-level class from provided file,
+    *          or <code>null</code> if calculating fqn is missing
     */
    private String getFqn(FileModel file)
    {
       ProjectModel project = file.getProject();
       String sourcePath =
          project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder") : DEFAULT_SOURCE_FOLDER;
-      String fqn = file.getPath().substring((project.getPath() + "/" + sourcePath + "/").length());
+      String fqn = null;
+      if (file.getPath().indexOf(sourcePath) != -1)
+      {
+         fqn = file.getPath().substring((project.getPath() + "/" + sourcePath + "/").length());
+      }
+      else if (file.getPath().indexOf(DEFAULT_TEST_SOURCE_FOLDER) != -1)
+      {
+         fqn = file.getPath().substring((project.getPath() + "/" + DEFAULT_TEST_SOURCE_FOLDER + "/").length());
+      }
+      else
+      {
+         return null;
+      }
+
       fqn = fqn.replaceAll("/", ".");
       fqn = fqn.substring(0, fqn.lastIndexOf('.'));
       return fqn;
