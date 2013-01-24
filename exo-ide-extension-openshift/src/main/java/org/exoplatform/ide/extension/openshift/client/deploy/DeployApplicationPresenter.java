@@ -430,10 +430,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             }
             else
             {
-//               if (projectType == ProjectType.SPRING)
-//               {
-//                  addUpstreamSpringSources();
-//               }
                setProjectType();
             }
          }
@@ -510,32 +506,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       String applicationName = display.getApplicationNameField().getValue();
       IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, lb.createApplicationFail(applicationName)));
       deployResultHandler.onDeployFinished(false);
-   }
-
-   private void addUpstreamSpringSources() //TODO review this
-   {
-      String gitUrl = "git://github.com/openshift/spring-eap6-quickstart.git";
-      try
-      {
-         GitClientService.getInstance().remoteAdd(vfs.getId(), project.getId(), "spring-eap6-quickstart", gitUrl, new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               IDE.fireEvent(new OutputEvent("Spring sources pulled successfully"));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError("Failed to fetch spring sources");
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
    }
 
    /**
