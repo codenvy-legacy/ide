@@ -46,6 +46,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.core.MediaType;
 
@@ -81,7 +83,9 @@ public class OpenProjectTest extends ResourcesBaseTest
       IProject project = ws.getRoot().getProject("proj");
       IJavaProject javaProject = JavaCore.create(project);
       javaProject.open(null);
-      JavaModelManager.getIndexManager().indexAll(javaProject.getProject());
+      CountDownLatch latch = new CountDownLatch(2);
+      JavaModelManager.getIndexManager().indexAll(javaProject.getProject(), latch);
+      latch.await(2, TimeUnit.MINUTES);
       IType type = javaProject.findType("com.exo.My");
       RenameSupport renameSupport = RenameSupport.create(type.getCompilationUnit(), "MyClass",
          RenameSupport.UPDATE_REFERENCES);
@@ -106,7 +110,9 @@ public class OpenProjectTest extends ResourcesBaseTest
       IProject project = ws.getRoot().getProject("proj");
       IJavaProject javaProject = JavaCore.create(project);
       javaProject.open(null);
-      JavaModelManager.getIndexManager().indexAll(javaProject.getProject());
+      CountDownLatch latch = new CountDownLatch(2);
+      JavaModelManager.getIndexManager().indexAll(javaProject.getProject(), latch);
+      latch.await(2, TimeUnit.MINUTES);
       IType type = javaProject.findType("com.exo.Foo");
       RenameSupport renameSupport = RenameSupport.create(type.getField("fff"), "www",
          RenameSupport.UPDATE_REFERENCES);

@@ -35,6 +35,7 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.gwtframework.ui.client.dialog.StringValueReceivedHandler;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.job.JobManager;
@@ -61,7 +62,7 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
-import org.exoplatform.ide.git.client.GitClientService;
+import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
@@ -212,8 +213,8 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#deploy(org.exoplatform.ide.client.framework.template.ProjectTemplate,
+    *      org.exoplatform.ide.client.framework.paas.DeployResultHandler)
     */
    @Override
    public void deploy(ProjectTemplate projectTemplate, DeployResultHandler deployResultHandler)
@@ -226,10 +227,104 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       }
       else
       {
-         createFolder();
+         getUserInfo();
       }
    }
 
+   private void getUserInfo()
+   {
+      try
+      {
+         AutoBean<RHUserInfo> rhUserInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.rhUserInfo();
+         AutoBeanUnmarshaller<RHUserInfo> unmarshaller = new AutoBeanUnmarshaller<RHUserInfo>(rhUserInfo);
+         OpenShiftClientService.getInstance().getUserInfo(true, new AsyncRequestCallback<RHUserInfo>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(RHUserInfo result)
+            {
+               if ("Doesn't exist".equals(result.getNamespace()))
+               {
+                  //create a domain
+                  StringValueReceivedHandler handler = new StringValueReceivedHandler()
+                  {
+                     @Override
+                     public void stringValueReceived(String value)
+                     {
+                        if (value != null && !value.isEmpty() && value.matches("[A-Za-z0-9]+") && value.length() < 17)
+                        {
+                           createDomain(value);
+                        }
+                        else
+                        {
+                           Dialogs.getInstance().showError("Namespace name must be contains latin characters only and not longer then 16 characters.");
+                        }
+                     }
+                  };
+
+                  Dialogs.getInstance().askForValue("Create new namespace",
+                     "You must enter a name for your new namespace.",
+                     "",
+                     handler);
+               }
+               else
+               {
+                  //create an application
+                  createFolder();
+               }
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .getUserInfoFail()));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT.getUserInfoFail()));
+      }
+   }
+
+   private void createDomain(final String domainName)
+   {
+      try
+      {
+         OpenShiftClientService.getInstance().createDomain(domainName, false, new AsyncRequestCallback<String>()
+         {
+
+            @Override
+            protected void onSuccess(String result)
+            {
+               IDE.fireEvent(new OutputEvent(OpenShiftExtension.LOCALIZATION_CONSTANT.createDomainSuccess(domainName),
+                  Type.INFO));
+               createFolder();
+            }
+
+            /**
+             * @see org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback#onFailure(java.lang.Throwable)
+             */
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               String randString = Double.toString(Math.random()).substring(2);
+               String newUniqueDomain = domainName + randString.substring(domainName.length());
+               createDomain(newUniqueDomain);
+               IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
+                  .createDomainFail(domainName)));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new OpenShiftExceptionThrownEvent(e, OpenShiftExtension.LOCALIZATION_CONSTANT
+            .createDomainFail(domainName)));
+      }
+   }
 
    private void createFolder()
    {
@@ -430,10 +525,6 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             }
             else
             {
-//               if (projectType == ProjectType.SPRING)
-//               {
-//                  addUpstreamSpringSources();
-//               }
                setProjectType();
             }
          }
@@ -471,7 +562,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#getDeployView(java.lang.String,
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#getDeployView(java.lang.String,
     *      org.exoplatform.ide.client.framework.project.ProjectType)
     */
    @Override
@@ -512,35 +603,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
       deployResultHandler.onDeployFinished(false);
    }
 
-   private void addUpstreamSpringSources() //TODO review this
-   {
-      String gitUrl = "git://github.com/openshift/spring-eap6-quickstart.git";
-      try
-      {
-         GitClientService.getInstance().remoteAdd(vfs.getId(), project.getId(), "spring-eap6-quickstart", gitUrl, new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               IDE.fireEvent(new OutputEvent("Spring sources pulled successfully"));
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               Dialogs.getInstance().showError("Failed to fetch spring sources");
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
    /**
-    * @see org.exoplatform.ide.client.framework.paas.recent.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
-    *      org.exoplatform.ide.client.framework.paas.recent.DeployResultHandler)
+    * @see org.exoplatform.ide.client.framework.paas.HasPaaSActions#deploy(org.exoplatform.ide.vfs.client.model.ProjectModel,
+    *      org.exoplatform.ide.client.framework.paas.DeployResultHandler)
     */
    @Override
    public void deploy(ProjectModel project, DeployResultHandler deployResultHandler)

@@ -56,7 +56,7 @@ import java.util.List;
  * @version $Id: Mar 14, 2012 5:26:59 PM anya $
  * 
  */
-public class ManageApplicationsPresenter implements ManageApplicationsHandler, ViewClosedHandler, LoggedInHandler,
+public class ManageApplicationsPresenter implements ManageApplicationsHandler, ViewClosedHandler,
    ApplicationDeletedHandler, ApplicationRenamedHandler
 {
    interface Display extends IsView
@@ -160,20 +160,6 @@ public class ManageApplicationsPresenter implements ManageApplicationsHandler, V
       {
          display = GWT.create(Display.class);
          bindDisplay();
-         IDE.getInstance().openView(display.asView());
-      }
-      getApplications();
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler#onLoggedIn(org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent)
-    */
-   @Override
-   public void onLoggedIn(LoggedInEvent event)
-   {
-      IDE.removeHandler(LoggedInEvent.TYPE, this);
-      if (!event.isFailed())
-      {
          getApplications();
       }
    }
@@ -195,14 +181,31 @@ public class ManageApplicationsPresenter implements ManageApplicationsHandler, V
     */
    public void getApplications()
    {
+      LoggedInHandler loggedInHandler = new LoggedInHandler()
+      {
+         @Override
+         public void onLoggedIn(LoggedInEvent event)
+         {
+            if (!event.isFailed())
+            {
+               IDE.getInstance().openView(display.asView());
+               getApplications();
+            }
+         }
+      };
+
       try
       {
-         HerokuClientService.getInstance().listApplications(new ApplicationListAsyncRequestCallback(this)
+         HerokuClientService.getInstance().listApplications(new ApplicationListAsyncRequestCallback(loggedInHandler)
          {
 
             @Override
             protected void onSuccess(List<String> result)
             {
+               if (!display.asView().isActive())
+               {
+                  IDE.getInstance().openView(display.asView());
+               }
                Collections.sort(result);
                display.getAppsGrid().setValue(result);
             }

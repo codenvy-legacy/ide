@@ -32,10 +32,19 @@ import org.eclipse.jdt.internal.core.util.Util;
 import java.io.IOException;
 import java.net.URI;
 import java.util.HashSet;
+import java.util.concurrent.CountDownLatch;
 
 public class IndexAllProject extends IndexRequest
 {
    IProject project;
+
+   private CountDownLatch latch;
+
+   public IndexAllProject(IProject project,IndexManager manager,  CountDownLatch latch)
+   {
+      this(project, manager);
+      this.latch = latch;
+   }
 
    public IndexAllProject(IProject project, IndexManager manager)
    {
@@ -62,10 +71,18 @@ public class IndexAllProject extends IndexRequest
 
       if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled())
       {
+         if(latch != null)
+         {
+           latch.countDown();
+         }
          return true;
       }
       if (!this.project.isAccessible())
       {
+         if(latch != null)
+         {
+            latch.countDown();
+         }
          return true; // nothing to do
       }
 
@@ -130,6 +147,10 @@ public class IndexAllProject extends IndexRequest
 
          monitor.enterRead(); // ask permission to read
 
+         if(!index.getIndexFile().exists())
+         {
+            index.reset();
+         }
          String[] paths = index.queryDocumentNames(""); // all file names //$NON-NLS-1$
          int max = paths == null ? 0 : paths.length;
          final SimpleLookupTable indexedFileNames = new SimpleLookupTable(max == 0 ? 33 : max + 11);
@@ -306,7 +327,7 @@ public class IndexAllProject extends IndexRequest
          }
 
          // request to save index when all cus have been indexed... also sets state to SAVED_STATE
-         this.manager.request(new SaveIndex(this.containerPath, this.manager));
+         this.manager.request(new SaveIndex(this.containerPath, this.manager, this.latch));
       }
       catch (CoreException e)
       {
@@ -335,6 +356,10 @@ public class IndexAllProject extends IndexRequest
          if (monitor != null)
          {
             monitor.exitRead(); // free read lock
+         }
+         if(latch != null)
+         {
+            latch.countDown();
          }
       }
       return true;

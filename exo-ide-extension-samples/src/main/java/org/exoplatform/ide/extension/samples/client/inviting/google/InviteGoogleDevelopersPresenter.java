@@ -251,7 +251,6 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             }
             else
             {
-               display.asView().setViewVisible();
                loadContactsFailed();
             }
          }
@@ -269,7 +268,6 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    {
       try
       {
-         display.asView().setViewVisible();
          GoogleContactsService.getInstance().getContacts(
             new AsyncRequestCallback<List<GoogleContact>>(new InviteGoogleContactsUnmarshaller(
                new ArrayList<GoogleContact>()))
@@ -277,6 +275,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                @Override
                protected void onSuccess(List<GoogleContact> result)
                {
+                  IDE.getInstance().openView(display.asView());
                   googleContactsReceived(result);
                }
 
@@ -296,7 +295,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    
    private void loadContactsFailed()
    {
-      display.asView().setViewVisible();
+      IDE.getInstance().openView(display.asView());
       display.setDevelopersListVisible(false);
    }
 

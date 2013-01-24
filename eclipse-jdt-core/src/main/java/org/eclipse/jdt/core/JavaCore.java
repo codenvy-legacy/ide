@@ -2913,20 +2913,20 @@ public final class JavaCore
       super();
       //      JAVA_CORE_PLUGIN = this;
       JAVA_CORE = this;
-      String path = System.getProperty("com.codenvy.project.index");
-      if (path != null)
-      {
-         indexPath = path;
-      }
-      else
-      {
-         indexPath = System.getProperty("java.io.tmpdir") + "/" + UUID.randomUUID().toString();
-      }
-      File f = new File(indexPath);
-      if (!f.exists())
-      {
-         f.mkdirs();
-      }
+//      String path = System.getProperty("com.codenvy.project.index");
+//      if (path != null)
+//      {
+//         indexPath = path;
+//      }
+//      else
+//      {
+         indexPath = System.getProperty("java.io.tmpdir") ;//+ "/" + UUID.randomUUID().toString();
+//      }
+//      File f = new File(indexPath);
+//      if (!f.exists())
+//      {
+//         f.mkdirs();
+//      }
    }
 
    /**
