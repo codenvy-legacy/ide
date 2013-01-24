@@ -13,6 +13,7 @@ package org.eclipse.jdt.internal.core.search.indexing;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.zip.CRC32;
 
 import org.eclipse.core.resources.*;
@@ -186,7 +187,7 @@ public class IndexManager extends JobManager implements IIndexConstants
          String pathString = containerPath.toOSString();
          CRC32 checksumCalculator = new CRC32();
          checksumCalculator.update(pathString.getBytes());
-         String fileName = Long.toString(checksumCalculator.getValue()) + ".index"; //$NON-NLS-1$
+         String fileName = UUID.randomUUID().toString() + Long.toString(checksumCalculator.getValue()) + ".index"; //$NON-NLS-1$
          if (VERBOSE)
          {
             Util.verbose("-> index name for " + pathString + " is " + fileName); //$NON-NLS-1$ //$NON-NLS-2$
@@ -637,7 +638,7 @@ public class IndexManager extends JobManager implements IIndexConstants
     * Trigger addition of the entire content of a project
     * Note: the actual operation is performed in background
     */
-   public void indexAll(IProject project)
+   public void indexAll(IProject project, CountDownLatch latch)
    {
       if (JavaCore.getJavaCore() == null)
       {
@@ -668,7 +669,7 @@ public class IndexManager extends JobManager implements IIndexConstants
       }
 
       // check if the same request is not already in the queue
-      IndexRequest request = new IndexAllProject(project, this);
+      IndexRequest request = new IndexAllProject(project, this, latch);
       if (!isJobWaiting(request))
       {
          request(request);

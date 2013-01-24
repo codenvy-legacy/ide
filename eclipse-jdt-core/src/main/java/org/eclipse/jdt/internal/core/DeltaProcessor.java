@@ -26,7 +26,6 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.*;
 import org.eclipse.jdt.core.*;
@@ -38,7 +37,6 @@ import org.eclipse.jdt.internal.core.hierarchy.TypeHierarchy;
 import org.eclipse.jdt.internal.core.search.AbstractSearchScope;
 import org.eclipse.jdt.internal.core.search.JavaWorkspaceScope;
 import org.eclipse.jdt.internal.core.search.indexing.IndexManager;
-import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
 
 /**
@@ -3227,7 +3225,7 @@ public class DeltaProcessor
                         // remember that the project's cache must be reset
                         this.projectCachesToReset.add(element);
 
-                        this.manager.indexManager.indexAll(res);
+                        this.manager.indexManager.indexAll(res, null);
                      }
                   }
                   else
@@ -3260,7 +3258,7 @@ public class DeltaProcessor
                      if (isJavaProject)
                      {
                         elementAdded(element, delta, rootInfo);
-                        this.manager.indexManager.indexAll(res);
+                        this.manager.indexManager.indexAll(res, null);
                      }
                      else
                      {
@@ -3299,7 +3297,7 @@ public class DeltaProcessor
             switch (delta.getKind())
             {
                case IResourceDelta.ADDED:
-                  indexManager.indexAll(element.getJavaProject().getProject());
+                  indexManager.indexAll(element.getJavaProject().getProject(), null);
                   break;
                case IResourceDelta.REMOVED:
                   indexManager.removeIndexFamily(element.getJavaProject().getProject().getFullPath());

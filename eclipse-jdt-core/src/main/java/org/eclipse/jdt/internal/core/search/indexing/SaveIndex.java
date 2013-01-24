@@ -11,6 +11,7 @@
 package org.eclipse.jdt.internal.core.search.indexing;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,35 +22,74 @@ import org.eclipse.jdt.internal.core.util.Util;
 /*
  * Save the index of a project.
  */
-public class SaveIndex extends IndexRequest {
-	public SaveIndex(IPath containerPath, IndexManager manager) {
-		super(containerPath, manager);
-	}
-	public boolean execute(IProgressMonitor progressMonitor) {
+public class SaveIndex extends IndexRequest
+{
+   private CountDownLatch latch;
 
-		if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
+   public SaveIndex(IPath containerPath, IndexManager manager)
+   {
+      super(containerPath, manager);
+   }
+
+   public SaveIndex(IPath containerPath, IndexManager manager, CountDownLatch latch)
+   {
+      this(containerPath, manager);
+      this.latch = latch;
+   }
+
+   public boolean execute(IProgressMonitor progressMonitor)
+   {
+
+      if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled())
+      {
+         if(latch != null)
+         {
+            latch.countDown();
+         }
+         return true;
+      }
 
 		/* ensure no concurrent write access to index */
-		Index index = this.manager.getIndex(this.containerPath, true /*reuse index file*/, false /*don't create if none*/);
-		if (index == null) return true;
-		ReadWriteMonitor monitor = index.monitor;
-		if (monitor == null) return true; // index got deleted since acquired
+      Index index = this.manager.getIndex(this.containerPath, true /*reuse index file*/,
+         false /*don't create if none*/);
+      if (index == null)
+      {
+         return true;
+      }
+      ReadWriteMonitor monitor = index.monitor;
+      if (monitor == null)
+      {
+         return true; // index got deleted since acquired
+      }
 
-		try {
-			monitor.enterWrite(); // ask permission to write
-			this.manager.saveIndex(index);
-		} catch (IOException e) {
-			if (JobManager.VERBOSE) {
-				Util.verbose("-> failed to save index " + this.containerPath + " because of the following exception:", System.err); //$NON-NLS-1$ //$NON-NLS-2$
-				e.printStackTrace();
-			}
-			return false;
-		} finally {
-			monitor.exitWrite(); // free write lock
-		}
-		return true;
-	}
-	public String toString() {
-		return "saving index for " + this.containerPath; //$NON-NLS-1$
-	}
+      try
+      {
+         monitor.enterWrite(); // ask permission to write
+         this.manager.saveIndex(index);
+      }
+      catch (IOException e)
+      {
+         if (JobManager.VERBOSE)
+         {
+            Util.verbose("-> failed to save index " + this.containerPath + " because of the following exception:",
+               System.err); //$NON-NLS-1$ //$NON-NLS-2$
+            e.printStackTrace();
+         }
+         return false;
+      }
+      finally
+      {
+         monitor.exitWrite(); // free write lock
+         if(latch != null)
+         {
+            latch.countDown();
+         }
+      }
+      return true;
+   }
+
+   public String toString()
+   {
+      return "saving index for " + this.containerPath; //$NON-NLS-1$
+   }
 }
