@@ -54,6 +54,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
@@ -81,6 +82,10 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
 
    private final SupportedProjectResolver projectResolver;
 
+   private boolean stillWork;
+   
+   private static JavaClasspathResolver instance;
+
    /**
     *
     */
@@ -93,8 +98,13 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       IDE.addHandler(PackageCreatedEvent.TYPE, this);
+      instance = this;
    }
-
+   
+   public static JavaClasspathResolver getInstance()
+   {
+      return instance;
+   }
    /**
     * @see org.exoplatform.ide.client.framework.event.FileSavedHandler#onFileSaved(org.exoplatform.ide.client.framework.event.FileSavedEvent)
     */
@@ -221,8 +231,23 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
    {
       project = event.getProject();
    }
-
+   
    private void resolveDependencies(ProjectModel... projects)
+   {
+      stillWork = true;
+      if (WebSocket.isSupported())
+      {
+         resolveDependenciesWS(projects);
+      }
+      else
+      {
+        resolveDependenciesRest(projects);   
+      }
+         
+   }
+   
+
+   private void resolveDependenciesWS(ProjectModel... projects)
    {
       for (ProjectModel project : projects)
       {
@@ -251,6 +276,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   @Override
                   protected void onFailure(Throwable exception)
                   {
+                     stillWork = false;
                      updateDependencyStatusHandler.requestError(projectId, exception);
 //                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
                      exception.printStackTrace();
@@ -292,6 +318,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   @Override
                   protected void onFailure(Throwable exception)
                   {
+                     stillWork = false;
                      updateDependencyStatusHandler.requestError(projectId, exception);
 //                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
                      exception.printStackTrace();
@@ -303,6 +330,11 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
             e.printStackTrace();
          }
       }
+   }
+   
+   public boolean isStillWork()
+   {
+      return stillWork;
    }
 
    /**
@@ -335,6 +367,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
          TypeInfoStorage.get().setPackages(projectId, stringSet);
          IDE.fireEvent(new ReparseOpenedFilesEvent());
       }
+      stillWork=false;
    }
 
    private class UpdateDependencyStatusHandler implements RequestStatusHandler
