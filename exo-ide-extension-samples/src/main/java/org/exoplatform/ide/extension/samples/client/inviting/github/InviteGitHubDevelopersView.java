@@ -175,7 +175,7 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
    }
 
    @Override
-   public String getInviteMessge()
+   public String getInviteMessage()
    {
       return inviteMessage.getValue();
    }
