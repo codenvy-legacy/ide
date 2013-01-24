@@ -35,6 +35,7 @@ import com.google.gwt.user.client.ui.HasValue;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialog;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
@@ -132,7 +133,6 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       selectedEmailsList.clear();
       emailsToInvite.clear();    
       display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
       bindDisplay();
       display.showEmailsHint();
       contacts = new ArrayList<GoogleContact>();
@@ -218,18 +218,18 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 
    protected void showLoginWindow()
    {
-
       String message =
          "If you want to invite someone from your Google contact list, <br> "
-            + "press Yes button and you will be redirected to Google authorization page. <br>";
+            + "press Yes button and you will be redirected to Google authorization page.";
 
-      Dialogs.getInstance().ask("You have to be logged in Google account!", message, new BooleanValueReceivedHandler()
+      Dialog askDialog = new Dialog("You have to be logged in Google account!", message, Dialog.Type.ASK);
+
+      BooleanValueReceivedHandler handler = new BooleanValueReceivedHandler()
       {
-
          @Override
-         public void booleanValueReceived(Boolean value)
+         public void booleanValueReceived(Boolean aBoolean)
          {
-            if (value)
+            if (aBoolean != null && aBoolean)
             {
                String authUrl = Utils.getAuthorizationContext()//
                   + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
@@ -244,15 +244,21 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                JsPopUpOAuthWindow authWindow =
                   new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
                authWindow.loginWithOAuth();
-               IDE.getInstance().closeView(display.asView().getId());
+               if (display != null)
+               {
+                  display = null;
+               }
             }
-            else 
+            else
             {
                loadContactsFailed();
             }
-
          }
-      });
+      };
+
+      askDialog.setBooleanValueReceivedHandler(handler);
+
+      Dialogs.getInstance().showDialog(askDialog);
    }
 
    /**
@@ -269,6 +275,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                @Override
                protected void onSuccess(List<GoogleContact> result)
                {
+                  IDE.getInstance().openView(display.asView());
                   googleContactsReceived(result);
                }
 
@@ -288,6 +295,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    
    private void loadContactsFailed()
    {
+      IDE.getInstance().openView(display.asView());
       display.setDevelopersListVisible(false);
    }
 

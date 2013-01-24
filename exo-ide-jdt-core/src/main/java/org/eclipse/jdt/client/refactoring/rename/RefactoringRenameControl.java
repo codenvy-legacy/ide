@@ -40,7 +40,9 @@ public class RefactoringRenameControl extends JavaControl
       setEvent(new RefactoringRenameEvent());
       setHotKey("Alt+Shift+R");
       setImages(JavaClientBundle.INSTANCE.blankImage(), JavaClientBundle.INSTANCE.blankImage());
-      setShowInContextMenu(true);
+
+      // TODO remove from context menu while bug with group name will fixed
+      //setShowInContextMenu(true);
    }
 
 }

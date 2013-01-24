@@ -23,6 +23,7 @@ import org.exoplatform.services.mail.MailService;
 
 import java.io.IOException;
 import java.util.Map;
+
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
 
@@ -33,6 +34,7 @@ import javax.mail.internet.MimeMessage;
  * Decoupled from MailSender for future use of MailSender in cloud-admin environment with other implementation
  * of mail sending and template resolver classes.
  */
+@Deprecated
 public class ExoMailSender extends MailSender
 {
    private final MailService mailService;
@@ -46,8 +48,8 @@ public class ExoMailSender extends MailSender
    }
 
    @Override
-   public String getMessageBody(String templateName,
-                                Map<String, Object> templateProperties) throws SendingIdeMailException
+   public String getMessageBody(String templateName, Map<String, Object> templateProperties)
+      throws SendingIdeMailException
    {
       try
       {

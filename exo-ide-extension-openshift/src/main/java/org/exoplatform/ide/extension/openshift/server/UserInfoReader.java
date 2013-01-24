@@ -63,11 +63,12 @@ public class UserInfoReader implements ExpressResponseReader<RHUserInfo>
          String resultSrc = resultJson.getStringValue();
          jsonParser.parse(new StringReader(resultSrc));
          JsonValue userInfoJson = jsonParser.getJsonObject().getElement("user_info");
+         JsonValue namespace = userInfoJson.getElement("namespace");
          RHUserInfo rhUserInfo = new RHUserInfoImpl( //
             userInfoJson.getElement("rhc_domain").getStringValue(), //
             userInfoJson.getElement("uuid").getStringValue(), //
             userInfoJson.getElement("rhlogin").getStringValue(), //
-            userInfoJson.getElement("namespace").getStringValue() //
+            namespace == null ? "Doesn't exist" : namespace.getStringValue() //
          );
 
          if (appsInfo)
