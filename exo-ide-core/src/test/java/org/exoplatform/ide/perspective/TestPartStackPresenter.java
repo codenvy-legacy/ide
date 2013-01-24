@@ -14,12 +14,11 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.part;
+package org.exoplatform.ide.perspective;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -29,6 +28,10 @@ import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.ide.part.PartPresenter;
+import org.exoplatform.ide.part.PartStackPresenter;
+import org.exoplatform.ide.part.PartStackUIResources;
+import org.exoplatform.ide.part.PartStackView;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,8 +42,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 /**
- * 
- * Testing {@link PartStackPresenter} functionality
+ * Testing {@link PartStackPresenter} functionality.
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
@@ -58,9 +60,6 @@ public class TestPartStackPresenter
 
    @Mock
    PartStackPresenter.PartStackEventHandler handler;
-
-   @Mock
-   PartPresenter part;
 
    @InjectMocks
    PartStackPresenter stack;
@@ -92,6 +91,7 @@ public class TestPartStackPresenter
    @Test
    public void shoudNotifyPartChanged()
    {
+      PartPresenter part = mock(PartPresenter.class);
       when(part.getTitleImage()).thenReturn(null);
 
       stack.addPart(part);
@@ -133,14 +133,12 @@ public class TestPartStackPresenter
       PartPresenter part2 = mock(PartPresenter.class);
 
       stack.addPart(part);
-
       assertEquals("shoud activate part", part, stack.getActivePart());
 
       stack.addPart(part2);
       assertEquals("shoud activate part2", part2, stack.getActivePart());
    }
 
-   
    @Test
    public void shoudSetActivatePart()
    {
@@ -175,15 +173,5 @@ public class TestPartStackPresenter
       // check first activated
       stack.setActivePart(part);
       verify(handler).onActivePartChanged(eq(part));
-      
-      reset(handler);
-      // imitate close, second should activate
-      stack.close(part);
-      verify(handler).onActivePartChanged(eq(part2));
-      
-      reset(handler);
-      // imitate close of the last one, active must be null
-      stack.close(part2);
-      verify(handler).onActivePartChanged((PartPresenter)isNull());
    }
 }
