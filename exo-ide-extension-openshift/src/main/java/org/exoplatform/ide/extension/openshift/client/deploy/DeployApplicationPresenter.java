@@ -250,13 +250,13 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                      @Override
                      public void stringValueReceived(String value)
                      {
-                        if (value != null && !value.isEmpty() && value.matches("[A-Za-z]+"))
+                        if (value != null && !value.isEmpty() && value.matches("[A-Za-z]+") && value.length() < 17)
                         {
                            createDomain(value);
                         }
                         else
                         {
-                           Dialogs.getInstance().showError("Namespace name must be contains latin characters only.");
+                           Dialogs.getInstance().showError("Namespace name must be contains latin characters only and not longer then 16 characters.");
                         }
                      }
                   };
@@ -311,6 +311,9 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
             @Override
             protected void onFailure(Throwable exception)
             {
+               String randString = Double.toString(Math.random()).substring(2);
+               String newUniqueDomain = domainName + randString.substring(domainName.length());
+               createDomain(newUniqueDomain);
                IDE.fireEvent(new OpenShiftExceptionThrownEvent(exception, OpenShiftExtension.LOCALIZATION_CONSTANT
                   .createDomainFail(domainName)));
             }
