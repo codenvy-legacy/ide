@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IField;
 import org.eclipse.jdt.core.IInitializer;
@@ -36,6 +37,7 @@ import org.eclipse.jdt.core.ITypeParameter;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaModelManager;
+import org.eclipse.jdt.internal.core.SourceMethod;
 import org.eclipse.jdt.internal.core.search.indexing.IndexAllProject;
 import org.eclipse.jdt.internal.core.search.indexing.IndexRequest;
 import org.eclipse.jdt.ui.refactoring.RenameSupport;
@@ -59,6 +61,7 @@ import org.exoplatform.services.log.Log;
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -110,47 +113,33 @@ public class RefactoringService
    {
       WorkspaceResource workspace = getWorkspace(vfsid);
       IJavaProject project = getOrCreateJavaProject(workspace, projectid);
+      if (project == null)
+      {
+         throw new CoreException(new Status(IStatus.ERROR, "IDE", "The project not initialized"));
+      }
       try
       {
          IType type = project.findType(fqn);
+         if (type == null)
+         {
+            throw new CoreException(new Status(IStatus.ERROR, "IDE", "The type '" + fqn + "' not found"));
+         }
          if (type.exists())
          {
             ICompilationUnit cUnit = type.getCompilationUnit();
             RenameSupport renameSupport;
             if (offset != -1)
             {
-               IJavaElement elementAt = cUnit.getElementAt(offset);
-               switch (elementAt.getElementType())
+               IJavaElement[] iJavaElements = cUnit.codeSelect(offset, 0);
+               if (iJavaElements != null && iJavaElements.length > 0)
                {
-                  case IJavaElement.COMPILATION_UNIT:
-                     renameSupport = RenameSupport.create((ICompilationUnit)elementAt, newname,
-                        RenameSupport.UPDATE_REFERENCES);
-                     break;
-                  case IJavaElement.METHOD:
-                     renameSupport = RenameSupport.create((IMethod)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
-                     break;
-                  case IJavaElement.FIELD:
-                     renameSupport = RenameSupport.create((IField)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
-                     break;
-                  case IJavaElement.TYPE:
-                     renameSupport = RenameSupport.create((IType)elementAt, newname, RenameSupport.UPDATE_REFERENCES);
-                     break;
-                  case IJavaElement.LOCAL_VARIABLE:
-                     renameSupport = RenameSupport.create((ILocalVariable)elementAt, newname,
-                        RenameSupport.UPDATE_REFERENCES);
-                     break;
-                  case IJavaElement.TYPE_PARAMETER:
-                     renameSupport = RenameSupport.create((ITypeParameter)elementAt, newname,
-                        RenameSupport.UPDATE_REFERENCES);
-                     break;
-                  case IJavaElement.INITIALIZER:
-                     renameSupport = RenameSupport.create(((IInitializer)elementAt).getDeclaringType(), newname,
-                        RenameSupport.UPDATE_REFERENCES);
-                     break;
-                  default:
-                     throw new IllegalArgumentException(
-                        "Rename of element '" + elementAt.getElementName() + "' is not supported");
+                  renameSupport = getRenameSupport(newname, iJavaElements[0]);
                }
+               else
+               {
+                  throw new CoreException(new Status(IStatus.ERROR, "IDE", "Cannot perform rename at current selection"));
+               }
+
             }
             else
             {
@@ -166,14 +155,18 @@ public class RefactoringService
                throw new CoreException(status);
             }
          }
+         else
+         {
+            throw new CoreException(new Status(IStatus.ERROR, "IDE", "The type '" + fqn + "' not found"));
+         }
       }
       catch (InterruptedException e)
       {
-         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+         throw new WebApplicationException(e);
       }
       catch (InvocationTargetException e)
       {
-         e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+         throw new WebApplicationException(e);
       }
       finally
       {
@@ -188,6 +181,39 @@ public class RefactoringService
          {
          }
       }
+   }
+
+   private RenameSupport getRenameSupport(String newname, IJavaElement element) throws CoreException
+   {
+      RenameSupport renameSupport;
+      switch (element.getElementType())
+      {
+         case IJavaElement.COMPILATION_UNIT:
+            renameSupport = RenameSupport.create((ICompilationUnit)element, newname, RenameSupport.UPDATE_REFERENCES);
+            break;
+         case IJavaElement.METHOD:
+            renameSupport = RenameSupport.create((IMethod)element, newname, RenameSupport.UPDATE_REFERENCES);
+            break;
+         case IJavaElement.FIELD:
+            renameSupport = RenameSupport.create((IField)element, newname, RenameSupport.UPDATE_REFERENCES);
+            break;
+         case IJavaElement.TYPE:
+            renameSupport = RenameSupport.create((IType)element, newname, RenameSupport.UPDATE_REFERENCES);
+            break;
+         case IJavaElement.LOCAL_VARIABLE:
+            renameSupport = RenameSupport.create((ILocalVariable)element, newname, RenameSupport.UPDATE_REFERENCES);
+            break;
+         case IJavaElement.TYPE_PARAMETER:
+            renameSupport = RenameSupport.create((ITypeParameter)element, newname, RenameSupport.UPDATE_REFERENCES);
+            break;
+         case IJavaElement.INITIALIZER:
+            renameSupport = RenameSupport.create(((IInitializer)element).getDeclaringType(), newname,
+               RenameSupport.UPDATE_REFERENCES);
+            break;
+         default:
+            throw new IllegalArgumentException("Rename of element '" + element.getElementName() + "' is not supported");
+      }
+      return renameSupport;
    }
 
    private IJavaProject getOrCreateJavaProject(WorkspaceResource workspace, String projectid)
@@ -206,10 +232,16 @@ public class RefactoringService
             IProject iProject = workspace.getRoot().getProject(item.getName());
             IJavaProject project = JavaCore.create(iProject);
             project.open(null);
-            JavaModelManager.getIndexManager().deleteIndexFiles();
-            JavaModelManager.getIndexManager().indexAll(project.getProject());
-//            CountDownLatch
-            return project;
+            JavaModelManager.getIndexManager().removeIndex(project.getPath());
+            CountDownLatch latch = new CountDownLatch(2);
+            JavaModelManager.getIndexManager().indexAll(project.getProject(), latch);
+            if (latch.await(2, TimeUnit.MINUTES))
+            {
+               return project;
+            }
+
+            return null;
+
          }
          else
          {
@@ -221,6 +253,10 @@ public class RefactoringService
          throw new WebApplicationException(e);
       }
       catch (JavaModelException e)
+      {
+         throw new WebApplicationException(e);
+      }
+      catch (InterruptedException e)
       {
          throw new WebApplicationException(e);
       }
