@@ -60,7 +60,7 @@ public class GitURLParser
       }
       else if (gitUrl.startsWith("https://github.com/"))
       {
-         gitUrl = gitUrl.split("git://github.com/")[1];
+         gitUrl = gitUrl.split("https://github.com/")[1];
          return gitUrl.split("/");
       }
       return null;

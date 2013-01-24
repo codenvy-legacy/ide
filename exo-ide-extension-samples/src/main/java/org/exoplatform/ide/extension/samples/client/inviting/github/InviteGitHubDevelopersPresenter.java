@@ -90,7 +90,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
       HasClickHandlers getCloseButton();
 
-      String getInviteMessge();
+      String getInviteMessage();
 
       void setInviteButtonEnabled(boolean enabled);
    }
@@ -400,7 +400,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       }
 
       String email = emailsToSend.remove(0);
-      String inviteMessage = display.getInviteMessge();
+      String inviteMessage = display.getInviteMessage();
 
       IDELoader.show("Inviting " + email);
       try
