@@ -521,7 +521,7 @@
                         **/lib/infinispan*,
                         **/lib/c3p0*,
                         **/lib/stax-api*,
-                        **/lib/gwt-dev*,
+                        **/lib/gwt-*,
                         **/lib/sjsxp*,
                         **/lib/*junit*,
                         **/lib/jotm*,

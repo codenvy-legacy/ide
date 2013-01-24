@@ -358,7 +358,7 @@ public class RestCodeAssistantJava
             List<Property> properties =
                Arrays.<Property> asList(new PropertyImpl("exoide:classpath", dependencies), new PropertyImpl(
                   "exoide:build_error", (String)null));
-            vfs.updateItem(projectId, properties, null);
+            project = (Project)vfs.updateItem(projectId, properties, null);
          }
       }
       else

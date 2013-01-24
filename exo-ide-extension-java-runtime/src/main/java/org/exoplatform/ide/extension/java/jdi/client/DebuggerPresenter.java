@@ -1197,12 +1197,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       runningApp = null;
    }
 
-   //   @Override
-   //   public void onCloseProject(final CloseProjectEvent event)
-   //   {
-   //      doStopApp();
-   //   }
-
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
