@@ -250,7 +250,7 @@ public class DeployApplicationPresenter implements HasPaaSActions, VfsChangedHan
                      @Override
                      public void stringValueReceived(String value)
                      {
-                        if (value != null && !value.isEmpty() && value.matches("[A-Za-z]+") && value.length() < 17)
+                        if (value != null && !value.isEmpty() && value.matches("[A-Za-z0-9]+") && value.length() < 17)
                         {
                            createDomain(value);
                         }
