@@ -16,18 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.perspective;
+package org.exoplatform.ide.openproject;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import elemental.html.Element;
@@ -36,95 +33,74 @@ import elemental.html.TableElement;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.perspective.WorkspacePresenter.PerspectiveDescriptor;
 import org.exoplatform.ide.ui.list.SimpleList;
 import org.exoplatform.ide.ui.list.SimpleList.View;
 import org.exoplatform.ide.util.dom.Elements;
 
 /**
- * The implementation of {@link OpenPerspectiveView}.
- * Provides selecting perspective what want to open.
+ * The implementation of {@link OpenProjectView}.
+ * Provides selecting project what want to open.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class OpenPerspectiveViewImpl extends DialogBox implements OpenPerspectiveView
+public class OpenProjectViewImpl extends DialogBox implements OpenProjectView
 {
-   private static ChangePerspectiveViewImplUiBinder uiBinder = GWT.create(ChangePerspectiveViewImplUiBinder.class);
-
-   @UiField
-   FlowPanel btnPanel;
-
-   @UiField
-   Button btnOpen;
+   private static OpenProjectViewImplUiBinder uiBinder = GWT.create(OpenProjectViewImplUiBinder.class);
 
    @UiField
    Button btnCancel;
+
+   @UiField
+   Button btnOpen;
 
    @UiField
    ScrollPanel listPanel;
 
    private ActionDelegate delegate;
 
-   private SimpleList<PerspectiveDescriptor> list;
+   private SimpleList<String> list;
 
-   private SimpleList.ListItemRenderer<PerspectiveDescriptor> listItemRenderer =
-      new SimpleList.ListItemRenderer<PerspectiveDescriptor>()
+   private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>()
+   {
+      @Override
+      public void render(Element itemElement, String itemData)
       {
-         @Override
-         public void render(Element itemElement, PerspectiveDescriptor itemData)
-         {
-            TableCellElement label = Elements.createTDElement();
+         TableCellElement label = Elements.createTDElement();
+         label.setInnerHTML(itemData);
+         itemElement.appendChild(label);
+      }
 
-            SafeHtmlBuilder sb = new SafeHtmlBuilder();
-
-            // Add icon
-            sb.appendHtmlConstant("<table><tr><td>");
-            ImageResource icon = itemData.getIcon();
-            if (icon != null)
-            {
-               sb.appendHtmlConstant("<img src=\"" + icon.getSafeUri().asString() + "\">");
-            }
-            sb.appendHtmlConstant("</td>");
-
-            // Add title
-            sb.appendHtmlConstant("<td>");
-            sb.appendEscaped(itemData.getTitle());
-            sb.appendHtmlConstant("</td></tr></table>");
-
-            label.setInnerHTML(sb.toSafeHtml().asString());
-
-            itemElement.appendChild(label);
-         }
-
-         @Override
-         public Element createElement()
-         {
-            return Elements.createTRElement();
-         }
-      };
-
-   private SimpleList.ListEventDelegate<PerspectiveDescriptor> listDelegate =
-      new SimpleList.ListEventDelegate<PerspectiveDescriptor>()
+      @Override
+      public Element createElement()
       {
-         public void onListItemClicked(Element itemElement, PerspectiveDescriptor itemData)
-         {
-            list.getSelectionModel().setSelectedItem(itemData);
-            delegate.selectedPerspective(itemData.getTitle());
-         }
+         return Elements.createTRElement();
+      }
+   };
 
-         public void onListItemDoubleClicked(Element listItemBase, PerspectiveDescriptor itemData)
-         {
-         }
-      };
+   private SimpleList.ListEventDelegate<String> listDelegate = new SimpleList.ListEventDelegate<String>()
+   {
+      public void onListItemClicked(Element itemElement, String itemData)
+      {
+         list.getSelectionModel().setSelectedItem(itemData);
+         delegate.selectedProject(itemData);
+      }
 
-   interface ChangePerspectiveViewImplUiBinder extends UiBinder<Widget, OpenPerspectiveViewImpl>
+      public void onListItemDoubleClicked(Element listItemBase, String itemData)
+      {
+      }
+   };
+
+   interface OpenProjectViewImplUiBinder extends UiBinder<Widget, OpenProjectViewImpl>
    {
    }
 
    /**
     * Create view.
+    * 
+    * @param projects
+    * @param resources
     */
-   public OpenPerspectiveViewImpl(JsonArray<PerspectiveDescriptor> perspectives, Resources resources)
+   public OpenProjectViewImpl(JsonArray<String> projects, Resources resources)
    {
       Widget widget = uiBinder.createAndBindUi(this);
 
@@ -135,10 +111,10 @@ public class OpenPerspectiveViewImpl extends DialogBox implements OpenPerspectiv
       this.listPanel.setStyleName(resources.coreCss().simpleListContainer());
       this.listPanel.add(list);
 
-      this.setText("Open Perspective");
+      this.setText("Open Project");
       this.setWidget(widget);
 
-      list.render(perspectives);
+      list.render(projects);
    }
 
    /**
@@ -178,15 +154,15 @@ public class OpenPerspectiveViewImpl extends DialogBox implements OpenPerspectiv
       this.show();
    }
 
-   @UiHandler("btnOpen")
-   void onBtnOpenClick(ClickEvent event)
-   {
-      delegate.onOpenClicked();
-   }
-
    @UiHandler("btnCancel")
    void onBtnCancelClick(ClickEvent event)
    {
       delegate.onCancelClicked();
+   }
+
+   @UiHandler("btnOpen")
+   void onBtnOpenClick(ClickEvent event)
+   {
+      delegate.onOpenClicked();
    }
 }

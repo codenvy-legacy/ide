@@ -8,9 +8,9 @@
 	</ui:style>
 	<g:DockLayoutPanel unit="PX" width="300px" height="300px">
 		<g:south size="26">
-			<g:FlowPanel ui:field="btnPanel" >
-				<g:Button styleName="{style.alignBtn}" text="Open" ui:field="btnOpen"/>
-				<g:Button styleName="{style.alignBtn}" text="Cancel" ui:field="btnCancel"/>
+			<g:FlowPanel>
+				<g:Button styleName="{style.alignBtn}" text="Open" ui:field="btnOpen" />
+				<g:Button styleName="{style.alignBtn}" text="Cancel" ui:field="btnCancel" />
 			</g:FlowPanel>
 		</g:south>
 		<g:center>

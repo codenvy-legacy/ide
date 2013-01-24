@@ -20,5 +20,6 @@
    <source path="preferences" />
    <source path="toolbar" />
    <source path="perspective" />
+   <source path="openproject" />
    <source path="" />
 </module>

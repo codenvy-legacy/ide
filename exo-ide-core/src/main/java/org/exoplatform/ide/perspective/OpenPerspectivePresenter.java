@@ -34,7 +34,10 @@ public class OpenPerspectivePresenter implements OpenPerspectiveView.ActionDeleg
    private String selectedPerspective = null;
 
    /**
-    * Create ChangePerspectivePresenter.
+    * Create OpenPerspectivePresenter.
+    * 
+    * @param workspacePresenter
+    * @param resources
     */
    public OpenPerspectivePresenter(WorkspacePresenter workspacePresenter, Resources resources)
    {
@@ -42,10 +45,11 @@ public class OpenPerspectivePresenter implements OpenPerspectiveView.ActionDeleg
    }
 
    /**
-    * Creates WizardPresenter with given instance of view.
+    * Creates OpenPerspectivePresenter with given instance of view.
     * 
     * For Unit Tests.
     * 
+    * @param workspacePresenter
     * @param view
     */
    protected OpenPerspectivePresenter(WorkspacePresenter workspacePresenter, OpenPerspectiveView view)
