@@ -18,6 +18,10 @@
  */
 package org.eclipse.jdt.client.refactoring.rename;
 
+import com.google.gwt.core.client.Scheduler;
+
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -304,16 +308,26 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          }
       }
 
+      originElementName = getOriginalElementName(element);
+
+      openView();
+      display.setNewNameFieldValue(originElementName);
+      display.selectAllTextInNewNameField();
+      display.setFocusOnNewNameField();
+   }
+
+   private String getOriginalElementName(ASTNode element)
+   {
       try
       {
          if (fileToRenameFromPackageExplorer == null)
          {
-            originElementName = activeEditor.getDocument().get(element.getStartPosition(), element.getLength());
+            return activeEditor.getDocument().get(element.getStartPosition(), element.getLength());
          }
          else
          {
             String name = fileToRenameFromPackageExplorer.getName();
-            originElementName = name.substring(0, name.length() - 5); // excluding ".java"
+            return name.substring(0, name.length() - 5); // excluding ".java"
          }
       }
       catch (BadLocationException e)
@@ -321,10 +335,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          e.printStackTrace();
       }
 
-      openView();
-      display.setNewNameFieldValue(originElementName);
-      display.selectAllTextInNewNameField();
-      display.setFocusOnNewNameField();
+      return "";
    }
 
    /**
@@ -608,10 +619,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                {
                   file.setContent(result.getContent());
 
-                  Editor editor = openedEditors.get(file.getId());
+                  final Editor editor = openedEditors.get(file.getId());
                   if (editor != null)
                   {
-                     editor.setText(file.getContent());
+                     editor.getDocument().set(file.getContent());
+//                     editor.setText(file.getContent());
                   }
 
                   IDE.fireEvent(new FileSavedEvent(file, null));
