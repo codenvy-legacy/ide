@@ -78,6 +78,9 @@ public interface LocalizationConstant extends Messages
    @Key("messages.refactoringRename.unavailable")
    String refactoringRenameUnavailable();
 
+   @Key("messages.refactoringRename.badCursorPosition")
+   String refactoringRenameBadCursorPosition();
+
    /*
     * RefactoringRenameView
     */

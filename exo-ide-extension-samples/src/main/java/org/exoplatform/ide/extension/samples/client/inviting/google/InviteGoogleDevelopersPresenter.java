@@ -29,6 +29,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -46,6 +48,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 
 import java.util.ArrayList;
@@ -138,7 +141,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       contacts = new ArrayList<GoogleContact>();
       display.setDevelopersListVisible(true);
       //lazyLoadGoogleContacts();
-      loadContacts();
+      isAuthenticate();
    }
 
 //   /**
@@ -189,31 +192,39 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 //      }.schedule(500);
 //   }
 
-   private void loadContacts()
+   private void isAuthenticate()
    {
       try
       {
-         GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<String>()
+         StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller(new StringBuilder());
+         GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller)
          {
             @Override
-            protected void onSuccess(String result)
+            protected void onSuccess(StringBuilder s)
             {
-               loadGoogleContacts();
+               JSONObject object = JSONParser.parseStrict(s.toString()).isObject();
+               String state = object.get("state").isString().stringValue();
+               if ("valid".equals(state))
+               {
+                  loadGoogleContacts();
+               }
+               else
+               {
+                  showLoginWindow();
+               }
             }
 
             @Override
-            protected void onFailure(Throwable exception)
+            protected void onFailure(Throwable throwable)
             {
                showLoginWindow();
             }
          });
-         IDELoader.show("Loading Google contacts...");
       }
       catch (RequestException exception)
       {
          loadContactsFailed();
       }
-
    }
 
    protected void showLoginWindow()

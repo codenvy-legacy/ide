@@ -89,7 +89,7 @@ public class GoogleContactsService
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 
-   public void isAuthenticate(AsyncRequestCallback<String> callback) throws RequestException
+   public void isAuthenticate(AsyncRequestCallback<StringBuilder> callback) throws RequestException
    {
       String url = restContext + BASE_URL + "/is-authenticate";
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);

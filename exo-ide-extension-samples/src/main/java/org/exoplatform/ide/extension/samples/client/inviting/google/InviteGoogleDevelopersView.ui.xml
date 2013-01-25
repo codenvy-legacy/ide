@@ -225,7 +225,7 @@
 		</div>
 		<div class="{style.inviteUserList}">
 			<div class="{style.inviteUserListBody}" ui:field="userListElement" style="display:none;"></div>
-			<div class="{style.inviteUserListError}" ui:field="userListErrorMessage" style="display:none;">Exo IDE failed to get information on your Google contacts</div>
+			<div class="{style.inviteUserListError}" ui:field="userListErrorMessage" style="display:none;">Codenvy IDE failed to get information on your Google contacts</div>
 		</div>
 		<div class="{style.inviteMessageTitle}">Write a personal message:</div>
 		<div class="{style.inviteMessage}">
