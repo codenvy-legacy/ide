@@ -201,11 +201,19 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private Editor activeEditor;
 
+   /**
+    * Name of element to rename before rename refactoring.
+    */
    private String originElementName;
 
    private FileModel fileToRenameFromPackageExplorer;
 
    private Map<Editor, String> editorsToUpdateContent = new HashMap<Editor, String>();
+
+   /**
+    * Current cursor offset.
+    */
+   private int cursorOffset;
 
    public RefactoringRenamePresenter()
    {
@@ -295,6 +303,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       {
          Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
             JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameWait());
+         return;
+      }
+
+      try
+      {
+         cursorOffset = getCursorOffset();
+      }
+      catch (BadLocationException e)
+      {
+         Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
+            JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameBadCursorPosition());
          return;
       }
 
@@ -491,25 +510,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
     */
    private void doRename()
    {
+      String fqn = getFqn(fileToRenameFromPackageExplorer == null ? activeFile : fileToRenameFromPackageExplorer);
       try
       {
-         String fqn = null;
-         int offset = -1;
-         if (fileToRenameFromPackageExplorer == null)
-         {
-            fqn = getFqn(activeFile);
-            offset =
-               activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
-                  + activeEditor.getSelectionRange().getStartSymbol();
-         }
-         else
-         {
-            fqn = getFqn(fileToRenameFromPackageExplorer);
-         }
-         String newName = display.getNewNameField().getValue();
-
-         RefactoringClientService.getInstance().renameWS(vfsInfo.getId(), openedProject.getId(), fqn, offset, newName,
-            new RequestCallback<Object>()
+         RefactoringClientService.getInstance().renameWS(vfsInfo.getId(), openedProject.getId(), fqn, cursorOffset,
+            display.getNewNameField().getValue(), new RequestCallback<Object>()
             {
 
                @Override
@@ -528,38 +533,21 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       }
       catch (WebSocketException e)
       {
-         doRenameREST();
-      }
-      catch (BadLocationException e)
-      {
-         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
+         doRenameREST(fqn);
       }
    }
 
    /**
     * Sends request for rename refactoring to the server (over HTTP).
+    * 
+    * @param fqn 
     */
-   private void doRenameREST()
+   private void doRenameREST(String fqn)
    {
       try
       {
-         String fqn = null;
-         int offset = -1;
-         if (fileToRenameFromPackageExplorer == null)
-         {
-            fqn = getFqn(activeFile);
-            offset =
-               activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
-                  + activeEditor.getSelectionRange().getStartSymbol();
-         }
-         else
-         {
-            fqn = getFqn(fileToRenameFromPackageExplorer);
-         }
-         String newName = display.getNewNameField().getValue();
-
-         RefactoringClientService.getInstance().rename(vfsInfo.getId(), openedProject.getId(), fqn, offset, newName,
-            new AsyncRequestCallback<Object>()
+         RefactoringClientService.getInstance().rename(vfsInfo.getId(), openedProject.getId(), fqn, cursorOffset,
+            display.getNewNameField().getValue(), new AsyncRequestCallback<Object>()
             {
 
                @Override
@@ -577,10 +565,6 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             });
       }
       catch (RequestException e)
-      {
-         IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
-      }
-      catch (BadLocationException e)
       {
          IDE.eventBus().fireEvent(new ExceptionThrownEvent(e));
       }
@@ -727,6 +711,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       fqn = fqn.replaceAll("/", ".");
       fqn = fqn.substring(0, fqn.lastIndexOf('.'));
       return fqn;
+   }
+
+   private int getCursorOffset() throws BadLocationException
+   {
+      if (fileToRenameFromPackageExplorer != null)
+      {
+         return -1;
+      }
+
+      return activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
+         + activeEditor.getSelectionRange().getStartSymbol();
    }
 
    /**
