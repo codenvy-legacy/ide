@@ -399,6 +399,18 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     */
    private void startParsing()
    {
+      //TODO temporary solutions need do something smart. 
+      //This need delay start parsing then dependency parsing is finish
+      new Timer () {
+         public void run() {
+            if (!JavaClasspathResolver.getInstance().isStillWork())
+               cancel();
+         }
+       }.scheduleRepeating(1000);
+      
+      
+       
+
       int time = 2000;
       if (workingParsers.containsKey(activeFile.getId()))
       {

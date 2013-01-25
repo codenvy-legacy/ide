@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.extension.heroku.server;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+
 import static org.apache.commons.codec.binary.Base64.encodeBase64;
 
 import org.eclipse.jgit.transport.URIish;
@@ -1164,19 +1168,31 @@ public class Heroku
          }
 
          InputStream input = http.getInputStream();
-         Document xmlDoc;
-         try
+         String rendezvousUrl = null;
+
+         if (http.getHeaderField("Content-Type").contains("application/json"))
          {
-            xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+            JsonParser jsonParser = new JsonParser();
+            JsonElement jsonElement = jsonParser.parse(new JsonReader(new InputStreamReader(input, "UTF-8")));
+            rendezvousUrl = jsonElement.getAsJsonObject().get("rendezvous_url").getAsString();
          }
-         finally
+         else
          {
-            input.close();
+            Document xmlDoc;
+            try
+            {
+               xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
+            }
+            finally
+            {
+               input.close();
+            }
+
+            XPath xpath = XPathFactory.newInstance().newXPath();
+
+            rendezvousUrl = (String)xpath.evaluate("/process/rendezvous-url", xmlDoc, XPathConstants.STRING);
          }
 
-         XPath xpath = XPathFactory.newInstance().newXPath();
-
-         String rendezvousUrl = (String)xpath.evaluate("/process/rendezvous-url", xmlDoc, XPathConstants.STRING);
          return rendezvousUrl;
       }
       catch (ParserConfigurationException pce)
