@@ -236,7 +236,7 @@ public class InviteService
                + mailBody + "</p></td>");
          }
 
-         doSendMail(to, from, inviteMessageProperties);
+         doSendMail(to, "Codenvy <noreply@codenvy.com>", inviteMessageProperties);
       }
       catch (SendingIdeMailException e)
       {
