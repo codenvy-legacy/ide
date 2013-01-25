@@ -1240,10 +1240,10 @@ public class IndexManager extends JobManager implements IIndexConstants
    {
       request(new IndexRequest(container, this)
       {
+         ConversationState state = ConversationState.getCurrent();
 
          public boolean execute(IProgressMonitor progressMonitor)
          {
-            ConversationState.setCurrent(state);
             if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled())
             {
                return true;
