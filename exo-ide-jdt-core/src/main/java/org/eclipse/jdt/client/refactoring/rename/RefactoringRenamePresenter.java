@@ -829,7 +829,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    {
       openedFilesToCompilationUnit.put(event.getFile().getId(), event.getCompilationUnit());
 
-      if (event.getFile() == activeFile)
+      if (event.getFile().getId().equals(activeFile.getId()))
       {
          currentCompilationUnit = event.getCompilationUnit();
       }
