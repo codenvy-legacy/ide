@@ -29,6 +29,8 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 
@@ -46,6 +48,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 
 import java.util.ArrayList;
@@ -198,7 +201,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
             @Override
             protected void onSuccess(String result)
             {
-               loadGoogleContacts();
+               tokenValidate();
             }
 
             @Override
@@ -214,6 +217,40 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
          loadContactsFailed();
       }
 
+   }
+
+   private void tokenValidate()
+   {
+      try
+      {
+         GoogleContactsService.getInstance().isTokenValid(new AsyncRequestCallback<StringBuilder>(new StringContentUnmarshaller(new StringBuilder()))
+         {
+            @Override
+            protected void onSuccess(StringBuilder s)
+            {
+               JSONObject object = JSONParser.parseStrict(s.toString()).isObject();
+               String state = object.get("state").isString().stringValue();
+               if ("valid".equals(state))
+               {
+                  loadGoogleContacts();
+               }
+               else
+               {
+                  showLoginWindow();
+               }
+            }
+
+            @Override
+            protected void onFailure(Throwable throwable)
+            {
+               showLoginWindow();
+            }
+         });
+      }
+      catch (RequestException exception)
+      {
+         loadContactsFailed();
+      }
    }
 
    protected void showLoginWindow()

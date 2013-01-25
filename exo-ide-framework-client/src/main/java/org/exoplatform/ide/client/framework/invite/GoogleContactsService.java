@@ -50,6 +50,11 @@ public class GoogleContactsService
    private static final String ALL = BASE_URL + "/all";
 
    /**
+    * Validate token on google if it active or not
+    */
+   private static final String TOKEN_VALIDATE = BASE_URL + "/token-validate";
+
+   /**
     * Context of the REST service.
     */
    private String restContext;
@@ -92,6 +97,12 @@ public class GoogleContactsService
    public void isAuthenticate(AsyncRequestCallback<String> callback) throws RequestException
    {
       String url = restContext + BASE_URL + "/is-authenticate";
+      AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
+   }
+
+   public void isTokenValid(AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   {
+      String url = restContext + TOKEN_VALIDATE;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
    }
 }
