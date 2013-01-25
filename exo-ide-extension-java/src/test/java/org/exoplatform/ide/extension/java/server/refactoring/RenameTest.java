@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.extension.java.server.refactoring;
 
+import com.codenvy.eclipse.resources.WorkspaceResource;
+
+import com.codenvy.eclipse.core.resources.ResourcesPlugin;
+import com.codenvy.eclipse.core.runtime.CoreException;
+
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.exoplatform.ide.eclipse.resources.WorkspaceResource;
 import org.exoplatform.ide.extension.java.server.JavaDocBuilderVfsTest;
 import org.exoplatform.ide.extension.java.server.RefactoringService;
 import org.exoplatform.ide.vfs.server.ContentStream;

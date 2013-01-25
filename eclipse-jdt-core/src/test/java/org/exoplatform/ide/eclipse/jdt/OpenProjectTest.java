@@ -20,15 +20,16 @@ package org.exoplatform.ide.eclipse.jdt;
 
 import static org.junit.Assert.assertTrue;
 
+import com.codenvy.eclipse.core.resources.IProject;
+import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.core.runtime.IStatus;
+import com.codenvy.eclipse.jdt.core.IJavaProject;
+import com.codenvy.eclipse.jdt.core.IType;
+import com.codenvy.eclipse.jdt.core.JavaCore;
+import com.codenvy.eclipse.jdt.internal.core.JavaModelManager;
+import com.codenvy.eclipse.jdt.ui.refactoring.RenameSupport;
+
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.core.JavaModelManager;
-import org.eclipse.jdt.ui.refactoring.RenameSupport;
 import org.exoplatform.ide.eclipse.resources.ResourcesBaseTest;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;

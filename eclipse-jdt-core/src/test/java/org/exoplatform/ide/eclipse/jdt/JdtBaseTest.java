@@ -18,16 +18,17 @@
  */
 package org.exoplatform.ide.eclipse.jdt;
 
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaCore;
+import com.codenvy.eclipse.core.resources.IFolder;
+import com.codenvy.eclipse.core.resources.IProject;
+import com.codenvy.eclipse.core.resources.IProjectDescription;
+import com.codenvy.eclipse.core.resources.IWorkspaceRoot;
+import com.codenvy.eclipse.core.resources.ResourcesPlugin;
+import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.jdt.core.IClasspathEntry;
+import com.codenvy.eclipse.jdt.core.IJavaProject;
+import com.codenvy.eclipse.jdt.core.IPackageFragmentRoot;
+import com.codenvy.eclipse.jdt.core.JavaCore;
+
 import org.exoplatform.ide.eclipse.resources.ResourcesBaseTest;
 
 /**

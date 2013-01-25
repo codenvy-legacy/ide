@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import com.codenvy.eclipse.resources.WorkspaceResource;
+
+import com.codenvy.eclipse.core.resources.ResourcesPlugin;
+
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.impl.ApplicationContextImpl;

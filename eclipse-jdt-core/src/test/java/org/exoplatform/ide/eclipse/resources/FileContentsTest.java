@@ -18,11 +18,12 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import com.codenvy.eclipse.core.resources.IFile;
+import com.codenvy.eclipse.core.resources.IResource;
+import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
+import com.codenvy.eclipse.core.runtime.Path;
+
 import org.exoplatform.ide.commons.StringUtils;
 import org.junit.Test;
 
