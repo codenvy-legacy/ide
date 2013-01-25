@@ -271,7 +271,7 @@ public class InviteService
          {
             templateContent = templateResolver.resolveTemplate("template-mail-invitation", inviteMessageProperties);
          }
-         mailSender.sendMail(from, to, null, "You've been invited to use Exo IDE", "text/html; charset=utf-8",
+         mailSender.sendMail(from, to, null, "You've been invited to use Codenvy", "text/html; charset=utf-8",
             templateContent);
       }
       catch (IOException e)
