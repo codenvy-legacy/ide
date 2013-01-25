@@ -228,6 +228,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-googleappengine</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -264,6 +270,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-server</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -509,7 +521,7 @@
                         **/lib/infinispan*,
                         **/lib/c3p0*,
                         **/lib/stax-api*,
-                        **/lib/gwt-dev*,
+                        **/lib/gwt-*,
                         **/lib/sjsxp*,
                         **/lib/*junit*,
                         **/lib/jotm*,

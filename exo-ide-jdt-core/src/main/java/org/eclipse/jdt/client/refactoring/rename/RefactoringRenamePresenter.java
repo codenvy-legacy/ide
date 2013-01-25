@@ -18,11 +18,9 @@
  */
 package org.eclipse.jdt.client.refactoring.rename;
 
-import com.google.gwt.core.client.Scheduler;
-
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
@@ -207,6 +205,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
    private FileModel fileToRenameFromPackageExplorer;
 
+   private Map<Editor, String> editorsToUpdateContent = new HashMap<Editor, String>();
+
    public RefactoringRenamePresenter()
    {
       IDE.addHandler(RefactoringRenameEvent.TYPE, this);
@@ -282,6 +282,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    @Override
    public void onRename(RefactoringRenameEvent event)
    {
+      fileToRenameFromPackageExplorer = event.getFile();
+
       if (isUnsavedFilesExist())
       {
          Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
@@ -289,16 +291,16 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          return;
       }
 
+      if (!isFileReadyToRefactoring())
+      {
+         Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
+            JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameWait());
+         return;
+      }
+
       ASTNode element = null;
-      fileToRenameFromPackageExplorer = event.getFile();
       if (fileToRenameFromPackageExplorer == null)
       {
-         if (currentCompilationUnit == null)
-         {
-            Dialogs.getInstance().showInfo(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
-               JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameWait());
-         }
-
          element = getElementToRename();
          if (element == null)
          {
@@ -308,34 +310,12 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          }
       }
 
-      originElementName = getOriginalElementName(element);
+      originElementName = getElementName(element);
 
       openView();
-      display.setNewNameFieldValue(originElementName);
+      display.setNewNameFieldValue(originElementName != null ? originElementName : "");
       display.selectAllTextInNewNameField();
       display.setFocusOnNewNameField();
-   }
-
-   private String getOriginalElementName(ASTNode element)
-   {
-      try
-      {
-         if (fileToRenameFromPackageExplorer == null)
-         {
-            return activeEditor.getDocument().get(element.getStartPosition(), element.getLength());
-         }
-         else
-         {
-            String name = fileToRenameFromPackageExplorer.getName();
-            return name.substring(0, name.length() - 5); // excluding ".java"
-         }
-      }
-      catch (BadLocationException e)
-      {
-         e.printStackTrace();
-      }
-
-      return "";
    }
 
    /**
@@ -354,6 +334,47 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          }
       }
       return false;
+   }
+
+   /**
+    * Checks whether file ready to refactoring.
+    * 
+    * @return <code>true</code> if file is ready, or
+    *          <code>false</code> if not
+    */
+   private boolean isFileReadyToRefactoring()
+   {
+      if (fileToRenameFromPackageExplorer != null)
+      {
+         return true;
+      }
+      return currentCompilationUnit != null;
+   }
+
+   /**
+    * Returns existing name of element to rename.
+    * 
+    * @param element {@link ASTNode}
+    * @return name of element or <code>null</code> if any error is occurred
+    */
+   private String getElementName(ASTNode element)
+   {
+      try
+      {
+         if (fileToRenameFromPackageExplorer == null)
+         {
+            return activeEditor.getDocument().get(element.getStartPosition(), element.getLength());
+         }
+
+         String name = fileToRenameFromPackageExplorer.getName();
+         return name.substring(0, name.length() - 5); // excluding file extension ".java"
+      }
+      catch (BadLocationException e)
+      {
+         e.printStackTrace();
+      }
+
+      return null;
    }
 
    /**
@@ -566,7 +587,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
       for (final FileModel file : openedFiles.values())
       {
-         if (!foldersToRefresh.contains(file.getParent()))
+         if (file.getParent() != null && !foldersToRefresh.contains(file.getParent()))
          {
             foldersToRefresh.add(file.getParent());
          }
@@ -622,13 +643,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                   final Editor editor = openedEditors.get(file.getId());
                   if (editor != null)
                   {
-                     editor.getDocument().set(file.getContent());
-//                     editor.setText(file.getContent());
+                     if (editor == activeEditor)
+                     {
+                        editor.getDocument().set(file.getContent());
+                     }
+                     else
+                     {
+                        editorsToUpdateContent.put(editor, result.getContent());
+                     }
                   }
 
                   IDE.fireEvent(new FileSavedEvent(file, null));
-
-                  // TODO do this once, after udating all editors
                   reparseOpenedFiles();
                }
 
@@ -749,6 +774,25 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       }
 
       activeEditor = event.getEditor();
+
+      // FIXME workaround
+      final String content = editorsToUpdateContent.remove(activeEditor);
+      if (content != null)
+      {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+
+            @Override
+            public void execute()
+            {
+               int cursorColumn = activeEditor.getCursorColumn();
+               int cursorRow = activeEditor.getCursorRow();
+               activeEditor.getDocument().set(content);
+               activeEditor.setCursorPosition(cursorRow, cursorColumn);
+            }
+         });
+      }
+
       currentCompilationUnit = openedFilesToCompilationUnit.get(activeFile.getId());
    }
 
