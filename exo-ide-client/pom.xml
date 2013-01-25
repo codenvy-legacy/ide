@@ -47,6 +47,11 @@
 			<artifactId>exo-ide-vfs</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		
+		<dependency>
+		  <groupId>org.exoplatform.ide</groupId>
+		  <artifactId>exo-ide-jdt-core</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>com.google.gwt</groupId>
