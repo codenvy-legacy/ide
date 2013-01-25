@@ -85,12 +85,13 @@ public abstract class ResourcesBaseTest
       if (ws == null)
       {
          ws = new WorkspaceResource(vfs);
-         ResourcesPlugin.workspace = ws;
+         ResourcesPlugin.setDefaultWorkspace(ws);
       }
       else
       {
          ws.setVfs(vfs);
       }
+      ConversationState.setCurrent(new ConversationState(new Identity("test")));
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
       dependencies.addComponent(EventListenerList.class, eventListenerList);

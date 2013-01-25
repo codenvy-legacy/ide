@@ -28,6 +28,7 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.processing.JobManager;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.IOException;
 import java.net.URI;
@@ -39,6 +40,8 @@ public class IndexAllProject extends IndexRequest
    IProject project;
 
    private CountDownLatch latch;
+
+   ConversationState state = ConversationState.getCurrent();
 
    public IndexAllProject(IProject project,IndexManager manager,  CountDownLatch latch)
    {
@@ -68,7 +71,7 @@ public class IndexAllProject extends IndexRequest
     */
    public boolean execute(IProgressMonitor progressMonitor)
    {
-
+      ConversationState.setCurrent(state);
       if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled())
       {
          if(latch != null)

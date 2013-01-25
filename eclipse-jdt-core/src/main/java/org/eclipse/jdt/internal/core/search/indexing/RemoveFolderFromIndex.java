@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.processing.JobManager;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.services.security.ConversationState;
 
 class RemoveFolderFromIndex extends IndexRequest {
 	IPath folderPath;
@@ -32,7 +33,7 @@ class RemoveFolderFromIndex extends IndexRequest {
 		this.exclusionPatterns = exclusionPatterns;
 	}
 	public boolean execute(IProgressMonitor progressMonitor) {
-
+      ConversationState.setCurrent(state);
 		if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
 
 		/* ensure no concurrent write access to index */

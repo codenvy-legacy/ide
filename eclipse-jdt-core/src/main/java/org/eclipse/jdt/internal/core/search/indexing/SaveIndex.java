@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.processing.JobManager;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.services.security.ConversationState;
 
 /*
  * Save the index of a project.
@@ -39,7 +40,7 @@ public class SaveIndex extends IndexRequest
 
    public boolean execute(IProgressMonitor progressMonitor)
    {
-
+      ConversationState.setCurrent(state);
       if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled())
       {
          if(latch != null)

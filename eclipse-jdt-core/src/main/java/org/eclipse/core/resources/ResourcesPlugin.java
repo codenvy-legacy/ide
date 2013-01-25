@@ -16,6 +16,11 @@ package org.eclipse.core.resources;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.jobs.IJobManager;
 import org.eclipse.core.runtime.jobs.Job;
+import org.exoplatform.ide.eclipse.resources.WorkspaceResource;
+import org.exoplatform.services.security.ConversationState;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The plug-in runtime class for the Resources plug-in.  This is
@@ -322,7 +327,9 @@ public final class ResourcesPlugin
     * The workspace managed by the single instance of this
     * plug-in runtime class, or <code>null</code> is there is none.
     */
-   public static IWorkspace workspace = null;
+   private static IWorkspace defaultWorkspace;
+
+   private static Map<String, IWorkspace> workspaceMap = new HashMap<String, IWorkspace>();
    //
    //	private ServiceRegistration<IWorkspace> workspaceRegistration;
 
@@ -401,11 +408,42 @@ public final class ResourcesPlugin
     */
    public static IWorkspace getWorkspace()
    {
-      if (workspace == null)
+      Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+      if (tenantName != null)
+      {
+         if (workspaceMap.containsKey(tenantName))
+         {
+            return workspaceMap.get(tenantName);
+         }
+         else
+         {
+            throw new IllegalStateException("Workspace not defined."/*Messages.resources_workspaceClosed*/);
+         }
+      }
+      else if (defaultWorkspace == null)
       {
          throw new IllegalStateException("Workspace not defined."/*Messages.resources_workspaceClosed*/);
       }
-      return workspace;
+      else
+      {
+         return defaultWorkspace;
+      }
+   }
+
+   public static IWorkspace getDefaultWorkspace()
+   {
+      return defaultWorkspace;
+   }
+
+   public static void setDefaultWorkspace(WorkspaceResource defaultWorkspace)
+   {
+      ResourcesPlugin.defaultWorkspace = defaultWorkspace;
+   }
+
+   public static void addWorkspace(IWorkspace workspace)
+   {
+      Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+      workspaceMap.put((String)tenantName, workspace);
    }
 
    //	/**

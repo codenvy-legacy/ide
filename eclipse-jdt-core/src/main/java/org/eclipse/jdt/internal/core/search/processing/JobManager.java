@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.*;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.services.security.ConversationState;
 
 public abstract class JobManager implements Runnable {
 
@@ -310,6 +311,14 @@ public abstract class JobManager implements Runnable {
 		}
 		notifyAll(); // wake up the background thread if it is waiting
 	}
+
+//   class HU implements Runnable{
+//      ConversationState state = ConversationState.getCurrent();
+//      public void run() {
+//         JobManager.this.run();
+//      }
+//   }
+
 	/**
 	 * Flush current state
 	 */

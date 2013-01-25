@@ -23,6 +23,7 @@ import org.eclipse.jdt.internal.compiler.SourceElementParser;
 import org.eclipse.jdt.internal.core.index.Index;
 import org.eclipse.jdt.internal.core.search.processing.JobManager;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.services.security.ConversationState;
 
 class AddFolderToIndex extends IndexRequest {
 	IPath folderPath;
@@ -38,7 +39,7 @@ class AddFolderToIndex extends IndexRequest {
 		this.exclusionPatterns = exclusionPatterns;
 	}
 	public boolean execute(IProgressMonitor progressMonitor) {
-
+      ConversationState.setCurrent(state);
 		if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
 		if (!this.project.isAccessible()) return true; // nothing to do
 		IResource folder = this.project.getParent().findMember(this.folderPath);

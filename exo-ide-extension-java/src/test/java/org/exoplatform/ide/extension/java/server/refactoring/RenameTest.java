@@ -47,9 +47,9 @@ public class RenameTest extends ResourcesBaseTest
    @Before
    public void before() throws VirtualFileSystemException, IOException
    {
-      if (ResourcesPlugin.workspace == null)
+      if (ResourcesPlugin.getDefaultWorkspace() == null)
       {
-         ResourcesPlugin.workspace = new WorkspaceResource(vfs);
+         ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
       }
       try
       {

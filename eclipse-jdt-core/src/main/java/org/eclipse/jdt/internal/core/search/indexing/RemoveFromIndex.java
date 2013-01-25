@@ -13,6 +13,7 @@ package org.eclipse.jdt.internal.core.search.indexing;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.internal.core.index.Index;
+import org.exoplatform.services.security.ConversationState;
 
 class RemoveFromIndex extends IndexRequest {
 	String resourceName;
@@ -22,7 +23,7 @@ class RemoveFromIndex extends IndexRequest {
 		this.resourceName = resourceName;
 	}
 	public boolean execute(IProgressMonitor progressMonitor) {
-
+      ConversationState.setCurrent(state);
 		if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled()) return true;
 
 		/* ensure no concurrent write access to index */

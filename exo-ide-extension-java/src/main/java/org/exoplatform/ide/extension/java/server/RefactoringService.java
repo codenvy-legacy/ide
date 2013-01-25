@@ -57,6 +57,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -90,12 +91,29 @@ public class RefactoringService
 
    private WorkspaceResource getWorkspace(String vfsid)
    {
-      if (ResourcesPlugin.workspace == null)
+      Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+      if(tenantName == null)
+      {
+            if(ResourcesPlugin.getDefaultWorkspace() == null)
+            {
+
+               try
+               {
+                  VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
+                  ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
+               }
+               catch (VirtualFileSystemException e)
+               {
+                  LOG.error("Can't initialize Workspace.", e);
+               }
+            }
+      }
+      else
       {
          try
          {
-            VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-            ResourcesPlugin.workspace = new WorkspaceResource(vfs);
+          VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
+           ResourcesPlugin.addWorkspace(new WorkspaceResource(vfs));
          }
          catch (VirtualFileSystemException e)
          {

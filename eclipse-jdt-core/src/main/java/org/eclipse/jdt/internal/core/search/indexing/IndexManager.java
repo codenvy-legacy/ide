@@ -38,6 +38,7 @@ import org.eclipse.jdt.internal.core.search.processing.IJob;
 import org.eclipse.jdt.internal.core.search.processing.JobManager;
 import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.services.security.ConversationState;
 
 public class IndexManager extends JobManager implements IIndexConstants
 {
@@ -1239,8 +1240,10 @@ public class IndexManager extends JobManager implements IIndexConstants
    {
       request(new IndexRequest(container, this)
       {
+
          public boolean execute(IProgressMonitor progressMonitor)
          {
+            ConversationState.setCurrent(state);
             if (this.isCancelled || progressMonitor != null && progressMonitor.isCanceled())
             {
                return true;

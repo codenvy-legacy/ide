@@ -25,6 +25,7 @@ import org.eclipse.jdt.internal.core.search.matching.MatchLocator;
 import org.eclipse.jdt.internal.core.search.processing.IJob;
 import org.eclipse.jdt.internal.core.search.processing.JobManager;
 import org.eclipse.jdt.internal.core.util.Util;
+import org.exoplatform.services.security.ConversationState;
 
 public class PatternSearchJob implements IJob {
 
@@ -34,7 +35,7 @@ protected SearchParticipant participant;
 protected IndexQueryRequestor requestor;
 protected boolean areIndexesReady;
 protected long executionTime = 0;
-
+   ConversationState state = ConversationState.getCurrent();
 public PatternSearchJob(SearchPattern pattern, SearchParticipant participant, IJavaSearchScope scope, IndexQueryRequestor requestor) {
 	this.pattern = pattern;
 	this.participant = participant;
@@ -52,6 +53,7 @@ public void ensureReadyToRun() {
 		getIndexes(null/*progress*/); // may trigger some index recreation
 }
 public boolean execute(IProgressMonitor progressMonitor) {
+   ConversationState.setCurrent(state);
 	if (progressMonitor != null && progressMonitor.isCanceled()) throw new OperationCanceledException();
 
 	boolean isComplete = COMPLETE;

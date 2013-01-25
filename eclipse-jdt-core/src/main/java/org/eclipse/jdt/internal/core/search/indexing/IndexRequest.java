@@ -11,14 +11,23 @@
 package org.eclipse.jdt.internal.core.search.indexing;
 
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.internal.core.search.processing.IJob;
+import org.exoplatform.services.security.ConversationState;
 
 public abstract class IndexRequest implements IJob {
 	protected boolean isCancelled = false;
 	protected IPath containerPath;
 	protected IndexManager manager;
 
+   ConversationState state = ConversationState.getCurrent();
+
 	public IndexRequest(IPath containerPath, IndexManager manager) {
+      Object currentTenant = ConversationState.getCurrent().getAttribute("currentTenant");
+      if(currentTenant != null)
+      {
+         containerPath = new Path("/" + currentTenant + containerPath.toString());
+      }
 		this.containerPath = containerPath;
 		this.manager = manager;
 	}
