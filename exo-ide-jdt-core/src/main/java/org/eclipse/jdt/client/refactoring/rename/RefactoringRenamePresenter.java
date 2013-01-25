@@ -317,7 +317,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       display.setFocusOnNewNameField();
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
-         
+
          @Override
          public void execute()
          {
@@ -653,11 +653,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                   {
                      if (editor == activeEditor)
                      {
-                        int cursorColumn = editor.getCursorColumn();
-                        int cursorRow = editor.getCursorRow();
+                        final int cursorColumn = editor.getCursorColumn();
+                        final int cursorRow = editor.getCursorRow();
                         editor.getDocument().set(file.getContent());
-                        editor.setCursorPosition(cursorRow, cursorColumn);
-                        // TODO scroll to cursor position
+                        Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                        {
+                           @Override
+                           public void execute()
+                           {
+                              editor.setCursorPosition(cursorRow, cursorColumn);
+                           }
+                        });
                      }
                      else
                      {
@@ -797,11 +803,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             @Override
             public void execute()
             {
-               int cursorColumn = activeEditor.getCursorColumn();
-               int cursorRow = activeEditor.getCursorRow();
+               final int cursorColumn = activeEditor.getCursorColumn();
+               final int cursorRow = activeEditor.getCursorRow();
                activeEditor.getDocument().set(content);
-               activeEditor.setCursorPosition(cursorRow, cursorColumn);
-               // TODO scroll to cursor position
+               Scheduler.get().scheduleDeferred(new ScheduledCommand()
+               {
+                  @Override
+                  public void execute()
+                  {
+                     activeEditor.setCursorPosition(cursorRow, cursorColumn);
+                  }
+               });
             }
          });
       }
