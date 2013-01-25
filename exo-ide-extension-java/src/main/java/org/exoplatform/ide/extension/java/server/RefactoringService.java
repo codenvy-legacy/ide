@@ -213,8 +213,9 @@ public class RefactoringService
             renameSupport = RenameSupport.create((ICompilationUnit)element, newname, RenameSupport.UPDATE_REFERENCES);
             break;
          case IJavaElement.METHOD:
-            renameSupport = RenameSupport.create((IMethod)element, newname, RenameSupport.UPDATE_REFERENCES);
-            break;
+//            renameSupport = RenameSupport.create((IMethod)element, newname, RenameSupport.UPDATE_REFERENCES);
+            throw new UnsupportedOperationException("Currently we do not support renaming methods");
+//            break;
          case IJavaElement.FIELD:
             renameSupport = RenameSupport.create((IField)element, newname, RenameSupport.UPDATE_REFERENCES);
             break;
