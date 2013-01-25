@@ -20,11 +20,14 @@ package org.exoplatform.ide.eclipse.resources;
 
 import static org.junit.Assert.*;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import com.codenvy.eclipse.resources.ItemResource;
+
+import com.codenvy.eclipse.core.resources.IFile;
+import com.codenvy.eclipse.core.resources.IResource;
+import com.codenvy.eclipse.core.runtime.IPath;
+import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
+import com.codenvy.eclipse.core.runtime.Path;
+
 import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.junit.Test;

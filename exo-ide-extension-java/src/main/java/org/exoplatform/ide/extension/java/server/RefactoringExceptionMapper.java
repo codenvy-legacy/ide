@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
+import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.core.runtime.IStatus;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;

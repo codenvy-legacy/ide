@@ -20,15 +20,16 @@ package org.exoplatform.ide.eclipse.resources;
 
 import static org.junit.Assert.assertTrue;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Path;
+import com.codenvy.eclipse.core.resources.IFile;
+import com.codenvy.eclipse.core.resources.IFolder;
+import com.codenvy.eclipse.core.resources.IProject;
+import com.codenvy.eclipse.core.resources.IResource;
+import com.codenvy.eclipse.core.resources.IWorkspaceRoot;
+import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.core.runtime.IPath;
+import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
+import com.codenvy.eclipse.core.runtime.Path;
+
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
