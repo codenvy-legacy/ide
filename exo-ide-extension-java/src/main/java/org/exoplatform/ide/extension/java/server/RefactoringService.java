@@ -18,31 +18,34 @@
  */
 package org.exoplatform.ide.extension.java.server;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IField;
-import org.eclipse.jdt.core.IInitializer;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.ILocalVariable;
-import org.eclipse.jdt.core.IMethod;
-import org.eclipse.jdt.core.IType;
-import org.eclipse.jdt.core.ITypeParameter;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.JavaModelManager;
-import org.eclipse.jdt.internal.core.SourceMethod;
-import org.eclipse.jdt.internal.core.search.indexing.IndexAllProject;
-import org.eclipse.jdt.internal.core.search.indexing.IndexRequest;
-import org.eclipse.jdt.ui.refactoring.RenameSupport;
-import org.exoplatform.ide.eclipse.resources.ProjectResource;
-import org.exoplatform.ide.eclipse.resources.WorkspaceResource;
+import com.codenvy.eclipse.resources.ProjectResource;
+import com.codenvy.eclipse.resources.WorkspaceResource;
+
+import com.codenvy.eclipse.core.resources.IProject;
+import com.codenvy.eclipse.core.resources.IProjectDescription;
+import com.codenvy.eclipse.core.resources.ResourcesPlugin;
+import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.core.runtime.IPath;
+import com.codenvy.eclipse.core.runtime.IStatus;
+import com.codenvy.eclipse.core.runtime.NullProgressMonitor;
+import com.codenvy.eclipse.core.runtime.Status;
+import com.codenvy.eclipse.jdt.core.ICompilationUnit;
+import com.codenvy.eclipse.jdt.core.IField;
+import com.codenvy.eclipse.jdt.core.IInitializer;
+import com.codenvy.eclipse.jdt.core.IJavaElement;
+import com.codenvy.eclipse.jdt.core.IJavaProject;
+import com.codenvy.eclipse.jdt.core.ILocalVariable;
+import com.codenvy.eclipse.jdt.core.IMethod;
+import com.codenvy.eclipse.jdt.core.IType;
+import com.codenvy.eclipse.jdt.core.ITypeParameter;
+import com.codenvy.eclipse.jdt.core.JavaCore;
+import com.codenvy.eclipse.jdt.core.JavaModelException;
+import com.codenvy.eclipse.jdt.internal.core.JavaModelManager;
+import com.codenvy.eclipse.jdt.internal.core.SourceMethod;
+import com.codenvy.eclipse.jdt.internal.core.search.indexing.IndexAllProject;
+import com.codenvy.eclipse.jdt.internal.core.search.indexing.IndexRequest;
+import com.codenvy.eclipse.jdt.ui.refactoring.RenameSupport;
+
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -57,6 +60,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -90,12 +94,29 @@ public class RefactoringService
 
    private WorkspaceResource getWorkspace(String vfsid)
    {
-      if (ResourcesPlugin.workspace == null)
+      Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+      if(tenantName == null)
+      {
+            if(ResourcesPlugin.getDefaultWorkspace() == null)
+            {
+
+               try
+               {
+                  VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
+                  ResourcesPlugin.setDefaultWorkspace(new WorkspaceResource(vfs));
+               }
+               catch (VirtualFileSystemException e)
+               {
+                  LOG.error("Can't initialize Workspace.", e);
+               }
+            }
+      }
+      else
       {
          try
          {
-            VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
-            ResourcesPlugin.workspace = new WorkspaceResource(vfs);
+          VirtualFileSystem vfs = vfsRegistry.getProvider(vfsid).newInstance(null, eventListenerList);
+           ResourcesPlugin.addWorkspace(new WorkspaceResource(vfs));
          }
          catch (VirtualFileSystemException e)
          {
@@ -265,7 +286,7 @@ public class RefactoringService
 
    private void initializeProject(Item vfsProject, WorkspaceResource workspace)
    {
-      IProject project = new ProjectResource(new org.eclipse.core.runtime.Path(vfsProject.getPath()), workspace);
+      IProject project = new ProjectResource(new com.codenvy.eclipse.core.runtime.Path(vfsProject.getPath()), workspace);
       try
       {
          project.create(null);

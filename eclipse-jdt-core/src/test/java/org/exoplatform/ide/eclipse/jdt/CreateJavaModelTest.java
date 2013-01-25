@@ -18,13 +18,14 @@
  */
 package org.exoplatform.ide.eclipse.jdt;
 
+import com.codenvy.eclipse.core.runtime.CoreException;
+import com.codenvy.eclipse.jdt.core.ICompilationUnit;
+import com.codenvy.eclipse.jdt.core.IJavaProject;
+import com.codenvy.eclipse.jdt.core.IPackageFragment;
+import com.codenvy.eclipse.jdt.core.IPackageFragmentRoot;
+import com.codenvy.eclipse.jdt.core.JavaModelException;
+
 import org.apache.commons.io.IOUtils;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.junit.Before;

@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.extension.java.server.refactoring;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import com.codenvy.eclipse.resources.WorkspaceResource;
+
+import com.codenvy.eclipse.core.resources.ResourcesPlugin;
+
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.impl.ApplicationContextImpl;
@@ -31,7 +34,6 @@ import org.everrest.core.impl.RequestHandlerImpl;
 import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.exoplatform.ide.eclipse.resources.WorkspaceResource;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
@@ -85,12 +87,13 @@ public abstract class ResourcesBaseTest
       if (ws == null)
       {
          ws = new WorkspaceResource(vfs);
-         ResourcesPlugin.workspace = ws;
+         ResourcesPlugin.setDefaultWorkspace(ws);
       }
       else
       {
          ws.setVfs(vfs);
       }
+      ConversationState.setCurrent(new ConversationState(new Identity("test")));
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
       dependencies.addComponent(EventListenerList.class, eventListenerList);

@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.eclipse.resources;
 
-import org.eclipse.core.resources.ResourcesPlugin;
+import com.codenvy.eclipse.resources.WorkspaceResource;
+
+import com.codenvy.eclipse.core.resources.ResourcesPlugin;
+
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.impl.ApplicationContextImpl;
@@ -85,12 +88,13 @@ public abstract class ResourcesBaseTest
       if (ws == null)
       {
          ws = new WorkspaceResource(vfs);
-         ResourcesPlugin.workspace = ws;
+         ResourcesPlugin.setDefaultWorkspace(ws);
       }
       else
       {
          ws.setVfs(vfs);
       }
+      ConversationState.setCurrent(new ConversationState(new Identity("test")));
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
       dependencies.addComponent(EventListenerList.class, eventListenerList);
