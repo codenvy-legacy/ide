@@ -35,10 +35,8 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * This REST service is used for getting user's Google Contacts.
@@ -55,17 +53,6 @@ public class GoogleContactsRestService
 
    @Inject
    private OAuthTokenProvider oauthTokenProvider;
-
-   @GET
-   @Path("is-authenticate")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Response isAuthenticate(@Context SecurityContext security) throws Exception
-   {
-      final String userId = ConversationState.getCurrent().getIdentity().getUserId();
-      if (oauthTokenProvider.getToken("google", userId) == null)
-         return Response.status(403).entity("OAuth token not found").build();
-      return Response.ok().build();
-   }
 
    /**
     * Fetch all user's contacts.
@@ -111,9 +98,9 @@ public class GoogleContactsRestService
    }
 
    @GET
-   @Path("/token-validate")
+   @Path("/is-authenticate")
    @Produces(MediaType.APPLICATION_JSON)
-   public Response tokenValidate() throws Exception
+   public Response isAuthenticate() throws Exception
    {
       final String userId = ConversationState.getCurrent().getIdentity().getUserId();
       if (oauthTokenProvider.getToken("google", userId) == null)

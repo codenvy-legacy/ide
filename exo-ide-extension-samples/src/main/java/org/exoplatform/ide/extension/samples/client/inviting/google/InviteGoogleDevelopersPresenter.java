@@ -141,7 +141,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       contacts = new ArrayList<GoogleContact>();
       display.setDevelopersListVisible(true);
       //lazyLoadGoogleContacts();
-      loadContacts();
+      isAuthenticate();
    }
 
 //   /**
@@ -192,38 +192,12 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 //      }.schedule(500);
 //   }
 
-   private void loadContacts()
+   private void isAuthenticate()
    {
       try
       {
-         GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<String>()
-         {
-            @Override
-            protected void onSuccess(String result)
-            {
-               tokenValidate();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               showLoginWindow();
-            }
-         });
-         IDELoader.show("Loading Google contacts...");
-      }
-      catch (RequestException exception)
-      {
-         loadContactsFailed();
-      }
-
-   }
-
-   private void tokenValidate()
-   {
-      try
-      {
-         GoogleContactsService.getInstance().isTokenValid(new AsyncRequestCallback<StringBuilder>(new StringContentUnmarshaller(new StringBuilder()))
+         StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller(new StringBuilder());
+         GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller)
          {
             @Override
             protected void onSuccess(StringBuilder s)
