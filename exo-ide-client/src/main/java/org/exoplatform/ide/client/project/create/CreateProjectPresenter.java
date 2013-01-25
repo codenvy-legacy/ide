@@ -1071,7 +1071,7 @@ public class CreateProjectPresenter
             }
             return phoneMatched;
          }
-         display.setJRebelErrorMessageLabel("All field are required!");
+         display.setJRebelErrorMessageLabel("All fields are required!");
       }
       return false;
    }
