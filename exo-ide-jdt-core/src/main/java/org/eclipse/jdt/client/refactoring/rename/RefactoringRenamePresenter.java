@@ -599,6 +599,13 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                         FileModel fileModel = (FileModel)item;
                         file.setName(fileModel.getName());
                         file.setPath(fileModel.getPath());
+
+                        if (fileModel.getId().equals(activeFile.getId()))
+                        {
+                           activeFile.setName(fileModel.getName());
+                           activeFile.setPath(fileModel.getPath());
+                        }
+
                         updateFileContent(file);
                      }
                   }
@@ -683,7 +690,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    }
 
    /**
-    * Returns the fully-qualified name of the top-level class from provided file.
+    * Returns the fully-qualified name of the top-level class from the provided file.
     * 
     * @param file {@link FileModel}
     * @return fqn of the top-level class from provided file,
