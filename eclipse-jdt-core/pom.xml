@@ -14,12 +14,7 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-editor-api</artifactId>
-         <exclusions>
-            <exclusion>
-               <groupId>com.google.gwt</groupId>
-               <artifactId>gwt</artifactId>
-            </exclusion>
-         </exclusions>
+         <scope>provided</scope>
 		</dependency>
         <dependency>
 			<groupId>org.exoplatform.ide</groupId>
