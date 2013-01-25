@@ -79,6 +79,7 @@ import org.eclipse.jdt.internal.core.util.Messages;
 import org.eclipse.jdt.internal.core.util.Util;
 import org.eclipse.jdt.internal.core.util.WeakHashSet;
 import org.eclipse.jdt.internal.core.util.WeakHashSetOfCharArray;
+import org.exoplatform.services.security.ConversationState;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -99,6 +100,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
@@ -1431,6 +1433,8 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
     */
    private static JavaModelManager MANAGER = new JavaModelManager();
 
+   private static ConcurrentHashMap<String, JavaModelManager> MANAGERS = new ConcurrentHashMap<String, JavaModelManager>();
+
    /**
     * Infos cache.
     */
@@ -2620,7 +2624,23 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
 
    public static DeltaProcessingState getDeltaState()
    {
-      return MANAGER.deltaState;
+
+      return getManager().deltaState;
+   }
+
+   private static JavaModelManager getManager()
+   {
+      Object currentTenant = ConversationState.getCurrent().getAttribute("currentTenant");
+      if(currentTenant != null)
+      {
+         if(!MANAGERS.containsKey(currentTenant))
+         {
+            MANAGERS.put((String)currentTenant, new JavaModelManager());
+         }
+         return MANAGERS.get(currentTenant);
+      }
+
+      return MANAGER;
    }
 
    /**
@@ -2633,12 +2653,12 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
 
    public static ExternalFoldersManager getExternalManager()
    {
-      return MANAGER.externalFoldersManager;
+      return getManager().externalFoldersManager;
    }
 
    public static IndexManager getIndexManager()
    {
-      return MANAGER.indexManager;
+      return getManager().indexManager;
    }
 
    /**
@@ -2790,7 +2810,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
     */
    public final static JavaModelManager getJavaModelManager()
    {
-      return MANAGER;
+      return getManager();
    }
 
    /**
@@ -3421,18 +3441,19 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
 
    public static UserLibraryManager getUserLibraryManager()
    {
-      if (MANAGER.userLibraryManager == null)
+      JavaModelManager manager = getManager();
+      if (manager.userLibraryManager == null)
       {
          UserLibraryManager libraryManager = new UserLibraryManager();
-         synchronized (MANAGER)
+         synchronized (manager)
          {
-            if (MANAGER.userLibraryManager == null)
+            if (manager.userLibraryManager == null)
             { // ensure another library manager was not set while creating the instance above
-               MANAGER.userLibraryManager = libraryManager;
+               manager.userLibraryManager = libraryManager;
             }
          }
       }
-      return MANAGER.userLibraryManager;
+      return manager.userLibraryManager;
    }
 
    /*
@@ -5143,9 +5164,9 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
 
    public static final void doNotUse()
    {
-      // used by tests to simulate a startup
-      MANAGER.deltaState.doNotUse();
-      MANAGER = new JavaModelManager();
+//      // used by tests to simulate a startup
+//      getManager().deltaState.doNotUse();
+//      MANAGER = new JavaModelManager();
    }
 
    /*

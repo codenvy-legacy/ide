@@ -23,11 +23,6 @@ public abstract class IndexRequest implements IJob {
    ConversationState state = ConversationState.getCurrent();
 
 	public IndexRequest(IPath containerPath, IndexManager manager) {
-      Object currentTenant = ConversationState.getCurrent().getAttribute("currentTenant");
-      if(currentTenant != null)
-      {
-         containerPath = new Path("/" + currentTenant + containerPath.toString());
-      }
 		this.containerPath = containerPath;
 		this.manager = manager;
 	}

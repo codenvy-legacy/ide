@@ -388,5 +388,4 @@ public class ProjectResource extends ContainerResource implements IProject
    {
       return workspace.getRoot();
    }
-
 }
