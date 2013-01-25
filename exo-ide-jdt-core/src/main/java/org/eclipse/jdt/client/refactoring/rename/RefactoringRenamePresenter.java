@@ -314,8 +314,16 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
       openView();
       display.setNewNameFieldValue(originElementName != null ? originElementName : "");
-      display.selectAllTextInNewNameField();
       display.setFocusOnNewNameField();
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         
+         @Override
+         public void execute()
+         {
+            display.selectAllTextInNewNameField();
+         }
+      });
    }
 
    /**
@@ -645,7 +653,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                   {
                      if (editor == activeEditor)
                      {
+                        int cursorColumn = editor.getCursorColumn();
+                        int cursorRow = editor.getCursorRow();
                         editor.getDocument().set(file.getContent());
+                        editor.setCursorPosition(cursorRow, cursorColumn);
+                        // TODO scroll to cursor position
                      }
                      else
                      {
@@ -775,7 +787,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
       activeEditor = event.getEditor();
 
-      // FIXME workaround
+      // TODO workaround of bug to updating content of editors in inactive tabs in CollabEditor
       final String content = editorsToUpdateContent.remove(activeEditor);
       if (content != null)
       {
@@ -789,6 +801,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                int cursorRow = activeEditor.getCursorRow();
                activeEditor.getDocument().set(content);
                activeEditor.setCursorPosition(cursorRow, cursorColumn);
+               // TODO scroll to cursor position
             }
          });
       }
