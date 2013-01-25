@@ -388,21 +388,4 @@ public class ProjectResource extends ContainerResource implements IProject
    {
       return workspace.getRoot();
    }
-
-   public void setPath(IPath pathInTenant)
-   {
-      path = pathInTenant;
-   }
-
-   @Override
-   public IPath getLocation()
-   {
-      return super.getLocation();
-   }
-
-   @Override
-   public IPath getFullPath()
-   {
-      return super.getFullPath();
-   }
 }
