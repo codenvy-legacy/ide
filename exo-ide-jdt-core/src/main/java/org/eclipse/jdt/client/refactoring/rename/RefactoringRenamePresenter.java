@@ -36,7 +36,10 @@ import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
+import org.eclipse.jdt.client.core.dom.MethodDeclaration;
+import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
+import org.eclipse.jdt.client.core.dom.StructuralPropertyDescriptor;
 import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
 import org.eclipse.jdt.client.refactoring.RefactoringClientService;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -57,7 +60,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -428,62 +430,62 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
          if (coveringNode.getNodeType() == ASTNode.SIMPLE_NAME)
          {
-//            IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
+            //IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
             return coveringNode;
-            //            ASTNode parentNode = coveringNode.getParent();
-            //            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
-            //
-            //            if (parentNode instanceof SingleVariableDeclaration)
-            //            {
-            //               if (descriptor == SingleVariableDeclaration.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof VariableDeclarationFragment)
-            //            {
-            //               if (descriptor == VariableDeclarationFragment.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof MethodDeclaration)
-            //            {
-            //               MethodDeclaration p = (MethodDeclaration)parentNode;
-            //               // could be the name of the method or constructor
-            //               if (!p.isConstructor() && (descriptor == MethodDeclaration.NAME_PROPERTY))
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof MethodInvocation)
-            //            {
-            //               if (descriptor == MethodInvocation.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof TypeDeclaration)
-            //            {
-            //               if (descriptor == TypeDeclaration.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof SimpleType)
-            //            {
-            //               if (descriptor == SimpleType.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof ClassInstanceCreation)
-            //            {
-            //               if (descriptor == ClassInstanceCreation.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
+//            ASTNode parentNode = coveringNode.getParent();
+//            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
+//
+//            if (parentNode instanceof SingleVariableDeclaration)
+//            {
+//               if (descriptor == SingleVariableDeclaration.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof VariableDeclarationFragment)
+//            {
+//               if (descriptor == VariableDeclarationFragment.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof MethodDeclaration)
+//            {
+//               MethodDeclaration p = (MethodDeclaration)parentNode;
+//               // could be the name of the constructor
+//               if (!p.isConstructor() && descriptor == MethodDeclaration.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof MethodInvocation)
+//            {
+//               if (descriptor == MethodInvocation.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof TypeDeclaration)
+//            {
+//               if (descriptor == TypeDeclaration.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof SimpleType)
+//            {
+//               if (descriptor == SimpleType.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof ClassInstanceCreation)
+//            {
+//               if (descriptor == ClassInstanceCreation.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
          }
       }
       catch (BadLocationException e)
@@ -649,17 +651,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                      }
                      else
                      {
-                        final int cursorColumn = editor.getCursorColumn();
-                        final int cursorRow = editor.getCursorRow();
-                        editor.getDocument().set(file.getContent());
-                        Scheduler.get().scheduleDeferred(new ScheduledCommand()
-                        {
-                           @Override
-                           public void execute()
-                           {
-                              editor.setCursorPosition(cursorRow, cursorColumn);
-                           }
-                        });
+                        updateEditorContent(editor, file.getContent(), file);
                      }
                   }
 
@@ -668,7 +660,6 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                      @Override
                      public void execute()
                      {
-                        file.setContentChanged(false);
                         IDE.fireEvent(new FileSavedEvent(file, null));
                      }
                   });
@@ -814,17 +805,12 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             @Override
             public void execute()
             {
-               final int cursorColumn = activeEditor.getCursorColumn();
-               final int cursorRow = activeEditor.getCursorRow();
-               activeEditor.getDocument().set(content);
+               updateEditorContent(activeEditor, content, activeFile);
                Scheduler.get().scheduleDeferred(new ScheduledCommand()
                {
                   @Override
                   public void execute()
                   {
-                     activeEditor.setCursorPosition(cursorRow, cursorColumn);
-
-                     activeFile.setContentChanged(false);
                      IDE.fireEvent(new FileSavedEvent(activeFile, null));
                   }
                });
@@ -833,6 +819,33 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       }
 
       currentCompilationUnit = openedFilesToCompilationUnit.get(activeFile.getId());
+   }
+
+   /**
+    * Updates {@link Editor} content. 
+    * 
+    * @param editor {@link Editor} to update
+    * @param content new content
+    * @param file editing {@link FileModel file}
+    */
+   private void updateEditorContent(final Editor editor, String content, final FileModel file)
+   {
+      final int cursorColumn = editor.getCursorColumn();
+      final int cursorRow = editor.getCursorRow();
+      editor.getDocument().set(content);
+
+      // need some time to update editor's content
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            editor.setCursorPosition(cursorRow, cursorColumn);
+
+            file.setContentChanged(false);
+            IDE.fireEvent(new FileSavedEvent(file, null));
+         }
+      });
    }
 
    /**
