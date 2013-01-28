@@ -57,6 +57,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -427,7 +428,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
          if (coveringNode.getNodeType() == ASTNode.SIMPLE_NAME)
          {
-            //IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
+//            IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
             return coveringNode;
             //            ASTNode parentNode = coveringNode.getParent();
             //            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
@@ -642,7 +643,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                   final Editor editor = openedEditors.get(file.getId());
                   if (editor != null)
                   {
-                     if (editor == activeEditor)
+                     if (editor != activeEditor)
+                     {
+                        editorsToUpdateContent.put(editor, result.getContent());
+                     }
+                     else
                      {
                         final int cursorColumn = editor.getCursorColumn();
                         final int cursorRow = editor.getCursorRow();
@@ -656,13 +661,17 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                            }
                         });
                      }
-                     else
-                     {
-                        editorsToUpdateContent.put(editor, result.getContent());
-                     }
                   }
 
-                  IDE.fireEvent(new FileSavedEvent(file, null));
+                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                  {
+                     @Override
+                     public void execute()
+                     {
+                        file.setContentChanged(false);
+                        IDE.fireEvent(new FileSavedEvent(file, null));
+                     }
+                  });
                   reparseOpenedFiles();
                }
 
@@ -814,6 +823,9 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                   public void execute()
                   {
                      activeEditor.setCursorPosition(cursorRow, cursorColumn);
+
+                     activeFile.setContentChanged(false);
+                     IDE.fireEvent(new FileSavedEvent(activeFile, null));
                   }
                });
             }
