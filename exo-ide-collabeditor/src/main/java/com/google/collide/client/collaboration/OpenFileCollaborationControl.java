@@ -40,9 +40,10 @@ public class OpenFileCollaborationControl extends SimpleControl implements IDECo
       setEnabled(true);
       setVisible(true);
       setEvent(new OpenFileCollaborationEvent());
-      setTitle("Open File Collaboration");
+      setTitle("Open in Collaboration Mode");
       setPrompt("Open File in Collaboration mode");
-      setImages(resource.getCollaborationImage(),resource.getCollaborationImage());
+      setImages(resource.getCollaborationImage(), resource.getCollaborationImageDisabled());
+      setShowInContextMenu(true);
    }
 
    @Override

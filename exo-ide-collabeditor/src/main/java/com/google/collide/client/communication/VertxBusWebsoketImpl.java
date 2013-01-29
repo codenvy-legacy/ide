@@ -57,11 +57,11 @@ public class VertxBusWebsoketImpl implements VertxBus
       boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
       if (isSecureConnection)
       {
-         url = "wss://" + Window.Location.getHost() + "/collaboration";
+         url = "wss://" + Window.Location.getHost() + "/IDE/collaboration";
       }
       else
       {
-         url = "ws://" + Window.Location.getHost() + "/collaboration";
+         url = "ws://" + Window.Location.getHost() + "/IDE/collaboration";
       }
       return new VertxBusWebsoketImpl(url);
 
@@ -141,7 +141,7 @@ public class VertxBusWebsoketImpl implements VertxBus
    }
 
    @Override
-   public short getReadyState()
+   public short getReadyState() throws WebSocketException
    {
       return Short.parseShort(messageBus.getReadyState().toString());
    }

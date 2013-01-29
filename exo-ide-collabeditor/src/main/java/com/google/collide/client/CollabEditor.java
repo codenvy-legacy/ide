@@ -857,7 +857,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
 
    public void setDocument(final Document document)
    {
-      this.document = new org.exoplatform.ide.editor.text.Document(document.asText());
+      this.document = new org.exoplatform.ide.editor.shared.text.Document(document.asText());
       this.document.addDocumentListener(documentAdaptor);
      // hoverPresenter = new HoverPresenter(this, editor, this.document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
