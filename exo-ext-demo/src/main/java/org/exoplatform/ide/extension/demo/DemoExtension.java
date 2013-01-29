@@ -16,6 +16,8 @@
  */
 package org.exoplatform.ide.extension.demo;
 
+import elemental.html.Element;
+
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
