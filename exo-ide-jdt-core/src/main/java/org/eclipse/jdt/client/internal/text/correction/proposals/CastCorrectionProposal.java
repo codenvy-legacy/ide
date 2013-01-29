@@ -33,7 +33,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ImportRewrite.ImportRewriteContex
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ContextSensitiveImportRewriteContext;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class CastCorrectionProposal extends LinkedCorrectionProposal
 {

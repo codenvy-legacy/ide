@@ -37,7 +37,7 @@ import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeCorrectionProposal;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.Collection;

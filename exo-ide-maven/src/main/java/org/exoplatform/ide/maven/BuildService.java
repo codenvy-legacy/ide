@@ -83,8 +83,9 @@ public class BuildService
    public static final String BUILDER_PUBLISH_REPOSITORY = "builder.publish-repository";
 
    /**
-    * Name of configuration parameter that points to the directory where stored build after deploy command.
-    * Is such parameter is not specified then 'java.io.tmpdir' used.
+    * Name of configuration parameter that points URL for public maven repository.
+    * This is mirror of the directory where stored build after deploy command.
+    * If not set will be null.
     */
    public static final String BUILDER_PUBLISH_REPOSITORY_URL = "builder.publish-repository-url";
 
@@ -125,8 +126,8 @@ public class BuildService
    public static final int DEFAULT_BUILDER_QUEUE_SIZE = 100;
 
    /**
-    * Default time of keeping the results of build in minutes (60). After this time the results of build (artifact and
-    * logs) may be removed.
+    * Default time of keeping the results of build in minutes (60).
+    * After this time the results of build (artifact and logs) may be removed.
     */
    public static final int DEFAULT_BUILDER_CLEAN_RESULT_DELAY_TIME = 60;
 
@@ -173,6 +174,10 @@ public class BuildService
    private final long timeoutMillis;
 
    private final long cleanBuildResultDelayMillis;
+
+   private final int maxSizeOfBuildQueue;
+
+   private final int workerNumber;
 
    public BuildService(Map<String, Object> config)
    {
@@ -233,6 +238,8 @@ public class BuildService
       this.publishRepositoryUrl = publishRepositoryUrl;
       this.timeoutMillis = timeout * 1000; // to milliseconds
       this.cleanBuildResultDelayMillis = cleanBuildResultDelay * 60 * 1000; // to milliseconds
+      this.maxSizeOfBuildQueue = buildQueueSize;
+      this.workerNumber = workerNumber;
 
       //
       this.map = new ConcurrentHashMap<String, CacheElement>();
@@ -482,6 +489,47 @@ public class BuildService
          }
       }
    }
+
+   public int getSize()
+   {
+      return queue.size();
+   }
+   
+   public long getCleanBuildResultDelayMillis()
+   {
+      return cleanBuildResultDelayMillis;
+   }
+   
+   public String getPublishRepository()
+   {
+      return publishRepository;
+   }
+   
+   public String getPublishRepositoryUrl()
+   {
+      return publishRepositoryUrl;
+   }
+   
+   public String getRepository()
+   {
+      return repository != null ? repository.getPath() : "";
+   }
+   
+   public long getTimeoutMillis()
+   {
+      return timeoutMillis;
+   }
+   
+   public int getMaxSizeOfBuildQueue()
+   {
+      return maxSizeOfBuildQueue;
+   }
+   
+   public int getWorkerNumber()
+   {
+      return workerNumber;
+   }
+   
 
    /* ====================================================== */
 

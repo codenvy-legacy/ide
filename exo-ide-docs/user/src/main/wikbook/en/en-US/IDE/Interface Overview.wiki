@@ -4,9 +4,9 @@ When the application is launched the first thing you see is the window like this
 !main_window.png|border=0!
 
 
-*Illustration. The eXo IDE interface*
+*Illustration. The Codenvy interface*
 
-IDE uses notion of _Virtual File System_ which wraps the physical location you are working in. It is displayed as the _Workspace Panel_ containing folders and files.
+Codenvy uses notion of _Virtual File System_ which wraps the physical location you are working in. It is displayed as the _Workspace Panel_ containing folders and files.
 
 
 The _Content Panel_ consists of two horizontal panels:

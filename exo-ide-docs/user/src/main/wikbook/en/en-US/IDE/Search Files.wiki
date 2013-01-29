@@ -1,4 +1,4 @@
-eXo IDE enables you to search by file content and MIME type. To find, do as follows:
+Codenvy enables you to search by file content and MIME type. To find, do as follows:
 * *Step 1:* Select the target folder or root folder in the _Workspace Panel_ or in the _Project Explorer_.
 * *Step 2:* Click the *Search...* icon on the toolbar; or go to *File > Search...* on the top menu to open the *Search* dialog.
 * *Step 3:* Set parameters for two criteria fields, including *Containing text* and *MIME type*. If those fields are empty, all files in the search results will be displayed.

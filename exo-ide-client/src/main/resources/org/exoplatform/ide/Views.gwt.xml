@@ -109,10 +109,6 @@
       <when-type-is class="org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display"/>
    </replace-with>
 
-   <replace-with class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectForm">
-      <when-type-is class="org.exoplatform.ide.client.project.create.empty.CreateEmptyProjectPresenter.Display"/>
-   </replace-with>
-
    <replace-with class="org.exoplatform.ide.client.project.template.CreateProjectTemplateView">
       <when-type-is class="org.exoplatform.ide.client.project.template.CreateProjectTemplatePresenter.Display"/>
    </replace-with>
@@ -251,10 +247,6 @@
 
    <replace-with class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsView">
       <when-type-is class="org.exoplatform.ide.client.googlecontacts.InviteGoogleContactsPresenter.Display"/>
-   </replace-with>
-
-   <replace-with class="org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserView">
-      <when-type-is class="org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.client.project.prepare.ProjectPrepareView">

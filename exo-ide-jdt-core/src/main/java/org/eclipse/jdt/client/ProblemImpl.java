@@ -19,7 +19,7 @@
 package org.eclipse.jdt.client;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
-import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.client.marking.Marker;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

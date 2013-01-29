@@ -51,6 +51,7 @@ import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.ui.ClearFocusForm;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.impl.ViewHighlightManager;
+import org.exoplatform.ide.client.framework.util.IDEAutoBeanFactory;
 import org.exoplatform.ide.client.messages.IdeEditorLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeErrorsLocalizationConstant;
 import org.exoplatform.ide.client.messages.IdeLocalizationMessages;
@@ -71,7 +72,6 @@ import org.exoplatform.ide.client.project.ProjectSupportingModule;
 import org.exoplatform.ide.client.project.prepare.ProjectPreparePresenter;
 import org.exoplatform.ide.client.properties.PropertiesPresenter;
 import org.exoplatform.ide.client.selenium.SeleniumTestsHelper;
-import org.exoplatform.ide.client.unsupportedbrowser.UnsupportedBrowserHandler;
 import org.exoplatform.ide.client.websocket.WebSocketHandler;
 import java.util.ArrayList;
 import java.util.List;
@@ -183,7 +183,6 @@ public class IDE extends org.exoplatform.ide.client.framework.module.IDE
       new PreferencesModule();
 
       new WebSocketHandler();
-      new UnsupportedBrowserHandler();
 
       new IDEDebug();
       new ProjectPreparePresenter();

@@ -17,7 +17,7 @@ import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.templates.api.Template;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.HashSet;
 import java.util.Map;

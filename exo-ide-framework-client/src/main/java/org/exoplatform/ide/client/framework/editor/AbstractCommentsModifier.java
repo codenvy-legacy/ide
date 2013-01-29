@@ -19,15 +19,15 @@
 package org.exoplatform.ide.client.framework.editor;
 
 import org.exoplatform.gwtframework.commons.util.Log;
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.FindReplaceDocumentAdapter;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.edits.DeleteEdit;
-import org.exoplatform.ide.editor.text.edits.InsertEdit;
-import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.FindReplaceDocumentAdapter;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.edits.DeleteEdit;
+import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -138,8 +138,8 @@ public abstract class AbstractCommentsModifier implements CommentsModifier
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.api.SelectionRange,
-    *      org.exoplatform.ide.editor.text.IDocument)
+    * @see org.exoplatform.ide.client.framework.editor.CommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.client.api.SelectionRange,
+    *      org.exoplatform.ide.editor.shared.text.IDocument)
     */
    @Override
    public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document)

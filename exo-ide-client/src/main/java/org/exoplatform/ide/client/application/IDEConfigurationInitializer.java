@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.application;
 
-import com.google.gwt.core.shared.GWT;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.json.client.JSONObject;
@@ -34,6 +32,7 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
+import org.exoplatform.ide.client.framework.codenow.CodeNowSpec10;
 import org.exoplatform.ide.client.framework.codenow.StartWithInitParamsEvent;
 import org.exoplatform.ide.client.framework.configuration.ConfigurationReceivedSuccessfullyEvent;
 import org.exoplatform.ide.client.framework.configuration.IDEConfiguration;
@@ -65,7 +64,7 @@ import java.util.Map;
  * 
  */
 public class IDEConfigurationInitializer implements ApplicationSettingsReceivedHandler, VfsChangedHandler
-   
+
 {
 
    private IDEConfiguration applicationConfiguration;
@@ -200,10 +199,11 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       {
          promptToSelectEntryPoint();
       }
-      
+
       Map<String, List<String>> parameterMap = Location.getParameterMap();
-      
-      if (parameterMap != null && parameterMap.size() > 1)
+
+      if (parameterMap != null && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER) != null
+         && parameterMap.get(CodeNowSpec10.VERSION_PARAMETER).get(0).equals(CodeNowSpec10.CURRENT_VERSION))
       {
          IDE.fireEvent(new StartWithInitParamsEvent(parameterMap));
       }
@@ -246,12 +246,10 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
 
       initServices();
    }
-   
-   
 
    private void initServices()
    {
-     
+
       IDE.fireEvent(new InitializeServicesEvent(applicationConfiguration, IDELoader.get()));
 
       /*
@@ -270,6 +268,5 @@ public class IDEConfigurationInitializer implements ApplicationSettingsReceivedH
       IDE.fireEvent(new SetToolbarItemsEvent("exoIDEStatusbar", controls.getStatusBarControls(), controls
          .getRegisteredControls()));
    }
-
 
 }

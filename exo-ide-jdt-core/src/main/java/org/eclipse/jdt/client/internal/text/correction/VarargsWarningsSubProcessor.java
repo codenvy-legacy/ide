@@ -29,7 +29,7 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectionProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.Collection;
 import java.util.Iterator;

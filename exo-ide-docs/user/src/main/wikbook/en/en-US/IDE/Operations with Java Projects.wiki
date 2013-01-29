@@ -1,4 +1,4 @@
-With eXo IDE you can build your Java project, launch builded application in either run or debug mode.
+With Codenvy you can build your Java project, launch builded application in either run or debug mode.
 
 h1. Build project
 

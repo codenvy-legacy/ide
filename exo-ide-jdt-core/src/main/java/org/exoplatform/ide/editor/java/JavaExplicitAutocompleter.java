@@ -88,10 +88,13 @@ class JavaExplicitAutocompleter extends ExplicitAutocompleter
    private boolean checkCursorInComment(SelectionModel selectionModel, DocumentParser parser)
    {
       JsonArray<Token> tokens = parser.parseLineSync(selectionModel.getCursorLine());
-      for(Token t = tokens.pop(); !tokens.isEmpty(); t=tokens.pop())
+      if (!tokens.isEmpty())
       {
-         if (t.getType() == TokenType.COMMENT && commentEndMach.test(t.getValue()))
-            return true;
+         for(Token t = tokens.pop(); !tokens.isEmpty(); t=tokens.pop())
+         {
+            if (t.getType() == TokenType.COMMENT && commentEndMach.test(t.getValue()))
+               return true;
+         }
       }
       return false;
    }

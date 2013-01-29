@@ -1,6 +1,6 @@
-h1. View information about eXo IDE
+h1. View information about Codenvy
 
-To view information about the current version of eXo IDE, go to *Help > About* on the top menu.
+To view information about the current version of Codenvy, go to *Help > About* on the top menu.
 
 
 h1. Customize Toolbar
@@ -15,9 +15,9 @@ If you want to customize the toolbar, such as adding or removing some buttons, c
 
 h1. Customize Hotkeys
 
-The hotkey manager enables you to customize hotkeys applied for eXo IDE. If your customized hotkeys are matching with browser hotkeys, only eXo IDE hotkeys will work out.
+The hotkey manager enables you to customize hotkeys applied for Codenvy. If your customized hotkeys are matching with browser hotkeys, only Codenvy hotkeys will work out.
 
-If hotkeys of the browser and of eXo IDE are not overridden, they will work as usual.
+If hotkeys of the browser and of Codenvy are not overridden, they will work as usual.
 
 To customize your own hotkeys, do as follows:
 

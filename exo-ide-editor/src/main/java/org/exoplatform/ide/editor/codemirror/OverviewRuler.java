@@ -21,8 +21,8 @@ package org.exoplatform.ide.editor.codemirror;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.marking.Marker;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.MouseDownEvent;

@@ -39,7 +39,7 @@ import com.google.gwt.user.client.ui.Widget;
 import org.eclipse.jdt.client.codeassistant.AbstractJavaCompletionProposal;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.templates.TemplateProposal;
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 
 /**

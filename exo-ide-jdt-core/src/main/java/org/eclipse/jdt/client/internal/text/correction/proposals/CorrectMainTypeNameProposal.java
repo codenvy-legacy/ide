@@ -26,7 +26,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.LinkedNodeFinder;
 import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Renames the primary type to be compatible with the name of the compilation unit.

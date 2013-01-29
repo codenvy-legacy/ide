@@ -29,7 +29,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
-import org.exoplatform.gwtframework.ui.client.component.ComboBoxField;
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
@@ -74,7 +73,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
     * Field to select target (domain, server), where to login.
     */
    @UiField
-   ComboBoxField targetField;
+   TextBox targetField;
 
    /**
     * Email field.
@@ -114,6 +113,7 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
       passwordField.setName(PASSWORD_FIELD_ID);
       loginButton.setButtonId(LOGIN_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      targetField.setReadOnly(true);
    }
 
    @Override
@@ -166,9 +166,9 @@ public class LoginView extends ViewImpl implements LoginPresenter.Display
    }
 
    @Override
-   public void setTargetValues(String[] targets)
+   public void setTargetValues(String target)
    {
-      targetField.setValueMap(targets);
+      targetField.setValue(target);
    }
 
    @Override

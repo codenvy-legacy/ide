@@ -223,20 +223,20 @@ public class ViewportRenderer {
       // TODO: need to shrink back down if the max line shrinks
       buffer.setMaxLineLength(newMaxLineLength);
     }
-    else
-    {
-       //FIXME this code added to quick fix https://jira.exoplatform.org/browse/IDE-1916, need to replace with something more smarter
-       Line top = viewport.getTopLine();
-       int max = 0;
-       while(top.getNextLine() != viewport.getBottomLine())
-       {
-          if(top.getText().length() > max)
-             max = top.getText().length();
-          top = top.getNextLine();
-       }
-       
-       buffer.setMaxLineLength(max);
-    }
+//    else
+//    {
+//       //FIXME this code added to quick fix https://jira.exoplatform.org/browse/IDE-1916, need to replace with something more smarter
+//       Line top = viewport.getTopLine();
+//       int max = 0;
+//       while(top.getNextLine() != viewport.getBottomLine())
+//       {
+//          if(top.getText().length() > max)
+//             max = top.getText().length();
+//          top = top.getNextLine();
+//       }
+//       
+//       buffer.setMaxLineLength(max);
+//    }
   }
 
   /**

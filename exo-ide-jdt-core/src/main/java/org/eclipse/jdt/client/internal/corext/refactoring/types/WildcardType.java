@@ -11,7 +11,7 @@
 package org.eclipse.jdt.client.internal.corext.refactoring.types;
 
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 public abstract class WildcardType extends TType
 {

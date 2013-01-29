@@ -85,7 +85,6 @@ public class CollaboratorsViewer extends ViewImpl implements GitHubCollaborators
       List<GitHubUser> usersWithMail = new ArrayList<GitHubUser>();
       for (GitHubUser gitHubUser : users)
       {
-
          if (gitHubUser.getEmail() != null && !gitHubUser.getEmail().isEmpty())
             usersWithMail.add(gitHubUser);
       }

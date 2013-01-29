@@ -114,7 +114,13 @@ public interface SamplesLocalizationConstant extends Messages
 
    @Key("welcome.survey.text")
    String surverText();
+   
+   @Key("welcome.invitation.title")
+   String invitationTitle();
 
+   @Key("welcome.invitation.text")
+   String invitationText();
+   
    /*
     * SamplesListGrid
     */

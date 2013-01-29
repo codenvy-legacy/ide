@@ -38,8 +38,8 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.editor.java.Breakpoint;
 import org.exoplatform.ide.editor.java.BreakpointGutterManager;
 import org.exoplatform.ide.editor.java.JavaEditor;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.BreakPointsUpdatedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.DebuggerConnectedEvent;
@@ -289,7 +289,7 @@ public class BreakpointsManager implements EditorActiveFileChangedHandler, Debug
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       debuggerInfo = null;
-      if (breakPoints.containsKey(file.getId()))
+      if (file != null && breakPoints.containsKey(file.getId()))
       {
          for (EditorBreakPoint p : breakPoints.get(file.getId()))
          {

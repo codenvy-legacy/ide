@@ -66,7 +66,7 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
 
    public static final AppfogLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(AppfogLocalizationConstant.class);
 
-   public static final String DEFAULT_SERVER = "http://api.appfog.com";
+   public static final String DEFAULT_SERVER = "https://api.appfog.com";
 
    private static final String ID = "AppFog";
 

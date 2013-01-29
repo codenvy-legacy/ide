@@ -60,7 +60,7 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.FixCorrectionPr
 import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ModifierChangeCorrectionProposal;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 import java.util.Collection;
 import java.util.List;

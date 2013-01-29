@@ -36,8 +36,8 @@ import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptEvent;
 import org.exoplatform.ide.extension.groovy.client.event.ValidateGroovyScriptHandler;
 import org.exoplatform.ide.extension.groovy.client.service.groovy.GroovyService;
@@ -279,7 +279,7 @@ public class ValidateGroovyCommandHandler implements ValidateGroovyScriptHandler
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.event.EditorInitializedHandler#onEditorInitialized(org.exoplatform.ide.editor.api.event.EditorInitializedEvent)
+    * @see org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler#onEditorInitialized(org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent)
     */
    @Override
    public void onEditorInitialized(EditorInitializedEvent event)

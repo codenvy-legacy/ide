@@ -24,6 +24,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
@@ -36,9 +37,9 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
- * 
+ *
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -71,6 +72,12 @@ public class ProjectCreatedEventHandler implements ProjectCreatedHandler, Projec
       if (openedProject == null)
       {
          openProject(event.getProject());
+         return;
+      }
+      if (openedProject.getId().equals(event.getProject().getId()))
+      {
+         //disallow to reopened current project. if this appears then we update folder contents
+         IDE.fireEvent(new RefreshBrowserEvent(event.getProject()));
          return;
       }
 

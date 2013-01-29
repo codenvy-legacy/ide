@@ -29,10 +29,10 @@ import com.google.collide.json.client.JsoStringMap;
 import com.google.collide.shared.document.LineInfo;
 import elemental.html.Element;
 
-import org.exoplatform.ide.editor.hover.TextHover;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.hover.TextHover;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

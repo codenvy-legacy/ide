@@ -48,11 +48,11 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 
-import org.exoplatform.ide.editor.marking.Marker;
-import org.exoplatform.ide.editor.marking.ProblemClickEvent;
-import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.marking.Marker;
+import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;
+import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.List;

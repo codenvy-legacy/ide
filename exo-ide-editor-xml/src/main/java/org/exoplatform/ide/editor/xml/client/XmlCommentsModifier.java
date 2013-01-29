@@ -19,9 +19,9 @@
 package org.exoplatform.ide.editor.xml.client;
 
 import org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier;
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -59,8 +59,8 @@ public class XmlCommentsModifier extends AbstractCommentsModifier
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.api.SelectionRange,
-    *      org.exoplatform.ide.editor.text.IDocument)
+    * @see org.exoplatform.ide.client.framework.editor.AbstractCommentsModifier#toggleSingleLineComment(org.exoplatform.ide.editor.client.api.SelectionRange,
+    *      org.exoplatform.ide.editor.shared.text.IDocument)
     */
    @Override
    public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document)

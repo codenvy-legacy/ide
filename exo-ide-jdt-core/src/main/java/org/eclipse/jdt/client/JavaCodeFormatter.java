@@ -21,8 +21,8 @@ package org.eclipse.jdt.client;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.internal.corext.util.CodeFormatterUtil;
 import org.exoplatform.ide.client.framework.editor.CodeFormatter;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -33,7 +33,7 @@ public class JavaCodeFormatter implements CodeFormatter
 {
 
    /**
-    * @see org.exoplatform.ide.client.framework.editor.CodeFormatter#format(org.exoplatform.ide.editor.text.IDocument)
+    * @see org.exoplatform.ide.client.framework.editor.CodeFormatter#format(org.exoplatform.ide.editor.shared.text.IDocument)
     */
    @Override
    public TextEdit format(IDocument document)

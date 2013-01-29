@@ -74,8 +74,6 @@ public class JavaTypeToTypeInfoConverter
       }
    }
 
-   private static final int AccAnnotation = 0x2000;
-
    private static final int AccInterface = 0x0200;
 
    private static final int AccEnum = 0x4000;

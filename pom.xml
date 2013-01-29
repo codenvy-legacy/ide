@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform</groupId>
       <artifactId>exo.parent</artifactId>
       <version>8.1</version>
-      <relativePath />
+      <relativePath/>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
-   <version>1.2.0-M15-SNAPSHOT</version>
+   <version>1.2.0-M16-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
@@ -26,13 +27,13 @@
       <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.9-GA</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.9-GA</org.exoplatform.ws.version>
-      <org.exoplatform.gwtframework.version>1.2.0-M15-SNAPSHOT</org.exoplatform.gwtframework.version>
+      <org.exoplatform.gwtframework.version>1.2.0-M16-SNAPSHOT</org.exoplatform.gwtframework.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
-      <gwt.version>2.5.0-rc1</gwt.version>
+      <gwt.version>2.5.0</gwt.version>
       <shindig.version>2.5.0-beta2</shindig.version>
-      <gwt.maven.plugin.version>2.5.0-rc1</gwt.maven.plugin.version>
+      <gwt.maven.plugin.version>2.5.0</gwt.maven.plugin.version>
       <maven.compiler.source>1.6</maven.compiler.source>
       <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.8</org.slf4j.version>
@@ -50,7 +51,7 @@
       <gwt.test.skip>true</gwt.test.skip>
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
-      <everrest.version>1.0.10-SNAPSHOT</everrest.version>
+      <everrest.version>1.0.10</everrest.version>
       <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
       <version.release.plugin>2.2.1</version.release.plugin>
       <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
@@ -481,6 +482,19 @@
             <type>war</type>
             <version>${project.version}</version> 
          </dependency>
+         
+         <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-shell</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+        <dependency>
+           <groupId>org.exoplatform.ide</groupId>
+           <artifactId>exo-ide-shell-war</artifactId>
+            <type>war</type>
+            <version>${project.version}</version>
+        </dependency>
 
          <dependency>
             <groupId>org.exoplatform.log-reader</groupId>
@@ -593,7 +607,7 @@
       <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
-        <version>1.2</version>
+        <version>1.6</version>
       </dependency>
          
          
@@ -708,6 +722,12 @@
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-jrebel-remote</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>eclipse-jdt-core</artifactId>
             <version>${project.version}</version>
          </dependency>
       </dependencies>
@@ -836,6 +856,7 @@
       <module>exo-ide-security</module>
 
       <module>exo-ide-server</module>
+      <module>eclipse-jdt-core</module>
 
       <module>exo-ide-testframework</module>
 
@@ -894,12 +915,11 @@
       <module>exo-ide-websocket</module>
 
       <module>exo-ide-git-server</module>
-      <module>exo-ide-gadget-server</module> 
+      <module>exo-ide-gadget-server</module>
       <module>exo-ide-packaging-application-war</module>
       <module>exo-ide-rest-war</module>
       <module>exo-ide-site-war</module>
       <module>exo-ide-packaging-shell-war</module>
-      <module>exo-ide-packaging-websocket-war</module>
 
       <module>exo-ide-testsuite-selenium</module>
       <module>exo-ide-shell-testsuite-selenium</module>

@@ -22,23 +22,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.exoplatform.ide.client.IDE;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuHandler;
 
 import com.google.gwt.event.shared.HandlerRegistration;
 

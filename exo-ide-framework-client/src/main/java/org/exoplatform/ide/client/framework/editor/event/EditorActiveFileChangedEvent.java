@@ -20,7 +20,7 @@ package org.exoplatform.ide.client.framework.editor.event;
 
 import com.google.gwt.event.shared.GwtEvent;
 
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**

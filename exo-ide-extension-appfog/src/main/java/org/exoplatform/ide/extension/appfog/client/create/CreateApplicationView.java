@@ -77,7 +77,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
     *           http://api.Appfog.com)
     */
    @UiField
-   ComboBoxField serverField;
+   TextInput serverField;
 
    @UiField
    ComboBoxField infraField;
@@ -159,6 +159,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       createButton.setButtonId(CREATE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
       infraField.setName(INFRA_FIELD_ID);
+      serverField.setReadOnly(true);
    }
 
    @Override
@@ -289,9 +290,9 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    }
 
    @Override
-   public void setServerValues(String[] servers)
+   public void setServerValue(String server)
    {
-      serverField.setValueMap(servers);
+      serverField.setValue(server);
    }
 
    @Override

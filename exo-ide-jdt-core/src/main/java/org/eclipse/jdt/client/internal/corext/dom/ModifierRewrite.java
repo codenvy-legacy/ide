@@ -32,7 +32,7 @@ import org.eclipse.jdt.client.core.dom.VariableDeclarationStatement;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ITrackedNodePosition;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  *

@@ -22,12 +22,16 @@ import org.exoplatform.ide.vfs.server.LocalPathResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
@@ -58,7 +62,6 @@ public class ProjectPrepareService
          throw new ProjectPrepareException(500, "Missing folderId or vfsId parameter");
       }
 
-
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       if (vfs == null)
       {
@@ -67,7 +70,45 @@ public class ProjectPrepareService
       }
 
       ProjectPrepare project = new ProjectPrepare(vfs);
-
       project.doPrepare(localPathResolver.resolve(vfs, folderId), folderId, properties);
    }
+   
+   @Path("addModule")
+   @GET
+   public void addModule(@QueryParam("vfsId") String vfsId,
+                         @QueryParam("projectId") String projectId,
+                         @QueryParam("moduleName") String moduleName)
+      throws VirtualFileSystemException, ProjectPrepareException
+   {
+      if (vfsId == null || vfsId.isEmpty() || projectId == null || projectId.isEmpty() || moduleName == null || moduleName.isEmpty())
+      {
+         throw new ProjectPrepareException(500, "Missing projectId or moduleName parameter");
+      }
+
+      VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+      if (vfs == null)
+      {
+         throw new VirtualFileSystemException(
+            "Can't resolve path on the Local File System : Virtual file system not initialized");
+      }
+
+      try 
+      {
+         ItemList<Item> children = vfs.getChildren(projectId, -1, 0, null, PropertyFilter.ALL_FILTER);
+         for (Item item : children.getItems())
+         {
+            if ("pom.xml".equals(item.getName()))
+            {
+               MultiModuleProjectProcessor processor = new MultiModuleProjectProcessor(vfs);
+               processor.addModule(item, moduleName);
+               return;
+            }
+         }
+      }
+      catch(Exception e)
+      {
+         e.printStackTrace();
+      }
+   }
+
 }

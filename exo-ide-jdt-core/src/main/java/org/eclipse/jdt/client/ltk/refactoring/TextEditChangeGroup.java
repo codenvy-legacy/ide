@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.ltk.refactoring;
 
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * This class is a wrapper around a {@link TextEditGroup TextEditGroup}

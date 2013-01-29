@@ -18,6 +18,8 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.shared.document.LineFinder;
+
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -47,32 +49,32 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.RequiresResize;
 import com.google.gwt.user.client.ui.Widget;
 
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
-import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuEvent;
-import org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler;
-import org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler;
-import org.exoplatform.ide.editor.marking.Markable;
-import org.exoplatform.ide.editor.marking.Marker;
-import org.exoplatform.ide.editor.marking.ProblemClickHandler;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
+import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuEvent;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuHandler;
+import org.exoplatform.ide.editor.client.marking.EditorLineNumberDoubleClickHandler;
+import org.exoplatform.ide.editor.client.marking.Markable;
+import org.exoplatform.ide.editor.client.marking.Marker;
+import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -175,7 +177,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getMimeType()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getMimeType()
     */
    @Override
    public String getMimeType()
@@ -184,7 +186,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getId()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getId()
     */
    @Override
    public String getId()
@@ -193,7 +195,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getText()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getText()
     */
    @Override
    public String getText()
@@ -202,12 +204,12 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setText(java.lang.String)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setText(java.lang.String)
     */
    @Override
    public void setText(final String text)
    {
-      document = new org.exoplatform.ide.editor.text.Document(text);
+      document = new org.exoplatform.ide.editor.shared.text.Document(text);
       document.addDocumentListener(documentAdaptor);
 //      hoverPresenter = new HoverPresenter(this, editor, document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
@@ -247,7 +249,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getDocument()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getDocument()
     */
    @Override
    public IDocument getDocument()
@@ -256,7 +258,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#isCapable(org.exoplatform.ide.editor.api.EditorCapability)
+    * @see org.exoplatform.ide.editor.client.api.Editor#isCapable(org.exoplatform.ide.editor.client.api.EditorCapability)
     */
    @Override
    public boolean isCapable(EditorCapability capability)
@@ -278,7 +280,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#formatSource()
+    * @see org.exoplatform.ide.editor.client.api.Editor#formatSource()
     */
    @Override
    public void formatSource()
@@ -287,7 +289,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#showLineNumbers(boolean)
+    * @see org.exoplatform.ide.editor.client.api.Editor#showLineNumbers(boolean)
     */
    @Override
    public void showLineNumbers(boolean showLineNumbers)
@@ -296,7 +298,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setFocus()
+    * @see org.exoplatform.ide.editor.client.api.Editor#setFocus()
     */
    @Override
    public void setFocus()
@@ -307,7 +309,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setCursorPosition(int, int)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setCursorPosition(int, int)
     */
    @Override
    public void setCursorPosition(final int row, final int column)
@@ -330,7 +332,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#deleteCurrentLine()
+    * @see org.exoplatform.ide.editor.client.api.Editor#deleteCurrentLine()
     */
    @Override
    public void deleteCurrentLine()
@@ -347,7 +349,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#hasUndoChanges()
+    * @see org.exoplatform.ide.editor.client.api.Editor#hasUndoChanges()
     */
    @Override
    public boolean hasUndoChanges()
@@ -356,7 +358,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#undo()
+    * @see org.exoplatform.ide.editor.client.api.Editor#undo()
     */
    @Override
    public void undo()
@@ -365,7 +367,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#hasRedoChanges()
+    * @see org.exoplatform.ide.editor.client.api.Editor#hasRedoChanges()
     */
    @Override
    public boolean hasRedoChanges()
@@ -374,7 +376,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#redo()
+    * @see org.exoplatform.ide.editor.client.api.Editor#redo()
     */
    @Override
    public void redo()
@@ -383,7 +385,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#isReadOnly()
+    * @see org.exoplatform.ide.editor.client.api.Editor#isReadOnly()
     */
    @Override
    public boolean isReadOnly()
@@ -392,7 +394,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setReadOnly(boolean)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setReadOnly(boolean)
     */
    @Override
    public void setReadOnly(boolean readOnly)
@@ -401,7 +403,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorRow()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorRow()
     */
    @Override
    public int getCursorRow()
@@ -410,7 +412,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorColumn()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorColumn()
     */
    @Override
    public int getCursorColumn()
@@ -419,7 +421,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceTextAtCurrentLine(java.lang.String, int)
+    * @see org.exoplatform.ide.editor.client.api.Editor#replaceTextAtCurrentLine(java.lang.String, int)
     */
    @Override
    public void replaceTextAtCurrentLine(String line, int cursorPosition)
@@ -428,7 +430,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getLineText(int)
+    * @see org.exoplatform.ide.editor.client.api.Editor#getLineText(int)
     */
    @Override
    public String getLineText(int line)
@@ -437,7 +439,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setLineText(int, java.lang.String)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setLineText(int, java.lang.String)
     */
    @Override
    public void setLineText(int line, String text)
@@ -446,7 +448,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getNumberOfLines()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getNumberOfLines()
     */
    @Override
    public int getNumberOfLines()
@@ -455,7 +457,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getSelectionRange()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getSelectionRange()
     */
    @Override
    public SelectionRange getSelectionRange()
@@ -466,16 +468,21 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#selectRange(int, int, int, int)
+    * @see org.exoplatform.ide.editor.client.api.Editor#selectRange(int, int, int, int)
     */
    @Override
    public void selectRange(int startLine, int startChar, int endLine, int endChar)
    {
-      throw new UnsupportedOperationException();
+      LineFinder lineFinder = editor.getDocument().getLineFinder();
+      LineInfo baseLineInfo = lineFinder.findLine(startLine-1);
+      LineInfo cursorLineInfo = lineFinder.findLine(endLine-1);
+      int baseColumn = startChar;
+      int cursorColumn = endChar;
+      editor.getSelection().setSelection(baseLineInfo, baseColumn, cursorLineInfo, cursorColumn);
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#selectAll()
+    * @see org.exoplatform.ide.editor.client.api.Editor#selectAll()
     */
    @Override
    public void selectAll()
@@ -484,7 +491,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#cut()
+    * @see org.exoplatform.ide.editor.client.api.Editor#cut()
     */
    @Override
    public void cut()
@@ -493,7 +500,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#copy()
+    * @see org.exoplatform.ide.editor.client.api.Editor#copy()
     */
    @Override
    public void copy()
@@ -502,7 +509,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#paste()
+    * @see org.exoplatform.ide.editor.client.api.Editor#paste()
     */
    @Override
    public void paste()
@@ -511,16 +518,16 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#delete()
+    * @see org.exoplatform.ide.editor.client.api.Editor#delete()
     */
    @Override
    public void delete()
    {
-      throw new UnsupportedOperationException();
+      editor.getSelection().deleteSelection(editor.getEditorDocumentMutator());
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getName()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getName()
     */
    @Override
    public String getName()
@@ -529,7 +536,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#markProblem(org.exoplatform.ide.editor.marking.Marker)
+    * @see org.exoplatform.ide.editor.client.marking.Markable#markProblem(org.exoplatform.ide.editor.client.marking.Marker)
     */
    @Override
    public void markProblem(Marker problem)
@@ -538,7 +545,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#unmarkProblem(org.exoplatform.ide.editor.marking.Marker)
+    * @see org.exoplatform.ide.editor.client.marking.Markable#unmarkProblem(org.exoplatform.ide.editor.client.marking.Marker)
     */
    @Override
    public void unmarkProblem(Marker problem)
@@ -547,7 +554,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#unmarkAllProblems()
+    * @see org.exoplatform.ide.editor.client.marking.Markable#unmarkAllProblems()
     */
    @Override
    public void unmarkAllProblems()
@@ -556,7 +563,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#addProblemClickHandler(org.exoplatform.ide.editor.marking.ProblemClickHandler)
+    * @see org.exoplatform.ide.editor.client.marking.Markable#addProblemClickHandler(org.exoplatform.ide.editor.client.marking.ProblemClickHandler)
     */
    @Override
    public HandlerRegistration addProblemClickHandler(ProblemClickHandler handler)
@@ -565,7 +572,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#addLineNumberDoubleClickHandler(org.exoplatform.ide.editor.marking.EditorLineNumberDoubleClickHandler)
+    * @see org.exoplatform.ide.editor.client.marking.Markable#addLineNumberDoubleClickHandler(org.exoplatform.ide.editor.client.marking.EditorLineNumberDoubleClickHandler)
     */
    @Override
    public HandlerRegistration addLineNumberDoubleClickHandler(EditorLineNumberDoubleClickHandler handler)
@@ -575,7 +582,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#addLineNumberContextMenuHandler(org.exoplatform.ide.editor.marking.EditorLineNumberContextMenuHandler)
+    * @see org.exoplatform.ide.editor.client.marking.Markable#addLineNumberContextMenuHandler(org.exoplatform.ide.editor.client.marking.EditorLineNumberContextMenuHandler)
     */
    @Override
    public HandlerRegistration addLineNumberContextMenuHandler(EditorLineNumberContextMenuHandler handler)
@@ -584,7 +591,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetLeft()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorOffsetLeft()
     */
    @Override
    public int getCursorOffsetLeft()
@@ -600,7 +607,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getCursorOffsetTop()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getCursorOffsetTop()
     */
    @Override
    public int getCursorOffsetTop()
@@ -612,7 +619,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler)
     */
    @Override
    public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
@@ -621,7 +628,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler)
     */
    @Override
    public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
@@ -630,7 +637,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler)
     */
    @Override
    public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
@@ -639,7 +646,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler)
     */
    @Override
    public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
@@ -648,7 +655,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler)
     */
    @Override
    public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
@@ -657,7 +664,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler)
     */
    @Override
    public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
@@ -666,7 +673,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Markable#addProblems(org.exoplatform.ide.editor.marking.Marker[])
+    * @see org.exoplatform.ide.editor.client.marking.Markable#addProblems(org.exoplatform.ide.editor.client.marking.Marker[])
     */
    @Override
    public void addProblems(Marker[] problems)
@@ -699,7 +706,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
+    * @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback)
     */
    public void search(String query, boolean caseSensitive, final SearchCompleteCallback searchCompleteCallback)
    {
@@ -784,7 +791,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceMatch(java.lang.String)
+    * @see org.exoplatform.ide.editor.client.api.Editor#replaceMatch(java.lang.String)
     */
    @Override
    public void replaceMatch(String replacement)

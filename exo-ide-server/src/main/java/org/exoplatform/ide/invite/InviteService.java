@@ -18,24 +18,21 @@
  */
 package org.exoplatform.ide.invite;
 
+import org.codenvy.mail.MailSenderClient;
+import org.exoplatform.container.configuration.ConfigurationException;
 import org.exoplatform.services.jcr.ext.app.SessionProviderService;
 import org.exoplatform.services.jcr.ext.common.SessionProvider;
 import org.exoplatform.services.jcr.ext.registry.RegistryEntry;
 import org.exoplatform.services.jcr.ext.registry.RegistryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.organization.Group;
-import org.exoplatform.services.organization.GroupHandler;
-import org.exoplatform.services.organization.MembershipType;
-import org.exoplatform.services.organization.OrganizationService;
-import org.exoplatform.services.organization.User;
-import org.exoplatform.services.organization.UserHandler;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +40,7 @@ import java.util.UUID;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.mail.MessagingException;
 
 /**
  * Sends invites to user join to the cloud-ide domain.
@@ -58,22 +56,26 @@ public class InviteService
 
    private final RegistryService registry;
 
-   private final MailSender mailSender;
+   private final MailSenderClient mailSender;
+
+   private final TemplateResolver templateResolver;
 
    private final SessionProviderService sessionProviderService;
 
-   private final OrganizationService organizationService;
+   private final InviteUserService inviteUserService;
 
    private final InviteMessagePropertiesProvider inviteMessagePropertiesProvider;
 
-   public InviteService(RegistryService registry, SessionProviderService sessionProviderService, MailSender mailSender,
-      OrganizationService organizationService, InviteMessagePropertiesProvider messagePropertiesProvider)
+   public InviteService(RegistryService registry, SessionProviderService sessionProviderService,
+      MailSenderClient mailSender, InviteUserService inviteUserService,
+      InviteMessagePropertiesProvider messagePropertiesProvider, TemplateResolver templateResolver)
    {
       this.registry = registry;
       this.mailSender = mailSender;
       this.sessionProviderService = sessionProviderService;
-      this.organizationService = organizationService;
+      this.inviteUserService = inviteUserService;
       this.inviteMessagePropertiesProvider = messagePropertiesProvider;
+      this.templateResolver = templateResolver;
    }
 
    /**
@@ -101,22 +103,7 @@ public class InviteService
       }
       try
       {
-         UserHandler userHandler = organizationService.getUserHandler();
-         User newUser = userHandler.createUserInstance(invite.getEmail());
-         newUser.setPassword(invite.getPassword());
-         newUser.setFirstName(" ");
-         newUser.setLastName(" ");
-         newUser.setEmail(invite.getEmail());
-         userHandler.createUser(newUser, true);
-
-         // register user in groups '/platform/developers' and '/platform/users'
-         GroupHandler groupHandler = organizationService.getGroupHandler();
-         Group developersGroup = groupHandler.findGroupById("/platform/developers");
-         MembershipType membership = organizationService.getMembershipTypeHandler().findMembershipType("member");
-         organizationService.getMembershipHandler().linkMembership(newUser, developersGroup, membership, true);
-
-         Group usersGroup = groupHandler.findGroupById("/platform/users");
-         organizationService.getMembershipHandler().linkMembership(newUser, usersGroup, membership, true);
+         inviteUserService.addUser(invite);
       }
       catch (Exception e)
       {
@@ -138,12 +125,33 @@ public class InviteService
     * @return -true if user already registered in organization service
     * @throws InviteException
     */
-   private boolean isUserRegisteredInOrganizationService(String userName) throws InviteException
+   private boolean isUserRegisteredGlobally(String userName) throws InviteException
    {
       try
       {
-         UserHandler userHandler = organizationService.getUserHandler();
-         return userHandler.findUserByName(userName) != null;
+         return inviteUserService.isUserRegisteredGlobally(userName);
+      }
+      catch (Exception e)//NOSONAR
+      {
+         LOG.error(e.getLocalizedMessage(), e);
+         throw new InviteException(403, "Error during searching user with email address: " + userName, e);
+      }
+
+   }
+
+   /**
+    * Check if user already registered in the organization service.
+    * 
+    * @param userName
+    *           - name of the user
+    * @return -true if user already registered in organization service
+    * @throws InviteException
+    */
+   private boolean isUserRegisteredInOrganization(String userName) throws InviteException
+   {
+      try
+      {
+         return inviteUserService.isUserRegistered(userName);
       }
       catch (Exception e)//NOSONAR
       {
@@ -199,7 +207,7 @@ public class InviteService
    {
       // check if specified user is already registered
 
-      if (isUserRegisteredInOrganizationService(to))
+      if (isUserRegisteredInOrganization(to))
       {
          throw new InviteException(403, to + " already registered in the system");
       }
@@ -212,7 +220,8 @@ public class InviteService
       newInvite.setUuid(UUID.randomUUID().toString());
 
       saveInvite(newInvite);
-      // send mail.
+
+      // send mail
       try
       {
          Map<String, Object> inviteMessageProperties = inviteMessagePropertiesProvider.getInviteMessageProperties();
@@ -221,26 +230,18 @@ public class InviteService
          inviteMessageProperties.put("user.password", newInvite.getPassword());
          inviteMessageProperties.put("inviter.email", from);
 
-         //         Map<String, Object> messageProperties = new HashMap<String, Object>();
-         //         messageProperties.put("tenant.masterhost", TenantNameResolver.getMasterUrl());
-         //         messageProperties.put("tenant.repository.name", tenant);
-         //         messageProperties.put("id", newInvite.getUuid());
-         //         messageProperties.put("user.name", to);
-         //         messageProperties.put("user.password", newInvite.getPassword());
-         //         messageProperties.put("inviter.email", from);
-
          if (mailBody != null && mailBody.length() > 0)
          {
             inviteMessageProperties.put("personal-message", "<td><p><strong>Personal message</strong></p><p>"
                + mailBody + "</p></td>");
          }
 
-         mailSender.sendMail(from, to, null, "You've been invited to use Cloud IDE", "text/html; charset=utf-8",
-            "template-mail-invitation", inviteMessageProperties);
+         doSendMail(to, "Codenvy <noreply@codenvy.com>", inviteMessageProperties);
       }
       catch (SendingIdeMailException e)
       {
          LOG.error(e.getLocalizedMessage(), e);
+
          // remove invite from registry if sending failed.
          try
          {
@@ -248,11 +249,43 @@ public class InviteService
          }
          catch (InviteException ignored)
          {
-            LOG.error(e.getLocalizedMessage(), e);
+            LOG.error(ignored.getLocalizedMessage(), ignored);
          }
+
          throw new InviteException(e.getStatus(), e.getLocalizedMessage());
       }
+   }
 
+   private void doSendMail(String to, String from, Map<String, Object> inviteMessageProperties) throws InviteException,
+      SendingIdeMailException
+   {
+      try
+      {
+         String templateContent;
+         if (isUserRegisteredGlobally(to))
+         {
+            templateContent =
+               templateResolver.resolveTemplate("template-mail-invitation-registered-user", inviteMessageProperties);
+         }
+         else
+         {
+            templateContent = templateResolver.resolveTemplate("template-mail-invitation", inviteMessageProperties);
+         }
+         mailSender.sendMail(from, to, null, "You've been invited to use Codenvy", "text/html; charset=utf-8",
+            templateContent);
+      }
+      catch (IOException e)
+      {
+         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
+      }
+      catch (MessagingException e)
+      {
+         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
+      }
+      catch (ConfigurationException e)
+      {
+         throw new SendingIdeMailException(e.getLocalizedMessage(), e);
+      }
    }
 
    /**

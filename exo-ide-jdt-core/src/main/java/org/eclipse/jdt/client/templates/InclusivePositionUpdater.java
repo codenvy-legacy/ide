@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates;
 
-import org.exoplatform.ide.editor.text.BadPositionCategoryException;
-import org.exoplatform.ide.editor.text.DocumentEvent;
-import org.exoplatform.ide.editor.text.IPositionUpdater;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.shared.text.BadPositionCategoryException;
+import org.exoplatform.ide.editor.shared.text.DocumentEvent;
+import org.exoplatform.ide.editor.shared.text.IPositionUpdater;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  * Position updater that takes any change in [position.offset, position.offset + position.length] as belonging to the position.

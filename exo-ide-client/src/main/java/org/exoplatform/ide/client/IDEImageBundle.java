@@ -20,6 +20,7 @@ package org.exoplatform.ide.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
+import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -33,7 +34,7 @@ public interface IDEImageBundle extends ClientBundle
 
    public static final IDEImageBundle INSTANCE = GWT.create(IDEImageBundle.class);
 
-   @Source("org/exoplatform/ide/public/images/logo/eXo-IDE-Logo.png")
+   @Source("org/exoplatform/ide/public/images/logo/codenvy-welcome.png")
    ImageResource ideLogo();
 
    /*

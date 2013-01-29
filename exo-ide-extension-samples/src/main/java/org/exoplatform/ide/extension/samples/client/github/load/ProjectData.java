@@ -39,16 +39,22 @@ public class ProjectData
     * Url to clone from GitHub.
     */
    private String repositoryUrl;
+   
+   /**
+    * Url to clone from GitHub (readOnly).
+    */
+   private String readOnlyUrl;
 
    private List<String> targets;
 
-   public ProjectData(String name, String description, String type, List<String> targets, String repositoryUrl)
+   public ProjectData(String name, String description, String type, List<String> targets, String repositoryUrl,String readOnlyUrl)
    {
       this.name = name;
       this.description = description;
       this.type = type;
       this.repositoryUrl = repositoryUrl;
       this.targets = targets;
+      this.readOnlyUrl = readOnlyUrl;
    }
 
    /**
@@ -132,5 +138,15 @@ public class ProjectData
    public void setDescription(String description)
    {
       this.description = description;
+   }
+   
+   public String getReadOnlyUrl()
+   {
+      return readOnlyUrl;
+   }
+   
+   public void setReadOnlyUrl(String readOnlyUrl)
+   {
+      this.readOnlyUrl = readOnlyUrl;
    }
 }

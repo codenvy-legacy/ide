@@ -145,6 +145,24 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
          suspend ? new DebugMode("suspend") : new DebugMode(), params);
    }
 
+   private enum APPLICATION_TYPE
+   {
+      JAVA_WEB,
+      JAVA_WEB_APP_ENGINE
+   }
+
+   private APPLICATION_TYPE determineApplicationType(java.io.File war) throws IOException
+   {
+      for (String f : listEntries(war))
+      {
+         if (f.endsWith("WEB-INF/appengine-web.xml"))
+         {
+            return APPLICATION_TYPE.JAVA_WEB_APP_ENGINE;
+         }
+      }
+      return APPLICATION_TYPE.JAVA_WEB;
+   }
+
    private ApplicationInstance startApplication(Cloudfoundry cloudfoundry,
                                                 String name,
                                                 URL war,
@@ -152,9 +170,11 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                 Map<String, String> params) throws ApplicationRunnerException
    {
       final java.io.File path;
+      final APPLICATION_TYPE type;
       try
       {
          path = downloadFile(null, "app-", ".war", war);
+         type = determineApplicationType(path);
       }
       catch (IOException e)
       {
@@ -165,9 +185,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
       {
          if (debugMode != null)
          {
-            return doDebugApplication(cloudfoundry, name, path, debugMode, params);
+            return doDebugApplication(cloudfoundry, name, path, type, debugMode, params);
          }
-         return doRunApplication(cloudfoundry, name, path, params);
+         return doRunApplication(cloudfoundry, name, path, type, params);
       }
       catch (ApplicationRunnerException e)
       {
@@ -180,9 +200,9 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                login(cloudfoundry);
                if (debugMode != null)
                {
-                  return doDebugApplication(cloudfoundry, name, path, debugMode, params);
+                  return doDebugApplication(cloudfoundry, name, path, type, debugMode, params);
                }
-               return doRunApplication(cloudfoundry, name, path, params);
+               return doRunApplication(cloudfoundry, name, path, type, params);
             }
          }
          throw e;
@@ -199,12 +219,13 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private ApplicationInstance doRunApplication(Cloudfoundry cloudfoundry,
                                                 String name,
                                                 java.io.File path,
+                                                APPLICATION_TYPE type,
                                                 Map<String, String> params) throws ApplicationRunnerException
    {
       try
       {
          final String target = cloudfoundry.getTarget();
-         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, null, params);
+         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, type, null, params);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
          applications.put(name, new Application(name, target, expired));
@@ -233,13 +254,14 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
    private ApplicationInstance doDebugApplication(Cloudfoundry cloudfoundry,
                                                   String name,
                                                   java.io.File path,
+                                                  APPLICATION_TYPE type,
                                                   DebugMode debugMode,
                                                   Map<String, String> params) throws ApplicationRunnerException
    {
       try
       {
          final String target = cloudfoundry.getTarget();
-         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, debugMode, params);
+         final CloudFoundryApplication cfApp = createApplication(cloudfoundry, target, name, path, type, debugMode, params);
          final long expired = System.currentTimeMillis() + applicationLifetimeMillis;
 
          Instance[] instances = cloudfoundry.applicationInstances(target, name, null, null);
@@ -421,11 +443,12 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
                                                      String target,
                                                      String name,
                                                      java.io.File path,
+                                                     APPLICATION_TYPE type,
                                                      DebugMode debug,
                                                      Map<String, String> params)
       throws CloudfoundryException, IOException, ParsingResponseException, VirtualFileSystemException
    {
-      if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == determineApplicationType(path))
+      if (APPLICATION_TYPE.JAVA_WEB_APP_ENGINE == type)
       {
          return cloudfoundry.createApplication(target, name, "java_gae", null, 1, 256, false, "java", null, debug, null,
             null, path.toURI().toURL(), params);
@@ -686,24 +709,6 @@ public class CloudfoundryApplicationRunner implements ApplicationRunner, Startab
             conn.disconnect();
          }
       }
-   }
-
-   private enum APPLICATION_TYPE
-   {
-      JAVA_WEB,
-      JAVA_WEB_APP_ENGINE
-   }
-
-   private APPLICATION_TYPE determineApplicationType(java.io.File war) throws IOException
-   {
-      for (String f : listEntries(war))
-      {
-         if (f.endsWith("WEB-INF/appengine-web.xml"))
-         {
-            return APPLICATION_TYPE.JAVA_WEB_APP_ENGINE;
-         }
-      }
-      return APPLICATION_TYPE.JAVA_WEB;
    }
 
    private void login(Cloudfoundry cloudfoundry) throws ApplicationRunnerException

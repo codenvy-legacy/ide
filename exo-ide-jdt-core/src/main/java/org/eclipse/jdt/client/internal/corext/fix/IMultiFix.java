@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.internal.corext.fix;
 
 import org.eclipse.jdt.client.codeassistant.api.IProblemLocation;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public interface IMultiFix extends ICleanUp
 {

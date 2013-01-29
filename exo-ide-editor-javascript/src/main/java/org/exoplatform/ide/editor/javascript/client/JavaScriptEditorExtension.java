@@ -28,7 +28,7 @@ import org.exoplatform.ide.client.framework.module.EditorCreator;
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptOutlineItemCreator;
 import org.exoplatform.ide.editor.javascript.client.syntaxvalidator.JavaScriptCodeController;
 

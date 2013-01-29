@@ -33,17 +33,25 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
  */
 public class InviteClientService
 {
-
+   
+   private static InviteClientService instance;
+   
+   public static InviteClientService getInstance()
+   {
+      return instance;
+   }
+   
    private String restServiceContext;
 
    public InviteClientService(String restServiceContext)
    {
       this.restServiceContext = restServiceContext;
+      instance = this;
    }
 
    public void inviteUser(String email, String message, AsyncRequestCallback<String> callback) throws RequestException
    {
-      String url = restServiceContext + "/ide/invite/" + email;      
+      String url = restServiceContext + "/invite/" + email;      
       AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
          .header(HTTPHeader.CONTENTTYPE, "text/html; charset=utf-8").data(message).send(callback);
    }

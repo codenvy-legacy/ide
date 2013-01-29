@@ -142,12 +142,12 @@ public abstract class MessageBus implements MessageReceivedHandler
     * Return the ready state of the WebSocket connection.
     *
     * @return ready state of the WebSocket
-    * @throws IllegalStateException when WebSocket is not initialized
+    * @throws WebSocketException when WebSocket is not initialized
     */
-   public ReadyState getReadyState()
+   public ReadyState getReadyState() throws WebSocketException
    {
       if (ws == null)
-         throw new IllegalStateException("WebSocket is not initialized.");
+         throw new WebSocketException("WebSocket is not opened.");
 
       switch (ws.getReadyState())
       {
@@ -183,6 +183,8 @@ public abstract class MessageBus implements MessageReceivedHandler
     */
    protected void send(String uuid, String message, ReplyHandler callback) throws WebSocketException
    {
+      checkWebSocketConnectionState();
+
       if (callback != null)
          callbackMap.put(uuid, callback);
 
@@ -193,10 +195,14 @@ public abstract class MessageBus implements MessageReceivedHandler
     * Transmit text data over WebSocket.
     *
     * @param message text message
-    * @throws WebSocketException throws if an any error has occurred while sending data
+    * @throws WebSocketException
+    *       throws if an any error has occurred while sending data,
+    *       e.g.: WebSocket is not supported by browser, WebSocket connection is not opened
     */
    protected void send(String message) throws WebSocketException
    {
+      checkWebSocketConnectionState();
+
       try
       {
          ws.send(message);
@@ -309,6 +315,8 @@ public abstract class MessageBus implements MessageReceivedHandler
     */
    public void subscribe(String channel, MessageHandler handler) throws WebSocketException
    {
+      checkWebSocketConnectionState();
+
       Set<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
       if (subscribersSet != null)
       {
@@ -341,6 +349,8 @@ public abstract class MessageBus implements MessageReceivedHandler
     */
    public void unsubscribe(String channel, MessageHandler handler) throws WebSocketException
    {
+      checkWebSocketConnectionState();
+
       Set<MessageHandler> subscribersSet = channelToSubscribersMap.get(channel);
       if (subscribersSet == null)
          throw new IllegalArgumentException("Handler not subscribed to any channel.");
@@ -383,6 +393,20 @@ public abstract class MessageBus implements MessageReceivedHandler
    public String getURL()
    {
       return url;
+   }
+
+   /**
+    * Check WebSocket connection and throws {@link WebSocketException} if WebSocket connection is not ready to use.
+    * 
+    * @throws WebSocketException throws if WebSocket connection is not ready to use
+    */
+   protected void checkWebSocketConnectionState() throws WebSocketException
+   {
+      if (!isSupported())
+         throw new WebSocketException("WebSocket is not supported.");
+
+      if (getReadyState() != ReadyState.OPEN)
+         throw new WebSocketException("WebSocket is not opened.");
    }
 
 }

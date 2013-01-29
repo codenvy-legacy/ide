@@ -58,7 +58,7 @@ public class ShellLinkUpdater implements ItemsSelectedHandler
       }
 
       AnchorElement a = AnchorElement.as(ae);
-      String newHref = "/shell/Shell.html?workdir=" + path;
+      String newHref = "/IDE/shell/Shell.html?workdir=" + path;
       a.setHref(newHref);
    }
 

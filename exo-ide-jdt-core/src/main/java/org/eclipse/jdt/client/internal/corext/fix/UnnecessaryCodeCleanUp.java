@@ -20,10 +20,8 @@ import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.compiler.IProblem;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 
-import org.eclipse.jdt.client.internal.corext.fix.CleanUpConstants;
-import org.eclipse.jdt.client.internal.corext.fix.UnusedCodeFix;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class UnnecessaryCodeCleanUp extends AbstractMultiFix
 {

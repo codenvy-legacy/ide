@@ -1,4 +1,4 @@
-Exo IDE _Virtual File System_ allows you to manage files and folders in a familiar way.
+Codenvy _Virtual File System_ allows you to manage files and folders in a familiar way.
 
 h1. Copy, Cut and Paste Operations
 

@@ -23,9 +23,9 @@ import org.eclipse.jdt.client.internal.compiler.parser.Scanner;
 import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 import org.eclipse.jdt.client.internal.core.util.CodeSnippetParsingUtil;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.Region;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.Region;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.HashMap;
 import java.util.Map;

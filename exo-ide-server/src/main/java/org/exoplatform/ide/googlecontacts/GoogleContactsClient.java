@@ -18,17 +18,18 @@
  */
 package org.exoplatform.ide.googlecontacts;
 
-import com.google.gdata.client.Query.CustomParameter;
-
 import com.google.api.client.auth.oauth2.BearerToken;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.gdata.client.Query;
+import com.google.gdata.client.Query.CustomParameter;
 import com.google.gdata.client.Service.GDataRequest;
 import com.google.gdata.client.contacts.ContactsService;
+import com.google.gdata.data.DateTime;
 import com.google.gdata.data.Link;
 import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.contacts.ContactFeed;
 import com.google.gdata.util.ServiceException;
+
 import org.apache.ws.commons.util.Base64;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
@@ -53,21 +54,6 @@ public class GoogleContactsClient
     */
    private ContactsService service;
 
-   /**
-    * Read/write access to Contacts and Contact Groups.
-    */
-   private static final String SCOPE = "https://www.google.com/m8/feeds/";
-
-   /**
-    * Base URL for the feed.
-    */
-   private static final String DEFAULT_FEED = SCOPE + "contacts/";
-
-   /**
-    * The special value 'default' can be used to refer to the authenticated user.
-    */
-   private static final String USER_NAME = "default";
-
    private final OAuthTokenProvider oAuthTokenProvider;
 
    /**
@@ -83,7 +69,6 @@ public class GoogleContactsClient
       this.oAuthTokenProvider = oAuthTokenProvider;
       service = new ContactsService("exo.ide");
    }
-
 
    /**
     * Returns contact photo as string encoded in Base64.
@@ -121,20 +106,15 @@ public class GoogleContactsClient
       credentials.setAccessToken(oAuthTokenProvider.getToken("google", getUserId()));
       service.setOAuth2Credentials(credentials);
       ContactFeed feed;
-      Query query = new Query(new URL(DEFAULT_FEED + USER_NAME + "/full"));
+      Query query = new Query(new URL("https://www.google.com/m8/feeds/contacts/default/full"));
       query.addCustomParameter(new CustomParameter("xoauth_requestor_id", getUserId()));
-      List<ContactEntry> googleContacts = new ArrayList<ContactEntry>();
-
-      // Loop used because the feed may not contain all of the user's contacts,
-      // because there's a default limit on the number of results returned. Default limit is 25 entries.
-      do
-      {
-         feed = service.query(query, ContactFeed.class);
-         googleContacts.addAll(feed.getEntries());
-         query.setStartIndex(feed.getEntries().size() + query.getStartIndex());
-      }
-      while (feed.getTotalResults() > query.getStartIndex());
-
+      DateTime startTime = new DateTime(0);
+      query.setUpdatedMin(startTime);
+      int maxResult = 200;
+      query.setMaxResults(maxResult);
+      List<ContactEntry> googleContacts = new ArrayList<ContactEntry>(maxResult);
+      feed = service.query(query, ContactFeed.class);
+      googleContacts.addAll(feed.getEntries());
       return googleContacts;
    }
 
@@ -159,7 +139,7 @@ public class GoogleContactsClient
     * @throws ServiceException
     *    if any error in Google Contacts Service
     */
-   private byte[] getPhoto(ContactEntry contactEntry) throws IOException, ServiceException
+   private byte[] getPhoto(ContactEntry contactEntry) 
    {
       Link photoLink = contactEntry.getContactPhotoLink();
 
@@ -168,6 +148,7 @@ public class GoogleContactsClient
          return null;
       }
 
+      try{
       GDataRequest createLinkQueryRequest = service.createLinkQueryRequest(photoLink);
       createLinkQueryRequest.execute();
 
@@ -192,7 +173,10 @@ public class GoogleContactsClient
       createLinkQueryRequest.end();
       responseStream.close();
       out.close();
+         return photo;
+      } catch (Exception e) {
+         return null;
+      }
 
-      return photo;
    }
 }
