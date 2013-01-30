@@ -14,7 +14,9 @@ import com.codenvy.eclipse.core.resources.IFile;
 import com.codenvy.eclipse.core.runtime.Assert;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.IProgressMonitor;
+import com.codenvy.eclipse.core.runtime.IStatus;
 import com.codenvy.eclipse.core.runtime.OperationCanceledException;
+import com.codenvy.eclipse.core.runtime.Status;
 import com.codenvy.eclipse.core.runtime.SubProgressMonitor;
 import com.codenvy.eclipse.jdt.core.Flags;
 import com.codenvy.eclipse.jdt.core.ICompilationUnit;
@@ -228,7 +230,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
    @Override
    public int getSaveMode()
    {
-      return 4;//RefactoringSaveHelper.SAVE_REFACTORING;
+      return 4;// RefactoringSaveHelper.SAVE_REFACTORING;
    }
 
    //---- INameUpdating -------------------------------------
@@ -529,7 +531,8 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
             }
             else
             {
-               Util.log(new Exception("Unexpected element in search match: " + match.toString())); //$NON-NLS-1$
+               Util.log(new Status(IStatus.ERROR, "IDE",
+                  "Unexpected element in search match: " + match.toString())); //$NON-NLS-1$
             }
          }
       };
@@ -972,8 +975,7 @@ public abstract class RenameMethodProcessor extends JavaRenameProcessor implemen
     * @param manager the text change manager
     * @param pm      the progress monitor
     * @param status  the status
-    * @throws com.codenvy.eclipse.core.runtime.CoreException
-    *          if change creation failed
+    * @throws CoreException if change creation failed
     */
    protected void addOccurrences(TextChangeManager manager, IProgressMonitor pm,
       RefactoringStatus status) throws CoreException/*thrown in subtype*/

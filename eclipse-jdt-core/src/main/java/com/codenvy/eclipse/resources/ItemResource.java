@@ -1072,4 +1072,25 @@ public abstract class ItemResource implements IResource, ICoreConstants
       return workspace.getResourceInfo(getFullPath(), phantom, mutable);
    }
 
+   public String getTypeString() {
+      switch (getType()) {
+         case FILE :
+            return "L"; //$NON-NLS-1$
+         case FOLDER :
+            return "F"; //$NON-NLS-1$
+         case PROJECT :
+            return "P"; //$NON-NLS-1$
+         case ROOT :
+            return "R"; //$NON-NLS-1$
+      }
+      return ""; //$NON-NLS-1$
+   }
+
+   /* (non-Javadoc)
+    * @see Object#toString()
+    */
+   public String toString() {
+      return getTypeString() + getFullPath().toString();
+   }
+
 }
