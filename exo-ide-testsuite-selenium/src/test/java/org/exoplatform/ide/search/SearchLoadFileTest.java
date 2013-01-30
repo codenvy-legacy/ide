@@ -19,8 +19,6 @@
 package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.util.Map;
@@ -48,10 +46,6 @@ public class SearchLoadFileTest extends BaseTest
    private final static String restFileName = "Example.groovy";
 
    private final static String gadgetFileName = "googlegadgettst.gadget";
-
-   private final String gadgetFileContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n" + "<Module>\n"
-      + "<ModulePrefs title=\"Hello World!\" />\n" + "<Content type=\"html\">\n" + "<![CDATA[ Hello, world!\n"
-      + "Hello, world!\n" + "]]></Content></Module>";
 
    private final static String TEST_FOLDER = "testFolder";
 

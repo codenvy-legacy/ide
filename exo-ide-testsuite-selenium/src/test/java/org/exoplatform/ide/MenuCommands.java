@@ -362,6 +362,13 @@ public interface MenuCommands
       String UPDATE_DEPENDENCY = "Update Dependency";
    }
 
+   public interface Source
+   {
+      String GENERATE_GETTERS_AND_SETTERS = "Generate Getters and Setters";
+
+      String GENERATE_CONSTRUCTOR = "Generate Constructor using Fields...";
+   }
+
    public interface PaaS
    {
       String PAAS = "PaaS";

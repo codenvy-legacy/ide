@@ -22,12 +22,9 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
@@ -120,7 +117,6 @@ public class RefactoringClassFromPackageMenuTest extends RefactService
       //for next test
       IDE.EDITOR.forcedClosureFile(1);
       IDE.EDITOR.forcedClosureFile(1);
-      
 
    }
 
@@ -147,8 +143,7 @@ public class RefactoringClassFromPackageMenuTest extends RefactService
       IDE.EDITOR.forcedClosureFile(1);
       IDE.EDITOR.forcedClosureFile(1);
    }
-   
-   
+
    @Test
    public void changeClassFromContextMenuInClosedFiles() throws Exception
    {
@@ -171,5 +166,5 @@ public class RefactoringClassFromPackageMenuTest extends RefactService
       IDE.JAVAEDITOR.waitJavaEditorIsActive();
       IDE.JAVAEDITOR.waitIntoJavaEditorSpecifiedText("public class RefactMethods extends GreetingController");
    }
-   
+
 }
