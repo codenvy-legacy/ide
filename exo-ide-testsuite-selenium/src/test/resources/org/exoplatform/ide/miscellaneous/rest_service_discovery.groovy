@@ -8,7 +8,7 @@ import javax.ws.rs.HeaderParam
 import javax.ws.rs.QueryParam
 import javax.ws.rs.DefaultValue
 
-@Path("/aa/testService11")
+@Path("/aa/testServ")
 public class TestService {
   @POST
   @Path("Inner/{pathParam}")

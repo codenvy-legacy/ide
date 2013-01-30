@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -74,22 +75,8 @@ public class GoToLine extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement view = input.findElement(By.xpath(Locators.VIEW_LOCATOR));
-               return (view != null && view.isDisplayed());
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.VIEW_LOCATOR)));
    }
 
    /**
@@ -99,7 +86,7 @@ public class GoToLine extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -120,11 +107,19 @@ public class GoToLine extends AbstractTestModule
    /**
     * Check Go To LineForm present
     */
-   public boolean isGoToLineViewPresent()
+   public void waitGoToLineViewPresent()
    {
-      return (view != null && view.isDisplayed()) && (goButton != null && goButton.isDisplayed())
-         && (cancelButton != null && cancelButton.isDisplayed())
-         && (lineNumberField != null && lineNumberField.isDisplayed());
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver arg0)
+         {
+            return (view != null && view.isDisplayed()) && (goButton != null && goButton.isDisplayed())
+               && (cancelButton != null && cancelButton.isDisplayed())
+               && (lineNumberField != null && lineNumberField.isDisplayed());
+         }
+      });
    }
 
    /**
@@ -177,6 +172,7 @@ public class GoToLine extends AbstractTestModule
     */
    public void goToLine(int line) throws Exception
    {
+      IDE().MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE().MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       waitOpened();
       typeIntoLineNumberField(String.valueOf(line));

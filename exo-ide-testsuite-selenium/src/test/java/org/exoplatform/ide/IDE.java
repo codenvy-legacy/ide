@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide;
 
-import com.thoughtworks.selenium.Selenium;
-
 import org.exoplatform.ide.core.AboutDialog;
 import org.exoplatform.ide.core.AskDialog;
 import org.exoplatform.ide.core.AskForValueDialog;
@@ -30,18 +28,27 @@ import org.exoplatform.ide.core.CkEditor;
 import org.exoplatform.ide.core.CodeAssistant;
 import org.exoplatform.ide.core.CodeAssistantJava;
 import org.exoplatform.ide.core.ContextMenu;
+import org.exoplatform.ide.core.CreateANewProjectFromScratch;
 import org.exoplatform.ide.core.CustomizeHotkeys;
 import org.exoplatform.ide.core.CustomizeToolbar;
+import org.exoplatform.ide.core.Debuger;
 import org.exoplatform.ide.core.Delete;
+import org.exoplatform.ide.core.DeployForm;
 import org.exoplatform.ide.core.DeployNodeType;
 import org.exoplatform.ide.core.Editor;
 import org.exoplatform.ide.core.ErrorMarks;
 import org.exoplatform.ide.core.FindReplace;
 import org.exoplatform.ide.core.Folder;
+import org.exoplatform.ide.core.Formatter;
 import org.exoplatform.ide.core.GetURL;
+import org.exoplatform.ide.core.GitHub;
 import org.exoplatform.ide.core.GoToLine;
+import org.exoplatform.ide.core.Google;
+import org.exoplatform.ide.core.ImportFromGitHub;
 import org.exoplatform.ide.core.InformationDialog;
 import org.exoplatform.ide.core.Input;
+import org.exoplatform.ide.core.InvitefromGoogle;
+import org.exoplatform.ide.core.JavaEditor;
 import org.exoplatform.ide.core.Loader;
 import org.exoplatform.ide.core.LockFile;
 import org.exoplatform.ide.core.LogReader;
@@ -49,41 +56,39 @@ import org.exoplatform.ide.core.Login;
 import org.exoplatform.ide.core.Menu;
 import org.exoplatform.ide.core.OpenFileByPath;
 import org.exoplatform.ide.core.OpenFileByURL;
+import org.exoplatform.ide.core.OrginizeImport;
 import org.exoplatform.ide.core.Outline;
 import org.exoplatform.ide.core.Output;
+import org.exoplatform.ide.core.PaasAuthorization;
 import org.exoplatform.ide.core.Perspective;
 import org.exoplatform.ide.core.PopupDialogsBrowser;
+import org.exoplatform.ide.core.Preferences;
 import org.exoplatform.ide.core.Preview;
 import org.exoplatform.ide.core.PreviewNodeType;
 import org.exoplatform.ide.core.ProgressBar;
 import org.exoplatform.ide.core.Project;
+import org.exoplatform.ide.core.ProjectsMenu;
 import org.exoplatform.ide.core.Properties;
 import org.exoplatform.ide.core.RESTService;
 import org.exoplatform.ide.core.RESTServiceDiscovery;
+import org.exoplatform.ide.core.Refactoring;
 import org.exoplatform.ide.core.Rename;
 import org.exoplatform.ide.core.SaveAsTemplate;
 import org.exoplatform.ide.core.Search;
 import org.exoplatform.ide.core.SearchResult;
 import org.exoplatform.ide.core.SelectWorkspace;
 import org.exoplatform.ide.core.ShowKeyboardShortcuts;
+import org.exoplatform.ide.core.Ssh;
 import org.exoplatform.ide.core.Statusbar;
 import org.exoplatform.ide.core.Templates;
 import org.exoplatform.ide.core.Toolbar;
 import org.exoplatform.ide.core.Upload;
 import org.exoplatform.ide.core.WarningDialog;
 import org.exoplatform.ide.core.WelcomePage;
+import org.exoplatform.ide.mail.MailCheck;
+import org.exoplatform.ide.mail.MailReceiver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
-import org.exoplatform.ide.debug.DebugChangeVariable;
-import org.exoplatform.ide.core.Debuger;
-import org.exoplatform.ide.core.OrginizeImport;
-import org.exoplatform.ide.core.ProjectsMenu;
-import org.exoplatform.ide.core.DeployForm;
-import org.exoplatform.ide.core.PaasAuthorization;
-import org.exoplatform.ide.core.JavaEditor;
-import org.exoplatform.ide.core.Preferences;
-import org.exoplatform.ide.core.Ssh;
-import org.exoplatform.ide.core.Formatter;
 
 /**
  * 
@@ -95,9 +100,6 @@ import org.exoplatform.ide.core.Formatter;
 
 public class IDE
 {
-
-   private Selenium selenium;
-
    private WebDriver driver;
 
    private static IDE instance;
@@ -122,7 +124,6 @@ public class IDE
    public Loader LOADER;
 
    public Outline OUTLINE;
-
 
    public Perspective PERSPECTIVE;
 
@@ -231,17 +232,32 @@ public class IDE
    public Preferences PREFERENCES;
 
    public Ssh SSH;
-   
+
    public Formatter FORMATTER;
 
-   public IDE(Selenium selenium, String workspaceURL, WebDriver driver)
+   public MailCheck MAIL_CHECK;
+
+   public MailReceiver MAIL_RECEIVER;
+
+   public Google GOOGLE;
+
+   public GitHub GITHUB;
+
+   public ImportFromGitHub IMPORT_FROM_GITHUB;
+
+   public InvitefromGoogle INVITE_FORM;
+
+   public CreateANewProjectFromScratch CREATE_PROJECT_FROM_SCRATHC;
+
+   public Refactoring REFACTORING;
+
+   public IDE(String workspaceURL, WebDriver driver)
    {
-      this.selenium = selenium;
       this.workspaceURL = workspaceURL;
       this.driver = driver;
       instance = this;
-      GIT = new org.exoplatform.ide.git.core.GIT(selenium, driver);
-      PAAS = new org.exoplatform.paas.core.Paas(selenium, driver);
+      GIT = new org.exoplatform.ide.git.core.GIT(driver);
+      PAAS = new org.exoplatform.paas.core.Paas(driver);
       ABOUT = PageFactory.initElements(driver, AboutDialog.class);
       ASK_DIALOG = PageFactory.initElements(driver, AskDialog.class);
       ASK_FOR_VALUE_DIALOG = PageFactory.initElements(driver, AskForValueDialog.class);
@@ -304,12 +320,14 @@ public class IDE
       PREFERENCES = PageFactory.initElements(driver, Preferences.class);
       SSH = PageFactory.initElements(driver, Ssh.class);
       FORMATTER = PageFactory.initElements(driver, Formatter.class);
-      
-   }
-
-   public Selenium getSelenium()
-   {
-      return selenium;
+      INVITE_FORM = PageFactory.initElements(driver, InvitefromGoogle.class);
+      MAIL_CHECK = PageFactory.initElements(driver, MailCheck.class);
+      MAIL_RECEIVER = PageFactory.initElements(driver, MailReceiver.class);
+      GITHUB = PageFactory.initElements(driver, GitHub.class);
+      GOOGLE = PageFactory.initElements(driver, Google.class);
+      IMPORT_FROM_GITHUB = PageFactory.initElements(driver, ImportFromGitHub.class);
+      CREATE_PROJECT_FROM_SCRATHC = PageFactory.initElements(driver, CreateANewProjectFromScratch.class);
+      REFACTORING = PageFactory.initElements(driver, Refactoring.class);
    }
 
    public WebDriver driver()

@@ -18,14 +18,15 @@
  */
 package org.exoplatform.ide.operation.autocompletion.java;
 
+import static org.fest.assertions.Assertions.assertThat;
 import static org.junit.Assert.fail;
-import static org.fest.assertions.Assertions.*;
+
+import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -70,7 +71,7 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       {
          fail("Can't create test folder");
       }
-      openProject();
+      openJavaProject();
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + "pom.xml");
       IDE.PROJECT.EXPLORER.openItem(projectName + "/src");
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/src/main");
@@ -81,7 +82,7 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       IDE.PROJECT.EXPLORER.openItem(projectName + "/src/main/java/helloworld");
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/src/main/java/helloworld/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/src/main/java/helloworld/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/src/main/java/helloworld/" + FILE_NAME);
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
       IDE.CODE_ASSISTANT_JAVA.waitForJavaToolingInitialized(FILE_NAME);
    }
 
@@ -89,15 +90,15 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
    public void testJavaCodeAssistant() throws Exception
    {
 
-      //step 1 got line 24, open form and check data in coeassist
-      //IDE.GOTOLINE.goToLine(24);
-      //-------on this moment go to line does not work in java editor
+      // step 1 got line 24, open form and check data in coeassist
+      // IDE.GOTOLINE.goToLine(24);
+      // -------on this moment go to line does not work in java editor
       // after fix this block can be uncomment
 
       // Go to string with num 24
       for (int i = 0; i < 23; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ARROW_DOWN.toString());
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.ARROW_DOWN.toString());
       }
       IDE.CODE_ASSISTANT_JAVA.openForm();
       String[] proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
@@ -105,128 +106,121 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       assertThat(proposalsText).contains(shuldContainsVars);
       IDE.CODE_ASSISTANT_JAVA.closeForm();
 
-      //step 2 type iList and check data in codeassist for List
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "List");
+      // step 2 type iList and check data in codeassist for List
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("List");
 
-      //delay for reparse codeassistant 
+      // delay for reparse codeassistant
       Thread.sleep(3000);
 
       IDE.CODE_ASSISTANT_JAVA.openForm();
-    //  IDE.CODE_ASSISTANT_JAVA.moveCursorDown(2);
-      //delay for user keypress emulation
+      // IDE.CODE_ASSISTANT_JAVA.moveCursorDown(2);
+      // delay for user keypress emulation
       Thread.sleep(500);
+      IDE.CODE_ASSISTANT_JAVA.waitFromImportContent("java.util");
+      IDE.CODE_ASSISTANT_JAVA.selectImportProposal("java.util");
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
 
-      //delay for user keypress emulation
+      // delay for user keypress emulation
       Thread.sleep(500);
-      //IDE.CODE_ASSISTANT_JAVA.selectProposal("List", "java.util");
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).contains("List<E>").contains("import java.util.List;");
-      IDE.JAVAEDITOR.moveCursorLeft(0, 1);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.BACK_SPACE.toString());
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "String");
-      IDE.JAVAEDITOR.moveCursorRight(0, 1);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, " ");
+      // IDE.CODE_ASSISTANT_JAVA.selectProposal("List", "java.util");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor()).contains("List<E>").contains("import java.util.List;");
+      IDE.JAVAEDITOR.moveCursorLeft(1);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.BACK_SPACE.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("String");
+      IDE.JAVAEDITOR.moveCursorRight(1);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(" ");
 
       // sleep to re-parse file
-      //step 3 check work cursor in codeassist and insert first value
+      // step 3 check work cursor in codeassist and insert first value
       Thread.sleep(TestConstants.SLEEP);
       IDE.CODE_ASSISTANT_JAVA.openForm();
       proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
       assertThat(proposalsText).contains("strings : List<java.lang.String>", "list : List<java.lang.String>");
       IDE.CODE_ASSISTANT_JAVA.moveCursorDown(1);
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).contains("List<String> strings");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor()).contains("List<String> strings");
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, " = new ArrayLis");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(" = new ArrayLis");
 
-      //step 3 open form, select first element and insert
+      // step 3 open form, select first element and insert
       IDE.CODE_ASSISTANT_JAVA.openForm();
       proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
       assertThat(proposalsText).contains("ArrayList(int arg0) - java.util.ArrayList",
          "ArrayList() - java.util.ArrayList", "ArrayList(Collection arg0) - java.util.ArrayList");
       IDE.CODE_ASSISTANT_JAVA.moveCursorDown(1);
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).contains("List<String> strings = new ArrayList").contains(
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor()).contains("List<String> strings = new ArrayList").contains(
          "import java.util.ArrayList;");
-      IDE.JAVAEDITOR.moveCursorLeft(0, 3);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.BACK_SPACE.toString());
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "String");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.END.toString());
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, ";\n");
+      IDE.JAVAEDITOR.moveCursorLeft(3);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.BACK_SPACE.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("String");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.END.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(";\n");
 
       // sleep to re-parse file
-      //step 4 type next java-values, open form and check 
+      // step 4 type next java-values, open form and check
       Thread.sleep(TestConstants.SLEEP);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "str");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("str");
       IDE.CODE_ASSISTANT_JAVA.openForm();
       proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
       assertThat(proposalsText).containsOnly("strings : List<java.lang.String>");
       IDE.CODE_ASSISTANT_JAVA.selectProposalPanel();
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, ".clea");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(".clea");
       IDE.CODE_ASSISTANT_JAVA.openForm();
       proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
       IDE.CODE_ASSISTANT_JAVA.selectProposalPanel();
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, ";\n");
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).contains("strings.clear();");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "\"test\".");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(";\n");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor()).contains("strings.clear();");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("\"test\".");
       IDE.CODE_ASSISTANT_JAVA.openForm();
       proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
       assertThat(proposalsText).contains("trim() : String - String", "intern() : String - String",
          "endsWith(String arg0) : boolean - String");
       IDE.CODE_ASSISTANT_JAVA.closeForm();
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "toCha");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("toCha");
       IDE.CODE_ASSISTANT_JAVA.openForm();
       IDE.CODE_ASSISTANT_JAVA.selectProposalPanel();
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).contains("\"test\".toCharArray()");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, ";");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor()).contains("\"test\".toCharArray()");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(";");
 
-      //on this moment we go to line 32 with cursor
-      IDE.JAVAEDITOR.moveCursorDown(0, 4);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
+      IDE.JAVAEDITOR.waitNoContentModificationMark(FILE_NAME);
+      IDE.EDITOR.closeFile(FILE_NAME);
+      IDE.PROJECT.EXPLORER.openItem(projectName + "/src/main/java/helloworld/" + FILE_NAME);
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
+      IDE.CODE_ASSISTANT_JAVA.waitForJavaToolingInitialized(FILE_NAME);
 
-      //-------on this moment go to line does not work in java editor
-      // after fix this block with GOTOLINE method can be uncomment
-      //      IDE.GOTOLINE.goToLine(32);
-
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.END.toString() + "\n");
-
-      //In this place may be problems. Next steps created for reparse and load data from server-side for java autocomplete
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, " ");
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, " ");
-      // sleep to re-parse file and load data from server-side
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, " ");
-      // sleep to re-parse file and load data from server-side
-      Thread.sleep(TestConstants.SLEEP);
+      IDE.GOTOLINE.goToLine(33);
 
       IDE.CODE_ASSISTANT_JAVA.openForm();
       IDE.CODE_ASSISTANT_JAVA.selectProposalPanel();
       IDE.CODE_ASSISTANT_JAVA.moveCursorDown(1);
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      Thread.sleep(TestConstants.SLEEP);
       IDE.CODE_ASSISTANT_JAVA.moveCursorUp(1);
 
       proposalsText = IDE.CODE_ASSISTANT_JAVA.getFormProposalsText();
       assertThat(proposalsText).contains(shuldContainsOverride);
       Thread.sleep(TestConstants.SLEEP);
       IDE.CODE_ASSISTANT_JAVA.doudleClickSelectedItem("toString() : String");
-      //for close form
+      // for close form
       Thread.sleep(TestConstants.SLEEP / 3);
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0)).contains("public String toString()").contains(
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor()).contains("public String toString()").contains(
          "return super.toString();");
 
-      //step 5 checking work cursor in codeassistant after select class
-      //-------on this moment go to line does not work in java editor
+      // step 5 checking work cursor in codeassistant after select class
+      // -------on this moment go to line does not work in java editor
       // after fix this block with GOTOLINE method can be uncomment
-      //IDE.GOTOLINE.goToLine(22);
-      //on this moment we go to line 22 with cursor
-      IDE.JAVAEDITOR.moveCursorUp(0, 16);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ARROW_UP.toString());
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.END.toString());
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "\n");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "System.");
+      // IDE.GOTOLINE.goToLine(22);
+      // on this moment we go to line 22 with cursor
+      IDE.JAVAEDITOR.moveCursorUp(16);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.ARROW_UP.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.END.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("\n");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("System.");
       Thread.sleep(TestConstants.SLEEP / 3);
       Thread.sleep(TestConstants.SLEEP);
       IDE.CODE_ASSISTANT_JAVA.openForm();
@@ -234,12 +228,12 @@ public class JavaCodeAssistantTest extends CodeAssistantBaseTest
       IDE.CODE_ASSISTANT_JAVA.moveCursorUp(1);
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
 
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("System.class"));
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, ".");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor().contains("System.class"));
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(".");
       Thread.sleep(TestConstants.SLEEP);
       IDE.CODE_ASSISTANT_JAVA.openForm();
       IDE.CODE_ASSISTANT_JAVA.moveCursorDown(1);
       IDE.CODE_ASSISTANT_JAVA.insertSelectedItem();
-      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("System.class.newInstance()"));
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaEditor().contains("System.class.newInstance()"));
    }
 }

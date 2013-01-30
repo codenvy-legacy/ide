@@ -27,12 +27,12 @@ import org.junit.Test;
 import org.openqa.selenium.Keys;
 
 /**
- * Test to check, that autocomplete form
- * works correctly inside method in Groovy class.
- *
+ * Test to check, that autocomplete form works correctly inside method in Groovy
+ * class.
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 8, 2010 2:36:49 PM evgen $
- *
+ * 
  */
 public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
 {
@@ -51,12 +51,12 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
        * 1. Open REST Service file.
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
+      IDE.EDITOR.waitActiveFile();
       /*
        * 2. Go inside hello() method.
        */
-      IDE.EDITOR.moveCursorDown(0, 9);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollections.");
+      IDE.EDITOR.moveCursorDown(9);
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "\nCollections.");
 
       /*
        * 4. Call autocomplete form.
@@ -69,14 +69,11 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.typeToInput("so");
 
       /*
-       * Check, that to elements are found:
-       * sort(List):void
-       * sort(List, Comparator):void
+       * Check, that to elements are found: sort(List):void sort(List,
+       * Comparator):void
        */
-      
-      
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List<T>):void"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sort(List<T>, Comparator<? super T>):void"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("sort(List<T>):void");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("sort(List<T>, Comparator<? super T>):void");
 
       /*
        * 6. Select sort(List, Comparator):void element
@@ -89,10 +86,11 @@ public class GroovyClassMethodsCompletionTest extends CodeAssistantBaseTest
       IDE.CODEASSISTANT.insertSelectedItem();
 
       /*
-       * Check, that autocomplete form dissapeared, and new text in editor appeared.
+       * Check, that autocomplete form dissapeared, and new text in editor
+       * appeared.
        */
       Thread.sleep(10000);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collections.sort(List<T>, Comparator<? super T>)"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("Collections.sort(List<T>, Comparator<? super T>)"));
    }
 
 }

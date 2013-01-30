@@ -92,7 +92,7 @@ public class Ssh extends AbstractTestModule
     */
    public void waitSshView()
    {
-      new WebDriverWait(driver(), 7).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -116,7 +116,7 @@ public class Ssh extends AbstractTestModule
     */
    public void waitSshAskForm()
    {
-      new WebDriverWait(driver(), 7).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -140,7 +140,7 @@ public class Ssh extends AbstractTestModule
     */
    public void waitSshAskFormClose()
    {
-      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By
+      (new WebDriverWait(driver(), 30)).until(ExpectedConditions.invisibilityOfElementLocated(By
          .id(Locators.ASK_SSH_KEY_FORM)));
    }
 
@@ -149,7 +149,7 @@ public class Ssh extends AbstractTestModule
     */
    public void waitAppearContentInSshListGrig()
    {
-      new WebDriverWait(driver(), 7).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -171,7 +171,7 @@ public class Ssh extends AbstractTestModule
     */
    public void waitDisAppearContentInSshListGrig()
    {
-      new WebDriverWait(driver(), 7).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -193,7 +193,7 @@ public class Ssh extends AbstractTestModule
     */
    public void waitAppearSshKeyManadger()
    {
-      new WebDriverWait(driver(), 7).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -216,7 +216,7 @@ public class Ssh extends AbstractTestModule
     */
    public void waitCloseSshKeyManadger()
    {
-      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By
+      (new WebDriverWait(driver(), 30)).until(ExpectedConditions.invisibilityOfElementLocated(By
          .id(Locators.SHH_KEY_MANAGER_TEXTAREA)));
    }
 

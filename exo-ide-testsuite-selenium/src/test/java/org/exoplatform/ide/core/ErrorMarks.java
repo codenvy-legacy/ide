@@ -21,11 +21,10 @@ package org.exoplatform.ide.core;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -53,7 +52,12 @@ public class ErrorMarks extends AbstractTestModule
       String FQN_PREFIX = "//div[@id='ideAssistImportDeclarationForm']//div[text()='%s']";
 
       String MARKER_EDITOR_LOCATOR = "//div[@panel-id='editor' and @view-id='editor-%s' ]//iframe";
+
+      String NUM_ACTIVE_EDITOR = "//div[@class='gwt-TabLayoutPanelContent' and @is-active='true']";
    }
+
+   @FindBy(xpath = Locators.NUM_ACTIVE_EDITOR)
+   private WebElement numActiveEditor;
 
    /** wait appearance of the error in editor 
     * @param numEditor
@@ -61,15 +65,8 @@ public class ErrorMarks extends AbstractTestModule
     */
    public void waitLineNumberAppearance(final int numLine)
    {
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver d)
-         {  WebElement line = driver().findElement(By.xpath(String.format(Locators.LINE_NUMBERS_CLASS, numLine)));
-            return line != null && line.isDisplayed();
-         }
-
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.LINE_NUMBERS_CLASS, numLine))));
    }
 
    /**
@@ -77,17 +74,10 @@ public class ErrorMarks extends AbstractTestModule
     * @param numString
     * @return
     */
-   public boolean isErrorMarkerShow(int numString)
+   public void waitErrorMarkerShow(int numString)
    {
-      try
-      {
-         WebElement mark = driver().findElement(By.xpath(String.format(Locators.ERROR_MARKER_PREFIX, numString)));
-         return mark != null && mark.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.ERROR_MARKER_PREFIX, numString))));
    }
 
    /**
@@ -97,24 +87,8 @@ public class ErrorMarks extends AbstractTestModule
     */
    public void waitDeclarationFormOpen(final String declaration)
    {
-
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver d)
-         {
-            try
-            {
-               WebElement mark = driver().findElement(By.xpath(String.format(Locators.DECLARATION_FORM, declaration)));
-               return mark != null && mark.isDisplayed();
-            }
-            catch (Exception e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.DECLARATION_FORM, declaration))));
    }
 
    /**
@@ -124,24 +98,8 @@ public class ErrorMarks extends AbstractTestModule
     */
    public void waitErrorMarkerIsAppear(final int numMark)
    {
-
-      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver d)
-         {
-            try
-            {
-               WebElement mark = driver().findElement(By.xpath(String.format(Locators.ERROR_MARKER_PREFIX, numMark)));
-               return mark != null && mark.isDisplayed();
-            }
-            catch (Exception e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.ERROR_MARKER_PREFIX, numMark))));
    }
 
    /**
@@ -151,24 +109,8 @@ public class ErrorMarks extends AbstractTestModule
     */
    public void waitErrorMarkerIsDisAppear(final int numMark)
    {
-
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver d)
-         {
-            try
-            {
-               WebElement mark = driver().findElement(By.xpath(String.format(Locators.ERROR_MARKER_PREFIX, numMark)));
-               return false;
-            }
-            catch (Exception e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(String.format(
+         Locators.ERROR_MARKER_PREFIX, numMark))));
    }
 
    /**
@@ -179,25 +121,28 @@ public class ErrorMarks extends AbstractTestModule
     */
    public void waitChangesInErrorMarker(final String markLabel, final int numMarker)
    {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.ERROR_MARKER_LABEL, markLabel, numMarker))));
 
-      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver d)
-         {
-            try
-            {
-               WebElement mark =
-                  driver().findElement(By.xpath(String.format(Locators.ERROR_MARKER_LABEL, markLabel, numMarker)));
-               return true;
-            }
-            catch (Exception e)
-            {
-               return false;
-            }
-         }
-      });
+      // TODO if works fine remove commented
+      //      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
+      //      {
+      //
+      //         @Override
+      //         public Boolean apply(WebDriver d)
+      //         {
+      //            try
+      //            {
+      //               WebElement mark =
+      //                  driver().findElement(By.xpath(String.format(Locators.ERROR_MARKER_LABEL, markLabel, numMarker)));
+      //               return true;
+      //            }
+      //            catch (Exception e)
+      //            {
+      //               return false;
+      //            }
+      //         }
+      //      });
    }
 
    /**
@@ -207,24 +152,8 @@ public class ErrorMarks extends AbstractTestModule
     */
    public void waitFqnDeclarationIsAppear(final String fqnName)
    {
-
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver d)
-         {
-            try
-            {
-               WebElement fqn = driver().findElement(By.xpath(String.format(Locators.FQN_PREFIX, fqnName)));
-               return fqn != null && fqn.isDisplayed();
-            }
-            catch (Exception e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.FQN_PREFIX, fqnName))));
    }
 
    /**
@@ -254,24 +183,27 @@ public class ErrorMarks extends AbstractTestModule
     */
    public void waitDeclarationFormClosed()
    {
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver d)
-         {
-
-            try
-            {
-               WebElement mark = driver().findElement(By.id(Locators.DECLARATION_FORM_ID));
-               return false;
-            }
-            catch (Exception e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .id(Locators.DECLARATION_FORM_ID)));
+      // TODO remove if works
+      //      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
+      //      {
+      //
+      //         @Override
+      //         public Boolean apply(WebDriver d)
+      //         {
+      //
+      //            try
+      //            {
+      //               WebElement mark = driver().findElement(By.id(Locators.DECLARATION_FORM_ID));
+      //               return false;
+      //            }
+      //            catch (Exception e)
+      //            {
+      //               return true;
+      //            }
+      //         }
+      //      });
    }
 
    /**
@@ -338,11 +270,21 @@ public class ErrorMarks extends AbstractTestModule
     * select iframe with error markers panel
     * @param numEditor
     */
-   public void selectIframeWitErrorMarks(int numEditor)
+   public void selectIframeWitErrorMarks()
    {
       WebElement frameWithMarkers =
-         driver().findElement(By.xpath(String.format(Locators.MARKER_EDITOR_LOCATOR, numEditor)));
+         driver().findElement(By.xpath(String.format(Locators.MARKER_EDITOR_LOCATOR, getNumberTabOfActiveEditor())));
       driver().switchTo().frame(frameWithMarkers);
+   }
+
+   /**
+    * Getting of number current active tab of the code editor
+    * 
+    * @return
+    */
+   public int getNumberTabOfActiveEditor()
+   {
+      return Integer.parseInt(numActiveEditor.getAttribute("view-id").replace("editor-", ""));
    }
 
 }

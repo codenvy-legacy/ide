@@ -18,12 +18,10 @@
  */
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
+import java.util.Map;
+
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
@@ -31,8 +29,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -87,30 +83,30 @@ public class AddBlockCommentsTest extends ServicesJavaTextFuction
    @Test
    public void addBlockComment() throws Exception
    {
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       openJavaCommenTest(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
-      IDE.JAVAEDITOR.moveCursorDown(0, 28);
-      IDE.JAVAEDITOR.moveCursorRight(0, 6);
-
-      //after adding ability show number of the string into new java - editor,  this  block should be uncommenting 
-      //assertEquals("29 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorDown(28);
+      IDE.JAVAEDITOR.moveCursorRight(6);
 
       for (int i = 0; i < 5; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 20; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "/");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
       assertTrue(content.contains("/*     numbers.add(1);"));
       assertTrue(content.contains("numbers.add(6);*/"));
 
@@ -119,45 +115,46 @@ public class AddBlockCommentsTest extends ServicesJavaTextFuction
    @Test
    public void overrideBlockComment() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
-      openJavaCommenTest(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaCommentsTest.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaCommentsTest.java");
+      waitJavaCommentTestIsReady(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
-      IDE.JAVAEDITOR.moveCursorDown(0, 30);
-      IDE.JAVAEDITOR.moveCursorRight(0, 6);
+      IDE.JAVAEDITOR.moveCursorDown(30);
+      IDE.JAVAEDITOR.moveCursorRight(6);
 
-      //after adding ability show number of the string into new java - editor,  this  block should be uncommenting 
-      //assertEquals("30 : 7", IDE.STATUSBAR.getCursorPosition());
+      // after adding ability show number of the string into new java -
+      // editor, this block should be uncommenting
+      // assertEquals("30 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 2; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 15; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "/");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
       assertTrue(content.contains("/*numbers.add(2);"));
       assertTrue(content.contains("numbers.add(4);*/"));
 
-      //need for reparce in editor
+      // need for reparce in editor
       Thread.sleep(4000);
       IDE.GOTOLINE.goToLine(34);
-      IDE.JAVAEDITOR.moveCursorRight(0, 6);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.END.toString());
+      IDE.JAVAEDITOR.moveCursorRight(6);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.END.toString());
 
-      // after fix problem with status bar should be uncomment  
+      // after fix problem with status bar should be uncomment
       // assertEquals("34 : 7", IDE.STATUSBAR.getCursorPosition());
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "/");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "/");
 
-      content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      content = IDE.JAVAEDITOR.getTextFromJavaEditor();
       Thread.sleep(10000);
       assertTrue(content.contains("/*numbers.add(5);"));
       assertTrue(content.contains("numbers.add(6);*/"));

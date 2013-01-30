@@ -27,6 +27,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -44,7 +45,7 @@ public class SearchResult extends AbstractTestModule
 
       public static final String SEARCH_RESULT_TREE = "ideSearchResultItemTreeGrid";
 
-      public static final String TREE_GRID_ID = "ideSearchResultItemTreeGrid";
+      public static final String TREE_GRID_ID = "//div[@id='ideSearchResultItemTreeGrid']/div/div";
 
       public static final String SEARCH_RESULT_SELECTOR = "div#" + SEARCH_RESULT_TREE + " div[id^=" + TREE_PREFIX + "]";
    }
@@ -54,7 +55,7 @@ public class SearchResult extends AbstractTestModule
    @FindBy(xpath = Locators.VIEW_LOCATOR)
    private WebElement view;
 
-   @FindBy(id = Locators.TREE_GRID_ID)
+   @FindBy(xpath = Locators.TREE_GRID_ID)
    private WebElement treeGrid;
 
    /**
@@ -62,7 +63,7 @@ public class SearchResult extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -87,7 +88,7 @@ public class SearchResult extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -112,14 +113,14 @@ public class SearchResult extends AbstractTestModule
     */
    public void waitItemIsSelected(final WebElement elem) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
             try
             {
-              return elem.findElement(By.cssSelector("div.gwt-TreeItem-selected")).isDisplayed();
+               return elem.findElement(By.cssSelector("div.gwt-TreeItem-selected")).isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -135,42 +136,27 @@ public class SearchResult extends AbstractTestModule
    }
 
    /**
-    * Is item present in search results tree.
+    * wait item present in search results tree.
     * 
     * @param path item's path
-    * @return <code>true</code> if item is present.
     * @throws Exception
     */
-   public boolean isItemPresent(String path) throws Exception
+   public void waitItemPresent(String path) throws Exception
    {
-      try
-      {
-         return driver().findElement(By.id(getItemId(path))) != null;
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.id(getItemId(path))));
    }
 
    /**
-    * Is item visible in search results tree.
+    * wait item not present in search results tree.
     * 
     * @param path item's path
-    * @return <code>true</code> if item is present.
     * @throws Exception
     */
-   public boolean isItemVisible(String path) throws Exception
+   public void waitItemNotPresent(String path) throws Exception
    {
-      try
-      {
-         WebElement item = driver().findElement(By.id(getItemId(path)));
-         return (item != null && item.isDisplayed());
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id(getItemId(path))));
    }
 
    /**
@@ -185,8 +171,7 @@ public class SearchResult extends AbstractTestModule
       item.click();
       new Actions(driver()).doubleClick(item).build().perform();
    }
-   
-   
+
    /**
     * Open item (make double click) in Search results tree.
     * 
@@ -208,7 +193,7 @@ public class SearchResult extends AbstractTestModule
     */
    public void selectItem(String path) throws Exception
    {
-      driver().findElement(By.id(getItemId(path))).click();
+      driver().findElement(By.xpath("//div[@id='" + getItemId(path) + "']//div[@class='ide-Tree-label']")).click();
    }
 
    public void typeKeys(String keys)
@@ -235,8 +220,6 @@ public class SearchResult extends AbstractTestModule
       itemId = Utils.md5(itemId);
       return Locators.TREE_PREFIX + itemId;
    }
-   
-   
 
    /**
     * Generate item id
@@ -252,11 +235,10 @@ public class SearchResult extends AbstractTestModule
       WebElement elem = driver().findElement(By.id(Locators.TREE_PREFIX + itemId));
       return elem;
    }
-   
 
    public void waitForItem(final String path) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

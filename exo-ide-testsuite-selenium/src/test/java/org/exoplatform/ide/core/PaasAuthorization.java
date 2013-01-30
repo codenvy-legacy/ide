@@ -1,22 +1,13 @@
 package org.exoplatform.ide.core;
 
-import com.sun.swing.internal.plaf.basic.resources.basic;
-
-import com.gargoylesoftware.htmlunit.WebWindow;
-
-import org.exoplatform.ide.MenuCommands;
 import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotVisibleException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.internal.selenesedriver.FindElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.xmlpull.v1.sax2.Driver;
 
 public class PaasAuthorization extends AbstractTestModule
 {
@@ -67,11 +58,9 @@ public class PaasAuthorization extends AbstractTestModule
    */
    public boolean checkAppearAutorizationForm(int mlsec) throws InterruptedException
    {
-      for (int i = 0; i < mlsec*5; i++)
+      for (int i = 0; i < mlsec * 5; i++)
       {
-         System.out.println("<<<<<<<<<<<<<<<<<<<I'm into loop");
          Thread.sleep(500);
-         System.out.println("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + isAutorizationFormPresent());
          if (isAutorizationFormPresent())
             return true;
          break;
@@ -86,7 +75,7 @@ public class PaasAuthorization extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -106,7 +95,7 @@ public class PaasAuthorization extends AbstractTestModule
    */
    public void waitLoginBtnIsActive() throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

@@ -1,54 +1,40 @@
 // simple groovy script
+import javax.ws.rs.DefaultValue
 import javax.ws.rs.Path
-import POST
+import javax.ws.rs.POST
+import javax.ws.rs.Produces
+import javax.ws.rs.Consumes
+import javax.ws.rs.PathParam
+import javax.ws.rs.HeaderParam
+import javax.ws.rs.QueryParam
 
-@Path("/testService11")
+@Path ("/testMediaTypes")
 public class TestService {
-  @POST
-  @Consumes("application/xml")
-
-  @Produces("text/html")
-  @Path("InnerPath/{pathParam}")
-  public String post1(@PathParam("pathParam") String pathParam,
-    @HeaderParam("Test-Header1") String testHeader,
-    @QueryParam("Test Query Parameter 1") String testQueryParam,
-    String body) {
-      return "PathParam 1:" + pathParam + "; Test Query Parameter 1: " + testQueryParam + "; Test-Header1: " + testHeader + "; Body: " + body;
-  }
-
-  @POST
-  @Consumes("application/xml")
-
-  @Produces("application/json")
-  @Path("InnerPath/{pathParam}")
-  public java.lang.String post2(@PathParam("pathParam") String pathParam,
-    @HeaderParam("Test-Header2") java.lang.String testHeader,
-    @QueryParam("Test Query Parameter 2") String testQueryParam,
-    java.lang.String body) throws Exception {
-      return "PathParam 2:" + pathParam + "; Test Query Parameter 2: " + testQueryParam + "; Test-Header2: " + testHeader + "; Body: " + body;
-  }
-  
-  public TestService(String property) {
-     this.property = property;     
-  }
-
-  @Listener
-  protected TestService(String property, HashMap<String,String> map) throws java.lang.Exception
-  {
-     this.map = map;     
-     this.border = border;     
-  }
+   @POST
+   @Consumes("application/json")
+   @Produces("text/plain")
+   @Path("/InnerPath")
+   public String post1(TestJSON body) {
+      return "Body: " + body.getValue();
+   }
+   
+   @POST
+   @Consumes("text/plain")
+   @Produces("text/plain")
+   @Path("/InnerPath")
+   public String post2(String body) {
+      return "Body: " + body;
+   }
 }
-
-interface Dep extends String
-{
-   private String name;
-   private int age;
+public class TestJSON {
+   private String value
    
-   public void addYear();
    
-   public java.lang.String greet(
-   @PathParam("pathParam") String begin);
+   public String getValue() {
+      return value
+   }
    
-   private int address;   
- }
+   public void setValue(String value) {
+      this.value = value
+   }
+}

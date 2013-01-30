@@ -58,80 +58,85 @@ public class AutoCompleteJspTest extends CodeAssistantBaseTest
       openFile(FILE_NAME);
    }
 
-   
    @Test
    public void testAutocompleteJsp() throws Exception
    {
       IDE.GOTOLINE.goToLine(6);
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("background-attachment"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("counter-increment"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("background-attachment");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("counter-increment");
+
       IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("!important"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("!important"));
 
       IDE.GOTOLINE.goToLine(11);
 
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("application:javax.servlet.ServletContext"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("config:javax.servlet.ServletConfig"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("exception:java.lang.Throwable"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("out:javax.servlet.jsp.JspWriter"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("page:java.lang.Object"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("pageContext:javax.servlet.jsp.PageContext"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("request:javax.servlet.http.HttpServletRequest"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("response:javax.servlet.http.HttpServletResponse"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("session:javax.servlet.http.HttpSession"));
+
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("application:javax.servlet.ServletContext");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("config:javax.servlet.ServletConfig");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("exception:java.lang.Throwable");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("out:javax.servlet.jsp.JspWriter");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("page:java.lang.Object");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("pageContext:javax.servlet.jsp.PageContext");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("request:javax.servlet.http.HttpServletRequest");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("response:javax.servlet.http.HttpServletResponse");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("session:javax.servlet.http.HttpSession");
 
       IDE.CODEASSISTANT.closeForm();
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "Collection");
+      IDE.EDITOR.typeTextIntoEditor("Collection");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Collection"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Collections"));
+
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Collection");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Collections");
+
       IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("Collection"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("Collection"));
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.GOTOLINE.goToLine(18);
 
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("a"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Window"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("a");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Window");
       IDE.CODEASSISTANT.closeForm();
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.GOTOLINE.goToLine(24);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<t");
+      IDE.EDITOR.typeTextIntoEditor("<t");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("table"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("textarea"));
+
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("table");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("textarea");
+
       IDE.CODEASSISTANT.closeForm();
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.GOTOLINE.goToLine(4);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<jsp:");
+      IDE.EDITOR.typeTextIntoEditor("<jsp:");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:attribute"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:body"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:element"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:fallback"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:forward"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:getProperty"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:include"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:invoke"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:output"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:plugin"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:text"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:useBean"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:attribute");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:body");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:element");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:fallback");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:forward");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:getProperty");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:include");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:invoke");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:output");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:plugin");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:text");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:useBean");
 
       IDE.CODEASSISTANT.closeForm();
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<jsp:use");
+      IDE.EDITOR.typeTextIntoEditor("<jsp:use");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.typeToInput("\n");
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("<jsp:useBean id=\"\"></jsp:useBean>"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("<jsp:useBean id=\"\"></jsp:useBean>"));
    }
 }

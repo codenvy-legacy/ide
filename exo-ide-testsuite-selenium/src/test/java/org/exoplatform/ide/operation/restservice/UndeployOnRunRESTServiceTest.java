@@ -20,23 +20,23 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 25, 2010 $
- *
+ * 
  */
 public class UndeployOnRunRESTServiceTest extends BaseTest
 {
@@ -47,8 +47,8 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
 
    private final static String FILE_NAME = "kjfdshglksfdghldsfbg.grs";
 
-   @Before
-   public void beforeTest()
+   @BeforeClass
+   public static void beforeTest()
    {
 
       String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/";
@@ -66,13 +66,16 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       }
    }
 
-   @After
-   public void afterTest()
+   @AfterClass
+   public static void afterTest()
    {
       try
       {
-         /*       Utils.undeployService(BASE_URL, REST_CONTEXT, URL + SIMPLE_FILE_NAME);
-                Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);*/
+         /*
+          * Utils.undeployService(BASE_URL, REST_CONTEXT, URL +
+          * SIMPLE_FILE_NAME); Utils.undeployService(BASE_URL, REST_CONTEXT,
+          * URL + FILE_NAME);
+          */
          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (IOException e)
@@ -90,7 +93,7 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + SIMPLE_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + SIMPLE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.REST_SERVICE.runRESTServiceInSanbox();
 
@@ -102,20 +105,17 @@ public class UndeployOnRunRESTServiceTest extends BaseTest
       assertTrue(text.endsWith("/" + PROJECT + "/" + SIMPLE_FILE_NAME + " undeployed successfully."));
 
       IDE.EDITOR.closeFile(SIMPLE_FILE_NAME);
+      IDE.OUTPUT.clickClearButton();
    }
 
    @Test
    public void testUndeloyOnCancel() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.REST_SERVICE.runRESTServiceInSanbox();
       IDE.REST_SERVICE.closeForm();

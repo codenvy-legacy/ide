@@ -21,6 +21,9 @@ package org.exoplatform.ide.operation.restservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -31,95 +34,89 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class RESTServiceResponseHeadersTest extends BaseTest
-{
+public class RESTServiceResponseHeadersTest extends BaseTest {
 
-   private final static String FILE_NAME = "ResponseHeaders.grs";
+	private final static String FILE_NAME = "ResponseHeaders.grs";
 
-   private final static String PROJECT = RESTServiceResponseHeadersTest.class.getSimpleName();
+	private final static String PROJECT = RESTServiceResponseHeadersTest.class
+			.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
-   {
+	@BeforeClass
+	public static void setUp() {
 
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ResponseHeaders.groovy";
-      try
-      {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
-      }
-      catch (IOException e)
-      {
-      }
+		String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/ResponseHeaders.groovy";
+		try {
+			Map<String, Link> project = VirtualFileSystemUtils
+					.createDefaultProject(PROJECT);
+			Link link = project.get(Link.REL_CREATE_FILE);
+			VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME,
+					MimeType.GROOVY_SERVICE, filePath);
+		} catch (IOException e) {
+		}
 
-   }
+	}
 
-   @Test
-   public void testResponseHeaders() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testResponseHeaders() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.LOADER.waitClosed();
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
 
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(1, 5);
+		IDE.MENU.runCommand(MenuCommands.Run.RUN,
+				MenuCommands.Run.DEPLOY_REST_SERVICE);
+		IDE.OUTPUT.waitForMessageShow(1, 5);
 
-      assertEquals("[INFO] " + "/" + PROJECT + "/" + FILE_NAME + " deployed successfully.",
-         IDE.OUTPUT.getOutputMessage(1));
+		assertEquals("[INFO] " + "/" + PROJECT + "/" + FILE_NAME
+				+ " deployed successfully.", IDE.OUTPUT.getOutputMessage(1));
 
-      IDE.REST_SERVICE.launchRestService();
+		IDE.REST_SERVICE.launchRestService();
 
-      IDE.REST_SERVICE.selectPath("/test/testgroovy/{name}");
+		IDE.REST_SERVICE.selectPath("/test/testgroovy/{name}");
 
-      IDE.REST_SERVICE.typeToPathField("/test/testgroovy/Evgen");
-      IDE.REST_SERVICE.sendRequest();
+		IDE.REST_SERVICE.typeToPathField("/test/testgroovy/Evgen");
+		IDE.REST_SERVICE.sendRequest();
 
-      Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
-      String mess = IDE.OUTPUT.getOutputMessage(2);
+		Thread.sleep(TestConstants.FOLDER_REFRESH_PERIOD);
+		String mess = IDE.OUTPUT.getOutputMessage(2);
 
-      assertTrue(mess.contains("[OUTPUT] - -Status - - - - - - - -"));
-      assertTrue(mess.contains("200 OK"));
-      assertTrue(mess.contains("Content-Type : */*"));
-      assertTrue(mess.contains("- -Text - - - - - - - - -"));
-      assertTrue(mess.contains("Hello Evgen"));
+		assertTrue(mess.contains("[OUTPUT] - -Status - - - - - - - -"));
+		assertTrue(mess.contains("200 OK"));
+		assertTrue(mess.contains("Content-Type : */*"));
+		assertTrue(mess.contains("- -Text - - - - - - - - -"));
+		assertTrue(mess.contains("Hello Evgen"));
 
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(3, 5);
-      assertTrue(IDE.OUTPUT.getOutputMessage(3).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."));
-   }
+		IDE.MENU.runCommand(MenuCommands.Run.RUN,
+				MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+		IDE.OUTPUT.waitForMessageShow(3, 5);
+		assertTrue(IDE.OUTPUT.getOutputMessage(3).contains(
+				"/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."));
+	}
 
-   @AfterClass
-   public static void tearDown() throws Exception
-   {
-      try
-      {
-         if (IDE.OUTPUT.getOutputMessage(3).contains("/" + PROJECT + "/" + FILE_NAME + " undeployed successfully."))
-         {
-            //TODO Utils.undeployService(BASE_URL, REST_CONTEXT, URL + FILE_NAME);
-            VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         }
-         else
-         {
-            IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-         }
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() throws Exception {
+		try {
+			if (IDE.OUTPUT.getOutputMessage(3).contains(
+					"/" + PROJECT + "/" + FILE_NAME
+							+ " undeployed successfully.")) {
+				// TODO Utils.undeployService(BASE_URL, REST_CONTEXT, URL +
+				// FILE_NAME);
+				VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+			} else {
+				IDE.MENU.runCommand(MenuCommands.Run.RUN,
+						MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+			}
+		} catch (IOException e) {
+		}
+	}
 
 }

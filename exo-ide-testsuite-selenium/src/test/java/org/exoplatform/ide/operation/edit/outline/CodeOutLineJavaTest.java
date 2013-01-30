@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
+import java.util.Map;
 
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -27,8 +27,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
@@ -73,19 +71,23 @@ public class CodeOutLineJavaTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
       openSpringJavaTetsFile(PROJECT);
+
+      //TODO Pause for build outline tree
+      //after implementation method for check ready state, should be remove
+      Thread.sleep(4000);
 
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
 
       // wait while outline tree is loaded
       IDE.OUTLINE.waitOutlineTreeVisible();
-      assertTrue(IDE.OUTLINE.isHiglightBorderJavaOutlinePresent());
+      IDE.OUTLINE.waitHiglightBorderJavaOutlinePresent();
 
       // check for presence and visibility of outline tab
-      assertTrue(IDE.OUTLINE.isJavaOutlineViewVisible());
+      IDE.OUTLINE.waitJavaOutlineViewVisible();
 
       // expand all outline tree
       IDE.OUTLINE.selectItem("import declarations");
@@ -102,14 +104,14 @@ public class CodeOutLineJavaTest extends ServicesJavaTextFuction
    private void checkAllNodes() throws Exception
    {
       //wait last node in tree
-      IDE.OUTLINE.waitNodePresent("handleRequestInternal(HttpServletRequest, HttpServletResponse)");
-      assertTrue(IDE.OUTLINE.isItemPresent("sumcontroller"));
-      assertTrue(IDE.OUTLINE.isItemPresent("import declarations"));
-      assertTrue(IDE.OUTLINE.isItemPresent("org.springframework.web.servlet.ModelAndView"));
-      assertTrue(IDE.OUTLINE.isItemPresent("org.springframework.web.servlet.mvc.AbstractController"));
-      assertTrue(IDE.OUTLINE.isItemPresent("javax.servlet.http.HttpServletRequest"));
-      assertTrue(IDE.OUTLINE.isItemPresent("javax.servlet.http.HttpServletResponse"));
-      assertTrue(IDE.OUTLINE.isItemPresent("SumController"));
+      IDE.OUTLINE.waitNodeWithSubNamePresent("handleRequestInternal(HttpServletRequest, HttpServletResponse)");
+      IDE.OUTLINE.waitItemPresent("sumcontroller");
+      IDE.OUTLINE.waitItemPresent("import declarations");
+      IDE.OUTLINE.waitItemPresent("org.springframework.web.servlet.ModelAndView");
+      IDE.OUTLINE.waitItemPresent("org.springframework.web.servlet.mvc.AbstractController");
+      IDE.OUTLINE.waitItemPresent("javax.servlet.http.HttpServletRequest");
+      IDE.OUTLINE.waitItemPresent("javax.servlet.http.HttpServletResponse");
+      IDE.OUTLINE.waitItemPresent("SumController");
    }
 
    // check move in outline tree

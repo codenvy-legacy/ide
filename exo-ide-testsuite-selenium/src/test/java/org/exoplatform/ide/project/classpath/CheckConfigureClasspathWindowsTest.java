@@ -21,6 +21,8 @@ package org.exoplatform.ide.project.classpath;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,8 +30,6 @@ import org.exoplatform.ide.core.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Check, that Configure Classpath and Choose source dialog windows work correctly: buttons actions work correctly, and new
@@ -82,7 +82,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT_2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT_2);
 
-      assertFalse(IDE.MENU.isCommandVisible(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH));
+      IDE.MENU.waitCommandInvisible(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH);
 
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CLOSE_PROJECT);
 
@@ -91,7 +91,7 @@ public class CheckConfigureClasspathWindowsTest extends BaseTest
       // open project to configure classpath
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH));
+      IDE.MENU.waitCommandVisible(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH);
 
       // call configure classpath form
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CONFIGURE_CLASS_PATH);

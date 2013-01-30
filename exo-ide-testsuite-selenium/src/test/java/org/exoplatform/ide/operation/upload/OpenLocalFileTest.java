@@ -18,6 +18,13 @@
  */
 package org.exoplatform.ide.operation.upload;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -26,11 +33,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.IOException;
-
-import static org.junit.Assert.*;
-
 /**
  * Test for "Open local file" form.
  * 
@@ -38,73 +40,63 @@ import static org.junit.Assert.*;
  * @version $Id: $
  * 
  */
-public class OpenLocalFileTest extends BaseTest
-{
-   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/test";
+public class OpenLocalFileTest extends BaseTest {
+	private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/test";
 
-   private static final String PROJECT = OpenLocalFileTest.class.getSimpleName();
+	private static final String PROJECT = OpenLocalFileTest.class
+			.getSimpleName();
 
-   @Before
-   public void beforeTest()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@Before
+	public void beforeTest() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testOpenFileWithoutExtention() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testOpenFileWithoutExtention() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+		IDE.LOADER.waitClosed();
 
-      // call Open Local File form
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.OPEN_LOCAL_FILE);
-      IDE.UPLOAD.waitOpenLocalFileViewOpened();
-      assertFalse(IDE.UPLOAD.isUploadButtonEnabled());
+		// call Open Local File form
+		IDE.MENU.runCommand(MenuCommands.File.FILE,
+				MenuCommands.File.OPEN_LOCAL_FILE);
+		IDE.UPLOAD.waitOpenLocalFileViewOpened();
+		assertFalse(IDE.UPLOAD.isUploadButtonEnabled());
 
-      // select file from local driver without file extention
-      try
-      {
-         File file = new File(FILE_PATH);
-         IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
-      }
-      catch (Exception e)
-      {
-      }
+		// select file from local driver without file extention
+		try {
+			File file = new File(FILE_PATH);
+			IDE.UPLOAD.setUploadFilePath(file.getCanonicalPath());
+		} catch (Exception e) {
+		}
 
-      String fileName = FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length());
-      assertEquals(fileName, IDE.UPLOAD.getFilePathValue());
+		String fileName = FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1,
+				FILE_PATH.length());
+		assertEquals(fileName, IDE.UPLOAD.getFilePathValue());
 
-      assertEquals("text/plain", IDE.UPLOAD.getMimeTypeValue());
-      assertTrue(IDE.UPLOAD.isUploadButtonEnabled());
+		assertEquals("text/plain", IDE.UPLOAD.getMimeTypeValue());
+		assertTrue(IDE.UPLOAD.isUploadButtonEnabled());
 
-      IDE.UPLOAD.setMimeType(MimeType.TEXT_HTML);
+		IDE.UPLOAD.setMimeType(MimeType.TEXT_HTML);
 
-      assertTrue(IDE.UPLOAD.isUploadButtonEnabled());
+		assertTrue(IDE.UPLOAD.isUploadButtonEnabled());
 
-      IDE.UPLOAD.clickUploadButton();
-      IDE.UPLOAD.waitClosed();
+		IDE.UPLOAD.clickUploadButton();
+		IDE.UPLOAD.waitClosed();
 
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + fileName);
-   }
+		IDE.EDITOR.waitActiveFile();
+	}
 
-   @After
-   public void afterTest()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@After
+	public void afterTest() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 }

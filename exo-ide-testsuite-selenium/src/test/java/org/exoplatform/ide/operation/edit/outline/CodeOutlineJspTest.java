@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -27,14 +29,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: CodeOutlineJspTest Apr 27, 2011 10:47:14 AM evgen $
- *
+ * 
  */
 public class CodeOutlineJspTest extends BaseTest
 {
@@ -42,13 +40,6 @@ public class CodeOutlineJspTest extends BaseTest
    private final static String FILE_NAME = "JspCodeOutline.jsp";
 
    private final static String PROJECT = CodeOutlineJspTest.class.getSimpleName();
-
-   private OutlineTreeHelper outlineTreeHelper;
-
-   public CodeOutlineJspTest()
-   {
-      this.outlineTreeHelper = new OutlineTreeHelper();
-   }
 
    @BeforeClass
    public static void setUp()
@@ -84,9 +75,11 @@ public class CodeOutlineJspTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.LOADER.waitClosed();
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      //TODO Pause for build outline tree
+      //after implementation method for check ready state, should be remove
+      Thread.sleep(4000);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
@@ -94,7 +87,6 @@ public class CodeOutlineJspTest extends BaseTest
 
       checkTreeCorrectlyCreated();
       checkClickOnTreeElements();
-      checkClickOnCodeEditorElements();
 
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);
@@ -102,71 +94,42 @@ public class CodeOutlineJspTest extends BaseTest
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
-      //expand all tree (move cursor in code editor top-down)
-      outlineTreeHelper.expandOutlineTree();
+      IDE.GOTOLINE.goToLine(2);
+      IDE.OUTLINE.waitElementIsSelect("head");
+      IDE.OUTLINE.waitItemAtPosition("html", 1);
+      IDE.OUTLINE.waitItemAtPosition("script", 3);
+      IDE.OUTLINE.waitItemAtPosition("body", 4);
 
-      // check is tree created correctly
-      assertEquals("html", IDE.OUTLINE.getItemLabel(1));
-      assertEquals("head", IDE.OUTLINE.getItemLabel(2));
-      assertEquals("java code", IDE.OUTLINE.getItemLabel(3));
-      assertEquals("script", IDE.OUTLINE.getItemLabel(4));
-      assertEquals("a : String", IDE.OUTLINE.getItemLabel(5));
-      assertEquals("body", IDE.OUTLINE.getItemLabel(6));
-      assertEquals("java code", IDE.OUTLINE.getItemLabel(7));
-      assertEquals("curentState", IDE.OUTLINE.getItemLabel(8));
-      assertEquals("identity", IDE.OUTLINE.getItemLabel(9));
-      assertEquals("i", IDE.OUTLINE.getItemLabel(10));
-      assertEquals("a", IDE.OUTLINE.getItemLabel(11));
+      IDE.GOTOLINE.goToLine(4);
+      IDE.OUTLINE.waitElementIsSelect("java code");
+      IDE.GOTOLINE.goToLine(9);
+      IDE.OUTLINE.waitItemAtPosition("a : String", 5);
+      IDE.GOTOLINE.goToLine(14);
+      IDE.OUTLINE.waitElementIsSelect("curentState");
+      IDE.OUTLINE.waitItemAtPosition("identity", 9);
+      IDE.OUTLINE.waitItemAtPosition("i", 10);
+      IDE.OUTLINE.waitItemAtPosition("a", 11);
 
    }
 
    private void checkClickOnTreeElements() throws Exception
    {
-      //check variable a
+      // check variable a
       // click on 5 row need for reparse tree
-      IDE.OUTLINE.selectRow(5);
       IDE.OUTLINE.selectRow(11);
-      assertEquals("23 : 1", IDE.STATUSBAR.getCursorPosition());
-
-      //check javascript variable a
-      IDE.OUTLINE.selectRow(5);
-      assertEquals("9 : 1", IDE.STATUSBAR.getCursorPosition());
-
-      //check tag head
-      IDE.OUTLINE.selectRow(2);
-      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
-
-      //check javascript javacode
-      IDE.OUTLINE.selectRow(7);
-      assertEquals("13 : 1", IDE.STATUSBAR.getCursorPosition());
-
-   }
-
-   private void checkClickOnCodeEditorElements() throws Exception
-   {
-      // check highlight tag body 
-      IDE.GOTOLINE.goToLine(12);
-      IDE.STATUSBAR.waitCursorPositionAt("12 : 1");
-      //this delay need for fix 'Element is no longer attached to the DOM' problem. 
-      //Driver Wait method for highliter element does not works.
-      Thread.sleep(500);
-      IDE.OUTLINE.isItemSelected(6);
-
-      //check highlight tag java code
-      IDE.GOTOLINE.goToLine(4);
-      IDE.STATUSBAR.waitCursorPositionAt("4 : 1");
-      //this delay need for fix 'Element is no longer attached to the DOM' problem. 
-      //Driver Wait method for highliter element does not works.
-      Thread.sleep(500);
-      IDE.OUTLINE.isItemSelected(3);
-
-      //check highlight tag java code
-      IDE.GOTOLINE.goToLine(23);
       IDE.STATUSBAR.waitCursorPositionAt("23 : 1");
-      //this delay need for fix 'Element is no longer attached to the DOM' problem. 
-      //Driver Wait method for highliter element does not works.
-      Thread.sleep(500);
-      IDE.OUTLINE.isItemSelected(11);
+
+      // check javascript variable a
+      IDE.OUTLINE.selectRow(5);
+      IDE.STATUSBAR.waitCursorPositionAt("9 : 1");
+
+      // check tag head
+      IDE.OUTLINE.selectRow(2);
+      IDE.STATUSBAR.waitCursorPositionAt("2 : 1");
+
+      // check javascript javacode
+      IDE.OUTLINE.selectRow(7);
+      IDE.STATUSBAR.waitCursorPositionAt("13 : 1");
    }
 
 }

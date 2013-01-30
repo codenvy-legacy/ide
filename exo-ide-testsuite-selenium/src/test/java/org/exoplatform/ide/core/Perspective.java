@@ -19,7 +19,6 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.TestConstants;
-import org.jboss.netty.util.Timeout;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -89,7 +88,7 @@ public class Perspective extends AbstractTestModule
     */
    private void waitMaximizeButtonAppear(final String panelId)
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
@@ -119,13 +118,21 @@ public class Perspective extends AbstractTestModule
     * 
     * @param panelId panel's id
     */
-   private void waitMaximized(final String panelId)
+   public void waitMaximized(final String panelId)
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
          {
+            // need for 
+            try
+            {
+               Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+            }
+            catch (InterruptedException e)
+            {
+            }
             return isPanelMaximized(panelId);
          }
       });
@@ -136,9 +143,9 @@ public class Perspective extends AbstractTestModule
     * 
     * @param panelId panel's id
     */
-   private void waitRestored(final String panelId)
+   public void waitRestored(final String panelId)
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)

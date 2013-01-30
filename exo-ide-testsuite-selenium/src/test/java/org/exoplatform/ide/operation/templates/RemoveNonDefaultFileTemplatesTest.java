@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -25,11 +27,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Test for deleting user file template.
@@ -90,12 +87,12 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
 
       // ------ 1 ----------
       // Click on "File->New->From Template..." topmenu item.
-      assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
+      IDE.TOOLBAR.waitButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
 
       // check "Create file" dialog window
-      assertTrue(IDE.TEMPLATES.isOpened());
+      IDE.TEMPLATES.waitOpenedDialog();
 
       // ------ 2 ----------
       // In window select "test template", then click "Delete" button.
@@ -112,9 +109,7 @@ public class RemoveNonDefaultFileTemplatesTest extends BaseTest
       IDE.ASK_DIALOG.clickYes();
       IDE.LOADER.waitClosed();
       IDE.ASK_DIALOG.waitClosed();
-      IDE.TEMPLATES.waitForTemplateDeleted(FILE_TEMPLATE_NAME_1);
-
-      assertFalse(IDE.TEMPLATES.isTemplatePresent(FILE_TEMPLATE_NAME_1));
+      IDE.TEMPLATES.waitTemplateNotPresent(FILE_TEMPLATE_NAME_1);
 
       // ------ 4 ----------
       // Close "Create file" window, and all opened tabs in content panel.

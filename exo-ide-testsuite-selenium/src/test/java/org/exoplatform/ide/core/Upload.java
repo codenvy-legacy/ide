@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.core;
 
+import java.io.File;
+
 import org.exoplatform.ide.MenuCommands;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -28,8 +30,6 @@ import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.File;
 
 /**
  * Operations with Upload (Open Local File) dialogs: open dialog, upload file.
@@ -110,7 +110,7 @@ public class Upload extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -134,14 +134,22 @@ public class Upload extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(ExpectedConditions.invisibilityOfElementLocated(By
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
          .id(Locators.VIEW_LOCATOR)));
    }
 
    public boolean isOpened()
    {
-      return (view != null && view.isDisplayed() && uploadButton != null && uploadButton.isDisplayed()
-         && cancelButton != null && cancelButton.isDisplayed() && fileNameField != null && fileNameField.isDisplayed());
+      try
+      {
+         return (view != null && view.isDisplayed() && uploadButton != null && uploadButton.isDisplayed()
+            && cancelButton != null && cancelButton.isDisplayed() && fileNameField != null && fileNameField
+               .isDisplayed());
+      }
+      catch (Exception e)
+      {
+         return false;
+      }
    }
 
    /**
@@ -151,7 +159,7 @@ public class Upload extends AbstractTestModule
     */
    public void waitOpenLocalFileViewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -168,7 +176,7 @@ public class Upload extends AbstractTestModule
     */
    public void waitOpenLocalFileViewClosed() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -224,7 +232,7 @@ public class Upload extends AbstractTestModule
 
       final String fileName = filePath.substring(filePath.lastIndexOf("/") + 1, filePath.length());
 
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -258,20 +266,52 @@ public class Upload extends AbstractTestModule
    }
 
    /**
-    * Check the mime type suggest panel contains pointed proposes.
+    * Wait the mime-type suggest panel contains pointed proposes.
     * 
     * @param proposes proposes to be contained
     */
-   public boolean isMimeTypeContainsProposes(String... proposes)
+   public void waitMimeTypeContainsProposes(final String... proposes)
    {
-      for (String propose : proposes)
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         if (!IDE().INPUT.isComboboxValuePresent(mimeTypeField, propose))
+         @Override
+         public Boolean apply(WebDriver input)
          {
+
+            for (String propose : proposes)
+            {
+               if (!IDE().INPUT.isComboboxValuePresent(mimeTypeField, propose))
+               {
+                  return false;
+               }
+            }
+            return true;
+         }
+      });
+   }
+
+   /**
+    * Wait the mime-type suggest panel  not contains pointed proposes.
+    * 
+    * @param proposes proposes to be contained
+    */
+   public void waitMimeTypeNotContainsProposes(final String... proposes)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            for (String propose : proposes)
+            {
+               if (!IDE().INPUT.isComboboxValuePresent(mimeTypeField, propose))
+               {
+                  return true;
+               }
+            }
             return false;
          }
-      }
-      return true;
+      });
    }
 
    /**
@@ -345,18 +385,4 @@ public class Upload extends AbstractTestModule
    {
       return IDE().BUTTON.isButtonEnabled(uploadButton);
    }
-
-   public boolean ddd()
-   {
-      try
-      {
-         return driver().findElement(By.id(Locators.VIEW_ID)).isDisplayed();
-
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
-   }
-
 }

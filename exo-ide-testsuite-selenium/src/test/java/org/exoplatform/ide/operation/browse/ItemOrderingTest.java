@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse;
 
+import static org.junit.Assert.fail;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -25,9 +27,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * Created by The eXo Platform SAS.
@@ -126,13 +125,13 @@ public class ItemOrderingTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER_1);
 
       // check all elements in explorer
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1_2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FILE_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FILE_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1_2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + UPPERCASE_TEST_FOLDER_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + TEST_FOLDER_1));
-      
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + TEST_FILE_1_2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + UPPERCASE_TEST_FILE_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + TEST_FILE_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + TEST_FOLDER_1_2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + UPPERCASE_TEST_FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + TEST_FOLDER_1);
+
       // search all xml files and check
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommand(MenuCommands.File.SEARCH);
@@ -141,9 +140,9 @@ public class ItemOrderingTest extends BaseTest
       IDE.SEARCH.setMimeTypeValue("\n");
       IDE.SEARCH.clickSearchButton();
       IDE.SEARCH_RESULT.waitOpened();
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE_1_2));
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + UPPERCASE_TEST_FILE_1));
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE_1));
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + TEST_FILE_1_2);
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + UPPERCASE_TEST_FILE_1);
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + TEST_FILE_1);
    }
 
    @AfterClass

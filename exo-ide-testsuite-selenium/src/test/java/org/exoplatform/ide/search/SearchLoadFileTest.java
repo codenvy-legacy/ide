@@ -22,6 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -32,13 +35,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class SearchLoadFileTest extends BaseTest
 {
@@ -84,24 +84,24 @@ public class SearchLoadFileTest extends BaseTest
    @Test
    public void testLoadFoundFile() throws Exception
    {
-      //step 1 open project an folders, search groovy and check result
+      // step 1 open project an folders, search groovy and check result
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.WELCOME_PAGE.close();
-      IDE.WELCOME_PAGE.waitClose();
+      IDE.WELCOME_PAGE.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_FOLDER);
       IDE.SEARCH.performSearch("/" + PROJECT + "/" + TEST_FOLDER, "", MimeType.APPLICATION_GROOVY);
       IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
 
-      IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
       IDE.SEARCH_RESULT.openItem(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + restFileName);
+      IDE.EDITOR.waitActiveFile();
 
       chekButtonState();
 
-      //step 2 check GOTO folder and close groovy file
+      // step 2 check GOTO folder and close groovy file
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       IDE.EDITOR.waitTabPresent(0);
       assertEquals(restFileName, IDE.EDITOR.getTabTitle(0));
@@ -111,14 +111,14 @@ public class SearchLoadFileTest extends BaseTest
    private void chekButtonState() throws Exception
    {
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.View.SHOW_OUTLINE);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.CUT_SELECTED_ITEM));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.COPY_SELECTED_ITEM));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.REFRESH));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.SEARCH));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.LOCK_FILE));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.FORMAT));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.DELETE);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.CUT_SELECTED_ITEM);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.COPY_SELECTED_ITEM);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.PASTE);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.REFRESH);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.SEARCH);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.LOCK_FILE);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.FORMAT);
       IDE.MENU.isTopMenuEnabled(MenuCommands.File.FILE);
    }
 

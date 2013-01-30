@@ -20,7 +20,6 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.Utils;
 import org.openqa.selenium.By;
@@ -85,7 +84,7 @@ public class Search extends AbstractTestModule
     */
    public void waitPerformSearchOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -110,7 +109,7 @@ public class Search extends AbstractTestModule
     */
    public void waitPerformSearchClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

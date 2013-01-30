@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.file;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,8 +32,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Map;
 
 public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
 {
@@ -93,22 +93,22 @@ public class DeleteSeveralFilesSimultaniouslyTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_FILE_NAME);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + GROOVY_FILE_NAME);
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
+      IDE.MENU.waitCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.DELETE);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + GROOVY_FILE_NAME);
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + GROOVY_FILE_NAME).getStatusCode());
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + XML_FILE_NAME);
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
+      IDE.MENU.waitCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.DELETE);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + XML_FILE_NAME);
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + XML_FILE_NAME).getStatusCode());
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + HTML_FILE_NAME);
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.DELETE));
+      IDE.MENU.waitCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.DELETE);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.DELETE);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + HTML_FILE_NAME);
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + HTML_FILE_NAME).getStatusCode());

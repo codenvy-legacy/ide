@@ -20,6 +20,11 @@ package org.exoplatform.ide.core;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Created by The eXo Platform SAS.
@@ -28,23 +33,81 @@ import org.openqa.selenium.NoSuchElementException;
 */
 public class WelcomePage extends AbstractTestModule
 {
-   
-   public void close()
+
+   private interface Locators
    {
-      try {
-         driver().findElement(By.cssSelector("div[tab-title=\"Welcome\"]")).click();
-       } catch (NoSuchElementException e) {
-          //Nothing to do Welcome page already closed
-       }
+      String IMPORTFROM_GITHUB_BTN = "//button[text()='Import from GitHub']";
+
+      String CREATE_A_NEW_PROJECT_FROM_SCRATCH = "//button[text()='Create a New Project from Scratch']";
    }
 
-   
-   public void waitClose() throws Exception
+   @FindBy(xpath = Locators.IMPORTFROM_GITHUB_BTN)
+   WebElement inportFromGithub;
+
+   @FindBy(xpath = Locators.CREATE_A_NEW_PROJECT_FROM_SCRATCH)
+   WebElement createNewProjectFromScratch;
+
+   /**
+    * wait opening button 'Import from github'
+    * in 'Welcome' tab
+    */
+   public void waitImportFromGithubBtnOpened()
+   {
+      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return inportFromGithub.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * click on import from github btn in IDE 
+    */
+   public void clickImportFromGithub()
+   {
+      inportFromGithub.click();
+   }
+
+   /**
+    * click on Create a New Project from Scratch on welcome page 
+    */
+   public void clickCreateNewProjectFromScratch()
+   {
+      createNewProjectFromScratch.click();
+   }
+
+   /**
+    * close 'Welcome' tab in IDE 
+    */
+   public void close()
+   {
+      try
+      {
+         driver().findElement(By.cssSelector("div[tab-title=\"Welcome\"]")).click();
+      }
+      catch (NoSuchElementException e)
+      {
+         //Nothing to do Welcome page already closed
+      }
+   }
+
+   /**
+    * wait while 'Welcome' tab in IDE is closed
+    * @throws Exception
+    */
+   public void waitClosed() throws Exception
    {
       IDE().EDITOR.waitTabNotPresent("Welcome");
    }
-   
-   
-   
-   
+
 }

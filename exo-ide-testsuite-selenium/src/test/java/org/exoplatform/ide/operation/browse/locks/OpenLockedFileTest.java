@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+import java.util.Map;
+import java.util.Set;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -28,21 +30,15 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.Cookie;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Check, that can open locked file only in read-only mode.
  * 
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Sep 21, 2010 $
- *
+ * 
  */
 public class OpenLockedFileTest extends BaseTest
 {
@@ -83,7 +79,7 @@ public class OpenLockedFileTest extends BaseTest
    @Test
    public void testOpenLockedFile() throws Exception
    {
-     // step 1 open and lock file. Check state of the file
+      // step 1 open and lock file. Check state of the file
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
@@ -91,24 +87,26 @@ public class OpenLockedFileTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
-      IDE.LOCK_FILE.isUnLockCommandActive();
+      IDE.LOCK_FILE.waitUnLockCommandActive();
 
-      //step 2 delete lock Cookies and check states buttons and files after delete
+      // step 2 delete lock Cookies and check states buttons and files after
+      // delete
       deleteLockTokensCookies();
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.LOCK_FILE.isLockCommandNotActive();
+      IDE.EDITOR.selectTab("File opened in read only mode. Use SaveAs command.");
+      IDE.EDITOR.waitActiveFile();
+      IDE.LOCK_FILE.waitLockCommandNotActive();
       IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
       IDE.MENU.clickOnLockLayer();
-      IDE.LOCK_FILE.isLockIconOnTabView(1);
-      assertTrue(IDE.LOCK_FILE.isLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME));
+      IDE.LOCK_FILE.waitLockIconOnTabView(1);
+      IDE.LOCK_FILE.waitLockIconViewOnFileInProjecrExplorer(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
    }
 
    private void deleteLockTokensCookies()

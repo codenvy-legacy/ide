@@ -20,14 +20,14 @@ package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URLEncoder;
 
 /**
  * Created by The eXo Platform SAS.

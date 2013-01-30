@@ -1,13 +1,13 @@
 package org.exoplatform.ide.operation.paas;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+import java.util.ResourceBundle;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.operation.autocompletion.jsp.JspTagsTest;
 import org.junit.Test;
-
-import java.util.ResourceBundle;
 
 public class CloudBeesZipWithWizard extends BaseTest
 {

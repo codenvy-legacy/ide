@@ -78,6 +78,7 @@ public class ShowKeyboardShortcutsTest extends BaseTest
       IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.waitOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.LOADER.waitClosed();
       closeCustomizeHotkeyForm();
 
       driver.navigate().refresh();
@@ -103,7 +104,6 @@ public class ShowKeyboardShortcutsTest extends BaseTest
 
    private void closeCustomizeHotkeyForm() throws Exception, InterruptedException
    {
-
       IDE.PREFERENCES.waitPreferencesOpen();
       IDE.PREFERENCES.clickOnCloseFormBtn();
       IDE.PREFERENCES.waitPreferencesClose();

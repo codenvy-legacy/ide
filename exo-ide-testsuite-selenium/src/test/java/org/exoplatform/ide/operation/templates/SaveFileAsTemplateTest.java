@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -27,43 +33,39 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
-import static org.junit.Assert.*;
-
 /**
  * Created by The eXo Platform SAS.
- *   
+ * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class SaveFileAsTemplateTest extends BaseTest
 {
    private final static String PROJECT = SaveFileAsTemplateTest.class.getSimpleName();
-   
+
    private static final String FILE_NAME = "RestServiceTemplate.groovy";
 
    private static final String REST_SERVICE_TEMPLATE_NAME = "test REST template";
-   
+
    private static final String REST_SERVICE_TEMPLATE_DESCRIPTION = "test REST Service template description";
-   
+
    private static final String REST_SERVICE_FILE_NAME = "abc";
-   
+
    private static final String TEXT = "// test groovy file template";
-   
+
    /**
     * File, where users templates are stored.
     */
    public static final String FILE_TEMPLATES_STORE = ENTRY_POINT_URL + WS_NAME_2 + "/ide-home/templates/fileTemplates";
-   
+
    @BeforeClass
    public static void setUp()
    {
       try
       {
-         final String filePath ="src/test/resources/org/exoplatform/ide/operation/templates/RestServiceTemplate.groovy";
+         final String filePath =
+            "src/test/resources/org/exoplatform/ide/operation/templates/RestServiceTemplate.groovy";
          Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
          Link link = project.get(Link.REL_CREATE_FILE);
          VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
@@ -72,7 +74,7 @@ public class SaveFileAsTemplateTest extends BaseTest
       {
       }
    }
-   
+
    @AfterClass
    public static void tearDown()
    {
@@ -92,68 +94,72 @@ public class SaveFileAsTemplateTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      
-      //-------- 1 ----------
-      //open file with text
+
+      // -------- 1 ----------
+      // open file with text
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      
-      //--------- 2 --------
-      //Click on "File->Save As Template" top menu item,
-      //set "Name" field on "test REST template", 
-      //"Description" field on "test REST Service template description", and then click on "Save" button.
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE));
+      IDE.EDITOR.waitActiveFile();
+
+      // --------- 2 --------
+      // Click on "File->Save As Template" top menu item,
+      // set "Name" field on "test REST template",
+      // "Description" field on "test REST Service template description", and
+      // then click on "Save" button.
+      IDE.MENU.waitCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
       IDE.SAVE_AS_TEMPLATE.waitOpened();
       // check "Save file as template" dialog window
-      assertTrue(IDE.SAVE_AS_TEMPLATE.isOpened());
-      
-      //check save button disabled
-      assertFalse(IDE.SAVE_AS_TEMPLATE.isSaveButtonEnabled());
-      
-      //type some text to name field
+      IDE.SAVE_AS_TEMPLATE.isOpened();
+
+      // check save button disabled
+      IDE.SAVE_AS_TEMPLATE.waitSaveButtonDisabled();
+
+      // type some text to name field
       IDE.SAVE_AS_TEMPLATE.setName("a");
-      assertTrue(IDE.SAVE_AS_TEMPLATE.isSaveButtonEnabled());
-      
-      //remove text from name field
+      IDE.SAVE_AS_TEMPLATE.waitSaveButtonEnabled();
+
+      // remove text from name field
       IDE.SAVE_AS_TEMPLATE.setName("");
-      assertFalse(IDE.SAVE_AS_TEMPLATE.isSaveButtonEnabled());
-      
+      IDE.SAVE_AS_TEMPLATE.waitSaveButtonDisabled();
+
       IDE.SAVE_AS_TEMPLATE.setName(REST_SERVICE_TEMPLATE_NAME);
       IDE.SAVE_AS_TEMPLATE.setDescription(REST_SERVICE_TEMPLATE_DESCRIPTION);
       IDE.SAVE_AS_TEMPLATE.clickSaveButton();
       IDE.SAVE_AS_TEMPLATE.waitClosed();
-      
+
       IDE.INFORMATION_DIALOG.waitOpened("Template created successfully!");
       IDE.INFORMATION_DIALOG.clickOk();
       IDE.INFORMATION_DIALOG.waitClosed();
-      
-      //------------ 3 ----------
-      //Click on "New->From Template" button and then click on "test groovy template" item.
+
+      // ------------ 3 ----------
+      // Click on "New->From Template" button and then click on
+      // "test groovy template" item.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
-      
+
       // check "Create file" dialog window
-      assertTrue(IDE.TEMPLATES.isOpened());
+      IDE.TEMPLATES.waitOpenedDialog();
       IDE.TEMPLATES.selectTemplate(REST_SERVICE_TEMPLATE_NAME);
       IDE.TEMPLATES.waitForNameFieldEnabled();
-      
-      //------------ 4 ----------
-      //Change "File Name.groovy" field text on "Test Groovy File.groovy" name, click on "Create" button.
+
+      // ------------ 4 ----------
+      // Change "File Name.groovy" field text on "Test Groovy File.groovy"
+      // name, click on "Create" button.
       IDE.TEMPLATES.setFileName(REST_SERVICE_FILE_NAME);
-      //click Create button
+      // click Create button
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
       IDE.EDITOR.waitTabPresent(2);
-      //there should be new tab with title "Test Groovy File.groovy",
-      //first line "// test groovy file template" in content and with "Groovy" 
-      //highlighting opened in the Content Panel.
+      // there should be new tab with title "Test Groovy File.groovy",
+      // first line "// test groovy file template" in content and with
+      // "Groovy"
+      // highlighting opened in the Content Panel.
       assertEquals(REST_SERVICE_FILE_NAME + " *", IDE.EDITOR.getTabTitle(2));
       IDE.EDITOR.selectTab(1);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).startsWith(TEXT));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().startsWith(TEXT));
       IDE.EDITOR.forcedClosureFile(1);
       IDE.EDITOR.forcedClosureFile(1);
    }
-   
+
 }

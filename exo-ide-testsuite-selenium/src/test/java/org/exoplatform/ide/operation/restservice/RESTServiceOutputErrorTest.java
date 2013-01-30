@@ -21,6 +21,9 @@ package org.exoplatform.ide.operation.restservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -31,13 +34,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class RESTServiceOutputErrorTest extends BaseTest
 {
@@ -71,9 +71,9 @@ public class RESTServiceOutputErrorTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
 
       IDE.WARNING_DIALOG.waitOpened();
@@ -83,7 +83,7 @@ public class RESTServiceOutputErrorTest extends BaseTest
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
       IDE.OUTPUT.waitForMessageShow(1, 5);
 
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.LAUNCH_REST_SERVICE, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.LAUNCH_REST_SERVICE);
       IDE.REST_SERVICE.launchRestService();
 
       assertTrue(IDE.REST_SERVICE.isPathPresent("/outputError/Inner/{first}/{second}/node/{paramList: .+}"));

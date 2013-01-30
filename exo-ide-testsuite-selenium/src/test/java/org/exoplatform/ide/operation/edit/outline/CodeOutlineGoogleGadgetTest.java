@@ -35,8 +35,10 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -47,14 +49,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class CodeOutlineGoogleGadgetTest extends BaseTest
 {
@@ -78,7 +78,6 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       }
    }
 
-   //IDE-173 : Google Gadget Code Outline
    @Test
    public void testCodeOutlineGoogleGadget() throws Exception
    {
@@ -88,41 +87,43 @@ public class CodeOutlineGoogleGadgetTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-
+      IDE.EDITOR.waitActiveFile();
+      //TODO Pause for build outline tree
+      //after implementation method for check ready state, should be remove
+      Thread.sleep(4000);
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
-Thread.sleep(10000);
       checkTreeCorrectlyCreated();
    }
 
    private void checkTreeCorrectlyCreated() throws Exception
    {
-      //check first node after open
+      IDE.GOTOLINE.goToLine(1);
+      // check first node after open
       assertEquals("Module", IDE.OUTLINE.getItemLabel(1));
-      //expand first node and check
+      // expand first node and check
 
       IDE.OUTLINE.expandSelectItem(1);
 
       assertEquals("ModulePrefs", IDE.OUTLINE.getItemLabel(2));
       assertEquals("Content", IDE.OUTLINE.getItemLabel(3));
-      //expand third node and check 
+      // expand third node and check
       IDE.OUTLINE.selectRow(3);
       IDE.OUTLINE.expandSelectItem(3);
       assertEquals("CDATA", IDE.OUTLINE.getItemLabel(4));
 
-      //expand 4 node and check 
+      // expand 4 node and check
       IDE.OUTLINE.selectRow(4);
       IDE.OUTLINE.expandSelectItem(4);
       assertEquals("html", IDE.OUTLINE.getItemLabel(5));
 
-      //expand 5 node and check
+      // expand 5 node and check
       IDE.OUTLINE.selectRow(5);
       IDE.OUTLINE.expandSelectItem(5);
       assertEquals("head", IDE.OUTLINE.getItemLabel(6));
       assertEquals("body", IDE.OUTLINE.getItemLabel(7));
 
-      //expand 5 node and check
+      // expand 5 node and check
       IDE.OUTLINE.selectRow(6);
       IDE.OUTLINE.expandSelectItem(6);
       assertEquals("meta", IDE.OUTLINE.getItemLabel(7));
@@ -132,12 +133,12 @@ Thread.sleep(10000);
       assertEquals("style", IDE.OUTLINE.getItemLabel(11));
       assertEquals("body", IDE.OUTLINE.getItemLabel(12));
 
-      //expand 10 (script) node and check
+      // expand 10 (script) node and check
       IDE.OUTLINE.selectRow(10);
       IDE.OUTLINE.expandSelectItem(10);
       assertEquals("a", IDE.OUTLINE.getItemLabel(11));
 
-      //expand 13 (body) node and check
+      // expand 13 (body) node and check
       IDE.OUTLINE.selectRow(13);
       IDE.OUTLINE.expandSelectItem(13);
       assertEquals("table", IDE.OUTLINE.getItemLabel(14));
@@ -146,11 +147,11 @@ Thread.sleep(10000);
       assertEquals("style", IDE.OUTLINE.getItemLabel(17));
       assertEquals("script", IDE.OUTLINE.getItemLabel(18));
 
-      //go to line and check item in Outline tree
+      // go to line and check item in Outline tree
       IDE.GOTOLINE.goToLine(41);
       assertEquals("b", IDE.OUTLINE.getItemLabel(19));
 
-      //go to line and check item in Outline tree
+      // go to line and check item in Outline tree
       IDE.GOTOLINE.goToLine(41);
       assertEquals("b", IDE.OUTLINE.getItemLabel(19));
 
@@ -160,10 +161,10 @@ Thread.sleep(10000);
       assertEquals("tbody", IDE.OUTLINE.getItemLabel(16));
 
       IDE.OUTLINE.selectRow(15);
-      assertEquals("22 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("22 : 1");
 
       IDE.OUTLINE.selectRow(16);
-      assertEquals("25 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("25 : 1");
 
       IDE.GOTOLINE.goToLine(23);
       assertEquals("tr", IDE.OUTLINE.getItemLabel(16));

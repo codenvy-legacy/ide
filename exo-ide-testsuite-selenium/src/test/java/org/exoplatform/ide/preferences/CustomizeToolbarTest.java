@@ -22,17 +22,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
@@ -65,16 +61,18 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.selectNumElementOnCommandListbar(7);
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnCommandlistbarByName("New *");
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.deleteClick();
       IDE.LOADER.waitClosed();
       IDE.PREFERENCES.clickOnCloseFormBtn();
       IDE.PREFERENCES.waitPreferencesClose();
       IDE.PROJECT.EXPLORER.waitOpened();
       openCustomizeHotkeyForm();
-      assertTrue(IDE.CUSTOMIZE_TOOLBAR.isToolbarListPresent("New * [Popup]"));
 
-      //step 2  (delete "New * [Popup]" element on Toolbar? press OK BUTTON and check deleting element)
+      IDE.CUSTOMIZE_TOOLBAR.waitToolbarElementIsPresent("New * [Popup]");
+
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.deleteClick();
       IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.okClick();
@@ -82,7 +80,8 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.PREFERENCES.clickOnCloseFormBtn();
       IDE.PREFERENCES.waitPreferencesClose();
       openCustomizeHotkeyForm();
-      assertFalse(IDE.CUSTOMIZE_TOOLBAR.isToolbarListPresent("New * [Popup]"));
+
+      IDE.CUSTOMIZE_TOOLBAR.waitToolbarElementIsNotPresent("New * [Popup]");
 
       //step 3  (restore default settings and check them)
       IDE.CUSTOMIZE_TOOLBAR.defaultClick();
@@ -90,34 +89,43 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.CUSTOMIZE_TOOLBAR.isDefaultCommandlbarList();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultToolbarList();
       IDE.CUSTOMIZE_TOOLBAR.okClick();
-      
 
       //step 4  (move first element down, check element in new position. Reopen Customize Toolbar form, and check element in new position )
-      //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.moveDownClick();
       IDE.LOADER.waitClosed();
-      assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "New * [Popup]");
+
+      IDE.CUSTOMIZE_TOOLBAR.waitToolbarElementPresentInPosition(3, "New * [Popup]");
+
       IDE.CUSTOMIZE_TOOLBAR.okClick();
-      assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "New * [Popup]");
+      IDE.LOADER.waitClosed();
+
+      IDE.CUSTOMIZE_TOOLBAR.waitToolbarElementPresentInPosition(3, "New * [Popup]");
 
       //step 4  (Remove element which was moved Check next placement element after reopen form. (should be "Save" instead of "New * [Popup]"))
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("New *");
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.deleteClick();
       IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.okClick();
       IDE.CUSTOMIZE_TOOLBAR.waitClosed();
 
-      //    IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.CUSTOMIZE_TOOLBAR);
       IDE.CUSTOMIZE_TOOLBAR.waitOpened();
-      assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(3), "Save");
+
+      IDE.CUSTOMIZE_TOOLBAR.waitToolbarElementPresentInPosition(3, "Save");
+      IDE.LOADER.waitClosed();
 
       //step 5 (Click on "Save" element, add delimiter, check new delimiter on toolbar. Move second delimiter on one position down. And check his position)
       IDE.CUSTOMIZE_TOOLBAR.selectElementOnToolbarByName("Save");
+      IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.delimiterClick();
       IDE.LOADER.waitClosed();
-      assertEquals(IDE.CUSTOMIZE_TOOLBAR.isElementNumPositionPresent(4), "Delimiter");
+
+      IDE.CUSTOMIZE_TOOLBAR.waitToolbarElementPresentInPosition(4, "Delimiter");
+
       IDE.PREFERENCES.clickOnCloseFormBtn();
       IDE.PREFERENCES.waitPreferencesClose();
 
@@ -127,7 +135,7 @@ public class CustomizeToolbarTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultCommandlbarList();
       IDE.CUSTOMIZE_TOOLBAR.isDefaultToolbarList();
-      
+
    }
 
    private void openCustomizeHotkeyForm() throws Exception, InterruptedException

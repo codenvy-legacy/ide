@@ -18,16 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -44,13 +41,13 @@ public class Menu extends AbstractTestModule
    {
       String LOCK_LAYER_CLASS = "exo-lockLayer";
 
-      String TOP_MENU_ITEM_LOCATOR = "//td[@class='exo-menuBarItem' and text()='%s']";
+      String TOP_MENU_ITEM_LOCATOR = "//div[@class='exo-menuBar']//td[@class='exo-menuBarItem' and text()='%s']/.";
 
       String TOP_MENU_ITEM_DISABLED_LOCATOR = "//td[@class='exo-menuBarItemDisabled' and text()='%s']";
 
-      String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField')]//nobr[text()='%s']";
+      String MENU_ITEM_LOCATOR = "//td[contains(@class,'exo-popupMenuTitleField')]//nobr[text()='%s']/..";
 
-      String POPUP_SELECTOR = "div.exo-popupMenuMain";
+      String POPUP_SELECTOR = "//div[@class='exo-popupMenuMain']/table/tbody/tr[@item-enabled][last()]";
 
       String MENU_ITEM_ROW_LOCATOR = "//table[@class='exo-popupMenuTable']//tr[contains(., '%s')]";
 
@@ -68,16 +65,12 @@ public class Menu extends AbstractTestModule
     */
    public void runCommand(String topMenuName, String commandName) throws Exception
    {
+      waitCommandEnabled(topMenuName, commandName);
       //Call top menu command:
       WebElement topMenuItem =
          driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
-      waitForTopMenuPresent(topMenuItem);
-      IDE().LOADER.waitClosed();
       topMenuItem.click();
       waitMenuPopUp();
-
-      //for redraw all menus on staging
-      Thread.sleep(200);
       //Call command from menu popup:
       WebElement menuItem = driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName)));
       menuItem.click();
@@ -95,8 +88,6 @@ public class Menu extends AbstractTestModule
       //Call top menu command:
       WebElement topMenuItem =
          driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
-      waitForTopMenuPresent(topMenuItem);
-      IDE().LOADER.waitClosed();
       topMenuItem.click();
       waitMenuPopUp();
    }
@@ -111,6 +102,7 @@ public class Menu extends AbstractTestModule
     */
    public void runCommand(String menuName, String commandName, String subCommandName) throws Exception
    {
+      waitSubCommandEnabled(menuName, commandName, subCommandName);
       //Call top menu command:
       WebElement topMenuItem = driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, menuName)));
       topMenuItem.click();
@@ -129,32 +121,75 @@ public class Menu extends AbstractTestModule
    }
 
    /**
-    * Returns visibility state of the menu command.
+    * Wait visibility state of the menu command.
     * 
     * @param topMenuName mane of menu
     * @param commandName command name
-    * @return {@link Boolean} command visibility state
     * @throws Exception
     */
-   public boolean isCommandVisible(String topMenuName, String commandName) throws Exception
-   {
-      WebElement topMenuItem =
-         driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
-      topMenuItem.click();
-      waitMenuPopUp();
 
-      try
+   public void waitCommandVisible(final String topMenuName, final String commandName)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         return driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName))) != null;
-      }
-      catch (NoSuchElementException e)
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            WebElement topMenuItem =
+               driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+            topMenuItem.click();
+            waitMenuPopUp();
+
+            try
+            {
+               return driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName))) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+            finally
+            {
+               topMenuItem.click();
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait visibility state of the menu command.
+    * 
+    * @param topMenuName mane of menu
+    * @param commandName command name
+    * @throws Exception
+    */
+
+   public void waitCommandInvisible(final String topMenuName, final String commandName)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         return false;
-      }
-      finally
-      {
-         lockLayer.click();
-      }
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            WebElement topMenuItem =
+               driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+            topMenuItem.click();
+            waitMenuPopUp();
+
+            try
+            {
+               return driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName))) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+            finally
+            {
+               topMenuItem.click();
+            }
+         }
+      });
    }
 
    /**
@@ -162,23 +197,8 @@ public class Menu extends AbstractTestModule
     */
    protected void waitMenuPopUp()
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver driver)
-         {
-            try
-            {
-               return driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)) != null
-                  && driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR)).isDisplayed();
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 10).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.POPUP_SELECTOR)));
    }
 
    /**
@@ -186,55 +206,174 @@ public class Menu extends AbstractTestModule
     */
    protected void waitMenuPopUpClosed()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
-      {
+      new WebDriverWait(driver(), 10).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .xpath(Locators.POPUP_SELECTOR)));
+   }
 
+   /**
+    * Wait for enabled state of the menu command. 
+    * 
+    * @param topMenuName top menu command name
+    * @param commandName command name
+    */
+   public void waitCommandEnabled(final String topMenuName, final String commandName)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
          @Override
          public Boolean apply(WebDriver driver)
          {
+            WebElement topMenuItem =
+               driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+            topMenuItem.click();
+            waitMenuPopUp();
             try
             {
-               WebElement menuPopup = driver.findElement(By.cssSelector(Locators.POPUP_SELECTOR));
-
-               return !menuPopup.isDisplayed();
+               WebElement command =
+                  driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_ROW_LOCATOR, commandName)));
+               return Boolean.parseBoolean(command.getAttribute(Locators.ENABLED_ATTRIBUTE));
             }
             catch (NoSuchElementException e)
             {
-               return true;
+               return false;
+            }
+            finally
+            {
+               topMenuItem.click();
             }
          }
       });
    }
 
    /**
-    * Returns enabled state of the menu command. 
+    * Wait for disabled state of the menu command. 
     * 
     * @param topMenuName top menu command name
     * @param commandName command name
-    * @return {@link Boolean} enabled state of the menu command
-    * @throws Exception
     */
-   public boolean isCommandEnabled(String topMenuName, String commandName) throws Exception
+   public void waitCommandDisabled(final String topMenuName, final String commandName)
    {
-      WebElement topMenuItem =
-         driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
-      topMenuItem.click();
-      waitMenuPopUp();
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            WebElement topMenuItem =
+               driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, topMenuName)));
+            topMenuItem.click();
+            waitMenuPopUp();
+            try
+            {
+               WebElement command =
+                  driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_ROW_LOCATOR, commandName)));
+               return !(Boolean.parseBoolean(command.getAttribute(Locators.ENABLED_ATTRIBUTE)));
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+            finally
+            {
+               topMenuItem.click();
+            }
+         }
+      });
+   }
 
-      try
+   /**
+    * Wait for disabled state of the menu sub command. 
+    * 
+    * @param topMenuName top menu command name
+    * @param commandName command name
+    */
+   public void waitSubCommandDisabled(final String menuName, final String commandName, final String subCommandName)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         WebElement command =
-            driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_ROW_LOCATOR, commandName)));
-         return Boolean.parseBoolean(command.getAttribute(Locators.ENABLED_ATTRIBUTE));
-      }
-      catch (NoSuchElementException e)
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            WebElement topMenuItem =
+               driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, menuName)));
+            topMenuItem.click();
+            waitMenuPopUp();
+            //Call command from menu popup:
+            WebElement menuItem =
+               driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName)));
+            menuItem.click();
+            try
+            {
+               WebElement command =
+                  driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_ROW_LOCATOR, subCommandName)));
+               return !(Boolean.parseBoolean(command.getAttribute(Locators.ENABLED_ATTRIBUTE)));
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+            finally
+            {
+               try
+               {
+                  Thread.sleep(10000);
+               }
+               catch (InterruptedException e)
+               {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+               }
+               topMenuItem.click();
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait for disabled state of the menu sub command. 
+    * 
+    * @param topMenuName top menu command name
+    * @param commandName command name
+    */
+   public void waitSubCommandEnabled(final String menuName, final String commandName, final String subCommandName)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         return false;
-      }
-      finally
-      {
-         lockLayer.click();
-      }
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            WebElement topMenuItem =
+               driver().findElement(By.xpath(String.format(Locators.TOP_MENU_ITEM_LOCATOR, menuName)));
+            topMenuItem.click();
+            waitMenuPopUp();
+            //Call command from menu popup:
+            WebElement menuItem =
+               driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, commandName)));
+            menuItem.click();
+            try
+            {
+               WebElement command =
+                  driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_ROW_LOCATOR, subCommandName)));
+               return (Boolean.parseBoolean(command.getAttribute(Locators.ENABLED_ATTRIBUTE)));
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+            finally
+            {
+               try
+               {
+                  Thread.sleep(10000);
+               }
+               catch (InterruptedException e)
+               {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+               }
+               topMenuItem.click();
+            }
+         }
+      });
    }
 
    /**
@@ -281,7 +420,7 @@ public class Menu extends AbstractTestModule
     */
    protected void waitForMenuItemPresent(final String itemName) throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
@@ -317,7 +456,7 @@ public class Menu extends AbstractTestModule
       }
       finally
       {
-         lockLayer.click();
+         topMenuItem.click();
          waitMenuPopUpClosed();
       }
    }
@@ -338,14 +477,15 @@ public class Menu extends AbstractTestModule
     */
    public void waitForTopMenuPresent(final WebElement menuName) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
          {
             try
             {
-               return menuName != null && menuName.isDisplayed();
+               return menuName != null && menuName.isDisplayed()
+                  && menuName.getAttribute("class").contains("exo-menuBarItem");
             }
             catch (NoSuchElementException e)
             {
@@ -354,6 +494,18 @@ public class Menu extends AbstractTestModule
          }
       });
 
+   }
+
+   /**
+    * Click on item  in 'New' menu 
+    * 
+    * @param menuName
+    */
+   public void clickOnNewMenuItem(String menuName)
+   {
+      WebElement menuItem = driver().findElement(By.xpath(String.format(Locators.MENU_ITEM_LOCATOR, menuName)));
+      menuItem.click();
+      waitMenuPopUpClosed();
    }
 
 }

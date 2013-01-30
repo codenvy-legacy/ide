@@ -32,6 +32,8 @@ public interface MenuCommands
 
       String NEW = "New";
 
+      String PACKAGE = "Package";
+
       String XML_FILE = "XML";
 
       String HTML_FILE = "HTML";
@@ -114,7 +116,11 @@ public interface MenuCommands
 
       public static final String RUN_APPLICATION = "Run Application";
 
-      public static final String STOP_APPLICATION = "STOP Application";
+      public static final String STOP_APPLICATION = "Stop Application";
+
+      public static final String UPDATE_APPLICATION = "Update Application";
+
+      public static final String SHOW_LOGS = "Show Logs...";
 
    }
 
@@ -229,6 +235,11 @@ public interface MenuCommands
 
       public static final String LUCK_UNLOCK_FILE = "Lock " + "\\" + " Unlock File";
 
+      public static final String SOURCE = "Source";
+
+      public static final String REFACTOR = "Refactor";
+
+      public static final String RENAME = "Rename...";
    }
 
    public interface CodeEditors
@@ -249,6 +260,15 @@ public interface MenuCommands
       public static final String SHOW_KEYBOARD_SHORTCUTS = "Show Keyboard Shortcuts...";
 
       String AVAILABLE_DEPENDENCIES = "Show Available Dependencies...";
+   }
+
+   public interface Share
+   {
+      public static final String SHARE = "Share";
+
+      public static final String INVITE_DEVELOPERS = "Invite Developers...";
+
+      public static final String INVITE_GITHUB_COLLABORATORS = "Invite GitHub Collaborators...";
    }
 
    public interface Window
@@ -336,6 +356,10 @@ public interface MenuCommands
       String CONFIGURE_CLASS_PATH = "Configure Classpath...";
 
       String BUILD_PROJECT = "Build";
+
+      String BUILD_AND_PUBLISH_PROJECT = "Build & Publish";
+
+      String UPDATE_DEPENDENCY = "Update Dependency";
    }
 
    public interface PaaS

@@ -25,13 +25,10 @@ import static org.junit.Assert.fail;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -75,18 +72,6 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       }
    }
 
-   @After
-   public void refreshBrowser()
-   {
-      try
-      {
-        driver.navigate().refresh();
-      }
-      catch (Exception e)
-      {
-      }
-   }
-
    //http://jira.exoplatform.com/browse/IDE-412
    @Test
    public void testClosingAndSaveAsFile() throws Exception
@@ -123,15 +108,9 @@ public class ClosingAndSaveAsFileTest extends BaseTest
       IDE.EDITOR.forcedClosureFile(1);
    }
 
-  @Test
+   @Test
    public void testSaveAsFileAfterTryingToCloseNewFile() throws Exception
    {
-      if (!IDE.PROJECT.EXPLORER.isItemPresent(PROJECT)) //project already open
-      {
-         IDE.PROJECT.EXPLORER.waitOpened();
-         IDE.PROJECT.OPEN.openProject(PROJECT);
-         IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      }
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);

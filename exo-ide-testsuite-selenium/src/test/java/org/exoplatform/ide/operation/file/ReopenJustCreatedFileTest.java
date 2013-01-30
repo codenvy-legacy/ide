@@ -35,58 +35,50 @@ import org.junit.Test;
  * 
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
-public class ReopenJustCreatedFileTest extends BaseTest
-{
-   private static final String PROJECT = ReopenJustCreatedFileTest.class.getSimpleName();
+public class ReopenJustCreatedFileTest extends BaseTest {
+	private static final String PROJECT = ReopenJustCreatedFileTest.class
+			.getSimpleName();
 
-   private static final String FILE_NAME = "file-" + ReopenJustCreatedFileTest.class.getSimpleName();
+	private static final String FILE_NAME = "file-"
+			+ ReopenJustCreatedFileTest.class.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (Exception e)
-      {
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (Exception e) {
+		}
+	}
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (Exception e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (Exception e) {
+		}
+	}
 
-   @Test
-   public void testReopenJustCreatedFile() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+	@Test
+	public void testReopenJustCreatedFile() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
-      assertTrue(IDE.EDITOR.isFileContentChanged("Untitled file.html"));
+		IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+		IDE.EDITOR.waitActiveFile();
+		IDE.EDITOR.waitFileContentModificationMark("Untitled file.html");
 
-      IDE.EDITOR.saveAs(1, FILE_NAME);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.closeFile(1);
-      IDE.EDITOR.waitTabNotPresent(1);
+		IDE.EDITOR.saveAs(1, FILE_NAME);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.closeFile(1);
+		IDE.EDITOR.waitTabNotPresent(1);
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
 
-      assertEquals(FILE_NAME, IDE.EDITOR.getTabTitle(1));
-   }
+		assertEquals(FILE_NAME, IDE.EDITOR.getTabTitle(1));
+	}
 
 }

@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -55,6 +56,8 @@ public class Preview extends AbstractTestModule
 
    private static final String GADGET_PREVIEW_TITLE = "gadgets-gadget-title";
 
+   private static final String OPERATION_FORM = "//div[@id='operation']/ancestor::div[contains(@style, 'height: 300')]";
+
    @FindBy(xpath = HTML_PREVIEW)
    private WebElement htmlPreview;
 
@@ -76,6 +79,9 @@ public class Preview extends AbstractTestModule
    @FindBy(tagName = "body")
    private WebElement body;
 
+   @FindBy(xpath = OPERATION_FORM)
+   private WebElement operationForm;
+
    /**
     * Wait for HTML preview view opened.
     * 
@@ -83,7 +89,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitHtmlPreviewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -91,7 +97,8 @@ public class Preview extends AbstractTestModule
          {
             try
             {
-               return (htmlPreview != null && htmlPreview.isDisplayed());
+               return (operationForm != null && operationForm.isDisplayed() && htmlPreview != null && htmlPreview
+                  .isDisplayed());
             }
             catch (Exception e)
             {
@@ -108,7 +115,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitHtmlPreviewClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -133,7 +140,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitGadgetPreviewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 15).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -141,7 +148,8 @@ public class Preview extends AbstractTestModule
          {
             try
             {
-               return (gadgetPreview != null && gadgetPreview.isDisplayed());
+               return (operationForm != null && operationForm.isDisplayed() && gadgetPreview != null && gadgetPreview
+                  .isDisplayed());
             }
             catch (Exception e)
             {
@@ -158,7 +166,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitGadgetPreviewClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -183,7 +191,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitGtmplPreviewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -191,7 +199,8 @@ public class Preview extends AbstractTestModule
          {
             try
             {
-               return (gtmplPreview != null && gtmplPreview.isDisplayed());
+               return (operationForm != null && operationForm.isDisplayed() && gtmplPreview != null && gtmplPreview
+                  .isDisplayed());
             }
             catch (Exception e)
             {
@@ -208,7 +217,7 @@ public class Preview extends AbstractTestModule
     */
    public void waitGtmplPreviewClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -228,7 +237,7 @@ public class Preview extends AbstractTestModule
 
    public void waitForCloseButton()
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -256,7 +265,8 @@ public class Preview extends AbstractTestModule
    {
       try
       {
-         return htmlPreview != null && htmlPreview.isDisplayed();
+         return operationForm != null && operationForm.isDisplayed() && htmlPreview != null
+            && htmlPreview.isDisplayed();
       }
       catch (NoSuchElementException e)
       {
@@ -273,7 +283,8 @@ public class Preview extends AbstractTestModule
    {
       try
       {
-         return gadgetPreview != null && gadgetPreview.isDisplayed();
+         return operationForm != null && operationForm.isDisplayed() && gadgetPreview != null
+            && gadgetPreview.isDisplayed();
       }
       catch (NoSuchElementException e)
       {
@@ -290,7 +301,8 @@ public class Preview extends AbstractTestModule
    {
       try
       {
-         return gtmplPreview != null && gtmplPreview.isDisplayed();
+         return operationForm != null && operationForm.isDisplayed() && gtmplPreview != null
+            && gtmplPreview.isDisplayed();
       }
       catch (NoSuchElementException e)
       {
@@ -372,11 +384,16 @@ public class Preview extends AbstractTestModule
       IDE().PERSPECTIVE.getCloseViewButton(VIEW_TITLE).click();
    }
 
-   public boolean isTablePresent(final int row, final int cell)
+   /**
+    * wait is table in preview
+    * 
+    * @param row
+    * @param cell
+    * @return
+    */
+   public void waitTablePresent(int row, int cell)
    {
-      WebElement table = driver().findElement(By.xpath(String.format(PREVIEW_TABLE, row, cell)));
-      return table != null && table.isDisplayed();
-
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         PREVIEW_TABLE, row, cell))));
    }
-
 }

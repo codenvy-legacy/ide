@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,77 +30,67 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class RESTServiceRuntimeErrorTest extends BaseTest
-{
+public class RESTServiceRuntimeErrorTest extends BaseTest {
 
-   private static final String PROJECT = "RuntimeError";
+	private static final String PROJECT = "RuntimeError";
 
-   private static final String FILE_NAME = "RESTServiceRuntimeErrorTest.grs";
+	private static final String FILE_NAME = "RESTServiceRuntimeErrorTest.grs";
 
-   @Before
-   public void beforeTest()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@Before
+	public void beforeTest() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testRunTimeError() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testRunTimeError() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+		IDE.LOADER.waitClosed();
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
-      IDE.EDITOR.saveAs(1, FILE_NAME);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.TOOLBAR
+				.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+		IDE.EDITOR.waitActiveFile();
+		IDE.EDITOR.saveAs(1, FILE_NAME);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      IDE.EDITOR.moveCursorDown(0, 10);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, " / 0");
-      IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+		IDE.EDITOR.moveCursorDown(10);
+		IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
+		IDE.EDITOR.typeTextIntoEditor(" / 0");
+		IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
+		IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+		IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
 
-      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
+		IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
 
-      IDE.REST_SERVICE.launchRestService();
-      IDE.REST_SERVICE.selectPath("/helloworld/{name}");
-      IDE.REST_SERVICE.setMethodFieldValue("GET");
-      IDE.REST_SERVICE.sendRequest();
+		IDE.REST_SERVICE.launchRestService();
+		IDE.REST_SERVICE.selectPath("/helloworld/{name}");
+		IDE.REST_SERVICE.setMethodFieldValue("GET");
+		IDE.REST_SERVICE.sendRequest();
 
-      IDE.OUTPUT.waitForMessageShow(2, 5);
+		IDE.OUTPUT.waitForMessageShow(2, 5);
 
-      String mess = IDE.OUTPUT.getOutputMessage(2);
-      assertTrue(mess.startsWith("[ERROR]"));
-      assertTrue(mess.contains("500 Internal Server Error"));
-   }
+		String mess = IDE.OUTPUT.getOutputMessage(2);
+		assertTrue(mess.startsWith("[ERROR]"));
+		assertTrue(mess.contains("500 Internal Server Error"));
+	}
 
-   @After
-   public void afterTest() throws Exception
-   {
-      try
-      {
-         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@After
+	public void afterTest() throws Exception {
+		try {
+			IDE.MENU.runCommand(MenuCommands.Run.RUN,
+					MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 }
