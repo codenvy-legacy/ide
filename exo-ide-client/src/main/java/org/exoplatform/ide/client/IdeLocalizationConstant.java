@@ -596,7 +596,7 @@ public interface IdeLocalizationConstant extends Constants
     * 
     **************************************************************************/
 
-   @DefaultStringValue("Server disconnected.<br>Retry?")
+   @DefaultStringValue("Your login session has expired. To fix it try refresh page.")
    @Key("dialog.serverDisconnected")
    String serverDisconnected();
 

@@ -32,7 +32,7 @@
 		</dependency>
 
       <!-- EDITOR EXTENSIONS -->
-
+      
       <dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-collabeditor</artifactId>
@@ -496,7 +496,21 @@
 								**/preloadIDE.js,
 								**/lib/exo-ide-client*,
 								**/lib/exo-ide-collabeditor*,
-								**/lib/exo-ide-editor-*,
+								**/lib/exo-ide-editor-chromattic*,
+								**/lib/exo-ide-editor-codemirror2*,
+								**/lib/exo-ide-editor-css*,
+								**/lib/exo-ide-editor-gadget*,
+								**/lib/exo-ide-editor-groovy*,
+								**/lib/exo-ide-editor-gtmpl*,
+								**/lib/exo-ide-editor-html*,
+								**/lib/exo-ide-editor-java*,
+								**/lib/exo-ide-editor-javascript*,
+								**/lib/exo-ide-editor-jsp*,
+								**/lib/exo-ide-editor-php*,
+								**/lib/exo-ide-editor-python*,
+								**/lib/exo-ide-editor-ruby*,
+								**/lib/exo-ide-editor-xml*,
+								**/lib/exo-ide-editor-yaml*,
 								**/lib/exo-ide-extension-samples*,
 								**/lib/exo-ide-framework-client*,
 								**/lib/exo-ide-jdt-core*,
