@@ -285,4 +285,111 @@ public class JavaConventions
       return validateIdentifier(name, sourceLevel, complianceLevel);
    }
 
+   /**
+    * Validate the given field name for the given source and compliance levels.
+    * <p>
+    * Syntax of a field name corresponds to VariableDeclaratorId (JLS2 8.3).
+    * For example, <code>"x"</code>.
+    *
+    * @param name            the name of a field
+    * @param sourceLevel     the source level
+    * @param complianceLevel the compliance level
+    * @return a status object with code <code>IStatus.OK</code> if
+    *         the given name is valid as a field name, otherwise a status
+    *         object indicating what is wrong with the name
+    * @since 3.3
+    */
+   public static IStatus validateFieldName(String name, String sourceLevel, String complianceLevel)
+   {
+      return validateIdentifier(name, sourceLevel, complianceLevel);
+   }
+
+   /**
+    * Validate the given Java type name, either simple or qualified, for the given source and compliance levels.
+    *
+    * <p>For example, <code>"java.lang.Object"</code>, or <code>"Object"</code>.</p>
+    *
+    * <p>The source level and compliance level values should be taken from the constant defined inside
+    * {@link JavaCore} class. The constants are named <code>JavaCore#VERSION_1_x</code>, x being set
+    * between '1' and '7'.
+    * </p>
+    *
+    * @param name            the name of a type
+    * @param sourceLevel     the source level
+    * @param complianceLevel the compliance level
+    * @return a status object with code <code>IStatus.OK</code> if
+    *         the given name is valid as a Java type name,
+    *         a status with code <code>IStatus.WARNING</code>
+    *         indicating why the given name is discouraged,
+    *         otherwise a status object indicating what is wrong with
+    *         the name
+    * @see JavaCore#VERSION_1_1
+    * @see JavaCore#VERSION_1_2
+    * @see JavaCore#VERSION_1_3
+    * @see JavaCore#VERSION_1_4
+    * @see JavaCore#VERSION_1_5
+    * @see JavaCore#VERSION_1_6
+    * @see JavaCore#VERSION_1_7
+    * @since 3.3
+    */
+   public static IStatus validateJavaTypeName(String name, String sourceLevel, String complianceLevel)
+   {
+      String convention_type_nullName = "A Java type name must not be null";
+      String convention_type_nameWithBlanks = "A Java type name must not start or end with a blank";
+      String convention_type_dollarName = "By convention, Java type names usually don't contain the $ character";
+      String convention_type_lowercaseName = "By convention, Java type names usually start with an uppercase letter";
+      String convention_type_invalidName = "A type name is not a valid identifier";
+
+      if (name == null)
+      {
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, convention_type_nullName, null);
+      }
+      String trimmed = name.trim();
+      if (!name.equals(trimmed))
+      {
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, convention_type_nameWithBlanks, null);
+      }
+      int index = name.lastIndexOf('.');
+      char[] scannedID;
+      if (index == -1)
+      {
+         // simple name
+         scannedID = scannedIdentifier(name, sourceLevel, complianceLevel);
+      }
+      else
+      {
+         // qualified name
+         String pkg = name.substring(0, index).trim();
+         IStatus status = validatePackageName(pkg, sourceLevel, complianceLevel);
+         if (!status.isOK())
+         {
+            return status;
+         }
+         String type = name.substring(index + 1).trim();
+         scannedID = scannedIdentifier(type, sourceLevel, complianceLevel);
+      }
+
+      if (scannedID != null)
+      {
+//         IStatus status = ResourcesPlugin.getWorkspace().validateName(new String(scannedID), IResource.FILE);
+//         if (!status.isOK())
+//         {
+//            return status;
+//         }
+         if (CharOperation.contains('$', scannedID))
+         {
+            return new Status(IStatus.WARNING, JavaCore.PLUGIN_ID, -1, convention_type_dollarName, null);
+         }
+         if ((scannedID.length > 0 && ScannerHelper.isLowerCase(scannedID[0])))
+         {
+            return new Status(IStatus.WARNING, JavaCore.PLUGIN_ID, -1, convention_type_lowercaseName, null);
+         }
+         return VERIFIED_OK;
+      }
+      else
+      {
+         return new Status(IStatus.ERROR, JavaCore.PLUGIN_ID, -1, convention_type_invalidName, null);
+      }
+   }
+
 }
