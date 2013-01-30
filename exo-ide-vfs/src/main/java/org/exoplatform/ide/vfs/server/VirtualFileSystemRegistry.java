@@ -46,9 +46,9 @@ public class VirtualFileSystemRegistry
       }
    }
 
-   public void unregisterProvider(String vfsId) throws VirtualFileSystemException
+   public boolean unregisterProvider(String vfsId) throws VirtualFileSystemException
    {
-      providers.remove(id(vfsId));
+      return providers.remove(id(vfsId)) != null;
    }
 
    public VirtualFileSystemProvider getProvider(String vfsId) throws VirtualFileSystemException

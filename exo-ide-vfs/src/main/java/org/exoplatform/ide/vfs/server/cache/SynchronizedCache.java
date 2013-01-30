@@ -19,27 +19,19 @@
 package org.exoplatform.ide.vfs.server.cache;
 
 /**
- * Concurrent segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented
- * LRU cache</a>.
+ * Synchronized cache.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see SLRUCache
+ * @see Cache
  */
-public final class SynchronizedSLRUCache<K, V> implements Cache<K, V>
+public final class SynchronizedCache<K, V> implements Cache<K, V>
 {
-   private final SLRUCache<K, V> delegate;
+   private final Cache<K, V> delegate;
 
-   /**
-    * @param protectedSize
-    *    size of protected area.
-    * @param probationarySize
-    *    size of probationary area.
-    */
-   @SuppressWarnings("unchecked")
-   public SynchronizedSLRUCache(int protectedSize, int probationarySize)
+   public SynchronizedCache(Cache<K,V> cache)
    {
-      delegate = new SLRUCache<K, V>(protectedSize, probationarySize);
+      delegate = cache;
    }
 
    @Override
@@ -70,5 +62,11 @@ public final class SynchronizedSLRUCache<K, V> implements Cache<K, V>
    public synchronized void clear()
    {
       delegate.clear();
+   }
+
+   @Override
+   public int size()
+   {
+      return delegate.size();
    }
 }

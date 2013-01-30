@@ -16,25 +16,39 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.cache;
+package org.exoplatform.ide.vfs.impl.fs;
+
+import org.exoplatform.ide.vfs.server.cache.SLRUCache;
 
 /**
- * Cache abstraction.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Cache<K, V>
+public abstract class LoadingValueSLRUCache<K, V> extends SLRUCache<K, V>
 {
-   V get(K key);
+   /**
+    * @param protectedSize
+    *    size of protected area.
+    * @param probationarySize
+    *    size of probationary area.
+    */
+   public LoadingValueSLRUCache(int protectedSize, int probationarySize)
+   {
+      super(protectedSize, probationarySize);
+   }
 
-   V put(K key, V value);
+   @Override
+   public final V get(K key)
+   {
+      V value = super.get(key);
+      if (value != null)
+      {
+         return value;
+      }
+      value = loadValue(key);
+      put(key, value);
+      return value;
+   }
 
-   V remove(K key);
-
-   boolean contains(K key);
-
-   void clear();
-
-   int size();
+   protected abstract V loadValue(K key);
 }

@@ -16,25 +16,30 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.cache;
+package org.exoplatform.ide.vfs.server;
+
+import org.exoplatform.commons.utils.MimeTypeResolver;
 
 /**
- * Cache abstraction.
+ * Resolves media type from file name extension.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Cache<K, V>
+public enum MediaTypes
 {
-   V get(K key);
+   INSTANCE;
 
-   V put(K key, V value);
+   final MimeTypeResolver resolver;
 
-   V remove(K key);
+   private MediaTypes()
+   {
+      resolver = new MimeTypeResolver();
+      resolver.setDefaultMimeType("text/plain");
+   }
 
-   boolean contains(K key);
-
-   void clear();
-
-   int size();
+   public String getMediaType(String filename)
+   {
+      return resolver.getMimeType(filename);
+   }
 }

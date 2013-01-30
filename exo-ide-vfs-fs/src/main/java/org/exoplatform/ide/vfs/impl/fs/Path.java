@@ -18,7 +18,10 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -28,35 +31,65 @@ final class Path
 {
    static Path fromString(String path)
    {
-      return new Path(normalize(path));
+      return new Path(parse(path));
    }
 
    static final Path ROOT = new Path();
+   private static final String[] EMPTY_PATH = new String[0];
 
-   private static final String[] empty = new String[0];
+   private static final Pattern PATH_SPLITTER = Pattern.compile("/");
 
-   private static String[] normalize(String raw)
+   private static String[] parse(String raw)
    {
-      return ((raw == null) || raw.isEmpty() || ((raw.length() == 1) && (raw.charAt(0) == '/')))
-         ? empty : ((raw.charAt(0) == '/') ? raw.substring(1).split("/") : raw.split("/"));
+      String[] parsed = ((raw == null) || raw.isEmpty() || ((raw.length() == 1) && (raw.charAt(0) == '/')))
+         ? EMPTY_PATH : PATH_SPLITTER.split(raw.charAt(0) == '/' ? raw.substring(1) : raw);
+      if (parsed.length == 0)
+      {
+         return parsed;
+      }
+      List<String> newTokens = new ArrayList<String>(parsed.length);
+      for (String token : parsed)
+      {
+         if ("..".equals(token))
+         {
+            int size = newTokens.size();
+            if (size == 0)
+            {
+               throw new IllegalArgumentException(String.format("Invalid path '%s', '..' on root. ", raw));
+            }
+            newTokens.remove(size - 1);
+         }
+         else if (!".".equals(token))
+         {
+            newTokens.add(token);
+         }
+      }
+
+      return newTokens.toArray(new String[newTokens.size()]);
    }
 
    private final String[] elements;
-   private final int hashCode;
 
-   private String path;
+   private volatile int hashCode;
+
+   private volatile String asString;
+   private volatile String ioPath;
 
    private Path(String... elements)
    {
-      this.elements = new String[elements.length];
-      System.arraycopy(elements, 0, this.elements, 0, elements.length);
-      int hash = 8;
-      hashCode = 31 * hash + Arrays.hashCode(elements);
+      this.elements = elements;
+//      this.elements = new String[elements.length];
+//      System.arraycopy(elements, 0, this.elements, 0, elements.length);
    }
 
    Path getParent()
    {
       return isRoot() ? null : elements.length == 1 ? ROOT : subPath(0, elements.length - 1);
+   }
+
+   Path subPath(int beginIndex)
+   {
+      return subPath(beginIndex, elements.length);
    }
 
    Path subPath(int beginIndex, int endIndex)
@@ -83,6 +116,11 @@ final class Path
       return copy;
    }
 
+   int length()
+   {
+      return elements.length;
+   }
+
    private String element(int index)
    {
       if (index < 0 || index >= elements.length)
@@ -97,9 +135,25 @@ final class Path
       return elements.length == 0;
    }
 
+   boolean isChild(Path parent)
+   {
+      if (parent.elements.length >= this.elements.length)
+      {
+         return false;
+      }
+      for (int i = 0, parentLength = parent.elements.length; i < parentLength; i++)
+      {
+         if (parent.elements[i].equals(this.elements[i]))
+         {
+            return false;
+         }
+      }
+      return true;
+   }
+
    Path newPath(String name)
    {
-      String[] relative = normalize(name);
+      String[] relative = parse(name);
       if (relative.length == 0)
       {
          return this; // It is safety to return this instance since it is immutable.
@@ -110,24 +164,63 @@ final class Path
       return new Path(absolute);
    }
 
-   @Override
-   public String toString()
+   Path newPath(Path relative)
    {
-      if (path != null)
+      String[] absolute = new String[elements.length + relative.elements.length];
+      System.arraycopy(elements, 0, absolute, 0, elements.length);
+      System.arraycopy(relative.elements, 0, absolute, elements.length, relative.elements.length);
+      return new Path(absolute);
+   }
+
+   /* Relative path that system-specific name-separator character. */
+   String toIoPath()
+   {
+      if (isRoot())
       {
-         return path;
+         return "";
       }
-      if (elements.length == 0)
+      if (needConvert())
       {
-         return path = "/";
+         if (ioPath == null)
+         {
+            ioPath = concat(java.io.File.separatorChar);
+         }
+         return ioPath;
       }
+      // Unix like system. Use vfs path as relative i/o path.
+      return toString();
+   }
+
+   private boolean needConvert()
+   {
+      return '/' == java.io.File.separatorChar;
+   }
+
+   String concat(char separator)
+   {
       StringBuilder builder = new StringBuilder();
       for (String element : elements)
       {
-         builder.append('/');
+         builder.append(separator);
          builder.append(element);
       }
-      return path = builder.toString();
+      return builder.toString();
+   }
+
+   /* ==================================================== */
+
+   @Override
+   public String toString()
+   {
+      if (isRoot())
+      {
+         return "/";
+      }
+      if (asString == null)
+      {
+         asString = concat('/');
+      }
+      return asString;
    }
 
    @Override
@@ -148,6 +241,13 @@ final class Path
    @Override
    public int hashCode()
    {
-      return hashCode;
+      int hash = hashCode;
+      if (hash == 0)
+      {
+         hash = 8;
+         hash = 31 * hash + Arrays.hashCode(elements);
+         hashCode = hash;
+      }
+      return hash;
    }
 }

@@ -413,7 +413,7 @@ public class ProjectTest extends JcrFileSystemTest
       // This one must not be notified.
       assertTrue(listeners.addEventListener(filter1, listener1));
 
-      String path = SERVICE_URI + "file/" + project.getId() + "?" + "name=file";
+      String requestPath = SERVICE_URI + "file/" + project.getId() + "?" + "name=file";
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       List<String> contentType = new ArrayList<String>();
       contentType.add("text/plain;charset=utf8");

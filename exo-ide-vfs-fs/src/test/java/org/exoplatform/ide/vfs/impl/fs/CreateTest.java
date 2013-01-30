@@ -23,154 +23,167 @@ import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Folder;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-public class CreateTest extends PlainFileSystemTest
+import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+
+public class CreateTest extends LocalFileSystemTest
 {
-   private String createTestFolderId;
-   private String createTestFolderPath;
+   private String folderId;
+   private String folderPath;
+
+   private String protectedFolderPath;
+   private String protectedFolderId;
+
+   private String fileId;
 
    @Override
    public void setUp() throws Exception
    {
       super.setUp();
-      String name = getClass().getName();
-      java.io.File thisTestRoot = new java.io.File(testRoot, name);
-      if (!thisTestRoot.mkdirs())
-      {
-         fail();
-      }
-      createTestFolderPath = '/' + thisTestRoot.getName();
-      createTestFolderId = pathToId(createTestFolderPath);
+      folderPath = createDirectory(testRootPath, "CreateTest_Folder");
+      protectedFolderPath = createDirectory(testRootPath, "CreateTest_ProtectedFolder");
+      String filePath = createFile(testRootPath, "CreateTest_File", DEFAULT_CONTENT_BYTES);
+
+      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
+      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
+      writeACL(protectedFolderPath, accessList);
+
+      folderId = pathToId(folderPath);
+      protectedFolderId = pathToId(protectedFolderPath);
+      fileId = pathToId(filePath);
    }
 
    public void testCreateFile() throws Exception
    {
       String name = "testCreateFile";
       String content = "test create file";
-      String path = SERVICE_URI + "file/" + createTestFolderId + '?' + "name=" + name; //
+      String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       List<String> contentType = new ArrayList<String>();
       contentType.add("text/plain;charset=utf8");
       headers.put("Content-Type", contentType);
 
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), null);
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), null);
       assertEquals(200, response.getStatus());
-      String expectedPath = createTestFolderPath + '/' + name;
-      assertTrue("File was not created in expected location. ", new java.io.File(testRoot, expectedPath).exists());
-      // TODO
-//      assertEquals("text/plain", file.getNode("jcr:content").getProperty("jcr:mimeType").getString());
-      assertEquals(content, new String(readFile(new java.io.File(testRoot, expectedPath))));
+      String expectedPath = folderPath + '/' + name;
+      assertTrue("File was not created in expected location. ", exists(expectedPath));
+      assertEquals(content, new String(readFile(expectedPath)));
+      Map<String,String[]> expectedProperties = new HashMap<String, String[]>(1);
+      expectedProperties.put("vfs:mimeType", new String[]{"text/plain;charset=utf8"});
+      validateProperties(expectedPath, expectedProperties);
    }
 
-      public void testCreateFileInRoot() throws Exception
+   public void testCreateFileAlreadyExists() throws Exception
    {
-      String name = "testCreateFileInRoot";
+      String name = "testCreateFileAlreadyExists";
+      createFile(folderPath, name, null);
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals(400, response.getStatus());
+   }
+
+   public void testCreateFileInRoot() throws Exception
+   {
+      String name = "FileInRoot";
       String content = "test create file";
-      String path = SERVICE_URI + "file/" + PlainFileSystemContext.ROOT_ID + '?' + "name=" + name;
-      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
-      List <String> contentType = new ArrayList<String>();
+      String requestPath = SERVICE_URI + "file/" + ROOT_ID + '?' + "name=" + name;
+      Map<String, List<String>> headers = new HashMap<String, List<String>>();
+      List<String> contentType = new ArrayList<String>();
       contentType.add("text/plain;charset=utf8");
       headers.put("Content-Type", contentType);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, content.getBytes(), writer, null);
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       String expectedPath = '/' + name;
-      assertTrue("File was not created in expected location. ", new java.io.File(testRoot, expectedPath).exists());
-      // TODO
-//      assertEquals("text/plain", file.getNode("jcr:content").getProperty("jcr:mimeType").getString());
-//      assertEquals("utf8", file.getNode("jcr:content").getProperty("jcr:encoding").getString());
-
-      assertEquals(content, new String(readFile(new java.io.File(testRoot, expectedPath))));
+      assertTrue("File was not created in expected location. ", exists(expectedPath));
+      assertEquals(content, new String(readFile(expectedPath)));
+      Map<String,String[]> expectedProperties = new HashMap<String, String[]>(1);
+      expectedProperties.put("vfs:mimeType", new String[]{"text/plain;charset=utf8"});
+      validateProperties(expectedPath, expectedProperties);
    }
 
    public void testCreateFileNoContent() throws Exception
    {
       String name = "testCreateFileNoContent";
-      String path = SERVICE_URI + "file/" + createTestFolderId + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-
+      String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
-      String expectedPath = createTestFolderPath + '/' + name;
-      assertTrue("File was not created in expected location. ", new java.io.File(testRoot, expectedPath).exists());
-      // TODO
-//      assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
-//         .getString());
-//      assertFalse(file.getNode("jcr:content").hasProperty("jcr:encoding"));
-//      assertEquals("", file.getNode("jcr:content").getProperty("jcr:data").getString());
-      assertTrue(readFile(new java.io.File(testRoot, expectedPath)).length == 0);
+      String expectedPath = folderPath + '/' + name;
+      assertTrue("File was not created in expected location. ", exists(expectedPath));
+      assertTrue(readFile(expectedPath).length == 0);
+      Map<String,String[]> expectedProperties = new HashMap<String, String[]>(1);
+      expectedProperties.put("vfs:mimeType", new String[]{"application/octet-stream"});
+      validateProperties(expectedPath, expectedProperties);
    }
 
-//   public void testCreateFileNoMediaType() throws Exception
-//   {
-//      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-//      String name = "testCreateFileNoMediaType";
-//      String content = "test create file without media type";
-//      String path = new StringBuilder() //
-//         .append(SERVICE_URI) //
-//         .append("file/") //
-//         .append(createTestNodeID) //
-//         .append("?") //
-//         .append("name=") //
-//         .append(name).toString();
-//
-//      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
-//      assertEquals(200, response.getStatus());
-//      String expectedPath = createTestNodePath + "/" + name;
-//      assertTrue("File was not created in expected location. ", session.itemExists(expectedPath));
-//      Node file = (Node)session.getItem(expectedPath);
-//      assertEquals(MediaType.APPLICATION_OCTET_STREAM, file.getNode("jcr:content").getProperty("jcr:mimeType")
-//         .getString());
-//      assertFalse(file.getNode("jcr:content").hasProperty("jcr:encoding"));
-//      assertEquals(content, file.getNode("jcr:content").getProperty("jcr:data").getString());
-//   }
+   public void testCreateFileNoMediaType() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String name = "testCreateFileNoMediaType";
+      String content = "test create file without media type";
+      String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
+      ContainerResponse response =
+         launcher.service("POST", requestPath, BASE_URI, null, content.getBytes(), writer, null);
+      assertEquals(200, response.getStatus());
+      String expectedPath = folderPath + '/' + name;
+      assertTrue("File was not created in expected location. ", exists(expectedPath));
+      assertEquals(content, new String(readFile(expectedPath)));
+      Map<String,String[]> expectedProperties = new HashMap<String, String[]>(1);
+      expectedProperties.put("vfs:mimeType", new String[]{"application/octet-stream"});
+      validateProperties(expectedPath, expectedProperties);
+   }
 
    public void testCreateFileNoName() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "file/" + createTestFolderId;
+      String requestPath = SERVICE_URI + "file/" + folderId;
       ContainerResponse response =
-         launcher.service("POST", path, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
+         launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(400, response.getStatus());
    }
 
-//   public void testCreateFileNoPermissions() throws Exception
-//   {
-//      Node parent = createTestNode.addNode("testCreateFileNoPermissions_PARENT", "nt:folder");
-//      parent.addMixin("exo:privilegeable");
-//      Map<String, String[]> permissions = new HashMap<String, String[]>(1);
-//      permissions.put("root", PermissionType.ALL);
-//      ((ExtendedNode)parent).setPermissions(permissions);
-//      session.save();
-//      String parentID = ((ExtendedNode)parent).getIdentifier();
-//
-//      String name = "testCreateFileNoPermissions";
-//      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-//      String path = new StringBuilder() //
-//         .append(SERVICE_URI) //
-//         .append("file/") //
-//         .append(parentID) //
-//         .append("?") //
-//         .append("name=") //
-//         .append(name).toString();
-//      ContainerResponse response =
-//         launcher.service("POST", path, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
-//      assertEquals(403, response.getStatus());
-//      log.info(new String(writer.getBody()));
-//   }
+   public void testCreateFileNoPermissions() throws Exception
+   {
+      String name = "testCreateFileNoPermissions";
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "file/" + protectedFolderId + '?' + "name=" + name;
+      ContainerResponse response =
+         launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals(403, response.getStatus());
+      assertFalse(exists(protectedFolderPath + '/' + name));
+   }
 
    public void testCreateFileWrongParent() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFileWrongParent";
-      String path = SERVICE_URI + "file/" + createTestFolderId + "_WRONG_ID" + "?" + "name=" + name;
+      // Try to create new file in other file.
+      String requestPath = SERVICE_URI + "file/" + fileId + '?' + "name=" + name;
       ContainerResponse response =
-         launcher.service("POST", path, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
+         launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals(400, response.getStatus());
+   }
+
+   public void testCreateFileWrongParentId() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String name = "testCreateFileWrongParentId";
+      String requestPath = SERVICE_URI + "file/" + folderId + "_WRONG_ID" + '?' + "name=" + name;
+      ContainerResponse response =
+         launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(404, response.getStatus());
    }
@@ -179,65 +192,53 @@ public class CreateTest extends PlainFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolder";
-      String path = SERVICE_URI + "folder/" + createTestFolderId + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
-      String expectedPath = createTestFolderPath + '/' + name;
-      assertTrue("Folder was not created in expected location. ", new java.io.File(testRoot, expectedPath).exists());
+      String expectedPath = folderPath + '/' + name;
+      assertTrue("Folder was not created in expected location. ", exists(expectedPath));
    }
 
    public void testCreateFolderInRoot() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateFolderInRoot";
-      String path = SERVICE_URI + "folder/" + PlainFileSystemContext.ROOT_ID + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      String name = "FolderInRoot";
+      String requestPath = SERVICE_URI + "folder/" + ROOT_ID + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       String expectedPath = '/' + name;
-      assertTrue("Folder was not created in expected location. ", new java.io.File(testRoot, expectedPath).exists());
+      assertTrue("Folder was not created in expected location. ", exists(expectedPath));
    }
 
    public void testCreateFolderNoName() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "folder/" + createTestFolderId;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      String requestPath = SERVICE_URI + "folder/" + folderId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(400, response.getStatus());
    }
 
-//   public void testCreateFolderNoPermissions() throws Exception
-//   {
-//      Node parent = createTestNode.addNode("testCreateFolderNoPermissions_PARENT", "nt:folder");
-//      parent.addMixin("exo:privilegeable");
-//      Map<String, String[]> permissions = new HashMap<String, String[]>(1);
-//      permissions.put("root", PermissionType.ALL);
-//      ((ExtendedNode)parent).setPermissions(permissions);
-//      session.save();
-//      String parentID = ((ExtendedNode)parent).getIdentifier();
-//
-//      String name = "testCreateFolderNoPermissions";
-//      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-//      String path = new StringBuilder() //
-//         .append(SERVICE_URI) //
-//         .append("folder/") //
-//         .append(parentID) //
-//         .append("?") //
-//         .append("name=") //
-//         .append(name).toString();
-//      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
-//      assertEquals(403, response.getStatus());
-//      log.info(new String(writer.getBody()));
-//   }
-//
-   public void testCreateFolderWrongParent() throws Exception
+   public void testCreateFolderNoPermissions() throws Exception
+   {
+      String name = "testCreateFolderNoPermissions";
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "folder/" + protectedFolderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals(403, response.getStatus());
+      String expectedPath = protectedFolderPath + '/' + name;
+      assertFalse(exists(expectedPath));
+   }
+
+   public void testCreateFolderWrongParentId() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String name = "testCreateFolderWrongParent";
-      String path = SERVICE_URI + "folder/" + createTestFolderId + "_WRONG_ID" + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      String name = "testCreateFolderWrongParentId";
+      String requestPath = SERVICE_URI + "folder/" + folderId + "_WRONG_ID" + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(404, response.getStatus());
    }
@@ -246,31 +247,39 @@ public class CreateTest extends PlainFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolderHierarchy/1/2/3/4/5";
-      String path = SERVICE_URI + "folder/" + createTestFolderId + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
-      String expectedPath = createTestFolderPath + '/' + name;
-      assertTrue("Folder was not created in expected location. ", new java.io.File(testRoot, expectedPath).exists());
+      String expectedPath = folderPath + '/' + name;
+      assertTrue("Folder was not created in expected location. ", exists(expectedPath));
+   }
+
+   public void testCreateFolderHierarchyExists() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String name = "testCreateFolderHierarchyExists/1/2/3/4/5";
+      createDirectory(folderPath, name);
+      String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals(400, response.getStatus());
    }
 
    public void testCreateFolderHierarchy2() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String name = "testCreateFolderHierarchy2/1/2/3";
-      if (!new java.io.File(new java.io.File(testRoot, createTestFolderPath), name).mkdirs())
-      {
-         fail();
-      }
+      createDirectory(folderPath, name);
       name += "/4/5";
-      String path = SERVICE_URI + "folder/" + createTestFolderId + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      String requestPath = SERVICE_URI + "folder/" + folderId + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(200, response.getStatus());
       // Expect path of first folder in hierarchy.
       // testCreateFolderHierarchy2/1/2/3 already exists create only 4/5
-      assertEquals(createTestFolderPath + "/testCreateFolderHierarchy2/1/2/3/4", ((Folder)response.getEntity()).getPath());
-      String expectedPath = createTestFolderPath + '/' + name;
-      assertTrue("Folder was not created in expected location. ", new java.io.File(testRoot, expectedPath).exists());
+      assertEquals(folderPath + "/testCreateFolderHierarchy2/1/2/3/4", ((Folder)response.getEntity()).getPath());
+      String expectedPath = folderPath + '/' + name;
+      assertTrue("Folder was not created in expected location. ", exists(expectedPath));
    }
 }

@@ -25,7 +25,7 @@ import java.util.Map;
  * Segmented LRU cache. See for details <a href="http://en.wikipedia.org/wiki/Cache_algorithms#Segmented_LRU">Segmented
  * LRU cache</a>
  * <p/>
- * Implementation is not threadsafe. In need concurrent access use {@link SynchronizedSLRUCache}
+ * Implementation is not threadsafe. In need concurrent access use {@link SynchronizedCache}
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -124,6 +124,12 @@ public class SLRUCache<K, V> implements Cache<K, V>
    {
       protectedSegment.clear();
       probationarySegment.clear();
+   }
+
+   @Override
+   public int size()
+   {
+      return protectedSegment.size() + probationarySegment.size();
    }
 
    public void printStats()

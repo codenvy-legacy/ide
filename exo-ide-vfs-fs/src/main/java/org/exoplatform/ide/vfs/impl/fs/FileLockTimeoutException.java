@@ -16,25 +16,21 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.cache;
+package org.exoplatform.ide.vfs.impl.fs;
+
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 
 /**
- * Cache abstraction.
+ * Thrown if timeout is reached while try to get lock.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Cache<K, V>
+@SuppressWarnings("serial")
+public final class FileLockTimeoutException extends VirtualFileSystemRuntimeException
 {
-   V get(K key);
-
-   V put(K key, V value);
-
-   V remove(K key);
-
-   boolean contains(K key);
-
-   void clear();
-
-   int size();
+   public FileLockTimeoutException(String message)
+   {
+      super(message);
+   }
 }

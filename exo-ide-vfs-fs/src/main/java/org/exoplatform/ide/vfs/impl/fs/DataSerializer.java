@@ -16,25 +16,19 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.cache;
+package org.exoplatform.ide.vfs.impl.fs;
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
- * Cache abstraction.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public interface Cache<K, V>
+public interface DataSerializer<T>
 {
-   V get(K key);
+   void write(DataOutput output, T value) throws IOException;
 
-   V put(K key, V value);
-
-   V remove(K key);
-
-   boolean contains(K key);
-
-   void clear();
-
-   int size();
+   T read(DataInput input) throws IOException;
 }

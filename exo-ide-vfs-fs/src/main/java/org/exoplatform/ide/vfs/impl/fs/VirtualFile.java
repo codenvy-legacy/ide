@@ -18,79 +18,229 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.MediaTypes;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
-import java.util.Collections;
+import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class VirtualFile
+public class VirtualFile implements Comparable<VirtualFile>
 {
-   private final String id;
+   private final java.io.File ioFile;
    private final Path path;
-   private final ItemType type;
-//   private final java.io.File ioFile;
-   private final long length;
-   private final long lastModificationDate = 0; // TODO
-   private final Map<String, List<String>> properties = Collections.emptyMap(); // TODO
+   private final MountPoint mountPoint;
 
-   VirtualFile(String id, Path path, ItemType type, /*java.io.File ioFile*/long length)
+   VirtualFile(java.io.File ioFile, Path path, MountPoint mountPoint)
    {
-      this.id = id;
+      this.ioFile = ioFile;
       this.path = path;
-      this.type = type;
-      this.length = length;
-//      this.ioFile = ioFile;
+      this.mountPoint = mountPoint;
    }
 
-   String getId()
+   public String getName()
    {
-      return id;
+      return path.getName();
    }
 
-   Path getPath()
+   public String getPath()
    {
-      return path;
+      return path.toString();
    }
 
-   ItemType getType()
+   public boolean exists()
    {
-      return type;
+      return getIoFile().exists();
    }
 
-   String getMediaType()
+   public boolean isRoot()
    {
-      return "text/plain"; // TODO
+      return path.isRoot();
    }
 
-   long getCreationDate()
+   public boolean isFile()
+   {
+      return getIoFile().isFile();
+   }
+
+   public boolean isFolder()
+   {
+      return getIoFile().isDirectory();
+   }
+
+   public boolean isProject()
+   {
+      // TODO
+      return false; // isDirectory() && new java.io.File(ioFile, ".project").exists();
+   }
+
+   public VirtualFile getParent() throws VirtualFileSystemException
+   {
+      return mountPoint.getParent(this);
+   }
+
+   public List<VirtualFile> getChildren() throws VirtualFileSystemException
+   {
+      return mountPoint.getChildren(this);
+   }
+
+   public ContentStream getContent() throws VirtualFileSystemException
+   {
+      return mountPoint.getContent(this);
+   }
+
+   public void updateContent(String mediaType, InputStream content, String lockToken) throws VirtualFileSystemException
+   {
+      mountPoint.updateContent(this, mediaType, content, lockToken);
+   }
+
+   public String getMediaType() throws VirtualFileSystemException
+   {
+      String mediaType = mountPoint.getPropertyValue(this, "vfs:mimeType");
+      if (mediaType == null)
+      {
+         mediaType = MediaTypes.INSTANCE.getMediaType(path.getName());
+      }
+      return mediaType;
+   }
+
+   public long getCreationDate() throws VirtualFileSystemException
    {
       // Creation date is not accessible over JDK API. May be done when switch to JDK7.
       return getLastModificationDate();
    }
 
-   long getLastModificationDate()
+   public long getLastModificationDate() throws VirtualFileSystemException
    {
-      return lastModificationDate;
+      return getIoFile().lastModified();
    }
 
-   long getLength()
+   public long getLength() throws VirtualFileSystemException
    {
-      return length/*ioFile.length()*/;
+      return getIoFile().length();
    }
 
-   Map<String, List<String>> getProperties()
+   //
+
+   public List<Property> getProperties(PropertyFilter filter) throws VirtualFileSystemException
    {
-      return properties;
+      return mountPoint.getProperties(this, filter);
    }
 
-   String getFirstProperty(String name)
+   public String getFirstPropertyValue(String name) throws VirtualFileSystemException
    {
-      List<String> l = properties.get(name);
-      return l == null || l.isEmpty() ? null : l.get(0);
+      return mountPoint.getPropertyValue(this, name);
+   }
+
+   //
+
+   public VirtualFile copyTo(VirtualFile parent) throws VirtualFileSystemException
+   {
+      return mountPoint.copy(this, parent);
+   }
+
+   public VirtualFile moveTo(VirtualFile parent, String lockToken) throws VirtualFileSystemException
+   {
+      return mountPoint.move(this, parent, lockToken);
+   }
+
+   public VirtualFile rename(String newName, String newMediaType, String lockToken) throws VirtualFileSystemException
+   {
+      return mountPoint.rename(this, newName, newMediaType, lockToken);
+   }
+
+   public void delete(String lockToken) throws VirtualFileSystemException
+   {
+      mountPoint.delete(this, lockToken);
+   }
+
+   //
+
+   public String lock() throws VirtualFileSystemException
+   {
+      return mountPoint.lock(this);
+   }
+
+   public void unlock(String lockToken) throws VirtualFileSystemException
+   {
+      mountPoint.unlock(this, lockToken);
+   }
+
+   public boolean isLocked() throws VirtualFileSystemException
+   {
+      return mountPoint.isLocked(this);
+   }
+
+   //
+
+   public List<AccessControlEntry> getACL() throws VirtualFileSystemException
+   {
+      return mountPoint.getACL(this);
+   }
+
+   public void updateACL(List<AccessControlEntry> acl, boolean override, String lockToken)
+      throws VirtualFileSystemException
+   {
+      mountPoint.updateACL(this, acl, override, lockToken);
+   }
+
+   //
+
+   public VirtualFile createFile(String name, String mediaType, InputStream content) throws VirtualFileSystemException
+   {
+      return mountPoint.createFile(this, name, mediaType, content);
+   }
+
+   public VirtualFile createFolder(String name) throws VirtualFileSystemException
+   {
+      return mountPoint.createFolder(this, name);
+   }
+
+   public VirtualFile createProject(String name, List<Property> properties) throws VirtualFileSystemException
+   {
+      return null; // TODO
+   }
+
+   //
+
+   @Override
+   public int compareTo(VirtualFile other)
+   {
+      if (isProject())
+      {
+         return other.isProject() ? getName().compareTo(other.getName()) : -1;
+      }
+      else if (other.isProject())
+      {
+         return 1;
+      }
+      else if (isFolder())
+      {
+         return other.isFolder() ? getName().compareTo(other.getName()) : -1;
+      }
+      else if (other.isFolder())
+      {
+         return 1;
+      }
+      return getName().compareTo(other.getName());
+   }
+
+   /* =================== */
+
+   public final java.io.File getIoFile()
+   {
+      return ioFile;
+   }
+
+   Path getInternalPath()
+   {
+      return path;
    }
 }

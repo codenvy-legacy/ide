@@ -102,7 +102,7 @@ public class EventsTest extends JcrFileSystemTest
    {
       String name = "testCreateFile";
       String content = "test create file";
-      String path = SERVICE_URI + "file/" + testNodeID + '?' + "name=" + name;
+      String requestPath = SERVICE_URI + "file/" + testNodeID + '?' + "name=" + name;
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       List<String> contentType = new ArrayList<String>();
       contentType.add("text/plain;charset=utf8");
@@ -119,7 +119,7 @@ public class EventsTest extends JcrFileSystemTest
    public void testCreateFolder() throws Exception
    {
       String name = "testCreateFolder";
-      String path = SERVICE_URI + "folder/" + testNodeID + '?' + "name=" + name;
+      String requestPath = SERVICE_URI + "folder/" + testNodeID + '?' + "name=" + name;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
 
@@ -132,7 +132,7 @@ public class EventsTest extends JcrFileSystemTest
    {
       String fileId = createFile(testNode, "CopyTest_FILE", "text/plain", DEFAULT_CONTENT);
 
-      String path = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + destinationNodeID;
+      String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + destinationNodeID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
 
       assertEquals(200, response.getStatus());
@@ -147,7 +147,7 @@ public class EventsTest extends JcrFileSystemTest
    {
       String fileId = createFile(testNode, "MoveTest_FILE", "text/plain", DEFAULT_CONTENT);
 
-      String path = SERVICE_URI + "move/" + fileId + '?' + "parentId=" + destinationNodeID;
+      String requestPath = SERVICE_URI + "move/" + fileId + '?' + "parentId=" + destinationNodeID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
 
@@ -161,7 +161,7 @@ public class EventsTest extends JcrFileSystemTest
    {
       String fileId = createFile(testNode, "UpdateContent_FILE", "text/plain", DEFAULT_CONTENT);
 
-      String path = SERVICE_URI + "content/" + fileId;
+      String requestPath = SERVICE_URI + "content/" + fileId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       List<String> contentType = new ArrayList<String>();
       contentType.add("application/xml");
@@ -180,7 +180,7 @@ public class EventsTest extends JcrFileSystemTest
    {
       String fileId = createFile(testNode, "UpdateProperties_FILE", "text/plain", DEFAULT_CONTENT);
 
-      String path = SERVICE_URI + "item/" + fileId;
+      String requestPath = SERVICE_URI + "item/" + fileId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>();
       List<String> contentType = new ArrayList<String>();
       contentType.add("application/json");
@@ -199,7 +199,7 @@ public class EventsTest extends JcrFileSystemTest
    {
       String fileId = createFile(testNode, "Delete_FILE", "text/plain", DEFAULT_CONTENT);
 
-      String path = SERVICE_URI + "delete/" + fileId;
+      String requestPath = SERVICE_URI + "delete/" + fileId;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
 
@@ -213,7 +213,7 @@ public class EventsTest extends JcrFileSystemTest
    {
       String fileId = createFile(testNode, "RenameTest_FILE", "text/plain", DEFAULT_CONTENT);
 
-      String path = SERVICE_URI + "rename/" + fileId + '?' + "newname=" + "_FILE_NEW_NAME_";
+      String requestPath = SERVICE_URI + "rename/" + fileId + '?' + "newname=" + "_FILE_NEW_NAME_";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
 
       assertEquals(200, response.getStatus());
@@ -234,7 +234,7 @@ public class EventsTest extends JcrFileSystemTest
 //      byte[] zip = new byte[(int)f.length()];
 //      in.read(zip);
 //      in.close();
-//      String path = SERVICE_URI + "import/" + testNodeID;
+//      String requestPath = SERVICE_URI + "import/" + testNodeID;
 //      Map<String, List<String>> headers = new HashMap<String, List<String>>();
 //      headers.put("Content-Type", Arrays.asList("application/zip"));
 //      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, zip, null, null);
@@ -296,7 +296,7 @@ public class EventsTest extends JcrFileSystemTest
 //      byte[] zip = new byte[(int)f.length()];
 //      in.read(zip);
 //      in.close();
-//      String path = SERVICE_URI + "import/" + testNodeID;
+//      String requestPath = SERVICE_URI + "import/" + testNodeID;
 //      Map<String, List<String>> headers = new HashMap<String, List<String>>();
 //      headers.put("Content-Type", Arrays.asList("application/zip"));
 //      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, zip, null, null);

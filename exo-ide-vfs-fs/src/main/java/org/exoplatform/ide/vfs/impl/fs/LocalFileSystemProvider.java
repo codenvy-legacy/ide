@@ -32,29 +32,29 @@ import java.net.URI;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class PlainFileSystemProvider implements VirtualFileSystemProvider
+public class LocalFileSystemProvider implements VirtualFileSystemProvider
 {
    private final String id;
-   private final PlainFileSystemContext fsContext;
+   private final MountPoint mountPoint;
 
    /**
     * @param id
     *    virtual file system identifier
-    * @param fsContext
-    *    file system entry
+    * @param mountPoint
+    *    virtual file system entry
     */
-   public PlainFileSystemProvider(String id, PlainFileSystemContext fsContext)
+   LocalFileSystemProvider(String id, MountPoint mountPoint)
    {
       this.id = id;
-      this.fsContext = fsContext;
+      this.mountPoint = mountPoint;
    }
 
    @Override
    public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners) throws VirtualFileSystemException
    {
-      return new PlainFileSystem(id,
+      return new LocalFileSystem(id,
          requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
-         fsContext,
-         listeners);
+         listeners,
+         mountPoint);
    }
 }

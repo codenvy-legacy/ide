@@ -21,185 +21,195 @@ package org.exoplatform.ide.vfs.impl.fs;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 
-import java.io.FileOutputStream;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
 
-public class DeleteTest extends PlainFileSystemTest
+import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+
+public class DeleteTest extends LocalFileSystemTest
 {
-   private String folderPath;
-   private String folderId;
-   private String notEmptyFolderPath;
-   private String notEmptyFolderId;
+   private final String lockToken = "01234567890abcdef";
+
    private String filePath;
    private String fileId;
+
+   private String lockedFileId;
+   private String lockedFilePath;
+
+   private String protectedFilePath;
+   private String protectedFileId;
+
+   private String protectedFolderPath;
+   private String protectedFolderId;
+
+   private String protectedChildFolderPath;
+   private String protectedChildFolderId;
+
+   private String lockedChildFolderPath;
+   private String lockedChildFolderId;
+
+   private String folderPath;
+   private String folderId;
+
+   private String notEmptyFolderPath;
+   private String notEmptyFolderId;
 
    @Override
    protected void setUp() throws Exception
    {
       super.setUp();
-      String name = getClass().getName();
-      java.io.File thisTestRoot = new java.io.File(testRoot, name);
-      if (!thisTestRoot.mkdirs())
+
+      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
+      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
+
+      filePath = createFile(testRootPath, "DeleteTest_File", DEFAULT_CONTENT_BYTES);
+      lockedFilePath = createFile(testRootPath, "DeleteTest_LockedFile", DEFAULT_CONTENT_BYTES);
+      protectedFilePath = createFile(testRootPath, "DeleteTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
+      folderPath = createDirectory(testRootPath, "DeleteTest_Folder");
+      protectedFolderPath = createDirectory(testRootPath, "DeleteTest_ProtectedFolder");
+      createTree(protectedFolderPath, 6, 4, null);
+      notEmptyFolderPath = createDirectory(testRootPath, "DeleteTest_NotEmptyFolder");
+      createTree(notEmptyFolderPath, 6, 4, null);
+      protectedChildFolderPath = createDirectory(testRootPath, "DeleteTest_ProtectedChildFolder");
+      createTree(protectedChildFolderPath, 6, 4, null);
+      lockedChildFolderPath = createDirectory(testRootPath, "DeleteTest_LockedChildFolder");
+      createTree(lockedChildFolderPath, 6, 4, null);
+
+      List<String> l = flattenDirectory(protectedChildFolderPath);
+      // Find one child in the list and remove write permission for 'admin'.
+      writeACL(protectedChildFolderPath + '/' + l.get(new Random().nextInt(l.size())), accessList);
+
+      l = flattenDirectory(lockedChildFolderPath);
+      // Find one child in the list and lock it.
+      for (String s : l)
       {
-         fail();
+         if (createLock(lockedChildFolderPath + '/' + s, lockToken))
+         {
+            break;
+         }
       }
-      java.io.File file = new java.io.File(thisTestRoot, "DeleteTest_FILE");
-      FileOutputStream fOut = new FileOutputStream(file);
-      fOut.write(DEFAULT_CONTENT.getBytes());
-      fOut.flush();
-      fOut.close();
-      filePath = '/' + thisTestRoot.getName() + '/' + file.getName();
+
+      writeACL(protectedFilePath, accessList);
+      writeACL(protectedFolderPath, accessList);
+
+      createLock(lockedFilePath, lockToken);
+
       fileId = pathToId(filePath);
-      java.io.File folder = new java.io.File(thisTestRoot, "DeleteTest_FOLDER");
-      if (!folder.mkdir())
-      {
-         fail();
-      }
-      folderPath = '/' + thisTestRoot.getName() + '/' + folder.getName();
+      lockedFileId = pathToId(lockedFilePath);
+      protectedFileId = pathToId(protectedFilePath);
       folderId = pathToId(folderPath);
-
-      java.io.File tree = new java.io.File(thisTestRoot, "DeleteTest_TREE");
-      if (!tree.mkdir())
-      {
-         fail();
-      }
-      notEmptyFolderPath = '/' + thisTestRoot.getName() + '/' + folder.getName();
+      protectedFolderId = pathToId(protectedFolderPath);
+      protectedChildFolderId = pathToId(protectedChildFolderPath);
+      lockedChildFolderId = pathToId(lockedChildFolderPath);
       notEmptyFolderId = pathToId(notEmptyFolderPath);
-      createTree(tree, 3);
-   }
-
-   /** Create file tree. Each level contain 5 folders and 5 empty files. */
-   private void createTree(java.io.File root, int depth) throws Exception
-   {
-      if (depth < 0)
-      {
-         return;
-      }
-      for (int i = 0; i < 10; i++)
-      {
-         java.io.File f = new java.io.File(root, Integer.toString(i));
-         if (!(i % 2 == 0 ? f.mkdirs() : f.createNewFile()))
-         {
-            fail();
-         }
-         if (depth >= 0 && f.isDirectory())
-         {
-            createTree(f, depth - 1);
-         }
-
-         --depth;
-      }
    }
 
    public void testDeleteFile() throws Exception
    {
-      String path = SERVICE_URI + "delete/" + fileId;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      String requestPath = SERVICE_URI + "delete/" + fileId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      if (new java.io.File(testRoot, filePath).exists())
-      {
-         fail("File must be removed. ");
-      }
+      assertFalse("File must be removed. ", exists(filePath));
    }
 
-//   public void testDeleteFileLocked() throws Exception
-//   {
-//      Lock lock = fileNode.lock(true, false);
-//      String path = new StringBuilder() //
-//         .append(SERVICE_URI) //
-//         .append("delete/") //
-//         .append(fileID) //
-//         .append("?") //
-//         .append("lockToken=") //
-//         .append(lock.getLockToken()) //
-//         .toString();
-//      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-//      assertEquals(204, response.getStatus());
-//      try
-//      {
-//         ((ExtendedSession)session).getNodeByIdentifier(fileID);
-//         fail("File must be removed. ");
-//      }
-//      catch (ItemNotFoundException e)
-//      {
-//      }
-//   }
-//
-//   public void testDeleteFileLocked_NoLockToken() throws Exception
-//   {
-//      fileNode.lock(true, false);
-//      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-//      String path = new StringBuilder() //
-//         .append(SERVICE_URI) //
-//         .append("delete/") //
-//         .append(fileID) //
-//         .toString();
-//      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
-//      assertEquals(423, response.getStatus());
-//      log.info(new String(writer.getBody()));
-//      try
-//      {
-//         ((ExtendedSession)session).getNodeByIdentifier(fileID);
-//      }
-//      catch (ItemNotFoundException e)
-//      {
-//         fail("File must not be removed since locked parent. ");
-//      }
-//   }
-//
-//   public void testDeleteFileNoPermissions() throws Exception
-//   {
-//      Map<String, String[]> permissions = new HashMap<String, String[]>(2);
-//      permissions.put("root", PermissionType.ALL);
-//      permissions.put("john", new String[]{PermissionType.READ});
-//      ((ExtendedNode)fileNode).setPermissions(permissions);
-//      session.save();
-//
-//      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-//      String path = new StringBuilder() //
-//         .append(SERVICE_URI) //
-//         .append("delete/") //
-//         .append(fileID).toString();
-//      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
-//      assertEquals(403, response.getStatus());
-//      log.info(new String(writer.getBody()));
-//      try
-//      {
-//         ((ExtendedSession)session).getNodeByIdentifier(fileID);
-//      }
-//      catch (ItemNotFoundException e)
-//      {
-//         fail("File must not be removed since permissions restriction. ");
-//      }
-//   }
+   public void testDeleteFileLocked() throws Exception
+   {
+      String requestPath = SERVICE_URI + "delete/" + lockedFileId + '?' + "lockToken=" + lockToken;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
+      assertEquals(204, response.getStatus());
+      assertFalse("File must be removed. ", exists(lockedFilePath));
+   }
 
-   public void testDeleteFileWrongID() throws Exception
+   public void testDeleteFileLocked_NoLockToken() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = SERVICE_URI + "delete/" + fileId + "_WRONG_ID";
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
+      String requestPath = SERVICE_URI + "delete/" + lockedFileId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals(423, response.getStatus());
+      log.info(new String(writer.getBody()));
+      assertTrue("File must not be removed. ", exists(lockedFilePath));
+   }
+
+   public void testDeleteFileNoPermissions() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "delete/" + protectedFileId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals(403, response.getStatus());
+      assertTrue("File must not be removed. ", exists(protectedFilePath));
+   }
+
+   public void testDeleteFileWrongId() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "delete/" + fileId + "_WRONG_ID";
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(404, response.getStatus());
+      assertTrue(exists(filePath));
    }
 
    public void testDeleteFolder() throws Exception
    {
-      String path = SERVICE_URI + "delete/" + folderId;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      String requestPath = SERVICE_URI + "delete/" + folderId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      if (new java.io.File(testRoot, folderPath).exists())
-      {
-         fail("Folder must be removed. ");
-      }
+      assertFalse("Folder must be removed. ", exists(folderPath));
+   }
+
+   public void testDeleteFolderNoPermissions() throws Exception
+   {
+      List<String> before = flattenDirectory(protectedFolderPath);
+      String requestPath = SERVICE_URI + "delete/" + protectedFolderId;
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals(403, response.getStatus());
+      log.info(new String(writer.getBody()));
+      assertTrue("Folder must not be removed. ", exists(protectedFolderPath));
+      List<String> after = flattenDirectory(protectedFolderPath);
+      before.removeAll(after);
+      assertTrue(String.format("Missed items: %s", before), before.isEmpty());
+   }
+
+   public void testDeleteFolderChildNoPermissions() throws Exception
+   {
+      List<String> before = flattenDirectory(protectedChildFolderPath);
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "delete/" + protectedChildFolderId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals(403, response.getStatus());
+      log.info(new String(writer.getBody()));
+      assertTrue("Folder must not be removed. ", exists(protectedChildFolderPath));
+      List<String> after = flattenDirectory(protectedChildFolderPath);
+      before.removeAll(after);
+      assertTrue(String.format("Missed items: %s", before), before.isEmpty());
+   }
+
+   public void testDeleteFolderChildLocked() throws Exception
+   {
+      List<String> before = flattenDirectory(lockedChildFolderPath);
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "delete/" + lockedChildFolderId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals(423, response.getStatus());
+      log.info(new String(writer.getBody()));
+      assertTrue("Folder must not be removed. ", exists(lockedChildFolderPath));
+      List<String> after = flattenDirectory(lockedChildFolderPath);
+      before.removeAll(after);
+      assertTrue(String.format("Missed items: %s", before), before.isEmpty());
    }
 
    public void testDeleteTree() throws Exception
    {
-      String path = SERVICE_URI + "delete/" + notEmptyFolderId;
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
+      String requestPath = SERVICE_URI + "delete/" + notEmptyFolderId;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
-      if (new java.io.File(testRoot, notEmptyFolderPath).exists())
-      {
-         fail("Folder must be removed. ");
-      }
+      assertFalse("Folder must be removed. ", exists(notEmptyFolderPath));
    }
 }

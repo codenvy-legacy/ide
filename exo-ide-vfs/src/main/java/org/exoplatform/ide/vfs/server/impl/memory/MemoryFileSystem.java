@@ -25,8 +25,8 @@ import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.MediaTypes;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
@@ -137,11 +137,11 @@ public class MemoryFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException("Item cannot be copied to itself. ");
       }
-      if (ItemType.FOLDER != parent.getType())
+      if (!parent.isFolder())
       {
          throw new InvalidArgumentException("Unable copy item. Item specified as parent is not a folder. ");
       }
-      if (((MemoryFolder)parent).isProject() && ItemType.FOLDER == object.getType() && ((MemoryFolder)object).isProject())
+      if (parent.isProject() && object.isProject())
       {
          throw new ConstraintException(
             "Unable copy item. Item specified as parent is a project. Project cannot contains another project.");
@@ -171,7 +171,7 @@ public class MemoryFileSystem implements VirtualFileSystem
    {
       checkName(name);
       MemoryItem parent = getItemById(parentId);
-      if (ItemType.FOLDER != parent.getType())
+      if (!parent.isFolder())
       {
          throw new InvalidArgumentException("Unable create new file. Item specified as parent is not a folder. ");
       }
@@ -208,7 +208,7 @@ public class MemoryFileSystem implements VirtualFileSystem
    {
       checkName(name);
       MemoryItem parent = getItemById(parentId);
-      if (ItemType.FOLDER != parent.getType())
+      if (!parent.isFolder())
       {
          throw new InvalidArgumentException("Unable create folder. Item specified as parent is not a folder. ");
       }
@@ -239,14 +239,14 @@ public class MemoryFileSystem implements VirtualFileSystem
                   memoryFolder = current;
                }
             }
-            else if (ItemType.FOLDER != node.getType())
+            else if (node.isFolder())
             {
-               throw new ItemAlreadyExistException("Unable create new folder. Item with the name '" +
-                  node.getPath() + "' already exists and is not a Folder. ");
+               current = (MemoryFolder)node;
             }
             else
             {
-               current = (MemoryFolder)node;
+               throw new ItemAlreadyExistException("Unable create new folder. Item with the name '" +
+                  node.getPath() + "' already exists and is not a Folder. ");
             }
          }
          if (memoryFolder == null)
@@ -281,11 +281,11 @@ public class MemoryFileSystem implements VirtualFileSystem
    {
       checkName(name);
       MemoryItem parent = getItemById(parentId);
-      if (ItemType.FOLDER != parent.getType())
+      if (!parent.isFolder())
       {
          throw new InvalidArgumentException("Unable create project. Item specified as parent is not a folder. ");
       }
-      if (((MemoryFolder)parent).isProject())
+      if (parent.isProject())
       {
          throw new ConstraintException("Unable create project. Item specified as parent is a project. "
             + "Project cannot contains another project.");
@@ -332,11 +332,11 @@ public class MemoryFileSystem implements VirtualFileSystem
       {
          throw new PermissionDeniedException("Unable delete item '" + object.getName() + "'. Operation not permitted. ");
       }
-      // For send notification to listeners. Path may not be retrieved after removing iten from tree.
+      // For send notification to listeners. Path may not be retrieved after removing item from tree.
       final String deletePath = object.getPath();
 
       MemoryFolder parent = object.getParent();
-      if (ItemType.FILE == object.getType())
+      if (object.isFile())
       {
          if (!((MemoryFile)object).isLockTokenMatched(lockToken))
          {
@@ -353,16 +353,16 @@ public class MemoryFileSystem implements VirtualFileSystem
             @Override
             public void visit(MemoryItem i) throws VirtualFileSystemException
             {
-               if (i.getType() == ItemType.FILE)
-               {
-                  toDelete.add(i);
-               }
-               else
+               if (i.isFolder())
                {
                   for (MemoryItem ii : ((MemoryFolder)i).getChildren())
                   {
                      ii.accept(this);
                   }
+                  toDelete.add(i);
+               }
+               else
+               {
                   toDelete.add(i);
                }
             }
@@ -375,7 +375,7 @@ public class MemoryFileSystem implements VirtualFileSystem
             {
                throw new PermissionDeniedException("Unable delete item '" + i.getPath() + "'. Operation not permitted. ");
             }
-            if (ItemType.FILE == i.getType() && ((MemoryFile)i).isLocked())
+            if (i.isFile() && ((MemoryFile)i).isLocked())
             {
                throw new LockException("Unable delete item '" + object.getName() +
                   "'. Child item '" + i.getPath() + "' is locked. ");
@@ -433,7 +433,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       }
 
       MemoryItem object = getItemById(folderId);
-      if (ItemType.FOLDER != object.getType())
+      if (!object.isFolder())
       {
          throw new InvalidArgumentException("Unable get children. Item '" + object.getName() + "' is not a folder. ");
       }
@@ -447,7 +447,9 @@ public class MemoryFileSystem implements VirtualFileSystem
          while (iterator.hasNext())
          {
             MemoryItem next = iterator.next();
-            if (itemTypeType != next.getType())
+            if ((itemTypeType == ItemType.FILE && !next.isFile())
+               || (itemTypeType == ItemType.FOLDER && !next.isFolder())
+               || (itemTypeType == ItemType.PROJECT && !next.isProject()))
             {
                iterator.remove();
             }
@@ -499,18 +501,18 @@ public class MemoryFileSystem implements VirtualFileSystem
                            @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter)
       throws VirtualFileSystemException
    {
-      MemoryItem folder = getItemById(folderId);
-      if (ItemType.FOLDER != folder.getType())
+      MemoryItem object = getItemById(folderId);
+      if (!object.isFolder())
       {
-         throw new InvalidArgumentException("Unable get tree. Item '" + folder.getName() + "' is not a folder. ");
+         throw new InvalidArgumentException("Unable get tree. Item '" + object.getName() + "' is not a folder. ");
       }
-      return new ItemNodeImpl(fromMemoryItem(folder, propertyFilter, false), getTreeLevel(folder, depth, propertyFilter));
+      return new ItemNodeImpl(fromMemoryItem(object, propertyFilter, false), getTreeLevel(object, depth, propertyFilter));
    }
 
    private List<ItemNode> getTreeLevel(MemoryItem object, int depth, PropertyFilter propertyFilter)
       throws VirtualFileSystemException
    {
-      if (depth == 0 || object.getType() == ItemType.FILE)
+      if (depth == 0 || !object.isFolder())
       {
          return null;
       }
@@ -529,7 +531,7 @@ public class MemoryFileSystem implements VirtualFileSystem
    public ContentStream getContent(@PathParam("id") String id) throws VirtualFileSystemException
    {
       MemoryItem object = getItemById(id);
-      if (ItemType.FILE != object.getType())
+      if (!object.isFile())
       {
          throw new InvalidArgumentException("Unable get content. Item '" + object.getName() + "' is not a file. ");
       }
@@ -542,7 +544,7 @@ public class MemoryFileSystem implements VirtualFileSystem
                                    @QueryParam("versionId") String versionId) throws VirtualFileSystemException
    {
       MemoryItem object = getItemByPath(path);
-      if (ItemType.FILE != object.getType())
+      if (!object.isFile())
       {
          throw new InvalidArgumentException("Unable get content. Item '" + path + "' is not a file. ");
       }
@@ -646,7 +648,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       throws VirtualFileSystemException
    {
       MemoryItem object = getItemByPath(path);
-      if (ItemType.FILE == object.getType())
+      if (object.isFile())
       {
          if (!(versionId == null || versionId.equals(((MemoryFile)object).getVersionId())))
          {
@@ -667,7 +669,7 @@ public class MemoryFileSystem implements VirtualFileSystem
                                    @PathParam("versionId") String versionId) throws VirtualFileSystemException
    {
       MemoryItem object = getItemById(id);
-      if (ItemType.FILE != object.getType())
+      if (!object.isFile())
       {
          throw new InvalidArgumentException("Object '" + object.getName() + "' is not a file. ");
       }
@@ -697,7 +699,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       }
 
       MemoryItem object = getItemById(id);
-      if (ItemType.FILE != object.getType())
+      if (!object.isFile())
       {
          throw new InvalidArgumentException("Object '" + object.getName() + "' is not a file. ");
       }
@@ -720,7 +722,7 @@ public class MemoryFileSystem implements VirtualFileSystem
    public LockToken lock(@PathParam("id") String id) throws NotSupportedException, VirtualFileSystemException
    {
       MemoryItem object = getItemById(id);
-      if (ItemType.FILE != object.getType())
+      if (!object.isFile())
       {
          throw new InvalidArgumentException("Locking allowed for Files only. ");
       }
@@ -747,11 +749,11 @@ public class MemoryFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException("Item cannot be moved to itself. ");
       }
-      if (ItemType.FOLDER != parent.getType())
+      if (!parent.isFolder())
       {
          throw new InvalidArgumentException("Unable move item. Item specified as parent is not a folder. ");
       }
-      if (((MemoryFolder)parent).isProject() && ItemType.FOLDER == object.getType() && ((MemoryFolder)object).isProject())
+      if (parent.isProject() && object.isProject())
       {
          throw new ConstraintException(
             "Unable move item. Item specified as parent is a project. Project cannot contains another project.");
@@ -763,7 +765,7 @@ public class MemoryFileSystem implements VirtualFileSystem
             + ". Operation not permitted. ");
       }
 
-      if (object.getType() != ItemType.FILE)
+      if (object.isFolder())
       {
          // Be sure destination folder is not child (direct or not) of moved item.
          final String srcPath = object.getPath();
@@ -779,16 +781,16 @@ public class MemoryFileSystem implements VirtualFileSystem
             @Override
             public void visit(MemoryItem i) throws VirtualFileSystemException
             {
-               if (i.getType() == ItemType.FILE)
-               {
-                  forMove.add(i);
-               }
-               else
+               if (i.isFolder())
                {
                   for (MemoryItem ii : ((MemoryFolder)i).getChildren())
                   {
                      ii.accept(this);
                   }
+                  forMove.add(i);
+               }
+               else
+               {
                   forMove.add(i);
                }
             }
@@ -800,7 +802,7 @@ public class MemoryFileSystem implements VirtualFileSystem
             {
                throw new PermissionDeniedException("Unable move item '" + i.getPath() + "'. Operation not permitted. ");
             }
-            if (ItemType.FILE == i.getType() && ((MemoryFile)i).isLocked())
+            if (i.isFile() && !((MemoryFile)i).isLockTokenMatched(lockToken))
             {
                throw new LockException("Unable move item '" + object.getName() +
                   "'. Child item '" + i.getPath() + "' is locked. ");
@@ -846,7 +848,7 @@ public class MemoryFileSystem implements VirtualFileSystem
          throw new PermissionDeniedException("Unable rename item " + object.getName() + ". Operation not permitted. ");
       }
 
-      if (ItemType.FILE == object.getType() && !((MemoryFile)object).isLockTokenMatched(lockToken))
+      if (object.isFile() && !((MemoryFile)object).isLockTokenMatched(lockToken))
       {
          throw new LockException("Unable rename item " + object.getName() + ". Item is locked. ");
       }
@@ -863,7 +865,7 @@ public class MemoryFileSystem implements VirtualFileSystem
          && parent.isProject())
       {
          throw new ConstraintException(
-            "Unable change type of item. Item specified as parent is a project. Project cannot contains another project.");
+            "Unable change type of item. Item's parent is a project. Project cannot contains another project.");
       }
 
       if (!(newName == null || newName.isEmpty()))
@@ -921,17 +923,17 @@ public class MemoryFileSystem implements VirtualFileSystem
                       @QueryParam("lockToken") String lockToken //
    ) throws NotSupportedException, VirtualFileSystemException
    {
-      MemoryItem memoryFile = getItemById(id);
-      if (!hasPermissions(memoryFile, VirtualFileSystemInfoImpl.BasicPermissions.WRITE.value()))
+      MemoryItem object = getItemById(id);
+      if (!hasPermissions(object, VirtualFileSystemInfoImpl.BasicPermissions.WRITE.value()))
       {
-         throw new PermissionDeniedException("Unable unlock item '" + memoryFile.getName() +
+         throw new PermissionDeniedException("Unable unlock item '" + object.getName() +
             "'. Operation not permitted. ");
       }
-      if (memoryFile.getType() != ItemType.FILE)
+      if (!object.isFile())
       {
          throw new LockException("Object is not locked. "); // Folder can't be locked.
       }
-      ((MemoryFile)memoryFile).unlock(lockToken);
+      ((MemoryFile)object).unlock(lockToken);
    }
 
    @Path("acl/{id}")
@@ -943,7 +945,7 @@ public class MemoryFileSystem implements VirtualFileSystem
    ) throws NotSupportedException, VirtualFileSystemException
    {
       MemoryItem object = getItemById(id);
-      if (ItemType.FILE == object.getType() && !((MemoryFile)object).isLockTokenMatched(lockToken))
+      if (object.isFile() && !((MemoryFile)object).isLockTokenMatched(lockToken))
       {
          throw new LockException("Unable update ACL of item '" + object.getName() + "'. Item is locked. ");
       }
@@ -964,7 +966,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException
    {
       MemoryItem object = getItemById(id);
-      if (ItemType.FILE != object.getType())
+      if (!object.isFile())
       {
          throw new InvalidArgumentException("Object " + object.getName() + " is not file. ");
       }
@@ -1001,7 +1003,7 @@ public class MemoryFileSystem implements VirtualFileSystem
    {
       MemoryItem object = getItemById(id);
 
-      if (ItemType.FILE == object.getType() && !((MemoryFile)object).isLockTokenMatched(lockToken))
+      if (object.isFile() && !((MemoryFile)object).isLockTokenMatched(lockToken))
       {
          throw new LockException("Unable update item '" + object.getName() + "'. Item is locked. ");
       }
@@ -1025,7 +1027,7 @@ public class MemoryFileSystem implements VirtualFileSystem
    public ContentStream exportZip(@PathParam("folderId") String folderId) throws IOException, VirtualFileSystemException
    {
       MemoryItem object = getItemById(folderId);
-      if (ItemType.FOLDER != object.getType())
+      if (!object.isFolder())
       {
          throw new InvalidArgumentException("Unable export to zip. Item is not a folder. ");
       }
@@ -1034,6 +1036,20 @@ public class MemoryFileSystem implements VirtualFileSystem
       try
       {
          ZipOutputStream zipOut = new ZipOutputStream(out);
+         if (exportFolder.isProject())
+         {
+            zipOut.putNextEntry(new ZipEntry(".project"));
+            try
+            {
+               JsonWriter jw = new JsonWriter(zipOut);
+               JsonGenerator.createJsonArray(object.getProperties(PropertyFilter.ALL_FILTER)).writeTo(jw);
+               jw.flush();
+            }
+            catch (JsonException e)
+            {
+               throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+            }
+         }
          LinkedList<MemoryFolder> q = new LinkedList<MemoryFolder>();
          q.add(exportFolder);
          final String rootZipPath = exportFolder.getPath();
@@ -1043,8 +1059,8 @@ public class MemoryFileSystem implements VirtualFileSystem
             List<MemoryItem> children = q.pop().getChildren();
             for (MemoryItem current : children)
             {
-               final String zipEntryName = current.getPath().substring(rootZipPath.length() + 1).replace('\\', '/');
-               if (current.getType() == ItemType.FILE)
+               final String zipEntryName = current.getPath().substring(rootZipPath.length() + 1);
+               if (current.isFile())
                {
                   zipOut.putNextEntry(new ZipEntry(zipEntryName));
                   InputStream in = null;
@@ -1065,9 +1081,10 @@ public class MemoryFileSystem implements VirtualFileSystem
                      }
                   }
                }
-               else if (".project".equals(current.getName()))
+               else if (current.isProject())
                {
-                  zipOut.putNextEntry(new ZipEntry(zipEntryName));
+                  zipOut.putNextEntry(new ZipEntry(zipEntryName + '/'));
+                  zipOut.putNextEntry(new ZipEntry(zipEntryName + "/.project"));
                   try
                   {
                      JsonWriter jw = new JsonWriter(zipOut);
@@ -1078,6 +1095,7 @@ public class MemoryFileSystem implements VirtualFileSystem
                   {
                      throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
                   }
+                  q.add((MemoryFolder)current);
                }
                else
                {
@@ -1089,6 +1107,7 @@ public class MemoryFileSystem implements VirtualFileSystem
          }
          zipOut.close();
       }
+      catch (Exception e) {e.printStackTrace();}
       finally
       {
          out.close();
@@ -1113,14 +1132,14 @@ public class MemoryFileSystem implements VirtualFileSystem
       try
       {
          MemoryItem object = getItemById(parentId);
-         if (ItemType.FOLDER != object.getType())
+         if (!object.isFolder())
          {
             throw new InvalidArgumentException("Unable import from zip. Item specified as parent is not a folder. ");
          }
 
          final ZipContent zipContent = spoolZipStream(in);
 
-         if (zipContent.isProject && ((MemoryFolder)object).isProject())
+         if (zipContent.isProject && object.isProject())
          {
             throw new ConstraintException("Unable import from zip. Project cannot be imported to another one. ");
          }
@@ -1177,13 +1196,13 @@ public class MemoryFileSystem implements VirtualFileSystem
             else
             {
                MemoryItem child = current.getChild(name);
-               if (child != null && overwrite && ItemType.FILE == child.getType())
+               if (child != null && overwrite && child.isFile())
                {
                   ((MemoryFile)child).setContent(noCloseZip);
                }
                else
                {
-                  MemoryFile f = new MemoryFile(name, Resolver.INSTANCE.getMediaType(name), noCloseZip);
+                  MemoryFile f = new MemoryFile(name, MediaTypes.INSTANCE.getMediaType(name), noCloseZip);
                   current.addChild(f);
                }
             }
@@ -1367,7 +1386,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       try
       {
          MemoryItem parent = getItemById(parentId);
-         if (ItemType.FOLDER != parent.getType())
+         if (!parent.isFolder())
          {
             throw new InvalidArgumentException("Unable upload file. Item specified as parent is not a folder. ");
          }
@@ -1442,7 +1461,7 @@ public class MemoryFileSystem implements VirtualFileSystem
                throw new ItemAlreadyExistException("Unable upload file. File with the same name exists. ");
             }
             MemoryItem object = ((MemoryFolder)parent).getChild(name);
-            if (ItemType.FILE != object.getType())
+            if (!object.isFile())
             {
                throw new ItemAlreadyExistException(
                   "Unable upload file. Item with the same name exists but it is not a file. ");
@@ -1544,7 +1563,7 @@ public class MemoryFileSystem implements VirtualFileSystem
          throw new VirtualFileSystemException("EventListenerList is not configured properly. ");
       }
       MemoryItem object = getItemById(projectId);
-      if (!(ItemType.FOLDER == object.getType() && ((MemoryFolder)object).isProject()))
+      if (!object.isProject())
       {
          throw new InvalidArgumentException("Item is not a project. ");
       }
@@ -1563,7 +1582,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          MemoryItem object = getItemById(projectId);
-         if (!(ItemType.FOLDER == object.getType() && ((MemoryFolder)object).isProject()))
+         if (!object.isProject())
          {
             return;
          }
@@ -1577,24 +1596,6 @@ public class MemoryFileSystem implements VirtualFileSystem
 
    /* =========================================================================== */
    /* =========================================================================== */
-
-   enum Resolver
-   {
-      INSTANCE;
-      /*=====================================*/
-      final MimeTypeResolver resolver;
-
-      private Resolver()
-      {
-         resolver = new MimeTypeResolver();
-         resolver.setDefaultMimeType("text/plain");
-      }
-
-      public String getMediaType(String filename)
-      {
-         return resolver.getMimeType(filename);
-      }
-   }
 
    private MemoryItem getItemById(String id) throws VirtualFileSystemException
    {
@@ -1672,7 +1673,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       throws VirtualFileSystemException
    {
       String mediaType = object.getMediaType();
-      if (object.getType() == ItemType.FILE)
+      if (object.isFile())
       {
          MemoryFile file = (MemoryFile)object;
          return new FileImpl(file.getId(), file.getName(), file.getPath(), file.getParent().getId(), file.getCreationDate(),
@@ -1694,9 +1695,9 @@ public class MemoryFileSystem implements VirtualFileSystem
             }
          }
 
-         return new ProjectImpl(folder.getId(), folder.getName(), mediaType == null ? ProjectImpl.FOLDER_MIME_TYPE : mediaType,
-            folder.getPath(), folder.getParent().getId(), folder.getCreationDate(),
-            folder.getProperties(propertyFilter), addLinks ? createProjectLinks(folder) : null, projectType);
+         return new ProjectImpl(folder.getId(), folder.getName(), mediaType, folder.getPath(),
+            folder.getParent().getId(), folder.getCreationDate(), folder.getProperties(propertyFilter),
+            addLinks ? createProjectLinks(folder) : null, projectType);
       }
 
       return new FolderImpl(object.getId(), object.getName(),
@@ -1791,10 +1792,10 @@ public class MemoryFileSystem implements VirtualFileSystem
       return links;
    }
 
-   private Map<String, Link> createBaseLinks(MemoryItem data) throws VirtualFileSystemException
+   private Map<String, Link> createBaseLinks(MemoryItem object) throws VirtualFileSystemException
    {
       Map<String, Link> links = new HashMap<String, Link>();
-      String id = data.getId();
+      String id = object.getId();
 
       links.put(Link.REL_SELF, //
          new LinkImpl(createURI("item", id), Link.REL_SELF, MediaType.APPLICATION_JSON));
@@ -1802,12 +1803,12 @@ public class MemoryFileSystem implements VirtualFileSystem
       links.put(Link.REL_ACL, //
          new LinkImpl(createURI("acl", id), Link.REL_ACL, MediaType.APPLICATION_JSON));
 
-      MemoryFolder parent = data.getParent();
+      MemoryFolder parent = object.getParent();
       // Root folder can't be moved copied and has not parent.
       if (parent != null)
       {
          links.put(Link.REL_DELETE, //
-            new LinkImpl(ItemType.FILE == data.getType() && ((MemoryFile)data).isLocked()
+            new LinkImpl(object.isFile() && ((MemoryFile)object).isLocked()
                ? createURI("delete", id, "lockToken", "[lockToken]") : createURI("delete", id),
                Link.REL_DELETE, null));
 
@@ -1815,7 +1816,7 @@ public class MemoryFileSystem implements VirtualFileSystem
             new LinkImpl(createURI("copy", id, "parentId", "[parentId]"), Link.REL_COPY, MediaType.APPLICATION_JSON));
 
          links.put(Link.REL_MOVE, //
-            new LinkImpl(ItemType.FILE == data.getType() && ((MemoryFile)data).isLocked()
+            new LinkImpl(object.isFile() && ((MemoryFile)object).isLocked()
                ? createURI("move", id, "parentId", "[parentId]", "lockToken", "[lockToken]")
                : createURI("move", id, "parentId", "[parentId]"),
                Link.REL_MOVE, MediaType.APPLICATION_JSON));
