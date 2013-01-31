@@ -1,0 +1,1336 @@
+/****************************************************************************************
+BUTTON
+
+style prefix: exo-button-
+****************************************************************************************/
+
+/*
+BUTTON x 20
+*/
+
+.exo-button-table
+{
+	border-collapse: collapse;
+}
+
+.exo-button-left-20,
+.exo-button-left-20-down,
+.exo-button-left-20-disabled,
+.exo-button-middle-20,
+.exo-button-middle-20-down,
+.exo-button-middle-20-disabled,
+.exo-button-right-20,
+.exo-button-right-20-down,
+.exo-button-right-20-disabled
+{
+	height: 20px;
+}
+
+.exo-button-left-20,
+.exo-button-left-20-down,
+.exo-button-left-20-disabled,
+.exo-button-right-20,
+.exo-button-right-20-down,
+.exo-button-right-20-disabled
+{
+	width: 4px;
+}
+
+.exo-button-middle-20,
+.exo-button-middle-20-down,
+.exo-button-middle-20-disabled
+{
+	text-align: center;
+}
+
+.exo-button-left-20
+{
+	background: url("images/button/20/button_left.png ") no-repeat;
+}
+
+.exo-button-left-20-down
+{
+	background: url("images/button/20/button_Down_left.png ") no-repeat;
+}
+
+.exo-button-left-20-disabled
+{
+	background: url("images/button/20/button_Disabled_left.png ") no-repeat;
+}
+
+.exo-button-middle-20
+{
+	background: url("images/button/20/button_middle.png ") repeat-x;
+}
+
+.exo-button-middle-20-down
+{
+	background: url("images/button/20/button_Down_middle.png ") repeat-x;
+}
+
+.exo-button-middle-20-disabled
+{
+	background: url("images/button/20/button_middle.png ") repeat-x;
+}
+
+.exo-button-right-20
+{
+	background: url("images/button/20/button_right.png ") no-repeat;
+}
+
+.exo-button-right-20-down
+{
+	background: url("images/button/20/button_Down_right.png ") no-repeat;
+}
+
+.exo-button-right-20-disabled
+{
+	background: url("images/button/20/button_right.png ") no-repeat;
+}
+
+/*
+BUTTON x 22
+*/
+
+.exo-button-left-22,
+.exo-button-left-22-down,
+.exo-button-left-22-disabled,
+.exo-button-middle-22,
+.exo-button-middle-22-down,
+.exo-button-middle-22-disabled,
+.exo-button-right-22,
+.exo-button-right-22-down,
+.exo-button-right-22-disabled
+{
+	height: 22px;
+}
+
+.exo-button-left-22,
+.exo-button-left-22-down,
+.exo-button-left-22-disabled,
+.exo-button-right-22,
+.exo-button-right-22-down,
+.exo-button-right-22-disabled
+{
+	width: 4px;
+}
+
+.exo-button-middle-22,
+.exo-button-middle-22-down,
+.exo-button-middle-22-disabled
+{
+	text-align: center;
+}
+
+.exo-button-left-22
+{
+	background: url("images/button/22/button_left.png ") no-repeat;
+}
+
+.exo-button-left-22-down
+{
+	background: url("images/button/22/button_Down_left.png ") no-repeat;
+}
+
+.exo-button-left-22-disabled
+{
+	background: url("images/button/22/button_Disabled_left.png ") no-repeat;
+}
+
+.exo-button-middle-22
+{
+	background: url("images/button/22/button_middle.png ") repeat-x;
+}
+
+.exo-button-middle-22-down
+{
+	background: url("images/button/22/button_Down_middle.png ") repeat-x;
+}
+
+.exo-button-middle-22-disabled
+{
+	background: url("images/button/22/button_middle.png ") repeat-x;
+}
+
+.exo-button-right-22
+{
+	background: url("images/button/22/button_right.png ") no-repeat;
+}
+
+.exo-button-right-22-down
+{
+	background: url("images/button/22/button_Down_right.png ") no-repeat;
+}
+
+.exo-button-right-22-disabled
+{
+	background: url("images/button/22/button_right.png ") no-repeat;
+}
+
+/*
+BUTTON TITLE
+*/
+
+.exo-button-title-table
+{
+	border-collapse: collapse;
+	height: 100%;
+	margin: auto;
+}
+
+.exo-button-title-icon
+{
+	width: 16px;
+}
+
+.exo-button-title-text,
+.exo-button-title-text-down,
+.exo-button-title-text-disabled
+{
+    font-family:Verdana,sans-serif;
+    font-size:11px;
+	color:#4C4C4C;
+    padding-left:2px;
+    padding-right:2px;
+}
+
+
+.exo-button-title-text
+{
+	color:#4C4C4C;
+	font-weight:bold;
+}
+
+.exo-button-title-text-down
+{
+	color:#4C4C4C;
+	font-weight:bold;
+}
+
+.exo-button-title-text-disabled
+{
+	color:#AAAAAA;
+	font-weight:normal;
+}
+/****************************************************************************************
+EXO - COMPONENTS - BUTTON
+****************************************************************************************/
+
+.exoComponentButton,
+.exoComponentButtonOver,
+.exoComponentButtonDown,
+.exoComponentButtonDisabled
+{
+	height: 22px;
+	width: 150px;
+}
+
+.exoComponentButtonTable,
+.exoComponentButtonTableLeft,
+.exoComponentButtonTableStretch,
+.exoComponentButtonTableRight
+{
+	height: 22px;
+}
+
+.exoComponentButtonTable
+{
+	border-collapse: collapse;
+	width: 100%;
+	margin: auto;
+}
+
+.exoComponentButtonTableLeft
+{
+	background: url("images/component/button/button-left.png") no-repeat;
+	width: 1px;
+}
+
+.exoComponentButtonTableStretch
+{
+	background: url("images/component/button/button-middle.png") repeat-x;
+}
+
+.exoComponentButtonTableRight
+{
+	background: url("images/component/button/button-right.png") no-repeat;
+	width: 1px;
+}
+
+.exoComponentButtonTitleTable
+{
+	border-collapse: collapse;
+	height: 100%;
+	margin: auto;
+}
+
+.exoIconButtonPanel,
+.exoIconButtonPanelOver,
+.exoIconButtonPanelDown,
+.exoIconButtonPanelSelected,
+.exoIconButtonPanelSelectedOver,
+.exoIconButtonPanelSelectedDown
+{
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+	background: url(images/component/icon-button/button.png);
+}
+
+.exoIconButtonPanel
+{
+	background-position: 0px 0px;
+}
+
+.exoIconButtonPanelOver
+{
+	background-position: 0px -24px;
+}
+
+.exoIconButtonPanelDown
+{
+	background-position: 0px -48px;
+}
+
+.exoIconButtonPanelSelected
+{
+	background-position: 0px -72px;
+}
+
+.exoIconButtonPanelSelectedOver
+{
+	background-position: 0px -96px;
+}
+
+.exoIconButtonPanelSelectedDown
+{
+	background-position: 0px -120px;
+}
+
+.exoIconButtonIcon
+{
+	width:16px;
+	height:16px;
+	margin: 4px;
+}
+/****************************************************************************************
+EXO - COMPONENTS - LOADER
+****************************************************************************************/
+
+.exoComponentLoader
+{
+	width: 247px;
+}
+
+.exoComponentLoaderNoIcon
+{
+	width: 222px;
+}
+
+.exoComponentLoaderHidden
+{
+	width: 0px;
+	overflow: hidden;
+}
+
+.exoComponentLoaderTable
+{
+	border-collapse: collapse;
+	width: 247px;
+}
+
+.exoComponentLoaderTableNoIcon
+{
+	border-collapse: collapse;
+	width: 222px;
+}
+
+.exoComponentLoaderTableLeft,
+.exoComponentLoaderTableLeftOver,
+.exoComponentLoaderTableLeftDown,
+
+.exoComponentLoaderTableStretch,
+.exoComponentLoaderTableStretchOver,
+.exoComponentLoaderTableStretchDown,
+
+.exoComponentLoaderTableDelimiter,
+.exoComponentLoaderTableDelimiterOver,
+.exoComponentLoaderTableDelimiterDown,
+
+.exoComponentLoaderTableButton,
+.exoComponentLoaderTableButtonOver,
+.exoComponentLoaderTableButtonDown,
+
+.exoComponentLoaderTableRight,
+.exoComponentLoaderTableRightOver,
+.exoComponentLoaderTableRightDown
+{
+	height: 24px;
+}
+
+/*
+LEFT
+*/
+.exoComponentLoaderTableLeft,
+.exoComponentLoaderTableLeftOver,
+.exoComponentLoaderTableLeftDown
+{
+	background: url(images/component/loader/loader-left.png) no-repeat;
+	width: 3px;
+}
+
+.exoComponentLoaderTableLeft
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableLeftOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableLeftDown
+{
+	background-position: 0px -48px;
+}
+
+
+/*
+RIGHT
+*/
+.exoComponentLoaderTableRight,
+.exoComponentLoaderTableRightOver,
+.exoComponentLoaderTableRightDown
+{
+	background: url(images/component/loader/loader-right.png) no-repeat;
+	width: 3px;
+}
+
+.exoComponentLoaderTableRight
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableRightOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableRightDown
+{
+	background-position: 0px -48px;
+}
+
+/*
+STRETCH
+*/
+.exoComponentLoaderTableStretch,
+.exoComponentLoaderTableStretchOver,
+.exoComponentLoaderTableStretchDown
+{
+	background: url(images/component/loader/loader-middle.png) repeat-x;
+}
+
+.exoComponentLoaderTableStretch
+{
+	background-position: 0px 0px;	
+}
+
+.exoComponentLoaderTableStretchOver
+{
+	background-position: 0px -24px;	
+}
+
+.exoComponentLoaderTableStretchDown
+{
+	background-position: 0px -48px;	
+}
+
+/*
+DELIMITER
+*/
+.exoComponentLoaderTableDelimiter,
+.exoComponentLoaderTableDelimiterOver,
+.exoComponentLoaderTableDelimiterDown
+{
+	width: 4px;
+	background: url(images/component/loader/loader-delimiter.png) no-repeat;
+}
+
+.exoComponentLoaderTableDelimiter
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableDelimiterOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableDelimiterDown
+{
+	background-position: 0px -48px;
+}
+
+/*
+BUTTON
+*/
+.exoComponentLoaderTableButton,
+.exoComponentLoaderTableButtonOver,
+.exoComponentLoaderTableButtonDown
+{
+	width:24px;
+	background: url(images/component/loader/loader-middle.png) repeat-x;
+}
+
+.exoComponentLoaderTableButton
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableButtonOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableButtonDown
+{
+	background-position: 0px -48px;
+}
+
+/*
+LOADER PROGRESS IMAGE
+*/
+.exoComponentLoaderProgressPanel
+{
+	height: 24px;
+	width: 214px;
+}
+
+.exoComponentLoaderProgressImage
+{
+	margin-top: 5px;
+	margin-left: 4px;
+	width: : 208px;
+	height: 13px;	
+}
+
+/*
+LOADER BUTTON
+*/
+
+.exoComponentLoaderButtonPanel
+{
+	width: 24px;
+	height: 24px;
+}
+
+.exoComponentLoaderButtonIcon
+{
+	width: 16px;
+	height: 16px;
+	margin-left: 4px;
+	margin-top: 4px;
+	cursor: pointer;
+	overflow: hidden;
+}
+.exoPopupButtonPanel,
+.exoPopupButtonPanelOver,
+.exoPopupButtonPanelDown
+{
+	height:24px;
+	width: 38px;
+	background: url(images/component/popup-button/popup-button.png);
+	overflow: hidden;
+}
+
+.exoPopupButtonPanel
+{
+	background-position: 0px 0px;
+}
+
+.exoPopupButtonPanelOver
+{
+	background-position: 0px -24px;
+}
+
+.exoPopupButtonPanelDown
+{
+	background-position: 0px -48px;
+}
+
+.exoPopupButtonIcon
+{
+	width:16px;
+	height:16px;
+	margin-left: 4px;
+	margin-top: 4px;
+}
+/****************************************************************************************
+STATUS TEXT COMPONENT
+****************************************************************************************/
+
+.exo-statusText-panel
+{
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;	
+	cursor: default;
+	height: 24px;	
+}
+
+.exo-statusText-table
+{
+	height:24px;
+	border-collapse: collapse;
+	width:100%;
+}
+
+.exo-statusText-table-left,
+.exo-statusText-table-left-over,
+.exo-statusText-table-left-down,
+.exo-statusText-table-middle,
+.exo-statusText-table-middle-over,
+.exo-statusText-table-middle-down,
+.exo-statusText-table-right,
+.exo-statusText-table-right-over,
+.exo-statusText-table-right-down
+{
+	height:24px;
+}
+
+.exo-statusText-table-left,
+.exo-statusText-table-left-over,
+.exo-statusText-table-left-down
+{
+	background: url(images/statusbar/statustext/statusTextLeft.png);
+	width: 3px;
+}
+
+.exo-statusText-table-left
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusText-table-left-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusText-table-left-down
+{
+	background-position: 0px -48px;
+}
+
+.exo-statusText-table-middle,
+.exo-statusText-table-middle-over,
+.exo-statusText-table-middle-down
+{
+	background: url(images/statusbar/statustext/statusTextMiddle.png) repeat-x;
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-statusText-table-middle
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusText-table-middle-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusText-table-middle-down
+{
+	background-position: 0px -48px;
+}
+
+.exo-statusText-table-right,
+.exo-statusText-table-right-over,
+.exo-statusText-table-right-down
+{
+	background: url(images/statusbar/statustext/statusTextRight.png);
+	width: 3px;
+}
+
+.exo-statusText-table-right
+{
+	background-position: 0px 0px;
+}
+
+.exo-statusText-table-right-over
+{
+	background-position: 0px -24px;
+}
+
+.exo-statusText-table-right-down
+{
+	background-position: 0px -48px;
+}
+
+.exo-statusText-table-middle
+{
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;	
+}
+/****************************************************************************************
+TEXT INPUT
+****************************************************************************************/
+.exoTextInputPanel,
+.exoTextInputTable,
+.exoTextInputTableLeft,
+.exoTextInputTableText,
+.exoTextInputTableDelimiter,
+.exoTextInputTableButton,
+.exoTextInputTableRight
+{
+	height: 24px;
+}
+
+.exoTextInputTable
+{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.exoTextInputTable tr td
+{
+	background-position: 0px -24px;
+}
+
+.exoTextInputTable tr td input
+{
+	background: #FDFCFD;
+}
+
+.exoTextInputTableDown tr td
+{
+	background-position: 0px -48px;
+}
+
+.exoTextInputTableDown tr td input
+{
+	background: #E1EFFF;
+}
+
+.exoTextInputTableLeft
+{
+	background: url(images/component/text-input/textinput-left.png) no-repeat;
+	width: 3px;
+}
+
+.exoTextInputTableText
+{
+	background: url(images/component/text-input/textinput-middle.png) repeat-x;
+}
+
+.exoTextInputTableDelimiter
+{
+	background: url(images/component/text-input/textinput-delimiter.png) no-repeat;
+	width: 4px;
+}
+
+.exoTextInputTableButton
+{
+	background: url(images/component/text-input/textinput-middle.png) repeat-x;
+	width:24px;
+}
+
+.exoTextInputTableRight
+{
+	background: url(images/component/text-input/textinput-right.png) no-repeat;
+	width: 3px;
+}
+
+.exoTextInputField
+{
+	border: none;
+	font-family:Verdana,Bitstream Vera Sans,sans-serif;
+	font-size:12px;
+	width: 100%;	
+}
+
+.exoTextInputButtonPanel
+{
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+}
+
+.exoTextInputButtonIcon
+{
+	width: 16px;
+	height: 16px;
+	margin: 4px;
+}
+.exoToolbarPanel
+{
+	width:100%;
+	background: url(images/component/toolbar/toolbar_Background.png) repeat-x;
+	height:32px;
+	cursor: default;
+}
+
+.exoToolbarElementLeft,
+.exoToolbarElementRight
+{
+	height: 24px;
+	padding-top:4px;
+}
+
+.exoToolbarElementLeft
+{
+	float: left;
+	padding-left: 4px;
+}
+
+.exoToolbarElementRight
+{
+	float: right;
+	padding-right: 4px;
+}
+
+.exoToolbarDelimiter
+{
+	width: 1px;
+	height: 24px;
+	background: url(images/component/toolbar/delimiter.png);
+}
+/**********************************************************************************************
+MENU BAR
+
+style prefix: exo-menuBar-
+***********************************************************************************************/
+
+.exo-menuBarTable
+{
+}
+
+.exo-menuBar,
+.exo-menuBarItem,
+.exo-menuBarItemOver,
+.exo-menuBarItemSelected,
+.exo-menuBarItemDisabled
+{
+	height: 20px;
+}
+
+.exo-menuBarItem,
+.exo-menuBarItemOver,
+.exo-menuBarItemSelected,
+.exo-menuBarItemDisabled
+{
+	padding-left: 8px;
+	padding-right: 8px;
+	cursor: default;	
+	
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-menuBar
+{
+	width:100%;
+	background: #FFFFFF url(images/component/menu/menu.png) repeat-x;
+}
+
+.exo-menuBarItem {
+	color:#333333;
+}
+
+.exo-menuBarItemOver {
+	color:#333333;
+	background-image: url("images/component/menu/menuItemOver.png");
+}
+
+.exo-menuBarItemSelected {
+	color:#333333;
+	background-image: url("images/component/menu/menuItemSelected.png");
+}
+
+.exo-menuBarItemDisabled {
+	color:#AAAAAA;
+}
+/****************************************************************************************
+POPUP MENU
+
+style prefix: exo-popupMenu-
+****************************************************************************************/
+
+.exo-popupMenuMain
+{
+    background:#FFFFFF url(images/popupMenu/menu_background.png) repeat-y scroll;
+ 	position:absolute;
+}
+
+.exo-popupMenuTable
+{
+    border: 1px solid #93A9C0;
+	font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px;
+    position:relative;
+    left:0px;
+    top:0px;
+}
+
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled,
+.exo-popupMenuIconField,
+.exo-popupMenuTitleField,
+.exo-popupMenuHotKeyField,
+.exo-popupMenuSubMenuField,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuTitleFieldOver,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuSubMenuFieldOver,
+.exo-popupMenuIconFieldDisabled,
+.exo-popupMenuTitleFieldDisabled,
+.exo-popupMenuHotKeyFieldDisabled,
+.exo-popupMenuSubMenuFieldDisabled,
+.exo-popupMenuDelimiter
+{
+	height:22px;
+	cursor: default;	
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled
+{
+	width:9px;
+	padding-left: 1px;
+	padding-right: 3px;
+}
+
+.exo-popupMenuIconField,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuIconFieldDisabled
+{
+	width:23px;
+	padding-left:4px;
+	padding-right:1px; 
+}
+
+.exo-popupMenuTitleField
+ {
+    color:#333333;
+	padding-top:2px;
+	padding-bottom:2px;    
+}
+
+.exo-popupMenuHotKeyField
+{
+}
+
+.exo-popupMenuSubMenuField,
+.exo-popupMenuSubMenuFieldOver,
+.exo-popupMenuSubMenuFieldDisabled
+{
+	width:10px; 
+}
+
+.exo-popupMenuHotKeyField,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuHotKeyFieldDisabled
+{
+	width:10px;
+	padding-left:6px;
+	padding-right:6px;
+}
+
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuTitleFieldOver,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuSubMenuFieldOver
+{
+	background:#FFFFFF url(images/popupMenu/menu_rollover.png) repeat-x scroll 0px 1px;
+}
+
+.exo-popupMenuIconFieldDisabled,
+.exo-popupMenuTitleFieldDisabled,
+.exo-popupMenuHotKeyFieldDisabled,
+.exo-popupMenuSubMenuFieldDisabled
+{
+	color:#AAAAAA;	
+}
+
+.exo-popupMenuSubMenuImage
+{
+	width:7px;
+	height:7px;
+}
+
+.exo-popupMenuDelimiter
+{
+	padding-left: 4px;
+	padding-right: 4px;
+}
+/****************************************************************************************
+SHADOW
+
+style prefix: exo-shadow-
+****************************************************************************************/
+
+.exo-shadow-panel
+{
+	position: absolute;
+	z-index: 0;
+}
+
+.exo-shadow-table
+{
+	width: 100%;
+	height: 100%;
+	border-collapse: collapse;
+}
+
+.exo-shadow-tl,
+.exo-shadow-t,
+.exo-shadow-tr,
+.exo-shadow-bl,
+.exo-shadow-b,
+.exo-shadow-br
+{
+	height: 10px;
+}
+
+.exo-shadow-tl,
+.exo-shadow-tr,
+.exo-shadow-l,
+.exo-shadow-r,
+.exo-shadow-bl,
+.exo-shadow-br
+{
+	width: 10px;
+}
+
+.exo-shadow-tl
+{
+	background: url("images/shadow/shadow_TL.png") no-repeat;
+}
+
+.exo-shadow-t
+{
+	background: url("images/shadow/shadow_T.png") repeat-x;
+}
+
+.exo-shadow-tr
+{
+	background: url("images/shadow/shadow_TR.png") no-repeat;
+}
+
+.exo-shadow-l
+{
+	background: url("images/shadow/shadow_L.png") repeat-y;
+}
+
+.exo-shadow-m
+{
+}
+
+.exo-shadow-r
+{
+	background: url("images/shadow/shadow_R.png") repeat-y;
+}
+
+.exo-shadow-bl
+{
+	background: url("images/shadow/shadow_BL.png") no-repeat;
+}
+
+.exo-shadow-b
+{
+	background: url("images/shadow/shadow_B.png") repeat-x;
+}
+
+.exo-shadow-br
+{
+	background: url("images/shadow/shadow_BR.png") no-repeat;
+}
+.exo-blank
+{
+	width: 1px;
+	height: 1px;
+}
+
+.exo-lockLayer
+{
+	
+ 	background: url("images/blank.png") repeat;
+						 	
+ 	/*
+ 	background: url("images/blank_alpha.png") repeat;
+ 	*/
+}
+
+.exo-icon-16
+{
+	width: 16px;
+	height: 16px;
+}
+
+.exo-canvas
+{
+	position: absolute;	
+}
+/****************************************************************************************
+TREE
+****************************************************************************************/
+
+.exo-tree-panel
+{
+	width: 100%;
+}
+
+.exo-tree-row,
+
+.exo-tree-row-overed,
+.exo-tree-row-selected,
+.exo-tree-row-selected-overed,
+
+.exo-tree-control-image-panel,
+.exo-tree-control-icon-panel,
+.exo-tree-control-title-panel
+{
+	height: 20px;
+}
+
+.exo-tree-row-overed
+{
+	width: 100%;
+	background: url(images/tree/row_over.png) repeat-x;
+}
+
+.exo-tree-row-selected
+{
+	width: 100%;
+	background: url(images/tree/row-selected.png) repeat-x;
+}
+
+.exo-tree-row-selected-overed
+{
+	width: 100%;
+	background: url(images/tree/row-selected_over.png) repeat-x;
+}
+
+
+.exo-tree-row
+{
+	width: 100%;
+}
+
+.exo-tree-row-over
+{
+	background: url(images/tree/row_over.png) repeat-x;
+}
+
+.exo-tree-row-selected
+{
+	background: url(images/tree/row-selected.png) repeat-x;
+}
+
+.exo-tree-row-selected-over
+{
+	background: url(images/tree/row-selected_over.png) repeat-x;
+}
+
+.exo-tree-control-image-panel
+{
+	width: 20px;
+	float: left;
+	overflow: hidden;
+	cursor: default;
+}
+
+.exo-tree-control-image
+{
+	width: 16px;
+	height: 16px;
+	margin: 2px;
+	cursor: pointer;
+}
+
+.exo-tree-control-icon-panel
+{
+	width: 20px;
+	float: left;
+	cursor: default;
+}
+
+.exo-tree-control-icon-image
+{
+	width: 16px;
+	height: 16px;
+	margin: 2px;
+	float: left;
+	cursor: default;
+}
+
+.exo-tree-control-title-panel
+{
+    float: left;
+}
+
+.exo-tree-control-title-table
+{
+	height: 100%;
+	border-collapse: collapse;
+}
+
+.exo-tree-control-title-table-tr
+{
+	vertical-align: middle;
+}
+
+.exo-tree-control-title-table-td
+{
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 11px;
+    cursor: default;
+}
+/****************************************************************************************
+WINDOW
+
+style prefix: exo-window-
+****************************************************************************************/
+
+.exo-window-panel
+{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	z-index: 1;
+}
+
+.exo-window-table
+{
+	width: 100%;
+	height:100%;
+	border-collapse: collapse;
+}
+
+.exo-window-tl,
+.exo-window-t,
+.exo-window-tr
+{
+	height: 23px;
+}
+
+.exo-window-bl,
+.exo-window-b,
+.exo-window-br
+{
+	height: 6px;
+}
+
+.exo-window-tr,
+.exo-window-tl,
+.exo-window-l,
+.exo-window-bl
+{
+	width: 6px;
+}
+
+.exo-window-tl
+{
+	background: url("images/window/window_TL.png") no-repeat;
+}
+
+.exo-window-t
+{
+	background: url("images/window/window_T.png") repeat-x;
+}
+
+.exo-window-tr
+{
+	background: url("images/window/window_TR.png") no-repeat;
+}
+
+.exo-window-l
+{
+	background: url("images/window/window_L.png") repeat-y;
+}
+
+.exo-window-r
+{
+	background: url("images/window/window_R.png") repeat-y;
+}
+
+.exo-window-bl
+{
+	background: url("images/window/window_BL.png") no-repeat;
+}
+
+.exo-window-b
+{
+	background: url("images/window/window_B.png") repeat-x;
+}
+
+.exo-window-br
+{
+	background: url("images/window/window_BR.png") no-repeat;
+}
+
+.exo-window-m
+{
+	background: #FFFFFF;
+}
+
+/****************************************************************************************
+WINDOW HEADER
+****************************************************************************************/
+
+.exo-window-header-table
+{
+	width: 100%;
+	height:17px;
+	margin-top: 1px;
+	border-collapse: collapse;
+}
+
+/****************************************************************************************
+WINDOW TITLE
+****************************************************************************************/
+
+.exo-window-header-title
+{
+    font-family:Verdana,sans-serif;
+    font-size:11px;
+    font-weight:bold;
+	color:#4C4C4C;
+    padding-left:2px;
+    padding-right:2px;
+    padding-bottom:2px;
+}
+
+/****************************************************************************************
+WINDOW ICON, BUTTONS
+****************************************************************************************/
+
+.exo-window-icon,
+.exo-window-control-button
+{
+	width: 16px;
+}
+
+.exo-window-control-image
+{
+	width: 16px;
+	height: 16px;
+}
