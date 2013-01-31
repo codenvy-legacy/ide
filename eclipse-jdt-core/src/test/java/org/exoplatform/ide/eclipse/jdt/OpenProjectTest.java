@@ -23,10 +23,14 @@ import static org.junit.Assert.assertTrue;
 import com.codenvy.eclipse.core.resources.IProject;
 import com.codenvy.eclipse.core.runtime.CoreException;
 import com.codenvy.eclipse.core.runtime.IStatus;
+import com.codenvy.eclipse.jdt.core.ICompilationUnit;
 import com.codenvy.eclipse.jdt.core.IJavaProject;
 import com.codenvy.eclipse.jdt.core.IType;
 import com.codenvy.eclipse.jdt.core.JavaCore;
+import com.codenvy.eclipse.jdt.core.refactoring.descriptors.RenameJavaElementDescriptor;
+import com.codenvy.eclipse.jdt.internal.core.DefaultWorkingCopyOwner;
 import com.codenvy.eclipse.jdt.internal.core.JavaModelManager;
+import com.codenvy.eclipse.jdt.internal.corext.refactoring.scripting.RenameMethodRefactoringContribution;
 import com.codenvy.eclipse.jdt.ui.refactoring.RenameSupport;
 
 import org.apache.commons.io.IOUtils;
@@ -39,6 +43,7 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -72,7 +77,7 @@ public class OpenProjectTest extends ResourcesBaseTest
          new ByteArrayInputStream("package com.exo;\npublic class My{ private My ins = null; public void dodo(){}}".getBytes()));
 
       vfs.createFile(folder.getId(), "Foo.java", MediaType.TEXT_PLAIN_TYPE,
-         new ByteArrayInputStream("package com.exo;\npublic class Foo{ My fff; \n public void dome(){ My ddd = fff;}}".getBytes()));
+         new ByteArrayInputStream("package com.exo;\npublic class Foo{ My fff; \n public void dome(){ My ddd = fff;} public void dodo(){}}".getBytes()));
       vfs.createFile(project.getId(), ".classpath", MediaType.TEXT_PLAIN_TYPE, new ByteArrayInputStream(
          "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<classpath><classpathentry kind=\"output\" path=\"bin\"/><classpathentry kind=\"src\" path=\"src/main/java\"/></classpath>".getBytes()));
 
@@ -130,6 +135,39 @@ public class OpenProjectTest extends ResourcesBaseTest
 //      String ourContent = IOUtils.toString(content.getStream());
 //      System.out.println(ourContent);
 //      assertTrue(ourContent.contains("MyClass fff"));
+   }
+
+   @Test
+   @Ignore
+   public void renameMethod() throws CoreException, InvocationTargetException, InterruptedException, IOException, VirtualFileSystemException
+   {
+      IProject project = ws.getRoot().getProject("proj");
+      IJavaProject javaProject = JavaCore.create(project);
+      javaProject.open(null);
+      CountDownLatch latch = new CountDownLatch(2);
+      JavaModelManager.getIndexManager().indexAll(javaProject.getProject(), latch);
+      latch.await(2, TimeUnit.MINUTES);
+
+      IType type = javaProject.findType("com.exo.My");
+      ICompilationUnit workingCopy = type.getCompilationUnit().getWorkingCopy(DefaultWorkingCopyOwner.PRIMARY,null);
+
+      //      RenameSupport renameSupport = RenameSupport.create(type.getMethods()[0], "www",
+//         RenameSupport.UPDATE_REFERENCES);
+      RenameJavaElementDescriptor descriptor = (RenameJavaElementDescriptor)new RenameMethodRefactoringContribution().createDescriptor();
+      descriptor.setJavaElement(workingCopy.findPrimaryType().getMethods()[0]);
+      descriptor.setNewName("www");
+      descriptor.setKeepOriginal(false);
+      descriptor.setDeprecateDelegate(false);
+      descriptor.setUpdateReferences(true);
+      RenameSupport renameSupport = RenameSupport.create(descriptor);
+//      IStatus status = renameSupport.preCheck();
+//      System.out.println(status.getMessage());
+      renameSupport.perform();
+      workingCopy.discardWorkingCopy();
+      ContentStream content = vfs.getContent("/proj/src/main/java/com/exo/Foo.java", null);
+      String c = IOUtils.toString(content.getStream());
+      System.out.println(c);
+      assertTrue(c.contains("void dodo()"));
    }
 
 

@@ -11,9 +11,12 @@
 package com.codenvy.eclipse.ltk.internal.core.refactoring.history;
 
 import com.codenvy.eclipse.core.runtime.Assert;
+import com.codenvy.eclipse.jdt.core.refactoring.IJavaRefactorings;
+import com.codenvy.eclipse.jdt.internal.corext.refactoring.scripting.RenameMethodRefactoringContribution;
 import com.codenvy.eclipse.ltk.core.refactoring.RefactoringContribution;
 import com.codenvy.eclipse.ltk.core.refactoring.RefactoringDescriptor;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -161,9 +164,13 @@ public final class RefactoringContributionManager
     */
    private void populateCache()
    {
-      //		if (fContributionCache == null || fIdCache == null) {
-      //			fContributionCache= new HashMap(32);
-      //			fIdCache= new HashMap(32);
+      		if (fContributionCache == null || fIdCache == null) {
+      			fContributionCache= new HashMap(32);
+      			fIdCache= new HashMap(32);
+               RenameMethodRefactoringContribution instance = new RenameMethodRefactoringContribution();
+               fContributionCache.put(IJavaRefactorings.RENAME_METHOD, instance);
+               fIdCache.put(instance, IJavaRefactorings.RENAME_METHOD);
+            }
       //			final IConfigurationElement[] elements= Platform.getExtensionRegistry().getConfigurationElementsFor(
       //            RefactoringCore.ID_PLUGIN, REFACTORING_CONTRIBUTIONS_EXTENSION_POINT);
       //			for (int index= 0; index < elements.length; index++) {

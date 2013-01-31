@@ -63,6 +63,25 @@ public class ServicesJavaTextFuction extends BaseTest
       waitEditorIsReady();
    }
 
+   
+   public void openJavaClassInPackageExplorerFormat(String PROJECT) throws Exception
+   {
+      IDE.PROJECT.PACKAGE_EXPLORER.waitForItem(PROJECT + "/" + "src");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller");
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"
+         + "SimpleSum.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"
+         + "SimpleSum.java");
+      waitEditorIsReady();
+   }
+   
+   
    public void openJavaClassForFormatInAlreadyOpenedProgect(String PROJECT) throws Exception
    {
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"

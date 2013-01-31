@@ -43,6 +43,8 @@ public class PackageExplorer extends AbstractTestModule
    {
       String PACKAGE_EXPLORER_ID = "idePackageExplorerTreeGrid";
 
+      String PACKAGE_EXPLORER = "(//div[@id='idePackageExplorerTreeGrid']//div[@role='treeitem'])[last()]";
+
       String PACKAGE_EXPLORER_ITEM =
          "//div[@id='idePackageExplorerTreeGrid']//div[@class='ide-Tree-label' and text()='%s']";
 
@@ -85,6 +87,9 @@ public class PackageExplorer extends AbstractTestModule
 
    @FindBy(id = Locators.PACKAGE_EXPLORER_ID)
    private WebElement packageExplorerId;
+
+   @FindBy(xpath = Locators.PACKAGE_EXPLORER)
+   private WebElement packageExplorer;
 
    @FindBy(xpath = Locators.CLOSE_PACKAGE_EXPLORER_BUTTON)
    private WebElement closePackageExplorerButton;
@@ -146,7 +151,7 @@ public class PackageExplorer extends AbstractTestModule
     */
    public void waitPackageExplorerOpened() throws Exception
    {
-      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOf(packageExplorerId));
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOf(packageExplorer));
       IDE().PROGRESS_BAR.waitProgressBarControlClose();
       IDE().LOADER.waitClosed();
    }
@@ -157,7 +162,7 @@ public class PackageExplorer extends AbstractTestModule
    public void waitPackageExplorerClosed()
    {
       new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
-         .id(Locators.PACKAGE_EXPLORER_ID)));
+         .xpath(Locators.PACKAGE_EXPLORER)));
    }
 
    /**
