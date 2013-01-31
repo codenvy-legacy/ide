@@ -82,6 +82,14 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ext-css</artifactId>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ext-gae</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ext-cloudfoundry</artifactId>
+      </dependency>
 
     <!-- fix dependecies in JCR. Used for VFS-JCR -->
             <dependency>

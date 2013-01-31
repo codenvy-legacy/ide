@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,24 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.api.ui.preferences;
-
-import org.exoplatform.ide.extension.SDK;
-import org.exoplatform.ide.preferences.PreferencesPagePresenter;
-
+package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
 /**
- * Provides add new preference page.
+ * Handler to execute, when login to CloudFoundry was canceled.
  * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: LoginCanceledHandler.java Jun 29, 2011 4:13:14 PM vereshchaka $
  */
-@SDK(title = "ide.api.ui.preferences")
-public interface PreferencesAgent
+public interface LoginCanceledHandler
 {
-   /**
-    * Adds new preference page into preferences list.
-    * 
-    * @param page
-    */
-   void addPage(PreferencesPagePresenter page);
+   void onLoginCanceled();
 }

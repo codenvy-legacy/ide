@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,24 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.api.ui.preferences;
+package org.exoplatform.ide.job;
 
-import org.exoplatform.ide.extension.SDK;
-import org.exoplatform.ide.preferences.PreferencesPagePresenter;
-
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * Provides add new preference page.
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: Sep 19, 2011 evgen $
  */
-@SDK(title = "ide.api.ui.preferences")
-public interface PreferencesAgent
+public interface JobChangeHandler extends EventHandler
 {
-   /**
-    * Adds new preference page into preferences list.
-    * 
-    * @param page
-    */
-   void addPage(PreferencesPagePresenter page);
+   void onJobChangeHandler(JobChangeEvent event);
 }

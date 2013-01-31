@@ -182,8 +182,17 @@
             <artifactId>exo-ext-css</artifactId>
             <version>${project.version}</version>
          </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ext-gae</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ext-cloudfoundry</artifactId>
+            <version>${project.version}</version>
+         </dependency>
                                                                                            
-
 	<!-- OTHER -->
 
          <!--dependency>
@@ -455,5 +464,7 @@
       <module>exo-ext-css</module>
       <module>exo-ide-java</module>
       <module>exo-ide-client</module>
+      <module>exo-ext-gae</module>
+      <module>exo-ext-cloudfoundry</module>
    </modules>
 </project>

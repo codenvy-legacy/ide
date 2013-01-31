@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,24 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.api.ui.preferences;
+package org.exoplatform.ide.api.ui.paas;
+
+import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.extension.SDK;
+import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.preferences.PreferencesPagePresenter;
-
+import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
- * Provides add new preference page.
+ * Provides register new PaaS.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-@SDK(title = "ide.api.ui.preferences")
-public interface PreferencesAgent
+@SDK(title = "ide.api.ui.paas")
+public interface PaaSAgent
 {
    /**
-    * Adds new preference page into preferences list.
+    * Registers new PaaS.
     * 
-    * @param page
+    * @param id
+    * @param title
+    * @param image
+    * @param providesTemplate
+    * @param supportedProjectTypes
+    * @param wizardPage
+    * @param preferencePage
     */
-   void addPage(PreferencesPagePresenter page);
+   public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
+      JsonArray<String> supportedProjectTypes, WizardPagePresenter wizardPage, PreferencesPagePresenter preferencePage);
 }

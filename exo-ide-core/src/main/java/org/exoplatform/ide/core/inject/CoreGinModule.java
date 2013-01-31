@@ -28,6 +28,7 @@ import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
+import org.exoplatform.ide.api.ui.paas.PaaSAgent;
 import org.exoplatform.ide.api.ui.preferences.PreferencesAgent;
 import org.exoplatform.ide.api.ui.toolbar.ToolbarAgent;
 import org.exoplatform.ide.api.ui.wizard.WizardAgent;
@@ -48,6 +49,7 @@ import org.exoplatform.ide.menu.MainMenuView;
 import org.exoplatform.ide.menu.MainMenuViewImpl;
 import org.exoplatform.ide.outline.OutlinePartPrenter;
 import org.exoplatform.ide.outline.OutlinePartViewImpl;
+import org.exoplatform.ide.paas.PaaSAgentImpl;
 import org.exoplatform.ide.part.FocusManager;
 import org.exoplatform.ide.part.PartStackPresenter;
 import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
@@ -88,6 +90,7 @@ public class CoreGinModule extends AbstractGinModule
       bind(Resources.class).in(Singleton.class);
       bind(ExtensionRegistry.class).in(Singleton.class);
       bind(StandardComponentInitializer.class).in(Singleton.class);
+      bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
 
       resourcesAPIconfigure();
 

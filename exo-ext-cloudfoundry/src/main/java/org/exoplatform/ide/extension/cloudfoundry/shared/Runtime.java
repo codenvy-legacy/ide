@@ -16,24 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.api.ui.preferences;
-
-import org.exoplatform.ide.extension.SDK;
-import org.exoplatform.ide.preferences.PreferencesPagePresenter;
-
+package org.exoplatform.ide.extension.cloudfoundry.shared;
 
 /**
- * Provides add new preference page.
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
  */
-@SDK(title = "ide.api.ui.preferences")
-public interface PreferencesAgent
+public interface Runtime
 {
-   /**
-    * Adds new preference page into preferences list.
-    * 
-    * @param page
-    */
-   void addPage(PreferencesPagePresenter page);
+   String getName();
+
+   void setName(String name);
+
+   String getVersion();
+
+   void setVersion(String version);
+
+   String getDescription();
+
+   void setDescription(String description);
 }

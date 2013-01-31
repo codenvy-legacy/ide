@@ -20,6 +20,8 @@
   <inherits name='org.exoplatform.ide.java.Java' />
   <inherits name='org.exoplatform.ide.extension.demo.Demo' />
   <inherits name='org.exoplatform.ide.extension.css.Css' />
+  <inherits name='org.exoplatform.ide.extension.gae.GAE' />
+  <inherits name='org.exoplatform.ide.extension.cloudfoundry.CloudFoundry' />
   
   <stylesheet src="IDE.css"/>
   
