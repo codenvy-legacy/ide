@@ -19,7 +19,6 @@
 package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
@@ -96,7 +95,7 @@ public class OpeningFilesTest extends BaseTest
       // create txt file. Change content
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, file1Content);
+      IDE.EDITOR.typeTextIntoEditor(file1Content);
       IDE.EDITOR.saveAs(0, file1Name);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folderName + "/" + file1Name);
       IDE.EDITOR.closeFile(file1Name);
@@ -118,8 +117,8 @@ public class OpeningFilesTest extends BaseTest
 
       // open first file and check the saved content
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + folderName + "/" + file1Name);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + folderName + "/" + file1Name);
-      assertEquals(file1Content, IDE.EDITOR.getTextFromCodeEditor(2));
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(file1Content, IDE.EDITOR.getTextFromCodeEditor());
       IDE.EDITOR.closeFile(0);
 
       // delete first file, delete folder and check deleting
@@ -129,7 +128,7 @@ public class OpeningFilesTest extends BaseTest
       IDE.DELETE.clickOkButton();
       IDE.DELETE.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + folderName);
-      assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT));
+      IDE.PROJECT.EXPLORER.waitItemPresent(PROJECT);
    }
 
 }

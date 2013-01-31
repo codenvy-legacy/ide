@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -25,9 +28,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -84,24 +84,24 @@ public class HighlightEditorsTabTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //step 1 open file after close 'welcome' tab      
+      // step 1 open file after close 'welcome' tab
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
 
       IDE.EDITOR.clickCloseEditorButton(0);
       IDE.EDITOR.waitTabNotPresent(0);
 
-      //step 2 check highlight googlegadget in ckeditor
+      // step 2 check highlight googlegadget in ckeditor
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-      IDE.EDITOR.isHighlighterInEditor(0);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.waitHighlighterInEditor(0);
       IDE.EDITOR.forcedClosureFile(0);
 
       IDE.EDITOR.waitTabNotPresent(0);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
-      IDE.EDITOR.isHighlighterInEditor(1);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.waitHighlighterInEditor(1);
 
    }
 

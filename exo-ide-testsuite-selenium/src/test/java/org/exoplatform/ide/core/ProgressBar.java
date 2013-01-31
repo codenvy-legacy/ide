@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -35,78 +36,62 @@ public class ProgressBar extends AbstractTestModule
    private static final String PROGRESS_BAR_CONTROL = "//div[@control-id='__request-notification-control']";
 
    private static final String PROGRESS_BAR_VIEW = "//div[@view-id='ideRequestNotificationView']";
-   
+
    @FindBy(xpath = PROGRESS_BAR_CONTROL)
    private WebElement control;
-   
+
    @FindBy(xpath = PROGRESS_BAR_VIEW)
    private WebElement view;
-   
+
    public void waitProgressBarView()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
          {
-            @Override
-            public Boolean apply(WebDriver input)
+            try
             {
-               try
-               {
-                  return view != null && view.isDisplayed();
-               }
-               catch (NoSuchElementException e)
-               {
-                  return false;
-               }
+               return view != null && view.isDisplayed();
             }
-         });
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
-   
+
    public void clickProgressBarControl()
    {
       control.click();
    }
-   
+
    public void waitProgressBarControl()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
          {
-            @Override
-            public Boolean apply(WebDriver input)
+            try
             {
-               try
-               {
-                  return control != null && control.isDisplayed();
-               }
-               catch (NoSuchElementException e)
-               {
-                  return false;
-               }
+               return control != null && control.isDisplayed();
             }
-         });
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
-   
-   
-   
+
    public void waitProgressBarControlClose()
    {
-      new WebDriverWait(driver(), 45).until(new ExpectedCondition<Boolean>()
-         {
-            @Override
-            public Boolean apply(WebDriver input)
-            {
-               try
-               {
-                  return !(input.findElement(By.xpath(PROGRESS_BAR_CONTROL)).isDisplayed());
-               }
-               catch (NoSuchElementException e)
-               {
-                  return true;
-               }
-            }
-         });
+      new WebDriverWait(driver(), 180).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .xpath(PROGRESS_BAR_CONTROL)));
    }
-   
-   
+
    public String getViewText()
    {
       return view.getText();

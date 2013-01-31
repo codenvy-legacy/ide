@@ -20,6 +20,9 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,66 +31,59 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 
-//IDE-24
-public class RESTServiceVaditionCorrectTest extends BaseTest
-{
-   private final static String FILE_NAME = "VaditionCorrectTest.groovy";
+// IDE-24
+public class RESTServiceVaditionCorrectTest extends BaseTest {
+	private final static String FILE_NAME = "VaditionCorrectTest.groovy";
 
-   private final static String PROJECT = RESTServiceVaditionCorrectTest.class.getSimpleName();
+	private final static String PROJECT = RESTServiceVaditionCorrectTest.class
+			.getSimpleName();
 
-   private static final String VALID_SCRIPT = "// simple groovy script\n" + "import javax.ws.rs.Path\n"
-      + "import javax.ws.rs.GET\n" + "import javax.ws.rs.PathParam\n \n" + "@Path(\"/\")\n"
-      + "public class HelloWorld {\n" + "@GET\n" + "@Path(\"helloworld/{name}\")\n"
-      + "public String hello(@PathParam(\"name\") String name) {\n" + "return \"Hello \" + name\n" + "}\n" + "}\n";
+	private static final String VALID_SCRIPT = "// simple groovy script\n"
+			+ "import javax.ws.rs.Path\n" + "import javax.ws.rs.GET\n"
+			+ "import javax.ws.rs.PathParam\n \n" + "@Path(\"/\")\n"
+			+ "public class HelloWorld {\n" + "@GET\n"
+			+ "@Path(\"helloworld/{name}\")\n"
+			+ "public String hello(@PathParam(\"name\") String name) {\n"
+			+ "return \"Hello \" + name\n" + "}\n" + "}\n";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFile(link, FILE_NAME, MimeType.GROOVY_SERVICE, VALID_SCRIPT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			Map<String, Link> project = VirtualFileSystemUtils
+					.createDefaultProject(PROJECT);
+			Link link = project.get(Link.REL_CREATE_FILE);
+			VirtualFileSystemUtils.createFile(link, FILE_NAME,
+					MimeType.GROOVY_SERVICE, VALID_SCRIPT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testValidaton() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testValidaton() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.LOADER.waitClosed();
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
 
-      String message = IDE.REST_SERVICE.validate(1);
-      assertTrue(message.contains(FILE_NAME + " validated successfully."));
-   }
+		String message = IDE.REST_SERVICE.validate(1);
+		assertTrue(message.contains(FILE_NAME + " validated successfully."));
+	}
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 }

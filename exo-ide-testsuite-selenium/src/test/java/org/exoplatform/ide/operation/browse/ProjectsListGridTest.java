@@ -19,8 +19,6 @@
 package org.exoplatform.ide.operation.browse;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
@@ -76,7 +74,7 @@ public class ProjectsListGridTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT1);
       IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT2);
-      assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
+      IDE.PROJECT.EXPLORER.waitProjectsListGridVisible();
       int countOfProjects = IDE.PROJECT.EXPLORER.getProjectsCountInProjectsListGrid();
 
       // make sure that two test projects are present in the projects list grid
@@ -88,19 +86,19 @@ public class ProjectsListGridTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT1);
       IDE.LOADER.waitClosed();
 
-      assertFalse(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
+      IDE.PROJECT.EXPLORER.waitProjectsListGridNotVisible();
 
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.CLOSE_PROJECT);
       IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT1);
-      assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
-      
+      IDE.PROJECT.EXPLORER.waitProjectsListGridVisible();
+
       // delete project1
       VirtualFileSystemUtils.delete(WS_URL + PROJECT1 + "/");
       driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItemInProjectList(PROJECT2);
-      assertTrue(IDE.PROJECT.EXPLORER.isProjectsListGridVisible());
+      IDE.PROJECT.EXPLORER.waitProjectsListGridVisible();
       assertEquals(countOfProjects - 1, IDE.PROJECT.EXPLORER.getProjectsCountInProjectsListGrid());
    }
 

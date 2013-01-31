@@ -19,22 +19,16 @@
 package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
-import com.google.gwt.editor.client.Editor.Ignore;
+import java.io.IOException;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
 
 /**
  * IDE-156:HotKeys customization.
@@ -55,6 +49,8 @@ public class HotkeysInFCKEditorTest extends BaseTest
    private static final String FILE_NAME = "GoogleGadget.xml";
 
    private static final String FILE_NAME2 = "GoogleGadget.xml";
+
+   private static final String TEXT = "test_text";
 
    @BeforeClass
    public static void setUp() throws Exception
@@ -94,8 +90,8 @@ public class HotkeysInFCKEditorTest extends BaseTest
    @Test
    public void testFormatingTextHotkeysForFCKEditor() throws Exception
    {
-      //step one open test file, switch to ck_editor,
-      //delete content (hotkey ctrl+a, press del), checking
+      // step one open test file, switch to ck_editor,
+      // delete content (hotkey ctrl+a, press del), checking
       // press short key ctrl+z and check restore
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
@@ -104,30 +100,29 @@ public class HotkeysInFCKEditorTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.EDITOR.waitTabPresent(1);
-      //need for redraw design button 
-      Thread.sleep(1000);
-      IDE.CK_EDITOR.clickDesignButton(0);
-      IDE.CK_EDITOR.waitToolsCkEditor(1);
-      IDE.CK_EDITOR.waitIsTextPresent("Hello, world!", 1 );
-      IDE.CK_EDITOR.deleteFileContentInCKEditor(1);
-      IDE.CK_EDITOR.getTextFromCKEditor(1);
-      assertEquals("", IDE.CK_EDITOR.getTextFromCKEditor(1));
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "z");
-      assertEquals("Hello, world!", IDE.CK_EDITOR.getTextFromCKEditor(1));
-      //check bold formating
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "a");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "b");
-      IDE.CK_EDITOR.waitBoldTextPresent("Hello, world!", 1);
-      //check bold-italic formating
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "a");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "i");
-      IDE.CK_EDITOR.waitItalicBoldTextPresent("Hello, world!", 1);
-      //check italic firmating
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "b");
-      IDE.CK_EDITOR.waitItalicTextPresent("Hello, world!", 1);
-      //check no formating
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "i");
-      assertEquals("Hello, world!", IDE.CK_EDITOR.getTextFromCKEditor(1));
+      IDE.EDITOR.waitActiveFile();
+      IDE.CK_EDITOR.clickDesignButton();
+      IDE.CK_EDITOR.waitToolsCkEditor();
+      IDE.CK_EDITOR.waitIsTextPresent("Hello, world!");
+      IDE.CK_EDITOR.deleteFileContentInCKEditor();
+      IDE.CK_EDITOR.getTextFromCKEditor();
+      assertEquals("", IDE.CK_EDITOR.getTextFromCKEditor());
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "z");
+      assertEquals("Hello, world!", IDE.CK_EDITOR.getTextFromCKEditor());
+      // check bold formating
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "a");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "b");
+      IDE.CK_EDITOR.waitBoldTextPresent("Hello, world!");
+      // check bold-italic formating
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "a");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "i");
+      IDE.CK_EDITOR.waitItalicBoldTextPresent("Hello, world!");
+      // check italic firmating
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "b");
+      IDE.CK_EDITOR.waitItalicTextPresent("Hello, world!");
+      // check no formating
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "i");
+      assertEquals("Hello, world!", IDE.CK_EDITOR.getTextFromCKEditor());
       IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
@@ -136,25 +131,28 @@ public class HotkeysInFCKEditorTest extends BaseTest
    {
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FOLDER + "/" + FILE_NAME);
-      IDE.CK_EDITOR.clickDesignButton(1);
-      IDE.CK_EDITOR.waitToolsCkEditor(2);
-      IDE.CK_EDITOR.waitIsTextPresent("Hello, world!", 2);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "a");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "c");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "v");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "v");
-      assertEquals("Hello, world! Hello, world!", IDE.CK_EDITOR.getTextFromCKEditor(2));
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "a");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "x");
-      assertEquals("", IDE.CK_EDITOR.getTextFromCKEditor(2));
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "v");
-      assertEquals("Hello, world! Hello, world!", IDE.CK_EDITOR.getTextFromCKEditor(2));
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "s");
+      IDE.EDITOR.waitActiveFile();
+      IDE.CK_EDITOR.clickDesignButton();
+      IDE.CK_EDITOR.waitToolsCkEditor();
+      IDE.CK_EDITOR.waitIsTextPresent("Hello, world!");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "a");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.DELETE.toString());
+      assertEquals("", IDE.CK_EDITOR.getTextFromCKEditor());
+      IDE.CK_EDITOR.typeTextIntoCkEditor(TEXT);
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "a");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "c");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "v");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "v");
+      assertEquals(TEXT + TEXT, IDE.CK_EDITOR.getTextFromCKEditor());
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "a");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "x");
+      assertEquals("", IDE.CK_EDITOR.getTextFromCKEditor());
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "v");
+      assertEquals(TEXT + TEXT, IDE.CK_EDITOR.getTextFromCKEditor());
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "s");
       IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(2, Keys.CONTROL.toString() + "n");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "n");
       IDE.TEMPLATES.waitOpened();
 
    }
-
 }

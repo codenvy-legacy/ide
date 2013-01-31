@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.operation.browse.locks;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,18 +33,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
- * Check, is can open locked file in CK editor.
- * If open if CK editor locked file, you can't save it.
- *
+ * Check, is can open locked file in CK editor. If open if CK editor locked
+ * file, you can't save it.
+ * 
  * @author <a href="tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Oct 15, 2010 $
- *
+ * 
  */
 public class OpenLockedFileInCKEditorTest extends BaseTest
 {
@@ -82,37 +81,37 @@ public class OpenLockedFileInCKEditorTest extends BaseTest
    @Test
    public void testOpenLockedFile() throws Exception
    {
-      //step 1 open project
+      // step 1 open project
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
 
-      //step 2 lock file an logout
+      // step 2 lock file an logout
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
-      //open file save content 
+      // open file save content
       IDE.CK_EDITOR.switchToCkEditorIframe(1);
       IDE.selectMainFrame();
       IDE.CK_EDITOR.waitCkEditorOpened(1);
-      String contentEditor = IDE.CK_EDITOR.getTextFromCKEditor(1);
-     
-      //save file for correct logout, popup ask window can't appearance
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "s");
+      String contentEditor = IDE.CK_EDITOR.getTextFromCKEditor();
+
+      // save file for correct logout, popup ask window can't appearance
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "s");
       IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
-      //lock file
-      
+      // lock file
+
       IDE.TOOLBAR.waitButtonPresentAtLeft(ToolbarCommands.Editor.LOCK_FILE);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.LOCK_FILE);
       IDE.LOADER.waitClosed();
-      //check state buttons and logout
+      // check state buttons and logout
       checkAllUnlockStateButtons();
       IDE.LOGIN.logout();
 
-      //step 3 login as invite user, open an check lock project 
+      // step 3 login as invite user, open an check lock project
       if (isRunIdeAsTenant())
       {
          IDE.LOGIN.waitTenantLoginPage();
@@ -124,50 +123,50 @@ public class OpenLockedFileInCKEditorTest extends BaseTest
          IDE.LOGIN.loginAsStandaloneUser();
       }
 
+      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.EDITOR.waitTabPresent(0);
-      IDE.WELCOME_PAGE.close();
-      IDE.WELCOME_PAGE.waitClose();
 
-      
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      
-      
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.selectTab("File opened in read only mode. Use SaveAs command.");
+
       IDE.EDITOR.clickDesignButton();
       IDE.LOADER.waitClosed();
       IDE.CK_EDITOR.waitCkEditorOpened(1);
-    
-      IDE.CK_EDITOR.deleteFileContentInCKEditor(1);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "i try is change content");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString()+"s");
-      IDE.EDITOR.forcedClosureFile(0);
-      //need for redraw file in project tree
+
+      IDE.CK_EDITOR.deleteFileContentInCKEditor();
+      IDE.CK_EDITOR.typeTextIntoCkEditor("i try is change content");
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.SAVE);
+
+      IDE.EDITOR.closeFile(1);
+      // need for redraw file in project tree
       Thread.sleep(500);
-      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.CK_EDITOR.clickDesignButton(1);
-      assertEquals(contentEditor, IDE.CK_EDITOR.getTextFromCKEditor(2));
+      IDE.EDITOR.waitActiveFile();
+      IDE.CK_EDITOR.clickDesignButton();
+      assertEquals(contentEditor, IDE.CK_EDITOR.getTextFromCKEditor());
 
    }
 
    /**
     * check enabled ulock icon and button on toolbar and Edit menu
+    * 
     * @throws Exception
     */
    private void checkAllUnlockStateButtons() throws Exception
    {
       IDE.MENU.clickOnCommand(MenuCommands.Edit.EDIT_MENU);
-      assertTrue(IDE.LOCK_FILE.isUnLockCommandActive());
+      IDE.LOCK_FILE.waitUnLockCommandActive();
       IDE.MENU.clickOnLockLayer();
       IDE.LOADER.waitClosed();
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.UNLOCK_FILE));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE));
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.UNLOCK_FILE);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.UNLOCK_FILE);
    }
-   
-   
-   }
+
+}

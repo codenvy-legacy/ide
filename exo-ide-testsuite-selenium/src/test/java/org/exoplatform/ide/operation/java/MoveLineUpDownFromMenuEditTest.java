@@ -2,15 +2,14 @@ package org.exoplatform.ide.operation.java;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuction
 {
@@ -47,6 +46,8 @@ public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
 
@@ -55,11 +56,11 @@ public class MoveLineUpDownFromMenuEditTest extends ServicesJavaTextFuction
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.MOVE_LINE_UP);
       Thread.sleep(500);
-      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
+      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(21).trim());
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.MOVE_LINE_DOWN);
       IDE.TOOLBAR.runCommand(MenuCommands.File.SAVE);
       IDE.EDITOR.waitNoContentModificationMark("SumController.java");
-      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 26).trim());
+      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(26).trim());
    }
 }

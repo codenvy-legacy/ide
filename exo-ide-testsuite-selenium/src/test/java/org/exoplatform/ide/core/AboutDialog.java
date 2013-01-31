@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -72,18 +73,25 @@ public class AboutDialog extends AbstractTestModule
    /**
     * Check basic elements DialogAbout form 
     */
-   public boolean isCheckInfoAboutWindow()
+   public void waitCheckInfoAboutWindow() throws Exception
    {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            String textContentAbout = content.getText();
+            return (textContentAbout.contains("Codenvy") && textContentAbout.contains("Version:")
+               && textContentAbout.contains("Codenvy S.A. (c)") && textContentAbout.contains("Revision:") && textContentAbout
+               .contains("Build Time:"));
+         }
+      });
 
-      String textContentAbout = content.getText();
-      return (textContentAbout.contains("eXo IDE") && textContentAbout.contains("Version:")
-         && textContentAbout.contains("eXo Platform SAS (c)") && textContentAbout.contains("Revision:") && textContentAbout
-         .contains("Build Time:"));
    }
 
-   public boolean isLogoPresent()
+   public void waitLogoPresent()
    {
-      return (logo.isDisplayed());
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Locators.LOGO)));
    }
 
    /**
@@ -93,7 +101,7 @@ public class AboutDialog extends AbstractTestModule
     */
    public void waitClosedDialogAbout() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

@@ -26,6 +26,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -39,6 +40,8 @@ public class OpenProject extends AbstractTestModule
 
    private static final String LIST_ID = "ideProjectsListGrid";
 
+   private static final String PROJECT_LOCATOR = "//table[@id='ideProjectsListGrid']//tbody//td/div[text()='%s']";
+
    @FindBy(how = How.XPATH, using = VIEW_LOCATOR)
    private WebElement view;
 
@@ -48,6 +51,9 @@ public class OpenProject extends AbstractTestModule
    @FindBy(id = "ideShowProjectsOpenButton")
    private WebElement openButton;
 
+   @FindBy(id = "ideShowProjectsCancelButton")
+   private WebElement cancelButton;
+
    /**
     * Wait view is opened.
     * 
@@ -55,31 +61,57 @@ public class OpenProject extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(VIEW_LOCATOR)));
+   }
 
+   public void openProject(String name) throws Exception
+   {
+      waitProject(name);
+      IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.OPEN_PROJECT);
+      waitOpened();
+      IDE().LOADER.waitClosed();
+      selectProjectName(name);
+      clickOpenButton();
+      waitClosed();
+      IDE().LOADER.waitClosed();
+   }
+
+   public void waitProject(final String name)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
          @Override
-         public Boolean apply(WebDriver input)
+         public Boolean apply(WebDriver driver)
          {
             try
             {
-               return view != null && view.isDisplayed();
+               IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.OPEN_PROJECT);
+               waitOpened();
+               IDE().LOADER.waitClosed();
+               WebElement prj = driver().findElement(By.xpath(String.format(PROJECT_LOCATOR, name)));
+               return prj.isDisplayed() && prj != null;
             }
             catch (Exception e)
             {
                return false;
             }
+            finally
+            {
+               cancelButton.click();
+            }
          }
       });
    }
 
-   public void openProject(String name) throws Exception
+   public void openOtherProjectIfCurentProjectNotClosed(String name) throws Exception
    {
       IDE().MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.OPEN_PROJECT);
       waitOpened();
       IDE().LOADER.waitClosed();
       selectProjectName(name);
       clickOpenButton();
+      IDE().ASK_DIALOG.waitOpened();
+      IDE().ASK_DIALOG.clickYes();
       waitClosed();
    }
 
@@ -88,7 +120,7 @@ public class OpenProject extends AbstractTestModule
     */
    public void waitClosed()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -104,7 +136,7 @@ public class OpenProject extends AbstractTestModule
             }
          }
       });
-      
+
    }
 
    /**

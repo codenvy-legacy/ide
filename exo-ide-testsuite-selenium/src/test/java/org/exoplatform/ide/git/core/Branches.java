@@ -105,7 +105,7 @@ public class Branches extends AbstractTestModule
    */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -129,7 +129,7 @@ public class Branches extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -293,7 +293,7 @@ public class Branches extends AbstractTestModule
     */
    public void waitBranchChecked(final String branchName) throws Exception
    {
-      new WebDriverWait(driver(), 11).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -309,7 +309,7 @@ public class Branches extends AbstractTestModule
    */
    public void waitNewBranchViewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -333,7 +333,7 @@ public class Branches extends AbstractTestModule
     */
    public void waitNewBranchViewClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -388,7 +388,7 @@ public class Branches extends AbstractTestModule
     */
    public void waitForBranchesCount(final int count) throws Exception
    {
-      new WebDriverWait(driver(), 6).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

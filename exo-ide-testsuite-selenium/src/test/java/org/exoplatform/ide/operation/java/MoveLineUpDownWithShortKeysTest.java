@@ -1,18 +1,15 @@
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 
-import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
+import java.util.Map;
+
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuction
 {
@@ -50,17 +47,19 @@ public class MoveLineUpDownWithShortKeysTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
 
       IDE.GOTOLINE.goToLine(19);
       IDE.STATUSBAR.waitCursorPositionAt("19 : 1");
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ALT.toString() + Keys.ARROW_UP.toString());
-      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 21).trim());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.ALT.toString() + Keys.ARROW_UP.toString());
+      assertEquals("mav.addObject(\"x\", x);", IDE.JAVAEDITOR.getTextFromSetPosition(21).trim());
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ALT.toString() + Keys.ARROW_DOWN.toString());
-      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(0, 26).trim());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.ALT.toString() + Keys.ARROW_DOWN.toString());
+      assertEquals("mav.addObject(\"y\", y);", IDE.JAVAEDITOR.getTextFromSetPosition(26).trim());
    }
 
 }

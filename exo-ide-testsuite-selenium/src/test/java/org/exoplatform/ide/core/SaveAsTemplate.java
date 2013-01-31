@@ -78,7 +78,7 @@ public class SaveAsTemplate extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -103,7 +103,7 @@ public class SaveAsTemplate extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -126,29 +126,58 @@ public class SaveAsTemplate extends AbstractTestModule
     * 
     * @return {@link Boolean} opened  
     */
-   public boolean isOpened()
+   public void isOpened()
    {
-      try
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         return view != null && view.isDisplayed() && saveButton != null && saveButton.isDisplayed()
-            && cancelButton != null && cancelButton.isDisplayed() && nameField != null && nameField.isDisplayed()
-            && typeField != null && typeField.isDisplayed() && descriptionField != null
-            && descriptionField.isDisplayed();
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return view != null && view.isDisplayed() && saveButton != null && saveButton.isDisplayed()
+                  && cancelButton != null && cancelButton.isDisplayed() && nameField != null && nameField.isDisplayed()
+                  && typeField != null && typeField.isDisplayed() && descriptionField != null
+                  && descriptionField.isDisplayed();
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
-    * Returns the enabled state of the save button.
+    * Wait the enabled state of the save button.
     * 
-    * @return {@link Boolean} <code>true<code> if enabled
     */
-   public boolean isSaveButtonEnabled()
+   public void waitSaveButtonEnabled() throws Exception
    {
-      return IDE().BUTTON.isButtonEnabled(saveButton);
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(saveButton);
+         }
+      });
+   }
+
+   /**
+    * Wait the disabled state of the save button.
+    * 
+    */
+   public void waitSaveButtonDisabled() throws Exception
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !(IDE().BUTTON.isButtonEnabled(saveButton));
+         }
+      });
    }
 
    /**

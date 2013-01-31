@@ -19,8 +19,6 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -50,10 +48,8 @@ public class CopyFolderTest extends BaseTest
    private static final String FILE_CONTENT_1 = "file content";
 
    /**
-    * BeforeClass create such structure:
-    * FOLDER_1
-    *    FOLDER_1_1
-    *       FILE_GROOVY - file with sample content
+    * BeforeClass create such structure: FOLDER_1 FOLDER_1_1 FILE_GROOVY - file
+    * with sample content
     */
    @BeforeClass
    public static void setUp()
@@ -84,17 +80,14 @@ public class CopyFolderTest extends BaseTest
    }
 
    /*
-    * Create folder "/Test 1"
-    * Create folder "/Test 1/Test 1.1" 
-    * Create new groovy script
+    * Create folder "/Test 1" Create folder "/Test 1/Test 1.1" Create new
+    * groovy script
     * 
-    * Type "groovy file content"
-    * Save file as "/Test 1/Test 1.1/test.groovy"
+    * Type "groovy file content" Save file as "/Test 1/Test 1.1/test.groovy"
     * 
     * Select folder "/Test 1/Test 1.1"
     * 
-    * Check Paste must be disabled
-    * Check Copy must be enabled
+    * Check Paste must be disabled Check Copy must be enabled
     * 
     * Call "Edit/Copy" in menu
     * 
@@ -102,13 +95,9 @@ public class CopyFolderTest extends BaseTest
     * 
     * Select root in workspace tree and call "Edit/Paste"
     * 
-    * Edit currently opened file
-    * Call "Ctrl+S"
-    * Close opened file
+    * Edit currently opened file Call "Ctrl+S" Close opened file
     * 
-    * Open "/Test 1.1/test.groovy"
-    * Check it content
-    * 
+    * Open "/Test 1.1/test.groovy" Check it content
     */
    @Test
    public void copyOperationTestIde116() throws Exception
@@ -122,37 +111,38 @@ public class CopyFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1);
 
-      //Open file:
+      // Open file:
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1 + "/" + FILE_1);
+      IDE.EDITOR.waitActiveFile();
 
-      //Select folder "/Test 1/Test 1.1"
+      // Select folder "/Test 1/Test 1.1"
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.COPY_TOOLBAR));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.COPY_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR);
 
-      //Check Paste must be disabled
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      // Check Paste must be disabled
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonDisabled(MenuCommands.Edit.PASTE_TOOLBAR);
 
-       //Call "Edit/Copy" in menu
+      // Call "Edit/Copy" in menu
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
 
-      //Check Paste must be enabled
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      // Check Paste must be enabled
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR);
 
-      //Select root in workspace tree and call "Edit/Paste"
+      // Select root in workspace tree and call "Edit/Paste"
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1_1);
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER_1));
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + FOLDER_1);
 
-      //Change text in file.
-      IDE.EDITOR.typeTextIntoEditor(0, "updated");
+      // Change text in file.
+      IDE.EDITOR.selectTab(FILE_1);
+      IDE.EDITOR.typeTextIntoEditor("updated");
       IDE.EDITOR.waitFileContentModificationMark(FILE_1);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       IDE.EDITOR.waitNoContentModificationMark(FILE_1);
@@ -161,9 +151,7 @@ public class CopyFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1_1 + "/" + FILE_1);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1_1 + "/" + FILE_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1_1 + "/" + FILE_1);
-
-      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor());
    }
-
 }

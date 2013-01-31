@@ -23,6 +23,7 @@ import org.exoplatform.ide.core.project.Classpath;
 import org.exoplatform.ide.core.project.ClasspathSource;
 import org.exoplatform.ide.core.project.CreateProject;
 import org.exoplatform.ide.core.project.OpenProject;
+import org.exoplatform.ide.core.project.PackageExplorer;
 import org.exoplatform.ide.core.project.ProjectExplorer;
 import org.openqa.selenium.support.PageFactory;
 
@@ -39,12 +40,14 @@ public class Project extends AbstractTestModule
    public ProjectExplorer EXPLORER;
 
    public CreateProject CREATE;
-   
+
    public OpenProject OPEN;
-   
+
    public Classpath CLASSPATH;
 
    public ClasspathSource CLASSPATH_SOURCE;
+
+   public PackageExplorer PACKAGE_EXPLORER;
 
    /**
     * 
@@ -56,5 +59,6 @@ public class Project extends AbstractTestModule
       OPEN = PageFactory.initElements(driver(), OpenProject.class);
       CLASSPATH = PageFactory.initElements(driver(), Classpath.class);
       CLASSPATH_SOURCE = PageFactory.initElements(driver(), ClasspathSource.class);
+      PACKAGE_EXPLORER = PageFactory.initElements(driver(), PackageExplorer.class);
    }
 }

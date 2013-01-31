@@ -19,11 +19,9 @@
 package org.exoplatform.ide.core;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -37,7 +35,7 @@ public class AskDialog extends AbstractTestModule
    private interface Locators
    {
       String VIEW_ID = "ideAskModalView";
-      
+
       String VIEW_LOCATOR = "//div[@view-id='" + VIEW_ID + "']";
 
       String ASK_TITLE_SELECTOR = "div[id^=" + VIEW_ID + "] div.Caption>div";
@@ -69,16 +67,10 @@ public class AskDialog extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitOpened() throws Exception
+   public void waitOpened()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            return view != null && view.isDisplayed();
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.VIEW_LOCATOR)));
    }
 
    /**
@@ -86,27 +78,15 @@ public class AskDialog extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitClosed() throws Exception
+   public void waitClosed()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               input.findElement(By.xpath(Locators.VIEW_LOCATOR));
-               return false;
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .xpath(Locators.VIEW_LOCATOR)));
    }
 
    /**
+    * Return state of view
+    * 
     * @return {@link Boolean} 
     */
    public boolean isOpened()

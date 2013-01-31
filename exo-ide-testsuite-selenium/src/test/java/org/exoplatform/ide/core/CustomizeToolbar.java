@@ -18,18 +18,19 @@
  */
 package org.exoplatform.ide.core;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:mmusienko@exoplatform.com">Musienko Maxim</a>
@@ -111,7 +112,7 @@ public class CustomizeToolbar extends AbstractTestModule
     */
    public void waitOpened()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -127,7 +128,7 @@ public class CustomizeToolbar extends AbstractTestModule
     */
    public void waitClosed()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -390,7 +391,7 @@ public class CustomizeToolbar extends AbstractTestModule
             "Deploy public key", "Switch account...", "PaaS / OpenShift", "Create domain...", "Create application...",
             "User info...", "Update SSH public key...", "Switch account...", "PaaS / Google App Engine", "Deploy",
             "Create", "Login", "Logout", "Window / Show View", "Navigator", "Project Explorer", "Window / Navigation",
-            "Next Editor", "Previous Editor", "Window", "Preferences", "Formatter", "Help", "About...",
+            "Next Editor", "Previous Editor", "Window", "Preferences", "Format", "Help", "About...",
             "REST Services Discovery", "Show Keyboard Shortcuts...", "Show Available Dependencies...", "Welcome");
       for (String chkName : defaultSet)
       {
@@ -399,13 +400,75 @@ public class CustomizeToolbar extends AbstractTestModule
    }
 
    /**
+    * wait while element appear in specified position in list
+    * @param position
+    * @param name
+    */
+   public void waitToolbarElementPresentInPosition(final int position, final String name)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+
+            return driver().findElement(By.xpath(String.format(Locators.SELECTION_ON_TOOLBAR_ELEMENT, position)))
+               .getText().contains(name);
+
+         }
+      });
+   }
+
+   /**
+    * wait while menu appear in toolbar list
+    * @param nameMenu
+    */
+   public void waitToolbarElementIsPresent(final String nameMenu)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return isToolbarListPresent(nameMenu);
+         }
+      });
+   }
+
+   
+   
+   /**
+    * wait while menu is disappear in list
+    * 
+    * @param nameMenu
+    */
+   public void waitToolbarElementIsNotPresent(final String nameMenu)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return !isToolbarListPresent(nameMenu);
+         }
+      });
+   }
+   
+   
+   
+   
+   
+   /**
     * return name of element which 
     * corresponds to a specific number
     * start with 1
     * @param numElem
     * @return
     */
-   public String isElementNumPositionPresent(int numElem)
+   public String isToolBarElementNumPositionPresent(int numElem)
    {
       WebElement toolbarMenu =
          driver().findElement(By.xpath(String.format(Locators.SELECTION_ON_TOOLBAR_ELEMENT, numElem)));

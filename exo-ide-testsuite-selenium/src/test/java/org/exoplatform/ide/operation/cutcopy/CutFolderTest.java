@@ -51,7 +51,8 @@ public class CutFolderTest extends BaseTest
    private static final String FILE = "file.groovy";
 
    /**
-    * Create next folders' structure in the workspace root: folder 1/ folder 2/ file.groovy - file with sample content folder 2/
+    * Create next folders' structure in the workspace root: folder 1/ folder 2/
+    * file.groovy - file with sample content folder 2/
     */
    @BeforeClass
    public static void setUp()
@@ -98,25 +99,25 @@ public class CutFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2 + "/" + FILE);
 
       // Paste commands are disabled, Cut/Copy are enabled
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.PASTE);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR);
 
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.CUT_TOOLBAR);
 
       // Paste commands are enabled.
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE, true);
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1 + "/" + FOLDER2 + "/" + FILE);
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       // Paste in the same folder:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER1);
@@ -127,8 +128,8 @@ public class CutFolderTest extends BaseTest
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
 
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       // Paste in folder, which contains with the same name:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
@@ -138,8 +139,8 @@ public class CutFolderTest extends BaseTest
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
 
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER2);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
@@ -150,19 +151,20 @@ public class CutFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE);
-      assertEquals(FILE_CONTENT, IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(FILE_CONTENT, IDE.EDITOR.getTextFromCodeEditor());
 
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER2 + "/" + FOLDER2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE));
-      assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER1 + "/" + FOLDER2));
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + FOLDER1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + FOLDER2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + FOLDER2 + "/" + FOLDER2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + FOLDER2 + "/" + FOLDER2 + "/" + FILE);
+      IDE.PROJECT.EXPLORER.waitItemNotPresent(PROJECT + "/" + FOLDER1 + "/" + FOLDER2);
       IDE.EDITOR.closeFile(1);
    }
 
    /**
-    * Check, that FOLDER_1, FOLDER_2, FOLDER_2/FOLDER2, FOLDER_2/FOLDER_2/FILE_1 are present on webdav.
+    * Check, that FOLDER_1, FOLDER_2, FOLDER_2/FOLDER2,
+    * FOLDER_2/FOLDER_2/FILE_1 are present on webdav.
     * 
     * And FOLDER_1/FOLDER_2 are not present.
     * 

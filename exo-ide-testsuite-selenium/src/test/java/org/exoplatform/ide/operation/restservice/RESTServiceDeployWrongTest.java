@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,72 +30,64 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class RESTServiceDeployWrongTest extends BaseTest
-{
+public class RESTServiceDeployWrongTest extends BaseTest {
 
-   private static String FILE_NAME = "DeployWrongTest.grs";
+	private static String FILE_NAME = "DeployWrongTest.grs";
 
-   private final static String PROJECT = RESTServiceDeployWrongTest.class.getSimpleName();
+	private final static String PROJECT = RESTServiceDeployWrongTest.class
+			.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testDeployWrong() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testDeployWrong() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+		IDE.LOADER.waitClosed();
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+		IDE.TOOLBAR
+				.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+		IDE.EDITOR.waitActiveFile();
 
-      IDE.EDITOR.saveAs(1, FILE_NAME);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.saveAs(1, FILE_NAME);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      IDE.EDITOR.moveCursorDown(0, 1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "1");
-      IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
-      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
-      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+		IDE.EDITOR.moveCursorDown(1);
+		IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
+		IDE.EDITOR.typeTextIntoEditor("1");
+		IDE.EDITOR.waitFileContentModificationMark(FILE_NAME);
+		IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+		IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
 
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(1, 5);
+		IDE.MENU.runCommand(MenuCommands.Run.RUN,
+				MenuCommands.Run.DEPLOY_REST_SERVICE);
+		IDE.OUTPUT.waitForMessageShow(1, 5);
 
-      String mess = IDE.OUTPUT.getOutputMessage(1);
-      assertTrue(mess.startsWith("[ERROR]"));
-      assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME + " deploy failed."));
-   }
+		String mess = IDE.OUTPUT.getOutputMessage(1);
+		assertTrue(mess.startsWith("[ERROR]"));
+		assertTrue(mess.contains("/" + PROJECT + "/" + FILE_NAME
+				+ " deploy failed."));
+	}
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
 }

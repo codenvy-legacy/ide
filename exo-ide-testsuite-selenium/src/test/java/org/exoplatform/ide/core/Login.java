@@ -19,13 +19,13 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -33,42 +33,77 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @version $Id: Login.java Dec 27, 2011 4:42:12 PM vereshchaka $
  *
  */
-public class Login extends AbstractTestModule
+public class Login extends BaseTest
 {
 
-   private static final String USERNAME = "j_username";
+   private interface Locators
+   {
 
-   private static final String PASSWORD = "j_password";
+      String USERNAME = "username";
 
-   private static final String LOGIN_ON_TENANT_BTN = "recoverPassword";
+      String PASSWORD = "password";
 
-   private static final String LOGIN_STANDALONE = "loginButton";
+      String LOGIN_ON_TENANT_BTN = "submitButton";
 
-   private static final String IDE_LOGOUT = "//td[@class='exo-popupMenuTitleField' and text()='Logout']";
+      String LOGIN_STANDALONE = "loginButton";
 
-   @FindBy(name = USERNAME)
+      String GOOGLE_OAUTH_BUTTON = "a.LoginGoogle";
+
+      String GITHUB_OAUTH_BUTTON = "a.LoginGithub";
+
+      String IDE_LOGOUT = "//td[@class='exo-popupMenuTitleField' and text()='Logout']";
+   }
+
+   @FindBy(name = Locators.USERNAME)
    private WebElement name;
 
-   @FindBy(id = LOGIN_ON_TENANT_BTN)
+   @FindBy(id = Locators.LOGIN_ON_TENANT_BTN)
    private WebElement loginTenantButton;
 
-   @FindBy(name = PASSWORD)
+   @FindBy(name = Locators.PASSWORD)
    private WebElement password;
 
-   @FindBy(id = LOGIN_STANDALONE)
+   @FindBy(id = Locators.LOGIN_STANDALONE)
    private WebElement loginButton;
 
-   @FindBy(xpath = IDE_LOGOUT)
+   @FindBy(xpath = Locators.IDE_LOGOUT)
    private WebElement logoutButton;
 
    @FindBy(linkText = "IDE")
    private WebElement cloudIdeAdditionMenu;
 
-   public void logout()
+   @FindBy(css = Locators.GOOGLE_OAUTH_BUTTON)
+   private WebElement googleOauthBtn;
+
+   @FindBy(css = Locators.GITHUB_OAUTH_BUTTON)
+   private WebElement gitHubOauthBtn;
+
+   /**
+    * click on google button in tenant authorization form
+    */
+   public void googleOauthBtnClick()
+   {
+      googleOauthBtn.click();
+   }
+
+   /**
+    * click on github button in tenant authorization form
+    */
+   public void githubBtnClick()
+   {
+      gitHubOauthBtn.click();
+   }
+
+   /**
+    * Logout from IDE click on IDE - > Logout
+    * @throws Exception 
+    */
+   public void logout() throws Exception
    {
       openCloudIdeAdditionMenu();
       waitLogoutIDEMenu();
       logoutButton.click();
+      waitIdeLoginPage();
    }
 
    /**
@@ -89,8 +124,8 @@ public class Login extends AbstractTestModule
     */
    public void standaloneLogin(String userName, String password) throws Exception
    {
-      IDE().INPUT.typeToElement(name, userName, true);
-      IDE().INPUT.typeToElement(this.password, password, true);
+      IDE.INPUT.typeToElement(name, userName, true);
+      IDE.INPUT.typeToElement(this.password, password, true);
       login();
    }
 
@@ -102,8 +137,8 @@ public class Login extends AbstractTestModule
    */
    public void tenantLogin(String userName, String password) throws Exception
    {
-      IDE().INPUT.typeToElement(name, userName, true);
-      IDE().INPUT.typeToElement(this.password, password, true);
+      IDE.INPUT.typeToElement(name, userName, true);
+      IDE.INPUT.typeToElement(this.password, password, true);
       tenantLogin();
    }
 
@@ -112,14 +147,14 @@ public class Login extends AbstractTestModule
     */
    public void waitStandaloneLogin()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver, 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
             try
             {
-               input.findElement(By.name(USERNAME));
+               input.findElement(By.name(Locators.USERNAME));
                return true;
             }
             catch (NoSuchElementException e)
@@ -132,21 +167,7 @@ public class Login extends AbstractTestModule
 
    public void waitLogoutIDEMenu()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               return loginButton != null && logoutButton.isDisplayed();
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver, 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(Locators.IDE_LOGOUT)));
    }
 
    /**
@@ -162,7 +183,7 @@ public class Login extends AbstractTestModule
     */
    public void waitStandaloneLoginPage()
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver, 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -185,7 +206,7 @@ public class Login extends AbstractTestModule
     */
    public void waitTenantAllLoginPage()
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver, 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -193,7 +214,8 @@ public class Login extends AbstractTestModule
             try
             {
                return name != null && name.isDisplayed() && password != null && password.isDisplayed()
-                  && loginTenantButton != null && loginTenantButton.isDisplayed();
+                  && loginTenantButton != null && loginTenantButton.isDisplayed() && gitHubOauthBtn.isDisplayed()
+                  && googleOauthBtn.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -209,6 +231,13 @@ public class Login extends AbstractTestModule
    public void tenantLogin()
    {
       loginTenantButton.click();
+      try
+      {
+         IDE.PROJECT.EXPLORER.waitOpened();
+      }
+      catch (InterruptedException e)
+      {
+      }
    }
 
    /**
@@ -217,6 +246,13 @@ public class Login extends AbstractTestModule
    public void login()
    {
       loginButton.click();
+      try
+      {
+         IDE.PROJECT.EXPLORER.waitOpened();
+      }
+      catch (InterruptedException e)
+      {
+      }
    }
 
    /**

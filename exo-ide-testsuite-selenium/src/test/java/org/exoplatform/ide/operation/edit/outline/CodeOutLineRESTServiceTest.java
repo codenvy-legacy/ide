@@ -18,12 +18,9 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.exoplatform.ide.core.Outline.TokenType;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.Before;
@@ -34,19 +31,12 @@ import org.junit.Test;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: Oct 26, 2010 $
- *
+ * 
  */
 public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
 {
 
    private final static String FILE_NAME = "RESTCodeOutline.groovy";
-
-   private OutlineTreeHelper outlineTreeHelper;
-
-   public CodeOutLineRESTServiceTest()
-   {
-      this.outlineTreeHelper = new OutlineTreeHelper();
-   }
 
    @BeforeClass
    public static void setUp()
@@ -68,57 +58,46 @@ public class CodeOutLineRESTServiceTest extends CodeAssistantBaseTest
       openProject();
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+
+      //TODO REMOVE IT WHEN IT WILL BE POSSIBLE
+      Thread.sleep(4000);
    }
 
-   //TODO Issue IDE-466 
-   //TODO Issue IDE-1499
    @Test
    public void testCodeOutLineRestService() throws Exception
    {
-      // open outline panel
+      // open outline panel and initial state nodes in Outline Tree
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOutlineTreeVisible();
+      IDE.OUTLINE.waitItemAtPosition("@TestService", 1);
+      IDE.OUTLINE.waitItemAtPosition("TestJSON", 2);
 
-      // check for presence and visibility of outline tab
-      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
-      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
+      // collapse 2 node and check items
+      IDE.GOTOLINE.goToLine(18);
+      IDE.OUTLINE.waitElementIsSelect("@post1(TestJSON) : String");
+      IDE.OUTLINE.waitItemAtPosition("@post2(String) : String", 3);
 
-      // create initial outline tree map
-      outlineTreeHelper.init();
-      outlineTreeHelper.addOutlineItem("@TestService", 6, false);
-      outlineTreeHelper.addOutlineItem("Dep", 43, false);
+      // collapse 'TestJSON' node and check items
+      IDE.GOTOLINE.goToLine(30);
+      IDE.OUTLINE.waitElementIsSelect("value : String");
+      IDE.OUTLINE.waitItemAtPosition("getValue() : String", 6);
+      IDE.OUTLINE.waitItemAtPosition("setValue(String) : void", 7);
 
-      // check is tree created correctly
-      outlineTreeHelper.checkOutlineTree();
+      IDE.OUTLINE.selectRow(4);
+      IDE.STATUSBAR.waitCursorPositionAt("29 : 1");
 
-      // expand outline tree
-      outlineTreeHelper.expandOutlineTree();
+      IDE.OUTLINE.selectItem("@");
+      IDE.STATUSBAR.waitCursorPositionAt("12 : 1");
 
-      // TODO issue IDE-1499
-      IDE.GOTOLINE.goToLine(24);
-      IDE.GOTOLINE.goToLine(31);
+      IDE.OUTLINE.selectRow(3);
+      IDE.STATUSBAR.waitCursorPositionAt("25 : 1");
 
-      // create opened outline tree map
-      outlineTreeHelper.clearOutlineTreeInfo();
-      outlineTreeHelper.init();
-      outlineTreeHelper.addOutlineItem("@TestService", 6);
-      outlineTreeHelper.addOutlineItem("@post1(@String, @String, @String, String) : String", 12);
-      outlineTreeHelper.addOutlineItem(
-         "@post2(@String, @java.lang.String, @String, java.lang.String) : java.lang.String", 24);
+      IDE.OUTLINE.selectRow(3);
+      IDE.STATUSBAR.waitCursorPositionAt("25 : 1");
 
-      outlineTreeHelper.addOutlineItem("TestService(String) : TestService", 31, TokenType.METHOD, "TestService");
-      outlineTreeHelper.addOutlineItem("@TestService(String, HashMap<String,String>) : TestService", 36, false,
-         TokenType.METHOD, "TestService");
+      IDE.OUTLINE.selectItem("setValue");
+      IDE.STATUSBAR.waitCursorPositionAt("37 : 1");
 
-      outlineTreeHelper.addOutlineItem("Dep", 43);
-      outlineTreeHelper.addOutlineItem("name : String", 45);
-      outlineTreeHelper.addOutlineItem("age : int", 46);
-      outlineTreeHelper.addOutlineItem("addYear() : void", 48);
-      outlineTreeHelper.addOutlineItem("greet(@String) : java.lang.String", 50);
-      outlineTreeHelper.addOutlineItem("address : int", 53, false); // false, because outline node is not highlighted from test, but highlighted when goto this line manually
-
-      // check is tree created correctly
-      outlineTreeHelper.checkOutlineTree();
    }
 }

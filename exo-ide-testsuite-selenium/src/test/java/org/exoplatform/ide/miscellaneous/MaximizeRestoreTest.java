@@ -18,8 +18,8 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -31,9 +31,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
@@ -80,47 +77,44 @@ public class MaximizeRestoreTest extends BaseTest
    @Test
    public void maximizeRestoreNavigationPanel() throws Exception
    {
-      //step 1 check maximize/restore for Navigation panel 
+      // step 1 check maximize/restore for Navigation panel
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.NAVIGATION);
-      IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.NAVIGATION);
-      assertTrue(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.NAVIGATION));
+      IDE.PERSPECTIVE.waitMaximized(Perspective.Panel.NAVIGATION);
       IDE.PERSPECTIVE.restorePanel(Perspective.Panel.NAVIGATION);
-      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.NAVIGATION));
+      IDE.PERSPECTIVE.waitRestored(Perspective.Panel.NAVIGATION);
 
-      //step 2 check maximize/restore for Editor panel
+      // step 2 check maximize/restore for Editor panel
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
       IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.EDITOR);
-      IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.EDITOR);
-      assertTrue(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.EDITOR));
+      IDE.PERSPECTIVE.waitMaximized(Perspective.Panel.EDITOR);
       IDE.PERSPECTIVE.restorePanel(Perspective.Panel.EDITOR);
-      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.EDITOR));
+      IDE.PERSPECTIVE.waitRestored(Perspective.Panel.EDITOR);
 
-      //step 3 check maximize/restore for Editor panel
+      // step 3 check maximize/restore for Editor panel
       IDE.TOOLBAR.runCommand(MenuCommands.Run.SHOW_PREVIEW);
       IDE.PREVIEW.waitHtmlPreviewOpened();
-      
+
       IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.OPERATION);
-      assertTrue(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.OPERATION));
-      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.EDITOR));
+      IDE.PERSPECTIVE.waitMaximized(Perspective.Panel.OPERATION);
+      IDE.PERSPECTIVE.waitRestored(Perspective.Panel.EDITOR);
       IDE.PERSPECTIVE.restorePanel(Perspective.Panel.OPERATION);
-      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.OPERATION));
-    
-      //step 4 check maximize/restore for Outline panel
+      IDE.PERSPECTIVE.waitRestored(Perspective.Panel.OPERATION);
+
+      // step 4 check maximize/restore for Outline panel
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.OUTLINE);
       IDE.OUTLINE.waitOpened();
       IDE.PERSPECTIVE.maximizePanel(Perspective.Panel.INFORMATION);
-      assertTrue(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.INFORMATION));
-      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.EDITOR));
-      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.OPERATION));
+      IDE.PERSPECTIVE.waitMaximized(Perspective.Panel.INFORMATION);
+      IDE.PERSPECTIVE.waitRestored(Perspective.Panel.EDITOR);
+      IDE.PERSPECTIVE.waitRestored(Perspective.Panel.OPERATION);
       IDE.PERSPECTIVE.restorePanel(Perspective.Panel.INFORMATION);
-      assertFalse(IDE.PERSPECTIVE.isPanelMaximized(Perspective.Panel.OPERATION));
-    
-   }
+      IDE.PERSPECTIVE.waitRestored(Perspective.Panel.INFORMATION);
 
+   }
 }

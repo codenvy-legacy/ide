@@ -21,16 +21,16 @@ package org.exoplatform.ide.operation.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -46,8 +46,8 @@ public class UploadingGroovyFileTest extends BaseTest
    private static final String FILE_PATH =
       "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.groovy";
 
-   @Before
-   public void beforeTest()
+   @BeforeClass
+   public static void beforeTest()
    {
       try
       {
@@ -71,9 +71,9 @@ public class UploadingGroovyFileTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      String text = IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor();
 
       assertTrue(text.length() > 0);
 
@@ -89,13 +89,6 @@ public class UploadingGroovyFileTest extends BaseTest
    @Test
    public void testAllMimeTypesArePresent() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
-      
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FILE);
       IDE.UPLOAD.waitOpened();
 
@@ -110,16 +103,16 @@ public class UploadingGroovyFileTest extends BaseTest
       assertEquals(FILE_PATH.substring(FILE_PATH.lastIndexOf("/") + 1, FILE_PATH.length()),
          IDE.UPLOAD.getFilePathValue());
 
-      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("application/x-groovy",
-         "application/x-jaxrs+groovy", "application/x-groovy+html", "application/x-chromattic+groovy"));
+      IDE.UPLOAD.waitMimeTypeContainsProposes("application/x-groovy", "application/x-jaxrs+groovy",
+         "application/x-groovy+html", "application/x-chromattic+groovy");
 
       // close form
       IDE.UPLOAD.clickCancelButton();
       IDE.UPLOAD.waitClosed();
    }
 
-   @After
-   public void afterTest()
+   @AfterClass
+   public static void afterTest()
    {
       try
       {

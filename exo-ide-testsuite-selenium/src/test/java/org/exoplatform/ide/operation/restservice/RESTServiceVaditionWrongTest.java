@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,58 +30,49 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class RESTServiceVaditionWrongTest extends BaseTest
-{
-   private final static String PROJECT = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
+public class RESTServiceVaditionWrongTest extends BaseTest {
+	private final static String PROJECT = RESTServiceAnnotationInheritanceTest.class
+			.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testValidation() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testValidation() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+		IDE.LOADER.waitClosed();
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.DOWN.toString() + Keys.END);
-      IDE.EDITOR.typeTextIntoEditor(0, "123\n5");
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
-      IDE.OUTPUT.waitOpened();
-      IDE.OUTPUT.waitForMessageShow(1, 5);
-      String mess = IDE.OUTPUT.getOutputMessage(1);
-      assertTrue(mess.contains("[ERROR] Untitled file.grs validation failed."));
-   }
+		IDE.TOOLBAR
+				.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+		IDE.EDITOR.waitActiveFile();
+		IDE.EDITOR.typeTextIntoEditor(Keys.DOWN.toString() + Keys.END);
+		IDE.EDITOR.typeTextIntoEditor("123\n5");
+		IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+		IDE.OUTPUT.waitOpened();
+		IDE.OUTPUT.waitForMessageShow(1, 5);
+		String mess = IDE.OUTPUT.getOutputMessage(1);
+		assertTrue(mess
+				.contains("[ERROR] Untitled file.grs validation failed."));
+	}
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 }

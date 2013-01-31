@@ -30,15 +30,19 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HasText;
 
 import org.eclipse.jdt.client.JdtExtension;
 import org.eclipse.jdt.client.UpdateOutlineEvent;
 import org.eclipse.jdt.client.UpdateOutlineHandler;
+import org.eclipse.jdt.client.core.JavaConventions;
+import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.core.dom.NodeFinder;
 import org.eclipse.jdt.client.event.ReparseOpenedFilesEvent;
 import org.eclipse.jdt.client.refactoring.RefactoringClientService;
+import org.eclipse.jdt.client.runtime.IStatus;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -57,6 +61,7 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -106,6 +111,20 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
        * @return name field
        */
       TextFieldItem getNewNameField();
+
+      /**
+       * Returns label for warning messages.
+       * 
+       * @return warning label
+       */
+      HasText getWarningLabel();
+
+      /**
+       * Returns label for error messages.
+       * 
+       * @return error label
+       */
+      HasText getErrorLabel();
 
       /**
        * Returns rename button.
@@ -192,6 +211,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    private CompilationUnit currentCompilationUnit;
 
    /**
+    * {@link ASTNode} to rename.
+    */
+   private ASTNode elementToRename;
+
+   /**
     * Active {@link FileModel file}.
     */
    private FileModel activeFile;
@@ -240,7 +264,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          @Override
          public void onValueChange(ValueChangeEvent<String> event)
          {
-            display.setEnableStateRenameButton(isNameChanged());
+            validateName(event.getValue(), elementToRename == null ? ASTNode.TYPE_DECLARATION : elementToRename.getParent().getNodeType());
          }
       });
 
@@ -317,11 +341,11 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          return;
       }
 
-      ASTNode element = null;
+      elementToRename = null;
       if (fileToRenameFromPackageExplorer == null)
       {
-         element = getElementToRename();
-         if (element == null)
+         elementToRename = getElementToRename();
+         if (elementToRename == null)
          {
             Dialogs.getInstance().showError(JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle(),
                JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameUnavailable());
@@ -329,7 +353,7 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          }
       }
 
-      originElementName = getElementName(element);
+      originElementName = getElementName(elementToRename);
 
       openView();
       display.setNewNameFieldValue(originElementName != null ? originElementName : "");
@@ -429,60 +453,60 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
          {
             //IDE.fireEvent(new OutputEvent(coveringNode.getLocationInParent().toString()));
             return coveringNode;
-            //            ASTNode parentNode = coveringNode.getParent();
-            //            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
-            //
-            //            if (parentNode instanceof SingleVariableDeclaration)
-            //            {
-            //               if (descriptor == SingleVariableDeclaration.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof VariableDeclarationFragment)
-            //            {
-            //               if (descriptor == VariableDeclarationFragment.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof MethodDeclaration)
-            //            {
-            //               MethodDeclaration p = (MethodDeclaration)parentNode;
-            //               // could be the name of the method or constructor
-            //               if (!p.isConstructor() && (descriptor == MethodDeclaration.NAME_PROPERTY))
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof MethodInvocation)
-            //            {
-            //               if (descriptor == MethodInvocation.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof TypeDeclaration)
-            //            {
-            //               if (descriptor == TypeDeclaration.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof SimpleType)
-            //            {
-            //               if (descriptor == SimpleType.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
-            //            else if (parentNode instanceof ClassInstanceCreation)
-            //            {
-            //               if (descriptor == ClassInstanceCreation.NAME_PROPERTY)
-            //               {
-            //                  return coveringNode;
-            //               }
-            //            }
+//            ASTNode parentNode = coveringNode.getParent();
+//            StructuralPropertyDescriptor descriptor = coveringNode.getLocationInParent();
+//
+//            if (parentNode instanceof SingleVariableDeclaration)
+//            {
+//               if (descriptor == SingleVariableDeclaration.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof VariableDeclarationFragment)
+//            {
+//               if (descriptor == VariableDeclarationFragment.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof MethodDeclaration)
+//            {
+//               MethodDeclaration p = (MethodDeclaration)parentNode;
+//               // could be the name of the constructor
+//               if (!p.isConstructor() && descriptor == MethodDeclaration.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof MethodInvocation)
+//            {
+//               if (descriptor == MethodInvocation.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof TypeDeclaration)
+//            {
+//               if (descriptor == TypeDeclaration.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof SimpleType)
+//            {
+//               if (descriptor == SimpleType.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
+//            else if (parentNode instanceof ClassInstanceCreation)
+//            {
+//               if (descriptor == ClassInstanceCreation.NAME_PROPERTY)
+//               {
+//                  return coveringNode;
+//               }
+//            }
          }
       }
       catch (BadLocationException e)
@@ -642,27 +666,24 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
                   final Editor editor = openedEditors.get(file.getId());
                   if (editor != null)
                   {
-                     if (editor == activeEditor)
-                     {
-                        final int cursorColumn = editor.getCursorColumn();
-                        final int cursorRow = editor.getCursorRow();
-                        editor.getDocument().set(file.getContent());
-                        Scheduler.get().scheduleDeferred(new ScheduledCommand()
-                        {
-                           @Override
-                           public void execute()
-                           {
-                              editor.setCursorPosition(cursorRow, cursorColumn);
-                           }
-                        });
-                     }
-                     else
+                     if (editor != activeEditor)
                      {
                         editorsToUpdateContent.put(editor, result.getContent());
                      }
+                     else
+                     {
+                        updateEditorContent(editor, file.getContent(), file);
+                     }
                   }
 
-                  IDE.fireEvent(new FileSavedEvent(file, null));
+                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
+                  {
+                     @Override
+                     public void execute()
+                     {
+                        IDE.fireEvent(new FileSavedEvent(file, null));
+                     }
+                  });
                   reparseOpenedFiles();
                }
 
@@ -729,6 +750,55 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
 
       return activeEditor.getDocument().getLineOffset(activeEditor.getCursorRow() - 1)
          + activeEditor.getSelectionRange().getStartSymbol();
+   }
+
+   /**
+    * Validate the given name.
+    * 
+    * @param name name of a element to check
+    * @param type type of {@link ASTNode} to check name 
+    */
+   private void validateName(String name, int type)
+   {
+      String sourceLevel = JavaCore.getOption(JavaCore.COMPILER_SOURCE);
+      String complianceLevel = JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE);
+      IStatus status = null;
+
+      if (type == ASTNode.TYPE_DECLARATION || type == ASTNode.SIMPLE_TYPE)
+      {
+         status = JavaConventions.validateJavaTypeName(name, sourceLevel, complianceLevel);
+      }
+      else if (type == ASTNode.PACKAGE_DECLARATION)
+      {
+         status = JavaConventions.validatePackageName(name, sourceLevel, complianceLevel);
+      }
+      else if (type == ASTNode.COMPILATION_UNIT)
+      {
+         status = JavaConventions.validateCompilationUnitName(name, sourceLevel, complianceLevel);
+      }
+      else
+      {
+         status = JavaConventions.validateIdentifier(name, sourceLevel, complianceLevel);
+      }
+
+      switch (status.getSeverity())
+      {
+         case IStatus.WARNING :
+            display.setEnableStateRenameButton(isNameChanged());
+            display.getWarningLabel().setText(status.getMessage());
+            display.getErrorLabel().setText("");
+            break;
+         case IStatus.OK :
+            display.setEnableStateRenameButton(isNameChanged());
+            display.getWarningLabel().setText("");
+            display.getErrorLabel().setText("");
+            break;
+         default :
+            display.setEnableStateRenameButton(false);
+            display.getWarningLabel().setText("");
+            display.getErrorLabel().setText(status.getMessage());
+            break;
+      }
    }
 
    /**
@@ -805,15 +875,13 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
             @Override
             public void execute()
             {
-               final int cursorColumn = activeEditor.getCursorColumn();
-               final int cursorRow = activeEditor.getCursorRow();
-               activeEditor.getDocument().set(content);
+               updateEditorContent(activeEditor, content, activeFile);
                Scheduler.get().scheduleDeferred(new ScheduledCommand()
                {
                   @Override
                   public void execute()
                   {
-                     activeEditor.setCursorPosition(cursorRow, cursorColumn);
+                     IDE.fireEvent(new FileSavedEvent(activeFile, null));
                   }
                });
             }
@@ -821,6 +889,33 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       }
 
       currentCompilationUnit = openedFilesToCompilationUnit.get(activeFile.getId());
+   }
+
+   /**
+    * Updates {@link Editor} content. 
+    * 
+    * @param editor {@link Editor} to update
+    * @param content new content
+    * @param file editing {@link FileModel file}
+    */
+   private void updateEditorContent(final Editor editor, String content, final FileModel file)
+   {
+      final int cursorColumn = editor.getCursorColumn();
+      final int cursorRow = editor.getCursorRow();
+      editor.getDocument().set(content);
+
+      // need some time to update editor's content
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            editor.setCursorPosition(cursorRow, cursorColumn);
+
+            file.setContentChanged(false);
+            IDE.fireEvent(new FileSavedEvent(file, null));
+         }
+      });
    }
 
    /**

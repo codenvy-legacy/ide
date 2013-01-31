@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.exoplatform.ide</groupId>
 		<artifactId>exo-ide-parent</artifactId>
-		<version>1.2.0-M16-SNAPSHOT</version>
+		<version>1.2.0-M17-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>exo-ide-server</artifactId>
@@ -285,12 +285,22 @@
 					<groupId>com.google.code.guice</groupId>
 					<artifactId>guice</artifactId>
 				</exclusion>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-security</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>com.github.dcarter.gdata-java-client</groupId>

@@ -1,9 +1,12 @@
 package org.exoplatform.ide.core;
 
+import javassist.expr.NewArray;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.seleniumemulation.WaitForCondition;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -49,7 +52,7 @@ public class Preferences extends AbstractTestModule
     */
    public void waitPreferencesOpen()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -72,7 +75,7 @@ public class Preferences extends AbstractTestModule
     */
    public void waitPreferencesClose()
    {
-      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By
+      (new WebDriverWait(driver(), 30)).until(ExpectedConditions.invisibilityOfElementLocated(By
          .id(Locators.PREFERNCESS_FORM_ID)));
    }
 
@@ -82,7 +85,7 @@ public class Preferences extends AbstractTestModule
     */
    public void waitCustomizeMenuRedraw(final String nameMenu)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -101,13 +104,15 @@ public class Preferences extends AbstractTestModule
       });
    }
 
+
+   
    /**
     * select menu for customization
     * @param nameMenu
     */
    public void selectCustomizeMenu(String nameMenu)
    {
-
+      waitCustomizeMenuRedraw(nameMenu);
       driver().findElement(By.xpath(String.format(Locators.PREFERNCES_TREE_SELECTOR, nameMenu))).click();
    }
 

@@ -91,9 +91,7 @@ public class JsPopUpOAuthWindow
 						//console.log(href);
 						var path = popupWindow.location.pathname;
 						if (path == "/IDE/Application.html" // for local ide bundle
-								|| path == "/cloud/profile.jsp"
-								|| path == "/cloud/ide.jsp"
-								|| path == "/IDE") {
+								|| path == "/IDE/") {
 							popupWindow.close();
 							popupWindow = null;
 							if (popupCloseHandlerIntervalId) {

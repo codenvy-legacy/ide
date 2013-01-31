@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,71 +31,60 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  * 
  */
-public class OpenGroovyLocalFileTest extends BaseTest
-{
-   private static String PROJECT = OpenGroovyLocalFileTest.class.getSimpleName();
+public class OpenGroovyLocalFileTest extends BaseTest {
+	private static String PROJECT = OpenGroovyLocalFileTest.class
+			.getSimpleName();
 
-   private static String GROOVY_NAME = "Example.groovy";
+	private static String GROOVY_NAME = "Example.groovy";
 
-   private static final String FILE_PATH =
-      "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.groovy";
+	private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.groovy";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testOpenGroovy() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testOpenGroovy() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.LOADER.waitClosed();
 
-      IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.GROOVY_SERVICE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_NAME);
+		IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH,
+				MimeType.GROOVY_SERVICE);
+		IDE.EDITOR.waitActiveFile();
 
-      String text = IDE.EDITOR.getTextFromCodeEditor(0);
+		String text = IDE.EDITOR.getTextFromCodeEditor();
 
-      assertTrue(text.length() > 0);
+		assertTrue(text.length() > 0);
 
-      String fileContent = getFileContent(FILE_PATH);
+		String fileContent = getFileContent(FILE_PATH);
 
-      assertEquals(fileContent.split("\n").length, text.split("\n").length);
+		assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      IDE.EDITOR.saveAs(1, GROOVY_NAME);
+		IDE.EDITOR.saveAs(1, GROOVY_NAME);
 
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_NAME);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GROOVY_NAME);
 
-      IDE.PROPERTIES.openProperties();
+		IDE.PROPERTIES.openProperties();
 
-      assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
-   }
+		assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());
+	}
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 }

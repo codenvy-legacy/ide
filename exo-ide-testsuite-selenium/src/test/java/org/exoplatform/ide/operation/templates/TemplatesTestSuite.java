@@ -32,5 +32,4 @@ import org.junit.runners.Suite.SuiteClasses;
    BigTemplateTest.class})
 public class TemplatesTestSuite
 {
-
 }

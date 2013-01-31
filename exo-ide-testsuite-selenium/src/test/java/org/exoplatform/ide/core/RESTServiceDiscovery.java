@@ -100,7 +100,7 @@ public class RESTServiceDiscovery extends AbstractTestModule
    */
    public void waitOpened()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -155,7 +155,7 @@ public class RESTServiceDiscovery extends AbstractTestModule
 
    public void waitOkButtonAppeared()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -178,7 +178,7 @@ public class RESTServiceDiscovery extends AbstractTestModule
     */
    public void waitForItem(final String path) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -199,7 +199,7 @@ public class RESTServiceDiscovery extends AbstractTestModule
 
    public void waitForItemById(final String id) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -224,7 +224,7 @@ public class RESTServiceDiscovery extends AbstractTestModule
    */
    public void waitClosed() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

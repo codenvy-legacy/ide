@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.search;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -27,8 +26,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -94,20 +91,21 @@ public class SearchByMimeTypeTest extends BaseTest
       IDE.SEARCH.performSearch("/" + PROJECT + "/" + FOLDER_NAME_1, "", MimeType.APPLICATION_JAVASCRIPT);
       IDE.SEARCH_RESULT.waitOpened();
       IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2));
+      IDE.SEARCH_RESULT.waitItemNotPresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2);
 
       IDE.SEARCH_RESULT.openItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
 
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.APPLICATION_JAVASCRIPT);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_2);
+
+      IDE.SEARCH.performSearch("/" + PROJECT + "/" + FOLDER_NAME_2, "", MimeType.APPLICATION_JAVASCRIPT);
 
       IDE.SEARCH_RESULT.waitOpened();
-      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2));
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2);
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + FOLDER_NAME_2 + "/" + FILE_NAME_2);
    }
 
    @AfterClass

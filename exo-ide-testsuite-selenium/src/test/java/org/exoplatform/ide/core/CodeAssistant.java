@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
@@ -33,8 +34,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -79,7 +78,8 @@ public class CodeAssistant extends AbstractTestModule
    /**
     * Type text to input field of autocompletion form.
     * 
-    * @param text - text to type
+    * @param text
+    *            - text to type
     * @throws Exception
     */
    public void typeToInput(String text) throws Exception
@@ -90,8 +90,10 @@ public class CodeAssistant extends AbstractTestModule
    /**
     * Type to input with cleaning previous value.
     * 
-    * @param text text to type
-    * @param clearInput if <code>true</code> - clear input befor type
+    * @param text
+    *            text to type
+    * @param clearInput
+    *            if <code>true</code> - clear input befor type
     * @throws Exception
     */
    public void typeToInput(String text, boolean clearInput) throws Exception
@@ -112,6 +114,16 @@ public class CodeAssistant extends AbstractTestModule
       {
          return false;
       }
+   }
+
+   /**
+    * wait for element in codeassistant
+    * @param value
+    */
+   public void waitForElementInCodeAssistant(final String value)
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         ELEMENT_LOCATOR, value))));
    }
 
    public String[] getFormProposalsText()
@@ -140,14 +152,15 @@ public class CodeAssistant extends AbstractTestModule
    public void checkElementNotPresent(String elementTitle)
    {
 
-      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(PANEL
+      (new WebDriverWait(driver(), 30)).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath(PANEL
          + "//div[text()='" + elementTitle + "']")));
    }
 
    /**
     * Move cursor down
     * 
-    * @param row Number of rows to move down
+    * @param row
+    *            Number of rows to move down
     * @throws InterruptedException
     */
    public void moveCursorDown(int row) throws InterruptedException
@@ -174,7 +187,7 @@ public class CodeAssistant extends AbstractTestModule
    {
       selectProposalPanel();
       input.sendKeys(Keys.ESCAPE);
-      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -220,21 +233,13 @@ public class CodeAssistant extends AbstractTestModule
     */
    public void openForm() throws Exception
    {
-      IDE().EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver d)
-         {
-            return d.findElement(By.id(PANEL_ID)) != null;
-         }
-      });
+      IDE().EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + Keys.SPACE.toString());
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.id(PANEL_ID)));
    }
 
    public void waitForDocPanelOpened()
    {
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver d)
@@ -265,7 +270,7 @@ public class CodeAssistant extends AbstractTestModule
 
    public void waitForImportAssistForOpened()
    {
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -278,7 +283,7 @@ public class CodeAssistant extends AbstractTestModule
 
    public void waitForInput()
    {
-      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -307,6 +312,18 @@ public class CodeAssistant extends AbstractTestModule
       Action sel = a.doubleClick(im).build();
       sel.perform();
       Thread.sleep(TestConstants.REDRAW_PERIOD);
+   }
+
+   /** select item in codeaasysten by declaration name
+    * @param name
+    * @throws InterruptedException
+    */
+   public void selectByImportDeclaration(String name) throws InterruptedException
+   {
+      WebElement elem =
+         driver().findElement(
+            By.xpath("//div[@id='ideAssistImportDeclarationForm']//div[contains(text(), '" + name + "')]"));
+      new Actions(driver()).doubleClick(elem).perform();
    }
 
    /**

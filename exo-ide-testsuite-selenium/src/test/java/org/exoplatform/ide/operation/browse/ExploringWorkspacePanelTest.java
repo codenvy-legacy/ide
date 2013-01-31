@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.BaseTest;
@@ -105,20 +103,20 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2);
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2));
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2);
 
       // step2. Close folder 2. Check not visible subfolders of folder #2.
       // Open folder one and check visible subfolders of of folder#1.
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_2);
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1));
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2));
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2);
 
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2);
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2));
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2);
 
       // step 3 collapse all folders and check their
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_2);
@@ -126,31 +124,31 @@ public class ExploringWorkspacePanelTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
       IDE.PROJECT.EXPLORER.waitForItem(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2);
 
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2));
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2);
 
       // step 4 Roll up project folder and checking - workspace is empty
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
       IDE.LOADER.waitClosed();
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1));
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2));
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1));
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2));
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1));
-      assertFalse(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2));
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_2);
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2);
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
+      IDE.PROJECT.EXPLORER.waitItemNotVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2);
 
       // step 5 Collapse project and check all folders present
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
       Thread.sleep(3000);
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2));
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_2 + "/" + FOLDER_2_2);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
+      IDE.PROJECT.EXPLORER.waitItemVisible(WS_URL + PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_2);
    }
 }

@@ -24,6 +24,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -45,7 +46,7 @@ public class Loader extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -67,23 +68,8 @@ public class Loader extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void waitClosed() throws Exception
+   public void waitClosed()
    {
-      new WebDriverWait(driver(), 15).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               input.findElement(By.id(LOADER_ID));
-               return false;
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 160).until(ExpectedConditions.invisibilityOfElementLocated(By.id(LOADER_ID)));
    }
 }

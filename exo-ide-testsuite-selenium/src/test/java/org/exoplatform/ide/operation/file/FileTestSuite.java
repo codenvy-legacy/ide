@@ -25,26 +25,19 @@ import org.junit.runners.Suite.SuiteClasses;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 @RunWith(Suite.class)
-@SuiteClasses({
-   SaveAllFilesTest.class,
-   PreviewHtmlFileTest.class,
-   DeleteSeveralFilesSimultaniouslyTest.class,
-   CreatingAndSavingAsNewFileTest.class,
-   DeletingFilesTest.class,
-   ClosingAndSaveAsFileTest.class,
-   CheckHilightTextTest.class,
-   SavingPreviouslyEditedFileTest.class,
-   RenameOpenedFileTest.class,
-   RenameClosedFileTest.class,
-   OpenAndSaveXmlFileWithNonLatinNameTest.class,
-   CreateSaveAsXmlWithNonLatinNameTest.class,
-   CheckInformUserAfterCloseNoneSavedFile.class,
-   DeletingXmlFileWithNonLatinNameTest.class
-})
-public class FileTestSuite
-{
+@SuiteClasses({ SaveAllFilesTest.class, PreviewHtmlFileTest.class,
+		DeleteSeveralFilesSimultaniouslyTest.class,
+		CreatingAndSavingAsNewFileTest.class, DeletingFilesTest.class,
+		ClosingAndSaveAsFileTest.class, CheckHilightTextTest.class,
+		SavingPreviouslyEditedFileTest.class, RenameOpenedFileTest.class,
+		RenameClosedFileTest.class,
+		OpenAndSaveXmlFileWithNonLatinNameTest.class,
+		CreateSaveAsXmlWithNonLatinNameTest.class,
+		CheckInformUserAfterCloseNoneSavedFile.class,
+		DeletingXmlFileWithNonLatinNameTest.class })
+public class FileTestSuite {
 
 }

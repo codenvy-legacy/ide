@@ -18,11 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
-import org.openqa.selenium.By;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -37,14 +35,22 @@ public class PopupDialogsBrowser extends AbstractTestModule
    {
       try
       {
-         driver().switchTo().alert();
-         return true;
+         Thread.sleep(1000);
+         Alert alert = driver().switchTo().alert();
+         System.out.println(alert.getText());
+         if (alert.getText().isEmpty())
+         {
+            return false;
+         }
+         else
+         {
+            return true;
+         }
       }
       catch (Exception e)
       {
          return false;
       }
-
    }
 
    /**
@@ -52,7 +58,8 @@ public class PopupDialogsBrowser extends AbstractTestModule
     */
    public void acceptAlert()
    {
-      driver().switchTo().alert().accept();
+      Alert alert = driver().switchTo().alert();
+      alert.accept();
    }
 
    /**
@@ -62,7 +69,7 @@ public class PopupDialogsBrowser extends AbstractTestModule
    {
       driver().switchTo().alert().dismiss();
    }
-   
+
    /**
     * get text from Alert
     */
@@ -70,7 +77,6 @@ public class PopupDialogsBrowser extends AbstractTestModule
    {
       return driver().switchTo().alert().getText();
    }
-   
 
    /**
     * Wait pop up browser window 
@@ -79,7 +85,7 @@ public class PopupDialogsBrowser extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

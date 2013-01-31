@@ -21,8 +21,6 @@ package org.exoplatform.ide.operation.edit.outline;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import junit.framework.Assert;
-
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.operation.autocompletion.java.JavaCodeAssistantTest;
 import org.junit.Before;
@@ -39,7 +37,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
+ * 
  */
 public class JavaQuickOutlineTest extends CodeAssistantBaseTest
 {
@@ -59,7 +57,13 @@ public class JavaQuickOutlineTest extends CodeAssistantBaseTest
       {
          fail("Can't create test folder");
       }
-      openProject();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(projectName);
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
+      IDE.PROJECT.EXPLORER.waitForItem(projectName);
+
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + "pom.xml");
       IDE.PROJECT.EXPLORER.openItem(projectName + "/src");
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/src/main");
@@ -70,15 +74,15 @@ public class JavaQuickOutlineTest extends CodeAssistantBaseTest
       IDE.PROJECT.EXPLORER.openItem(projectName + "/src/main/java/helloworld");
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/src/main/java/helloworld/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/src/main/java/helloworld/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/src/main/java/helloworld/" + FILE_NAME);
       IDE.CODE_ASSISTANT_JAVA.waitForJavaToolingInitialized(FILE_NAME);
+
    }
 
    @Test
    public void quickOutline() throws Exception
    {
       IDE.GOTOLINE.goToLine(24);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.chord(Keys.CONTROL, "o"));
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.chord(Keys.CONTROL, "o"));
       waitForQuickOutlineOpened();
       assertElementPresent("helloworld");
       assertElementPresent("GreetingController");
@@ -86,7 +90,7 @@ public class JavaQuickOutlineTest extends CodeAssistantBaseTest
 
       selectItem("GreetingController");
       waitForQuickOutlineClosed();
-      Assert.assertEquals("12 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("12 : 1");
    }
 
    /**
@@ -94,7 +98,7 @@ public class JavaQuickOutlineTest extends CodeAssistantBaseTest
     */
    private void waitForQuickOutlineClosed()
    {
-      (new WebDriverWait(IDE.driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(IDE.driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -123,8 +127,8 @@ public class JavaQuickOutlineTest extends CodeAssistantBaseTest
       WebElement element = driver.findElement(By.xpath(expression));
       element.click();
       element = driver.findElement(By.xpath(expression));
-      //      element.click();
-      //      element.click();
+      // element.click();
+      // element.click();
       new Actions(driver).doubleClick(element).perform();
    }
 
@@ -141,7 +145,7 @@ public class JavaQuickOutlineTest extends CodeAssistantBaseTest
     */
    private void waitForQuickOutlineOpened()
    {
-      (new WebDriverWait(IDE.driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(IDE.driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

@@ -18,8 +18,7 @@
  */
 package org.exoplatform.ide.operation.autocompletion.groovy;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,8 +27,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -45,7 +42,6 @@ public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
       openProject();
    }
 
-
    @AfterClass
    public static void tearDown() throws Exception
    {
@@ -60,52 +56,51 @@ public class GroovyAnnotationAutocompleteTest extends CodeAssistantBaseTest
       }
 
    }
-   
+
    @Test
    public void testGroovyAnnotation() throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
-      IDE.EDITOR.moveCursorDown(0, 8);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.moveCursorDown(8);
 
       //check Deprecated annotation
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\n@Depr");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "\n@Depr");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Deprecated"));
-      assertFalse(IDE.CODEASSISTANT.isElementPresent("hello(String):String"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Deprecated");
       closeFormAndDeleteAnotatationString();
 
       //check Inherited annotation
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Inh");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "@Inh");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Inherited"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Inherited");
       closeFormAndDeleteAnotatationString();
 
       //check Retention annotation
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Rete");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "@Rete");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Retention"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Retention");
       closeFormAndDeleteAnotatationString();
 
       //check SuppressWarnings annotation
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Suppress");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "@Suppress");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("SuppressWarnings"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("SuppressWarnings");
       closeFormAndDeleteAnotatationString();
 
       //check Override annotation
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "@Ove");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "@Ove");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Override"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Override");
       closeFormAndDeleteAnotatationString();
-     
+
    }
 
    private void closeFormAndDeleteAnotatationString() throws Exception
    {
       IDE.CODEASSISTANT.closeForm();
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.SHIFT.toString() + Keys.HOME.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.DELETE.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.SHIFT.toString() + Keys.HOME.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.DELETE.toString());
    }
 
 }

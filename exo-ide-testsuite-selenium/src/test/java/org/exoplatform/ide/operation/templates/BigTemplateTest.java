@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.operation.templates;
 
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -28,9 +29,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * Test for creating template from big file.
@@ -46,7 +44,7 @@ public class BigTemplateTest extends BaseTest
    private final static String TEMPLATE_NAME = "Calc";
 
    private final static String PROJECT = BigTemplateTest.class.getSimpleName();
-   
+
    public static final String FILE_TEMPLATES_STORE = ENTRY_POINT_URL + WS_NAME_2 + "/ide-home/templates/fileTemplates";
 
    @BeforeClass
@@ -74,11 +72,11 @@ public class BigTemplateTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS_TEMPLATE);
       IDE.SAVE_AS_TEMPLATE.waitOpened();
-      assertTrue(IDE.SAVE_AS_TEMPLATE.isOpened());
+      IDE.SAVE_AS_TEMPLATE.isOpened();
       IDE.SAVE_AS_TEMPLATE.setName(TEMPLATE_NAME);
       IDE.SAVE_AS_TEMPLATE.clickSaveButton();
       IDE.SAVE_AS_TEMPLATE.waitClosed();
@@ -94,13 +92,13 @@ public class BigTemplateTest extends BaseTest
       IDE.TEMPLATES.waitOpened();
 
       // check "Create file" dialog window
-      assertTrue(IDE.TEMPLATES.isOpened());
+      IDE.TEMPLATES.waitOpenedDialog();
       IDE.TEMPLATES.selectTemplate(TEMPLATE_NAME);
       // click Create button
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
 
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gadget");
+      IDE.EDITOR.waitActiveFile();
    }
 
    @AfterClass

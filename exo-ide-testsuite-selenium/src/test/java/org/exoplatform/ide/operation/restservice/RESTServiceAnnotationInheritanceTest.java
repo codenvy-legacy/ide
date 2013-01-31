@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.operation.restservice;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -27,105 +33,97 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class RESTServiceAnnotationInheritanceTest extends BaseTest
-{
-   private final static String FILE_NAME = "AnnotationInheritance.grs";
+public class RESTServiceAnnotationInheritanceTest extends BaseTest {
+	private final static String FILE_NAME = "AnnotationInheritance.grs";
 
-   private final static String PROJECT = RESTServiceAnnotationInheritanceTest.class.getSimpleName();
+	private final static String PROJECT = RESTServiceAnnotationInheritanceTest.class
+			.getSimpleName();
 
-   @Before
-   public void beforeTest()
-   {
+	@Before
+	public void beforeTest() {
 
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
-      try
-      {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+		String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/AnnotationInheritance.groovy";
+		try {
+			Map<String, Link> project = VirtualFileSystemUtils
+					.createDefaultProject(PROJECT);
+			Link link = project.get(Link.REL_CREATE_FILE);
+			VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME,
+					MimeType.GROOVY_SERVICE, filePath);
+		} catch (IOException e) {
+		}
+	}
 
-   //  @Ignore
-   @Test
-   public void testAnnotationInheritance() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      IDE.LOADER.waitClosed();
+	// @Ignore
+	@Test
+	public void testAnnotationInheritance() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.LOADER.waitClosed();
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
 
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(1, 5);
+		IDE.MENU.runCommand(MenuCommands.Run.RUN,
+				MenuCommands.Run.DEPLOY_REST_SERVICE);
+		IDE.OUTPUT.waitForMessageShow(1, 5);
 
-      //Call the "Run->Launch REST Service" topmenu command
-      IDE.REST_SERVICE.launchRestService();
+		// Call the "Run->Launch REST Service" topmenu command
+		IDE.REST_SERVICE.launchRestService();
 
-      assertEquals("/testAnnotationInheritance/InnerPath/{pathParam}", IDE.REST_SERVICE.getPathFieldValue());
+		assertEquals("/testAnnotationInheritance/InnerPath/{pathParam}",
+				IDE.REST_SERVICE.getPathFieldValue());
 
-      assertParameters();
+		assertParameters();
 
-      IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance");
-      IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
-      IDE.REST_SERVICE.typeToPathField("/testAnnotationInheritance/InnerPath/test");
-      assertParameters();
+		IDE.REST_SERVICE.isValuePresentInPathList("/testAnnotationInheritance");
+		IDE.REST_SERVICE
+				.isValuePresentInPathList("/testAnnotationInheritance/InnerPath/{pathParam}");
+		IDE.REST_SERVICE
+				.typeToPathField("/testAnnotationInheritance/InnerPath/test");
+		assertParameters();
 
-      IDE.REST_SERVICE.sendRequest();
-      IDE.OUTPUT.waitForMessageShow(2, 10);
-      String mess = IDE.OUTPUT.getOutputMessage(2);
-      assertTrue(mess.contains("PathParam:test"));
-      IDE.EDITOR.closeFile(FILE_NAME);
-      IDE.EDITOR.waitTabNotPresent(FILE_NAME);
-   }
+		IDE.REST_SERVICE.sendRequest();
+		IDE.OUTPUT.waitForMessageShow(2, 10);
+		String mess = IDE.OUTPUT.getOutputMessage(2);
+		assertTrue(mess.contains("PathParam:test"));
+		IDE.EDITOR.closeFile(FILE_NAME);
+		IDE.EDITOR.waitTabNotPresent(FILE_NAME);
+	}
 
-   /**
-    * Check parameters
-    */
-   private void assertParameters()
-   {
-      assertEquals("POST", IDE.REST_SERVICE.getMethodValue());
-      assertEquals("text/plain", IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
-      assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeValue());
-      assertEquals(0, IDE.REST_SERVICE.getQueryParameterCount());
-      IDE.REST_SERVICE.selectHeaderParametersTab();
-      assertEquals(0, IDE.REST_SERVICE.getHeaderParameterCount());
-      IDE.REST_SERVICE.selectQueryParametersTab();
-   }
+	/**
+	 * Check parameters
+	 */
+	private void assertParameters() {
+		assertEquals("POST", IDE.REST_SERVICE.getMethodValue());
+		assertEquals("text/plain",
+				IDE.REST_SERVICE.getRequestMediaTypeFieldValue());
+		assertEquals("text/html", IDE.REST_SERVICE.getResponseMediaTypeValue());
+		assertEquals(0, IDE.REST_SERVICE.getQueryParameterCount());
+		IDE.REST_SERVICE.selectHeaderParametersTab();
+		assertEquals(0, IDE.REST_SERVICE.getHeaderParameterCount());
+		IDE.REST_SERVICE.selectQueryParametersTab();
+	}
 
-   @After
-   public void afterTest() throws Exception
-   {
-      try
-      {
-         IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-         IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-         IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-         IDE.LOADER.waitClosed();
-         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-         IDE.LOADER.waitClosed();
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+	@After
+	public void afterTest() throws Exception {
+		try {
+			IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+			IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+			IDE.EDITOR.waitActiveFile();
+			IDE.LOADER.waitClosed();
+			IDE.MENU.runCommand(MenuCommands.Run.RUN,
+					MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+			IDE.LOADER.waitClosed();
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
 
-      }
-      catch (IOException e)
-      {
-      }
-   }
+		} catch (IOException e) {
+		}
+	}
 }

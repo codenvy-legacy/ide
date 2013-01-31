@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import java.util.List;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
@@ -32,8 +33,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 /**
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
@@ -50,7 +49,7 @@ public class CodeAssistantJava extends AbstractTestModule
 
    private static final String PANEL = "//div[@id='exo-ide-autocomplete-panel']";
 
-   private static final String ELEMENT_LOCATOR = PANEL + "//div[text()='%s']";
+   private static final String ELEMENT_LOCATOR = PANEL + "//td/div[contains(.,'%s')]";
 
    private static final String SUBSTITUTE_ELEMENT = PANEL + "//div[text()='%s']";
 
@@ -80,7 +79,8 @@ public class CodeAssistantJava extends AbstractTestModule
    /**
     * Type text to input field of autocompletion form.
     * 
-    * @param text - text to type
+    * @param text
+    *            - text to type
     * @throws Exception
     */
    public void typeToInput(String text) throws Exception
@@ -91,8 +91,10 @@ public class CodeAssistantJava extends AbstractTestModule
    /**
     * Type to input with cleaning previous value.
     * 
-    * @param text text to type
-    * @param clearInput if <code>true</code> - clear input befor type
+    * @param text
+    *            text to type
+    * @param clearInput
+    *            if <code>true</code> - clear input befor type
     * @throws Exception
     */
    public void typeToInput(String text, boolean clearInput) throws Exception
@@ -102,6 +104,11 @@ public class CodeAssistantJava extends AbstractTestModule
       typeToInput(text);
    }
 
+   /**
+    * check is proposal text presnt in panel
+    * @param elementTitle
+    * @return
+    */
    public boolean isElementPresent(String elementTitle)
    {
       try
@@ -115,6 +122,10 @@ public class CodeAssistantJava extends AbstractTestModule
       }
    }
 
+   /**
+    * get all text from codeassistant panel
+    * @return
+    */
    public String[] getFormProposalsText()
    {
       List<WebElement> elements =
@@ -135,16 +146,11 @@ public class CodeAssistantJava extends AbstractTestModule
       return texts;
    }
 
-   public void checkElementNotPresent(String elementTitle)
-   {
-
-      assertFalse(driver().findElement(By.xpath(PANEL + "//div[text()='" + elementTitle + "']")).isDisplayed());
-   }
-
    /**
     * Move cursor down
     * 
-    * @param row Number of rows to move down
+    * @param row
+    *            Number of rows to move down
     * @throws InterruptedException
     */
    public void moveCursorDown(int row) throws InterruptedException
@@ -153,7 +159,7 @@ public class CodeAssistantJava extends AbstractTestModule
       {
          selectProposalPanel();
          new Actions(driver()).sendKeys(Keys.DOWN.toString()).build().perform();
-         //input.sendKeys(Keys.DOWN.toString());
+         // input.sendKeys(Keys.DOWN.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -161,7 +167,8 @@ public class CodeAssistantJava extends AbstractTestModule
    /**
     * Move cursor down
     * 
-    * @param row Number of rows to move down
+    * @param row
+    *            Number of rows to move down
     * @throws InterruptedException
     */
    public void moveCursorUp(int row) throws InterruptedException
@@ -170,7 +177,7 @@ public class CodeAssistantJava extends AbstractTestModule
       {
          selectProposalPanel();
          new Actions(driver()).sendKeys(Keys.UP.toString()).build().perform();
-         //input.sendKeys(Keys.DOWN.toString());
+         // input.sendKeys(Keys.DOWN.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -190,7 +197,7 @@ public class CodeAssistantJava extends AbstractTestModule
    {
       selectProposalPanel();
       new Actions(driver()).sendKeys(Keys.ESCAPE).build().perform();
-      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -230,8 +237,8 @@ public class CodeAssistantJava extends AbstractTestModule
    }
 
    /**
-    * double click on selected item
-    * in java autocomplete form
+    * double click on selected item in java autocomplete form
+    * 
     * @param parameter
     * @throws InterruptedException
     */
@@ -242,7 +249,7 @@ public class CodeAssistantJava extends AbstractTestModule
 
       WebElement prop = driver().findElement(By.xpath(String.format(AUTOCOMPLETE_PROPOSAL, parameter)));
       new Actions(driver()).doubleClick(prop).build().perform();
-      //input.sendKeys(Keys.RETURN);
+      // input.sendKeys(Keys.RETURN);
       Thread.sleep(TestConstants.SLEEP_SHORT);
    }
 
@@ -253,8 +260,8 @@ public class CodeAssistantJava extends AbstractTestModule
     */
    public void openForm() throws Exception
    {
-      IDE().JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SPACE);
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      IDE().JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SPACE.toString());
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -267,7 +274,7 @@ public class CodeAssistantJava extends AbstractTestModule
 
    public void waitForDocPanelOpened()
    {
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver d)
@@ -278,12 +285,14 @@ public class CodeAssistantJava extends AbstractTestModule
 
    }
 
-   /** wait import with specific name
+   /**
+    * wait import with specific name
+    * 
     * @param nameImport
     */
    public void waitFromImportContent(final String nameImport)
    {
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver d)
@@ -314,7 +323,7 @@ public class CodeAssistantJava extends AbstractTestModule
 
    public void waitForImportAssistForOpened()
    {
-      (new WebDriverWait(driver(), 10)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -327,7 +336,7 @@ public class CodeAssistantJava extends AbstractTestModule
 
    public void waitForInput()
    {
-      (new WebDriverWait(driver(), 5)).until(new ExpectedCondition<Boolean>()
+      (new WebDriverWait(driver(), 30)).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -350,12 +359,8 @@ public class CodeAssistantJava extends AbstractTestModule
     */
    public void selectImportProposal(String name) throws InterruptedException
    {
-      WebElement im = driver().findElement(By.xpath("//div[@class='gwt-Label' and contains(text(),'" + name + "')]"));
-      Actions a = new Actions(driver());
-      im.click();
-      Action sel = a.doubleClick(im).build();
-      sel.perform();
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      driver().findElement(By.xpath(String.format(ELEMENT_LOCATOR, name))).click();
+
    }
 
    /**
