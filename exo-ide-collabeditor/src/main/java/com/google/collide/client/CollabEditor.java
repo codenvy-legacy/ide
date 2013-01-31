@@ -116,7 +116,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       @Override
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)
       {
-//         fireEvent(new EditorContentChangedEvent(CollabEditor.this));
+         fireEvent(new EditorContentChangedEvent(CollabEditor.this));
          updateDocument();
       }
 
@@ -130,7 +130,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       editorBundle =
          EditorBundle.create(CollabEditorExtension.get().getContext(), CollabEditorExtension.get().getManager(),
             EditorErrorListener.NOOP_ERROR_RECEIVER, this);
-//      contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
+      contentAssistant = editorBundle.getAutocompleter().getContentAssistant();
       editor = editorBundle.getEditor();
 //      editor.getTextListenerRegistrar().add(new TextListenerImpl());
       EditableContentArea.View v =
@@ -142,16 +142,16 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       notificationManager.setErrorListener(editorBundle.getErrorListener());
       setElement((Element)v.getElement());
       documentAdaptor = new DocumentAdaptor();
-//      editor.getFocusManager().getFocusListenerRegistrar().add(new FocusListener()
-//      {
-//
-//         @Override
-//         public void onFocusChange(boolean hasFocus)
-//         {
-//            if (hasFocus)
-//               fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
-//         }
-//      });
+      editor.getFocusManager().getFocusListenerRegistrar().add(new FocusListener()
+      {
+
+         @Override
+         public void onFocusChange(boolean hasFocus)
+         {
+            if (hasFocus)
+               fireEvent(new EditorFocusReceivedEvent(CollabEditor.this));
+         }
+      });
 
    }
 
@@ -172,7 +172,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    protected void onLoad()
    {
-//      fireEvent(new EditorInitializedEvent(this));
+      fireEvent(new EditorInitializedEvent(this));
       super.onLoad();
    }
 
@@ -859,7 +859,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       this.document = new org.exoplatform.ide.editor.shared.text.Document(document.asText());
       this.document.addDocumentListener(documentAdaptor);
-     // hoverPresenter = new HoverPresenter(this, editor, this.document);
+      hoverPresenter = new HoverPresenter(this, editor, this.document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
 

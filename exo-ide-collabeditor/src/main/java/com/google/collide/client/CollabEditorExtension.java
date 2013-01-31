@@ -73,8 +73,6 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
-      new OpenFileCollaboration(IDE.eventBus(), documentManager);
-      IDE.getInstance().addControl(new OpenFileCollaborationControl(context.getResources()));
    }
 
    public AppContext getContext()

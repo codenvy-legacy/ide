@@ -568,6 +568,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private boolean handleKeyPressing(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
    {
+      if((isCtrl || (BrowserResolver.isMacOs() && isAlt)) && keyCode == ' ')
+      {
+         onAutocomplete();
+         return true;
+      }
       EditorHotKeyPressedEvent event = new EditorHotKeyPressedEvent(isCtrl, isAlt, isShift, keyCode);
       fireEvent(event);
       return event.isHotKeyHandled();
@@ -628,11 +633,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode)
    {
-      if (mimeType.equals(MimeType.APPLICATION_JAVA))
-      {
-         fireEvent(new RunCodeAssistantEvent());
-         return;
-      }
 
       int cursorRow = cursorPositionRow;
 

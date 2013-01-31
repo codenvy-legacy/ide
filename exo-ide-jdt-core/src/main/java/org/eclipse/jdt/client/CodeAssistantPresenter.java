@@ -18,6 +18,11 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.client.AppContext;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.code.autocomplete.AutocompleteBox;
+import com.google.collide.client.code.autocomplete.integration.AutocompleteUiController;
 import com.google.collide.client.util.logging.Log;
 
 import com.google.gwt.core.client.GWT;
@@ -308,7 +313,10 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       int posX = currentEditor.getCursorOffsetLeft() + 2;
       int posY = currentEditor.getCursorOffsetTop() + 15;
       keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
-      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
+      AutocompleteBox popup = new AutocompleteUiController(((CollabEditor)currentEditor).getEditor(), CollabEditorExtension.get().getContext().getResources());
+
+      popup.positionAndShow(createProposals(false));
+//      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
 
    }
 
