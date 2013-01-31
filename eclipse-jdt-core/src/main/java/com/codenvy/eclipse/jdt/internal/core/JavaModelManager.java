@@ -3457,7 +3457,7 @@ public class JavaModelManager implements ISaveParticipant, IContentTypeChangeLis
       return manager.userLibraryManager;
    }
 
-   /*
+   /**
 	 * Returns all the working copies which have the given owner.
 	 * Adds the working copies of the primary owner if specified.
 	 * Returns null if it has none.
