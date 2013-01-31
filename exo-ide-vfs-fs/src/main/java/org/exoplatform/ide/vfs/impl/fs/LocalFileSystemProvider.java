@@ -35,7 +35,7 @@ import java.net.URI;
 public class LocalFileSystemProvider implements VirtualFileSystemProvider
 {
    private final String id;
-   private final MountPoint mountPoint;
+   /*private*/ final MountPoint mountPoint;
 
    /**
     * @param id

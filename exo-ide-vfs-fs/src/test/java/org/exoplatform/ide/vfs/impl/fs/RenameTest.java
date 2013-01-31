@@ -61,14 +61,14 @@ public class RenameTest extends LocalFileSystemTest
       properties.put("MyProperty01", new String[]{"foo"});
       properties.put("MyProperty02", new String[]{"bar"});
 
-      filePath = createFile(testRootPath, "RenameFileTest_File", DEFAULT_CONTENT_BYTES);
-      lockedFilePath = createFile(testRootPath, "RenameFileTest_LockedFile", DEFAULT_CONTENT_BYTES);
-      protectedFilePath = createFile(testRootPath, "RenameFileTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
-      folderPath = createDirectory(testRootPath, "RenameFileTest_Folder");
+      filePath = createFile(testRootPath, "RenameTest_File", DEFAULT_CONTENT_BYTES);
+      lockedFilePath = createFile(testRootPath, "RenameTest_LockedFile", DEFAULT_CONTENT_BYTES);
+      protectedFilePath = createFile(testRootPath, "RenameTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
+      folderPath = createDirectory(testRootPath, "RenameTest_Folder");
       writeProperties(folderPath, properties);
       // Add custom properties for each item in tree. Will check after rename to be sure all original properties are saved.
       createTree(folderPath, 6, 4, properties);
-      protectedFolderPath = createDirectory(testRootPath, "RenameFileTest_ProtectedFolder");
+      protectedFolderPath = createDirectory(testRootPath, "RenameTest_ProtectedFolder");
       createTree(protectedFolderPath, 6, 4, properties);
       writeProperties(protectedFolderPath, properties);
 

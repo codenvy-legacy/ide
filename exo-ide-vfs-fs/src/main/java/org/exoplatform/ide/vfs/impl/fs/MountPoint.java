@@ -18,9 +18,12 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.DeleteOnCloseFileInputStream;
+import org.exoplatform.ide.vfs.server.cache.Cache;
+import org.exoplatform.ide.vfs.server.cache.SynchronizedCache;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
@@ -30,7 +33,6 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -52,12 +54,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -106,41 +106,6 @@ public class MountPoint
       }
    };
 
-
-   private class AclCache extends LoadingValueSLRUCache<Path, Map<String, Set<BasicPermissions>>>
-   {
-      AclCache()
-      {
-         super(PARTITION_PROTECTED_SIZE, PARTITION_PROBATIONARY_SIZE);
-      }
-
-      @Override
-      protected Map<String, Set<BasicPermissions>> loadValue(Path key)
-      {
-         DataInputStream dis = null;
-         try
-         {
-            java.io.File aclFile = getAclFile(key);
-            if (aclFile.exists())
-            {
-               dis = new DataInputStream(new BufferedInputStream(new FileInputStream(aclFile)));
-               return aclSerializer.read(dis);
-            }
-
-            return Collections.emptyMap();
-         }
-         catch (IOException e)
-         {
-            String msg = String.format("Unable read ACL for '%s'. ", key);
-            LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemRuntimeException(msg);
-         }
-         finally
-         {
-            closeQuietly(dis);
-         }
-      }
-   }
 
    // Add in cache if file is not locked to avoid multiple checking the same files.
    private static final String NO_LOCK = "no_lock";
@@ -215,6 +180,42 @@ public class MountPoint
       }
    }
 
+
+   private class AccessControlListCache extends LoadingValueSLRUCache<Path, AccessControlList>
+   {
+      private AccessControlListCache()
+      {
+         super(PARTITION_PROTECTED_SIZE, PARTITION_PROBATIONARY_SIZE);
+      }
+
+      @Override
+      protected AccessControlList loadValue(Path key)
+      {
+         DataInputStream dis = null;
+         try
+         {
+            java.io.File aclFile = getAclFile(key);
+            if (aclFile.exists())
+            {
+               dis = new DataInputStream(new BufferedInputStream(new FileInputStream(aclFile)));
+               return aclSerializer.read(dis);
+            }
+
+            return new AccessControlList();
+         }
+         catch (IOException e)
+         {
+            String msg = String.format("Unable read ACL for '%s'. ", key);
+            LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
+            throw new VirtualFileSystemRuntimeException(msg);
+         }
+         finally
+         {
+            closeQuietly(dis);
+         }
+      }
+   }
+
    private final java.io.File ioRoot;
    /*
     * NOTE -- This does not related to virtual file system locking in any kind. --
@@ -226,9 +227,8 @@ public class MountPoint
    private VirtualFile root;
 
    /* ----- Access control list feature. ----- */
-   private final AclSerializer aclSerializer;
-   private final AclCache[] aclCache;
-   private final java.util.concurrent.locks.Lock[] aclCacheLocks;
+   private final AccessControlListSerializer aclSerializer;
+   private final Cache<Path, AccessControlList>[] aclCache;
 
    /* ----- Virtual file system lock feature. ----- */
    private final LockTokenSerializer lockTokenSerializer;
@@ -252,9 +252,8 @@ public class MountPoint
       root = new VirtualFile(ioRoot, Path.ROOT, this);
       fileLockFactory = new FileLockFactory(1024);
 
-      aclSerializer = new AclSerializer();
-      aclCache = new AclCache[CACHE_PARTITIONS_NUM];
-      aclCacheLocks = new java.util.concurrent.locks.Lock[CACHE_PARTITIONS_NUM];
+      aclSerializer = new AccessControlListSerializer();
+      aclCache = new Cache[CACHE_PARTITIONS_NUM];
 
       lockTokenSerializer = new LockTokenSerializer();
       lockTokensCache = new LockTokensCache[CACHE_PARTITIONS_NUM];
@@ -266,8 +265,8 @@ public class MountPoint
 
       for (int i = 0; i < CACHE_PARTITIONS_NUM; i++)
       {
-         aclCache[i] = new AclCache();
-         aclCacheLocks[i] = new java.util.concurrent.locks.ReentrantLock();
+         aclCache[i] = new SynchronizedCache(new AccessControlListCache());
+
          lockTokensCache[i] = new LockTokensCache();
          lockTokensCacheLocks[i] = new java.util.concurrent.locks.ReentrantLock();
          metadataCache[i] = new FileMetadataCache();
@@ -345,6 +344,10 @@ public class MountPoint
    private List<VirtualFile> doGetChildren(VirtualFile virtualFile, java.io.FilenameFilter ioFileFilter)
       throws VirtualFileSystemException
    {
+      FileLockFactory.FileLock parentLock =
+         fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+      System.err.println(">>>>>>>>> BEGIN GET CHILDREN");
+      try {
       String[] names = virtualFile.getIoFile().list(ioFileFilter);
       if (names == null)
       {
@@ -363,6 +366,10 @@ public class MountPoint
          children.add(child);
       }
       return children;
+      }finally {
+          parentLock.release();
+         System.err.println(">>>>>>>>> END GET CHILDREN");
+      }
    }
 
 
@@ -492,13 +499,30 @@ public class MountPoint
 
    private void doCopy(VirtualFile source, VirtualFile destination) throws VirtualFileSystemException
    {
-      if (source.isFolder())
+            FileLockFactory.FileLock sourceLock =
+         fileLockFactory.getLock(source.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+      System.err.println(">>>>>>>>> BEGIN COPY");
+
+      try{
+      try
       {
-         copyTree(source, destination);
+         FileUtils.nioCopy(source.getIoFile(), destination.getIoFile(), null);
       }
-      else
+      catch (IOException e)
       {
-         copyFile(source, destination);
+         String msg = String.format("Unable copy '%s' to '%s'. ", source, destination);
+         LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
+         throw new VirtualFileSystemException(msg);
+      }
+      Map<String, String[]> sourceMetadata = getFileMetadata(source);
+      if (!sourceMetadata.isEmpty())
+      {
+         saveFileMetadata(destination, sourceMetadata);
+      }
+      // TODO : copy acl for source folder
+      }finally {
+           sourceLock.release();
+         System.err.println(">>>>>>>>> END COPY");
       }
    }
 
@@ -510,127 +534,52 @@ public class MountPoint
          throw new VirtualFileSystemException(String.format("Unable create folder '%s'. ", destination.getPath()));
       }
 
-      // copy metadata for source folder
-      Map<String, String[]> sourceMetadata = getFileMetadata(source);
-      if (!sourceMetadata.isEmpty())
-      {
-         saveFileMetadata(destination, sourceMetadata);
-      }
-
-      // copy acl for source folder
-      Map<String, Set<BasicPermissions>> permissionsMap = getPermissionsMap(source);
-      if (!permissionsMap.isEmpty())
-      {
-         savePermissionMap(destination, permissionsMap);
-      }
-
       final int sourceBasePathLength = source.getInternalPath().length();
       LinkedList<VirtualFile> q = new LinkedList<VirtualFile>();
       q.add(source);
       while (!q.isEmpty())
       {
-         VirtualFile currentVirtualFile = q.pop();
-         for (VirtualFile sourceVirtualFile : doGetChildren(currentVirtualFile, SERVICE_DIR_FILTER))
+         VirtualFile current = q.pop();
+         for (VirtualFile child : doGetChildren(current, /*SERVICE_DIR_FILTER*/null))
          {
-            final Path newPath =
-               destination.getInternalPath().newPath(sourceVirtualFile.getInternalPath().subPath(sourceBasePathLength));
-            VirtualFile newVirtualFile = new VirtualFile(new java.io.File(ioRoot, newPath.toIoPath()), newPath, this);
-            if (sourceVirtualFile.isFolder())
+            Path newPath = destination.getInternalPath().newPath(child.getInternalPath().subPath(sourceBasePathLength));
+            VirtualFile newFile = new VirtualFile(new java.io.File(ioRoot, newPath.toIoPath()), newPath, this);
+
+            FileLockFactory.FileLock childLock =
+               fileLockFactory.getLock(child.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+            FileLockFactory.FileLock newFileLock = fileLockFactory.getLock(newPath, true).acquire(LOCK_FILE_TIMEOUT);
+            try
             {
-               java.io.File newIoFile = newVirtualFile.getIoFile();
-               if (!(newIoFile.exists() || newIoFile.mkdirs()))
+               if (child.isFolder())
                {
-                  throw new VirtualFileSystemException(String.format("Unable create directory '%s'. ", newPath));
+                  if (!(newFile.getIoFile().exists() || newFile.getIoFile().mkdirs()))
+                  {
+                     throw new VirtualFileSystemException(String.format("Unable create directory '%s'. ", newPath));
+                  }
+                  q.push(child);
                }
-
-               // copy metadata for newly created folder
-               sourceMetadata = getFileMetadata(sourceVirtualFile);
-               if (!sourceMetadata.isEmpty())
+               else
                {
-                  saveFileMetadata(newVirtualFile, sourceMetadata);
+                  try
+                  {
+                     FileUtils.copy(child.getIoFile(), newFile.getIoFile(), null);
+                  }
+                  catch (IOException e)
+                  {
+                     String msg = String.format("Unable copy '%s' to '%s'. ", source, destination);
+                     LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
+                     throw new VirtualFileSystemException(msg);
+                  }
                }
-
-               // copy acl for newly created folder
-               permissionsMap = getPermissionsMap(sourceVirtualFile);
-               if (!permissionsMap.isEmpty())
-               {
-                  savePermissionMap(newVirtualFile, permissionsMap);
-               }
-
-               q.push(sourceVirtualFile);
             }
-            else
+            finally
             {
-               copyFile(sourceVirtualFile, newVirtualFile);
+               childLock.release();
+               newFileLock.release();
             }
          }
       }
    }
-
-
-   private void copyFile(VirtualFile source, VirtualFile destination) throws VirtualFileSystemException
-   {
-      FileLockFactory.FileLock sourceLock =
-         fileLockFactory.getLock(source.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
-      FileLockFactory.FileLock targetLock =
-         fileLockFactory.getLock(destination.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
-      try
-      {
-         FileInputStream sourceStream = null;
-         FileOutputStream targetStream = null;
-         FileChannel sourceChannel = null;
-         FileChannel targetChannel = null;
-         try
-         {
-            if (!destination.getIoFile().createNewFile()) // atomic
-            {
-               throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", destination.getName()));
-            }
-            sourceStream = new FileInputStream(source.getIoFile());
-            targetStream = new FileOutputStream(destination.getIoFile());
-            sourceChannel = sourceStream.getChannel();
-            targetChannel = targetStream.getChannel();
-            final long size = sourceChannel.size();
-            long transferred = 0L;
-            while (transferred < size)
-            {
-               transferred += targetChannel.transferFrom(sourceChannel, transferred, (size - transferred));
-            }
-         }
-         catch (IOException e)
-         {
-            String msg = String.format("Unable copy '%s' to '%s'. ", source, destination);
-            LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
-         }
-         finally
-         {
-            closeQuietly(sourceChannel);
-            closeQuietly(targetChannel);
-            closeQuietly(sourceStream);
-            closeQuietly(targetStream);
-         }
-      }
-      finally
-      {
-         sourceLock.release();
-         targetLock.release();
-      }
-
-      // copy metadata for newly created file
-      Map<String, String[]> sourceMetadata = getFileMetadata(source);
-      if (!sourceMetadata.isEmpty())
-      {
-         saveFileMetadata(destination, sourceMetadata);
-      }
-      // copy acl for newly created file
-      Map<String, Set<BasicPermissions>> permissionsMap = getPermissionsMap(source);
-      if (!permissionsMap.isEmpty())
-      {
-         savePermissionMap(destination, permissionsMap);
-      }
-   }
-
 
    VirtualFile rename(VirtualFile virtualFile, String newName, String newMediaType, String lockToken)
       throws VirtualFileSystemException
@@ -754,7 +703,9 @@ public class MountPoint
 
       // Lock file to avoid update while we are read it.
       FileLockFactory.FileLock lock =
-         fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+         fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+      System.err.println(">>>>>>>>> BEGIN GET CONTENT");
+
       try
       {
          java.io.File ioFile = virtualFile.getIoFile();
@@ -817,6 +768,7 @@ public class MountPoint
       finally
       {
          lock.release();
+         System.err.println(">>>>>>>>> END GET CONTENT");
       }
    }
 
@@ -1146,185 +1098,235 @@ public class MountPoint
 
    List<AccessControlEntry> getACL(VirtualFile virtualFile)
    {
-      final Map<String, Set<BasicPermissions>> permissionsMap = getPermissionsMap(virtualFile);
-      List<AccessControlEntry> acl = new ArrayList<AccessControlEntry>(permissionsMap.size());
-      for (Map.Entry<String, Set<BasicPermissions>> e : permissionsMap.entrySet())
-      {
-         Set<BasicPermissions> basicPermissions = e.getValue();
-         Set<String> plainPermissions = new HashSet<String>(basicPermissions.size());
-         for (BasicPermissions permission : e.getValue())
-         {
-            plainPermissions.add(permission.value());
-         }
-
-         acl.add(new AccessControlEntryImpl(e.getKey(), plainPermissions));
-      }
-      return acl;
-   }
-
-   private Map<String, Set<BasicPermissions>> getPermissionsMap(VirtualFile virtualFile)
-   {
-      final int index = virtualFile.getInternalPath().hashCode() & MASK;
-      aclCacheLocks[index].lock();
+      FileLockFactory.FileLock lock =
+         fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
       try
       {
-         return copyPermissionsMap(aclCache[index].get(virtualFile.getInternalPath()));
+         return aclCache[virtualFile.getInternalPath().hashCode() & MASK]
+            .get(virtualFile.getInternalPath()).getEntries();
       }
       finally
       {
-         aclCacheLocks[index].unlock();
+         lock.release();
       }
    }
 
    void updateACL(VirtualFile virtualFile, List<AccessControlEntry> acl, boolean override, String lockToken)
       throws VirtualFileSystemException
    {
-      if (!hasPermissions(virtualFile, getCurrentUserId(), BasicPermissions.WRITE))
-      {
-         throw new PermissionDeniedException(
-            String.format("Unable update ACL for '%s'. Operation not permitted. ", virtualFile.getPath()));
-      }
-
-      if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken))
-      {
-         throw new LockException(
-            String.format("Unable update ACL of item '%s'. Item is locked. ", virtualFile.getPath()));
-      }
-
-      doUpdateACL(virtualFile, acl, override);
-   }
-
-   private void doUpdateACL(VirtualFile virtualFile, List<AccessControlEntry> acl, boolean override)
-      throws VirtualFileSystemException
-   {
-      if (acl.isEmpty() && !override)
-      {
-         // Have nothing to do if there is no updates and override flag is not set.
-         return;
-      }
-
-      final int index = virtualFile.getInternalPath().hashCode() & MASK;
-      Map<String, Set<BasicPermissions>> permissionsMap;
-      aclCacheLocks[index].lock();
+      FileLockFactory.FileLock lock =
+         fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
       try
       {
-         permissionsMap = copyPermissionsMap(aclCache[index].get(virtualFile.getInternalPath()));
-      }
-      finally
-      {
-         aclCacheLocks[index].unlock();
-      }
+         final int index = virtualFile.getInternalPath().hashCode() & MASK;
+         AccessControlList actualACL = aclCache[index].get(virtualFile.getInternalPath());
 
-      if (override)
-      {
-         // remove all existed permissions
-         permissionsMap.clear();
-      }
-
-      for (AccessControlEntry ace : acl)
-      {
-         String name = ace.getPrincipal();
-         Set<String> plainPermissions = ace.getPermissions();
-         if (plainPermissions == null || plainPermissions.isEmpty())
+         if (!actualACL.hasPermission(getCurrentUserId(), BasicPermissions.WRITE))
          {
-            permissionsMap.remove(name);
+            throw new PermissionDeniedException(
+               String.format("Unable update ACL for '%s'. Operation not permitted. ", virtualFile.getPath()));
          }
-         else
-         {
-            Set<BasicPermissions> basicPermissions = permissionsMap.get(name);
-            if (basicPermissions == null)
-            {
-               basicPermissions = EnumSet.noneOf(BasicPermissions.class);
-               permissionsMap.put(name, basicPermissions);
-            }
-            for (String strPermission : plainPermissions)
-            {
-               basicPermissions.add(BasicPermissions.fromValue(strPermission));
-            }
-         }
-      }
-      aclCacheLocks[index].lock();
-      try
-      {
-         savePermissionMap(virtualFile, permissionsMap);
-         // update cache
-         aclCache[index].put(virtualFile.getInternalPath(), permissionsMap);
-      }
-      finally
-      {
-         aclCacheLocks[index].unlock();
-      }
-   }
 
-   private void savePermissionMap(VirtualFile virtualFile, Map<String, Set<BasicPermissions>> permissionsMap)
-      throws VirtualFileSystemException
-   {
-      DataOutputStream dos = null;
-      try
-      {
-         java.io.File aclFile = getAclFile(virtualFile.getInternalPath());
-         if (permissionsMap.isEmpty())
+         if (virtualFile.isFile() && !validateLockTokenIfLocked(virtualFile, lockToken))
          {
-            if (!aclFile.delete())
+            throw new LockException(
+               String.format("Unable update ACL of item '%s'. Item is locked. ", virtualFile.getPath()));
+         }
+
+         // 1. make copy of ACL
+         AccessControlList copy = new AccessControlList(actualACL);
+         // 2. update ACL copy
+         copy.update(acl, override);
+         // 3. save updated ACL (write in file)
+         DataOutputStream dos = null;
+         try
+         {
+            java.io.File aclFile = getAclFile(virtualFile.getInternalPath());
+            if (copy.isEmpty())
             {
-               if (aclFile.exists())
+               if (!aclFile.delete())
                {
-                  throw new IOException(String.format("Unable delete file '%s'. ", aclFile));
+                  if (aclFile.exists())
+                  {
+                     throw new IOException(String.format("Unable delete file '%s'. ", aclFile));
+                  }
                }
             }
+
+            dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
+            aclSerializer.write(dos, copy);
+         }
+         catch (IOException e)
+         {
+            String msg = String.format("Unable save ACL for '%s'. ", virtualFile.getPath());
+            LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
+            throw new VirtualFileSystemException(msg);
+         }
+         finally
+         {
+            closeQuietly(dos);
          }
 
-         dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
-         aclSerializer.write(dos, permissionsMap);
-      }
-      catch (IOException e)
-      {
-         String msg = String.format("Unable save ACL for '%s'. ", virtualFile.getPath());
-         LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-         throw new VirtualFileSystemException(msg);
+         // 4. update cache
+         aclCache[index].put(virtualFile.getInternalPath(), copy);
       }
       finally
       {
-         closeQuietly(dos);
+         lock.release();
       }
    }
+
+//   private void doUpdateACL(VirtualFile virtualFile, List<AccessControlEntry> acl, boolean override)
+//      throws VirtualFileSystemException
+//   {
+//      if (acl.isEmpty() && !override)
+//      {
+//         // Have nothing to do if there is no updates and override flag is not set.
+//         return;
+//      }
+//
+//      final int index = virtualFile.getInternalPath().hashCode() & MASK;
+//      Map<String, Set<BasicPermissions>> permissionsMap;
+//      aclCacheLocks[index].lock();
+//      try
+//      {
+//         permissionsMap = copyPermissionsMap(aclCache[index].get(virtualFile.getInternalPath()));
+//      }
+//      finally
+//      {
+//         aclCacheLocks[index].unlock();
+//      }
+//
+//      if (override)
+//      {
+//         // remove all existed permissions
+//         permissionsMap.clear();
+//      }
+//
+//      for (AccessControlEntry ace : acl)
+//      {
+//         String name = ace.getPrincipal();
+//         Set<String> plainPermissions = ace.getPermissions();
+//         if (plainPermissions == null || plainPermissions.isEmpty())
+//         {
+//            permissionsMap.remove(name);
+//         }
+//         else
+//         {
+//            Set<BasicPermissions> basicPermissions = permissionsMap.get(name);
+//            if (basicPermissions == null)
+//            {
+//               basicPermissions = EnumSet.noneOf(BasicPermissions.class);
+//               permissionsMap.put(name, basicPermissions);
+//            }
+//            for (String strPermission : plainPermissions)
+//            {
+//               basicPermissions.add(BasicPermissions.fromValue(strPermission));
+//            }
+//         }
+//      }
+//      aclCacheLocks[index].lock();
+//      try
+//      {
+//         savePermissionMap(virtualFile, permissionsMap);
+//         // update cache
+//         aclCache[index].put(virtualFile.getInternalPath(), permissionsMap);
+//      }
+//      finally
+//      {
+//         aclCacheLocks[index].unlock();
+//      }
+//   }
+//
+//   private void savePermissionMap(VirtualFile virtualFile, Map<String, Set<BasicPermissions>> permissionsMap)
+//      throws VirtualFileSystemException
+//   {
+//      DataOutputStream dos = null;
+//      try
+//      {
+//         java.io.File aclFile = getAclFile(virtualFile.getInternalPath());
+//         if (permissionsMap.isEmpty())
+//         {
+//            if (!aclFile.delete())
+//            {
+//               if (aclFile.exists())
+//               {
+//                  throw new IOException(String.format("Unable delete file '%s'. ", aclFile));
+//               }
+//            }
+//         }
+//
+//         dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
+//         aclSerializer.write(dos, permissionsMap);
+//      }
+//      catch (IOException e)
+//      {
+//         String msg = String.format("Unable save ACL for '%s'. ", virtualFile.getPath());
+//         LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
+//         throw new VirtualFileSystemException(msg);
+//      }
+//      finally
+//      {
+//         closeQuietly(dos);
+//      }
+//   }
 
    private boolean hasPermissions(VirtualFile virtualFile, String userId, BasicPermissions p)
    {
-      return hasPermissions(virtualFile, userId, EnumSet.of(p));
+//      FileLockFactory.FileLock lock =
+//         fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
+      try
+      {
+         return aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath())
+            .hasPermission(userId, p);
+      }
+      finally
+      {
+//         lock.release();
+      }
    }
 
    private boolean hasPermissions(VirtualFile virtualFile, String userId, BasicPermissions p1, BasicPermissions p2)
    {
-      return hasPermissions(virtualFile, userId, EnumSet.of(p1, p2));
-   }
-
-   private boolean hasPermissions(VirtualFile virtualFile, String userId, Collection<BasicPermissions> toCheck)
-   {
-      final int index = virtualFile.getInternalPath().hashCode() & MASK;
-      aclCacheLocks[index].lock();
+      FileLockFactory.FileLock lock =
+         fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
       try
       {
-         final Map<String, Set<BasicPermissions>> permissionsMap = aclCache[index].get(virtualFile.getInternalPath());
-         if (permissionsMap.isEmpty())
-         {
-            return true;
-         }
-         final Set<BasicPermissions> anyUserPermissions = permissionsMap.get(VirtualFileSystemInfo.ANY_PRINCIPAL);
-         if (anyUserPermissions != null
-            && (anyUserPermissions.contains(BasicPermissions.ALL) || anyUserPermissions.containsAll(toCheck)))
-         {
-            return true;
-         }
-         final Set<BasicPermissions> userPermissions = permissionsMap.get(userId);
-         return userPermissions != null
-            && (userPermissions.contains(BasicPermissions.ALL) || userPermissions.containsAll(toCheck));
+         return aclCache[virtualFile.getInternalPath().hashCode() & MASK].get(virtualFile.getInternalPath())
+            .hasPermission(userId, p1, p2);
       }
       finally
       {
-         aclCacheLocks[index].unlock();
+         lock.release();
       }
    }
+
+//   private boolean hasPermissions(VirtualFile virtualFile, String userId, Collection<BasicPermissions> toCheck)
+//   {
+//      final int index = virtualFile.getInternalPath().hashCode() & MASK;
+//      aclCacheLocks[index].lock();
+//      try
+//      {
+//         final Map<String, Set<BasicPermissions>> permissionsMap = aclCache[index].get(virtualFile.getInternalPath());
+//         if (permissionsMap.isEmpty())
+//         {
+//            return true;
+//         }
+//         final Set<BasicPermissions> anyUserPermissions = permissionsMap.get(VirtualFileSystemInfo.ANY_PRINCIPAL);
+//         if (anyUserPermissions != null
+//            && (anyUserPermissions.contains(BasicPermissions.ALL) || anyUserPermissions.containsAll(toCheck)))
+//         {
+//            return true;
+//         }
+//         final Set<BasicPermissions> userPermissions = permissionsMap.get(userId);
+//         return userPermissions != null
+//            && (userPermissions.contains(BasicPermissions.ALL) || userPermissions.containsAll(toCheck));
+//      }
+//      finally
+//      {
+//         aclCacheLocks[index].unlock();
+//      }
+//   }
 
    private java.io.File getAclFile(Path path)
    {

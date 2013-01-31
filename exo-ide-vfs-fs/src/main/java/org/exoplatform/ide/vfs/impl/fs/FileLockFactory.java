@@ -112,8 +112,7 @@ class FileLockFactory
             throw new VirtualFileSystemRuntimeException(e);
          }
       }
-      // Increment number of active thread.
-      threads.put(path, permittedThreads - 1);
+      threads.put(path, permittedThreads - permits);
    }
 
    private synchronized void acquire(Path path, int permits, long timeoutMilliseconds)
@@ -138,7 +137,7 @@ class FileLockFactory
          }
          waitTime = endTime - now;
       }
-      threads.put(path, permittedThreads - 1);
+      threads.put(path, permittedThreads - permits);
    }
 
    private synchronized void release(Path path, int permits)
@@ -158,7 +157,19 @@ class FileLockFactory
    private int getPermittedThreads(Path path)
    {
       Integer permittedThreads = threads.get(path);
-      return permittedThreads == null ? maxThreads : permittedThreads;
+      if (permittedThreads == null)
+      {
+         permittedThreads = maxThreads;
+      }
+      Path parent;
+      while ((parent = path.getParent()) != null)
+      {
+         Integer parentPermittedThreads = threads.get(parent);
+         if (parentPermittedThreads != null)
+            permittedThreads -= parentPermittedThreads;
+         path = parent;
+      }
+      return permittedThreads;// == null ? maxThreads : permittedThreads;
    }
 
    /* =============================================== */

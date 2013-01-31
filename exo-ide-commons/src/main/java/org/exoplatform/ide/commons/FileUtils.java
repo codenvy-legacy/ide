@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.channels.FileChannel;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -115,7 +116,7 @@ public class FileUtils
       File dir = new File(parent, prefix + Long.toString(Math.abs(DIR_NAME_GENERATOR.nextLong())));
       if (!dir.mkdirs())
       {
-         throw new IOException("Unable create temp directory " + dir.getAbsolutePath());
+         throw new IOException(String.format("Unable create temp directory %s", dir.getAbsolutePath()));
       }
       return dir;
    }
@@ -196,8 +197,22 @@ public class FileUtils
 
    public static void copy(File source, File target, FilenameFilter filter) throws IOException
    {
+      copy(source, target, filter, false);
+   }
+
+   public static void nioCopy(File source, File target, FilenameFilter filter) throws IOException
+   {
+      copy(source, target, filter, true);
+   }
+
+   private static void copy(File source, File target, FilenameFilter filter, boolean nio) throws IOException
+   {
       if (source.isDirectory())
       {
+         if (!(target.exists() || target.mkdirs()))
+         {
+            throw new IOException(String.format("Unable create directory: %s", target.getAbsolutePath()));
+         }
          if (filter == null)
          {
             filter = ANY_FILTER;
@@ -207,6 +222,16 @@ public class FileUtils
          q.add(source);
          while (!q.isEmpty())
          {
+            try
+            {
+               Thread.sleep(10);
+            }
+            catch (InterruptedException e)
+            {
+               e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+
+
             File current = q.pop();
             File[] list = current.listFiles();
             if (list != null)
@@ -222,13 +247,20 @@ public class FileUtils
                   {
                      if (!(newFile.exists() || newFile.mkdirs()))
                      {
-                        throw new IOException("Unable create directory: " + newFile.getAbsolutePath());
+                        throw new IOException(String.format("Unable create directory: %s", newFile.getAbsolutePath()));
                      }
                      q.push(f);
                   }
                   else
                   {
-                     copyFile(f, newFile);
+                     if (nio)
+                     {
+                        nioCopyFile(f, newFile);
+                     }
+                     else
+                     {
+                        copyFile(f, newFile);
+                     }
                   }
                }
             }
@@ -239,14 +271,25 @@ public class FileUtils
          File parent = target.getParentFile();
          if (!(parent.exists() || parent.mkdirs()))
          {
-            throw new IOException("Unable create directory: " + parent.getAbsolutePath());
+            throw new IOException(String.format("Unable create directory: %s", parent.getAbsolutePath()));
          }
-         copyFile(source, target);
+         if (nio)
+         {
+            nioCopyFile(source, target);
+         }
+         else
+         {
+            copyFile(source, target);
+         }
       }
    }
 
    private static void copyFile(File source, File target) throws IOException
    {
+      if (!target.createNewFile()) // atomic
+      {
+         throw new IOException(String.format("Item '%s' already exists. ", target.getAbsolutePath()));
+      }
       FileInputStream in = null;
       FileOutputStream out = null;
       byte[] b = new byte[8192];
@@ -269,6 +312,50 @@ public class FileUtils
          if (out != null)
          {
             out.close();
+         }
+      }
+   }
+
+   private static void nioCopyFile(File source, File target) throws IOException
+   {
+      if (!target.createNewFile()) // atomic
+      {
+         throw new IOException(String.format("Item '%s' already exists. ", target.getAbsolutePath()));
+      }
+      FileInputStream sourceStream = null;
+      FileOutputStream targetStream = null;
+      FileChannel sourceChannel = null;
+      FileChannel targetChannel = null;
+      try
+      {
+         sourceStream = new FileInputStream(source);
+         targetStream = new FileOutputStream(target);
+         sourceChannel = sourceStream.getChannel();
+         targetChannel = targetStream.getChannel();
+         final long size = sourceChannel.size();
+         long transferred = 0L;
+         while (transferred < size)
+         {
+            transferred += targetChannel.transferFrom(sourceChannel, transferred, (size - transferred));
+         }
+      }
+      finally
+      {
+         if (sourceChannel != null)
+         {
+            sourceChannel.close();
+         }
+         if (targetChannel != null)
+         {
+            targetChannel.close();
+         }
+         if (sourceStream != null)
+         {
+            sourceStream.close();
+         }
+         if (targetStream != null)
+         {
+            targetStream.close();
          }
       }
    }

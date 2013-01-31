@@ -18,40 +18,25 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import org.exoplatform.ide.vfs.server.cache.SLRUCache;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 
 /**
- * SLRUCache that loads value for key if it is not cached yet.
- *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see SLRUCache
  */
-public abstract class LoadingValueSLRUCache<K, V> extends SLRUCache<K, V>
+public class AccessControlListSerializer implements DataSerializer<AccessControlList>
 {
-   /**
-    * @param protectedSize
-    *    size of protected area.
-    * @param probationarySize
-    *    size of probationary area.
-    */
-   public LoadingValueSLRUCache(int protectedSize, int probationarySize)
+   @Override
+   public void write(DataOutput output, AccessControlList value) throws IOException
    {
-      super(protectedSize, probationarySize);
+      value.write(output);
    }
 
    @Override
-   public V get(K key)
+   public AccessControlList read(DataInput input) throws IOException
    {
-      V value = super.get(key);
-      if (value != null)
-      {
-         return value;
-      }
-      value = loadValue(key);
-      put(key, value);
-      return value;
+      return AccessControlList.read(input);
    }
-
-   protected abstract V loadValue(K key);
 }
