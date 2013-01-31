@@ -1,0 +1,6 @@
+<module>
+   <inherits name="com.google.gwt.user.User" />
+   <inherits name="org.exoplatform.ide.Core" />
+
+   <source path="" />
+</module>
