@@ -17,6 +17,7 @@ package com.google.collide.client.collaboration;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.ParticipantList;
 import com.google.collide.client.code.ParticipantModel;
+import com.google.collide.client.collaboration.participants.CollaborationEditorFileOpenedEvent;
 import com.google.collide.client.communication.MessageFilter;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.document.DocumentManager;
@@ -35,6 +36,8 @@ import com.google.collide.json.shared.JsonIntegerMap;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
+
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * A manager for real-time collaboration.
@@ -208,6 +211,8 @@ public class CollaborationManager
       {
          docCollabController.attachToEditor(editor);
          editor.getBuffer().addUnmanagedElement(participantsViews.get(document.getId()).getElement());
+
+         IDE.fireEvent(new CollaborationEditorFileOpenedEvent(document, docCollabController.getParticipantModel()));
       }
    }
 
