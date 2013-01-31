@@ -304,7 +304,7 @@ public class Autocompleter implements ContentAssistant
       {
          return true;
       }
-      String contentType = IDocument.DEFAULT_CONTENT_TYPE;
+      String contentType;
       try
       {
          contentType = exoEditor.getDocument().getContentType(getOffset(exoEditor.getDocument()));
@@ -351,11 +351,11 @@ public class Autocompleter implements ContentAssistant
    {
       if (UserAgent.isMac())
       {
-         return (trigger.metaKey) && (trigger.keyCode == ' ') && (trigger.type == KeySignalType.INPUT);
+         return (trigger.metaKey) && (trigger.keyCode == ' ') &&(!trigger.altKey) && (!trigger.metaKey) &&(!trigger.shiftKey) && (trigger.type == KeySignalType.INPUT);
       }
       else
       {
-         return (trigger.ctrlKey) && (trigger.keyCode == ' ') && (trigger.type == KeySignalType.INPUT);
+         return (trigger.ctrlKey) && (trigger.keyCode == ' ') &&(!trigger.altKey) && (!trigger.metaKey) &&(!trigger.shiftKey) && (trigger.type == KeySignalType.INPUT);
       }
    }
 

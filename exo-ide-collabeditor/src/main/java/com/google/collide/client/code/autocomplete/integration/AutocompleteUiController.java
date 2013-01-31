@@ -83,7 +83,7 @@ public class AutocompleteUiController implements AutocompleteBox {
 
           if (itemData != CAPPED_INDICATOR) {
             icon.appendChild((Node)itemData.getImage().getElement());
-            label.setTextContent(itemData.getDisplayString());
+            label.setInnerHTML(itemData.getDisplayString());
             //group.setTextContent(itemData.getPath().getPathString());
           } else {
             label.setTextContent("Type for more results");

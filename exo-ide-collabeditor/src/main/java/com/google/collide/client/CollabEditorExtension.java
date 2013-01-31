@@ -22,8 +22,6 @@ import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
-import com.google.collide.client.collaboration.OpenFileCollaboration;
-import com.google.collide.client.collaboration.OpenFileCollaborationControl;
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
@@ -68,8 +66,6 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
-      new OpenFileCollaboration(IDE.eventBus(), documentManager);
-      IDE.getInstance().addControl(new OpenFileCollaborationControl(context.getResources()));
 
    }
 

@@ -127,7 +127,7 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
             parseCommandExecutor.scheduleParse(event.getFile());
          }
       };
-      timer.schedule(1000);
+      timer.schedule(3000);
    }
 
    /**

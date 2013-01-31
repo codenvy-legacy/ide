@@ -22,6 +22,7 @@ import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.BadPositionCategoryException;
@@ -665,6 +666,8 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
     */
    public Image getImage()
    {
+      if(fImage == null)
+            fImage = new Image(JavaClientBundle.INSTANCE.blankImage());
       return fImage;
    }
 

@@ -101,10 +101,10 @@ public class AutocompleterFacade {
 
 //    this.parseListener = new DocumentParserListenerAdapter(autocompleter, editor);
 
-//    instanceListeners.track(editor.getTextListenerRegistrar().add(textListener));
-//    instanceListeners.track(editor.getKeyListenerRegistrar().add(keyListener));
-//    instanceListeners.track(
-//        editor.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener));
+    instanceListeners.track(editor.getTextListenerRegistrar().add(textListener));
+    instanceListeners.track(editor.getKeyListenerRegistrar().add(keyListener));
+    instanceListeners.track(
+        editor.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener));
   }
 
   public void cleanup() {
