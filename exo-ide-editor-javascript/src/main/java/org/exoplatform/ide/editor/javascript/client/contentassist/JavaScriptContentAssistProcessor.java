@@ -24,13 +24,13 @@ import com.google.collide.json.shared.JsonArray;
 
 import com.google.collide.json.client.JsoArray;
 
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -59,7 +59,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor#computeCompletionProposals(org.exoplatform.ide.editor.api.Editor, int)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeCompletionProposals(org.exoplatform.ide.editor.client.api.Editor, int)
     */
    @Override
    public CompletionProposal[] computeCompletionProposals(Editor viewer, int offset)
@@ -146,7 +146,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor#computeContextInformation(org.exoplatform.ide.editor.api.Editor, int)
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeContextInformation(org.exoplatform.ide.editor.client.api.Editor, int)
     */
    @Override
    public ContextInformation[] computeContextInformation(Editor viewer, int offset)
@@ -155,7 +155,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#getCompletionProposalAutoActivationCharacters()
     */
    @Override
    public char[] getCompletionProposalAutoActivationCharacters()
@@ -164,7 +164,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor#getContextInformationAutoActivationCharacters()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#getContextInformationAutoActivationCharacters()
     */
    @Override
    public char[] getContextInformationAutoActivationCharacters()
@@ -173,7 +173,7 @@ public class JavaScriptContentAssistProcessor implements ContentAssistProcessor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor#getErrorMessage()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#getErrorMessage()
     */
    @Override
    public String getErrorMessage()

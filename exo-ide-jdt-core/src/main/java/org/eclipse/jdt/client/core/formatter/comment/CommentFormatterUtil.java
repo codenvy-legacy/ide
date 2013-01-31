@@ -12,13 +12,13 @@ package org.eclipse.jdt.client.core.formatter.comment;
 
 import org.eclipse.jdt.client.core.ToolFactory;
 import org.eclipse.jdt.client.internal.core.util.Util;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.BadPositionCategoryException;
-import org.exoplatform.ide.editor.text.DefaultPositionUpdater;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.Position;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.BadPositionCategoryException;
+import org.exoplatform.ide.editor.shared.text.DefaultPositionUpdater;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.Position;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.Map;
 

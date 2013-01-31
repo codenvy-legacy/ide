@@ -18,6 +18,8 @@
  */
 package com.google.collide.client.communication;
 
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -100,8 +102,9 @@ public interface VertxBus
 
    /**
     * @return the ready state of the event bus
+    * @throws WebSocketException 
     */
-   public short getReadyState();
+   public short getReadyState() throws WebSocketException;
 
    /**
     * Registers a new handler which will listener for messages sent to the specified address.

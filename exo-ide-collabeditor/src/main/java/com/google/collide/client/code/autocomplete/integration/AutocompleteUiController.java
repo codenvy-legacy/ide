@@ -38,7 +38,7 @@ import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**
@@ -83,7 +83,7 @@ public class AutocompleteUiController implements AutocompleteBox {
 
           if (itemData != CAPPED_INDICATOR) {
             icon.appendChild((Node)itemData.getImage().getElement());
-            label.setTextContent(itemData.getDisplayString());
+            label.setInnerHTML(itemData.getDisplayString());
             //group.setTextContent(itemData.getPath().getPathString());
           } else {
             label.setTextContent("Type for more results");

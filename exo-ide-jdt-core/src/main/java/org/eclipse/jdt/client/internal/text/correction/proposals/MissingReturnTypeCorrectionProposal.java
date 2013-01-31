@@ -31,7 +31,7 @@ import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodeFactory;
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.List;
 

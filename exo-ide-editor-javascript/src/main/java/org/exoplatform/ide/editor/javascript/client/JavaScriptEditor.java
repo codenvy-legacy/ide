@@ -22,7 +22,7 @@ import com.google.collide.client.CollabEditor;
 
 import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
 import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * JavaScript editor based on {@link CollabEditor}.

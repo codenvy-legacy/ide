@@ -20,24 +20,24 @@ package org.exoplatform.ide.editor.ckeditor;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.api.event.EditorInitializedEvent;
-import org.exoplatform.ide.editor.api.event.EditorInitializedHandler;
-import org.exoplatform.ide.editor.api.event.SearchCompleteCallback;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler;
+import org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
@@ -658,7 +658,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getMimeType()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getMimeType()
     */
    @Override
    public String getMimeType()
@@ -667,7 +667,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getDocument()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getDocument()
     */
    @Override
    public IDocument getDocument()
@@ -676,7 +676,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getSelectionRange()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getSelectionRange()
     */
    @Override
    public SelectionRange getSelectionRange()
@@ -685,7 +685,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#selectAll()
+    * @see org.exoplatform.ide.editor.client.api.Editor#selectAll()
     */
    @Override
    public native void selectAll()
@@ -698,7 +698,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#cut()
+    * @see org.exoplatform.ide.editor.client.api.Editor#cut()
     */
    @Override
    public native void cut()
@@ -711,7 +711,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#copy()
+    * @see org.exoplatform.ide.editor.client.api.Editor#copy()
     */
    @Override
    public native void copy()
@@ -724,7 +724,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#paste()
+    * @see org.exoplatform.ide.editor.client.api.Editor#paste()
     */
    @Override
    public native void paste()
@@ -737,7 +737,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#delete()
+    * @see org.exoplatform.ide.editor.client.api.Editor#delete()
     */
    @Override
    public native void delete()
@@ -750,7 +750,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }-*/;
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#setReadOnly(boolean)
+    * @see org.exoplatform.ide.editor.client.api.Editor#setReadOnly(boolean)
     */
    @Override
    public void setReadOnly(boolean readOnly)
@@ -759,7 +759,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#getName()
+    * @see org.exoplatform.ide.editor.client.api.Editor#getName()
     */
    @Override
    public String getName()
@@ -768,7 +768,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.api.event.EditorContentChangedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addContentChangedHandler(org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler)
     */
    @Override
    public HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler)
@@ -777,7 +777,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.api.event.EditorContextMenuHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addContextMenuHandler(org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler)
     */
    @Override
    public HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler)
@@ -786,7 +786,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addCursorActivityHandler(org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler)
     */
    @Override
    public HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler)
@@ -795,7 +795,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addFocusReceivedHandler(org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler)
     */
    @Override
    public HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler)
@@ -804,7 +804,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addHotKeyPressedHandler(org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler)
     */
    @Override
    public HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler)
@@ -813,7 +813,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.api.event.EditorInitializedHandler)
+    * @see org.exoplatform.ide.editor.client.api.Editor#addInitializedHandler(org.exoplatform.ide.editor.client.api.event.EditorInitializedHandler)
     */
    @Override
    public HandlerRegistration addInitializedHandler(EditorInitializedHandler handler)
@@ -907,7 +907,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.api.event.SearchCompleteCallback)
+    * @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback)
     */
    @Override
    public void search(String query, boolean caseSensitive, SearchCompleteCallback searchCompleteCallback)
@@ -915,7 +915,7 @@ public class CKEditor extends AbsolutePanel implements Editor
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.Editor#replaceMatch(java.lang.String)
+    * @see org.exoplatform.ide.editor.client.api.Editor#replaceMatch(java.lang.String)
     */
    @Override
    public void replaceMatch(String replacement)

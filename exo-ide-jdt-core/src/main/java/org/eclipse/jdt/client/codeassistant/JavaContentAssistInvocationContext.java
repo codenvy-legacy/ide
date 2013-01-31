@@ -20,7 +20,7 @@ import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.IType;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Describes the context of a content assist invocation in a Java editor.

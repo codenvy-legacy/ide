@@ -56,6 +56,7 @@ import org.exoplatform.ide.extension.samples.client.oauth.OAuthLoginEvent;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
+import org.exoplatform.ide.git.client.clone.GitURLParser;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
 import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.git.shared.GitHubRepository;
@@ -76,7 +77,7 @@ import java.util.List;
  * @version $Id: ImportFromGithubPresenter.java Dec 7, 2011 3:37:11 PM vereshchaka $
  *
  */
-public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, ViewClosedHandler,
+public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewClosedHandler,
    UserInfoReceivedHandler, VfsChangedHandler
 {
    public interface Display extends IsView
@@ -143,7 +144,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    public ImportFromGithubPresenter()
    {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ShowImportFromGithubEvent.TYPE, this);
+      IDE.addHandler(ImportFromGithubEvent.TYPE, this);
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
    }
@@ -209,7 +210,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
                   for (GitHubRepository repo : result)
                   {
                      projectDataList.add(new ProjectData(repo.getName(), repo.getDescription(), null, null, repo
-                        .getSshUrl()));
+                        .getSshUrl(), repo.getGitUrl()));
                      readonlyUrls.put(repo.getSshUrl(), repo.getGitUrl());
                   }
                   display.getRepositoriesGrid().setValue(projectDataList);
@@ -254,10 +255,10 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
    }
 
    /**
-    * @see org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubHandler#onShowImportFromGithub(org.exoplatform.ide.extension.samples.client.githubimport.ShowImportFromGithubEvent)
+    * @see org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubHandler#onImportFromGithub(org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubEvent)
     */
    @Override
-   public void onShowImportFromGithub(ShowImportFromGithubEvent event)
+   public void onImportFromGithub(ImportFromGithubEvent event)
    {
       if (userInfo != null)
       {
@@ -371,7 +372,11 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
     */
    private void cloneFolder(ProjectData repo, final FolderModel folder)
    {
-      String remoteUri = repo.getRepositoryUrl();
+      String remoteUri = "";
+      if (display.getReadOnlyModeField().getValue())
+        remoteUri = repo.getReadOnlyUrl();
+      else
+         remoteUri = repo.getRepositoryUrl(); 
       if (!remoteUri.endsWith(".git"))
       {
          remoteUri += ".git";
@@ -449,7 +454,7 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
          @Override
          public void execute()
          {
-            String[] userRepo = parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
+            String[] userRepo = GitURLParser.parseGitHubUrl(gitRepositoryInfo.getRemoteUri());
             if (userRepo != null)
             {
                IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
@@ -458,46 +463,6 @@ public class ImportFromGithubPresenter implements ShowImportFromGithubHandler, V
       });      
    }
 
-   /**
-    * Parse GitHub url. Need extract "user" and "repository" name.
-    * If given Url its GitHub url return array of string first element will be user name, second repository name
-    * else return null.
-    * GitHub url formats:
-    * - https://github.com/user/repo.git
-    * - git@github.com:user/repo.git
-    * - git://github.com/user/repo.git
-    *
-    * @param gitUrl
-    * @return array of string 
-    */
-   private String[] parseGitHubUrl(String gitUrl)
-   {
-      if (gitUrl.endsWith("/"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 1);
-      }
-      if (gitUrl.endsWith(".git"))
-      {
-         gitUrl = gitUrl.substring(0, gitUrl.length() - 4);
-      }
-      if (gitUrl.startsWith("git@github.com:"))
-      {
-         gitUrl = gitUrl.split("git@github.com:")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("git://github.com/"))
-      {
-         gitUrl = gitUrl.split("git://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      else if (gitUrl.startsWith("https://github.com/"))
-      {
-         gitUrl = gitUrl.split("git://github.com/")[1];
-         return gitUrl.split("/");
-      }
-      return null;
-   }   
-   
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {

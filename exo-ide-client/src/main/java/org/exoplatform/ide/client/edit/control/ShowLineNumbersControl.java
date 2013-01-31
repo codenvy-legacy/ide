@@ -30,8 +30,8 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsSavedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsSavedHandler;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 /**

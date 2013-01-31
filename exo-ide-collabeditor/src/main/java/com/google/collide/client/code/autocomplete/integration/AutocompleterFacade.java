@@ -23,12 +23,11 @@ import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 
-import org.exoplatform.ide.editor.api.contentassist.ContentAssistProcessor;
-import org.exoplatform.ide.editor.api.contentassist.ContentAssistant;
+import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
+import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**
@@ -102,10 +101,10 @@ public class AutocompleterFacade {
 
 //    this.parseListener = new DocumentParserListenerAdapter(autocompleter, editor);
 
-//    instanceListeners.track(editor.getTextListenerRegistrar().add(textListener));
-//    instanceListeners.track(editor.getKeyListenerRegistrar().add(keyListener));
-//    instanceListeners.track(
-//        editor.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener));
+    instanceListeners.track(editor.getTextListenerRegistrar().add(textListener));
+    instanceListeners.track(editor.getKeyListenerRegistrar().add(keyListener));
+    instanceListeners.track(
+        editor.getBuffer().getScrollListenerRegistrar().add(dismissingScrollListener));
   }
 
   public void cleanup() {

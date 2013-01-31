@@ -18,8 +18,9 @@
  */
 package com.google.collide.client;
 
+import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
+
 import com.google.collide.client.bootstrap.BootstrapSession;
-import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
@@ -36,7 +37,7 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.DOM;
 import elemental.dom.Node;
-import org.exoplatform.ide.client.framework.control.Docking;
+
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
@@ -60,6 +61,9 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       return instance;
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
+    */
    @Override
    public void initialize()
    {
@@ -69,9 +73,6 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
-      new OpenFileCollaboration(IDE.eventBus(), documentManager);
-      IDE.getInstance().addControl(new OpenFileCollaborationControl(context.getResources()), Docking.TOOLBAR);
-
    }
 
    public AppContext getContext()
@@ -113,6 +114,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
                   IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
                   CollaborationManager collaborationManager =
                      CollaborationManager.create(context, documentManager, docOpRecipient);
+
+//                  new ParticipantsPresenter(context, documentManager);
 
                   DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
                   bus.close();

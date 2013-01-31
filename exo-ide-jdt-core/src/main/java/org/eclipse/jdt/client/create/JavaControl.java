@@ -26,22 +26,22 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.ui.api.View;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class JavaControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, ViewVisibilityChangedHandler
+public class JavaControl extends SimpleControl implements IDEControl, ItemsSelectedHandler
 {
-
-   private View currnetView;
 
    /**
     * @param id
@@ -62,40 +62,49 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
       {
          Item item = event.getSelectedItems().get(0);
          ProjectModel project = ((ItemContext)item).getProject();
+
          if (project != null)
          {
-            boolean enabled = isInResourceDirectory(item);
-            setEnabled(enabled);
+            if (event.getView() instanceof ProjectExplorerDisplay)
+            {
+               String sourcePath;
+               List<String> paths = getDefaultPaths();
+
+               if (project.hasProperty("sourceFolder"))
+               {
+                  sourcePath = project.getPropertyValue("sourceFolder");
+                  paths.add(sourcePath);
+               }
+
+               for (String path : getDefaultPaths())
+               {
+                  if (item.getPath().startsWith((project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + path))
+                  {
+                     setEnabled(true);
+                     return;
+                  }
+               }
+            }
+            else if (event.getView() instanceof PackageExplorerDisplay)
+            {
+               setEnabled(isInResourceDirectory(item));
+               return;
+            }
          }
-         else
-            setEnabled(false);
       }
-      else
-      {
-         setEnabled(false);
-      }
+
+      setEnabled(false);
    }
-   
+
    private boolean isInResourceDirectory(Item item)
    {
-      
-//      String sourcePath =
-//             project.hasProperty("sourceFolder") ? (String)project.getPropertyValue("sourceFolder")
-//                : CreateJavaClassPresenter.DEFAULT_SOURCE_FOLDER;
-//          sourcePath = (project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + sourcePath;
-//          if (item.getPath().startsWith(sourcePath))
-//             setEnabled(true);
-//          else
-//             setEnabled(false);
-      
-      
-      
       ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+
       if (projectItem == null)
       {
          return false;
       }
-      
+
       for (ResourceDirectoryItem resourceDirectory : projectItem.getResourceDirectories())
       {
          if (item.getPath().startsWith(resourceDirectory.getFolder().getPath()))
@@ -103,7 +112,7 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
             return true;
          }
       }
-      
+
       return false;
    }
 
@@ -115,14 +124,16 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
    {
       setVisible(true);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
    }
 
-   @Override
-   public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
+   private List<String> getDefaultPaths()
    {
-      currnetView = event.getView();
-      
-   }
+      List<String> sourceDirs = new ArrayList<String>();
+      sourceDirs.add("src/main/java");
+      sourceDirs.add("src/main/resources");
+      sourceDirs.add("src/test/java");
+      sourceDirs.add("src/test/resources");
 
+      return sourceDirs;
+   }
 }

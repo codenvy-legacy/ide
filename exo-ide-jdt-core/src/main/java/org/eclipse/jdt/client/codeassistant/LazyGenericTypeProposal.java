@@ -18,10 +18,11 @@ import org.eclipse.jdt.client.TypeInfoStorage;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.exoplatform.ide.editor.api.contentassist.Point;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * Proposal for generic types.
@@ -38,7 +39,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
 //    * Short-lived context information object for generic types. Currently, these are only created after inserting a type proposal,
 //    * as core doesn't give us the correct type proposal from within SomeType<|>.
 //    */
-//   private static class ContextInformation implements org.exoplatform.ide.editor.api.contentassist.ContextInformation
+//   private static class ContextInformation implements ContextInformation
 //   {
 //      private final String fInformationDisplayString;
 //
@@ -868,7 +869,7 @@ public final class LazyGenericTypeProposal extends LazyJavaTypeCompletionProposa
     * @see org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal#computeContextInformation()
     */
    @Override
-   protected org.exoplatform.ide.editor.api.contentassist.ContextInformation computeContextInformation()
+   protected ContextInformation computeContextInformation()
    {
       // try
       // {

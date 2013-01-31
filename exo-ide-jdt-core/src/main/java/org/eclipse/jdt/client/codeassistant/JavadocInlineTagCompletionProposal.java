@@ -11,8 +11,8 @@
 package org.eclipse.jdt.client.codeassistant;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Completions of inline tags such as &#x7b;&#x40;link &#x7d;. See {@link CompletionProposal#JAVADOC_INLINE_TAG}.

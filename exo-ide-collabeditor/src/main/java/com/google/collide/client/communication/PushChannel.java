@@ -14,6 +14,8 @@
 
 package com.google.collide.client.communication;
 
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+
 import com.google.collide.client.communication.VertxBus.ReplySender;
 
 import com.google.collide.client.communication.VertxBus.ReplyHandler;
@@ -161,9 +163,17 @@ public class PushChannel {
    * Sends a message to an address, providing an replyHandler.
    */
   public void send(String address, String message, ReplyHandler replyHandler) {
-    if (eventBus.getReadyState() != VertxBus.OPEN) {
-      Log.debug(PushChannel.class,
-          "Message sent to '" + address + "' while channel was disconnected: " + message);
+    try {
+      if (eventBus.getReadyState() != VertxBus.OPEN) {
+         Log.debug(PushChannel.class,
+             "Message sent to '" + address + "' while channel was disconnected: " + message);
+         queuedMessages.add(new QueuedMessage(address, message, replyHandler));
+         return;
+       }
+    }
+    catch (WebSocketException e)
+    {
+      Log.debug(PushChannel.class, "Message sent to '" + address + "' while channel was disconnected: " + message);
       queuedMessages.add(new QueuedMessage(address, message, replyHandler));
       return;
     }

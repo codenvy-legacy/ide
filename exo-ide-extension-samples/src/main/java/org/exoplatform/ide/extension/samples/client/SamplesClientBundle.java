@@ -43,6 +43,12 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background.png")
    ImageResource invitePageHeaderBackground();   
    
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background-48.png")
+   ImageResource invitePageHeaderBackground48();  
+   
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/user-default-photo.png")
+   ImageResource userDefaultPhoto();  
+
    /*
     * Buttons
     */
@@ -97,7 +103,7 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/logo.png")
    ImageResource ideLogo();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-header.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/background.png")
    ImageResource welcomePageBgHeader();
    
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-top-container.png")
@@ -130,6 +136,9 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/survey.png")
    ImageResource survey();
 
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/invitation.png")
+   ImageResource invitation();
+
    /*
     * Controls
     */
@@ -148,6 +157,8 @@ public interface SamplesClientBundle extends ClientBundle
    public interface Style extends CssResource
    {
       String inviteHeader();
+      
+      String inviteHeader48();
       
       String table();
 

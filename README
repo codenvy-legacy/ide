@@ -2,10 +2,11 @@ Introduction
 
 The document describes step by step instructions for assembling the project eXo IDE (version 1.2.x).
 Requirements
-
+    Linux (tested on SuSE(11.x and higher), Fedora(11 and 15) and Ubuntu)
     JDK 1.6 or higher
     Maven 2.2.1 (or upper),
     GIT client.
+    DavFs (http://linux.die.net/man/8/mount.davfs)
     
     
 For the source eXo IDE to the folder ide execute the command
@@ -26,6 +27,8 @@ execute
  catalina.sh
 
 The address of  deployed IDE is http://localhost:8080/
+
+NOTE : on localhost oAuth wont work
 
 For launch in GWT DevMode:
 

@@ -137,6 +137,7 @@ public class ProjectResolver
          projectImages.put(ProjectType.AWS, IconImageBundle.INSTANCE.awsProject());
 
          projectLargeImages.put(ProjectType.JAR, IconImageBundle.INSTANCE.jarProject48());
+         projectLargeImages.put(ProjectType.WAR, IconImageBundle.INSTANCE.jarProject48());
          projectLargeImages.put(ProjectType.JSP, IconImageBundle.INSTANCE.jspProject48());
          projectLargeImages.put(ProjectType.SPRING, IconImageBundle.INSTANCE.springProject48());
          projectLargeImages.put(ProjectType.JAVASCRIPT, IconImageBundle.INSTANCE.jsProject48());
@@ -146,8 +147,8 @@ public class ProjectResolver
          projectLargeImages.put(ProjectType.MultiModule, IconImageBundle.INSTANCE.multiModule48());
       }
 
-      projectTypes.put(Language.JAVA,
-         Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING, ProjectType.AWS, ProjectType.JAR));
+      projectTypes.put(Language.JAVA, Arrays.asList(ProjectType.JAVA, ProjectType.JSP, ProjectType.SPRING,//
+                                                    ProjectType.AWS, ProjectType.JAR, ProjectType.WAR));
       projectTypes.put(Language.GROOVY, Arrays.asList(ProjectType.EXO));
       projectTypes.put(Language.JAVASCRIPT, Arrays.asList(ProjectType.JAVASCRIPT));
       projectTypes.put(Language.PHP, Arrays.asList(ProjectType.PHP));
@@ -163,6 +164,7 @@ public class ProjectResolver
       languageImages.put(Language.JAVASCRIPT, IconImageBundle.INSTANCE.jsType());
 
       sortedTypes.add(ProjectType.JAR);
+      sortedTypes.add(ProjectType.WAR);
       sortedTypes.add(ProjectType.JSP);
       sortedTypes.add(ProjectType.SPRING);
       sortedTypes.add(ProjectType.JAVASCRIPT);

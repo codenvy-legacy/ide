@@ -57,7 +57,7 @@ import java.util.Map.Entry;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 4:41:51 PM anya $
- * 
+ *
  */
 public class CreateProjectView extends ViewImpl implements CreateProjectPresenter.Display
 {
@@ -78,6 +78,18 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    private final String FINISH_BUTTON_ID = "eXoCreateNewProjectViewFinishButton";
 
    private final String CANCEL_BUTTON_ID = "eXoCreateNewProjectViewCancelButton";
+
+   private final String USE_JREBEL_PLUGIN_FIELD_ID = "usejrebelpluginfield";
+   
+   private final String JREBEL_PROFILE_FIRSTNAME_ID = "jrebelprofilefirstname";
+   
+   private final String JREBEL_PROFILE_LASTNAME_ID = "jrebelprofilelastname";
+   
+   private final String JREBEL_PROFILE_PHONE_ID = "jrebelprofilephone";
+   
+   private final String JREBEL_ERROR_MESSAGE_LABEL_ID = "jrebelerrormessagelabel";
+   
+   private final String JREBEL_PROFILE_FIELDS_ID = "jrebelprofilefields";
 
    private static CreateProjectViewUiBinder uiBinder = GWT.create(CreateProjectViewUiBinder.class);
 
@@ -127,6 +139,21 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
    @UiField
    DockLayoutPanel jRebelPanel;
 
+   @UiField
+   TextInput jRebelProfileFirstName;
+
+   @UiField
+   TextInput jRebelProfileLastName;
+
+   @UiField
+   TextInput jRebelProfilePhone;
+
+   @UiField
+   Label jRebelErrorMessageLabel;
+
+   @UiField
+   DockLayoutPanel jRebelProfileFields;
+
    private List<ToggleButton> projectTypeButtonsList = new LinkedList<ToggleButton>();
 
    private List<ToggleButton> targetButtonsList = new LinkedList<ToggleButton>();
@@ -137,6 +164,8 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    private Map<PaaS, ToggleButton> paasButtonsMap = new HashMap<PaaS, ToggleButton>();
 
+   private boolean showJRebelStoredForm;
+
    public CreateProjectView()
    {
       super(ID, ViewType.MODAL, CREATE_TITLE, null, WIDTH, HEIGHT, false);
@@ -146,10 +175,27 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       nextButton.setButtonId(NEXT_BUTTON_ID);
       finishButton.setButtonId(FINISH_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
+      
+      jRebelErrorMessageLabel.setID(JREBEL_ERROR_MESSAGE_LABEL_ID);
+      jRebelProfileFields.getElement().setId(JREBEL_PROFILE_FIELDS_ID);
+      jRebelProfileFirstName.getElement().setId(JREBEL_PROFILE_FIRSTNAME_ID);
+      jRebelProfileLastName.getElement().setId(JREBEL_PROFILE_LASTNAME_ID);
+      jRebelProfilePhone.getElement().setId(JREBEL_PROFILE_PHONE_ID);
+      useJRebelPluginField.getElement().setId(USE_JREBEL_PLUGIN_FIELD_ID);
 
       projectNameField.setName(NAME_FIELD_ID);
 
       deployProjectStep.setVisible(false);
+      jRebelErrorMessageLabel.setValue("");
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.project.create.CreateProjectPresenter.Display#switchToCreateModule()
+    */
+   @Override
+   public void switchToCreateModule()
+   {
+      setTitle(IDE.TEMPLATE_CONSTANT.createProjectFromTemplateNewModuleTitle());
    }
 
    /**
@@ -329,6 +375,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
             projectTypeButtonsList.add(projectTypeButton);
             projectTypesMap.put(projectTypeButton, projectType);
+            projectTypeButton.getElement().setId("CREATE-PROJECT-" + projectType);
             projectTypesGrid.setWidget(rowNum, colNum, dock);
          }
       }
@@ -377,6 +424,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
             targetButtonsList.add(targetButton);
             targetsMap.put(targetButton, target);
             paasButtonsMap.put(target, targetButton);
+            dock.getElement().setId("CREATE-PROJECT-PAAS-" + target.getId());
             targetGrid.setWidget(rowNum, colNum, dock);
          }
       }
@@ -513,9 +561,40 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       jRebelPanel.setVisible(isVisible);
    }
 
+   @Override
+   public void setJRebelFormVisible(boolean visible)
+   {
+      jRebelProfileFields.setVisible(visible);
+      for (int i = 0; i < getProjectTypeButtons().size(); i++)
+      {
+         if (getProjectTypeButtons().get(i).isDown())
+         {
+            ProjectType projectType = ProjectType.fromValue(projectTypesMap.get(getProjectTypeButtons().get(i)).value());
+            if (projectType == ProjectType.JSP || projectType == ProjectType.SPRING)
+            {
+               if (visible)
+               {
+                  if (!showJRebelStoredForm)
+                  {
+                     chooseTemplateStep.setHeight("88%");
+                     return;
+                  }
+                  chooseTemplateStep.setHeight("58%");
+               }
+               else
+               {
+                  chooseTemplateStep.setHeight("88%");
+               }
+               return;
+            }
+         }
+      }
+      chooseTemplateStep.setHeight("100%");
+   }
+
    /**
     * Creates a {@link ToggleButton} with the specified images and preconfigured style settings.
-    * 
+    *
     * @param enabledImage image for enabled button state
     * @param disabledImage image for disabled button state
     * @return a {@link ToggleButton}
@@ -539,7 +618,7 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
 
    /**
     * Creates an HTML widget with the specified text content and preconfigured style settings.
-    * 
+    *
     * @param label the new widget's text content
     * @return an HTML widget
     */
@@ -558,4 +637,33 @@ public class CreateProjectView extends ViewImpl implements CreateProjectPresente
       return titleLabel;
    }
 
+   @Override
+   public HasValue<String> getJRebelFirstNameField()
+   {
+      return jRebelProfileFirstName;
+   }
+
+   @Override
+   public HasValue<String> getJRebelLastNameField()
+   {
+      return jRebelProfileLastName;
+   }
+
+   @Override
+   public HasValue<String> getJRebelPhoneNumberField()
+   {
+      return jRebelProfilePhone;
+   }
+
+   @Override
+   public void setJRebelErrorMessageLabel(String message)
+   {
+      jRebelErrorMessageLabel.setValue(message);
+   }
+
+   @Override
+   public void setJRebelStoredFormVisible(boolean visible)
+   {
+      showJRebelStoredForm = visible;
+   }
 }

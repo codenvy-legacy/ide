@@ -36,13 +36,15 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
 import org.eclipse.jdt.client.event.CreateJavaClassEvent;
 import org.eclipse.jdt.client.event.CreateJavaClassHandler;
-import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
+import org.eclipse.jdt.client.packaging.ProjectTreeParser;
+import org.eclipse.jdt.client.packaging.ProjectTreeUnmarshaller;
 import org.eclipse.jdt.client.packaging.model.PackageItem;
 import org.eclipse.jdt.client.packaging.model.ProjectItem;
 import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
+import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
@@ -83,30 +85,30 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 {
 
    /**
-    * 
+    *
     */
    private static final String TYPE_CONTENT = "\n{\n}";
-   
+
    private static final String DEFAULT_PACKAGE = "(default package)";
 
    public interface Display extends IsView
    {
       HasValue<String> sourceFolderField();
-      
+
       void setSourceFolders(Collection<String> sourceFolders);
 
       HasValue<String> packageField();
-      
+
       void setPackages(Collection<String> packages);
 
       HasValue<String> classNameField();
-      
+
       void focusInClassNameField();
-      
+
       HasValue<String> classTypeField();
-      
+
       void setClassTypes(Collection<String> types);
-      
+
       HasClickHandlers createButton();
 
       void enableCreateButton(boolean enabled);
@@ -115,7 +117,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
 
    }
 
-   private enum JavaTypes {
+   private enum JavaTypes
+   {
       CLASS("Class"), INTERFACE("Interface"), ENUM("Enum"), ANNOTATION("Annotation");
 
       private String value;
@@ -147,14 +150,16 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    private ProjectModel project;
 
    private FolderModel parentFolder;
-   
+
    private Item selectedItem;
-   
+
    FolderModel classParentFolder;
 
    private final VirtualFileSystem vfs;
 
    private HandlerRegistration fileOpenedHandler;
+
+   private ProjectItem currentProjectItem;
 
    /**
     * @param eventBus
@@ -182,13 +187,11 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       {
          display = GWT.create(Display.class);
       }
-      
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
+      readProjectTreeAndBindDisplay("Reading project structure...");
    }
 
    /**
-    * 
+    *
     */
    private void bindDisplay()
    {
@@ -220,10 +223,12 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
                display.enableCreateButton(true);
             }
             else
+            {
                display.enableCreateButton(false);
+            }
          }
       });
-      
+
       ((HasKeyPressHandlers)display.classNameField()).addKeyPressHandler(new KeyPressHandler()
       {
          @Override
@@ -232,11 +237,11 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
             if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER)
             {
                doCreate();
-            }            
+            }
          }
       });
-      
-      
+
+
       List<String> types = new ArrayList<String>();
       for (JavaTypes t : JavaTypes.values())
       {
@@ -245,8 +250,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       }
       display.setClassTypes(types);
       display.enableCreateButton(false);
-      
-           
+
+
       display.sourceFolderField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -257,88 +262,123 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          }
       });
 
-      
-      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
-      if (projectItem != null)
+      List<String> sourceFolders = new ArrayList<String>();
+      for (ResourceDirectoryItem resourceDirectory : currentProjectItem.getResourceDirectories())
       {
-         List<String> sourceFolders = new ArrayList<String>();
-         for (ResourceDirectoryItem resourceDirectory : projectItem.getResourceDirectories())
-         {
-            sourceFolders.add(resourceDirectory.getName());
-         }
-         display.setSourceFolders(sourceFolders);         
+         sourceFolders.add(resourceDirectory.getName());
       }
-      
+
+      display.setSourceFolders(sourceFolders);
+
       showCurrentPackage();
       display.focusInClassNameField();
    }
-   
+
+   private void readProjectTreeAndBindDisplay(final String loaderMessage)
+   {
+      IDELoader.show(loaderMessage);
+
+      try
+      {
+         ProjectTreeUnmarshaller unmarshaller = new ProjectTreeUnmarshaller(project);
+         AsyncRequestCallback<ProjectModel> callback = new AsyncRequestCallback<ProjectModel>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(ProjectModel result)
+            {
+               IDELoader.hide();
+
+               ProjectTreeParser treeParser = new ProjectTreeParser(project, new ProjectItem(project));
+               treeParser.parseProjectStructure(new ProjectTreeParser.ParsingCompleteListener()
+               {
+                  @Override
+                  public void onParseComplete(ProjectItem resultItem)
+                  {
+                     currentProjectItem = resultItem;
+                     IDE.getInstance().openView(display.asView());
+                     bindDisplay();
+                  }
+               });
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               IDELoader.hide();
+               IDE.fireEvent(new ExceptionThrownEvent("Error loading project structure"));
+               exception.printStackTrace();
+            }
+         };
+
+         VirtualFileSystem.getInstance().getProjectTree(project, callback);
+      }
+      catch (Exception e)
+      {
+         IDELoader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    private List<String> getPackagesInSourceFolder(String sourceFolder)
    {
       List<String> packages = new ArrayList<String>();
-      packages.add(0, DEFAULT_PACKAGE);      
-      
+      packages.add(0, DEFAULT_PACKAGE);
+
       List<PackageItem> packageItems = new ArrayList<PackageItem>();
-      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
-      for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
+      for (ResourceDirectoryItem resourceDirectoryItem : currentProjectItem.getResourceDirectories())
       {
          if (sourceFolder.equals(resourceDirectoryItem.getName()))
          {
-            packageItems.addAll(resourceDirectoryItem.getPackages());            
+            packageItems.addAll(resourceDirectoryItem.getPackages());
          }
       }
 
       for (PackageItem pi : packageItems)
       {
-         String []parts = pi.getPackageName().split("\\.");
+         String[] parts = pi.getPackageName().split("\\.");
          String packageName = "";
          for (String part : parts)
          {
             packageName += (packageName.isEmpty() ? "" : ".") + part;
-            
+
             if (!packages.contains(packageName))
             {
                packages.add(packageName);
             }
          }
       }
-      
+
       return packages;
    }
-   
+
    private void showCurrentPackage()
    {
       if (selectedItem == null)
       {
          return;
       }
-      
+
       ResourceDirectoryItem resourceDirectory = null;
-      
-      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
-      if (projectItem != null)
+      for (ResourceDirectoryItem rd : currentProjectItem.getResourceDirectories())
       {
-         for (ResourceDirectoryItem rd : projectItem.getResourceDirectories())
+         if (selectedItem.getPath().startsWith(rd.getFolder().getPath()))
          {
-            if (selectedItem.getPath().startsWith(rd.getFolder().getPath()))
-            {
-               resourceDirectory = rd;
-               break;
-            }
+            resourceDirectory = rd;
+            break;
          }
       }
-      
+
       if (resourceDirectory != null)
       {
          display.sourceFolderField().setValue(resourceDirectory.getName());
       }
-      
+
       List<String> packages = getPackagesInSourceFolder(display.sourceFolderField().getValue());
       if (packages.size() > 0)
       {
-         display.setPackages(packages);            
+         display.setPackages(packages);
       }
-      
+
       if (resourceDirectory != null)
       {
          String packageName = parentFolder.getPath().substring(resourceDirectory.getFolder().getPath().length());
@@ -347,13 +387,13 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          {
             packageName = packageName.substring(1);
          }
-         
+
          display.packageField().setValue(packageName);
       }
    }
 
    /**
-    * 
+    *
     */
    private void doCreate()
    {
@@ -361,24 +401,23 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       {
          return;
       }
-      
       try
       {
          switch (JavaTypes.valueOf(display.classTypeField().getValue().toUpperCase()))
          {
-            case CLASS :
+            case CLASS:
                createClass(display.classNameField().getValue());
                break;
 
-            case INTERFACE :
+            case INTERFACE:
                createInterface(display.classNameField().getValue());
                break;
 
-            case ENUM :
+            case ENUM:
                createEnum(display.classNameField().getValue());
                break;
 
-            case ANNOTATION :
+            case ANNOTATION:
                createAnnotation(display.classNameField().getValue());
                break;
          }
@@ -417,34 +456,25 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       content.append("public class ").append(name).append(TYPE_CONTENT);
       createClassFile(name, content.toString());
    }
-   
+
    private void createClassFile(final String fileName, final String fileContent)
    {
-      String sourceFolder = display.sourceFolderField().getValue();
+      String path = display.sourceFolderField().getValue();
       String packageName = display.packageField().getValue();
-      
-      String path = null;      
-      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
-      for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
-      {
-         if (sourceFolder.equals(resourceDirectoryItem.getName()))
-         {
-            path = resourceDirectoryItem.getFolder().getPath();
-            break;     
-         }
-      }
-      
+
       if (path == null)
       {
          return;
       }
-      
+
+      path = project.getPath() + "/" + path;
+
       if (!DEFAULT_PACKAGE.equals(packageName))
       {
          String packagePath = packageName.replaceAll("\\.", "/");
          path += "/" + packagePath;
       }
-      
+
       try
       {
          VirtualFileSystem.getInstance().getItemByPath(path,
@@ -493,17 +523,14 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
-   /**
-    * @return
-    */
+
    private String getPackage()
    {
       if (DEFAULT_PACKAGE.equals(display.packageField().getValue()))
       {
          return "";
       }
-      
+
       String packageName = display.packageField().getValue();
       return "package " + packageName + ";\n\n";
    }
@@ -516,8 +543,8 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    {
       project = event.getProject();
    }
-   
-   
+
+
    @Override
    public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
@@ -533,15 +560,20 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
       if (!event.getSelectedItems().isEmpty())
       {
          selectedItem = event.getSelectedItems().get(0);
-         
+
          Item item = event.getSelectedItems().get(0);
          if (item instanceof FolderModel)
+         {
             parentFolder = (FolderModel)item;
+         }
+         else if (item instanceof ProjectModel)
+         {
+            parentFolder = new FolderModel((Folder)item);
+         }
          else
-            if(item instanceof ProjectModel)
-               parentFolder = new FolderModel((Folder)item);
-            else
+         {
             parentFolder = ((FileModel)item).getParent();
+         }
       }
       else
       {
@@ -568,6 +600,7 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
    public void onProjectClosed(ProjectClosedEvent event)
    {
       project = null;
+      currentProjectItem = null;
    }
 
    /**
@@ -586,5 +619,4 @@ public class CreateJavaClassPresenter implements CreateJavaClassHandler, ViewClo
          }
       });
    }
-
 }

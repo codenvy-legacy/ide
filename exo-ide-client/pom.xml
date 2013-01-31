@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.exoplatform.ide</groupId>
 		<artifactId>exo-ide-parent</artifactId>
-		<version>1.2.0-M15-SNAPSHOT</version>
+		<version>1.2.0-M16-SNAPSHOT</version>
 	</parent>
 	<artifactId>exo-ide-client</artifactId>
 	<name>eXo IDE :: Client</name>
@@ -35,6 +35,11 @@
 			<artifactId>exo-ide-editor-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-collabeditor</artifactId>
+         <scope>provided</scope>
+      </dependency>
 
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
@@ -52,6 +57,11 @@
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-vfs</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+		  <groupId>org.exoplatform.ide</groupId>
+		  <artifactId>exo-ide-jdt-core</artifactId>
 		</dependency>
 
 		<dependency>

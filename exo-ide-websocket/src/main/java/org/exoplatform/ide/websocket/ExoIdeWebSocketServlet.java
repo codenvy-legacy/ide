@@ -24,10 +24,12 @@ import org.everrest.core.ResourceBinder;
 import org.everrest.core.impl.EverrestConfiguration;
 import org.everrest.core.impl.EverrestProcessor;
 import org.everrest.core.impl.ProviderBinder;
+import org.everrest.core.impl.RequestDispatcher;
+import org.everrest.core.impl.RequestHandlerImpl;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 import org.everrest.websockets.EverrestWebSocketServlet;
-import org.everrest.websockets.WSConnection;
 import org.everrest.websockets.WSConnectionImpl;
+import org.exoplatform.container.ExoContainer;
 import org.exoplatform.container.ExoContainerContext;
 import org.exoplatform.services.security.ConversationState;
 
@@ -39,25 +41,27 @@ import javax.ws.rs.ext.ContextResolver;
  *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ExoIdeWebSocketServlet.java Nov 7, 2012 4:29:51 PM azatsarynnyy $
- *
  */
 @SuppressWarnings("serial")
 public class ExoIdeWebSocketServlet extends EverrestWebSocketServlet
 {
    static final String CONVERSATION_STATE_SESSION_ATTRIBUTE_NAME = "ide.websocket." + ConversationState.class.getName();
+
    @Override
    protected EverrestProcessor getEverrestProcessor()
    {
-      ResourceBinder resources =
-         ((ResourceBinder)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(ResourceBinder.class));
-      DependencySupplier dependencies =
-         ((DependencySupplier)ExoContainerContext.getCurrentContainer().getComponentInstanceOfType(
-            DependencySupplier.class));
+      final ExoContainer container = ExoContainerContext.getCurrentContainer();
+      ResourceBinder resources = ((ResourceBinder)container.getComponentInstanceOfType(ResourceBinder.class));
+      RequestDispatcher dispatcher = ((RequestDispatcher)container.getComponentInstanceOfType(RequestDispatcher.class));
+      DependencySupplier dependencies = ((DependencySupplier)container.getComponentInstanceOfType(DependencySupplier.class));
       EverrestConfiguration config = new EverrestConfiguration();
       config.setProperty(EverrestConfiguration.METHOD_INVOKER_DECORATOR_FACTORY,
          WebSocketMethodInvokerDecoratorFactory.class.getName());
       ProviderBinder providers = ProviderBinder.getInstance();
-      return new EverrestProcessor(resources, providers, dependencies, config, null);
+      return new EverrestProcessor(new RequestHandlerImpl(dispatcher, providers, dependencies, config),
+         resources,
+         providers,
+         null);
    }
 
    @Override

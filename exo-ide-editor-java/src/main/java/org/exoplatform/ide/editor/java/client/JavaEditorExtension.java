@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.java.client;
 
+import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
@@ -30,8 +32,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.editor.java.client.codeassistant.JavaCodeAssistantErrorHandler;
 import org.exoplatform.ide.editor.java.client.codeassistant.services.JavaCodeAssistantService;
-
-import com.google.gwt.core.client.GWT;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

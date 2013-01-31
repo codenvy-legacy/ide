@@ -14,6 +14,13 @@
 
 package com.google.collide.client.ui.list;
 
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.ui.HTML;
+
+import com.google.gwt.user.client.ui.Widget;
+
+import com.google.gwt.user.client.ui.IsWidget;
+
 import com.google.collide.client.ui.ElementView;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
@@ -37,7 +44,7 @@ import elemental.js.html.JsElement;
  */
 // TODO: When we hit a place where a componenet wants to ditch all of
 // the default simple list styles, figure out a way to make that easy.
-public class SimpleList<M> extends UiComponent<SimpleList.View> {
+public class SimpleList<M> extends UiComponent<SimpleList.View> implements IsWidget {
 
   /**
    * Create using the default CSS.
@@ -352,6 +359,8 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> {
   private final Element container;
   private final Element itemHolder;
 
+  private HTML widget;
+
   private SimpleList(View view, Element container, Element itemHolder,
       Css css, ListItemRenderer<M> itemRenderer, ListEventDelegate<M> eventDelegate) {
     super(view);
@@ -448,5 +457,18 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> {
 
   public M get(int i) {
     return model.listItems.get(i).getData();
+  }
+
+  /**
+   * @see com.google.gwt.user.client.ui.IsWidget#asWidget()
+   */
+  @Override
+  public Widget asWidget() {
+     if (widget == null) {
+        widget = new HTML();
+        widget.getElement().appendChild((Node)getView().getElement());
+     }
+
+     return widget;
   }
 }

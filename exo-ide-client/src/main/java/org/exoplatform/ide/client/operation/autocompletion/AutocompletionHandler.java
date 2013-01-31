@@ -22,7 +22,7 @@ package org.exoplatform.ide.client.operation.autocompletion;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 
@@ -41,7 +41,7 @@ public class AutocompletionHandler implements AutocompleteCalledHandler, EditorA
 
    public AutocompletionHandler()
    {
-      IDE.getInstance().addControl(new OpenAutocompleteControl());
+//      IDE.getInstance().addControl(new OpenAutocompleteControl());
 
       IDE.addHandler(AutocompleteCalledEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);

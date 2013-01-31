@@ -20,6 +20,7 @@
    
    <inherits name='org.exoplatform.ide.editor.API' />
    <inherits name='org.exoplatform.ide.client.framework.IDEClientFramework' />
+   <inherits name='com.google.collide.Views' />
    <entry-point class="com.google.collide.client.CollabEditorExtension" />
    <inherits name="org.waveprotocol.wave.client.scheduler.Scheduler"/>
    <!-- This provides deferred binding for the client windowing system.

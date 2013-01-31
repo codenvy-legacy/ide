@@ -13,8 +13,8 @@ package org.eclipse.jdt.client.codeassistant;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.codeassistant.ui.StyledString;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class JavaCompletionProposal extends AbstractJavaCompletionProposal
 {
@@ -142,7 +142,7 @@ public class JavaCompletionProposal extends AbstractJavaCompletionProposal
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable()
     */
    @Override
    public boolean isAutoInsertable()

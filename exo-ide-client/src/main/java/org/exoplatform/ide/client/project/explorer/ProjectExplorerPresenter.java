@@ -330,7 +330,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
             selectedItems = display.getSelectedItems();
             IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
-
             changeActiveFileOnSelection();
          }
       });

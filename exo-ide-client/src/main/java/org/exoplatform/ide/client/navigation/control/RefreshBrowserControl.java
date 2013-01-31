@@ -130,7 +130,7 @@ public class RefreshBrowserControl extends SimpleControl implements IDEControl, 
          return;
       }
       setVisible(true);
-
+      
       if (selectedItems.size() != 1)
       {
          setEnabled(false);

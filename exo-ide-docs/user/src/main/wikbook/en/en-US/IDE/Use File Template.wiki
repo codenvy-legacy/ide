@@ -1,4 +1,4 @@
-_File Template_ is stored in the IDE registry file, and then can be used to create another files with the same MIME type.
+_File Template_ is stored in the Codenvy registry file, and then can be used to create another files with the same MIME type.
 
 
 h1. Save File as Template

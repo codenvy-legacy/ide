@@ -81,22 +81,25 @@ public class GitUrlResolverJcrImpl implements GitUrlResolver
             throw new GitUrlResolveException("Can't resolve Git Url", e);
          }
          StringBuilder result = new StringBuilder();
-         result.append(uriInfo.getBaseUri().getScheme())
-            .append("://")
-            .append(uriInfo.getBaseUri().getHost());
-         int port = uriInfo.getBaseUri().getPort();
-         if (port != 80 && port != -1)
-         {
-            result.append(':').append(port);
-         }
-         result.append('/')
-            .append(gitServer)
-            .append(repositoryName)
-            .append('/')
-            .append(vfsId)
-            .append(item.getPath());
+         // Set schema hardcode to "http", 
+         // it because we have not valid certificate on test servers
+         // and Jenkins can't clone source from this servers (IDE-2072)
+          result.append("http")  
+             .append("://")
+             .append(uriInfo.getBaseUri().getHost());
+          int port = uriInfo.getBaseUri().getPort();
+          if (port != 80 && port != 443)
+          {
+             result.append(':').append(port);
+          }
+          result.append('/')
+             .append(gitServer)
+             .append(repositoryName)
+             .append('/')
+             .append(vfsId)
+             .append(item.getPath());
 
-         return result.toString();
+          return result.toString();
       }
       catch (RepositoryException e)
       {

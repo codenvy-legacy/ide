@@ -51,7 +51,8 @@ public class ParticipantModel {
 
   private static class ColorGenerator {
 
-    private static final String[] COLORS = new String[] {"#FC9229", // Orange
+    private static final String[] COLORS = new String[] {
+        "#FC9229", // Orange
         "#51D13F", // Green
         "#B744D1", // Purple
         "#3BC9D1", // Cyan

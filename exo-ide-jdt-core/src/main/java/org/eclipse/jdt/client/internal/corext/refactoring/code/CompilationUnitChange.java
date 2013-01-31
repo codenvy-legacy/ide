@@ -14,7 +14,7 @@ import org.eclipse.jdt.client.ltk.refactoring.ChangeDescriptor;
 import org.eclipse.jdt.client.ltk.refactoring.TextFileChange;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * A {@link TextFileChange} that operates on an CompilationUnit in the workspace.

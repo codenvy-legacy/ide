@@ -23,6 +23,7 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.util.List;
 
@@ -42,26 +43,22 @@ import javax.ws.rs.core.Response;
  * eXo Cloud + IDE
  */
 
-@Path("/ide/invite")
+@Path("/invite")
 public class IdeInviteService
 {
    private static final Log LOG = ExoLogger.getLogger(IdeInviteService.class);
    
-   private final String sender;
+   private final String sender = "Cloud-IDE <noreply@cloud-ide.com>";
 
    private final InviteService inviteService;
    
    private DSASignatureChecker dsaSignatureChecker;
 
-   public IdeInviteService(InviteService inviteService, InitParams params, DSASignatureChecker dsaSignatureChecker) throws ConfigurationException
-   {
-      this(inviteService, getParameterValue(params, "mail-sender"), dsaSignatureChecker);
-   }
 
-   public IdeInviteService(InviteService inviteService, String sender, DSASignatureChecker dsaSignatureChecker)
+   public IdeInviteService(InviteService inviteService, DSASignatureChecker dsaSignatureChecker)
    {
       this.inviteService = inviteService;
-      this.sender = sender;
+      this.dsaSignatureChecker = dsaSignatureChecker;
    }
 
    /**
@@ -119,9 +116,14 @@ public class IdeInviteService
    @RolesAllowed("users")
    @Consumes("text/*")
    public Response sendInvite(@PathParam("mailrecipient") String mailRecipient,
-      @QueryParam("mailsender") String mailsender, String mailBody) throws SendingIdeMailException, InviteException
+      @QueryParam("mailsender") String mailSender, String mailBody) throws SendingIdeMailException, InviteException
    {
-      String from = (mailsender == null || mailsender.isEmpty()) ? sender : mailsender;
+      String userId = null;
+      if (ConversationState.getCurrent() != null)
+         userId = ConversationState.getCurrent().getIdentity().getUserId();
+      else
+         userId = sender;
+      String from = (mailSender == null || mailSender.isEmpty()) ? userId : mailSender;
       inviteService.sendInviteByMail(from, mailRecipient, mailBody);
       return Response.ok().entity("Invitation mail sent successfully").build();
    }
@@ -219,8 +221,6 @@ public class IdeInviteService
    @Produces(MediaType.APPLICATION_JSON)
    public Response acceptInvite(@PathParam("id") String id) throws InviteException
    {
-    
-
       Invite invite = inviteService.acceptInvite(id);
       return Response.ok().entity(invite).build();
    }

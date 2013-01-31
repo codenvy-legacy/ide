@@ -38,6 +38,7 @@ import org.exoplatform.ide.client.framework.util.Utils;
  */
 public class OAuthLoginPresenter implements OAuthLoginHandler, ViewClosedHandler
 {
+   
    interface Display extends IsView
    {
       HasClickHandlers getLoginButton();

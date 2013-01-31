@@ -26,11 +26,11 @@ import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ITrackedNodePosition;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
-import org.exoplatform.ide.editor.text.edits.UndoEdit;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.UndoEdit;
 import org.junit.Assert;
 import org.junit.Test;
 

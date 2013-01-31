@@ -13,8 +13,8 @@ package org.eclipse.jdt.client.templates;
 import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.templates.api.DocumentTemplateContext;
 import org.eclipse.jdt.client.templates.api.TemplateContextType;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  * A compilation unit context.

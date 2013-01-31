@@ -36,9 +36,8 @@ import org.eclipse.jdt.client.internal.corext.dom.SelectionAnalyzer;
 import org.eclipse.jdt.client.internal.corext.dom.TokenScanner;
 import org.eclipse.jdt.client.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.jdt.client.ltk.refactoring.RefactoringStatus;
-import org.eclipse.jdt.client.ltk.refactoring.RefactoringStatusContext;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Analyzer to check if a selection covers a valid set of statements of an abstract syntax

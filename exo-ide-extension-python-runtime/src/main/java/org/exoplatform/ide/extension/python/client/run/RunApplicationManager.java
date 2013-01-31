@@ -39,6 +39,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeExtension;
 import org.exoplatform.ide.extension.python.client.PythonRuntimeService;
@@ -102,7 +103,8 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
    @Override
    public void onRunApplication(RunApplicationEvent event)
    {
-      if (currentProject != null && ProjectResolver.APP_ENGINE_PYTHON.equals(currentProject.getProjectType()))
+      if (currentProject != null && (ProjectResolver.APP_ENGINE_PYTHON.equals(currentProject.getProjectType())
+               || ProjectType.PYTHON.value().equals(currentProject.getProjectType())))
       {
          runApplication();
       }
@@ -129,7 +131,7 @@ public class RunApplicationManager implements RunApplicationHandler, StopApplica
    {
       this.currentProject = event.getProject();
    }
-   
+
    @Override
    public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {

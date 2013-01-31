@@ -71,7 +71,6 @@ import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ASTRewriteCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.AddArgumentCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.AddImportCorrectionProposal;
-import org.eclipse.jdt.client.internal.text.correction.proposals.AddTypeParameterProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.CUCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.CastCorrectionProposal;
 import org.eclipse.jdt.client.internal.text.correction.proposals.ChangeMethodSignatureProposal.ChangeDescription;
@@ -84,7 +83,7 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.ReplaceCorrecti
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.ui.BindingLabelProvider;
 import org.eclipse.jdt.client.ui.JavaElementLabels;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.ArrayList;
 import java.util.Collection;

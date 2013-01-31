@@ -26,6 +26,8 @@ import com.google.gwt.xml.client.Element;
 import com.google.gwt.xml.client.Node;
 import com.google.gwt.xml.client.NodeList;
 import com.google.gwt.xml.client.XMLParser;
+
+import org.eclipse.jdt.client.packaging.model.DependencyItem;
 import org.eclipse.jdt.client.packaging.model.DependencyListItem;
 import org.eclipse.jdt.client.packaging.model.PackageItem;
 import org.eclipse.jdt.client.packaging.model.ProjectItem;
@@ -33,6 +35,8 @@ import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FileContentUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -48,23 +52,24 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 public class ProjectTreeParser
 {
 
    public interface ParsingCompleteListener
    {
-
-      void onParseComplete();
-
+      void onParseComplete(ProjectItem resultItem);
    }
 
    public interface FolderUpdateCompleteListener
    {
-
       void onUpdateComplete(Object item);
+   }
 
+   public interface ProjectDependenciesUpdateCompleteListener
+   {
+      void onUpdateComplete(Object item);
    }
 
    private ParsingCompleteListener parsingCompleteListener;
@@ -72,7 +77,7 @@ public class ProjectTreeParser
    private ProjectModel project;
 
    private ProjectItem projectItem;
-   
+
    private List<String> projectDependencies;
 
    public ProjectTreeParser(ProjectModel project, ProjectItem projectItem)
@@ -94,7 +99,7 @@ public class ProjectTreeParser
    public void parseProjectStructure(ParsingCompleteListener parsingCompleteListener)
    {
       this.parsingCompleteListener = parsingCompleteListener;
-      
+
       projectItem.getResourceDirectories().clear();
       projectItem.getDependencies().clear();
       projectItem.getFolders().clear();
@@ -106,13 +111,25 @@ public class ProjectTreeParser
       }
 
       if (projectDependencies == null)
-      {         
+      {
          loadPomXML();
       }
       else
       {
          addFilesAndFoldersToProjectItem();
       }
+   }
+
+   public DependencyListItem updateProjectDependencies(String pomXmlFileContent)
+   {
+      List<DependencyItem> dependencyList = getDependenciesFromPomXml(pomXmlFileContent);
+      if (dependencyList == null)
+      {
+         return null;
+      }
+
+      DependencyListItem dependencies = setProjectDependencies(dependencyList);
+      return dependencies;
    }
 
    /**
@@ -144,7 +161,9 @@ public class ProjectTreeParser
                @Override
                protected void onSuccess(FileModel result)
                {
-                  parsePomXML(result);
+                  List<DependencyItem> dependencies = getDependenciesFromPomXml(result.getContent());
+                  setProjectDependencies(dependencies);
+                  addFilesAndFoldersToProjectItem();
                }
 
                @Override
@@ -165,7 +184,7 @@ public class ProjectTreeParser
 
    /**
     * Get list of maven properties
-    * 
+    *
     * @param projectElement
     * @return
     */
@@ -204,82 +223,110 @@ public class ProjectTreeParser
       return properties;
    }
 
-   /**
-    * Parse pom.xml file
-    * 
-    * @param pomXML
-    */
-   private void parsePomXML(FileModel pomXML)
+   private List<DependencyItem> getDependenciesFromPomXml(String pomXmlFileContent)
    {
-      projectDependencies = new ArrayList<String>();
+      List<DependencyItem> projectDependencies = new ArrayList<DependencyItem>();
 
-      Document dom = XMLParser.parse(pomXML.getContent());
       try
       {
+         Document dom = XMLParser.parse(pomXmlFileContent);
+
          Element projectElement = (Element)dom.getElementsByTagName("project").item(0);
 
          Map<String, String> properties = getPomProperties(projectElement);
 
          Element dependenciesElement = (Element)projectElement.getElementsByTagName("dependencies").item(0);
 
-         NodeList dependencies = dependenciesElement.getElementsByTagName("dependency");
-         for (int i = 0; i < dependencies.getLength(); i++)
+         if (dependenciesElement != null)
          {
-            if (dependencies.item(i).getNodeType() != Node.ELEMENT_NODE)
+            NodeList dependencies = dependenciesElement.getElementsByTagName("dependency");
+            for (int i = 0; i < dependencies.getLength(); i++)
             {
-               continue;
-            }
-
-            Element dependencyElement = (Element)dependencies.item(i);
-            Element artifactElement = (Element)dependencyElement.getElementsByTagName("artifactId").item(0);
-            Element versionElement = (Element)dependencyElement.getElementsByTagName("version").item(0);
-            if (Node.TEXT_NODE == artifactElement.getChildNodes().item(0).getNodeType()
-               && Node.TEXT_NODE == versionElement.getChildNodes().item(0).getNodeType())
-            {
-               String artifact = artifactElement.getChildNodes().item(0).getNodeValue();
-               String version = versionElement.getChildNodes().item(0).getNodeValue();
-
-               if (version.startsWith("${") && version.endsWith("}"))
+               if (dependencies.item(i).getNodeType() != Node.ELEMENT_NODE)
                {
-                  version = version.substring(2, version.length() - 1);
-                  version = properties.get(version);
+                  continue;
                }
 
-               String dependency = artifact + "-" + version + ".jar";
-               projectDependencies.add(dependency);
+               Element dependencyElement = (Element)dependencies.item(i);
+               Element artifactElement = (Element)dependencyElement.getElementsByTagName("artifactId").item(0);
+               Element versionElement = (Element)dependencyElement.getElementsByTagName("version").item(0);
+               if (Node.TEXT_NODE == artifactElement.getChildNodes().item(0).getNodeType()
+                  && Node.TEXT_NODE == versionElement.getChildNodes().item(0).getNodeType())
+               {
+                  String artifact = artifactElement.getChildNodes().item(0).getNodeValue();
+                  String version = versionElement.getChildNodes().item(0).getNodeValue();
+
+                  if (version.startsWith("${") && version.endsWith("}"))
+                  {
+                     version = version.substring(2, version.length() - 1);
+                     version = properties.get(version);
+                  }
+
+                  String dependency = artifact + "-" + version + ".jar";
+                  projectDependencies.add(new DependencyItem(dependency));
+               }
             }
          }
       }
       catch (Exception e)
       {
-         //e.printStackTrace();
+         e.printStackTrace();
+         IDE.fireEvent(new OutputEvent("Error parsing pom.xml.", OutputMessage.Type.ERROR));
       }
-      
-      addProjectDependencies();
+      return projectDependencies;
    }
 
-   /**
-    * Add project dependencies tree node
-    */
-   private void addProjectDependencies()
+   private DependencyListItem setProjectDependencies(List<DependencyItem> dependencies)
    {
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      DependencyListItem referencedLibraries = null;
+      for (DependencyListItem dl : projectItem.getDependencies())
       {
-         @Override
-         public void execute()
+         if ("Referenced Libraries".equals(dl.getName()))
          {
-            DependencyListItem referencedLibraries = new DependencyListItem("Referenced Libraries");
-            projectItem.getDependencies().add(referencedLibraries);
-
-            for (String dependency : projectDependencies)
-            {
-               referencedLibraries.getDependencies().add(dependency);
-            }
-
-            addFilesAndFoldersToProjectItem();
+            referencedLibraries = dl;
          }
-      });
+      }
+
+      if (referencedLibraries == null)
+      {
+         referencedLibraries = new DependencyListItem("Referenced Libraries");
+         projectItem.getDependencies().add(referencedLibraries);
+      }
+      else
+      {
+         referencedLibraries.getDependencies().clear();
+      }
+
+      if (dependencies != null)
+      {
+         referencedLibraries.getDependencies().addAll(dependencies);
+      }
+
+      return referencedLibraries;
    }
+
+   //   /**
+   //    * Add project dependencies tree node
+   //    */
+   //   private void addProjectDependencies()
+   //   {
+   //      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+   //      {
+   //         @Override
+   //         public void execute()
+   //         {
+   //            DependencyListItem referencedLibraries = new DependencyListItem("Referenced Libraries");
+   //            projectItem.getDependencies().add(referencedLibraries);
+   //
+   //            for (String dependency : projectDependencies)
+   //            {
+   //               referencedLibraries.getDependencies().add(new DependencyItem(dependency));
+   //            }
+   //
+   //            addFilesAndFoldersToProjectItem();
+   //         }
+   //      });
+   //   }
 
    private void addFilesAndFoldersToProjectItem()
    {
@@ -299,7 +346,6 @@ public class ProjectTreeParser
       }
 
       // sort files and folders here
-      
 
       // add files and folders to ProjectItem
       projectItem.getFolders().addAll(folders);
@@ -319,7 +365,7 @@ public class ProjectTreeParser
          {
             if (parsingCompleteListener != null)
             {
-               parsingCompleteListener.onParseComplete();
+               parsingCompleteListener.onParseComplete(projectItem);
             }
          }
       });
@@ -488,8 +534,9 @@ public class ProjectTreeParser
 
       return null;
    }
-   
-   private void searchItemInPackages(List<Object> navigateItems, ResourceDirectoryItem resourceDirectoryItem, Item itemToNavigate)
+
+   private void searchItemInPackages(List<Object> navigateItems, ResourceDirectoryItem resourceDirectoryItem,
+      Item itemToNavigate)
    {
       // search for item in packages
       for (PackageItem packageItem : resourceDirectoryItem.getPackages())
@@ -499,12 +546,12 @@ public class ProjectTreeParser
             navigateItems.add(packageItem);
             return;
          }
-         
+
          if (itemToNavigate instanceof FileModel)
          {
             String itemFolderPath = itemToNavigate.getPath();
             itemFolderPath = itemFolderPath.substring(0, itemFolderPath.lastIndexOf("/") + 1);
-            
+
             if (itemFolderPath.equals(packageItem.getPackageFolder().getPath() + "/"))
             {
                navigateItems.add(packageItem);
@@ -516,12 +563,12 @@ public class ProjectTreeParser
                      return;
                   }
                }
-               
+
             }
-            
+
          }
       }
-      
+
       // search for item in root of resource directory
       for (FileModel file : resourceDirectoryItem.getFiles())
       {
@@ -532,7 +579,7 @@ public class ProjectTreeParser
          }
       }
    }
-   
+
    private boolean searchItemInResourceFolders(List<Object> navigateItems, Item itemToNavigate)
    {
       for (ResourceDirectoryItem resourceDirectoryItem : projectItem.getResourceDirectories())
@@ -542,7 +589,7 @@ public class ProjectTreeParser
             navigateItems.add(resourceDirectoryItem);
             return true;
          }
-         
+
          if (itemToNavigate.getPath().startsWith(resourceDirectoryItem.getFolder().getPath() + "/"))
          {
             navigateItems.add(resourceDirectoryItem);
@@ -550,10 +597,10 @@ public class ProjectTreeParser
             return true;
          }
       }
-      
+
       return false;
    }
-   
+
    private boolean searchItemInTreeOfItems(List<Object> navigateItems, List<Item> items, Item itemToNavigate)
    {
       for (Item item : items)
@@ -561,23 +608,23 @@ public class ProjectTreeParser
          if (item instanceof FolderModel)
          {
             FolderModel folder = (FolderModel)item;
-            
+
             if (itemToNavigate.getPath().equals(folder.getPath()))
             {
                navigateItems.add(folder);
                return true;
             }
-            
+
             if (itemToNavigate.getPath().startsWith(folder.getPath() + "/"))
             {
                navigateItems.add(folder);
                searchItemInTreeOfItems(navigateItems, folder.getChildren().getItems(), itemToNavigate);
                return true;
             }
-            
+
             continue;
          }
-         
+
          if (item instanceof FileModel)
          {
             FileModel file = (FileModel)item;
@@ -588,17 +635,17 @@ public class ProjectTreeParser
             }
          }
       }
-      
+
       return false;
    }
 
    public List<Object> getItemList(Item itemToNavigate)
-   {      
+   {
       List<Object> navigateItems = new ArrayList<Object>();
       if (itemToNavigate == null)
       {
          return navigateItems;
-      }      
+      }
 
       if (itemToNavigate.getPath().equals(project.getPath()))
       {

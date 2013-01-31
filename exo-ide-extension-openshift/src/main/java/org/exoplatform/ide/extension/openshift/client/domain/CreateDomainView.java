@@ -44,7 +44,7 @@ public class CreateDomainView extends ViewImpl implements CreateDomainPresenter.
 
    private static final int WIDTH = 410;
 
-   private static final int HEIGHT = 160;
+   private static final int HEIGHT = 140;
 
    private static final String CREATE_BUTTON_ID = "ideCreateDomainViewCreateButton";
 

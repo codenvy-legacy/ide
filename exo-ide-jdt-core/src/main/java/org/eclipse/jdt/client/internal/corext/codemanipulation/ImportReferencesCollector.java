@@ -47,7 +47,7 @@ import org.eclipse.jdt.client.core.dom.ThisExpression;
 import org.eclipse.jdt.client.core.dom.TypeDeclaration;
 import org.eclipse.jdt.client.internal.corext.dom.GenericVisitor;
 import org.eclipse.jdt.client.internal.corext.dom.ScopeAnalyzer;
-import org.exoplatform.ide.editor.text.Region;
+import org.exoplatform.ide.editor.shared.text.Region;
 
 public class ImportReferencesCollector extends GenericVisitor
 {

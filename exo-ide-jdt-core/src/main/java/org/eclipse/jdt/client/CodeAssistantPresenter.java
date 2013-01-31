@@ -18,6 +18,11 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.client.AppContext;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.code.autocomplete.AutocompleteBox;
+import com.google.collide.client.code.autocomplete.integration.AutocompleteUiController;
 import com.google.collide.client.util.logging.Log;
 
 import com.google.gwt.core.client.GWT;
@@ -55,13 +60,13 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent;
-import org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
@@ -308,7 +313,10 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
       int posX = currentEditor.getCursorOffsetLeft() + 2;
       int posY = currentEditor.getCursorOffsetTop() + 15;
       keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
-      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
+      AutocompleteBox popup = new AutocompleteUiController(((CollabEditor)currentEditor).getEditor(), CollabEditorExtension.get().getContext().getResources());
+
+      popup.positionAndShow(createProposals(false));
+//      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
 
    }
 
@@ -348,7 +356,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
 
    /** @see org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler#onTokenSelected(org.eclipse.jdt.client.codeassistant.ui.ProposalWidget) */
    @Override
-   public void onTokenSelected(org.exoplatform.ide.editor.api.contentassist.CompletionProposal proposal, boolean editorHasFocus)
+   public void onTokenSelected(org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal proposal, boolean editorHasFocus)
    {
       try
       {
@@ -419,7 +427,7 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.event.EditorHotKeyPressedHandler#onEditorHotKeyPressed(org.exoplatform.ide.editor.api.event.EditorHotKeyPressedEvent)
+    * @see org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler#onEditorHotKeyPressed(org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent)
     */
    @Override
    public void onEditorHotKeyPressed(EditorHotKeyPressedEvent event)

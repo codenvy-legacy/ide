@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M15-SNAPSHOT</version>
+      <version>1.2.0-M16-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-extension-java</artifactId>
    <packaging>jar</packaging>
@@ -17,6 +18,10 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-server</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>eclipse-jdt-core</artifactId>
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -226,7 +231,8 @@
                   </goals>
                   <configuration>
                      <tasks>
-                        <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}" />
+                        <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
+                               dest="${project.build.directory}"/>
                      </tasks>
                   </configuration>
                </execution>

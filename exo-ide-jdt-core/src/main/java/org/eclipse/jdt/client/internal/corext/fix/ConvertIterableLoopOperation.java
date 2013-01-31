@@ -44,7 +44,6 @@ import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 
 import org.eclipse.jdt.client.internal.corext.codemanipulation.ASTResolving;
 import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility;
-import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.corext.dom.ModifierRewrite;
 import org.eclipse.jdt.client.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import org.eclipse.jdt.client.internal.corext.refactoring.structure.ImportRemover;
@@ -52,7 +51,7 @@ import org.eclipse.jdt.client.internal.corext.refactoring.util.TightSourceRangeC
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.Status;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * Operation to convert for loops over iterables to enhanced for loops.

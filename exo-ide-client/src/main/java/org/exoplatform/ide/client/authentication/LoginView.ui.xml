@@ -35,13 +35,11 @@
 	</ui:style>
 
 	<c:Border margin="15" borderColor="transparent">
-		<c:layer top="0" height="84px">
-			<g:FlowPanel width="200px" styleName="{style.center}">
-				<g:Image resource='{res.ideLogo}' width="200px"></g:Image>
-			</g:FlowPanel>
+      <c:layer top="0" height="84px">
+			<g:VerticalPanel ui:field="verticalPanel" width="490px" height="84px" />
 		</c:layer>
 
-		<c:layer top="90" height="60px">
+		<c:layer top="98" height="60px">
 			<g:FlowPanel width="80%" styleName="{style.center}">
 				<g:FlowPanel width="100%" height="28px">
 					<g:Label text="User ID:" addStyleNames="{style.labelH}"
@@ -59,7 +57,7 @@
 		</c:layer>
 
 		<c:layer height="120px" top="150">
-			<g:VerticalPanel width="280px" styleName="{style.center}"
+			<g:VerticalPanel width="100%" styleName="{style.center}"
 				verticalAlignment="ALIGN_MIDDLE" horizontalAlignment="ALIGN_CENTER"
 				spacing="5">
 				<g:HorizontalPanel spacing="5" verticalAlignment="ALIGN_MIDDLE">

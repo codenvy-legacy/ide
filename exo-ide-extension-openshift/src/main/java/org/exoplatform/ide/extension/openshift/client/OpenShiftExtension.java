@@ -43,16 +43,17 @@ import org.exoplatform.ide.extension.openshift.client.key.UpdatePublicKeyCommand
 import org.exoplatform.ide.extension.openshift.client.login.LoginPresenter;
 import org.exoplatform.ide.extension.openshift.client.preview.PreviewApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.project.OpenShiftProjectPresenter;
+import org.exoplatform.ide.extension.openshift.client.start.StartApplicationPresenter;
 import org.exoplatform.ide.extension.openshift.client.user.UserInfoPresenter;
 
 import java.util.Arrays;
 
 /**
  * OpenShift extension to be added to IDE.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 6, 2011 2:21:00 PM anya $
- * 
+ *
  */
 public class OpenShiftExtension extends Extension implements InitializeServicesHandler
 {
@@ -102,7 +103,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       IDE.getInstance().registerPaaS(
          new PaaS("OpenShift", "OpenShift", new Image(OpenShiftClientBundle.INSTANCE.openShiftControl48()), new Image(
             OpenShiftClientBundle.INSTANCE.openShiftControl48Disabled()), Arrays.asList(ProjectType.RUBY_ON_RAILS,
-            ProjectType.PHP), true, new DeployApplicationPresenter()));
+            ProjectType.PHP, ProjectType.JSP, ProjectType.PYTHON), true, new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
@@ -128,6 +129,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       new UpdatePublicKeyCommandHandler();
 
       new OpenShiftProjectPresenter();
+      new StartApplicationPresenter();
    }
 
    /**
