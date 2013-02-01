@@ -91,7 +91,7 @@
       <!-- eXo GWT Framework dependencies -->
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-commons</artifactId>
+         <artifactId>codenvy-gwtframework-commons</artifactId>
          <scope>provided</scope>
       </dependency>
       <dependency>

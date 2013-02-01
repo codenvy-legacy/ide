@@ -45,12 +45,12 @@
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-commons</artifactId>
+         <artifactId>codenvy-gwtframework-commons</artifactId>
       </dependency>
       
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-ui</artifactId>
+         <artifactId>codenvy-gwtframework-ui</artifactId>
       </dependency>
 
       <dependency>

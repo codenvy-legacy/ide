@@ -179,11 +179,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -202,11 +202,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -221,11 +221,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -247,11 +247,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -266,11 +266,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -285,11 +285,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -304,11 +304,11 @@
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -319,7 +319,7 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -384,7 +384,7 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -399,11 +399,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -414,35 +414,35 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -457,11 +457,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -472,11 +472,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -487,11 +487,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -506,11 +506,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -530,11 +530,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -549,11 +549,11 @@
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>
@@ -564,11 +564,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
                <artifactId>gwt-user</artifactId>
@@ -588,11 +588,11 @@
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-ui</artifactId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
             </exclusion>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>exo-gwtframework-commons</artifactId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
          </exclusions>
       </dependency>

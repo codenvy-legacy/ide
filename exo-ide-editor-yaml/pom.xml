@@ -20,7 +20,7 @@
 
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-ui</artifactId>
+         <artifactId>codenvy-gwtframework-ui</artifactId>
       </dependency>
 
       <dependency>
