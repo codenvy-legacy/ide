@@ -42,10 +42,10 @@ import java.util.List;
 
 /**
  * The implementation of {@link OpenShiftClientService}.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 6, 2011 5:50:11 PM anya $
- * 
+ *
  */
 public class OpenShiftClientServiceImpl extends OpenShiftClientService
 {
@@ -83,6 +83,26 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     * Types of the application method's path.
     */
    private static final String APPLICATION_TYPES = "/ide/openshift/express/apps/type";
+
+   /**
+    * Start of the application method's path.
+    */
+   private static final String APPLICATION_START = "/ide/openshift/express/apps/start";
+
+   /**
+    * Stop of the application method's path.
+    */
+   private static final String APPLICATION_STOP = "/ide/openshift/express/apps/stop";
+
+   /**
+    * Restart of the application method's path.
+    */
+   private static final String APPLICATION_RESTART = "/ide/openshift/express/apps/restart";
+
+   /**
+    * Health check of the application method's path.
+    */
+   private static final String APPLICATION_HEALTH = "/ide/openshift/express/apps/health";
 
    /**
     * REST service context.
@@ -151,7 +171,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     */
    @Override
    public void createApplication(String name, String vfsId, String projectId, String type,
-      AsyncRequestCallback<AppInfo> callback) throws RequestException
+                                 AsyncRequestCallback<AppInfo> callback) throws RequestException
    {
       String url = restServiceContext + CREATE_APPLICATION;
 
@@ -167,7 +187,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     */
    @Override
    public void createApplicationWS(String name, String vfsId, String projectId, String type,
-      RequestCallback<AppInfo> callback) throws WebSocketException
+                                   RequestCallback<AppInfo> callback) throws WebSocketException
    {
       String params = "?name=" + name + "&type=" + type + "&vfsid=" + vfsId + "&projectid=" + projectId;
       callback.setStatusHandler(new CreateRequestHandler(name));
@@ -212,7 +232,7 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
     */
    @Override
    public void getApplicationInfo(String applicationName, String vfsId, String projectId,
-      AsyncRequestCallback<AppInfo> callback) throws RequestException
+                                  AsyncRequestCallback<AppInfo> callback) throws RequestException
    {
       String url = restServiceContext + APPLICATION_INFO;
 
@@ -233,5 +253,37 @@ public class OpenShiftClientServiceImpl extends OpenShiftClientService
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)
          .send(callback);
+   }
+
+   @Override
+   public void getApplicationHealth(String appName, AsyncRequestCallback<StringBuilder> callback) throws RequestException
+   {
+      String url = restServiceContext + APPLICATION_HEALTH;
+
+      AsyncRequest.build(RequestBuilder.GET, url + "?appname=" + appName).loader(loader).send(callback);
+   }
+
+   @Override
+   public void startApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException
+   {
+      String url = restServiceContext + APPLICATION_START;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?appname=" + appName).loader(loader).send(callback);
+   }
+
+   @Override
+   public void stopApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException
+   {
+      String url = restServiceContext + APPLICATION_STOP;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?appname=" + appName).loader(loader).send(callback);
+   }
+
+   @Override
+   public void restartApplication(String appName, AsyncRequestCallback<Void> callback) throws RequestException
+   {
+      String url = restServiceContext + APPLICATION_RESTART;
+
+      AsyncRequest.build(RequestBuilder.POST, url + "?appname=" + appName).loader(loader).send(callback);
    }
 }

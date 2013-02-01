@@ -29,12 +29,15 @@ import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.ui.FocusWidget;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialog;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.invite.GoogleContact;
@@ -45,6 +48,7 @@ import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.extension.jenkins.client.marshal.StringContentUnmarshaller;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
 
 import java.util.ArrayList;
@@ -128,15 +132,16 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
       {
          return;
       }
-
+      customEmailsList.clear();
+      selectedEmailsList.clear();
+      emailsToInvite.clear();    
       display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
       bindDisplay();
       display.showEmailsHint();
       contacts = new ArrayList<GoogleContact>();
       display.setDevelopersListVisible(true);
       //lazyLoadGoogleContacts();
-      loadContacts();
+      isAuthenticate();
    }
 
 //   /**
@@ -187,47 +192,55 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
 //      }.schedule(500);
 //   }
 
-   private void loadContacts()
+   private void isAuthenticate()
    {
       try
       {
-         GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<String>()
+         StringContentUnmarshaller unmarshaller = new StringContentUnmarshaller(new StringBuilder());
+         GoogleContactsService.getInstance().isAuthenticate(new AsyncRequestCallback<StringBuilder>(unmarshaller)
          {
             @Override
-            protected void onSuccess(String result)
+            protected void onSuccess(StringBuilder s)
             {
-               loadGoogleContacts();
+               JSONObject object = JSONParser.parseStrict(s.toString()).isObject();
+               String state = object.get("state").isString().stringValue();
+               if ("valid".equals(state))
+               {
+                  loadGoogleContacts();
+               }
+               else
+               {
+                  showLoginWindow();
+               }
             }
 
             @Override
-            protected void onFailure(Throwable exception)
+            protected void onFailure(Throwable throwable)
             {
                showLoginWindow();
             }
          });
-         IDELoader.show("Loading Google contacts...");
       }
       catch (RequestException exception)
       {
          loadContactsFailed();
       }
-
    }
 
    protected void showLoginWindow()
    {
-
       String message =
          "If you want to invite someone from your Google contact list, <br> "
-            + "press Yes button and you will be redirected to Google authorization page. <br>";
+            + "press Yes button and you will be redirected to Google authorization page.";
 
-      Dialogs.getInstance().ask("You have to be logged in Google account!", message, new BooleanValueReceivedHandler()
+      Dialog askDialog = new Dialog("You have to be logged in Google account!", message, Dialog.Type.ASK);
+
+      BooleanValueReceivedHandler handler = new BooleanValueReceivedHandler()
       {
-
          @Override
-         public void booleanValueReceived(Boolean value)
+         public void booleanValueReceived(Boolean aBoolean)
          {
-            if (value)
+            if (aBoolean != null && aBoolean)
             {
                String authUrl = Utils.getAuthorizationContext()//
                   + "/ide/oauth/authenticate?oauth_provider=google&mode=federated_login"//
@@ -242,15 +255,21 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                JsPopUpOAuthWindow authWindow =
                   new JsPopUpOAuthWindow(authUrl, Utils.getAuthorizationErrorPageURL(), 980, 500);
                authWindow.loginWithOAuth();
-               IDE.getInstance().closeView(display.asView().getId());
+               if (display != null)
+               {
+                  display = null;
+               }
             }
-            else 
+            else
             {
                loadContactsFailed();
             }
-
          }
-      });
+      };
+
+      askDialog.setBooleanValueReceivedHandler(handler);
+
+      Dialogs.getInstance().showDialog(askDialog);
    }
 
    /**
@@ -267,6 +286,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
                @Override
                protected void onSuccess(List<GoogleContact> result)
                {
+                  IDE.getInstance().openView(display.asView());
                   googleContactsReceived(result);
                }
 
@@ -286,6 +306,7 @@ public class InviteGoogleDevelopersPresenter implements InviteGoogleDevelopersHa
    
    private void loadContactsFailed()
    {
+      IDE.getInstance().openView(display.asView());
       display.setDevelopersListVisible(false);
    }
 

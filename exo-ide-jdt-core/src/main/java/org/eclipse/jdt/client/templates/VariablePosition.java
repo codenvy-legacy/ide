@@ -10,10 +10,10 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.templates;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.Position;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.Position;
 
 /**
  *

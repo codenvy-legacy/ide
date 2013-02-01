@@ -22,7 +22,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.api.TextFieldItem;
@@ -30,6 +32,7 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.PasswordTextInput;
 import org.exoplatform.gwtframework.ui.client.component.TextInput;
 import org.exoplatform.ide.client.IDEImageBundle;
+import org.exoplatform.ide.client.Images;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 
 /**
@@ -68,6 +71,9 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
    @UiField
    PasswordTextInput passwordField;
 
+   @UiField
+   VerticalPanel verticalPanel;
+
    public LoginView()
    {
       super(ID, "modal", "Login", new Image(IDEImageBundle.INSTANCE.ok()), 540, 290);
@@ -75,6 +81,7 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
       passwordField.setName("ideLoginViewPasswordField");
       loginGoogleButton.setImage(new Image("http://www.google.com/favicon.ico"));
       loginGitHubButton.setImage(new Image(IDEImageBundle.INSTANCE.gitHubIconSmall()));
+      verticalPanel.add(createLogoLayout());
    }
 
    @Override
@@ -119,4 +126,18 @@ public class LoginView extends ViewImpl implements org.exoplatform.ide.client.au
       return loginGitHubButton;
    }
 
+   private HorizontalPanel createLogoLayout()
+   {
+      HorizontalPanel logoLayout = new HorizontalPanel();
+      logoLayout.setWidth("100%");
+      logoLayout.setHeight(84 + "px");
+      String style = logoLayout.getElement().getAttribute("style");
+      style += "background : url(\"" + Images.Logos.ABOUT_BG + "\") repeat-x scroll 0 0 transparent;";
+      logoLayout.getElement().setAttribute("style", style);
+      Image logoImage = new Image();
+      logoImage.setUrl(Images.Logos.ABOUT_LOGO);
+      logoImage.getElement().setAttribute("style", "padding-left: 35px; padding-top: 34px;");
+      logoLayout.add(logoImage);
+      return logoLayout;
+   }
 }

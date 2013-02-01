@@ -62,14 +62,14 @@ import org.eclipse.jdt.client.internal.text.correction.proposals.LinkedCorrectio
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.JavaUIStatus;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.TextUtilities;
-import org.exoplatform.ide.editor.text.edits.InsertEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.TextUtilities;
+import org.exoplatform.ide.editor.shared.text.edits.InsertEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  *

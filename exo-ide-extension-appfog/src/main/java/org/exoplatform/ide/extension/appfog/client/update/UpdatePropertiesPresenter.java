@@ -20,7 +20,6 @@ package org.exoplatform.ide.extension.appfog.client.update;
 
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -33,6 +32,7 @@ import org.exoplatform.ide.extension.appfog.client.AppfogAsyncRequestCallback;
 import org.exoplatform.ide.extension.appfog.client.AppfogClientService;
 import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.appfog.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.extension.appfog.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -129,11 +129,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
             @Override
             public void stringValueReceived(String value)
             {
-               if (value == null)
-               {
-                  return;
-               }
-               else
+               if (value != null)
                {
                   try
                   {
@@ -253,11 +249,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
             @Override
             public void stringValueReceived(String value)
             {
-               if (value == null)
-               {
-                  return;
-               }
-               else
+               if (value != null)
                {
 
                   instances = value;
@@ -306,11 +298,11 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
       try
       {
-         AppfogClientService.getInstance().updateInstances(null, null, appName, server, encodedExp,
-            new AppfogAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null)
+         AppfogClientService.getInstance().updateInstances(vfs.getId(), projectId, appName, server, encodedExp,
+            new AppfogAsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()), updateInstancesLoggedInHandler, null)
             {
                @Override
-               protected void onSuccess(String result)
+               protected void onSuccess(StringBuilder result)
                {
                   try
                   {
@@ -320,7 +312,7 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
                      AutoBeanUnmarshaller<AppfogApplication> unmarshaller =
                         new AutoBeanUnmarshaller<AppfogApplication>(appfogApplication);
 
-                     AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, null,
+                     AppfogClientService.getInstance().getApplicationInfo(vfs.getId(), projectId, null, AppfogExtension.DEFAULT_SERVER,
                         new AppfogAsyncRequestCallback<AppfogApplication>(unmarshaller, null, null)
                         {
                            @Override

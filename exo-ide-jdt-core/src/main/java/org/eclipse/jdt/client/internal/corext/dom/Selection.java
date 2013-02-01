@@ -11,8 +11,8 @@
 package org.eclipse.jdt.client.internal.corext.dom;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 public class Selection
 {

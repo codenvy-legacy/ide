@@ -55,8 +55,8 @@
 }
 
 .welcomeHeaderLogo {
-	margin-top: 12px;
-	margin-left: 12px;
+	margin-top: 15px;
+   margin-left: 10px;
 	width: 110px;
 }
 
@@ -69,7 +69,7 @@
     padding-top: 25px;
     padding-left: 12px;
     width: 100%;
-    height: auto;
+    height: 100%;
     color: #FFFFFF;
 }
 

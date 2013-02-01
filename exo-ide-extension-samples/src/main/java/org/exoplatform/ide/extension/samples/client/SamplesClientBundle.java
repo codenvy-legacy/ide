@@ -103,7 +103,7 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/logo.png")
    ImageResource ideLogo();
 
-   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-header.png")
+   @Source("org/exoplatform/ide/extension/samples/client/images/welcome/background.png")
    ImageResource welcomePageBgHeader();
    
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-top-container.png")

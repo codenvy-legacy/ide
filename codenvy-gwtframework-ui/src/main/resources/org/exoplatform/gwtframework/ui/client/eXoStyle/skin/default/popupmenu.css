@@ -1,0 +1,119 @@
+/****************************************************************************************
+POPUP MENU
+
+style prefix: exo-popupMenu-
+****************************************************************************************/
+
+.exo-popupMenuMain
+{
+    background:#FFFFFF url(images/popupMenu/menu_background.png) repeat-y scroll;
+ 	position:absolute;
+}
+
+.exo-popupMenuTable
+{
+    border: 1px solid #93A9C0;
+	font-family:Verdana,Bitstream Vera Sans,sans-serif; font-size:11px;
+    position:relative;
+    left:0px;
+    top:0px;
+}
+
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled,
+.exo-popupMenuIconField,
+.exo-popupMenuTitleField,
+.exo-popupMenuHotKeyField,
+.exo-popupMenuSubMenuField,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuTitleFieldOver,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuSubMenuFieldOver,
+.exo-popupMenuIconFieldDisabled,
+.exo-popupMenuTitleFieldDisabled,
+.exo-popupMenuHotKeyFieldDisabled,
+.exo-popupMenuSubMenuFieldDisabled,
+.exo-popupMenuDelimiter
+{
+	height:22px;
+	cursor: default;	
+	font-family:Verdana, Bitstream Vera Sans, sans-serif;
+    font-size:11px;
+    font-weight: normal;
+    font-style: normal;
+}
+
+.exo-popupMenuCheckField,
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuCheckFieldDisabled
+{
+	width:9px;
+	padding-left: 1px;
+	padding-right: 3px;
+}
+
+.exo-popupMenuIconField,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuIconFieldDisabled
+{
+	width:23px;
+	padding-left:4px;
+	padding-right:1px; 
+}
+
+.exo-popupMenuTitleField
+ {
+    color:#333333;
+	padding-top:2px;
+	padding-bottom:2px;    
+}
+
+.exo-popupMenuHotKeyField
+{
+}
+
+.exo-popupMenuSubMenuField,
+.exo-popupMenuSubMenuFieldOver,
+.exo-popupMenuSubMenuFieldDisabled
+{
+	width:10px; 
+}
+
+.exo-popupMenuHotKeyField,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuHotKeyFieldDisabled
+{
+	width:10px;
+	padding-left:6px;
+	padding-right:6px;
+}
+
+.exo-popupMenuCheckFieldOver,
+.exo-popupMenuIconFieldOver,
+.exo-popupMenuTitleFieldOver,
+.exo-popupMenuHotKeyFieldOver,
+.exo-popupMenuSubMenuFieldOver
+{
+	background:#FFFFFF url(images/popupMenu/menu_rollover.png) repeat-x scroll 0px 1px;
+}
+
+.exo-popupMenuIconFieldDisabled,
+.exo-popupMenuTitleFieldDisabled,
+.exo-popupMenuHotKeyFieldDisabled,
+.exo-popupMenuSubMenuFieldDisabled
+{
+	color:#AAAAAA;	
+}
+
+.exo-popupMenuSubMenuImage
+{
+	width:7px;
+	height:7px;
+}
+
+.exo-popupMenuDelimiter
+{
+	padding-left: 4px;
+	padding-right: 4px;
+}

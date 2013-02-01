@@ -38,7 +38,7 @@ import org.eclipse.jdt.client.internal.corext.refactoring.structure.CompilationU
 import org.eclipse.jdt.client.internal.corext.util.MethodsSourcePositionComparator;
 import org.eclipse.jdt.client.internal.text.correction.CorrectionMessages;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 public class AddUnimplementedMethodsOperation extends CompilationUnitRewriteOperation
 {

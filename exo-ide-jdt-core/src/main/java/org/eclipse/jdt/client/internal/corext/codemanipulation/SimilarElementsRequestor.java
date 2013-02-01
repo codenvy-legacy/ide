@@ -25,7 +25,7 @@ import org.eclipse.jdt.client.internal.codeassist.CompletionEngine;
 import org.eclipse.jdt.client.internal.corext.dom.ASTNodes;
 import org.eclipse.jdt.client.internal.text.correction.NameMatcher;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 import java.util.HashSet;
 

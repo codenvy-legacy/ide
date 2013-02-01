@@ -25,8 +25,8 @@ import org.eclipse.jdt.client.ltk.refactoring.TextFileChange;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.runtime.IStatus;
-import org.exoplatform.ide.editor.text.DocumentEvent;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.DocumentEvent;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * A correction proposal which uses an {@link ICleanUpFix} to

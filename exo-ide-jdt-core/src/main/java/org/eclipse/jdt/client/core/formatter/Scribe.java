@@ -27,12 +27,12 @@ import org.eclipse.jdt.client.internal.compiler.parser.TerminalTokens;
 import org.eclipse.jdt.client.internal.compiler.util.Util;
 import org.eclipse.jdt.client.internal.core.util.CodeSnippetParsingUtil;
 import org.eclipse.jdt.client.internal.core.util.RecordedParsingInformation;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.Region;
-import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
-import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
-import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.Region;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.text.edits.MultiTextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 import java.util.Arrays;
 import java.util.Comparator;

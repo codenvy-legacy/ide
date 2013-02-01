@@ -24,10 +24,10 @@ import org.exoplatform.ide.extension.openshift.client.create.CreateApplicationEv
 
 /**
  * Control for creating new application on OpenShift.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Jun 7, 2011 5:35:09 PM anya $
- * 
+ *
  */
 public class CreateApplicationControl extends AbstractOpenShiftControl
 {
@@ -42,4 +42,12 @@ public class CreateApplicationControl extends AbstractOpenShiftControl
       setEvent(new CreateApplicationEvent());
    }
 
+   @Override
+   public void initialize()
+   {
+      super.initialize();
+
+      //Temporary hide menu for feature considering if create application functionality will be in next version of IDE
+      setVisible(false);
+   }
 }

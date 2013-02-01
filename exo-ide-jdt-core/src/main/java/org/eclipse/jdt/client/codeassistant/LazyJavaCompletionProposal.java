@@ -17,9 +17,9 @@ import org.eclipse.jdt.client.codeassistant.ui.StyledString;
 import org.eclipse.jdt.client.core.CompletionProposal;
 import org.eclipse.jdt.client.core.JavaCore;
 import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterConstants;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
 {
@@ -574,7 +574,7 @@ public class LazyJavaCompletionProposal extends AbstractJavaCompletionProposal
    // }
 
    /**
-    * @see org.exoplatform.ide.editor.api.contentassist.CompletionProposal#isAutoInsertable()
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable()
     */
    @Override
    public boolean isAutoInsertable()

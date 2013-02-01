@@ -90,9 +90,9 @@
 //import org.eclipse.jdt.client.runtime.CoreException;
 //import org.eclipse.jdt.client.runtime.IProgressMonitor;
 //import org.eclipse.jdt.client.runtime.OperationCanceledException;
-//import org.exoplatform.ide.editor.text.edits.MultiTextEdit;
-//import org.exoplatform.ide.editor.text.edits.TextEdit;
-//import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+//import MultiTextEdit;
+//import TextEdit;
+//import TextEditGroup;
 //
 ///**
 // * Extracts a method in a compilation unit based on a text selection range.

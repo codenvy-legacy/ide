@@ -31,8 +31,8 @@ import org.eclipse.jdt.client.core.formatter.DefaultCodeFormatterOptions;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
 import org.eclipse.jdt.emul.FileSystem;
 import org.eclipse.jdt.quickfix.StringAsserts;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 import org.junit.Before;
 
 import java.util.HashMap;

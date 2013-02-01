@@ -50,7 +50,6 @@ import org.exoplatform.ide.extension.appfog.client.AppfogRESTfulRequestCallback;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.appfog.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.appfog.client.marshaller.InfrasUnmarshaller;
-import org.exoplatform.ide.extension.appfog.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.appfog.shared.InfraDetail;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
@@ -125,7 +124,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
 
       void enableAutodetectTypeCheckItem(boolean enable);
 
-      void setServerValues(String[] servers);
+      void setServerValue(String server);
 
       void setInfraValues(String[] infras);
 
@@ -653,7 +652,7 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          bindDisplay();
          IDE.getInstance().openView(display.asView());
          display.focusInNameField();
-         getServers();
+         display.setServerValue(AppfogExtension.DEFAULT_SERVER);
          getInfras(AppfogExtension.DEFAULT_SERVER);
          // Application will be started after creation (IDE-1618)
          display.setIsStartAfterCreationCheckItem(true);
@@ -800,47 +799,6 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                {
                   IDE.fireEvent(new ExceptionThrownEvent(exception,
                      "Service is not deployed.<br>Parent folder not found."));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   /**
-    * Get the list of server and put them to select field.
-    */
-   private void getServers()
-   {
-      try
-      {
-         AppfogClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  if (result.isEmpty())
-                  {
-                     display.setServerValues(new String[]{AppfogExtension.DEFAULT_SERVER});
-                     display.getServerField().setValue(AppfogExtension.DEFAULT_SERVER);
-                  }
-                  else
-                  {
-                     String[] servers = result.toArray(new String[result.size()]);
-                     display.setServerValues(servers);
-                     display.getServerField().setValue(servers[0]);
-                     getFrameworks(servers[0]);
-                  }
-                  display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                }
             });
       }

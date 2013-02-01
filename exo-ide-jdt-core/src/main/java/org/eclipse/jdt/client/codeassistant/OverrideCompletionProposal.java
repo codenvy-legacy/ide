@@ -38,13 +38,13 @@ import org.eclipse.jdt.client.internal.corext.codemanipulation.StubUtility2;
 import org.eclipse.jdt.client.internal.corext.dom.Bindings;
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.NullProgressMonitor;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.Document;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.TextUtilities;
-import org.exoplatform.ide.editor.text.edits.MalformedTreeException;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.TextUtilities;
+import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
 
 public class OverrideCompletionProposal extends JavaTypeCompletionProposal
 {

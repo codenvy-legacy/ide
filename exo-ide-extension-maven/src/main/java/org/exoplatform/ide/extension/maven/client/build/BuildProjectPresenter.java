@@ -200,7 +200,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       publishAfterBuild = event.isPublish();
 
-      buildApplicationIfNeed();
+      buildApplicationIfNeed(event.isForce());
    }
 
    /**
@@ -292,7 +292,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                   showBuildMessage("Building project <b>" + project.getPath().substring(1) + "</b>");
                   display.startAnimation();
                   previousStatus = null;
-                  startCheckingStatus(buildID);
+                  refreshBuildStatusTimer.schedule(delay);
                }
 
                @Override
@@ -320,12 +320,17 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
    }
 
-   private void buildApplicationIfNeed()
+   private void buildApplicationIfNeed(boolean force)
    {
       //if isPublish true start build & publish process any way
       if (publishAfterBuild)
       {
          doBuildAndPublish();
+         return;
+      }
+      if (force)
+      {
+         doBuild();
          return;
       }
       try
@@ -404,10 +409,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
                BuildStatus buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.buildStatus().as();
                buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                buildStatus.setDownloadUrl(url);
-               StringBuilder message = new StringBuilder("\r\nYou can download the build result <a href=\"");
-               message.append(buildStatus.getDownloadUrl());
-               message.append("\">here</a>");
-               showBuildMessage(message.toString());
                IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
             }
 
@@ -512,7 +513,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       {
          IDE.messageBus().unsubscribe(buildStatusChannel, buildStatusHandler);
       }
-      catch (WebSocketException e)
+      catch (Exception e)
       {
          // nothing to do
       }
@@ -532,8 +533,10 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          if (projectId != null)
          {
             writeBuildInfo(buildStatus);
-            startWatchingProjectChanges();
+            checkIfProjectIsUnderWatching();
          }
+//         message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
+//            .append("\">here</a>");
 
          if (publishAfterBuild)
          {
@@ -643,6 +646,41 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          e.printStackTrace();
       }
 
+   }
+
+   private void checkIfProjectIsUnderWatching()
+   {
+      try
+      {
+         final ProjectModel p = new ProjectModel();
+         p.setId(project.getId());
+
+         VirtualFileSystem.getInstance().getItemById(project.getId(),
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(p)))
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               for (Property property : result.getItem().getProperties())
+               {
+                  if ("vfs:lastUpdateTime".equals(property.getName()))
+                  {
+                     return;
+                  }
+               }
+               startWatchingProjectChanges();
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    private void startWatchingProjectChanges()

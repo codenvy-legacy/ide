@@ -32,8 +32,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.text.BadLocationException;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
 
 import com.google.gwt.event.dom.client.DoubleClickEvent;
 import com.google.gwt.event.dom.client.DoubleClickHandler;

@@ -17,10 +17,10 @@ import org.eclipse.jdt.client.templates.JavaContextType;
 import org.eclipse.jdt.client.templates.JavaDocContextType;
 import org.eclipse.jdt.client.templates.TemplateEngine;
 import org.eclipse.jdt.client.templates.api.TemplateContextType;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IJavaPartitions;
-import org.exoplatform.ide.editor.text.TextUtilities;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IJavaPartitions;
+import org.exoplatform.ide.editor.shared.text.TextUtilities;
 
 /**
  * Computer computing template proposals for Java and Javadoc context type.

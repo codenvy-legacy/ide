@@ -1,0 +1,221 @@
+/****************************************************************************************
+EXO - COMPONENTS - LOADER
+****************************************************************************************/
+
+.exoComponentLoader
+{
+	width: 247px;
+}
+
+.exoComponentLoaderNoIcon
+{
+	width: 222px;
+}
+
+.exoComponentLoaderHidden
+{
+	width: 0px;
+	overflow: hidden;
+}
+
+.exoComponentLoaderTable
+{
+	border-collapse: collapse;
+	width: 247px;
+}
+
+.exoComponentLoaderTableNoIcon
+{
+	border-collapse: collapse;
+	width: 222px;
+}
+
+.exoComponentLoaderTableLeft,
+.exoComponentLoaderTableLeftOver,
+.exoComponentLoaderTableLeftDown,
+
+.exoComponentLoaderTableStretch,
+.exoComponentLoaderTableStretchOver,
+.exoComponentLoaderTableStretchDown,
+
+.exoComponentLoaderTableDelimiter,
+.exoComponentLoaderTableDelimiterOver,
+.exoComponentLoaderTableDelimiterDown,
+
+.exoComponentLoaderTableButton,
+.exoComponentLoaderTableButtonOver,
+.exoComponentLoaderTableButtonDown,
+
+.exoComponentLoaderTableRight,
+.exoComponentLoaderTableRightOver,
+.exoComponentLoaderTableRightDown
+{
+	height: 24px;
+}
+
+/*
+LEFT
+*/
+.exoComponentLoaderTableLeft,
+.exoComponentLoaderTableLeftOver,
+.exoComponentLoaderTableLeftDown
+{
+	background: url(loader-left.png) no-repeat;
+	width: 3px;
+}
+
+.exoComponentLoaderTableLeft
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableLeftOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableLeftDown
+{
+	background-position: 0px -48px;
+}
+
+
+/*
+RIGHT
+*/
+.exoComponentLoaderTableRight,
+.exoComponentLoaderTableRightOver,
+.exoComponentLoaderTableRightDown
+{
+	background: url(loader-right.png) no-repeat;
+	width: 3px;
+}
+
+.exoComponentLoaderTableRight
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableRightOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableRightDown
+{
+	background-position: 0px -48px;
+}
+
+/*
+STRETCH
+*/
+.exoComponentLoaderTableStretch,
+.exoComponentLoaderTableStretchOver,
+.exoComponentLoaderTableStretchDown
+{
+	background: url(loader-middle.png) repeat-x;
+}
+
+.exoComponentLoaderTableStretch
+{
+	background-position: 0px 0px;	
+}
+
+.exoComponentLoaderTableStretchOver
+{
+	background-position: 0px -24px;	
+}
+
+.exoComponentLoaderTableStretchDown
+{
+	background-position: 0px -48px;	
+}
+
+/*
+DELIMITER
+*/
+.exoComponentLoaderTableDelimiter,
+.exoComponentLoaderTableDelimiterOver,
+.exoComponentLoaderTableDelimiterDown
+{
+	width: 4px;
+	background: url(loader-delimiter.png) no-repeat;
+}
+
+.exoComponentLoaderTableDelimiter
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableDelimiterOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableDelimiterDown
+{
+	background-position: 0px -48px;
+}
+
+/*
+BUTTON
+*/
+.exoComponentLoaderTableButton,
+.exoComponentLoaderTableButtonOver,
+.exoComponentLoaderTableButtonDown
+{
+	width:24px;
+	background: url(loader-middle.png) repeat-x;
+}
+
+.exoComponentLoaderTableButton
+{
+	background-position: 0px 0px;
+}
+
+.exoComponentLoaderTableButtonOver
+{
+	background-position: 0px -24px;
+}
+
+.exoComponentLoaderTableButtonDown
+{
+	background-position: 0px -48px;
+}
+
+/*
+LOADER PROGRESS IMAGE
+*/
+.exoComponentLoaderProgressPanel
+{
+	height: 24px;
+	width: 214px;
+}
+
+.exoComponentLoaderProgressImage
+{
+	margin-top: 5px;
+	margin-left: 4px;
+	width: : 208px;
+	height: 13px;	
+}
+
+/*
+LOADER BUTTON
+*/
+
+.exoComponentLoaderButtonPanel
+{
+	width: 24px;
+	height: 24px;
+}
+
+.exoComponentLoaderButtonIcon
+{
+	width: 16px;
+	height: 16px;
+	margin-left: 4px;
+	margin-top: 4px;
+	cursor: pointer;
+	overflow: hidden;
+}

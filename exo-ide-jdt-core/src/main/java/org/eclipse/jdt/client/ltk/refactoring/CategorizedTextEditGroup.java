@@ -10,9 +10,9 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.ltk.refactoring;
 
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  * A special text edit group that manages an additional set of

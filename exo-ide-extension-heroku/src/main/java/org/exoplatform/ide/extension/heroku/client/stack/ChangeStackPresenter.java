@@ -201,7 +201,10 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
    {
       Stack stack = display.getSelectedStack();
       if (stack == null)
+      {
          return;
+      }
+
       String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
       try
       {

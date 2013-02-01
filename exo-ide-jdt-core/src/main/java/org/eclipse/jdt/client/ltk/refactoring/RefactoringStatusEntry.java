@@ -12,7 +12,7 @@ package org.eclipse.jdt.client.ltk.refactoring;
 
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.Status;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * An immutable object representing an entry in the list in <code>RefactoringStatus</code>.

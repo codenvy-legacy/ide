@@ -20,7 +20,7 @@ import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.dom.Modifier;
 import org.eclipse.jdt.client.internal.corext.util.SignatureUtil;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Provides labels for java content assist proposals. The functionality is similar to the one provided by

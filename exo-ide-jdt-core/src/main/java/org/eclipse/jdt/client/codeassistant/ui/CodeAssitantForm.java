@@ -18,8 +18,6 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
-import elemental.events.KeyboardEvent.KeyCode;
-
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -46,7 +44,7 @@ import org.eclipse.jdt.client.AssistDisplay;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.codeassitant.ui.TokenWidgetFactory;
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.codeassistant.CodeAssistantClientBundle;
 
 import java.util.ArrayList;
@@ -499,7 +497,7 @@ public class CodeAssitantForm extends Composite implements ResizeHandler, Assist
    }
 
    /**
-    * @see org.eclipse.jdt.client.AssistDisplay#setNewProposals(org.exoplatform.ide.editor.api.contentassist.CompletionProposal[])
+    * @see org.eclipse.jdt.client.AssistDisplay#setNewProposals(org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal[])
     */
    @Override
    public void setNewProposals(CompletionProposal[] proposals)

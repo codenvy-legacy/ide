@@ -1,0 +1,31 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+
+	<g:HTMLPanel styleName="imageButtonPanel">
+
+		<table cellpadding="0" cellspacing="0" class="imageButtonTable" ui:field="table">
+			<tr>
+				<td class="imageButtonLeft"><div /></td>
+				<td class="imageButtonStretch">
+					<table class="imageButtonTitleTable" cellpadding="0" cellspacing="0">
+						<tr>
+							<td ui:field="imageElement">
+								<g:SimplePanel styleName="imageButtonIconPanel" ui:field="imagePanel"></g:SimplePanel>
+							</td>
+							
+							<td ui:field="delimiterElement">
+								<div style="width:6px;"></div>
+							</td>
+							
+							<td class="imageButtonText" nowrap="nowrap" ui:field="textElement">Hello</td>
+						</tr>
+					</table>
+				</td>
+				<td class="imageButtonRight"><div /></td>
+			</tr>
+		</table> 		
+		
+	</g:HTMLPanel>
+
+</ui:UiBinder>

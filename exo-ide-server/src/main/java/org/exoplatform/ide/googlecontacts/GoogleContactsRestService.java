@@ -26,6 +26,8 @@ import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,11 +35,8 @@ import javax.inject.Inject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.SecurityContext;
 
 /**
  * This REST service is used for getting user's Google Contacts.
@@ -54,17 +53,6 @@ public class GoogleContactsRestService
 
    @Inject
    private OAuthTokenProvider oauthTokenProvider;
-
-   @GET
-   @Path("is-authenticate")
-   @Produces(MediaType.APPLICATION_JSON)
-   public Response isAuthenticate(@Context SecurityContext security) throws Exception
-   {
-      final String userId = ConversationState.getCurrent().getIdentity().getUserId();
-      if (oauthTokenProvider.getToken("google", userId) == null)
-         return Response.status(403).entity("OAuth token not found").build();
-      return Response.ok().build();
-   }
 
    /**
     * Fetch all user's contacts.
@@ -107,5 +95,32 @@ public class GoogleContactsRestService
       }
 
       return contactList;
+   }
+
+   @GET
+   @Path("/is-authenticate")
+   @Produces(MediaType.APPLICATION_JSON)
+   public Response isAuthenticate() throws Exception
+   {
+      final String userId = ConversationState.getCurrent().getIdentity().getUserId();
+      if (oauthTokenProvider.getToken("google", userId) == null)
+      {
+         return Response.status(200).entity("{\"state\":\"invalid\"}").build();
+      }
+
+      String token = oauthTokenProvider.getToken("google", userId);
+
+      URL tokenInfoUrl = new URL("https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=" + token);
+      HttpURLConnection connection = (HttpURLConnection)tokenInfoUrl.openConnection();
+
+      if (connection.getResponseCode() == 200)
+      {
+         return Response.status(200).entity("{\"state\":\"valid\"}").build();
+      }
+      else
+      {
+
+         return Response.status(200).entity("{\"state\":\"invalid\"}").build();
+      }
    }
 }

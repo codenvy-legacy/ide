@@ -23,7 +23,7 @@ import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.module.EditorNotFoundException;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.editor.api.Editor;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticClientBundle;
 import org.exoplatform.ide.extension.chromattic.client.ChromatticExtension;
 
@@ -48,7 +48,7 @@ public class GeneratedNodeTypePreviewForm extends ViewImpl implements GeneratedN
    /**
     * Editor to display the content of node type definition.
     */
-   private org.exoplatform.ide.editor.api.Editor editor;
+   private Editor editor;
 
    /**
     * @param eventBus handler manager

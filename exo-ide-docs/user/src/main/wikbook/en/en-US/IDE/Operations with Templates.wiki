@@ -1,4 +1,4 @@
-The _Template_ file is a combination of HTML code and Groovy code blocks. In eXo IDE, you can create and edit those files in editor.
+The _Template_ file is a combination of HTML code and Groovy code blocks. In Codenvy, you can create and edit those files in editor.
 
 
 h1. Create and Edit Template
