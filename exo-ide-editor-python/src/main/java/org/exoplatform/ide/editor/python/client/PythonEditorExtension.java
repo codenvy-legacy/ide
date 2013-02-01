@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.python.client;
 
+import com.google.collide.client.CollabEditor;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
@@ -28,9 +30,6 @@ import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.editor.codemirror.CodeMirror;
-import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
-import org.exoplatform.ide.editor.codemirror.TabMode;
 
 /**
  * Provides a text editing area. Support syntax coloration for Python language.
@@ -68,10 +67,7 @@ public class PythonEditorExtension extends Extension implements InitializeServic
             @Override
             public Editor createEditor()
             {
-               return new CodeMirror(MimeType.TEXT_X_PYTHON, new CodeMirrorConfiguration()
-                  .setGenericParsers("['parsepython.js']")
-                  .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/pythoncolors.css']")
-                  .setTabMode(TabMode.INDENT));
+               return new PythonEditor(MimeType.TEXT_X_PYTHON);
             }
          });
       
