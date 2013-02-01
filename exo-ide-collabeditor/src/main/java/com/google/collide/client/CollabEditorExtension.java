@@ -18,14 +18,10 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
-
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
-import com.google.collide.client.collaboration.OpenFileCollaboration;
-import com.google.collide.client.collaboration.OpenFileCollaborationControl;
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
