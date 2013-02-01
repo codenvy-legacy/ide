@@ -28,6 +28,14 @@
 		.right {
 			float: right;
 		}
+
+		.warning {
+			color: #ffac00;
+		}
+
+		.error {
+			color: #f82c92;
+		}
 	</ui:style>
 
 	<f:Border margin="15" borderColor="transparent">
@@ -36,6 +44,10 @@
 				<g:FlowPanel width="100%" height="30px">
 					<g:Label text="{locale.refactoringRenameFieldNewName}" addStyleNames="{style.labelH} {style.middle}" width="18%"></g:Label>
 					<f:TextInput ui:field="newNameField" width="80%" height="23px" addStyleNames="{style.right}"></f:TextInput>
+				</g:FlowPanel>
+				<g:FlowPanel width="100%" height="50px">
+					<g:Label ui:field="warningLabel" styleName="{style.warning}" />
+					<g:Label ui:field="errorLabel" styleName="{style.error}" />
 				</g:FlowPanel>
 			</g:FlowPanel>
 		</f:layer>

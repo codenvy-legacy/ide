@@ -20,6 +20,9 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,76 +32,67 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class RESTServiceFilterParametersTest extends BaseTest
-{
+public class RESTServiceFilterParametersTest extends BaseTest {
 
-   private final static String FILE_NAME = "FilterParametersTest.grs";
+	private final static String FILE_NAME = "FilterParametersTest.grs";
 
-   private final static String PROJECT = RESTServiceFilterParametersTest.class.getSimpleName();
+	private final static String PROJECT = RESTServiceFilterParametersTest.class
+			.getSimpleName();
 
-   @BeforeClass
-   public static void setUp()
-   {
+	@BeforeClass
+	public static void setUp() {
 
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultValues.groovy";
-      try
-      {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+		String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultValues.groovy";
+		try {
+			Map<String, Link> project = VirtualFileSystemUtils
+					.createDefaultProject(PROJECT);
+			Link link = project.get(Link.REL_CREATE_FILE);
+			VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME,
+					MimeType.GROOVY_SERVICE, filePath);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testFilterParameters() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testFilterParameters() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.LOADER.waitClosed();
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
 
-      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
+		IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
 
-      IDE.REST_SERVICE.launchRestService();
+		IDE.REST_SERVICE.launchRestService();
 
-      IDE.REST_SERVICE.selectHeaderParametersTab();
+		IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      IDE.REST_SERVICE.unCheckHeaderParameter(1);
+		IDE.REST_SERVICE.unCheckHeaderParameter(1);
 
-      IDE.REST_SERVICE.sendRequest();
-      IDE.OUTPUT.waitOpened();
-      IDE.OUTPUT.waitForMessageShow(2, 5);
-      String mess = IDE.OUTPUT.getOutputMessage(2);
-      assertTrue(mess
-         .contains("POST PathParam: {pathParam}; POST Test-Header: 3; POST TestQueryParam: false; POST Body:"));
-   }
+		IDE.REST_SERVICE.sendRequest();
+		IDE.OUTPUT.waitOpened();
+		IDE.OUTPUT.waitForMessageShow(2, 5);
+		String mess = IDE.OUTPUT.getOutputMessage(2);
+		assertTrue(mess
+				.contains("POST PathParam: {pathParam}; POST Test-Header: 3; POST TestQueryParam: false; POST Body:"));
+	}
 
-   @AfterClass
-   public static void tearDown() throws Exception
-   {
-      try
-      {
-         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() throws Exception {
+		try {
+			IDE.MENU.runCommand(MenuCommands.Run.RUN,
+					MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
 }

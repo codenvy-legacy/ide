@@ -44,7 +44,7 @@ public interface ToolbarCommands
       String SAVE = "Save";
 
       String SAVE_AS = "Save As...";
-      
+
       String DELETE = "Delete Item(s)...";
 
       String REFRESH = "Refresh Selected Folder";
@@ -52,10 +52,12 @@ public interface ToolbarCommands
       String CUT_SELECTED_ITEM = "Cut Selected Item(s)";
 
       String COPY_SELECTED_ITEM = "Copy Selected Item(s)";
-      
+
       String PASTE = "Paste Selected Item(s)";
 
       final String SEARCH = "Search...";
+
+      String PACKAGE_EXPLORER = "Package Explorer";
    }
 
    public interface View
@@ -84,7 +86,7 @@ public interface ToolbarCommands
    public interface Run
    {
       String SHOW_PREVIEW = "Show Preview";
-      
+
       String SHOW_GADGET_PREVIEW = "Show Gadget Preview";
 
       String DEPLOY_GADGET = "Deploy Gadget to GateIn";
@@ -108,9 +110,15 @@ public interface ToolbarCommands
       String PREVIEW_NODE_TYPE = "Preview node type";
 
       String DEPLOY_NODE_TYPE = "Deploy node type";
-      
+
       String LAUNCH_REST_SERVICE = "Launch REST Service...";
-      
-      String UNSET_AUTOLOAD ="Unset REST Service Autoload";
+
+      String UNSET_AUTOLOAD = "Unset REST Service Autoload";
+
+   }
+
+   public interface PackageExplorer
+   {
+      String PACKAGE_EXPLORER = "Package Explorer";
    }
 }

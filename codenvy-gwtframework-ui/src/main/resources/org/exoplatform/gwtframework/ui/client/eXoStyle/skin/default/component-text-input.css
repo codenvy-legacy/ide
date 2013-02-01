@@ -1,0 +1,90 @@
+/****************************************************************************************
+TEXT INPUT
+****************************************************************************************/
+.exoTextInputPanel,
+.exoTextInputTable,
+.exoTextInputTableLeft,
+.exoTextInputTableText,
+.exoTextInputTableDelimiter,
+.exoTextInputTableButton,
+.exoTextInputTableRight
+{
+	height: 24px;
+}
+
+.exoTextInputTable
+{
+	border-collapse: collapse;
+	width: 100%;
+}
+
+.exoTextInputTable tr td
+{
+	background-position: 0px -24px;
+}
+
+.exoTextInputTable tr td input
+{
+	background: #FDFCFD;
+}
+
+.exoTextInputTableDown tr td
+{
+	background-position: 0px -48px;
+}
+
+.exoTextInputTableDown tr td input
+{
+	background: #E1EFFF;
+}
+
+.exoTextInputTableLeft
+{
+	background: url(images/component/text-input/textinput-left.png) no-repeat;
+	width: 3px;
+}
+
+.exoTextInputTableText
+{
+	background: url(images/component/text-input/textinput-middle.png) repeat-x;
+}
+
+.exoTextInputTableDelimiter
+{
+	background: url(images/component/text-input/textinput-delimiter.png) no-repeat;
+	width: 4px;
+}
+
+.exoTextInputTableButton
+{
+	background: url(images/component/text-input/textinput-middle.png) repeat-x;
+	width:24px;
+}
+
+.exoTextInputTableRight
+{
+	background: url(images/component/text-input/textinput-right.png) no-repeat;
+	width: 3px;
+}
+
+.exoTextInputField
+{
+	border: none;
+	font-family:Verdana,Bitstream Vera Sans,sans-serif;
+	font-size:12px;
+	width: 100%;	
+}
+
+.exoTextInputButtonPanel
+{
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+}
+
+.exoTextInputButtonIcon
+{
+	width: 16px;
+	height: 16px;
+	margin: 4px;
+}

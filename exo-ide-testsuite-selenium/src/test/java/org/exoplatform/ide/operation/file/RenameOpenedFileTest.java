@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -26,14 +29,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 1, 2010 $
- *
+ * 
  */
 public class RenameOpenedFileTest extends BaseTest
 {
@@ -71,7 +71,7 @@ public class RenameOpenedFileTest extends BaseTest
       }
    }
 
-   //IDE-81 Rename Opened File
+   // IDE-81 Rename Opened File
    @Test
    public void testRenameOpenedFile() throws Exception
    {
@@ -80,13 +80,14 @@ public class RenameOpenedFileTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE1);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE1);
-      
+      IDE.EDITOR.waitActiveFile();
+
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE1);
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.RENAME);
       IDE.RENAME.waitOpened();
 
-    //Try to rename opened file - warning message must be shown and Mime Type field disabled.
+      // Try to rename opened file - warning message must be shown and Mime
+      // Type field disabled.
       assertEquals("Can't change mime-type to opened file", IDE.RENAME.getWarningMessage());
       assertFalse(IDE.RENAME.isMimeTypeFieldEnabled());
       assertFalse(IDE.RENAME.isRenameButtonEnabled());
@@ -96,10 +97,11 @@ public class RenameOpenedFileTest extends BaseTest
       IDE.RENAME.waitClosed();
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE2);
-      IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FILE1);
+      IDE.PROJECT.EXPLORER.waitItemNotPresent(PROJECT + "/" + FILE1);
 
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FILE1).getStatusCode());
-      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FILE2.replaceAll(" ", "%20")).getStatusCode());
+      assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FILE2.replaceAll(" ", "%20"))
+         .getStatusCode());
 
       assertEquals(FILE2, IDE.EDITOR.getTabTitle(1));
       IDE.EDITOR.closeFile(1);

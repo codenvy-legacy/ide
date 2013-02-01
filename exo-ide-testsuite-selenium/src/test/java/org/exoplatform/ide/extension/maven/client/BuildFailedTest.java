@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.maven.client;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -29,8 +31,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildFailedTest.java Feb 27, 2012 5:24:41 PM azatsarynnyy $
@@ -39,11 +39,6 @@ import java.util.Map;
 public class BuildFailedTest extends BaseTest
 {
    private static final String PROJECT = BuildFailedTest.class.getSimpleName();
-
-   private static final String BEGINING_BUILD_FAIL_MESS = "Building project BuildFailedTest\n"
-      + "Finished building project BuildFailedTest.\n" + "Result: Failed\n" + "[INFO] Scanning for projects...\n"
-      + "[INFO] ------------------------------------------------------------------------\n"
-      + "[INFO] BUILD FAILURE\n" + "[INFO] ------------------------------------------------------------------------\n";
 
    protected static Map<String, Link> project;
 
@@ -55,8 +50,6 @@ public class BuildFailedTest extends BaseTest
          project =
             VirtualFileSystemUtils.importZipProject(PROJECT,
                "src/test/resources/org/exoplatform/ide/extension/maven/TestSpringProjectWithoutPOM.zip");
-
-         Thread.sleep(2000);
       }
       catch (Exception e)
       {
@@ -69,9 +62,7 @@ public class BuildFailedTest extends BaseTest
    {
       try
       {
-          VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-         //delay for DavFs
-         Thread.sleep(1000);
+         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
       }
       catch (Exception e)
       {
@@ -82,12 +73,13 @@ public class BuildFailedTest extends BaseTest
    public void testBuildFailed() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-
       // Open project
       IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitPackageExplorerOpened();
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
+      IDE.LOADER.waitClosed();
+      //IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       // Building of project is started
       IDE.MENU.runCommand(MenuCommands.Project.PROJECT, MenuCommands.Project.BUILD_PROJECT);
       IDE.BUILD.waitOpened();
@@ -96,17 +88,14 @@ public class BuildFailedTest extends BaseTest
 
       // Wait until building is finished.
       IDE.STATUSBAR.waitBuildFailStatus();
-      IDE.BUILD.waitOpened();
-      
-      
-    //  assertTrue(IDE.BUILD.getOutputMessage().startsWith(BEGINING_BUILD_FAIL_MESS));
+      //      --IDE.BUILD.waitOpened();
+
+      //assertTrue(IDE.BUILD.getOutputMessage().startsWith(BEGINING_BUILD_FAIL_MESS));
       // Close Build project view because Output view is not visible
       IDE.OUTPUT.clickOnOutputTab();
       IDE.OUTPUT.waitOpened();
       // Get error message
-
       IDE.OUTPUT.waitForMessageShow(1, 15);
-      IDE.OUTPUT.waitOpened();
       String buildErrorMessage = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(buildErrorMessage.endsWith(Build.Messages.BUILD_FAILED));
    }

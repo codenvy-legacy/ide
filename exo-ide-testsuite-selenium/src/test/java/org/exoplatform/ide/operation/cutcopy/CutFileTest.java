@@ -22,6 +22,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.UUID;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,8 +32,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.UUID;
 
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
@@ -98,27 +98,27 @@ public class CutFileTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile();
 
       // Check Paste disabled:
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       // Check Copy enabled:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       // Check Paste disabled:
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
       // Check Copy enabled:
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
 
@@ -129,8 +129,8 @@ public class CutFileTest extends BaseTest
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
       // Check Paste disabled:
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       // Cut folder, which contains opened file:
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1);
@@ -141,8 +141,8 @@ public class CutFileTest extends BaseTest
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
       // Check Paste disabled:
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       // Close file :
       IDE.EDITOR.closeFile(FILE_NAME_1);
@@ -151,9 +151,9 @@ public class CutFileTest extends BaseTest
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_1 + "/" + FILE_NAME_1);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
 
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE, true);
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_NAME_2);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
@@ -163,8 +163,8 @@ public class CutFileTest extends BaseTest
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
 
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
@@ -174,12 +174,12 @@ public class CutFileTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_1);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_NAME_1);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.File.PASTE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.File.PASTE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_1);
-      assertEquals(RANDOM_CONTENT, IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(RANDOM_CONTENT, IDE.EDITOR.getTextFromCodeEditor());
       IDE.EDITOR.closeFile(FILE_NAME_1);
    }
 }

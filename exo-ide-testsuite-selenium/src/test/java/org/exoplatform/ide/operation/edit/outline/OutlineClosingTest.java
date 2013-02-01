@@ -18,9 +18,6 @@
  */
 package org.exoplatform.ide.operation.edit.outline;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -31,12 +28,12 @@ import org.junit.Test;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 16, 2010 $
- *
+ * 
  */
-//http://jira.exoplatform.org/browse/IDE-417
+// http://jira.exoplatform.org/browse/IDE-417
 public class OutlineClosingTest extends BaseTest
 {
    private final static String PROJECT = OutlineClosingTest.class.getSimpleName();
@@ -61,7 +58,7 @@ public class OutlineClosingTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      IDE.EDITOR.waitActiveFile();
 
       openAndCloseOutline();
 
@@ -82,12 +79,12 @@ public class OutlineClosingTest extends BaseTest
       IDE.OUTLINE.waitOutlineTreeVisible();
 
       // check for presence of tab outline
-      assertTrue(IDE.OUTLINE.isOutlineTreePresent());
-      assertTrue(IDE.OUTLINE.isOutlineViewVisible());
-
+      IDE.OUTLINE.waitOutlineTreeVisible();
+      IDE.OUTLINE.waitOutlineViewVisible();
+      IDE.OUTLINE.waitItemAtPosition("@HelloWorld", 1);
       IDE.OUTLINE.closeOutline();
       IDE.OUTLINE.waitClosed();
-      assertFalse(IDE.OUTLINE.isOutlineTreePresent());
-      assertFalse(IDE.OUTLINE.isOutlineViewVisible());
+      IDE.OUTLINE.waitOutlineTreeNotVisible();
+      IDE.OUTLINE.waitOutlineViewInvisible();
    }
 }

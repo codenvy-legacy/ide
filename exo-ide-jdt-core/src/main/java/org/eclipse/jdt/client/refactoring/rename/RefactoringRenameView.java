@@ -18,6 +18,10 @@
  */
 package org.eclipse.jdt.client.refactoring.rename;
 
+import com.google.gwt.user.client.ui.HasText;
+
+import com.google.gwt.user.client.ui.Label;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -46,7 +50,7 @@ public class RefactoringRenameView extends ViewImpl implements Display
 
    private static final String TITLE = JdtExtension.LOCALIZATION_CONSTANT.refactoringRenameViewTitle();
 
-   private static final int HEIGHT = 130;
+   private static final int HEIGHT = 150;
 
    private static final int WIDTH = 450;
 
@@ -64,6 +68,12 @@ public class RefactoringRenameView extends ViewImpl implements Display
 
    @UiField
    TextInput newNameField;
+
+   @UiField
+   Label warningLabel;
+
+   @UiField
+   Label errorLabel;
 
    @UiField
    ImageButton cancelButton;
@@ -89,6 +99,24 @@ public class RefactoringRenameView extends ViewImpl implements Display
    public TextFieldItem getNewNameField()
    {
       return newNameField;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getWarningLabel()
+    */
+   @Override
+   public HasText getWarningLabel()
+   {
+      return warningLabel;
+   }
+
+   /**
+    * @see org.eclipse.jdt.client.refactoring.rename.RefactoringRenamePresenter.Display#getErrorLabel()
+    */
+   @Override
+   public HasText getErrorLabel()
+   {
+      return errorLabel;
    }
 
    /**

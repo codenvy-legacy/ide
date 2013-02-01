@@ -32,41 +32,39 @@ import org.junit.Test;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: ChrommaticImportAssistant Jan 24, 2011 5:42:31 PM evgen $
  */
-public class ChrommaticImportAssistantTest extends CodeAssistantBaseTest
-{
+public class ChrommaticImportAssistantTest extends CodeAssistantBaseTest {
 
-   private final static String FILE_NAME = "importChrommatic.groovy";
+	private final static String FILE_NAME = "importChrommatic.groovy";
 
-   @Before
-   public void beforeTest() throws Exception
-   {
-      createProject(ChrommaticImportAssistantTest.class.getSimpleName());
-      String serviceFilePath =
-         "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/importAssistantChrommatic.groovy";
-      VirtualFileSystemUtils.createFileFromLocal(project.get(Link.REL_CREATE_FILE), FILE_NAME,
-         MimeType.CHROMATTIC_DATA_OBJECT, serviceFilePath);
-      
-      openProject();
-      
-      IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
-      IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
-   }
+	@Before
+	public void beforeTest() throws Exception {
+		createProject(ChrommaticImportAssistantTest.class.getSimpleName());
+		String serviceFilePath = "src/test/resources/org/exoplatform/ide/operation/file/autocomplete/importAssistantChrommatic.groovy";
+		VirtualFileSystemUtils.createFileFromLocal(
+				project.get(Link.REL_CREATE_FILE), FILE_NAME,
+				MimeType.CHROMATTIC_DATA_OBJECT, serviceFilePath);
 
-   @Test
-   public void testChrommaticImportAssistant() throws Exception
-   {
-      //sleep to give editor parse file content
-      Thread.sleep(TestConstants.SLEEP);
-      IDE.CODEASSISTANT.clickOnLineNumer(2);
+		openProject();
 
-      IDE.CODEASSISTANT.waitForImportAssistForOpened();
+		IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
+		IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
+	}
 
-      IDE.CODEASSISTANT.selectImportProposal("Base64");
-      IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(2);
-      IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(3);
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
-      
-   }
+	@Test
+	public void testChrommaticImportAssistant() throws Exception {
+		// sleep to give editor parse file content
+		Thread.sleep(TestConstants.SLEEP);
+		IDE.CODEASSISTANT.clickOnLineNumer(2);
+
+		IDE.CODEASSISTANT.waitForImportAssistForOpened();
+
+		IDE.CODEASSISTANT.selectByImportDeclaration("java.util.prefs");
+		IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(2);
+		IDE.ERROR_MARKS.waitErrorMarkerIsDisAppear(3);
+		assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains(
+				"import java.util.prefs.Base64"));
+
+	}
 
 }

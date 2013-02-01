@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.chromattic;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -30,12 +32,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 20, 2010 $
- *
+ * 
  */
 public class DeployNodeTypeTest extends BaseTest
 {
@@ -82,8 +82,6 @@ public class DeployNodeTypeTest extends BaseTest
    @Test
    public void testGenerateNodeTypeView() throws Exception
    {
-      driver.navigate().refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
 
@@ -92,32 +90,31 @@ public class DeployNodeTypeTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.DEPLOY_NODE_TYPE));
-      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE));
+      // Check controls are present and enabled:
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.TOOLBAR.waitButtonPresentAtRight(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.MENU.waitCommandVisible(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_NODE_TYPE);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       IDE.DEPLOY_NODE_TYPE.waitOpened();
       IDE.DEPLOY_NODE_TYPE.clickCancelButton();
       IDE.DEPLOY_NODE_TYPE.waitClosed();
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       IDE.DEPLOY_NODE_TYPE.waitOpened();
 
-      //Select CND format:
+      // Select CND format:
       IDE.DEPLOY_NODE_TYPE.selectNodeTypeFormat("CND");
 
-      //Click deploy button:
+      // Click deploy button:
       IDE.DEPLOY_NODE_TYPE.clickDeployButton();
-
-      //Check error message that CND format is not supported:
+      // Check error message that CND format is not supported:
       IDE.WARNING_DIALOG.waitOpened();
       assertTrue(IDE.WARNING_DIALOG.getWarningMessage().contains("Unsupported content type:text/x-jcr-cnd"));
       IDE.WARNING_DIALOG.clickOk();
@@ -135,25 +132,20 @@ public class DeployNodeTypeTest extends BaseTest
    @Test
    public void testDeployIgnoreIfExist() throws Exception
    {
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
+      // Check controls are present and enabled:
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       IDE.DEPLOY_NODE_TYPE.waitOpened();
 
-      //Click deploy button:
+      // Click deploy button:
       IDE.DEPLOY_NODE_TYPE.selectAlreadyExists("ignore if exists");
       IDE.DEPLOY_NODE_TYPE.clickDeployButton();
       IDE.DEPLOY_NODE_TYPE.waitClosed();
@@ -175,35 +167,30 @@ public class DeployNodeTypeTest extends BaseTest
    @Test
    public void testDeployFailIfExist() throws Exception
    {
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE, true);
+      // Check controls are present and enabled:
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.DEPLOY_NODE_TYPE);
       IDE.DEPLOY_NODE_TYPE.waitOpened();
 
-      //Select "fail if exist" behavior:
+      // Select "fail if exist" behavior:
       IDE.DEPLOY_NODE_TYPE.selectAlreadyExists("fail if exists");
 
-      //Click deploy button:
+      // Click deploy button:
       IDE.DEPLOY_NODE_TYPE.clickDeployButton();
       IDE.DEPLOY_NODE_TYPE.waitClosed();
 
       IDE.WARNING_DIALOG.waitOpened();
       IDE.WARNING_DIALOG.clickOk();
 
-      //check, that there is no view with generated code
+      // check, that there is no view with generated code
 
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);

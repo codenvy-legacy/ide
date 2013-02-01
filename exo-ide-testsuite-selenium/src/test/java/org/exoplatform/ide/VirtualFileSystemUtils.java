@@ -18,6 +18,20 @@
  */
 package org.exoplatform.ide;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
+
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -37,20 +51,6 @@ import org.exoplatform.ide.core.Response;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by The eXo Platform SAS.
@@ -493,6 +493,7 @@ public class VirtualFileSystemUtils
    private static void initVFS() throws IOException
    {
       String uRl = BaseTest.BASE_URL + BaseTest.REST_CONTEXT + "/ide/vfs/dev-monit";
+
       HttpsURLConnection connection = null;
       try
       {

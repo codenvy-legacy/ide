@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.core;
 
+import java.util.List;
+
+import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.StaleElementReferenceException;
@@ -27,9 +30,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 /**
  * Operations with or in code outline panel.
@@ -63,19 +65,19 @@ public class Outline extends AbstractTestModule
 
       String HIGHLIGHTER_SELECTOR = "div.cellTreeSelectedItem";
 
-      String ROW_BY_INDEX_SELECTOR = "div#" + TREE_ID + " div.gwt-Label:nth(%s)";
-
       String ROW_SELECTOR = "div#" + TREE_ID + " div>span";
 
       String ROW_BY_TITLE_LOCATOR = "//div[@id='" + TREE_ID + "']//div[@class]//span[text()='%s']";
 
-      String BORDER_PREFIX = "//div[@component=\"Border\" and contains(@style, 'color: rgb(182, 204, 232)')]";
+      String BORDER_PREFIX = "//div[@component='Border' and contains(@style, '182, 204, 232')]";
 
       String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX;
 
       String HIGHLITER_JAVAOUTLINE_BORDER = JAVA_VIEW_LOCATOR + BORDER_PREFIX;
 
       String SELECTED_ELEMENT_CSS = "div.cellTreeSelectedItem>div>div>span";
+
+      String INFORMATION_FORM = "//div[@id='information']/ancestor::div[1][contains(@style, 'width: 300')]";
 
    }
 
@@ -147,6 +149,9 @@ public class Outline extends AbstractTestModule
    @FindBy(css = Locators.SELECTED_ELEMENT_CSS)
    private WebElement selectElementSelector;
 
+   @FindBy(xpath = Locators.INFORMATION_FORM)
+   private WebElement informationForm;
+
    /**
     * Wait Outline view opened.
     * 
@@ -154,12 +159,13 @@ public class Outline extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
+
          @Override
          public Boolean apply(WebDriver input)
          {
-            return view != null && view.isDisplayed();
+            return (informationForm != null && informationForm.isDisplayed() && view != null && view.isDisplayed());
          }
       });
    }
@@ -171,32 +177,22 @@ public class Outline extends AbstractTestModule
     */
    public void waitHighliterRedraw() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            return highlighter != null && highlighter.isDisplayed();
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .cssSelector(Locators.HIGHLIGHTER_SELECTOR)));
    }
 
    /**
-    * Wait while node appearance in outline tree
+    * Wait while node with sub appearance in outline tree
+    * for example: if we open default groovy file in IDE in first node we have:'@ HelloWorld'. 
+    * This name in DOM consists of two parts '@' and  'HelloWorld'. 
+    * This method may check only one part of the name, only '@' or "Helloworld".
     * @param nameNode
     * @throws Exception
     */
-   public void waitNodePresent(final String nameNode) throws Exception
+   public void waitNodeWithSubNamePresent(final String nameNode) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            WebElement nod = driver().findElement(By.xpath(String.format(Locators.ROW_BY_TITLE_LOCATOR, nameNode)));
-            return nod != null && nod.isDisplayed();
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.ROW_BY_TITLE_LOCATOR, nameNode))));
    }
 
    /**
@@ -206,7 +202,7 @@ public class Outline extends AbstractTestModule
     */
    public void waitElementIsSelect(final String node) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -222,8 +218,7 @@ public class Outline extends AbstractTestModule
          }
       });
    }
-   
-   
+
    /**
     * Wait Outline view closed.
     * 
@@ -231,24 +226,9 @@ public class Outline extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               return view == null || !view.isDisplayed();
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .xpath(Locators.VIEW_LOCATOR)));
    }
-   
-   
 
    /**
     * Returns the label of the visible item in Outline tree. Index starts from <code>1</code>.
@@ -349,41 +329,34 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Returns the visibility state of the Outline view.
+    * Wait the visibility state of the Outline view.
+    * @throws InterruptedException 
     * 
-    * @return {@link Boolean} if <code>true</code> then view is visible
     */
-   public boolean isOutlineViewVisible()
+   public void waitOutlineViewVisible() throws InterruptedException
    {
-      try
-      {
-         return view != null && view.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+      //for animation in google chrome
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.VIEW_LOCATOR)));
+   }
+
+   /**
+    * Wait the invisibility state of the Outline view.
+    * 
+    */
+   public void waitOutlineViewInvisible()
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .xpath(Locators.VIEW_LOCATOR)));
    }
 
    public String getSelectedText() throws Exception
    {
       //need for redra
       Thread.sleep(200);
-      return  selectElementSelector.getText();
-   }
-
-   /**
-    * Returns the outline's item selection state. Row number starts from <code>1</code>.
-    * 
-    * @param rowNumber number of the row
-    * @throws Exception 
-    */
-
-   public boolean isItemSelected(int rowNumber) throws Exception
-   {
-      int linePosition = OUTLINE_TOP_OFFSET_POSITION + (rowNumber - 1) * LINE_HEIGHT;
-      waitHighliterRedraw();
-      return highlighter.getLocation().y == linePosition;
+      return selectElementSelector.getText();
    }
 
    /**
@@ -392,17 +365,10 @@ public class Outline extends AbstractTestModule
     * @param label item's title
     * @throws Exception
     */
-   public boolean isItemPresent(String label) throws Exception
+   public void waitItemPresent(String label) throws Exception
    {
-      try
-      {
-         WebElement row = driver().findElement(By.xpath(String.format(Locators.ROW_BY_TITLE_LOCATOR, label)));
-         return row != null;
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.ROW_BY_TITLE_LOCATOR, label))));
    }
 
    /**
@@ -423,31 +389,9 @@ public class Outline extends AbstractTestModule
     */
    public void waitOutlineTreeVisible() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            return tree != null && tree.isDisplayed();
-         }
-      });
-   }
-
-   /**
-    * Returns <code>true</code> if Outline tree is present.
-    * 
-    * @return {@link Boolean} present state of the Outline tree
-    */
-   public boolean isOutlineTreePresent()
-   {
-      try
-      {
-         return driver().findElement(By.id(Locators.TREE_ID)) != null;
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      //for animation in google chrome
+      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.id(Locators.TREE_ID)));
    }
 
    /**
@@ -456,16 +400,9 @@ public class Outline extends AbstractTestModule
     * @param id item's id
     * @return {@link Boolean} <code>true</code> if element is present
     */
-   public boolean isItemPresentById(String id)
+   public void waitItemPresentById(String id)
    {
-      try
-      {
-         return driver().findElement(By.id(id)) != null;
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.id(id)));
    }
 
    /**
@@ -479,14 +416,37 @@ public class Outline extends AbstractTestModule
    }
 
    /**
-    * Returns the active state of outline view.
+    * Wait the active state of outline view.
     * 
-    * @return {@link Boolean} active state of outline view
     * @throws Exception
     */
-   public boolean isActive() throws Exception
+   public void waitActive() throws Exception
    {
-      return IDE().PERSPECTIVE.isViewActive(view);
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return IDE().PERSPECTIVE.isViewActive(view);
+         }
+      });
+   }
+
+   /**
+    * Wait the not active state of outline view.
+    * 
+    * @throws Exception
+    */
+   public void waitNotActive() throws Exception
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return !(IDE().PERSPECTIVE.isViewActive(view));
+         }
+      });
    }
 
    public enum LabelType {
@@ -524,7 +484,7 @@ public class Outline extends AbstractTestModule
     */
    public void waitItemAtPosition(final String item, final int position)
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -541,7 +501,7 @@ public class Outline extends AbstractTestModule
     */
    public void waitNotAvailable() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -554,57 +514,40 @@ public class Outline extends AbstractTestModule
    /**
     * Returns true if highlight border present
     * 
-    * @return
     */
-   public boolean isHiglightBorderPresent()
+   public void waitHiglightBorderPresent()
    {
-      WebElement border = driver().findElement(By.xpath(Locators.HIGHLITER_BORDER));
-      try
-      {
-         return border != null && border.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
-
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.HIGHLITER_BORDER)));
    }
 
    /**
     * Returns the visibility state of the Outline view.
     * Only for Java files 
     * 
-    * @return {@link Boolean} if <code>true</code> then view is visible
     */
-   public boolean isJavaOutlineViewVisible()
+   public void waitJavaOutlineViewVisible()
    {
-      try
-      {
-         return javaView != null && javaView.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.JAVA_VIEW_LOCATOR)));
    }
 
    /**
     * Returns true if highlight border present
     * 
-    * @return
     */
-   public boolean isHiglightBorderJavaOutlinePresent()
+   public void waitHiglightBorderJavaOutlinePresent()
    {
-      WebElement border = driver().findElement(By.xpath(Locators.HIGHLITER_JAVAOUTLINE_BORDER));
-      try
-      {
-         return border != null && border.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.HIGHLITER_JAVAOUTLINE_BORDER)));
+   }
 
+   /**
+    * wait Outline Tree Not Visible
+    */
+   public void waitOutlineTreeNotVisible()
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id(Locators.TREE_ID)));
    }
 
 }

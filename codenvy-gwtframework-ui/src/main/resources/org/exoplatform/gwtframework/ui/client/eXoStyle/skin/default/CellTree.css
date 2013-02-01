@@ -1,0 +1,70 @@
+.cellTreeWidget {
+	font-size: 11px;
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+}
+
+.cellTreeEmptyMessage {
+	padding-left: 16px;
+	font-style: italic;
+}
+
+.cellTreeItem {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	cursor: hand;
+	cursor: pointer;
+	height: 20px;
+}
+
+.cellTreeItemImage {
+	
+}
+
+.cellTreeItemImageValue {
+	
+}
+
+.cellTreeItemValue {
+	padding-left: 3px;
+	padding-right: 3px;
+	display: inline;
+	white-space: nowrap;
+	outline : 0;
+}
+
+/*
+div:focus { outline: none; }
+*/
+.cellTreeKeyboardSelectedItem { /*  background-color: #ffff00; */
+	
+}
+
+.cellTreeOpenItem {
+	
+}
+
+.cellTreeTopItem {
+	
+}
+
+.cellTreeTopItemImage {
+	
+}
+
+.cellTreeTopItemImageValue {
+	
+}
+
+@external cellTreeSelectedItem;
+@sprite .cellTreeSelectedItem {
+	gwt-image: 'cellTreeSelectedBackground';
+	background-color: #FFFFFF;
+	height: 20px;
+	outline : 0;
+	overflow: hidden;
+}
+
+.cellTreeShowMoreButton {
+	padding-left: 16px;
+	outline: none;
+}

@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.autocompletion.ruby;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.TestConstants;
@@ -30,8 +32,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -82,78 +82,80 @@ public class RubyAutoCompletionTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.GOTOLINE.goToLine(26);
 
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("h"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("w"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("@i"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("@@ins"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$cl"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("h");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("w");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("@i");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("@@ins");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$cl");
 
       IDE.CODEASSISTANT.typeToInput("@@");
       IDE.CODEASSISTANT.typeToInput("\n");
 
-      IDE.EDITOR.typeTextIntoEditor(0, ".");
+      IDE.EDITOR.typeTextIntoEditor(".");
       // Pause is necessary for parsing tokens by CodeMirror
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
       IDE.CODEASSISTANT.openForm();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("prec_f()"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("between?(arg1, arg2, arg3)"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("abs()"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("next()"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("prec_f()");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("between?(arg1, arg2, arg3)");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("abs()");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("next()");
 
       IDE.CODEASSISTANT.typeToInput("ro");
       IDE.CODEASSISTANT.typeToInput("\n");
 
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@@ins.round()"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("@@ins.round()"));
 
       IDE.GOTOLINE.goToLine(32);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "M");
-      // this method fix problem of returning cursor in codeeditor before character "M"
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor("M");
+      // this method fix problem of returning cursor in codeeditor before
+      // character "M"
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       // Pause is necessary for parsing tokens by CodeMirror
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.CODEASSISTANT.openForm();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("MDA"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("MyClass"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Method"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Math"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("MDA");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("MyClass");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Method");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Math");
+
       IDE.CODEASSISTANT.typeToInput("\n");
-      IDE.EDITOR.typeTextIntoEditor(0, ".");
+      IDE.EDITOR.typeTextIntoEditor(".");
       // Pause is necessary for parsing tokens by CodeMirror
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.CODEASSISTANT.openForm();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("finite?()"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("finite?()");
 
       IDE.CODEASSISTANT.typeToInput("inf");
       IDE.CODEASSISTANT.typeToInput("\n");
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("MDA.infinite?()"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("MDA.infinite?()"));
 
       IDE.GOTOLINE.goToLine(33);
 
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("g"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("num"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$cl"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("g");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("num");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$cl");
 
       IDE.CODEASSISTANT.typeToInput("\n");
-      IDE.EDITOR.typeTextIntoEditor(0, ".");
+      IDE.EDITOR.typeTextIntoEditor(".");
       // Pause is necessary for parsing tokens by CodeMirror
       Thread.sleep(TestConstants.REDRAW_PERIOD);
       IDE.CODEASSISTANT.openForm();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("get"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("set"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("hello"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("initialize"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("get");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("set");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("hello");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("initialize");
 
       IDE.CODEASSISTANT.closeForm();
    }

@@ -1,0 +1,52 @@
+/****************************************************************************************
+EXO - COMPONENTS - BUTTON
+****************************************************************************************/
+
+.exoComponentButton,
+.exoComponentButtonOver,
+.exoComponentButtonDown,
+.exoComponentButtonDisabled
+{
+	height: 22px;
+	width: 150px;
+}
+
+.exoComponentButtonTable,
+.exoComponentButtonTableLeft,
+.exoComponentButtonTableStretch,
+.exoComponentButtonTableRight
+{
+	height: 22px;
+}
+
+.exoComponentButtonTable
+{
+	border-collapse: collapse;
+	width: 100%;
+	margin: auto;
+}
+
+.exoComponentButtonTableLeft
+{
+	background: url("images/component/button/button-left.png") no-repeat;
+	width: 1px;
+}
+
+.exoComponentButtonTableStretch
+{
+	background: url("images/component/button/button-middle.png") repeat-x;
+}
+
+.exoComponentButtonTableRight
+{
+	background: url("images/component/button/button-right.png") no-repeat;
+	width: 1px;
+}
+
+.exoComponentButtonTitleTable
+{
+	border-collapse: collapse;
+	height: 100%;
+	margin: auto;
+}
+

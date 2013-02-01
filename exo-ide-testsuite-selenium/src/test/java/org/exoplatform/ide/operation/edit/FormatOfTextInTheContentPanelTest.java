@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -31,15 +33,14 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 
-//IDE-58:Format of text in the Content panel
+// IDE-58:Format of text in the Content panel
 
 public class FormatOfTextInTheContentPanelTest extends BaseTest
 {
@@ -115,9 +116,9 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_HTML_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_HTML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_HTML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      String postFormating = IDE.EDITOR.getTextFromCodeEditor(0);
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor();
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_HTML_FILE_NAME);
       assertEquals(formatingSource, postFormating);
    }
@@ -128,23 +129,25 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_CSS_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_CSS_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_CSS_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      String postFormating = IDE.EDITOR.getTextFromCodeEditor(1);
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor();
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_CSS_FILE_NAME);
       assertEquals(formatingSource, postFormating);
    }
 
-   //@Test
+   @Test
    public void testFormatingJS() throws Exception
    {
-      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_JS_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_JS_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_JS_FILE_NAME);
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      String postFormating = IDE.JAVAEDITOR.getTextFromJavaEditor(2);
+      String postFormating = IDE.JAVAEDITOR.getTextFromJavaEditor();
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_JS_FILE_NAME);
+      Thread.sleep(5000);
       assertEquals(formatingSource, postFormating);
 
    }
@@ -155,11 +158,10 @@ public class FormatOfTextInTheContentPanelTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NON_FORMAT_GADGET_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + NON_FORMAT_GADGET_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + NON_FORMAT_GADGET_FILE_NAME);
-      //for reparce all text in gadget file
-      Thread.sleep(1000);
+      IDE.EDITOR.waitActiveFile();
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      String postFormating = IDE.EDITOR.getTextFromCodeEditor(2);
+      String postFormating = IDE.EDITOR.getTextFromCodeEditor();
       String formatingSource = Utils.readFileAsString(PATH + FORMAT_GADGET_FILE_NAME);
       assertEquals(formatingSource, postFormating);
    }

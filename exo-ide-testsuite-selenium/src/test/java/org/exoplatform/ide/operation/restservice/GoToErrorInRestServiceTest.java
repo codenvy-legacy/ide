@@ -21,6 +21,9 @@ package org.exoplatform.ide.operation.restservice;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -32,13 +35,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class GoToErrorInRestServiceTest extends BaseTest
 {
@@ -78,216 +78,196 @@ public class GoToErrorInRestServiceTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       openAndValidateRestService();
-      //check, validation fails
+      // check, validation fails
       final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
-      //click on validation message to go to error
+      // click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
-      IDE.STATUSBAR.waitCursorPositionControl();
-      //check, cursor go to position
-      assertEquals("3 : 9", IDE.STATUSBAR.getCursorPosition());
-
+      IDE.STATUSBAR.waitCursorPositionAt("3 : 9");
+      // check, cursor go to position
       IDE.EDITOR.closeFile(FILE_WITH_ERROR);
       IDE.EDITOR.waitTabNotPresent(FILE_WITH_ERROR);
+      IDE.OUTPUT.clickClearButton();
    }
 
    @Test
    public void testGoToErrorInClosedFile() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
-
       openAndValidateRestService();
-      //check, validation fails
+      // check, validation fails
       final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
-      //close tab
+      // close tab
       IDE.EDITOR.closeFile(FILE_WITH_ERROR);
       IDE.EDITOR.waitTabNotPresent(FILE_WITH_ERROR);
 
-      //click on validation message to go to error
+      // click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
 
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_WITH_ERROR);
+      IDE.EDITOR.waitActiveFile();
 
-      //file must be opened and cursor must stay on error
+      // file must be opened and cursor must stay on error
       assertEquals(FILE_WITH_ERROR, IDE.EDITOR.getTabTitle(1));
 
-      assertEquals("3 : 9", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("3 : 9");
 
-      //---- 3 -----------------
-      //open new rest service file and check, that cursor doesn't go to position 3 : 9
+      // ---- 3 -----------------
+      // open new rest service file and check, that cursor doesn't go to
+      // position 3 : 9
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      IDE.EDITOR.waitActiveFile();
 
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
       IDE.EDITOR.closeFile(FILE_WITH_ERROR);
       IDE.EDITOR.waitTabNotPresent(FILE_WITH_ERROR);
       IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.OUTPUT.clickClearButton();
    }
 
    @Test
    public void testGoToErrorIfOtherTabSelected() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
-
       openAndValidateRestService();
-      //check, validation fails
+      // check, validation fails
       final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
 
-      //open another tab
+      // open another tab
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile();
 
-      //click on validation message to go to error
+      // click on validation message to go to error
       IDE.OUTPUT.clickOnErrorMessage(1);
 
-      //check, tab with rest service must be opened
+      // check, tab with rest service must be opened
       assertTrue(IDE.EDITOR.isEditorTabSelected(FILE_WITH_ERROR));
       IDE.STATUSBAR.waitCursorPositionAt("3 : 9");
-      assertEquals("3 : 9", IDE.STATUSBAR.getCursorPosition());
 
-      //---- 3 -----------------
+      // ---- 3 -----------------
       IDE.EDITOR.closeTabIgnoringChanges(2);
 
-      //open new rest service file and check, that cursor doesn't go to position 3 : 9
+      // open new rest service file and check, that cursor doesn't go to
+      // position 3 : 9
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
-      IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.EDITOR.waitActiveFile();
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
+      IDE.EDITOR.closeTabIgnoringChanges(2);
+      IDE.EDITOR.waitTabNotPresent("Untitled file.grs");
       IDE.EDITOR.closeFile(FILE_WITH_ERROR);
       IDE.EDITOR.waitTabNotPresent(FILE_WITH_ERROR);
+      IDE.OUTPUT.clickClearButton();
    }
 
    @Test
    public void testGoToErrorIfFileIsDeleted() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.POPUP.waitOpened();
-      IDE.POPUP.acceptAlert();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
 
       openAndValidateRestService();
-      //check, validation fails
+      // check, validation fails
       final String validationMsg = IDE.OUTPUT.getOutputMessage(1);
       assertTrue(validationMsg.contains("validation failed"));
 
-      //close tab
+      // close tab
       IDE.EDITOR.closeFile(FILE_WITH_ERROR);
       IDE.EDITOR.waitTabNotPresent(FILE_WITH_ERROR);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FILE_WITH_ERROR);
       IDE.DELETE.deleteSelectedItems();
 
-      //---- 3 -----------------
-      //click on validation message to go to error
-      //TODO after fix in CHROME Thread should be remove
+      // ---- 3 -----------------
+      // click on validation message to go to error
+      // TODO after fix in CHROME Thread should be remove
       Thread.sleep(1000);
       IDE.OUTPUT.clickOnErrorMessage(1);
 
       IDE.WARNING_DIALOG.waitOpened();
-      //check, error dialog appeared
+      // check, error dialog appeared
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
-      //---- 5 -----------------
-      //open new rest service file and check, that cursor doesn't go to position 3 : 9
+      // ---- 5 -----------------
+      // open new rest service file and check, that cursor doesn't go to
+      // position 3 : 9
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
-      IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.EDITOR.waitActiveFile();
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
+      IDE.EDITOR.closeTabIgnoringChanges(1);
+      IDE.OUTPUT.clickClearButton();
    }
 
    @Test
-    public void testGoToErrorAfterChangingFile() throws Exception
-    {
-       driver.navigate().refresh();
-       IDE.POPUP.waitOpened();
-       IDE.POPUP.acceptAlert();
-       IDE.LOADER.waitClosed();
-       IDE.PROJECT.EXPLORER.waitOpened();
-       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_WITH_ERROR_FOR_CHANGING);
-       IDE.LOADER.waitClosed();
-       
-       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_WITH_ERROR_FOR_CHANGING);
-       IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_WITH_ERROR_FOR_CHANGING);
+   public void testGoToErrorAfterChangingFile() throws Exception
+   {
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_WITH_ERROR_FOR_CHANGING);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_WITH_ERROR_FOR_CHANGING);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.selectTab(FILE_WITH_ERROR_FOR_CHANGING);
 
-       //press validate button
-       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
-       IDE.OUTPUT.waitForMessageShow(1, 5);
+      // press validate button
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(1, 15);
 
-       //check, validation fails
-       String validationMsg = IDE.OUTPUT.getOutputMessage(1);
-       assertTrue(validationMsg.contains("validation failed"));
+      // check, validation fails
+      String validationMsg = IDE.OUTPUT.getOutputMessage(1);
+      assertTrue(validationMsg.contains("validation failed"));
 
-       //click on validation message to go to error
-       IDE.OUTPUT.clickOnErrorMessage(1);
-       IDE.STATUSBAR.waitCursorPositionAt("1 : 9");
-       
-       IDE.EDITOR.moveCursorLeft(0, 6);
-       //delete# unnecessary  space
-       IDE.EDITOR.typeTextIntoEditor(0, Keys.BACK_SPACE.toString());
-       IDE.EDITOR.waitFileContentModificationMark(FILE_WITH_ERROR_FOR_CHANGING);
-       
-       //press validate button
-       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
-       IDE.OUTPUT.waitForMessageShow(2, 5);
-       
-       
-       //check, validation fails
-       validationMsg = IDE.OUTPUT.getOutputMessage(2);
-       assertTrue(validationMsg.contains("validation failed"));
+      // click on validation message to go to error
+      IDE.OUTPUT.clickOnErrorMessage(1);
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 9");
+      IDE.EDITOR.selectTab(FILE_WITH_ERROR_FOR_CHANGING);
+      IDE.EDITOR.moveCursorLeft(6);
+      // delete# unnecessary space
+      IDE.EDITOR.typeTextIntoEditor(Keys.BACK_SPACE.toString());
+      IDE.EDITOR.waitFileContentModificationMark(FILE_WITH_ERROR_FOR_CHANGING);
 
-       //click on validation message to go to error
-       IDE.OUTPUT.clickOnErrorMessage(2);
-       IDE.STATUSBAR.waitCursorPositionAt("3 : 3");
-       assertEquals("3 : 3", IDE.STATUSBAR.getCursorPosition());
+      // press validate button
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(2, 5);
 
-       //click on first validation message to check, 
-       //that cursor can go to previous error (event, it is already fixed)
-       IDE.OUTPUT.clickOnErrorMessage(1);
+      // check, validation fails
+      validationMsg = IDE.OUTPUT.getOutputMessage(2);
+      assertTrue(validationMsg.contains("validation failed"));
 
-       //check cursor went to position
-       assertEquals("1 : 9", IDE.STATUSBAR.getCursorPosition());
+      // click on validation message to go to error
+      IDE.OUTPUT.clickOnErrorMessage(2);
+      IDE.STATUSBAR.waitCursorPositionAt("3 : 3");
 
-       //---- 7 -----------------
-       //delete some text and check
-       //that cursor stays if try to go to nonexistent line
-       IDE.OUTPUT.clickOnErrorMessage(2);
+      // click on first validation message to check,
+      // that cursor can go to previous error (event, it is already fixed)
+      IDE.OUTPUT.clickOnErrorMessage(1);
 
-       //click on editor
-       IDE.EDITOR.clickOnEditor(0);
-       IDE.EDITOR.deleteFileContent(0);
+      // check cursor went to position
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 9");
 
-       //type some text
-       IDE.EDITOR.typeTextIntoEditor(0, "public void TestClass(){}");
-       IDE.EDITOR.moveCursorLeft(0, 2);
+      // ---- 7 -----------------
+      // delete some text and check
+      // that cursor stays if try to go to nonexistent line
+      IDE.OUTPUT.clickOnErrorMessage(2);
 
-       assertEquals("1 : 24", IDE.STATUSBAR.getCursorPosition());
+      // click on editor
+      IDE.EDITOR.selectTab(FILE_WITH_ERROR_FOR_CHANGING);
+      IDE.EDITOR.clickOnEditor();
+      IDE.EDITOR.deleteFileContent();
+      // type some text
+      IDE.EDITOR.typeTextIntoEditor("public void TestClass(){}");
+      IDE.EDITOR.moveCursorLeft(2);
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 24");
+      // when 3d line is deleted, try to go to it
+      IDE.OUTPUT.clickOnErrorMessage(2);
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 24");
+      IDE.OUTPUT.clickClearButton();
 
-       //when 3d line is deleted, try to go to it
-       IDE.OUTPUT.clickOnErrorMessage(2);
-       assertEquals("1 : 24", IDE.STATUSBAR.getCursorPosition());
-
-    }
+   }
 
    private void openAndValidateRestService() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_WITH_ERROR);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_WITH_ERROR);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_WITH_ERROR);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.VALIDATE_GROOVY_SERVICE);
       IDE.OUTPUT.waitForMessageShow(1, 5);

@@ -1,5 +1,4 @@
 package org.exoplatform.paas.core;
-import com.thoughtworks.selenium.Selenium;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
@@ -15,8 +14,6 @@ import org.openqa.selenium.support.PageFactory;
 
 public class Paas
 {
-   private Selenium selenium;
-
    private static Paas instance;
 
    public static Paas getInstance()
@@ -24,19 +21,13 @@ public class Paas
       return instance;
    }
 
-   public Paas(Selenium selenium, WebDriver driver)
+   public Paas(WebDriver driver)
    {
-      this.selenium = selenium;
       instance = this;
       CLOUDBEES = PageFactory.initElements(driver, CloudBees.class);
       
    }
 
-   public Selenium getSelenium()
-   {
-      return selenium;
-   }
- 
    public CloudBees CLOUDBEES;
    
 }

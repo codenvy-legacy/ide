@@ -22,6 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -31,21 +34,20 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 22, 2010 3:49:01 PM evgen $
- *
+ * 
  */
 public class RestServicesDiscoveryTest extends BaseTest
 {
    private static final String PROJECT = RestServicesDiscoveryTest.class.getSimpleName();
 
    private final static String FILE_NAME = "Rest.grs";
+
+   private static final String UNIQUE_NAME_PREFIX = "_" + System.currentTimeMillis();
 
    @BeforeClass
    public static void setUp()
@@ -83,41 +85,55 @@ public class RestServicesDiscoveryTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      //open file
+      // open file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      IDE.EDITOR.waitTabPresent(1);
-      //deploy rest service
+      IDE.EDITOR.moveCursorDown(10);
+      IDE.EDITOR.moveCursorRight(19);
+      IDE.EDITOR.typeTextIntoEditor(UNIQUE_NAME_PREFIX);
+
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(FILE_NAME);
+
+      // deploy rest service
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
-      IDE.OUTPUT.waitForMessageShow(1, 5);
+      IDE.OUTPUT.waitForMessageShow(1, 30);
       String mess = IDE.OUTPUT.getOutputMessage(1);
 
       assertTrue(mess.contains("[INFO]"));
-      assertTrue(mess.contains(/* TODO FILE_NAME +*/" deployed successfully."));
+      assertTrue(mess.contains(FILE_NAME + " deployed successfully."));
 
-      //run rest service discovery command 
+      // run rest service discovery command
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.REST_SERVICES);
       IDE.REST_SERVICE_DISCOVERY.waitOpened();
       IDE.REST_SERVICE_DISCOVERY.waitOkButtonAppeared();
+      //      Thread.sleep(20000);
       IDE.REST_SERVICE_DISCOVERY.waitForItem("/aa");
       IDE.REST_SERVICE_DISCOVERY.clickOpenCloseButton("/aa");
-      IDE.REST_SERVICE_DISCOVERY.waitForItem("/aa/testService11");
-      IDE.REST_SERVICE_DISCOVERY.clickOpenCloseButton("/aa/testService11");
-      final String optionsId = IDE.REST_SERVICE_DISCOVERY.getItemId("/aa/testService11") + ":OPTIONS";
+      IDE.REST_SERVICE_DISCOVERY.waitForItem("/aa/testServ");
+      IDE.REST_SERVICE_DISCOVERY.clickOpenCloseButton("/aa/testServ");
+      final String optionsId = IDE.REST_SERVICE_DISCOVERY.getItemId("/aa/testServ") + ":OPTIONS";
       IDE.REST_SERVICE_DISCOVERY.waitForItemById(optionsId);
       IDE.REST_SERVICE_DISCOVERY.selectItemById(optionsId);
 
-      //check elements on opened form
+      // check elements on opened form
       assertTrue(IDE.REST_SERVICE_DISCOVERY.isMethodFieldPresent());
       assertTrue(IDE.REST_SERVICE_DISCOVERY.isRequestFieldPresent());
       assertTrue(IDE.REST_SERVICE_DISCOVERY.isParametersTablePresent());
       assertFalse(IDE.REST_SERVICE_DISCOVERY.isRequestFieldEnabled());
-      assertEquals("/aa/testService11/", IDE.REST_SERVICE_DISCOVERY.getTextFromMethodField());
+      assertEquals("/aa/testServ/", IDE.REST_SERVICE_DISCOVERY.getTextFromMethodField());
       assertEquals("n/a", IDE.REST_SERVICE_DISCOVERY.getTextFromRequestField());
 
       IDE.REST_SERVICE_DISCOVERY.clickOkButton();
       IDE.REST_SERVICE_DISCOVERY.waitClosed();
-   }
 
+      //undeploy rest service
+      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.OUTPUT.waitForMessageShow(1, 30);
+      mess = IDE.OUTPUT.getOutputMessage(1);
+      assertTrue(mess.contains("[INFO]"));
+      assertTrue(mess.contains(FILE_NAME + " undeployed successfully."));
+
+   }
 }

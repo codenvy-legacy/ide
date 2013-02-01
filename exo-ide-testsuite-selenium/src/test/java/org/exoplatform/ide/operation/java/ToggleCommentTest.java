@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
+import java.util.Map;
+
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
@@ -31,8 +30,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -84,27 +81,29 @@ public class ToggleCommentTest extends ServicesJavaTextFuction
       }
    }
 
-    @Test
+   @Test
    public void toggleComment() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       openJavaCommenTest(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
       IDE.GOTOLINE.goToLine(30);
-      //after fix problem in status bar uncomment
-      //assertEquals("29 : 1", IDE.STATUSBAR.getCursorPosition());
+      // after fix problem in status bar uncomment
+      // assertEquals("29 : 1", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 5; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "C");
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "C");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
       assertTrue(content.contains("//      numbers.add(1);"));
       assertTrue(content.contains("//      numbers.add(2);"));
       assertTrue(content.contains("//      numbers.add(3);"));
@@ -113,19 +112,19 @@ public class ToggleCommentTest extends ServicesJavaTextFuction
       assertTrue(content.contains("//      numbers.add(6);"));
 
       IDE.GOTOLINE.goToLine(29);
-      //after fix problem in status bar uncomment
-      //assertEquals("29 : 1", IDE.STATUSBAR.getCursorPosition());
+      // after fix problem in status bar uncomment
+      // assertEquals("29 : 1", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 5; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "C");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "C");
 
-      //need for reparse code for correct asserts
+      // need for reparse code for correct asserts
       Thread.sleep(1500);
 
-      content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      content = IDE.JAVAEDITOR.getTextFromJavaEditor();
       assertFalse(content.contains("//      numbers.add(1);"));
       assertFalse(content.contains("//      numbers.add(2);"));
       assertFalse(content.contains("//      numbers.add(3);"));
@@ -137,39 +136,39 @@ public class ToggleCommentTest extends ServicesJavaTextFuction
    @Test
    public void toggleCommentWithNoCommentLine() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
-      openJavaCommenTest(PROJECT);
-      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaCommentsTest.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaCommentsTest.java");
+      waitJavaCommentTestIsReady(PROJECT);
 
       IDE.GOTOLINE.goToLine(32);
-      //after fix problem in status bar uncomment
-      //assertEquals("31 : 1", IDE.STATUSBAR.getCursorPosition());
+      // after fix problem in status bar uncomment
+      // assertEquals("31 : 1", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 2; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "C");
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "C");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
       assertTrue(content.contains("//      numbers.add(3);"));
       assertTrue(content.contains("//      numbers.add(4);"));
       assertTrue(content.contains("//      numbers.add(5);"));
 
       IDE.GOTOLINE.goToLine(30);
-      IDE.JAVAEDITOR.moveCursorRight(0, 5);
-      
-      //after fix problem in status bar uncomment
-      //assertEquals("29 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorRight(5);
+
+      // after fix problem in status bar uncomment
+      // assertEquals("29 : 1", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 5; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "C");
-      content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "C");
+      content = IDE.JAVAEDITOR.getTextFromJavaEditor();
 
       assertTrue(content.contains("//      numbers.add(1);"));
       assertTrue(content.contains("//      numbers.add(2);"));

@@ -25,7 +25,6 @@ import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,13 +32,14 @@ import org.junit.Test;
  * IDE-10: Creating and "Saving As" new files.
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class CreatingAndSavingAsNewFileTest extends BaseTest
 {
-   //IDE-10: Creating and "Saving As" new files.
+   // IDE-10: Creating and "Saving As" new files.
 
    private static final String PROJECT = CreatingAndSavingAsNewFileTest.class.getSimpleName();
 
@@ -74,7 +74,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       {
       }
    }
-   
+
    @BeforeClass
    public static void setUp()
    {
@@ -96,7 +96,7 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      
+
       createFileAndSaveAs(MenuCommands.New.REST_SERVICE_FILE, "grs", REST_SERVICE_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.TEXT_FILE, "txt", TXT_FILE_NAME);
       createFileAndSaveAs(MenuCommands.New.XML_FILE, "xml", XML_FILE_NAME);
@@ -113,18 +113,27 @@ public class CreatingAndSavingAsNewFileTest extends BaseTest
       throws InterruptedException, Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + "Untitled file." + fileExtention);
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + "Untitled file 1." + fileExtention);
 
+      //different wait methods for colab editor and codemiror
+      if (fileName.contains("js"))
+      {
+         IDE.JAVAEDITOR.waitJavaEditorIsActive();
+         IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
+         IDE.JAVAEDITOR.waitJavaEditorIsActive();
+      }
+      else
+      {
+         IDE.EDITOR.waitActiveFile();
+         IDE.TOOLBAR.runCommandFromNewPopupMenu(menuTitle);
+         IDE.EDITOR.waitActiveFile();
+      }
       IDE.EDITOR.saveAs(1, fileName);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + fileName);
       IDE.EDITOR.closeFile(fileName);
       IDE.EDITOR.waitTabNotPresent(fileName);
       IDE.EDITOR.closeTabIgnoringChanges(1);
 
-      Assert.assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + fileName));
+      IDE.PROJECT.EXPLORER.waitItemPresent(PROJECT + "/" + fileName);
       assertEquals(200, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + fileName).getStatusCode());
    }
-
 }

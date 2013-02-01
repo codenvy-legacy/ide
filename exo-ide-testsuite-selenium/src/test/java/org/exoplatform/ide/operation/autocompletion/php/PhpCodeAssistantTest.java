@@ -19,7 +19,8 @@
 package org.exoplatform.ide.operation.autocompletion.php;
 
 import static org.junit.Assert.fail;
-import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -29,8 +30,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -70,15 +69,17 @@ public class PhpCodeAssistantTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.GOTOLINE.goToLine(19);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$a"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$go:String"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$_COOKIE"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$HTTP_SERVER_VARS"));
+
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$a");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$go:String");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$_COOKIE");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$HTTP_SERVER_VARS");
+
       IDE.CODEASSISTANT.closeForm();
    }
 
@@ -86,11 +87,11 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpObjectThis() throws Exception
    {
       IDE.GOTOLINE.goToLine(21);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$sp2:ArrayList"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("AA"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sf2()"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$sp2:ArrayList");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("AA");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("sf2()");
       IDE.CODEASSISTANT.closeForm();
    }
 
@@ -98,10 +99,10 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpClassSelf() throws Exception
    {
       IDE.GOTOLINE.goToLine(20);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$p2:Handler"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("f2($a)"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$p2:Handler");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("f2($a)");
       IDE.CODEASSISTANT.closeForm();
    }
 
@@ -109,9 +110,9 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpVariableClass() throws Exception
    {
       IDE.GOTOLINE.goToLine(28);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("f2($a)"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("f2($a)");
       IDE.CODEASSISTANT.closeForm();
    }
 
@@ -119,11 +120,13 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpVarStaticClass() throws Exception
    {
       IDE.GOTOLINE.goToLine(29);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$sp2:ArrayList"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("AA"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sf2()"));
+
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$sp2:ArrayList");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("AA");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("sf2()");
+
       IDE.CODEASSISTANT.closeForm();
    }
 
@@ -131,11 +134,11 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpStaticClass() throws Exception
    {
       IDE.GOTOLINE.goToLine(30);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$sp2:ArrayList"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("AA"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("sf2()"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$sp2:ArrayList");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("AA");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("sf2()");
       IDE.CODEASSISTANT.closeForm();
    }
 
@@ -143,11 +146,12 @@ public class PhpCodeAssistantTest extends BaseTest
    public void testPhpRootConstAndVars() throws Exception
    {
       IDE.GOTOLINE.goToLine(31);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("$t:SimpleClass1"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("t"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("SimpleClass1"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("$t:SimpleClass1");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("t");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("SimpleClass1");
+
       IDE.CODEASSISTANT.closeForm();
    }
 

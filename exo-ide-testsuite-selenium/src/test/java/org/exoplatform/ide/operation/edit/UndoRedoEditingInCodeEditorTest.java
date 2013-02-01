@@ -19,8 +19,6 @@
 package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -34,9 +32,10 @@ import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class UndoRedoEditingInCodeEditorTest extends BaseTest
 {
    private static String UNDO_REDO_TXT = "undo-redo.txt";
@@ -63,138 +62,139 @@ public class UndoRedoEditingInCodeEditorTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.txt");
+      IDE.EDITOR.waitActiveFile();
       IDE.EDITOR.saveAs(1, UNDO_REDO_TXT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + UNDO_REDO_TXT);
-      IDE.EDITOR.typeTextIntoEditor(0, "1");
+      IDE.EDITOR.typeTextIntoEditor("1");
       IDE.EDITOR.waitFileContentModificationMark(UNDO_REDO_TXT);
 
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "2");
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
+
+      IDE.EDITOR.typeTextIntoEditor("2");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      IDE.EDITOR.typeTextIntoEditor(0, "3");
+      IDE.EDITOR.typeTextIntoEditor("3");
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
-      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor());
 
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "z");
-      assertEquals("1", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "z");
+      assertEquals("1", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
-      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.REDO);
-      assertEquals("1", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      assertEquals("1", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
-      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "y");
-      assertEquals("123", IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "y");
+      assertEquals("123", IDE.EDITOR.getTextFromCodeEditor());
 
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
-      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "a");
+      IDE.EDITOR.typeTextIntoEditor("a");
       Thread.sleep(TestConstants.SLEEP_SHORT);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "y");
-      assertEquals("a12", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "y");
+      assertEquals("a12", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
-      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       IDE.EDITOR.waitNoContentModificationMark(UNDO_REDO_TXT);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.REDO);
-      assertEquals("a12", IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals("a12", IDE.EDITOR.getTextFromCodeEditor());
 
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "z");
-      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor(0));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "z");
+      assertEquals("12", IDE.EDITOR.getTextFromCodeEditor());
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
-      IDE.EDITOR.typeTextIntoEditor(1, "text");
+      IDE.EDITOR.typeTextIntoEditor("text");
       Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + UNDO_REDO_TXT);
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.EDITOR.selectTab(2);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.xml");
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.REDO));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.UNDO));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.REDO);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Editor.UNDO);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.REDO_TYPING);
 
       IDE.EDITOR.forcedClosureFile(1);
       IDE.EDITOR.forcedClosureFile(1);

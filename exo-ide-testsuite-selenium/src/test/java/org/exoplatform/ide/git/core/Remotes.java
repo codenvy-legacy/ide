@@ -104,7 +104,7 @@ public class Remotes extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -128,7 +128,7 @@ public class Remotes extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -153,7 +153,7 @@ public class Remotes extends AbstractTestModule
     */
    public void waitAddRemoteViewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -175,7 +175,7 @@ public class Remotes extends AbstractTestModule
     */
    public void waitAddRemoteViewClosed()
    {
-      (new WebDriverWait(driver(), 5)).until(ExpectedConditions.invisibilityOfElementLocated(By
+      (new WebDriverWait(driver(), 30)).until(ExpectedConditions.invisibilityOfElementLocated(By
          .xpath(Locators.ADD_REMOTE_VIEW_LOCATOR)));
    }
 
@@ -307,7 +307,7 @@ public class Remotes extends AbstractTestModule
 
    public void waitForRemotesCount(final int count) throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

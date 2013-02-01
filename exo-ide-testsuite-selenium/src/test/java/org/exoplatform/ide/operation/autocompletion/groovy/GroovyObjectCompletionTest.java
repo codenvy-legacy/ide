@@ -31,10 +31,10 @@ import org.openqa.selenium.Keys;
 
 /**
  * Created by The eXo Platform SAS.
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Dec 8, 2010 12:40:45 PM evgen $
- *
+ * 
  */
 public class GroovyObjectCompletionTest extends CodeAssistantBaseTest
 {
@@ -55,37 +55,37 @@ public class GroovyObjectCompletionTest extends CodeAssistantBaseTest
       {
          fail("Can't create test folder");
       }
-      
+
       openProject();
    }
 
    @Test
    public void testGroovyObjectCompletion() throws Exception
    {
-      //open file
+      // open file
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + FILE_NAME);
-      
-      IDE.EDITOR.moveCursorDown(0, 10);
-      
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + ".");
+      IDE.EDITOR.waitActiveFile();
+
+      IDE.EDITOR.moveCursorDown(10);
+
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + ".");
 
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.typeToInput("con");
       Thread.sleep(2000);
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("concat(String):java.lang.String"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("contains(CharSequence):boolean"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(StringBuffer):boolean"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("contentEquals(CharSequence):boolean"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("concat(String):java.lang.String");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("contains(CharSequence):boolean");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("contentEquals(StringBuffer):boolean");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("contentEquals(CharSequence):boolean");
 
       IDE.CODEASSISTANT.moveCursorDown(2);
 
       IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains(".contentEquals(StringBuffer)"));
-      
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains(".contentEquals(StringBuffer)"));
+      IDE.EDITOR.closeTabIgnoringChanges(FILE_NAME);
    }
 
 }

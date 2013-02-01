@@ -18,7 +18,6 @@
  */
 package org.exoplatform.ide.core.project;
 
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.core.AbstractTestModule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -73,7 +72,7 @@ public class CreateProject extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -98,7 +97,7 @@ public class CreateProject extends AbstractTestModule
     */
    public void waitClosed() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

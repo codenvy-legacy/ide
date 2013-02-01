@@ -18,6 +18,11 @@
  */
 package org.exoplatform.ide.operation.gadget;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.net.URLEncoder;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -25,21 +30,15 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
 import org.exoplatform.ide.core.Templates;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.net.URLEncoder;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test for creating gadget from template.
  * 
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
  * @version $Id: Aug 11, 2010
- *
+ * 
  */
 public class GadgetDevelopmentTest extends BaseTest
 {
@@ -54,7 +53,7 @@ public class GadgetDevelopmentTest extends BaseTest
    {
       VirtualFileSystemUtils.createDefaultProject(PROJECT);
    }
-   
+
    @AfterClass
    public static void tearDown() throws IOException
    {
@@ -74,27 +73,29 @@ public class GadgetDevelopmentTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      
-      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
+
+      IDE.TOOLBAR.waitButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
 
-      //Select "OpenSocial Gadget" in the central column, change "File Name" field text on "Test Gadget File" name, click on "Create" button.
+      // Select "OpenSocial Gadget" in the central column, change "File Name"
+      // field text on "Test Gadget File" name, click on "Create" button.
       IDE.TEMPLATES.selectTemplate(Templates.GADGET_TEMPLATE);
 
       IDE.TEMPLATES.setFileName(FILE_NAME);
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
       IDE.EDITOR.waitTabPresent(1);
-      
+
       assertEquals(FILE_NAME + " *", IDE.EDITOR.getTabTitle(1));
 
-      //Click on "Save As" button and save file "Test Gadget File" with default name.
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      // Click on "Save As" button and save file "Test Gadget File" with
+      // default name.
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS);
       IDE.EDITOR.saveAs(1, FILE_NAME_FULL);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_FULL);
 
-      //check file created on server
+      // check file created on server
       final String fileUrl = WS_URL + PROJECT + "/" + URLEncoder.encode(FILE_NAME_FULL, "UTF-8");
       Response response = VirtualFileSystemUtils.get(fileUrl);
       assertEquals(200, response.getStatusCode());
@@ -102,10 +103,11 @@ public class GadgetDevelopmentTest extends BaseTest
       IDE.EDITOR.closeFile(FILE_NAME_FULL);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_FULL);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_FULL);
-      
+      IDE.EDITOR.waitActiveFile();
+
       IDE.EDITOR.waitTabPresent(1);
-      //new file with appropriate titles and highlighting should be opened in the Content Panel
+      // new file with appropriate titles and highlighting should be opened in
+      // the Content Panel
       assertEquals(FILE_NAME_FULL, IDE.EDITOR.getTabTitle(1));
 
       IDE.EDITOR.closeFile(FILE_NAME_FULL);

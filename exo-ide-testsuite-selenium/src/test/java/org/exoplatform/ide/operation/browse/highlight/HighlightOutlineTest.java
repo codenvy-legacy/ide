@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse.highlight;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -26,11 +28,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Map;
-
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by The eXo Platform SAS.
@@ -83,29 +80,29 @@ public class HighlightOutlineTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.EDITOR.waitTabPresent(1);
 
       // open outline panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
-      assertTrue(IDE.OUTLINE.isActive());
-      assertTrue(IDE.OUTLINE.isHiglightBorderPresent());
+      IDE.OUTLINE.waitActive();
+      IDE.OUTLINE.waitHiglightBorderPresent();
 
-      //reopen file
+      // reopen file
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      
-      assertTrue(IDE.EDITOR.isHighlighterInEditor(1));
-      assertFalse(IDE.OUTLINE.isActive());
-      IDE.EDITOR.typeTextIntoEditor(1, "\nFOO\nBAR");
-      //wait for some redrawing in IDE
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE, true);
-      assertFalse(IDE.OUTLINE.isActive());
-   }
+      IDE.EDITOR.waitActiveFile();
 
+      IDE.EDITOR.waitHighlighterInEditor(1);
+      IDE.OUTLINE.waitNotActive();
+      IDE.EDITOR.typeTextIntoEditor("\nFOO\nBAR");
+      // wait for some redrawing in IDE
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE);
+      IDE.OUTLINE.waitNotActive();
+      IDE.EDITOR.closeTabIgnoringChanges(FILE_NAME);
+   }
 }

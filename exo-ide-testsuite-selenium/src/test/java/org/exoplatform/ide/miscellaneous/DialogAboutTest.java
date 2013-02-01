@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.junit.Test;
@@ -33,10 +31,6 @@ import org.junit.Test;
 public class DialogAboutTest extends BaseTest
 {
 
-   private static final String COMPANY = "2009-2011 eXo Platform SAS (c)";
-
-   private static final String PRODUCT_NAME = "eXo IDE";
-
    @Test
    public void testDialogAbout() throws Exception
    {
@@ -44,13 +38,13 @@ public class DialogAboutTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       //call heplp menu and submenu About
       IDE.MENU.runCommand(MenuCommands.Help.HELP, MenuCommands.Help.ABOUT);
-      
+
       //check present logo
-      assertTrue(IDE.ABOUT.isLogoPresent());
-      
+      IDE.ABOUT.waitLogoPresent();
+
       //check all basic elements on About form
-      assertTrue(IDE.ABOUT.isCheckInfoAboutWindow());
-      
+      IDE.ABOUT.waitCheckInfoAboutWindow();
+
       //close dialogAboutMenu
       IDE.ABOUT.closeDialogAboutForm();
    }

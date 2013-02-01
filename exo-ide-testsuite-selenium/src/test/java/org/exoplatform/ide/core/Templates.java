@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -38,7 +39,7 @@ public class Templates extends AbstractTestModule
 {
    // Template names
    public static final String GADGET_TEMPLATE = "OpenSocial Gadget";
-   
+
    // Locators
    private static final String VIEW_ID = "ideCreateFileFromTemplateForm";
 
@@ -81,7 +82,7 @@ public class Templates extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -106,7 +107,7 @@ public class Templates extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -125,22 +126,22 @@ public class Templates extends AbstractTestModule
    }
 
    /**
-    * Returns opened state of the dialog.
+    * Wait opened state of the dialog.
     * 
-    * @return {@link Boolean} <code>true</code> if opened
     */
-   public boolean isOpened()
+   public void waitOpenedDialog() throws Exception
    {
-      try
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         return view != null && view.isDisplayed() && createButton != null && createButton.isDisplayed()
-            && cancelButton != null && cancelButton.isDisplayed() && deleteButton != null && deleteButton.isDisplayed()
-            && templateGrid != null && templateGrid.isDisplayed() && nameField != null && nameField.isDisplayed();
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return view != null && view.isDisplayed() && createButton != null && createButton.isDisplayed()
+               && cancelButton != null && cancelButton.isDisplayed() && deleteButton != null
+               && deleteButton.isDisplayed() && templateGrid != null && templateGrid.isDisplayed() && nameField != null
+               && nameField.isDisplayed();
+         }
+      });
    }
 
    /**
@@ -151,8 +152,7 @@ public class Templates extends AbstractTestModule
     */
    public void selectTemplate(String templateName) throws InterruptedException
    {
-      WebElement template =
-         driver().findElement(By.cssSelector(String.format(TEMPLATE_SELECTOR, templateName)));
+      WebElement template = driver().findElement(By.cssSelector(String.format(TEMPLATE_SELECTOR, templateName)));
       template.click();
    }
 
@@ -198,33 +198,51 @@ public class Templates extends AbstractTestModule
    }
 
    /**
-    * Returns the enabled state of the create button.
+    * Wait the enabled state of the create button.
     * 
-    * @return boolean enabled state
     */
-   public boolean isCreateButtonEnabled()
+   public void waitCreateButtonEnabled() throws Exception
    {
-      return IDE().BUTTON.isButtonEnabled(createButton);
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(createButton);
+         }
+      });
    }
 
    /**
-    * Returns the enabled state of the delete button.
+    * Wait the enabled state of the delete button.
     * 
-    * @return boolean enabled state
     */
-   public boolean isDeleteButtonEnabled()
+   public void waitDeleteButtonEnabled() throws Exception
    {
-      return IDE().BUTTON.isButtonEnabled(deleteButton);
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(deleteButton);
+         }
+      });
    }
 
    /**
-    * Returns the enabled state of the cancel button.
+    * Wait the enabled state of the cancel button.
     * 
-    * @return boolean enabled state
     */
-   public boolean isCancelButtonEnabled()
+   public void waitCancelButtonEnabled() throws Exception
    {
-      return IDE().BUTTON.isButtonEnabled(cancelButton);
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(cancelButton);
+         }
+      });
    }
 
    /**
@@ -245,52 +263,36 @@ public class Templates extends AbstractTestModule
    }
 
    /**
-    * Returns whether template is present in grid.
+    * wait for template present in grid.
     * 
     * @param templateName
-    * @return boolean <code>true</code> if template is present in grid
     */
-   public boolean isTemplatePresent(String templateName)
+   public void waitTemplatePresent(final String templateName) throws Exception
    {
-      try
-      {
-         WebElement template =
-            driver().findElement(By.cssSelector(String.format(TEMPLATE_SELECTOR, templateName)));
-         return template != null && template.isDisplayed();
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(String.format(
+         TEMPLATE_SELECTOR, templateName))));
    }
 
    /**
-    * Wait, while template name dissapears from list grid.
+    * wait for template not present in grid.
     * 
-    * @param templateName - the name of template
-    * @throws Exception
+    * @param templateName
     */
-   public void waitForTemplateDeleted(final String templateName) throws Exception
+   public void waitTemplateNotPresent(final String templateName) throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(String
+         .format(TEMPLATE_SELECTOR, templateName))));
+   }
+
+   public void waitForNameFieldEnabled() throws Exception
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
          {
-            return !isTemplatePresent(templateName);
+            return nameField != null && nameField.isDisplayed() && nameField.isEnabled();
          }
       });
-   }
-   
-   public void waitForNameFieldEnabled() throws Exception
-   {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
-         {
-            @Override
-            public Boolean apply(WebDriver driver)
-            {
-               return nameField != null && nameField.isDisplayed() && nameField.isEnabled();
-            }
-         });
    }
 }
