@@ -12,9 +12,9 @@ package org.eclipse.jdt.client.internal.core.dom.rewrite;
 
 import org.eclipse.jdt.client.core.dom.ASTNode;
 import org.eclipse.jdt.client.core.dom.rewrite.ITrackedNodePosition;
-import org.exoplatform.ide.editor.text.IRegion;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 /**
  *

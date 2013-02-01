@@ -45,9 +45,11 @@ public class Output extends AbstractTestModule
 
       String OUTPUT_ROW_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]";
 
-      String OUTPUT_ERROR_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]//span";
+      String OUTPUT_ERROR_BY_INDEX = "//div[@id='" + OUTPUT_CONTENT_ID + "']/div[%d]//b";
 
       String OUTPUT_TAB = "//div[@class='gwt-TabLayoutPanelTabs']//td[@class='tabTitleText' and text()='Output']";
+
+      String OPERATION_FORM = "//div[@id='operation']/ancestor::div[contains(@style, 'height: 300')]";
 
    }
 
@@ -59,9 +61,12 @@ public class Output extends AbstractTestModule
 
    @FindBy(id = Locators.OUTPUT_CONTENT_ID)
    private WebElement outputContent;
-   
+
    @FindBy(xpath = Locators.OUTPUT_TAB)
    private WebElement outputTab;
+
+   @FindBy(xpath = Locators.OPERATION_FORM)
+   private WebElement operationForm;
 
    /**
     * Wait Output view opened.
@@ -70,12 +75,12 @@ public class Output extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 60).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
-            return view != null && view.isDisplayed();
+            return operationForm != null && operationForm.isDisplayed() && view != null && view.isDisplayed();
          }
       });
    }
@@ -87,7 +92,7 @@ public class Output extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -162,6 +167,23 @@ public class Output extends AbstractTestModule
    }
 
    /**
+    * wait any sub text in output panel
+    * @param subText
+    * @throws Exception
+    */
+   public void waitForSubTextPresent(final String subText) throws Exception
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return getAllMessagesFromOutput().contains(subText);
+         }
+      });
+   }
+
+   /**
     * Click on error message, pointed by its position in output panel.
     * The index starts from 1.
     * 
@@ -172,7 +194,6 @@ public class Output extends AbstractTestModule
       outputContent.findElement(By.xpath(String.format(Locators.OUTPUT_ERROR_BY_INDEX, messageNumber))).click();
    }
 
-   
    /**
     * click on label tab Output panel
     */
@@ -180,10 +201,7 @@ public class Output extends AbstractTestModule
    {
       outputTab.click();
    }
-   
-   
-   
-   
+
    /**
     * @param index
     * @return
@@ -191,6 +209,15 @@ public class Output extends AbstractTestModule
    private WebElement getMessageByIndex(int index)
    {
       return outputContent.findElement(By.xpath(String.format(Locators.OUTPUT_ROW_BY_INDEX, index)));
+   }
+
+   /**
+    *  get all text from output panel
+    * @return
+    */
+   public String getAllMessagesFromOutput()
+   {
+      return outputContent.getText();
    }
 
    /**
@@ -206,7 +233,7 @@ public class Output extends AbstractTestModule
     */
    public void waitOutputCleaned()
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
@@ -215,4 +242,47 @@ public class Output extends AbstractTestModule
          }
       });
    }
+
+   /**
+    * wait 20 sec. link in output panel with part text in link
+    * @param text
+    */
+   public void waitLinkWithParticalText(final String text)
+   {
+      new WebDriverWait(driver(), 20).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               return driver().findElement(By.partialLinkText(text)).isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * click on link in output panel with part text in link
+    * @param text
+    */
+   public void clickOnAppLinkWithParticalText(final String text)
+   {
+      driver().findElement(By.partialLinkText(text)).click();
+   }
+
+   /**
+    * get url from link in output with specified prefix in linkname
+    * @param text
+    * @return
+    */
+   public String getUrlTextText(String text)
+   {
+      return driver().findElement(By.partialLinkText(text)).getText();
+   }
+
 }

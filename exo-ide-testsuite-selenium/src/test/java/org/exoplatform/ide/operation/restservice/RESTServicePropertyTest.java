@@ -19,8 +19,8 @@
 package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -30,12 +30,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
 public class RESTServicePropertyTest extends BaseTest
 {
@@ -66,24 +64,24 @@ public class RESTServicePropertyTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
+      IDE.EDITOR.waitActiveFile();
 
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE));
+      IDE.MENU.waitCommandDisabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
 
       IDE.EDITOR.saveAs(1, FILE_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE));
+      IDE.MENU.waitCommandEnabled(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SET_AUTOLOAD);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.VALIDATE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.DEPLOY_REST_SERVICE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.LAUNCH_REST_SERVICE);
 
       IDE.PROPERTIES.openProperties();
       assertEquals(MimeType.GROOVY_SERVICE, IDE.PROPERTIES.getContentType());

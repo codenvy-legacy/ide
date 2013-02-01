@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.operation.autocompletion.jsp;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -30,12 +31,10 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JspTagsTest May 6, 2011 12:01:55 PM evgen $
- *
+ * 
  */
 public class JspTagsTest extends BaseTest
 {
@@ -79,38 +78,36 @@ public class JspTagsTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.GOTOLINE.goToLine(10);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<jsp:");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor("<jsp:");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString());
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.waitForDocPanelOpened();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:attribute"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:body"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:element"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:fallback"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:forward"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:getProperty"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:include"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:invoke"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:output"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:plugin"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:text"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("jsp:useBean"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:attribute");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:body");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:element");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:fallback");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:forward");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:getProperty");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:include");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:invoke");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:output");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:plugin");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:text");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("jsp:useBean");
 
       IDE.CODEASSISTANT.typeToInput("use");
       IDE.CODEASSISTANT.waitForDocPanelOpened();
-      //TODO waitForElementPresent(CodeAssistant.Locators.JAVADOC_DIV));
       IDE.CODEASSISTANT.checkDocFormPresent();
-      //TODO assertEquals(docMessage, selenium().getText(CodeAssistant.Locators.JAVADOC_DIV)));
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      IDE.EDITOR.getTextFromCodeEditor(0).contains("<jsp:useBean id=\"\"></jsp:useBean>");
+      IDE.EDITOR.getTextFromCodeEditor().contains("<jsp:useBean id=\"\"></jsp:useBean>");
 
-      //IDE.EDITOR.closeUnsavedFileAndDoNotSave(0));
+      // IDE.EDITOR.closeUnsavedFileAndDoNotSave(0));
       // IDE.EDITOR.closeTabIgnoringChanges(0);
    }
 

@@ -23,12 +23,12 @@ import org.exoplatform.ide.Utils;
 import org.exoplatform.ide.core.AbstractTestModule;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -57,6 +57,13 @@ public class ProjectExplorer extends AbstractTestModule
       String OPEN_CLOSE_BUTTON_LOCATOR = "//div[@id='%s']/table/tbody/tr/td[1]/img";
 
       String PROJECT_LIST_GRID_ITEM = "//table[@id='ideProjectExplorerProjectsListGrid']//div[@style and text()='%s']";
+
+      String CLOSE_EXPLORER_BUTTON = "//div[@button-name='close-tab' and @tab-title='%s']";
+
+      String BORDER_PREFIX = "//div[@component='Border' and contains(@style, '182, 204, 232')]";
+
+      String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX;
+
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -76,22 +83,8 @@ public class ProjectExplorer extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               return view != null && view.isDisplayed();
-            }
-            catch (Exception e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 160).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.VIEW_LOCATOR)));
    }
 
    /**
@@ -107,7 +100,8 @@ public class ProjectExplorer extends AbstractTestModule
    /**
     * Generate item id
     * 
-    * @param path item's name
+    * @param path
+    *            item's name
     * @return id of item
     */
    public String getItemId(String path) throws Exception
@@ -120,90 +114,48 @@ public class ProjectExplorer extends AbstractTestModule
 
    /**
     * wait content in Project tree
+    * 
     * @param path
     * @throws Exception
     */
    public void waitForItem(final String path) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement item = driver().findElement(By.id(getItemId(path)));
-               return item != null && item.isDisplayed();
-            }
-            catch (Exception e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.id(getItemId(path))));
+      IDE().PROGRESS_BAR.waitProgressBarControlClose();
    }
 
-   /** wait content in project (name file or folder)
+   /**
+    * wait content in project (name file or folder)
+    * 
     * @param gridItem
     * @throws Exception
     */
    public void waitForItemInProjectList(final String gridItem) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement item =
-                  driver().findElement(By.xpath(String.format(Locators.PROJECT_LIST_GRID_ITEM, gridItem)));
-               return item != null && item.isDisplayed();
-            }
-            catch (Exception e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.PROJECT_LIST_GRID_ITEM, gridItem))));
    }
 
    /**
-    * wait  disappear item in project tree
+    * wait disappear item in project tree
+    * 
     * @param path
     * @throws Exception
     */
    public void waitForItemNotPresent(final String path) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               driver().findElement(By.id(getItemId(path)));
-               return false;
-            }
-            catch (Exception e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id(getItemId(path))));
    }
 
    /**
     * wait disappear progressor image on select folder
+    * 
     * @param path
     * @throws Exception
     */
    public void waitUpdateContentInFolder(final String path) throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -224,40 +176,28 @@ public class ProjectExplorer extends AbstractTestModule
 
    public void waitForItemNotVisible(final String path) throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement item = driver().findElement(By.id(getItemId(path)));
-               return item == null || !item.isDisplayed();
-            }
-            catch (Exception e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id(getItemId(path))));
    }
 
    /**
     * Select item in project explorer view.
     * 
-    * @param path item's path
+    * @param path
+    *            item's path
     * @throws Exception
     */
    public void selectItem(String path) throws Exception
    {
-      driver().findElement(By.id(getItemId(path))).click();
+
+      driver().findElement(By.xpath("//div[@id='" + getItemId(path) + "']//div[@class='ide-Tree-label']")).click();
+      waitHiglightBorderPresent();
    }
 
    /**
     * Select item in project explorer view by right mouse click.
     * 
-    * @param path item's path
+    * @param path
+    *            item's path
     * @throws Exception
     */
    public void selectItemByRightClick(String path) throws Exception
@@ -269,7 +209,8 @@ public class ProjectExplorer extends AbstractTestModule
    /**
     * Open item (make double click) in Project explorer tree.
     * 
-    * @param path item's path
+    * @param path
+    *            item's path
     * @throws Exception
     */
    public void openItem(String path) throws Exception
@@ -280,48 +221,58 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
-    * Is item present in project explorer tree.
+    *wait item present in project explorer tree.
     * 
-    * @param path item's path
-    * @return <code>true</code> if item is present.
+    * @param path
+    *            item's path
     * @throws Exception
     */
-   public boolean isItemPresent(String path) throws Exception
+   public void waitItemPresent(String path) throws Exception
    {
-      try
-      {
-         return driver().findElement(By.id(getItemId(path))) != null;
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.id(getItemId(path))));
    }
 
    /**
-    * Returns item visibility state in project explorer tree.
+    *wait item not present in project explorer tree.
     * 
-    * @param path item's path
-    * @return item's visibility state
+    * @param path
+    *            item's path
     * @throws Exception
     */
-   public boolean isItemVisible(String path) throws Exception
+   public void waitItemNotPresent(String path) throws Exception
    {
-      try
-      {
-         WebElement item = driver().findElement(By.id(getItemId(path)));
-         return (item != null && item.isDisplayed());
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id(getItemId(path))));
+   }
+
+   /**
+    * wait item visibility state in project explorer tree.
+    * 
+    * @param path
+    *            item's path
+    * @throws Exception
+    */
+   public void waitItemVisible(String path) throws Exception
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.id(getItemId(path))));
+   }
+
+   /**
+    * wait item invisibility state in project explorer tree.
+    * 
+    * @param path
+    *            item's path
+    * @throws Exception
+    */
+   public void waitItemNotVisible(String path) throws Exception
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By.id(getItemId(path))));
    }
 
    /**
     * Press right arrow for expand item
     * 
-    * @param path item's path
+    * @param path
+    *            item's path
     * @throws Exception
     */
    public void expandItem(String path) throws Exception
@@ -334,7 +285,8 @@ public class ProjectExplorer extends AbstractTestModule
    /**
     * Click open/close(+/-) button of the pointed item.
     * 
-    * @param path item's path
+    * @param path
+    *            item's path
     * @throws Exception
     */
    public void clickOpenCloseButton(String path) throws Exception
@@ -365,13 +317,15 @@ public class ProjectExplorer extends AbstractTestModule
 
    /**
     * send your keys commands to item in project explorer
+    * 
     * @param keys
     * @param item
     * @throws Exception
     */
    public void typeKeysToItem(String item, String keys) throws Exception
    {
-      WebElement elem = driver().findElement(By.id(getItemId(item)));
+      WebElement elem =
+         driver().findElement(By.xpath("//*[@id='" + getItemId(item) + "']//div[@class='ide-Tree-label']"));
       elem.sendKeys(keys);
    }
 
@@ -386,13 +340,23 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
-    * Returns the visibility state of the projects list grid.
+    * wait the visibility state of the projects list grid.
     * 
-    * @return true if projects list grid is visible
     */
-   public boolean isProjectsListGridVisible()
+   public void waitProjectsListGridVisible()
    {
-      return projectsListGrid.isDisplayed();
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .id(Locators.PROJECTS_LIST_GRID_ID)));
+   }
+
+   /**
+    * wait the invisibility state of the projects list grid.
+    * 
+    */
+   public void waitProjectsListGridNotVisible()
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .id(Locators.PROJECTS_LIST_GRID_ID)));
    }
 
    /**
@@ -408,7 +372,8 @@ public class ProjectExplorer extends AbstractTestModule
    /**
     * Select the row with project by the pointed name.
     * 
-    * @param name project name
+    * @param name
+    *            project name
     */
    public void selectProjectByNameInProjectsListGrid(String name)
    {
@@ -425,15 +390,37 @@ public class ProjectExplorer extends AbstractTestModule
    }
 
    /**
-    * get image attribute and return string 
-    * from current folder 
-    * @throws Exception 
+    * get image attribute and return string from current folder
+    * 
+    * @throws Exception
     */
    public String getImageAttributeFromContent(String path) throws Exception
    {
       WebElement imgElem =
          driver().findElement(By.xpath("//div[@id='" + getItemId(path) + "']" + "/table/tbody/tr/td[2]//img"));
       return imgElem.getCssValue("background");
+   }
+
+   /**
+    * close ProjectExplorer
+    * 
+    * @param projectName
+    * @throws Exception
+    */
+   public void clickCloseProjectExplorer(String projectName) throws Exception
+   {
+      WebElement closeBtn = driver().findElement(By.xpath(String.format(Locators.CLOSE_EXPLORER_BUTTON, projectName)));
+      closeBtn.click();
+   }
+
+   /**
+    * Wait true if highlight border present
+    * 
+    */
+   public void waitHiglightBorderPresent()
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.HIGHLITER_BORDER)));
    }
 
 }

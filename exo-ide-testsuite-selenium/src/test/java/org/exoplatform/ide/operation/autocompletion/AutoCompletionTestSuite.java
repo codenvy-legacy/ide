@@ -40,20 +40,19 @@ import org.junit.runners.Suite.SuiteClasses;
  */
 @RunWith(Suite.class)
 @SuiteClasses({AutoCompletionCSSTest.class, //
-               AutoCompletionHTMLTest.class,//
-               AutoCompletionJavaScriptNoneCollabEditorTest.class, //
-               AutoCompletionXMLTest.class,//
-               GroovyObjectCompletionTest.class,//
-               GroovyClassMethodsCompletionTest.class,//
-               GroovyClassNameCompletionTest.class, //
-               GroovyLocalVariableTest.class,//
-               GroovyAnnotationAutocompleteTest.class,//
-               GroovyKeywordsAutocompletionTest.class,//
-               ImportStatementInsertionTest.class,//
-               GroovyProjectAutocompletionTest.class,//
-               ChrommaticImportAssistantTest.class, //
-               AutoCompleteJspTest.class,
-               JavaCodeAssistantTest.class})
+   AutoCompletionHTMLTest.class,//
+   AutoCompletionJavaScriptNoneCollabEditorTest.class, //
+   AutoCompletionXMLTest.class,//
+   GroovyObjectCompletionTest.class,//
+   GroovyClassMethodsCompletionTest.class,//
+   GroovyClassNameCompletionTest.class, //
+   GroovyLocalVariableTest.class,//
+   GroovyAnnotationAutocompleteTest.class,//
+   GroovyKeywordsAutocompletionTest.class,//
+   ImportStatementInsertionTest.class,//
+   GroovyProjectAutocompletionTest.class,//
+   ChrommaticImportAssistantTest.class, //
+   AutoCompleteJspTest.class, JavaCodeAssistantTest.class, JavascriptAutocompleteTest.class})
 public class AutoCompletionTestSuite
 {
 

@@ -20,11 +20,11 @@ package org.eclipse.jdt.client.internal.corext.util;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
 import org.eclipse.jdt.client.core.formatter.IndentManipulation;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.DefaultLineTracker;
-import org.exoplatform.ide.editor.text.ILineTracker;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.DefaultLineTracker;
+import org.exoplatform.ide.editor.shared.text.ILineTracker;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.ltk.refactoring;
 
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 import java.util.ArrayList;
 import java.util.Collections;

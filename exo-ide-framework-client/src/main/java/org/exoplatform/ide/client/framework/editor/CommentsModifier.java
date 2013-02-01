@@ -18,9 +18,9 @@
  */
 package org.exoplatform.ide.client.framework.editor;
 
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 /**
  * Code comments modifier.

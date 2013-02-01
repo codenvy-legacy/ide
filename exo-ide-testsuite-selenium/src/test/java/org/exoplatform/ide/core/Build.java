@@ -41,6 +41,10 @@ public class Build extends AbstractTestModule
       String BUILD_FAILED = "Building of project failed. See details in Build project view.";
 
       String BUILD_IN_PROGRESS = "You can not start the build of two or more projects at the same time";
+
+      String URL_TO_ARTIFACT = "You can download your artifact :http://";
+
+      String DEPENDENCY_MESS = "Dependency for your pom:";
    }
 
    private interface Locators
@@ -54,6 +58,10 @@ public class Build extends AbstractTestModule
       String CLEAR_BUTTON_SELECTOR = "div[view-id='" + VIEW_ID + "'] div[title='Clear Output']>img";
 
       String LINK_ON_BUILT_RESULT = "//pre[@id='ide.builder.buildOutput']//a[text()='here']";
+
+      String BUILDER_OUTPUT_TAB = "//div[@id='operation']//td[@class='tabTitleText' and text()='Build project']";
+
+      String OPERATION_FORM = "//div[@id='operation']/ancestor::div[contains(@style, 'height: 300')]";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -68,6 +76,12 @@ public class Build extends AbstractTestModule
    @FindBy(css = Locators.CLEAR_BUTTON_SELECTOR)
    private WebElement clearButton;
 
+   @FindBy(xpath = Locators.BUILDER_OUTPUT_TAB)
+   private WebElement builderOutputTab;
+
+   @FindBy(xpath = Locators.OPERATION_FORM)
+   private WebElement operationForm;
+
    /**
     * Wait build project view opened.
     * 
@@ -75,7 +89,7 @@ public class Build extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -92,7 +106,7 @@ public class Build extends AbstractTestModule
     */
    public void waitBuildResultLink() throws Exception
    {
-      new WebDriverWait(driver(), 20).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 120).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -109,12 +123,13 @@ public class Build extends AbstractTestModule
     */
    public void waitBuildOutputPanel() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
-            return outputPanel != null && outputPanel.isDisplayed();
+            return outputPanel != null && outputPanel.isDisplayed() && operationForm.isDisplayed()
+               && operationForm != null;
          }
       });
    }
@@ -126,7 +141,7 @@ public class Build extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -176,4 +191,27 @@ public class Build extends AbstractTestModule
       clearButton.click();
    }
 
+   /**
+    * wait for message in builder output
+    */
+   public void waitBuilderMessage(final String mess)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            String message = outputPanel.getText();
+            return message.equals(mess);
+         }
+      });
+   }
+
+   /**
+    * select builder output tab
+    */
+   public void selectBuilderOutputTab()
+   {
+      builderOutputTab.click();
+   }
 }

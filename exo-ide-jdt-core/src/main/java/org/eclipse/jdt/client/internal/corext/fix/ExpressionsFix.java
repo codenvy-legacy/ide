@@ -27,8 +27,8 @@ import org.eclipse.jdt.client.internal.corext.dom.NecessaryParenthesesChecker;
 import org.eclipse.jdt.client.internal.corext.refactoring.structure.CompilationUnitRewrite;
 import org.eclipse.jdt.client.internal.corext.refactoring.util.NoCommentSourceRangeComputer;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 public class ExpressionsFix extends CompilationUnitRewriteOperationsFix
 {

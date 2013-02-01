@@ -56,6 +56,8 @@ public class FindReplace extends AbstractTestModule
 
       String FIND_RESULT_LABEL_ID = "ideFindReplaceTextFormFindResult";
 
+      String OPERATION_FORM = "//div[@id='operation']/ancestor::div[contains(@style, 'height: 300')]";
+
    }
 
    private static final String VIEW_TITLE = "Find/Replace";
@@ -89,6 +91,9 @@ public class FindReplace extends AbstractTestModule
    @FindBy(id = Locators.FIND_RESULT_LABEL_ID)
    private WebElement resultLabel;
 
+   @FindBy(xpath = Locators.OPERATION_FORM)
+   private WebElement operationForm;
+
    /**
     * Wait Find/Replace text view opened.
     * 
@@ -96,7 +101,7 @@ public class FindReplace extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -119,12 +124,12 @@ public class FindReplace extends AbstractTestModule
          && replaceField != null && replaceField.isDisplayed() && findButton != null && findButton.isDisplayed()
          && replaceButton != null && replaceButton.isDisplayed() && replaceFindButton != null
          && replaceFindButton.isDisplayed() && replaceAllButton != null && replaceAllButton.isDisplayed()
-         && caseSensitiveField != null && caseSensitiveField.isDisplayed());
+         && caseSensitiveField != null && caseSensitiveField.isDisplayed() && operationForm.isDisplayed() && operationForm != null);
    }
 
    public void waitCloseButtonAppeared() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -144,7 +149,7 @@ public class FindReplace extends AbstractTestModule
 
    public void waitFindButtonAppeared() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -163,7 +168,7 @@ public class FindReplace extends AbstractTestModule
 
    public void waitFindFieldAppeared() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -187,7 +192,7 @@ public class FindReplace extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -234,6 +239,38 @@ public class FindReplace extends AbstractTestModule
    }
 
    /**
+    * wait enabled state of find button.
+    * 
+    */
+   public void waitFindButtonEnabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(findButton);
+         }
+      });
+   }
+
+   /**
+    * wait disabled state of find button.
+    * 
+    */
+   public void waitFindButtonDisabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !(IDE().BUTTON.isButtonEnabled(findButton));
+         }
+      });
+   }
+
+   /**
     * Get enabled state of replace button.
     * 
     * @return boolean enabled state of replace button
@@ -241,6 +278,38 @@ public class FindReplace extends AbstractTestModule
    public boolean isReplaceButtonEnabled()
    {
       return IDE().BUTTON.isButtonEnabled(replaceButton);
+   }
+
+   /**
+    * wait enabled state of replace button.
+    * 
+    */
+   public void waitReplaceButtonEnabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(replaceButton);
+         }
+      });
+   }
+
+   /**
+    * wait disabled state of replace button.
+    * 
+    */
+   public void waitReplaceButtonDisabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !(IDE().BUTTON.isButtonEnabled(replaceButton));
+         }
+      });
    }
 
    /**
@@ -254,6 +323,38 @@ public class FindReplace extends AbstractTestModule
    }
 
    /**
+    * wait enabled state of replace/find button.
+    * 
+    */
+   public void waitReplaceFindButtonEnabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(replaceFindButton);
+         }
+      });
+   }
+
+   /**
+    * wait disabled state of replace/find button.
+    * 
+    */
+   public void waitReplaceFindButtonDisabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !(IDE().BUTTON.isButtonEnabled(replaceFindButton));
+         }
+      });
+   }
+
+   /**
     * Get enabled state of replace all button.
     * 
     * @return boolean enabled state of replace all button
@@ -263,24 +364,48 @@ public class FindReplace extends AbstractTestModule
       return IDE().BUTTON.isButtonEnabled(replaceAllButton);
    }
 
+   /**
+    * wait enabled state of replace all button button.
+    * 
+    */
+   public void waitReplaceAllButtonEnabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return IDE().BUTTON.isButtonEnabled(replaceAllButton);
+         }
+      });
+   }
+
+   /**
+    * wait disabled state of replace all button button.
+    * 
+    */
+   public void waitReplaceAllButtonDisabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !(IDE().BUTTON.isButtonEnabled(replaceAllButton));
+         }
+      });
+   }
+
    public void typeInFindField(String text) throws InterruptedException
    {
-      IDE().INPUT.typeToElement(findField, text, true);
+      findField.click();
+      findField.sendKeys(text);
    }
 
    public void typeInReplaceField(String text) throws InterruptedException
    {
-      IDE().INPUT.typeToElement(replaceField, text, true);
-   }
-
-   public boolean isFindFieldNotEmptyState()
-   {
-      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && !isReplaceButtonEnabled() && !isReplaceFindButtonEnabled());
-   }
-
-   public boolean checkFindFieldEmptyState()
-   {
-      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && !isReplaceButtonEnabled() && !isReplaceFindButtonEnabled());
+      replaceField.click();
+      replaceField.sendKeys(text);
    }
 
    public void clickFindButton() throws InterruptedException
@@ -303,22 +428,28 @@ public class FindReplace extends AbstractTestModule
       replaceAllButton.click();
    }
 
-   /**
-    * Check buttons when text is found.
-    */
-   public boolean isStateWhenTextFound()
+   public void waitFindResultEmpty()
    {
-      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && isReplaceButtonEnabled()
-         && isReplaceFindButtonEnabled() && getFindResultText().isEmpty());
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return getFindResultText().isEmpty();
+         }
+      });
    }
 
-   /**
-    * Check buttons when text is not found.
-    */
-   public boolean isStateWhenTextNotFound()
+   public void waitFindResultNotFound()
    {
-      return (isFindButtonEnabled() && isReplaceAllButtonEnabled() && !isReplaceButtonEnabled() && !isReplaceFindButtonEnabled())
-         && NOT_FOUND_RESULT.equals(getFindResultText());
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return NOT_FOUND_RESULT.equals(getFindResultText());
+         }
+      });
    }
 
    /**

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -32,7 +31,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
  * @version $Id: Aug 12, 2010
- *
+ * 
  */
 public class GoToLineTest extends BaseTest
 {
@@ -69,27 +68,24 @@ public class GoToLineTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //Open new Groovy file in editor.
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.grs");
-
-      //Open new HTML file in editor.
+      // Open new HTML file in editor.
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
+      IDE.EDITOR.waitActiveFile();
 
-      //Select Groovy file.
-      IDE.EDITOR.selectTab(1);
+      // Open new Groovy file in editor.
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+      IDE.EDITOR.waitActiveFile();
 
-      //Go to menu and click "View->Go To Line".
+      // Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
       IDE.GOTOLINE.waitOpened();
-      assertTrue(IDE.GOTOLINE.isGoToLineViewPresent());
+      IDE.GOTOLINE.waitGoToLineViewPresent();
       assertEquals(String.format(GoToLine.RANGE_LABEL, 1, 13), IDE.GOTOLINE.getLineNumberRangeLabel());
 
       // Type empty value an check form (form should remain unchanged)
       IDE.GOTOLINE.typeIntoLineNumberField("");
       IDE.GOTOLINE.clickGoButton();
-      assertTrue(IDE.GOTOLINE.isGoToLineViewPresent());
+      IDE.GOTOLINE.waitGoToLineViewPresent();
 
       // Print "abc" in input field.
       IDE.GOTOLINE.typeIntoLineNumberField("abc");
@@ -112,12 +108,12 @@ public class GoToLineTest extends BaseTest
       IDE.GOTOLINE.clickGoButton();
       IDE.GOTOLINE.waitClosed();
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("2 : 1");
 
       // Select HTML file's tab.
-      IDE.EDITOR.selectTab(2);
+      IDE.EDITOR.selectTab(1);
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
       // Go to menu and click "View->Go To Line".
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
@@ -125,9 +121,10 @@ public class GoToLineTest extends BaseTest
       IDE.GOTOLINE.typeIntoLineNumberField("1\n");
       IDE.GOTOLINE.waitClosed();
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
-      // Go to status bar - right down corner , where row and column numbers are displayed, hover on them with the mouse and click on it.
+      // Go to status bar - right down corner , where row and column numbers
+      // are displayed, hover on them with the mouse and click on it.
       IDE.STATUSBAR.clickOnCursorPositionControl();
       IDE.GOTOLINE.waitOpened();
       assertEquals(String.format(GoToLine.RANGE_LABEL, 1, 8), IDE.GOTOLINE.getLineNumberRangeLabel());
@@ -138,6 +135,6 @@ public class GoToLineTest extends BaseTest
       IDE.GOTOLINE.waitClosed();
 
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("2 : 1");
    }
 }

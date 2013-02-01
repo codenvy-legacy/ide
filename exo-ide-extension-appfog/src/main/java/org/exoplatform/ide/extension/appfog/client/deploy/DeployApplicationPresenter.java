@@ -86,7 +86,7 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
 
       HasValue<String> getInfraField();
 
-      void setServerValues(String[] servers);
+      void setServerValue(String server);
 
       void setInfraValues(String[] infras);
 
@@ -144,15 +144,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
          }
       });
 
-      display.getServerField().addValueChangeHandler(new ValueChangeHandler<String>()
-      {
-         @Override
-         public void onValueChange(ValueChangeEvent<String> event)
-         {
-            server = display.getServerField().getValue();
-         }
-      });
-
       display.getInfraField().addValueChangeHandler(new ValueChangeHandler<String>()
       {
          @Override
@@ -162,6 +153,8 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
             updateUrlField();
          }
       });
+
+      name = display.getNameField().getValue();
    }
 
    @Override
@@ -334,47 +327,6 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       return appUris;
    }
 
-   private void getServers()
-   {
-      try
-      {
-         AppfogClientService.getInstance().getTargets(
-            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
-            {
-               @Override
-               protected void onSuccess(List<String> result)
-               {
-                  if (result.isEmpty())
-                  {
-                     display.setServerValues(new String[]{AppfogExtension.DEFAULT_SERVER});
-                     display.getServerField().setValue(AppfogExtension.DEFAULT_SERVER);
-                  }
-                  else
-                  {
-                     String[] servers = result.toArray(new String[result.size()]);
-                     display.setServerValues(servers);
-                     display.getServerField().setValue(servers[0]);
-                  }
-                  display.getNameField().setValue(projectName);
-                  // don't forget to init values, that are stored, when
-                  // values in form fields are changed.
-                  name = projectName;
-                  server = display.getServerField().getValue();
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
    private void getInfras(final String server)
    {
       LoggedInHandler getInfrasHandler = new LoggedInHandler()
@@ -524,9 +476,11 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       {
          display = GWT.create(Display.class);
       }
+      display.setServerValue(AppfogExtension.DEFAULT_SERVER);
+      display.getNameField().setValue(projectName);
+      getInfras(AppfogExtension.DEFAULT_SERVER);
+      server = display.getServerField().getValue();
       bindDisplay();
-      getServers();
-      getInfras(server == null ? AppfogExtension.DEFAULT_SERVER : server);
       return display.getView();
    }
 
@@ -537,7 +491,10 @@ public class DeployApplicationPresenter implements ProjectBuiltHandler, HasPaaSA
       loader.show();
       try
       {
-         TemplateService.getInstance().createProjectFromTemplate(vfs.getId(), vfs.getRoot().getId(), projectName,
+         TemplateService.getInstance().createProjectFromTemplate(
+            vfs.getId(),
+            vfs.getRoot().getId(),
+            display.getNameField().getValue(),
             projectTemplate.getName(),
             new AsyncRequestCallback<ProjectModel>(new ProjectUnmarshaller(new ProjectModel()))
             {

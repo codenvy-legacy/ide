@@ -11,9 +11,9 @@
 package org.eclipse.jdt.client.codeassistant.api;
 
 import org.eclipse.jdt.client.core.compiler.CharOperation;
-import org.exoplatform.ide.editor.runtime.Assert;
-import org.exoplatform.ide.editor.text.BadLocationException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+import org.exoplatform.ide.editor.shared.text.BadLocationException;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * Describes the context of an invocation of content assist in a text viewer. The context knows the document, the invocation

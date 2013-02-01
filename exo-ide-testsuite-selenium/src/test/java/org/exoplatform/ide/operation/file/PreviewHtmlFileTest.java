@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertTrue;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,14 +31,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class PreviewHtmlFileTest extends BaseTest
 {
@@ -72,6 +72,7 @@ public class PreviewHtmlFileTest extends BaseTest
 
    /**
     * IDE-65: Preview HTML File
+    * 
     * @throws Exception
     */
    @Test
@@ -86,28 +87,28 @@ public class PreviewHtmlFileTest extends BaseTest
        * 1. create HTML file
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
+      IDE.EDITOR.waitActiveFile();
 
       /*
        * 2. "Preview" button must be disabled
        */
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW));
+      IDE.TOOLBAR.waitButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Run.SHOW_PREVIEW);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 
       /*
        * 3. open "PreviewHtmlFileTest/PreviewHtmlFile.html" file
        */
       String path = PROJECT + "/" + FILE_NAME;
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.EDITOR.waitActiveFile();
 
       /*
        * 4. "Preview" button must be enabled
        */
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
+      IDE.TOOLBAR.waitButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW);
 
       /*
        * 5. Click on "Preview" button
@@ -117,9 +118,9 @@ public class PreviewHtmlFileTest extends BaseTest
 
       IDE.PREVIEW.selectPreviewHtmlIFrame();
       assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size() > 0);
-     //need for redraw images on staging
-     //Thread.sleep(2000);
-     assertTrue(driver.findElements(
+      // need for redraw images on staging
+      // Thread.sleep(2000);
+      assertTrue(driver.findElements(
          By.xpath("//img[@src='http://www.google.com.ua/intl/en_com/images/logo_plain.png']")).size() > 0);
       IDE.selectMainFrame();
 
@@ -134,16 +135,16 @@ public class PreviewHtmlFileTest extends BaseTest
        */
       IDE.EDITOR.closeFile(FILE_NAME);
 
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW));
+      IDE.TOOLBAR.waitButtonPresentAtRight(ToolbarCommands.Run.SHOW_PREVIEW);
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Run.SHOW_PREVIEW);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 
       /*
        * 9. Reopen "PreviewHtmlFile.html" and click "Preview".
        */
       IDE.PROJECT.EXPLORER.waitForItem(path);
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.EDITOR.waitActiveFile();
       IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_PREVIEW);
 
       /*
@@ -151,8 +152,8 @@ public class PreviewHtmlFileTest extends BaseTest
        */
       IDE.PREVIEW.waitHtmlPreviewOpened();
       assertTrue(IDE.PREVIEW.isHtmlPreviewOpened());
-      //need for redraw images on staging
-     // Thread.sleep(1000);
+      // need for redraw images on staging
+      // Thread.sleep(1000);
       IDE.PREVIEW.selectPreviewHtmlIFrame();
       assertTrue(driver.findElements(By.xpath("//p/b/i[text()='Changed Content.']")).size() > 0);
       assertTrue(driver.findElements(

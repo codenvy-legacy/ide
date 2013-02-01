@@ -1,0 +1,13 @@
+<ui:UiBinder
+	xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui'>
+	
+	<ui:with field='resource' type='org.exoplatform.gwtframework.ui.client.TextInputResource' />
+
+	<g:HTMLPanel styleName="{resource.css.textInput}">
+		<nobr ui:field="titlePanel">
+			<span ui:field="titleElement" class='{resource.css.textInputTitle}'></span>
+		</nobr>
+	</g:HTMLPanel>
+
+</ui:UiBinder>

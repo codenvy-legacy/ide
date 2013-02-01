@@ -20,14 +20,6 @@ package org.exoplatform.ide;
 
 import static org.junit.Assert.fail;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import org.apache.commons.httpclient.Credentials;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.everrest.http.client.ModuleException;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -40,14 +32,20 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.commons.httpclient.Credentials;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.everrest.http.client.ModuleException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -103,7 +101,8 @@ public class Utils
       HttpClient client = new HttpClient();
       client.getParams().setAuthenticationPreemptive(true);
       Credentials defaultcreds = new UsernamePasswordCredentials(BaseTest.USER_NAME, BaseTest.USER_PASSWORD);
-      client.getState().setCredentials(new AuthScope(BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM),
+      client.getState().setCredentials(
+         new AuthScope(BaseTest.REPO_NAME + "." + BaseTest.IDE_HOST, BaseTest.IDE_PORT, AuthScope.ANY_REALM),
          defaultcreds);
       return client;
    }
@@ -310,7 +309,9 @@ public class Utils
       try
       {
          String lOGIN_URL =
-            BaseTest.LOGIN_URL + "cloud/ide.jsp?username=" + BaseTest.USER_NAME + "&password=" + BaseTest.USER_PASSWORD;
+            BaseTest.LOGIN_URL_VFS + "sso/server/gen?username=" + BaseTest.USER_NAME + "&password="
+               + BaseTest.USER_PASSWORD + "&redirectTenantName=" + BaseTest.REPO_NAME + "&authType=jaas";
+
          System.err.println(lOGIN_URL);
          https = (HttpsURLConnection)new URL(lOGIN_URL).openConnection();
          https.setRequestMethod("GET");

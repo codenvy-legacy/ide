@@ -38,6 +38,8 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
 
    private final boolean publish;
    
+   private final boolean force;
+   
    public BuildProjectEvent()
    {
       this(false);
@@ -51,6 +53,17 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
    public BuildProjectEvent(boolean publish)
    {
       this(null, publish);
+   }
+   
+   /**
+    * If <code>publish</code> artifact will be in public repository after build.
+    * <code>force</code> project will be build  even if it not change from last build
+    * By default set to false
+    * @param publish
+    */
+   public BuildProjectEvent(boolean publish, boolean force)
+   {
+      this(null, publish, force);
    }
 
    /**
@@ -69,8 +82,14 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
     */
    public BuildProjectEvent(ProjectModel project, boolean publish)
    {
+      this(project, publish, false);
+   }
+
+   public BuildProjectEvent(ProjectModel project, boolean publish, boolean force)
+   {
       this.project = project;
       this.publish = publish;
+      this.force = force;
    }
 
    /**
@@ -109,5 +128,10 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
    public boolean isPublish()
    {
       return publish;
+   }
+   
+   public boolean isForce()
+   {
+      return force;
    }
 }

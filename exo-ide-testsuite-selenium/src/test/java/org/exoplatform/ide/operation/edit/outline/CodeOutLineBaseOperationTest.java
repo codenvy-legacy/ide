@@ -19,7 +19,8 @@
 package org.exoplatform.ide.operation.edit.outline;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -31,15 +32,13 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * Created by The eXo Platform SAS.
  * 
  * 
  * @author <a href="musienko.maxim@gmail.com">Musienko Maksim</a>
- * @version $Id:   ${date} ${time}
-  */
+ * @version $Id: ${date} ${time}
+ */
 public class CodeOutLineBaseOperationTest extends BaseTest
 {
    private final static String PROJECT = CodeOutLineBaseOperationTest.class.getSimpleName();
@@ -73,7 +72,6 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       }
    }
 
-   // IDE-178:Groovy Template Code Outline
    @Test
    public void testNavigationOnOutLineGroovyTemplate() throws Exception
    {
@@ -83,41 +81,35 @@ public class CodeOutLineBaseOperationTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      //TODO Pause for build outline tree
+      //after implementation method for check ready state, should be remove
+      Thread.sleep(4000);
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
 
-      //click on second groovy code node
+      // click on second groovy code node
       IDE.OUTLINE.selectRow(2);
+      IDE.OUTLINE.waitElementIsSelect("groovy code");
 
-      //check, than cursor go to line
-      assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
+      // check, than cursor go to line
+      IDE.STATUSBAR.waitCursorPositionAt("26 : 1");
 
-      //IDE.EDITOR.deleteLinesInEditor(0, 7);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-
-      //Schedule redraw period is 3 seconds: 
-      Thread.sleep(3000);
-
-      assertEquals("26 : 1", IDE.STATUSBAR.getCursorPosition());
-      assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
-      IDE.OUTLINE.selectRow(1);
-      IDE.OUTLINE.expandSelectItem(1);
-
+      IDE.STATUSBAR.waitCursorPositionAt("26 : 1");
+      IDE.GOTOLINE.goToLine(2);
+      IDE.STATUSBAR.waitCursorPositionAt("2 : 1");
       IDE.OUTLINE.waitItemAtPosition("div", 12);
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
       assertEquals("a1 : Object", IDE.OUTLINE.getItemLabel(2));
-      assertTrue(IDE.OUTLINE.isItemSelected(1));
 
-      IDE.GOTOLINE.goToLine(27);
+      IDE.GOTOLINE.goToLine(28);
       IDE.OUTLINE.waitItemAtPosition("groovy code", 14);
-      assertEquals("27 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("28 : 1");
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(1));
       assertEquals("div", IDE.OUTLINE.getItemLabel(12));
       assertEquals("div", IDE.OUTLINE.getItemLabel(13));
       assertEquals("groovy code", IDE.OUTLINE.getItemLabel(14));
-
-      assertTrue(IDE.OUTLINE.isItemSelected(13));
    }
 }

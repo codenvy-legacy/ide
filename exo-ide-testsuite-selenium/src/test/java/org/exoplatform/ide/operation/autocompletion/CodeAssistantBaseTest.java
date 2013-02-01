@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.operation.autocompletion;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
 import org.junit.Assert;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -55,10 +55,10 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       }
 
    }
-   
-   
+
    /**
     * create empty exo-project in IDE
+    * 
     * @param name
     * @param zipPath
     */
@@ -78,21 +78,21 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       }
 
    }
-   
+
    public static void createProject(String name)
    {
       createProject(name, null);
    }
-   
+
    /**
     * create empty eXo project
+    * 
     * @param name
     */
    public static void createExoPrj(String name)
    {
       createExoProject(name, null);
    }
-   
 
    @After
    public void deleteProject() throws IOException
@@ -110,11 +110,22 @@ public abstract class CodeAssistantBaseTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(projectName);
    }
 
+   public void openJavaProject() throws Exception
+   {
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.PROJECT.OPEN.openProject(projectName);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(projectName);
+   }
+
    protected void openFile(String name) throws Exception
    {
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + name);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + name);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + name);
+      IDE.EDITOR.waitActiveFile();
    }
 
 }

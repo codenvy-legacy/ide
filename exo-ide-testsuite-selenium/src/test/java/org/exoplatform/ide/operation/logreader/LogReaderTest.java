@@ -20,7 +20,6 @@ package org.exoplatform.ide.operation.logreader;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -49,11 +48,11 @@ public class LogReaderTest extends BaseTest
       if (log.isEmpty())
       {
          assertFalse(IDE.LOG_READER.isPreviousButtonEnabled());
-         assertFalse(IDE.LOG_READER.isNextButtonEnabled());
+         IDE.LOG_READER.waitNextButtonDisabled();
       }
       else
       {
-         assertFalse(IDE.LOG_READER.isNextButtonEnabled());
+         IDE.LOG_READER.waitNextButtonDisabled();
       }
    }
 
@@ -67,15 +66,16 @@ public class LogReaderTest extends BaseTest
       IDE.LOG_READER.waitOpened();
 
       String log = IDE.LOG_READER.getLogContent();
-      assertFalse(IDE.LOG_READER.isNextButtonEnabled());
+      IDE.LOG_READER.waitNextButtonDisabled();
       if (IDE.LOG_READER.isPreviousButtonEnabled())
       {
          IDE.LOG_READER.clickPrevButton();
          IDE.LOADER.waitClosed();
          assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
          log = IDE.LOG_READER.getLogContent();
-         assertTrue(IDE.LOG_READER.isNextButtonEnabled());
+         IDE.LOG_READER.waitNextButtonEnabled();
          IDE.LOG_READER.clickNextButton();
+         IDE.LOADER.waitClosed();
          assertFalse(log.equals(IDE.LOG_READER.getLogContent()));
       }
    }

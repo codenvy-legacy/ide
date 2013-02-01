@@ -1,7 +1,8 @@
 package org.exoplatform.ide.operation.java;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -9,9 +10,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuction
 {
@@ -42,25 +40,24 @@ public class DeleteLineFromEditMenuTest extends ServicesJavaTextFuction
       {
       }
    }
-   
+
    @Test
    public void deleteCurrentLineUi() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openSpringJavaTetsFile (PROJECT);
-     
-      
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      IDE.GOTOLINE.waitOpened();
+      openSpringJavaTetsFile(PROJECT);
+
       IDE.GOTOLINE.goToLine(1);
       IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      String code = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
-      //pause for deleting
+      String code = IDE.JAVAEDITOR.getTextFromJavaEditor();
+      // pause for deleting
       Thread.sleep(200);
       assertFalse(code.contains("package sumcontroller;"));
-      
+
    }
 }

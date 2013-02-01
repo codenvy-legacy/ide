@@ -19,17 +19,13 @@
 package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.ToolbarCommands;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.sql.Driver;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -64,6 +60,10 @@ public class Properties extends AbstractTestModule
 
       String HIGHLITER_BORDER = VIEW_LOCATOR + BORDER_PREFIX;
 
+      String END_ANIMATION = "//div[@view-id='ideFilePropertiesView']//ancestor::div[@id='operation']/..";
+
+      String OPERATION_FORM = "//div[@id='operation']/ancestor::div[contains(@style, 'height: 300')]";
+
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -90,6 +90,12 @@ public class Properties extends AbstractTestModule
 
    @FindBy(xpath = Locators.CLOSE_VIEW_BUTTON_LOCATOR)
    private WebElement closeViewButton;
+
+   @FindBy(xpath = Locators.END_ANIMATION)
+   private WebElement endAnimationPanel;
+
+   @FindBy(xpath = Locators.OPERATION_FORM)
+   private WebElement operationForm;
 
    /**
     * click on Proporties editor
@@ -161,6 +167,7 @@ public class Properties extends AbstractTestModule
     */
    public void closeProperties() throws Exception
    {
+      waitEndAnimation();
       closeViewButton.click();
       waitClosed();
    }
@@ -172,6 +179,7 @@ public class Properties extends AbstractTestModule
     */
    public void openProperties() throws Exception
    {
+      IDE().TOOLBAR.waitForButtonEnabled(ToolbarCommands.View.SHOW_PROPERTIES);
       IDE().TOOLBAR.runCommand(ToolbarCommands.View.SHOW_PROPERTIES);
       waitOpened();
    }
@@ -183,17 +191,35 @@ public class Properties extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
          public Boolean apply(WebDriver input)
          {
-            return (view != null && view.isDisplayed() && contentLenghtProperty != null
-               && contentLenghtProperty.isDisplayed() && nameProperty != null && nameProperty.isDisplayed()
-               && closeViewButton != null && closeViewButton.isDisplayed());
+            return (operationForm != null && operationForm.isDisplayed() && view != null && view.isDisplayed()
+               && contentLenghtProperty != null && contentLenghtProperty.isDisplayed() && nameProperty != null
+               && nameProperty.isDisplayed() && closeViewButton != null && closeViewButton.isDisplayed());
          }
       });
+   }
+
+   /**
+    * Wait while properties panel set height on 300 px
+    * 
+    * @throws Exception
+    */
+   public void waitEndAnimation() throws Exception
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return endAnimationPanel.getAttribute("style").contains("height: 300px");
+         }
+      });
+
    }
 
    /**
@@ -203,7 +229,7 @@ public class Properties extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

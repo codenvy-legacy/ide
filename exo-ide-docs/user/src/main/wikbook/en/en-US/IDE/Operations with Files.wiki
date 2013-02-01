@@ -59,7 +59,7 @@ You can change the MIME type of the closed file as follows:
 * *Step 4:* Click *Rename* to change the MIME type.
 
 {note}
-The file with the non-registered MIME type in eXo IDE will be opened as plain text file.
+The file with the non-registered MIME type in Codenvy will be opened as plain text file.
 {note}
 
 h1. Preview File Properties
@@ -106,7 +106,7 @@ If you open the locked file with the WYSIWYG Editor, you can edit its content, b
 
 h1. Open Local File
 
-In eXo IDE, you can edit some local files with the registered type within the _Code Editor_ or _WYSIWYG Editor_. During opening, you can directly define the correct file type. To edit the local file content in eXo IDE, do as follows:
+In Codenvy, you can edit some local files with the registered type within the _Code Editor_ or _WYSIWYG Editor_. During opening, you can directly define the correct file type. To edit the local file content in Codenvy, do as follows:
 * *Step 1:* Go to *File > Open Local File...* on the top menu.
 * *Step 2:* Click the *Browse...* button in the *Open file* dialog to select the required local file.
 * *Step 3:* Check the file's MIME type, based on the file extension. If needed, select another MIME type from the list.
@@ -118,7 +118,7 @@ In eXo IDE, you can edit some local files with the registered type within the _C
 
 *Illustration. Example of opening the local Ruby file*
 
-The following table is the list of MIME types registered in the eXo IDE.
+The following table is the list of MIME types registered in the Codenvy.
 
 *Table. Registered MIME Types*
 || File Type || MIME Type || Default File Extension || Default Editor ||
@@ -156,7 +156,7 @@ If you want to download some file from server Workspace, do as follows:
 
 h1. Upload File
 
-To upload a local file directly to the _IDE Workspace_, go to *File > Upload File...*. For example, to upload the *gadget.xml* file to the *Gadget* folder, do as follows:
+To upload a local file directly to the _Codenvy Workspace_, go to *File > Upload File...*. For example, to upload the *gadget.xml* file to the *Gadget* folder, do as follows:
 * *Step 1:* Select the *Gadget* folder in the _Project Explorer_ or in the _Workspace Panel_.
 * *Step 2:* Go to *File > Upload File...* on the top menu.
 * *Step 3:* Click the *Browse...* button to select the *gadget.xml* file from the local device in the *File upload* dialog.
@@ -175,5 +175,5 @@ To open a file by its path, for example *Example.groovy*, do as follows:
 You can select *View > Get URL...* on the top menu to obtain the file path.
 
 {info}
-The target file should be placed at the same domain as IDE.
+The target file should be placed at the same domain as Codenvy.
 {info}

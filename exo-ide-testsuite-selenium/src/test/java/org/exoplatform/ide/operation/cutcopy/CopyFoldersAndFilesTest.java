@@ -22,6 +22,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.UUID;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,9 +33,6 @@ import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.UUID;
 
 /**
  * IDE-113:Copy folders and files.
@@ -62,8 +62,9 @@ public class CopyFoldersAndFilesTest extends BaseTest
    private static final String RANDOM_CONTENT_2 = UUID.randomUUID().toString();
 
    /**
-    * BeforeClass create such structure: PROJECT FOLDER_1 FILE_GADGET - file with sample content FILE_GROOVY - file with sample
-    * content FOLDER_1_1 FOLDER_1_2 FOLDER_2
+    * BeforeClass create such structure: PROJECT FOLDER_1 FILE_GADGET - file
+    * with sample content FILE_GROOVY - file with sample content FOLDER_1_1
+    * FOLDER_1_2 FOLDER_2
     */
    @BeforeClass
    public static void setUp()
@@ -107,19 +108,19 @@ public class CopyFoldersAndFilesTest extends BaseTest
       // Open files:
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.EDITOR.waitActiveFile();
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GADGET);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1);
 
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonDisabled(MenuCommands.Edit.PASTE_TOOLBAR);
 
       // Call the "Edit->Copy Items" topmenu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1 + "/" + FOLDER_1_1);
       IDE.DELETE.deleteSelectedItems();
@@ -139,11 +140,11 @@ public class CopyFoldersAndFilesTest extends BaseTest
       assertTrue(IDE.EDITOR.isTabPresentInEditorTabset(FILE_GROOVY));
       assertFalse(IDE.EDITOR.isTabPresentInEditorTabset(FILE_GADGET));
 
-      assertTrue(IDE.MENU.isCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
+      IDE.MENU.waitCommandVisible(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
 
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonDisabled(MenuCommands.Edit.PASTE_TOOLBAR);
    }
 
    private void checkFilesAndFoldersOnServer() throws Exception

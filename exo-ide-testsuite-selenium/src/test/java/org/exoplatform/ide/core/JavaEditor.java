@@ -1,12 +1,9 @@
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import java.util.Arrays;
 
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
-import org.openqa.selenium.By.ByXPath;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -36,11 +33,11 @@ public class JavaEditor extends AbstractTestModule
 
       String JAVAEDITOR_SET_CURSOR_LOCATOR = EDITOR_VIEW_LOCATOR + "//div[@tabindex='-1']/div";
 
-      String TITLE_SPAN_LOCATOR = "//span[@title='%s']";
+      String TITLE_SPAN_LOCATOR = "//span[@title='%s']/..";
 
       String GET_TEXT_LOCATOR = "//div[@panel-id='editor' and @view-id='editor-%s']//div[@tabindex='-1']";
 
-      String LINE_NUMBER_LOCATOR = "EDITOR_VIEW_LOCATOR + LINENUMBER_PREFIX";
+      String LINE_NUMBER_LOCATOR = EDITOR_VIEW_LOCATOR + LINENUMBER_PREFIX;
 
       String GET_POSITION_TEXT = GET_TEXT_LOCATOR + "/div/div[%s]";
 
@@ -48,6 +45,16 @@ public class JavaEditor extends AbstractTestModule
 
       String JAVA_DOC_CONTAINER = "//div[@__animcontrollerstate]";
 
+      String NUM_ACTIVE_EDITOR = "//div[@class='gwt-TabLayoutPanelContent' and @is-active='true']";
+
+      String HIGHLITER_BORDER_PREFIX = "//div[@component='Border' and contains(@style, '182, 204, 232')]";
+
+      String ACTIVE_EDITOR_WITH_REDACTOR = NUM_ACTIVE_EDITOR + HIGHLITER_BORDER_PREFIX + "/div/div//textarea";
+
+      String EDITOR_JAVA_CONTAINER_READY_STATUS = "//div[@class='gwt-TabLayoutPanelContent' and @is-active='true']//..";
+
+      String EDITOR_CONTAINER_READY_DESC =
+         "//div[@class='gwt-TabLayoutPanelContent' and @is-active='true']/parent::div/preceding-sibling::div[1]";
    }
 
    private WebElement editor;
@@ -55,22 +62,73 @@ public class JavaEditor extends AbstractTestModule
    @FindBy(xpath = Locators.JAVA_DOC_CONTAINER)
    private WebElement javaDocContainer;
 
-   /**
-    * wait appearance line number panel
-    * @param tabIndex
-    */
-   public void waitLineNumberPanel(final int tabIndex)
-   {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
+   @FindBy(xpath = Locators.ACTIVE_EDITOR_WITH_REDACTOR)
+   private WebElement numActiveEditorWithRedactor;
 
+   @FindBy(xpath = Locators.EDITOR_JAVA_CONTAINER_READY_STATUS)
+   private WebElement javacontainerReadyStatus;
+
+   @FindBy(xpath = Locators.EDITOR_CONTAINER_READY_DESC)
+   private WebElement descendReadyStatus;
+
+   @FindBy(xpath = Locators.NUM_ACTIVE_EDITOR)
+   private WebElement numActiveEditor;
+
+   //   /**
+   //    * wait appearance line number panel
+   //    * 
+   //    */
+   //   public void waitLineNumberPanel()
+   //   {
+   //      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+   //      {
+   //
+   //         @Override
+   //         public Boolean apply(WebDriver driver)
+   //         {
+   //            try
+   //            {
+   //               WebElement line =
+   //                  driver.findElement(By.xpath(String.format(Locators.LINE_NUMBER_LOCATOR, getNumberTabOfActiveEditor())));
+   //               return line != null && line.isDisplayed();
+   //            }
+   //            catch (Exception e)
+   //            {
+   //               return false;
+   //            }
+   //         }
+   //      });
+   //   }
+
+   /**
+    * wait while java editor is active
+    */
+   public void waitJavaEditorIsActive()
+   {
+      new WebDriverWait(driver(), 180).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return javacontainerReadyStatus.getAttribute("style").contains("width: 100%; height: 100%;")
+               && !descendReadyStatus.getAttribute("style").isEmpty() && numActiveEditorWithRedactor.isDisplayed();
+         }
+      });
+   }
+
+   /**
+    * wait while into java editor appear text
+    */
+   public void waitIntoJavaEditorSpecifiedText(final String text)
+   {
+      new WebDriverWait(driver(), 20).until(new ExpectedCondition<Boolean>()
+      {
          @Override
          public Boolean apply(WebDriver driver)
          {
             try
             {
-               WebElement line = driver.findElement(By.xpath(String.format(Locators.LINE_NUMBER_LOCATOR, tabIndex)));
-               return line != null && line.isDisplayed();
+               return getTextFromJavaEditor().contains(text);
             }
             catch (Exception e)
             {
@@ -81,14 +139,12 @@ public class JavaEditor extends AbstractTestModule
    }
 
    /**
-    * wait appearance error on 
-    * panel with line numbers
-    * if in java - mistake 
-    * @param tabIndex
+    * wait appearance error on panel with line numbers if in java - mistake
+    * 
     */
    public void waitErrorLabel(final String errorMess)
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -110,11 +166,11 @@ public class JavaEditor extends AbstractTestModule
 
    /**
     * wait appearance line number panel
-    * @param tabIndex
+    * 
     */
-   public void waitLineCloseNumberPanel(final int tabIndex)
+   public void waitLineCloseNumberPanel()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -122,7 +178,8 @@ public class JavaEditor extends AbstractTestModule
          {
             try
             {
-               WebElement line = driver.findElement(By.xpath(String.format(Locators.LINE_NUMBER_LOCATOR, tabIndex)));
+               WebElement line =
+                  driver.findElement(By.xpath(String.format(Locators.LINE_NUMBER_LOCATOR, getNumberTabOfActiveEditor())));
                return false;
             }
             catch (Exception e)
@@ -134,12 +191,12 @@ public class JavaEditor extends AbstractTestModule
    }
 
    /**
-   * wait  line number panel disappear
-   * @param tabIndex
-   */
-   public void waitFileContentModificationMark(final int tabIndex)
+    * wait line number panel disappear
+    * 
+    */
+   public void waitFileContentModificationMark()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -147,7 +204,8 @@ public class JavaEditor extends AbstractTestModule
          {
             try
             {
-               WebElement line = driver.findElement(By.xpath(String.format(Locators.LINE_NUMBER_LOCATOR, tabIndex)));
+               WebElement line =
+                  driver.findElement(By.xpath(String.format(Locators.LINE_NUMBER_LOCATOR, getNumberTabOfActiveEditor())));
                return line != null && line.isDisplayed();
             }
             catch (Exception e)
@@ -159,11 +217,11 @@ public class JavaEditor extends AbstractTestModule
    }
 
    /**
-   * wait appereance javadoc Container
-   */
+    * wait appereance javadoc Container
+    */
    public void waitJavaDocContainer()
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -175,27 +233,50 @@ public class JavaEditor extends AbstractTestModule
    }
 
    /**
-    * get text from javadoccontainer
-    * @return
+    * wait appereance javadoc Container with specified javadoc text
     */
-   public String getTextFronJavaDocContainer()
+   public void waitJavaDocContainerWithSpecifiedText(final Object[] obj)
    {
-      return javaDocContainer.getText();
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            waitJavaDocContainer();
+            String[] stringArray = Arrays.copyOf(obj, obj.length, String[].class);
+            String compare1 = convertObjToStr(stringArray);
+            String compare2 = convertObjToStr(getTextFromJavaDocContainer().split("\n"));
+            return compare1.contains(compare2);
+         }
+      });
    }
 
    /**
-    * @param title
+    * auxiliary for cast arraystring  to string
+    * @param arr
+    * @return
     */
+   protected String convertObjToStr(String[] arr)
+   {
+      StringBuilder builderForObj = new StringBuilder();
+      for (String s : arr)
+      {
+         builderForObj.append(s);
 
-   //Should be complete later after applying not dynamic GWT class for this
-   //   public void waitNoContentModificationMark(final String title)
-   //   {
-   //      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
-   //      {
-   //
-   //        
-   //      });
-   //   }
+      }
+      return builderForObj.toString();
+   }
+
+   /**
+    * get text from javadoccontainer
+    * 
+    * @return
+    */
+   public String getTextFromJavaDocContainer()
+   {
+      return javaDocContainer.getText();
+   }
 
    public boolean isEditorTabSelected(String tabTitle)
    {
@@ -212,21 +293,23 @@ public class JavaEditor extends AbstractTestModule
    /**
     * set cursor in begin position in java editor
     */
-   public void setCursorToJavaEditor(int tabIndex) throws Exception
+   public void setCursorToJavaEditor() throws Exception
    {
-      driver().findElement(By.xpath(String.format(Locators.JAVAEDITOR_SET_CURSOR_LOCATOR, tabIndex))).click();
+      driver().findElement(
+         By.xpath(String.format(Locators.JAVAEDITOR_SET_CURSOR_LOCATOR, getNumberTabOfActiveEditor()))).click();
    }
 
    /**
-    * @param tabIndex begins from 1
-    * @param text (can be used '\n' as line break)
+    * @param text
+    *            (can be used '\n' as line break)
     */
-   public void typeTextIntoJavaEditor(int tabIndex, String text) throws Exception
+   public void typeTextIntoJavaEditor(String text) throws Exception
    {
       try
       {
          WebElement eleme =
-            driver().findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR + "//textarea", tabIndex)));
+            driver().findElement(
+               By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR + "//textarea", getNumberTabOfActiveEditor())));
          eleme.sendKeys(text);
 
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
@@ -240,30 +323,30 @@ public class JavaEditor extends AbstractTestModule
    /**
     * Move cursor in Java editor left to pointed number of symbols.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of symbols to move left
+    * @param rows
+    *            number of symbols to move left
     * @throws Exception
     */
-   public void moveCursorLeft(int tabIndex, int symbols) throws Exception
+   public void moveCursorLeft(int symbols) throws Exception
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_LEFT.toString());
+         typeTextIntoJavaEditor(Keys.ARROW_LEFT.toString());
       }
    }
 
    /**
     * Move cursor in Javaeditor right to pointed number of symbols.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of symbols to move right
+    * @param rows
+    *            number of symbols to move right
     * @throws Exception
     */
-   public void moveCursorRight(int tabIndex, int symbols) throws Exception
+   public void moveCursorRight(int symbols) throws Exception
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_RIGHT.toString());
+         typeTextIntoJavaEditor(Keys.ARROW_RIGHT.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -271,15 +354,15 @@ public class JavaEditor extends AbstractTestModule
    /**
     * Move cursor in Javaeditor down to pointed number of symbols.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of symbols to move right
+    * @param rows
+    *            number of symbols to move right
     * @throws Exception
     */
-   public void moveCursorDown(int tabIndex, int symbols) throws Exception
+   public void moveCursorDown(int symbols) throws Exception
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_DOWN.toString());
+         typeTextIntoJavaEditor(Keys.ARROW_DOWN.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -287,31 +370,31 @@ public class JavaEditor extends AbstractTestModule
    /**
     * Move cursor in Javaeditor up to pointed number of symbols.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of symbols to move right
+    * @param rows
+    *            number of symbols to move right
     * @throws Exception
     */
-   public void moveCursorUp(int tabIndex, int symbols) throws Exception
+   public void moveCursorUp(int symbols) throws Exception
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoJavaEditor(tabIndex, Keys.ARROW_UP.toString());
+         typeTextIntoJavaEditor(Keys.ARROW_UP.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
 
    /**
-    * emulate right click of a mouse
-    * in java editor
-    * @param tabIndex
+    * emulate right click of a mouse in java editor
+    * 
     * @param text
     * @throws Exception
     */
-   public void callContextMenuIntoJavaEditor(int tabIndex) throws Exception
+   public void callContextMenuIntoJavaEditor() throws Exception
    {
       try
       {
-         WebElement eleme = driver().findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, tabIndex)));
+         WebElement eleme =
+            driver().findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, getNumberTabOfActiveEditor())));
          new Actions(driver()).contextClick(eleme).build().perform();
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
@@ -322,26 +405,107 @@ public class JavaEditor extends AbstractTestModule
    }
 
    /**
-    * get text from tag with java code in DOM
-    * note: start position can be not with 1. 
-    * Because text with java - code in DOM of the java editor not sequenced follows 
-    * @param position
-    * @return
+    * @param title
     */
-   public String getTextFromSetPosition(int tabIndex, int position)
+   public void waitNoContentModificationMark(final String title)
    {
-      return driver().findElement(By.xpath(String.format(Locators.GET_POSITION_TEXT, tabIndex, position))).getText();
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement tab =
+                  editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR
+                     + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
+               return !tab.getText().trim().endsWith(MODIFIED_MARK);
+            }
+            catch (Exception e)
+            {
+               return true;
+            }
+         }
+      });
    }
 
    /**
-    * Get text from tab number "tabIndex" from javaeditor
+    * Wait mark of file content modification appear (symbol "*" near title).
     * 
-    * @param tabIndex begins from 0
+    * @param title
+    *            file's title
     */
-   public String getTextFromJavaEditor(int tabIndex) throws Exception
+   public void waitFileContentModificationMark(final String title)
    {
-      String text = driver().findElement(By.xpath(String.format(Locators.GET_TEXT_LOCATOR, tabIndex))).getText();
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            try
+            {
+               WebElement tab =
+                  editor.findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR
+                     + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
+               return tab.getText().trim().endsWith(MODIFIED_MARK);
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * get text from tag with java code in DOM note: start position can be not
+    * with 1. Because text with java - code in DOM of the java editor not
+    * sequenced follows
+    * 
+    * @param position
+    * @return
+    */
+   public String getTextFromSetPosition(int position)
+   {
+      return driver().findElement(
+         By.xpath(String.format(Locators.GET_POSITION_TEXT, getNumberTabOfActiveEditor(), position))).getText();
+   }
+
+   public String getTextFromJavaEditor() throws Exception
+   {
+      String text =
+         driver().findElement(By.xpath(String.format(Locators.GET_TEXT_LOCATOR, getNumberTabOfActiveEditor())))
+            .getText();
       return text;
+   }
+
+   /**
+    * Getting of number current active tab of the code editor
+    * 
+    * @return
+    */
+   public int getNumberTabOfActiveEditor()
+   {
+      return Integer.parseInt(numActiveEditor.getAttribute("view-id").replace("editor-", ""));
+   }
+
+   /**
+   * Select tab the code editor with the specified name
+   * 
+   * @param fileName
+   * @throws Exception
+   */
+   public void selectTab(String fileName) throws Exception
+   {
+      WebElement tab =
+         editor.findElement(By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR,
+            fileName)));
+      tab.click();
+
+      // TODO replace with wait for condition
+      Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
 
 }

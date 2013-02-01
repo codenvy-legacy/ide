@@ -19,14 +19,13 @@
 package org.exoplatform.ide.operation.folder;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -40,9 +39,9 @@ public class CreateFolderTest extends BaseTest
    private static String FOLDER_NAME_DEFAULT = "New Folder";
 
    private static String PROJECT = CreateFolderTest.class.getSimpleName();
-   
-   @Before
-   public void setUp()
+
+   @BeforeClass
+   public static void setUp()
    {
       try
       {
@@ -52,12 +51,12 @@ public class CreateFolderTest extends BaseTest
       {
       }
    }
-   
+
    @Test
    public void testCreateFolderNotInProject() throws Exception
    {
       IDE.PROJECT.EXPLORER.waitOpened();
-      Assert.assertFalse(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FOLDER));
+      IDE.TOOLBAR.waitButtonFromNewPopupMenuDisabled(MenuCommands.New.FOLDER);
       Assert.assertNull(IDE.PROJECT.EXPLORER.getCurrentProject());
    }
 
@@ -74,7 +73,7 @@ public class CreateFolderTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FOLDER));
+      IDE.TOOLBAR.waitButtonFromNewPopupMenuEnabled(MenuCommands.New.FOLDER);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FOLDER);
       IDE.FOLDER.waitOpened();

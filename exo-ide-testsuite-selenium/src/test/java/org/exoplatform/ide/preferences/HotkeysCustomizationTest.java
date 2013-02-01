@@ -30,7 +30,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.interactions.Actions;
 
 /**
  * IDE-156:HotKeys customization.
@@ -38,9 +37,8 @@ import org.openqa.selenium.interactions.Actions;
  * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id:   ${date} ${time}
- *
+ * @version $Id: ${date} ${time}
+ * 
  */
 public class HotkeysCustomizationTest extends BaseTest
 {
@@ -60,6 +58,7 @@ public class HotkeysCustomizationTest extends BaseTest
       }
       catch (IOException e)
       {
+
       }
    }
 
@@ -77,8 +76,8 @@ public class HotkeysCustomizationTest extends BaseTest
    }
 
    /**
-    * IDE-156:HotKeys customization
-    * ----- 1-2 ------------
+    * IDE-156:HotKeys customization ----- 1-2 ------------
+    * 
     * @throws Exception
     */
 
@@ -86,35 +85,34 @@ public class HotkeysCustomizationTest extends BaseTest
    public void testDefaultHotkeys() throws Exception
    {
 
-      //step 1 create new project, open default xml file and check hotkey ctrl+N.
-      //change xml file, press Ctrl+S and check ask for value dialog
+      // step 1 create new project, open default xml file and check hotkey
+      // ctrl+N.
+      // change xml file, press Ctrl+S and check ask for value dialog
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.New.NEW);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "n");
       IDE.TEMPLATES.waitOpened();
       IDE.TEMPLATES.clickCancelButton();
       IDE.TEMPLATES.waitClosed();
-      IDE.EDITOR.deleteFileContent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, "change file");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "s");
+      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.typeTextIntoEditor("change file");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "s");
       IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
       IDE.ASK_FOR_VALUE_DIALOG.clickNoButton();
       IDE.ASK_DIALOG.waitClosed();
-      //need for fix problem 
-      Thread.sleep(500);
+      IDE.LOADER.waitClosed();
       IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
    @Test
    public void testHotkeysInSeveralTabs() throws Exception
    {
-      //step 1 opening 2 files and checking restore commands in 2 tabs after refresh. 
-      driver.navigate().refresh();
 
+      // step 1 open
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
@@ -135,22 +133,19 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.PREFERENCES.clickOnCloseFormBtn();
       IDE.PREFERENCES.waitPreferencesClose();
 
-      // step 2 tabs and check in first tab new hotkeys. Selecting second tab, and checking new hotkey here
+      // step 2 tabs and check in first tab new hotkeys. Selecting second tab,
+      // and checking new hotkey here
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
       IDE.EDITOR.waitTabPresent(2);
       IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ALT.toString() + "n");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ALT.toString() + "n");
       IDE.SAVE_AS_TEMPLATE.waitOpened();
       IDE.SAVE_AS_TEMPLATE.clickCancelButton();
       IDE.SAVE_AS_TEMPLATE.waitClosed();
       IDE.EDITOR.selectTab(2);
-      //this workaround for problem with select iframes in coseeditor 
-      new Actions(driver).sendKeys(Keys.CONTROL + "h").build().perform();
-      // TODO After opening third tab, all next steps test cases  don't work in FF v.4.0 and higher.
-      //Maybe this problem switch between iframes with WebDriver. Maybe this problem will resolved after 
-      //refresh browser and fix issue IDE-1392
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL + "h");
       IDE.EDITOR.isTabPresentInEditorTabset("Untitled file.html *");
       IDE.selectMainFrame();
       IDE.EDITOR.closeTabIgnoringChanges(1);
@@ -162,8 +157,6 @@ public class HotkeysCustomizationTest extends BaseTest
    @Test
    public void testHotkeysAfterRefresh() throws Exception
    {
-      //step 1 opening 2 files and checking restore commands in 2 tabs after refresh. 
-      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.New.NEW);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
@@ -171,13 +164,13 @@ public class HotkeysCustomizationTest extends BaseTest
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
 
       IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "n");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "n");
       IDE.TEMPLATES.waitOpened();
       IDE.TEMPLATES.clickCancelButton();
       IDE.TEMPLATES.waitClosed();
 
       IDE.EDITOR.selectTab(2);
-      IDE.EDITOR.typeTextIntoEditor(1, Keys.CONTROL.toString() + "n");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "n");
       IDE.TEMPLATES.waitOpened();
       IDE.TEMPLATES.clickCancelButton();
       IDE.TEMPLATES.waitClosed();
@@ -187,15 +180,13 @@ public class HotkeysCustomizationTest extends BaseTest
    @Test
    public void testResettingToDefaults() throws Exception
    {
-      //reopen project after refresh, because if this action need for correctly work in short keys in IDE 
-      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //step 1: create new hotkey for upload file (Alt+U)
+      // step 1: create new hotkey for upload file (Alt+U)
       openCustomizeHotkeyForm();
 
       IDE.CUSTOMIZE_HOTKEYS.selectElementOnCommandlistbarByName("Open File By Path...");
-      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "g");
+      IDE.CUSTOMIZE_HOTKEYS.typeKeys(Keys.CONTROL.toString() + "m");
       IDE.CUSTOMIZE_HOTKEYS.waitBindEnabled();
       IDE.CUSTOMIZE_HOTKEYS.bindButtonClick();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
@@ -207,28 +198,30 @@ public class HotkeysCustomizationTest extends BaseTest
       // step 2: check new hotkey
       IDE.selectMainFrame();
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      
       IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.New.NEW);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
       IDE.EDITOR.waitTabPresent(1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL + "g");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL + "m");
       IDE.OPEN_FILE_BY_PATH.waitOpened();
       IDE.OPEN_FILE_BY_PATH.clickCancelButton();
       IDE.OPEN_FILE_BY_PATH.waitClosed();
-      //step 3: resetting the hotkeys to the default values and checking
+
+      // step 3: resetting the hotkeys to the default values and checking
       openCustomizeHotkeyForm();
       IDE.CUSTOMIZE_HOTKEYS.defaultsButtonClick();
       IDE.LOADER.waitClosed();
       IDE.CUSTOMIZE_HOTKEYS.isOkEnabled();
       IDE.CUSTOMIZE_HOTKEYS.okButtonClick();
+      IDE.LOADER.waitClosed();
       IDE.PREFERENCES.clickOnCloseFormBtn();
       IDE.PREFERENCES.waitPreferencesClose();
       IDE.EDITOR.waitTabPresent(1);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL + "g");
-      assertFalse(IDE.UPLOAD.ddd());
+      IDE.EDITOR.selectTab(1);
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL + "m");
+      assertFalse(IDE.UPLOAD.isOpened());
    }
 
-   //--------------
+   // close opened files in this test
    private void closeAllTabs() throws Exception
    {
       for (int i = 0; i < 2; i++)
@@ -237,6 +230,7 @@ public class HotkeysCustomizationTest extends BaseTest
       }
    }
 
+   //sequence actions for calling Hotkeys form
    private void openCustomizeHotkeyForm() throws Exception, InterruptedException
    {
       IDE.MENU.runCommand(MenuCommands.Window.WINDOW, MenuCommands.Window.PREFERNCESS);

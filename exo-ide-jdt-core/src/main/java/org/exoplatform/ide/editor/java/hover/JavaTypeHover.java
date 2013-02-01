@@ -24,9 +24,9 @@ import com.google.gwt.user.client.Element;
 
 import com.google.gwt.event.shared.HandlerManager;
 
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.hover.TextHover;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.hover.TextHover;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -54,7 +54,7 @@ public class JavaTypeHover implements TextHover
    }
 
    /**
-    * @see org.exoplatform.ide.editor.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.api.Editor, org.exoplatform.ide.editor.text.IRegion)
+    * @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.client.api.Editor, org.exoplatform.ide.editor.shared.text.IRegion)
     */
    @Override
    public Element getHoverInfo(Editor editor, IRegion hoverRegion)
@@ -67,7 +67,7 @@ public class JavaTypeHover implements TextHover
    }
 
    /**
-    * @see org.exoplatform.ide.editor.hover.TextHover#getHoverRegion(org.exoplatform.ide.editor.api.Editor, int)
+    * @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverRegion(org.exoplatform.ide.editor.client.api.Editor, int)
     */
    @Override
    public IRegion getHoverRegion(Editor editor, int offset)

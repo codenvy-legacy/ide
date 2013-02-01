@@ -18,7 +18,7 @@
  */
 package org.eclipse.jdt.client.codeassistant.ui;
 
-import org.exoplatform.ide.editor.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 
 /**
  * Created by The eXo Platform SAS.

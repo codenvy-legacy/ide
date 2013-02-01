@@ -24,8 +24,8 @@ import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.user.client.DOM;
 
 import org.eclipse.jdt.client.core.compiler.IProblem;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.text.IRegion;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.shared.text.IRegion;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -44,7 +44,7 @@ public class ProblemHover extends AbstractJavaHover
    }
 
    /**
-    * @see org.exoplatform.ide.editor.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.api.Editor, org.exoplatform.ide.editor.text.IRegion)
+    * @see org.exoplatform.ide.editor.client.hover.TextHover#getHoverInfo(org.exoplatform.ide.editor.client.api.Editor, org.exoplatform.ide.editor.shared.text.IRegion)
     */
    @Override
    public Element getHoverInfo(Editor editor, IRegion hoverRegion)

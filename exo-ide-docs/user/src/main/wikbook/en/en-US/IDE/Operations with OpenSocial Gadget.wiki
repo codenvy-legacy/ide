@@ -1,4 +1,4 @@
-The OpenSocial Gadget file is in the .xml format with the special MIME type "application/x-google-gadget". In eXo IDE, you can do the following actions on the OpenSocial Gadget files:
+The OpenSocial Gadget file is in the .xml format with the special MIME type "application/x-google-gadget". In Codenvy, you can do the following actions on the OpenSocial Gadget files:
 
 * Create *.xml* files.
 * Edit *.xml* files in the _Code_ or _WYSIWYG Editor_.
@@ -7,7 +7,7 @@ The OpenSocial Gadget file is in the .xml format with the special MIME type "app
 
 h1. Create OpenSocial Gadget
 
-To create the OpenSocial Gadget within eXo IDE, do one of the following ways:
+To create the OpenSocial Gadget within Codenvy, do one of the following ways:
 
 1. Click the *New* icon on the toolbar and then select *OpenSocial Gadget* from the drop-down menu.
 

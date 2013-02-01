@@ -25,7 +25,6 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -80,7 +79,7 @@ public class DeleteFolderTest extends BaseTest
       IDE.DELETE.waitClosed();
 
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER_NAME_TOOLBAR);
-      Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER_NAME_TOOLBAR));
+      IDE.PROJECT.EXPLORER.waitItemNotPresent(PROJECT + "/" + FOLDER_NAME_TOOLBAR);
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_NAME_TOOLBAR).getStatusCode());
    }
 
@@ -106,7 +105,7 @@ public class DeleteFolderTest extends BaseTest
       IDE.DELETE.waitClosed();
 
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER_NAME_MENU);
-      Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER_NAME_MENU));
+      IDE.PROJECT.EXPLORER.waitItemNotPresent(PROJECT + "/" + FOLDER_NAME_MENU);
       assertEquals(404, VirtualFileSystemUtils.get(WS_URL + PROJECT + "/" + FOLDER_NAME_MENU).getStatusCode());
    }
 

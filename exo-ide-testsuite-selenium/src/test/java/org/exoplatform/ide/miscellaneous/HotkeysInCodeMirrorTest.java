@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -27,10 +31,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * This test contains Thread.sleep, because we need
@@ -86,41 +86,41 @@ public class HotkeysInCodeMirrorTest extends AbstractCustomizeHotkeys
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(1);
       //type text to editor
-      IDE.EDITOR.typeTextIntoEditor(0, "Text File");
+      IDE.EDITOR.typeTextIntoEditor("Text File");
       IDE.EDITOR.waitFileContentModificationMark("Untitled file.txt");
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS, true);
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.File.SAVE_AS);
       //----- 2 ------------
       //Press Ctrl+F
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "f");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "f");
       //Find-replace form appeared
       IDE.FINDREPLACE.waitOpened();
       IDE.FINDREPLACE.waitFindButtonAppeared();
       IDE.FINDREPLACE.waitFindFieldAppeared();
       IDE.FINDREPLACE.typeInFindField("abcdefghi");
       IDE.FINDREPLACE.waitCloseButtonAppeared();
-      
+
       //close form
       IDE.FINDREPLACE.closeView();
       IDE.FINDREPLACE.waitClosed();
 
       //----- 3 ------------
       //check Ctrl+D
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
-      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "d");
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor());
 
       //----- 4 ------------
       //check Ctrl+L
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "l");
       //check go to line window dialog appeared
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "l");
       IDE.GOTOLINE.waitOpened();
       IDE.GOTOLINE.clickCancelButton();
-     
+
    }
 
    @Test
    public void testCopyPasetHotkeys() throws Exception
    {
-      driver.navigate().refresh();
+      IDE.selectMainFrame();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       //----- 1 ------------
       //Create new text file
@@ -129,81 +129,80 @@ public class HotkeysInCodeMirrorTest extends AbstractCustomizeHotkeys
 
       //type text to editor
       final String textToEdit = "text to edit";
-      IDE.EDITOR.typeTextIntoEditor(0, textToEdit);
+      IDE.EDITOR.typeTextIntoEditor(textToEdit);
 
       //check Ctrl+C, Ctrl+V
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_LEFT.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "a");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ARROW_LEFT.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "a");
       //used delay to imitate the user's typing
-      
+
       //TODO Used two "Ctrl+c" because after first pressing does not copy to clipboard
       //If, maybe this problem will fixed in latest versions WebDriver, one "Ctrl+c" should remove. 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "c");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "c");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "c");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "c");
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_DOWN.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.ARROW_DOWN.toString());
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
 
       //paste text by pressing Ctrl+V
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "v");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "v");
 
       //check text
-      assertEquals(textToEdit + "\n" + textToEdit, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(textToEdit + "\n" + textToEdit, IDE.EDITOR.getTextFromCodeEditor());
 
       //----- 2 ------------
       //check Ctrl+X
       //delete all text
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_UP.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.ARROW_UP.toString());
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "d");
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "d");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "d");
       Thread.sleep(500);
 
       final String textToCut = "text to cut";
-      IDE.EDITOR.typeTextIntoEditor(0, textToCut);
+      IDE.EDITOR.typeTextIntoEditor(textToCut);
 
       //select all text
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ARROW_LEFT.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "a");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ARROW_LEFT.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "a");
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "x");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "x");
       Thread.sleep(500);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "v");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "v");
       Thread.sleep(500);
-      assertEquals(textToCut, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(textToCut, IDE.EDITOR.getTextFromCodeEditor());
    }
 
-  @Test
+   @Test
    public void testUndoRedoHotkeys() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
+      IDE.selectMainFrame();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      
+
       //Create new text file
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
       IDE.EDITOR.waitTabPresent(1);
 
       final String textToRevert = "a";
 
-      IDE.EDITOR.typeTextIntoEditor(0, textToRevert);
+      IDE.EDITOR.typeTextIntoEditor(textToRevert);
       Thread.sleep(500);
       //change text
-      IDE.EDITOR.typeTextIntoEditor(0, "5");
+      IDE.EDITOR.typeTextIntoEditor("5");
       Thread.sleep(500);
 
-      assertEquals(textToRevert + "5", IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(textToRevert + "5", IDE.EDITOR.getTextFromCodeEditor());
       Thread.sleep(500);
       //press Ctrl+Z
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "z");
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "z");
       Thread.sleep(500);
-      assertEquals(textToRevert, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(textToRevert, IDE.EDITOR.getTextFromCodeEditor());
 
       // press Ctrl+Y
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.CONTROL.toString() + "y");
-      assertEquals(textToRevert + "5", IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "y");
+      assertEquals(textToRevert + "5", IDE.EDITOR.getTextFromCodeEditor());
    }
 
 }

@@ -20,6 +20,8 @@ package org.exoplatform.ide.preferences;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -30,8 +32,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
 
 /**
  * IDE-156:HotKeys customization.

@@ -14,7 +14,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 
 /**
  * Implementation of the <code>IContextInformation</code> interface.

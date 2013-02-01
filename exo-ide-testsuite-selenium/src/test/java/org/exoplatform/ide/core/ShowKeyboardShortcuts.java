@@ -70,7 +70,7 @@ public class ShowKeyboardShortcuts extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -88,7 +88,7 @@ public class ShowKeyboardShortcuts extends AbstractTestModule
     */
    public void waitClosed() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

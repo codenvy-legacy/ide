@@ -84,7 +84,7 @@ public class ClasspathSource extends AbstractTestModule
 
    public void waitOpened()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -99,7 +99,7 @@ public class ClasspathSource extends AbstractTestModule
    
    public void waitAppearContentInChoosePathForm(final String content)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -115,7 +115,7 @@ public class ClasspathSource extends AbstractTestModule
 
    public void waitClosed()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -163,7 +163,7 @@ public class ClasspathSource extends AbstractTestModule
 
    public void waitOkButtonEnabled(boolean enabled)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

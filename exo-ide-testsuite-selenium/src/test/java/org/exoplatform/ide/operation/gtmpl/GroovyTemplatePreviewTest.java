@@ -21,6 +21,9 @@ package org.exoplatform.ide.operation.gtmpl;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -30,9 +33,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * Test for preview of groovy template.
  * 
@@ -40,77 +40,73 @@ import java.util.Map;
  * @version $Id: $
  */
 
-public class GroovyTemplatePreviewTest extends BaseTest
-{
+public class GroovyTemplatePreviewTest extends BaseTest {
 
-   private static final String PROJECT = GroovyTemplatePreviewTest.class.getSimpleName();
+	private static final String PROJECT = GroovyTemplatePreviewTest.class
+			.getSimpleName();
 
-   private final static String FILE_NAME = "GroovyTemplatePreviewTest.gtmpl";
+	private final static String FILE_NAME = "GroovyTemplatePreviewTest.gtmpl";
 
-   private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"
-      + " import org.exoplatform.services.security.ConversationState\n "
-      + " ConversationState curentState = ConversationState.getCurrent();\n"
-      + " if (curentState != null){ Identity identity = curentState.getIdentity();\n"
-      + " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";
+	private static String GTMPL = "<html><body><% import org.exoplatform.services.security.Identity\n"
+			+ " import org.exoplatform.services.security.ConversationState\n "
+			+ " ConversationState curentState = ConversationState.getCurrent();\n"
+			+ " if (curentState != null){ Identity identity = curentState.getIdentity();\n"
+			+ " 3.times { println \"Hello \" + identity.getUserId()}}%><br></body></html>";
 
-   @BeforeClass
-   public static void setUp()
-   {
+	@BeforeClass
+	public static void setUp() {
 
-      try
-      {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFile(link, FILE_NAME, MimeType.GROOVY_TEMPLATE, GTMPL);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+		try {
+			Map<String, Link> project = VirtualFileSystemUtils
+					.createDefaultProject(PROJECT);
+			Link link = project.get(Link.REL_CREATE_FILE);
+			VirtualFileSystemUtils.createFile(link, FILE_NAME,
+					MimeType.GROOVY_TEMPLATE, GTMPL);
+		} catch (IOException e) {
+		}
+	}
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testGtmplPreview() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+	@Test
+	public void testGtmplPreview() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
-      // open file
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitTabPresent(1);
+		// open file
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
+		IDE.EDITOR.waitTabPresent(1);
 
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
-      IDE.PREVIEW.waitGtmplPreviewOpened();
-      IDE.PREVIEW.selectPreviewIFrame();
-      assertTrue(IDE.PREVIEW.getPreviewContent().contains(USER_NAME));
-      IDE.selectMainFrame();
-      // XXX Switch frames doesn't work with Google Chrome WebDriver without sleep.
-      // Issue - http://code.google.com/p/selenium/issues/detail?id=1969
-      Thread.sleep(500);
+		IDE.MENU.runCommand(MenuCommands.Run.RUN,
+				MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
+		IDE.PREVIEW.waitGtmplPreviewOpened();
+		IDE.PREVIEW.selectPreviewIFrame();
+		assertTrue(IDE.PREVIEW.getPreviewContent().contains(USER_NAME));
+		IDE.selectMainFrame();
+		// XXX Switch frames doesn't work with Google Chrome WebDriver without
+		// sleep.
+		// Issue - http://code.google.com/p/selenium/issues/detail?id=1969
+		Thread.sleep(500);
 
-      // close preview tab and open again
-      IDE.PREVIEW.closeView();
-      IDE.PREVIEW.waitGtmplPreviewClosed();
-      assertFalse(IDE.PREVIEW.isGtmplPreviewOpened());
-      IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
-      IDE.PREVIEW.waitGtmplPreviewOpened();
-      IDE.PREVIEW.selectPreviewIFrame();
-      assertTrue(IDE.PREVIEW.getPreviewContent().contains(USER_NAME));
-      IDE.selectMainFrame();
-   }
+		// close preview tab and open again
+		IDE.PREVIEW.closeView();
+		IDE.PREVIEW.waitGtmplPreviewClosed();
+		assertFalse(IDE.PREVIEW.isGtmplPreviewOpened());
+		IDE.MENU.runCommand(MenuCommands.Run.RUN,
+				MenuCommands.Run.SHOW_GROOVY_TEMPLATE_PREVIEW);
+		IDE.PREVIEW.waitGtmplPreviewOpened();
+		IDE.PREVIEW.selectPreviewIFrame();
+		assertTrue(IDE.PREVIEW.getPreviewContent().contains(USER_NAME));
+		IDE.selectMainFrame();
+	}
 
 }

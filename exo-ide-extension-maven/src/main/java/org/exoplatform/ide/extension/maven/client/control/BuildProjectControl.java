@@ -47,6 +47,6 @@ public class BuildProjectControl extends BuildProjectControlAbstract implements 
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(BuilderClientBundle.INSTANCE.build(), BuilderClientBundle.INSTANCE.buildDisabled());
-      setEvent(new BuildProjectEvent());
+      setEvent(new BuildProjectEvent(false, true));
    }
 }

@@ -16,7 +16,7 @@ import org.eclipse.jdt.client.core.dom.CompilationUnit;
 import org.eclipse.jdt.client.runtime.IProgressMonitor;
 import org.eclipse.jdt.client.templates.TemplateEngine;
 import org.eclipse.jdt.client.templates.TemplateProposal;
-import org.exoplatform.ide.editor.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 
 import java.util.ArrayList;
 import java.util.Arrays;

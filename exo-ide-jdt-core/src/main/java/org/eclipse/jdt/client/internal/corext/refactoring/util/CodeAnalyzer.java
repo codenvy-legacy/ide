@@ -17,7 +17,7 @@ import org.eclipse.jdt.client.internal.corext.dom.Selection;
 import org.eclipse.jdt.client.internal.corext.refactoring.RefactoringCoreMessages;
 import org.eclipse.jdt.client.ltk.refactoring.RefactoringStatus;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 public class CodeAnalyzer extends StatementAnalyzer
 {

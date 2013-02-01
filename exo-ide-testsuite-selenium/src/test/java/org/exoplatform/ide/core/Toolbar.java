@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.ide.MenuCommands;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
@@ -75,6 +73,7 @@ public class Toolbar extends AbstractTestModule
     */
    public void runCommand(String buttonTitle) throws Exception
    {
+      waitForButtonEnabled(buttonTitle);
       WebElement button = toolbar.findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, buttonTitle)));
       button.click();
    }
@@ -87,7 +86,10 @@ public class Toolbar extends AbstractTestModule
     */
    public void runCommandFromNewPopupMenu(final String commandName) throws Exception
    {
-      runCommand(MenuCommands.New.NEW);
+      waitButtonFromNewPopupMenuEnabled(commandName);
+      WebElement toolBarbutton =
+         toolbar.findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, MenuCommands.New.NEW)));
+      toolBarbutton.click();
       waitMenuPopUp();
       try
       {
@@ -115,7 +117,7 @@ public class Toolbar extends AbstractTestModule
     */
    protected void waitMenuPopUp()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
@@ -131,7 +133,6 @@ public class Toolbar extends AbstractTestModule
          }
       });
    }
-
 
    /**
     * Returns the enabled state of the Toolbar button.
@@ -156,47 +157,122 @@ public class Toolbar extends AbstractTestModule
     * Returns the enabled state of button from new popup.
     * 
     * @param name button's name
-    * @return {@link Boolean} enabled state
     * @throws Exception
     */
-   public boolean isButtonFromNewPopupMenuEnabled(String name) throws Exception
+   public void waitButtonFromNewPopupMenuEnabled(final String name) throws Exception
    {
-      runCommand(MenuCommands.New.NEW);
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
 
-      try
-      {
-         WebElement button = driver().findElement(By.xpath(String.format(Locators.ROW_FROM_NEW_POPUP_LOCATOR, name)));
-         return Boolean.parseBoolean(button.getAttribute("item-enabled"));
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
-      finally
-      {
-         if (lockLayer != null)
+         @Override
+         public Boolean apply(WebDriver driver)
          {
-            lockLayer.click();
+
+            try
+            {
+               WebElement toolBarbutton =
+                  toolbar.findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, MenuCommands.New.NEW)));
+               toolBarbutton.click();
+               WebElement button =
+                  driver().findElement(By.xpath(String.format(Locators.ROW_FROM_NEW_POPUP_LOCATOR, name)));
+               return Boolean.parseBoolean(button.getAttribute("item-enabled"));
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+            finally
+            {
+               if (lockLayer != null)
+               {
+                  lockLayer.click();
+               }
+            }
          }
-      }
+      });
+   }
+
+   /**
+    * Returns the disabled state of button from new popup.
+    * 
+    * @param name button's name
+    * @throws Exception
+    */
+   public void waitButtonFromNewPopupMenuDisabled(final String name) throws Exception
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+
+            try
+            {
+               WebElement toolBarbutton =
+                  toolbar.findElement(By.cssSelector(String.format(Locators.BUTTON_SELECTOR, MenuCommands.New.NEW)));
+               toolBarbutton.click();
+               WebElement button =
+                  driver().findElement(By.xpath(String.format(Locators.ROW_FROM_NEW_POPUP_LOCATOR, name)));
+               return !(Boolean.parseBoolean(button.getAttribute("item-enabled")));
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+            finally
+            {
+               if (lockLayer != null)
+               {
+                  lockLayer.click();
+               }
+            }
+         }
+      });
    }
 
    /**
     * Wait for button change the enabled state.
     * 
     * @param name button's name
-    * @param enabled <code>true</code> if wait for enabled state, otherwise - for disabled
     * @throws Exception
     */
-   public void waitForButtonEnabled(final String name, boolean enabled) throws Exception
+   public void waitForButtonEnabled(final String name) throws Exception
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
          public Boolean apply(WebDriver driver)
          {
             return isButtonEnabled(name);
+         }
+      });
+   }
+
+   /**
+    * Wait for button change the disbled state.
+    * 
+    * @param name button's name
+    * @throws Exception
+    */
+   public void waitForButtonDisabled(final String name) throws Exception
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !(isButtonEnabled(name));
          }
       });
    }
@@ -216,6 +292,32 @@ public class Toolbar extends AbstractTestModule
       {
          return false;
       }
+   }
+
+   public void waitButtonNotPresentAtRight(final String name)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return !isButtonPresentAtRight(name);
+         }
+      });
+   }
+
+   public void waitButtonPresentAtRight(final String name)
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver driver)
+         {
+            return isButtonPresentAtRight(name);
+         }
+      });
    }
 
    /**
@@ -239,7 +341,7 @@ public class Toolbar extends AbstractTestModule
 
    public void waitButtonNotPresentAtLeft(final String name)
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -252,7 +354,7 @@ public class Toolbar extends AbstractTestModule
 
    public void waitButtonPresentAtLeft(final String name)
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

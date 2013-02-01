@@ -24,6 +24,7 @@ import static org.junit.Assert.fail;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -31,6 +32,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -45,6 +47,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class Editor extends AbstractTestModule
 {
    public static final String MODIFIED_MARK = "*";
+
+   public static final String SCRIPT_FOR_EXECUTOR = "var element = arguments[0];" + "return element.textContent;";
 
    private interface Locators
    {
@@ -78,9 +82,9 @@ public class Editor extends AbstractTestModule
 
       String VIEW_ID_ATTRIBUTE = "view-id";
 
-      String TITLE_SPAN_LOCATOR = "//span[@title='%s']";
+      String TITLE_SPAN_LOCATOR = "//span[@title='%s']/..";
 
-      String LINE_NUMBER_CSS_LOCATOR = "div[class='CodeMirror-line-numbers']";
+      String LINE_NUMBERS_TAB = "//div[@class='CodeMirror-line-numbers']/..";
 
       String ACTIVE_FILE_ID = "debug-editor-active-file-url";
 
@@ -91,10 +95,11 @@ public class Editor extends AbstractTestModule
       String DESIGN_EDITOR_PREFIX = "//div[@view-id='editor-%s']";
 
       String HIGHLITER_BORDER = DESIGN_EDITOR_PREFIX
-         + "//div[@component= 'Border' and contains(@style, 'color: rgb(182, 204, 232)')]";
+         + "//div[@component= 'Border' and contains(@style, '182, 204, 232')]";
 
       String IFRAME = "iframe";
 
+      String NUM_ACTIVE_EDITOR = "//div[@class='gwt-TabLayoutPanelContent' and @is-active='true']";
    }
 
    private WebElement editor;
@@ -108,10 +113,17 @@ public class Editor extends AbstractTestModule
    @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
    private WebElement editorCodemirr;
 
+   @FindBy(id = Locators.ACTIVE_FILE_ID)
+   private WebElement activeFileId;
+
+   @FindBy(xpath = Locators.NUM_ACTIVE_EDITOR)
+   private WebElement numActiveEditor;
+
    /**
     * Returns the title of the tab with the pointed index.
     * 
-    * @param index tab index
+    * @param index
+    *            tab index
     * @return {@link String} tab's title
     * @throws Exception
     */
@@ -129,7 +141,7 @@ public class Editor extends AbstractTestModule
     */
    public void waitIframe()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -141,17 +153,44 @@ public class Editor extends AbstractTestModule
    }
 
    /**
+    * waiting while in editor is no content
+    * 
+    * @param numCodeEditor
+    */
+   public void waitContentIsClear()
+   {
+      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return IDE().EDITOR.getTextFromCodeEditor().equals("");
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
     * Click on editor tab to make it active.
     * 
     * Numbering of tabs starts with 0.
     * 
-    * @param tabIndex index of tab
+    * @param tabIndex
+    *            index of tab
     * @throws Exception
     */
    public void selectTab(int tabIndex) throws Exception
    {
       editor.findElement(
-         By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR + "//span", tabIndex))).click();
+         By.xpath(String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TAB_LOCATOR + "//span/..", tabIndex)))
+         .click();
       // TODO replace with wait for condition
       Thread.sleep(TestConstants.EDITOR_OPEN_PERIOD);
    }
@@ -192,9 +231,11 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Click on Close Tab button. Old name of this method is "clickCloseTabButton(int tabIndex)"
+    * Click on Close Tab button. Old name of this method is
+    * "clickCloseTabButton(int tabIndex)"
     * 
-    * @param tabIndex index of tab, starts at 0
+    * @param tabIndex
+    *            index of tab, starts at 0
     */
    public void clickCloseEditorButton(int tabIndex) throws Exception
    {
@@ -227,7 +268,8 @@ public class Editor extends AbstractTestModule
    {
       selectTab(tabIndex);
       String activeFile =
-         (selenium().getText(Locators.ACTIVE_FILE_ID) == null) ? "" : selenium().getText(Locators.ACTIVE_FILE_ID);
+         ((String)((JavascriptExecutor)driver()).executeScript(SCRIPT_FOR_EXECUTOR, activeFileId) == null) ? ""
+            : (String)((JavascriptExecutor)driver()).executeScript(SCRIPT_FOR_EXECUTOR, activeFileId);
       clickCloseEditorButton(tabIndex);
       waitActiveFileChanged(activeFile);
    }
@@ -242,7 +284,8 @@ public class Editor extends AbstractTestModule
    {
       selectTab(fileName);
       String activeFile =
-         (selenium().getText(Locators.ACTIVE_FILE_ID) == null) ? "" : selenium().getText(Locators.ACTIVE_FILE_ID);
+         ((String)((JavascriptExecutor)driver()).executeScript(SCRIPT_FOR_EXECUTOR, activeFileId) == null) ? ""
+            : (String)((JavascriptExecutor)driver()).executeScript(SCRIPT_FOR_EXECUTOR, activeFileId);
       clickCloseEditorButton(fileName);
       waitActiveFileChanged(activeFile);
       waitTabNotPresent(fileName);
@@ -253,13 +296,14 @@ public class Editor extends AbstractTestModule
     */
    private void waitActiveFileChanged(final String activeFile)
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
          public Boolean apply(WebDriver input)
          {
-            return !activeFile.equals(selenium().getText(Locators.ACTIVE_FILE_ID));
+            return !activeFile.equals((String)((JavascriptExecutor)driver()).executeScript(SCRIPT_FOR_EXECUTOR,
+               activeFileId));
          }
       });
    }
@@ -267,7 +311,8 @@ public class Editor extends AbstractTestModule
    /**
     * Close tab in editor. Close ask window in case it appear while closing.
     * 
-    * @param tabIndex index of tab, starts at 0
+    * @param tabIndex
+    *            index of tab, starts at 0
     * @throws Exception
     */
    public void closeTabIgnoringChanges(int tabIndex) throws Exception
@@ -292,7 +337,55 @@ public class Editor extends AbstractTestModule
          fail("Dialog has been not found!");
       }
 
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
+               return false;
+            }
+            catch (NoSuchElementException e)
+            {
+               return true;
+            }
+         }
+      });
+   }
+
+   /**
+    * Close tab in editor. Close ask window in case it appear while closing.
+    * 
+    * @param tabName
+    *            name of tab.
+    * @throws Exception
+    */
+   public void closeTabIgnoringChanges(String tabName) throws Exception
+   {
+      selectTab(tabName);
+      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
+      clickCloseEditorButton(tabName);
+
+      /*
+       * Closing ask dialogs if them is appears.
+       */
+      if (IDE().ASK_DIALOG.isOpened())
+      {
+         IDE().ASK_DIALOG.clickNo();
+      }
+      else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
+      {
+         IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
+      }
+      else
+      {
+         fail("Dialog has been not found!");
+      }
+
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -314,51 +407,8 @@ public class Editor extends AbstractTestModule
    /**
     * 
     * 
-    * @param tabIndex index of tab, starts at 0
-    * @throws Exception
-    */
-   public void forcedClosureFile(int tabIndex) throws Exception
-   {
-      selectTab(tabIndex);
-      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
-      clickCloseEditorButton(tabIndex);
-
-      /*
-       * Closing ask dialogs if them is appears.
-       */
-      if (IDE().ASK_DIALOG.isOpened())
-      {
-         IDE().ASK_DIALOG.clickNo();
-      }
-      else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
-      {
-         IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
-      }
-      else
-
-         new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
-         {
-
-            @Override
-            public Boolean apply(WebDriver input)
-            {
-               try
-               {
-                  input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
-                  return false;
-               }
-               catch (NoSuchElementException e)
-               {
-                  return true;
-               }
-            }
-         });
-   }
-
-   /**
-    * 
-    * 
-    * @param tabIndex index of tab, starts at 0
+    * @param tabIndex
+    *            index of tab, starts at 0
     * @return
     */
    public boolean isFileContentChanged(int tabIndex)
@@ -367,22 +417,24 @@ public class Editor extends AbstractTestModule
       return tabName.endsWith(MODIFIED_MARK);
    }
 
-   public boolean isFileContentChanged(String title)
-   {
-      WebElement tab =
-         editor
-            .findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
-      return tab.getText().trim().endsWith(MODIFIED_MARK);
-   }
+   //
+   //   public boolean isFileContentChanged(String title)
+   //   {
+   //      WebElement tab =
+   //         editor
+   //            .findElement(By.xpath(Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TITLE_SPAN_LOCATOR, title)));
+   //      return tab.getText().trim().endsWith(MODIFIED_MARK);
+   //   }
 
    /**
     * Wait mark of file content modification appear (symbol "*" near title).
     * 
-    * @param title file's title
+    * @param title
+    *            file's title
     */
    public void waitFileContentModificationMark(final String title)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -408,7 +460,7 @@ public class Editor extends AbstractTestModule
     */
    public void waitNoContentModificationMark(final String title)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -430,11 +482,15 @@ public class Editor extends AbstractTestModule
    }
 
    /**
-    * Close new file. If saveFile true - save file. If fileName is null - save with default name, else save with fileName name.
+    * Close new file. If saveFile true - save file. If fileName is null - save
+    * with default name, else save with fileName name.
     * 
-    * @param tabIndex - index of tab in editor panel
-    * @param saveFile - is save file before closing
-    * @param fileName - name of new file
+    * @param tabIndex
+    *            - index of tab in editor panel
+    * @param saveFile
+    *            - is save file before closing
+    * @param fileName
+    *            - name of new file
     * @throws Exception
     */
    public void saveAndCloseFile(int tabIndex, String newFileName) throws Exception
@@ -464,7 +520,7 @@ public class Editor extends AbstractTestModule
          fail();
       }
 
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -498,7 +554,8 @@ public class Editor extends AbstractTestModule
    /**
     * Returns the active state of the editor. Index starts from <code>0</code>.
     * 
-    * @param editorIndex editor's index
+    * @param editorIndex
+    *            editor's index
     * @return {@link Boolean} <code>true</code> if active
     */
    public boolean isActive(int editorIndex)
@@ -536,14 +593,15 @@ public class Editor extends AbstractTestModule
    /**
     * Delete pointed number of lines in editor.
     * 
-    * @param count number of lines to delete
+    * @param count
+    *            number of lines to delete
     * @throws Exception
     */
-   public void deleteLinesInEditor(int tabIndex, int count) throws Exception
+   public void deleteLinesInEditor(int count) throws Exception
    {
       for (int i = 0; i < count; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "d");
+         typeTextIntoEditor(Keys.CONTROL.toString() + "d");
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -551,10 +609,10 @@ public class Editor extends AbstractTestModule
    /**
     * Delete all file content via Ctrl+a, Delete
     */
-   public void deleteFileContent(int tabIndex) throws Exception
+   public void deleteFileContent() throws Exception
    {
-      typeTextIntoEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
-      Thread.sleep(TestConstants.REDRAW_PERIOD);
+      typeTextIntoEditor(Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
+      waitContentIsClear();
    }
 
    /**
@@ -562,21 +620,21 @@ public class Editor extends AbstractTestModule
     * 
     * Index of tabs begins from 0.
     * 
-    * Sometimes, if you can't type text to editor, try before to click on editor:
+    * Sometimes, if you can't type text to editor, try before to click on
+    * editor:
     * 
-    * selenium().clickAt("//body[@class='editbox']", "5,5");
-    * 
-    * @param tabIndex begins from 0
-    * @param text (can be used '\n' as line break)
+    * @param tabIndex
+    *            begins from 0
+    * @param text
+    *            (can be used '\n' as line break)
     */
-   public void typeTextIntoEditor(int tabIndex, String text) throws Exception
+   public void typeTextIntoEditor(String text) throws Exception
    {
       try
       {
-         selectIFrameWithEditor(tabIndex);
+         selectIFrameWithEditor();
          WebElement editor = driver().switchTo().activeElement();
          editor.sendKeys(text);
-         Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
       finally
       {
@@ -587,15 +645,17 @@ public class Editor extends AbstractTestModule
    /**
     * Move cursor in editor down to pointed number of lines.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of lines to move down
+    * @param tabIndex
+    *            index of the tab
+    * @param rows
+    *            number of lines to move down
     * @throws Exception
     */
-   public void moveCursorDown(int tabIndex, int rows) throws Exception
+   public void moveCursorDown(int rows) throws Exception
    {
       for (int i = 0; i < rows; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.ARROW_DOWN.toString());
+         typeTextIntoEditor(Keys.ARROW_DOWN.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -603,45 +663,51 @@ public class Editor extends AbstractTestModule
    /**
     * Move cursor in editor up to pointed number of lines.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of lines to move up
+    * @param tabIndex
+    *            index of the tab
+    * @param rows
+    *            number of lines to move up
     * @throws Exception
     */
-   public void moveCursorUp(int tabIndex, int rows) throws Exception
+   public void moveCursorUp(int rows) throws Exception
    {
       for (int i = 0; i < rows; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.ARROW_UP.toString());
+         typeTextIntoEditor(Keys.ARROW_UP.toString());
       }
    }
 
    /**
     * Move cursor in editor left to pointed number of symbols.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of symbols to move left
+    * @param tabIndex
+    *            index of the tab
+    * @param rows
+    *            number of symbols to move left
     * @throws Exception
     */
-   public void moveCursorLeft(int tabIndex, int symbols) throws Exception
+   public void moveCursorLeft(int symbols) throws Exception
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.ARROW_LEFT.toString());
+         typeTextIntoEditor(Keys.ARROW_LEFT.toString());
       }
    }
 
    /**
     * Move cursor in editor right to pointed number of symbols.
     * 
-    * @param tabIndex index of the tab
-    * @param rows number of symbols to move right
+    * @param tabIndex
+    *            index of the tab
+    * @param rows
+    *            number of symbols to move right
     * @throws Exception
     */
-   public void moveCursorRight(int tabIndex, int symbols) throws Exception
+   public void moveCursorRight(int symbols) throws Exception
    {
       for (int i = 0; i < symbols; i++)
       {
-         typeTextIntoEditor(tabIndex, Keys.ARROW_RIGHT.toString());
+         typeTextIntoEditor(Keys.ARROW_RIGHT.toString());
          Thread.sleep(TestConstants.TYPE_DELAY_PERIOD);
       }
    }
@@ -650,38 +716,40 @@ public class Editor extends AbstractTestModule
     * Get the locator of content panel.
     * 
     * 
-    * @param tabIndex starts from 0
+    * @param tabIndex
+    *            starts from 0
     * @return content panel locator
     */
-   public String getContentPanelLocator(int tabIndex)
+   public String getContentPanelLocator()
    {
-      return String.format(Locators.EDITOR_TAB_LOCATOR, tabIndex);
-   }
+      return String.format(Locators.EDITOR_TAB_LOCATOR, getNumberTabOfActiveEditor());
+   };
 
    /**
     * Select iframe, which contains editor from tab with index tabIndex
     * 
-    * @param tabIndex begins from 0
+    * @param tabIndex
+    *            begins from 0
     */
-   public WebElement selectIFrameWithEditor(int tabIndex) throws Exception
+   public void selectIFrameWithEditor() throws Exception
    {
-      String iFrameWithEditorLocator = getContentPanelLocator(tabIndex) + "//iframe";
+      String iFrameWithEditorLocator = getContentPanelLocator() + "//iframe";
       WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
       driver().switchTo().frame(editorFrame);
       waitIframe();
       driver().switchTo().frame(iframe);
-      return editorFrame;
    }
 
    /**
     * Mouse click on editor.
     * 
-    * @param tabIndex - tab index.
+    * @param tabIndex
+    *            - tab index.
     * @throws Exception
     */
-   public void clickOnEditor(int tabIndex) throws Exception
+   public void clickOnEditor() throws Exception
    {
-      selectIFrameWithEditor(tabIndex);
+      selectIFrameWithEditor();
       driver().switchTo().activeElement().click();
       IDE().selectMainFrame();
    }
@@ -689,11 +757,12 @@ public class Editor extends AbstractTestModule
    /**
     * Get text from tab number "tabIndex" from editor
     * 
-    * @param tabIndex begins from 0
+    * @param tabIndex
+    *            begins from 0
     */
-   public String getTextFromCodeEditor(int tabIndex) throws Exception
+   public String getTextFromCodeEditor() throws Exception
    {
-      selectIFrameWithEditor(tabIndex);
+      selectIFrameWithEditor();
       String text = driver().switchTo().activeElement().getText();
       IDE().selectMainFrame();
       return text;
@@ -702,14 +771,50 @@ public class Editor extends AbstractTestModule
    /**
     * Wait while tab appears in editor
     * 
-    * @param tabIndex - index of tab, starts at 0
+    * @param tabIndex
+    *            - index of tab, starts at 0
     * @throws Exception
     */
    public void waitTabPresent(int tabIndex) throws Exception
    {
       final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
 
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+
+            try
+            {
+               Thread.sleep(TestConstants.SLEEP);
+               return input.findElement(By.xpath(tab)) != null;
+            }
+            catch (NoSuchElementException e)
+            {
+               return false;
+            }
+            catch (InterruptedException e)
+            {
+               return false;
+            }
+         }
+      });
+   }
+
+   /**
+    * Wait while tab appears in editor
+    * 
+    * @param tabName
+    *            
+    * @throws Exception
+    */
+   public void waitTabPresent(String fileName) throws Exception
+   {
+      final String tab = String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR, fileName);
+
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -730,24 +835,33 @@ public class Editor extends AbstractTestModule
    /**
     * Wait while tab appears in editor
     * 
-    * @param tabIndex - index of tab, starts at 0
     * @throws Exception
     */
-   public void waitActiveFile(String path) throws Exception
+   public void waitActiveFile() throws Exception
    {
-      final String location = (path.startsWith("/")) ? path : "/" + path;
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
             try
             {
-               return location.equals(selenium().getText(Locators.ACTIVE_FILE_ID));
+               //TODO try to avoid and wait completely opened
+               Thread.sleep(3000);
+               selectIFrameWithEditor();
+               return true;
             }
             catch (NoSuchElementException e)
             {
                return false;
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+            finally
+            {
+               IDE().selectMainFrame();
             }
          }
       });
@@ -756,14 +870,15 @@ public class Editor extends AbstractTestModule
    /**
     * Wait while tab disappears in editor
     * 
-    * @param tabIndex - index of tab, starts at 0
+    * @param tabIndex
+    *            - index of tab, starts at 0
     * @throws Exception
     */
    public void waitTabNotPresent(int tabIndex) throws Exception
    {
       final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
 
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -786,7 +901,7 @@ public class Editor extends AbstractTestModule
    {
       final String tab = String.format(Locators.EDITOR_TABSET_LOCATOR + Locators.TITLE_SPAN_LOCATOR, fileName);
 
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -813,23 +928,39 @@ public class Editor extends AbstractTestModule
     */
    public void checkCodeEditorOpened(int tabIndex) throws Exception
    {
-      // TODO
       String locator =
          "//div[@panel-id='editor'and @tab-index='" + tabIndex + "']//div[@class='CodeMirror-wrapping']/iframe";
-      assertTrue(selenium().isElementPresent(locator));
-      assertTrue(selenium().isVisible(locator));
+      assertTrue(driver().findElement(By.xpath(locator)).isDisplayed());
    }
 
-   public boolean isLineNumbersVisible()
+   /**
+    * wait line numbers visible
+    */
+   public void waitLineNumbersVisible()
    {
-      try
-      {
-         return editor.findElement(By.cssSelector(Locators.LINE_NUMBER_CSS_LOCATOR)) != null;
-      }
-      catch (NoSuchElementException e)
-      {
-         return false;
-      }
+      String iFrameWithEditorLocator = getContentPanelLocator() + "//iframe";
+      WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
+      driver().switchTo().frame(editorFrame);
+
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.LINE_NUMBERS_TAB)));
+
+      IDE().selectMainFrame();
+   }
+
+   /**
+    * wait line numbers not visible
+    */
+   public void waitLineNumbersNotVisible()
+   {
+      String iFrameWithEditorLocator = getContentPanelLocator() + "//iframe";
+      WebElement editorFrame = driver().findElement(By.xpath(iFrameWithEditorLocator));
+      driver().switchTo().frame(editorFrame);
+
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .xpath(Locators.LINE_NUMBERS_TAB)));
+
+      IDE().selectMainFrame();
    }
 
    /**
@@ -856,32 +987,14 @@ public class Editor extends AbstractTestModule
       driver().findElement(By.xpath(Locators.DESIGN_BUTTON_XPATH)).click();
    }
 
-   public void selectCkEditorIframe(int tabIndex)
-   {
-      // TODO
-      String divIndex = String.valueOf(tabIndex);
-      selenium().selectFrame(
-         "//div[@panel-id='editor'and @tab-index=" + "'" + divIndex + "'" + "]"
-            + "//table[@class='cke_editor']//iframe");
-   }
-
-   public String getSelectedText(int tabIndex) throws Exception
-   {
-      selectIFrameWithEditor(tabIndex);
-      // TODO find how to get selected text
-      String text = selenium().getEval("if (window.getSelection()) { window.getSelection().toString();}");
-
-      IDE().selectMainFrame();
-      return text;
-   }
-
    public boolean isHighlighterPresent()
    {
       return highlighter != null && highlighter.isDisplayed();
    }
 
    /**
-    * @param tabIndex editor tab with highlighter
+    * @param tabIndex
+    *            editor tab with highlighter
     * @return {@link WebElement} highlighter
     */
    public WebElement getHighlighter(int tabIndex)
@@ -896,17 +1009,10 @@ public class Editor extends AbstractTestModule
       }
    }
 
-   public boolean isHighlighterInEditor(int numEditor)
+   public void waitHighlighterInEditor(int numEditor)
    {
-      WebElement border = driver().findElement(By.xpath(String.format(Locators.HIGHLITER_BORDER, numEditor)));
-      try
-      {
-         return border != null && border.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.HIGHLITER_BORDER, numEditor))));
    }
 
    /**
@@ -915,11 +1021,58 @@ public class Editor extends AbstractTestModule
     * @param editorIndex
     * @throws Exception
     */
-   public void openContextMenu(int editorIndex) throws Exception
+   public void openContextMenu() throws Exception
    {
-      selectIFrameWithEditor(0);
-      //   editorCodemirr.sendKeys(Keys.chord(Keys.SHIFT, Keys.F10));
+      selectIFrameWithEditor();
+
       new Actions(driver()).contextClick(editorCodemirr).perform();
       IDE().selectMainFrame();
+   }
+
+   /**
+    * Getting of number current active tab of the code editor
+    * 
+    * @return
+    */
+   public int getNumberTabOfActiveEditor()
+   {
+      return Integer.parseInt(numActiveEditor.getAttribute("view-id").replace("editor-", ""));
+   }
+
+   public void forcedClosureFile(int tabIndex) throws Exception
+   {
+      selectTab(tabIndex);
+      final String viewId = editor.findElement(By.xpath(Locators.ACTIVE_EDITOR_TAB_LOCATOR)).getAttribute("view-id");
+      clickCloseEditorButton(tabIndex);
+      /*
+       * Closing ask dialogs if them is appears.
+       */
+      if (IDE().ASK_DIALOG.isOpened())
+      {
+         IDE().ASK_DIALOG.clickNo();
+      }
+      else if (IDE().ASK_FOR_VALUE_DIALOG.isOpened())
+      {
+         IDE().ASK_FOR_VALUE_DIALOG.clickNoButton();
+      }
+      else
+
+         new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+         {
+            @Override
+            public Boolean apply(WebDriver input)
+
+            {
+               try
+               {
+                  input.findElement(By.xpath(String.format(Locators.EDITOR_VIEW_LOCATOR, viewId)));
+                  return false;
+               }
+               catch (NoSuchElementException e)
+               {
+                  return true;
+               }
+            }
+         });
    }
 }

@@ -28,6 +28,15 @@ import com.google.gwt.i18n.client.Messages;
 public interface LocalizationConstant extends Messages
 {
    /*
+    * Buttons
+    */
+   @Key("button.refactoring.rename")
+   String refactoringRenameButton();
+
+   @Key("button.cancel")
+   String cancelButton();
+
+   /*
     * Controls
     */
    @Key("control.updateDependency.id")
@@ -39,6 +48,15 @@ public interface LocalizationConstant extends Messages
    @Key("control.updateDependency.prompt")
    String updateDependencyControlPrompt();
 
+   @Key("control.refactoringRename.id")
+   String refactoringRenameControlId();
+
+   @Key("control.refactoringRename.title")
+   String refactoringRenameControlTitle();
+
+   @Key("control.refactoringRename.prompt")
+   String refactoringRenameControlPrompt();
+
    /*
     * Messages
     */
@@ -47,7 +65,28 @@ public interface LocalizationConstant extends Messages
 
    @Key("messages.updateDependency.finished")
    String updateDependencyFinished(String project);
-   
+
    @Key("messages.updateDependency.suggest")
    String updateDependencySuggest();
+
+   @Key("messages.refactoringRename.saveFiles")
+   String refactoringRenameSaveFiles();
+
+   @Key("messages.refactoringRename.wait")
+   String refactoringRenameWait();
+
+   @Key("messages.refactoringRename.unavailable")
+   String refactoringRenameUnavailable();
+
+   @Key("messages.refactoringRename.badCursorPosition")
+   String refactoringRenameBadCursorPosition();
+
+   /*
+    * RefactoringRenameView
+    */
+   @Key("refactoringRename.view.title")
+   String refactoringRenameViewTitle();
+
+   @Key("refactoringRename.field.newName")
+   String refactoringRenameFieldNewName();
 }

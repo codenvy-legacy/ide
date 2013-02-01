@@ -45,9 +45,9 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent;
-import org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.core.client.GWT;
@@ -273,7 +273,7 @@ public class OutlinePresenter implements UpdateOutlineHandler, ViewClosedHandler
    }
 
    /**
-    * @see org.exoplatform.ide.editor.api.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.ide.editor.api.event.EditorCursorActivityEvent)
+    * @see org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler#onEditorCursorActivity(org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent)
     */
    @Override
    public void onEditorCursorActivity(EditorCursorActivityEvent event)

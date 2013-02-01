@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertEquals;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -25,15 +27,14 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
-
 /**
  * IDE-54:Save All Files
  * 
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class SaveAllFilesTest extends BaseTest
 {
@@ -78,7 +79,7 @@ public class SaveAllFilesTest extends BaseTest
       }
    }
 
-   //IDE-54:Save All Files
+   // IDE-54:Save All Files
    @Test
    public void saveAllFiles() throws Exception
    {
@@ -94,9 +95,9 @@ public class SaveAllFilesTest extends BaseTest
        */
       IDE.PROJECT.EXPLORER.selectItem(pathFolder1);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.EDITOR.waitActiveFile(pathFolder1 + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile();
 
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL));
+      IDE.MENU.waitCommandDisabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
       IDE.EDITOR.saveAs(1, SAVED_XML);
       String pathSavedXml = pathFolder1 + "/" + SAVED_XML;
       IDE.PROJECT.EXPLORER.waitForItem(pathSavedXml);
@@ -107,9 +108,9 @@ public class SaveAllFilesTest extends BaseTest
        */
       IDE.PROJECT.EXPLORER.selectItem(pathFolder2);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_SCRIPT_FILE);
-      IDE.EDITOR.waitActiveFile(pathFolder2 + "/Untitled file.groovy");
+      IDE.EDITOR.waitActiveFile();
 
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL));
+      IDE.MENU.waitCommandDisabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
       IDE.EDITOR.saveAs(1, SAVED_GROOVY);
       String pathSavedGroovy = pathFolder2 + "/" + SAVED_GROOVY;
       IDE.PROJECT.EXPLORER.waitForItem(pathSavedGroovy);
@@ -118,7 +119,7 @@ public class SaveAllFilesTest extends BaseTest
       /*
        * 3. Save All command must be disabled
        */
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL));
+      IDE.MENU.waitCommandDisabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
 
       /*
        * 4. Create HTML file from template "Empty HTML" and does not save it.
@@ -133,32 +134,34 @@ public class SaveAllFilesTest extends BaseTest
       /*
        * 6. Save All command must be disabled
        */
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL));
+      IDE.MENU.waitCommandDisabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
 
       /*
-       * 7. Open and change content of files "Saved File.xml" and "Saved File.groovy"
+       * 7. Open and change content of files "Saved File.xml" and
+       * "Saved File.groovy"
        */
       IDE.PROJECT.EXPLORER.openItem(pathSavedXml);
-      IDE.EDITOR.waitActiveFile(pathSavedXml);
-      IDE.EDITOR.typeTextIntoEditor(4, "<root>admin</root>");
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.typeTextIntoEditor("<root>admin</root>");
 
       IDE.PROJECT.EXPLORER.openItem(pathSavedGroovy);
-      IDE.EDITOR.waitActiveFile(pathSavedGroovy);
-      IDE.EDITOR.typeTextIntoEditor(5, "changed content of file");
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.typeTextIntoEditor("changed content of file");
 
       /*
        * 8. Save All command must be enabled.
        */
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL));
+      IDE.MENU.waitCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
 
       /*
-       * 9. Run command "Save All" from menu 
+       * 9. Run command "Save All" from menu
        */
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
-
+      IDE.LOADER.waitClosed();
       /*
-       * 10. Files "Untitled file.html" and  "Untitled file.txt" must have marker "*" in editor
-       *      Files "Saved File.xml" and "Saved File.groovy" must be without marker "*" in editor.
+       * 10. Files "Untitled file.html" and "Untitled file.txt" must have
+       * marker "*" in editor Files "Saved File.xml" and "Saved File.groovy"
+       * must be without marker "*" in editor.
        */
       assertEquals(NEW_HTML + " *", IDE.EDITOR.getTabTitle(1));
       assertEquals(NEW_TEXT + " *", IDE.EDITOR.getTabTitle(2));
@@ -190,12 +193,14 @@ public class SaveAllFilesTest extends BaseTest
        * 13. Open "Untitled file.groovy" and "Untitled file.xml"
        */
       IDE.PROJECT.EXPLORER.openItem(pathHtml);
+      IDE.EDITOR.waitActiveFile();
       IDE.PROJECT.EXPLORER.openItem(pathTxt);
-
+      IDE.EDITOR.waitActiveFile();
       /*
-       * 14. Now Save As command must be disabled and all files in editor must does not have a marker "*"
+       * 14. Now Save As command must be disabled and all files in editor must
+       * does not have a marker "*"
        */
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL));
+      IDE.MENU.waitCommandDisabled(MenuCommands.File.FILE, MenuCommands.File.SAVE_ALL);
       assertEquals(SAVED_XML, IDE.EDITOR.getTabTitle(1));
       assertEquals(SAVED_GROOVY, IDE.EDITOR.getTabTitle(2));
       assertEquals(NEW_HTML, IDE.EDITOR.getTabTitle(3));
@@ -206,5 +211,4 @@ public class SaveAllFilesTest extends BaseTest
       IDE.EDITOR.closeFile(1);
       IDE.EDITOR.closeFile(1);
    }
-
 }

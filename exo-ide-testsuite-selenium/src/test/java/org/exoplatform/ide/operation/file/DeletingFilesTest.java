@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,10 +30,8 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
- * IDE-11: Deleting files. 
+ * IDE-11: Deleting files.
  * 
  * Created by The eXo Platform SAS.
  * 
@@ -87,7 +87,7 @@ public class DeletingFilesTest extends BaseTest
       }
    }
 
-   //IDE-11: Deleting files.
+   // IDE-11: Deleting files.
    @Test
    public void testDeletingFile() throws Exception
    {
@@ -98,7 +98,8 @@ public class DeletingFilesTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(path);
 
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.EDITOR.waitActiveFile();
+      IDE.PROJECT.EXPLORER.waitForItem(path);
       IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
@@ -106,7 +107,8 @@ public class DeletingFilesTest extends BaseTest
 
       path = PROJECT + "/" + GOOGLE_GADGET_FILE_NAME;
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.EDITOR.waitActiveFile();
+      IDE.PROJECT.EXPLORER.waitForItem(path);
       IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
@@ -114,7 +116,9 @@ public class DeletingFilesTest extends BaseTest
 
       path = PROJECT + "/" + JAVA_SCRIPT_FILE_NAME;
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
+      IDE.LOADER.waitClosed();
+      IDE.PROJECT.EXPLORER.waitForItem(path);
       IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
@@ -122,7 +126,8 @@ public class DeletingFilesTest extends BaseTest
 
       path = PROJECT + "/" + XML_FILE_NAME;
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.EDITOR.waitActiveFile();
+      IDE.PROJECT.EXPLORER.waitForItem(path);
       IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
@@ -130,7 +135,8 @@ public class DeletingFilesTest extends BaseTest
 
       path = PROJECT + "/" + TEXT_FILE_NAME;
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.EDITOR.waitActiveFile();
+      IDE.PROJECT.EXPLORER.waitForItem(path);
       IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);
@@ -138,7 +144,8 @@ public class DeletingFilesTest extends BaseTest
 
       path = PROJECT + "/" + HTML_FILE_NAME;
       IDE.PROJECT.EXPLORER.openItem(path);
-      IDE.EDITOR.waitActiveFile(path);
+      IDE.EDITOR.waitActiveFile();
+      IDE.PROJECT.EXPLORER.waitForItem(path);
       IDE.PROJECT.EXPLORER.selectItem(path);
       IDE.DELETE.deleteSelectedItems();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(path);

@@ -57,7 +57,7 @@ public class Formatter extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver elem)
@@ -75,7 +75,7 @@ public class Formatter extends AbstractTestModule
     */
    public void waitEclipseFormatterIsSelect() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver elem)
@@ -92,7 +92,7 @@ public class Formatter extends AbstractTestModule
     */
    public void waitExoFormatterIsSelect() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver elem)
@@ -110,7 +110,7 @@ public class Formatter extends AbstractTestModule
     */
    public void waitRedrawSampleText() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver elem)
@@ -136,7 +136,7 @@ public class Formatter extends AbstractTestModule
     */
    public void waitLastTextElement() throws Exception
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver elem)

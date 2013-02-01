@@ -381,6 +381,18 @@ public interface DebuggerLocalizationConstant extends com.google.gwt.i18n.client
    String evaluateExpressionFailed(String reason);
 
    /*************************************************************************
+    * Dialog
+    *************************************************************************/
+   @DefaultMessage("Debug session still active")
+   @Key("dialog.close.project.title")
+   String dialogCloseProjectTitle();
+   
+   @DefaultMessage("You are about to close the project with a running debug session. If you press \"Yes\" the debug session will be terminated.")
+   @Key("dialog.close.project.msg")
+   String dialogCloseProjectMsg();
+   
+   
+   /*************************************************************************
     * Breakpoint properties view
     *************************************************************************/
 

@@ -20,6 +20,9 @@ package org.exoplatform.ide.operation.restservice;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,91 +32,82 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
- *
+ * 
  */
-public class RESTServiceDefaultHTTPParametersTest extends BaseTest
-{
+public class RESTServiceDefaultHTTPParametersTest extends BaseTest {
 
-   private final static String FILE_NAME = RESTServiceDefaultHTTPParametersTest.class.getSimpleName() + ".grs";
+	private final static String FILE_NAME = RESTServiceDefaultHTTPParametersTest.class
+			.getSimpleName() + ".grs";
 
-   private final static String PROJECT = "DefaultHTTPParameters";
+	private final static String PROJECT = "DefaultHTTPParameters";
 
-   @Before
-   public void beforeTest()
-   {
+	@Before
+	public void beforeTest() {
 
-      String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultHTTPParameters.groovy";
-      try
-      {
-         Map<String, Link> project = VirtualFileSystemUtils.createDefaultProject(PROJECT);
-         Link link = project.get(Link.REL_CREATE_FILE);
-         VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME, MimeType.GROOVY_SERVICE, filePath);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+		String filePath = "src/test/resources/org/exoplatform/ide/operation/restservice/DefaultHTTPParameters.groovy";
+		try {
+			Map<String, Link> project = VirtualFileSystemUtils
+					.createDefaultProject(PROJECT);
+			Link link = project.get(Link.REL_CREATE_FILE);
+			VirtualFileSystemUtils.createFileFromLocal(link, FILE_NAME,
+					MimeType.GROOVY_SERVICE, filePath);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testDefaultHTTPParameters() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testDefaultHTTPParameters() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
+		IDE.LOADER.waitClosed();
 
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
+		IDE.EDITOR.waitActiveFile();
 
-      IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
+		IDE.REST_SERVICE.deploy(PROJECT + "/" + FILE_NAME, 1);
 
-      IDE.REST_SERVICE.launchRestService();
-      checkParam();
-      IDE.REST_SERVICE.setMethodFieldValue("GET");
-      checkParam();
+		IDE.REST_SERVICE.launchRestService();
+		checkParam();
+		IDE.REST_SERVICE.setMethodFieldValue("GET");
+		checkParam();
 
-      IDE.REST_SERVICE.closeForm();
-      IDE.REST_SERVICE.waitClosed();
-   }
+		IDE.REST_SERVICE.closeForm();
+		IDE.REST_SERVICE.waitClosed();
+	}
 
-   /**
-    *  Check Request parameters
-    */
-   private void checkParam()
-   {
-      assertEquals("TestQueryParam 1", IDE.REST_SERVICE.getQueryParameterName(1));
-      assertEquals("boolean", IDE.REST_SERVICE.getQueryParameterType(1));
-      assertEquals("true", IDE.REST_SERVICE.getQueryParameterDefaultValue(1));
-      assertEquals(" ", IDE.REST_SERVICE.getQueryParameterValue(1));
+	/**
+	 * Check Request parameters
+	 */
+	private void checkParam() {
+		assertEquals("TestQueryParam 1",
+				IDE.REST_SERVICE.getQueryParameterName(1));
+		assertEquals("boolean", IDE.REST_SERVICE.getQueryParameterType(1));
+		assertEquals("true", IDE.REST_SERVICE.getQueryParameterDefaultValue(1));
+		assertEquals(" ", IDE.REST_SERVICE.getQueryParameterValue(1));
 
-      IDE.REST_SERVICE.selectHeaderParametersTab();
+		IDE.REST_SERVICE.selectHeaderParametersTab();
 
-      assertEquals("Test-Header", IDE.REST_SERVICE.getHeaderParameterName(1));
-      assertEquals("integer", IDE.REST_SERVICE.getHeaderParameterType(1));
-      assertEquals("3", IDE.REST_SERVICE.getHeaderParameterDefaultValue(1));
-      assertEquals(" ", IDE.REST_SERVICE.getHeaderParameterValue(1));
+		assertEquals("Test-Header", IDE.REST_SERVICE.getHeaderParameterName(1));
+		assertEquals("integer", IDE.REST_SERVICE.getHeaderParameterType(1));
+		assertEquals("3", IDE.REST_SERVICE.getHeaderParameterDefaultValue(1));
+		assertEquals(" ", IDE.REST_SERVICE.getHeaderParameterValue(1));
 
-      IDE.REST_SERVICE.selectQueryParametersTab();
-   }
+		IDE.REST_SERVICE.selectQueryParametersTab();
+	}
 
-   @After
-   public void afterTest() throws Exception
-   {
-      try
-      {
-         IDE.MENU.runCommand(MenuCommands.Run.RUN, MenuCommands.Run.UNDEPLOY_REST_SERVICE);
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@After
+	public void afterTest() throws Exception {
+		try {
+			IDE.MENU.runCommand(MenuCommands.Run.RUN,
+					MenuCommands.Run.UNDEPLOY_REST_SERVICE);
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
 }

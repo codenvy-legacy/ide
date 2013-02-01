@@ -20,16 +20,16 @@ package org.exoplatform.ide.miscellaneous;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by The eXo Platform SAS .
@@ -47,7 +47,8 @@ public class CookiesTest extends BaseTest
 
    private final static String TEST_FOLDER = "Test";
 
-   private final static String COOKIE_PREFIX = "domain=" + IDE_HOST + ", eXo-IDE-" + USER_NAME.replace("@", "%40");
+   private final static String COOKIE_PREFIX = "domain=" + REPO_NAME + "." + IDE_HOST + ", eXo-IDE-"
+      + USER_NAME.replace("@", "%40");
 
    @BeforeClass
    public static void setUp()

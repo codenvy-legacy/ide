@@ -23,7 +23,6 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -66,33 +65,35 @@ public class GroovyProjectAutocompletionTest extends CodeAssistantBaseTest
       openProject();
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + REST_SERVICE_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + REST_SERVICE_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + REST_SERVICE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
    }
 
    @Test
    public void testGroovyClassNameProject() throws Exception
    {
-      IDE.EDITOR.moveCursorDown(0, 12);
-      IDE.EDITOR.typeTextIntoEditor(0, "Poj");
+      IDE.EDITOR.moveCursorDown(12);
+      IDE.EDITOR.typeTextIntoEditor("Poj");
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Pojo"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Pojo");
 
       IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import org.exoplatform.sample.Pojo"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import org.exoplatform.sample.Pojo"));
 
-      IDE.EDITOR.typeTextIntoEditor(0, " p\n");
-      
-      IDE.EDITOR.typeTextIntoEditor(0, "p.");
-      Thread.sleep(TestConstants.SLEEP_SHORT);
+      IDE.EDITOR.typeTextIntoEditor(" p\n");
+
+      IDE.EDITOR.typeTextIntoEditor("p.");
+      //TODO Remove when it will possible to check that documet parsed.
+      Thread.sleep(4000);
 
       IDE.CODEASSISTANT.openForm();
-      
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("getName():java.lang.String"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("printText(String):void"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("setName(String):void"));
+
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("getName():java.lang.String");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("printText(String):void");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("setName(String):void");
 
       IDE.CODEASSISTANT.typeToInput("pr");
       IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("p.printText(String)"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("p.printText(String)"));
+      IDE.EDITOR.closeTabIgnoringChanges(REST_SERVICE_FILE_NAME);
    }
 }

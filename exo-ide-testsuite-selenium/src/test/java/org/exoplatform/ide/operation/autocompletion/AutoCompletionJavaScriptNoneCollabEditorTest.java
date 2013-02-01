@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -34,78 +34,70 @@ import org.openqa.selenium.Keys;
 public class AutoCompletionJavaScriptNoneCollabEditorTest extends CodeAssistantBaseTest
 {
 
-   @Before
-   public void createProject() throws Exception
+   @BeforeClass
+   public static void createProject() throws Exception
    {
       createProject(AutoCompletionJavaScriptNoneCollabEditorTest.class.getSimpleName());
-      openProject();
    }
 
-   public void closeWelcomePage() throws Exception
-   {
-      IDE.WELCOME_PAGE.close();
-   }
-
-    @Test
+   @Test
    public void testGoogleGadget() throws InterruptedException, Exception
    {
-      closeWelcomePage();
+      openProject();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gadget");
-      IDE.EDITOR.moveCursorDown(0, 4);
-      IDE.EDITOR.moveCursorRight(0, 10);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "<script>\n\n</script>\n");
-      IDE.EDITOR.moveCursorUp(0, 2);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.RETURN.toString());
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.moveCursorDown(4);
+      IDE.EDITOR.moveCursorRight(10);
+      IDE.EDITOR.typeTextIntoEditor(Keys.RETURN.toString());
+      IDE.EDITOR.typeTextIntoEditor("<script>\n\n</script>\n");
+      IDE.EDITOR.moveCursorUp(2);
+      IDE.EDITOR.typeTextIntoEditor(Keys.RETURN.toString());
       javaScriptTest();
    }
 
    @Test
    public void testHTML() throws InterruptedException, Exception
    {
-      closeWelcomePage();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.html");
-      IDE.EDITOR.moveCursorDown(0, 2);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.moveCursorDown(2);
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "<script>\n</script>");
-      IDE.EDITOR.moveCursorDown(0, 2);
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("<script>\n</script>");
+      IDE.EDITOR.moveCursorDown(2);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "\n<script>\n</script>\n");
+      IDE.EDITOR.typeTextIntoEditor("\n<script>\n</script>\n");
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<style>\n</style>\n<script>\n</script>");
+      IDE.EDITOR.typeTextIntoEditor("<style>\n</style>\n<script>\n</script>");
 
-      IDE.EDITOR.moveCursorUp(0, 9);
+      IDE.EDITOR.moveCursorUp(9);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "\n");
+      IDE.EDITOR.typeTextIntoEditor("\n");
 
       javaScriptTest();
+
    }
 
    @Test
    public void testGroovyTemplate() throws InterruptedException, Exception
    {
-      closeWelcomePage();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.GROOVY_TEMPLATE_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.gtmpl");
-      IDE.EDITOR.deleteFileContent(0);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.deleteFileContent();
 
-      IDE.EDITOR.typeTextIntoEditor(0, " <script>\n</script>\n");
-      IDE.EDITOR.typeTextIntoEditor(0, "<%\n  import org.exoplatform.web.application.Parameter;\n");
-      IDE.EDITOR.typeTextIntoEditor(0, "  List appCategories = uicomponent.getApplicationCategories();\n%>");
+      IDE.EDITOR.typeTextIntoEditor(" <script>\n</script>\n");
+      IDE.EDITOR.typeTextIntoEditor("<%\n  import org.exoplatform.web.application.Parameter;\n");
+      IDE.EDITOR.typeTextIntoEditor("  List appCategories = uicomponent.getApplicationCategories();\n%>");
 
-      IDE.EDITOR.typeTextIntoEditor(0, "\n<script>\n\n</script>\n");
+      IDE.EDITOR.typeTextIntoEditor("\n<script>\n\n</script>\n");
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<style>\n</style>\n");
+      IDE.EDITOR.typeTextIntoEditor("<style>\n</style>\n");
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<script>\n</script>");
+      IDE.EDITOR.typeTextIntoEditor("<script>\n</script>");
 
-      IDE.EDITOR.moveCursorUp(0, 5);
+      IDE.EDITOR.moveCursorUp(5);
 
       javaScriptTest();
-
    }
 
    /**
@@ -114,54 +106,54 @@ public class AutoCompletionJavaScriptNoneCollabEditorTest extends CodeAssistantB
    private void javaScriptTest() throws Exception
    {
 
-      IDE.EDITOR.typeTextIntoEditor(0, "function a () {\nreturn 1;\n}\n");
-      IDE.EDITOR.typeTextIntoEditor(0, "var b = function() {\nreturn 2;\n}\n");
+      IDE.EDITOR.typeTextIntoEditor("function a () {\nreturn 1;\n}\n");
+      IDE.EDITOR.typeTextIntoEditor("var b = function() {\nreturn 2;\n}\n");
       Thread.sleep(TestConstants.SLEEP_SHORT);
       IDE.CODEASSISTANT.openForm();
 
       Thread.sleep(TestConstants.SLEEP_SHORT);
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("a()"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("b()"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("a()");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("b()");
 
       IDE.CODEASSISTANT.moveCursorDown(1);
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      String textAfter = IDE.EDITOR.getTextFromCodeEditor(0);
+      String textAfter = IDE.EDITOR.getTextFromCodeEditor();
       assertTrue(textAfter.split("b").length >= 2);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\n");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "\n");
 
-      IDE.EDITOR.typeTextIntoEditor(0, "function topFunc(x) {");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "  // Local variables get a different colour than global ones.");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "  var localVarOfTopFunc = 44;");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, " function privateFunc1OfTopFunc() {");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "  var localVarOfPrivateFuncOfTopFunc = 1;");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "   };");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "   var privateFunc2OfTopFunc = function() {");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "   };");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "    };");
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.ENTER.toString());
-      IDE.EDITOR.moveCursorUp(0, 1);
+      IDE.EDITOR.typeTextIntoEditor("function topFunc(x) {");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("  // Local variables get a different colour than global ones.");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("  var localVarOfTopFunc = 44;");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(" function privateFunc1OfTopFunc() {");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("  var localVarOfPrivateFuncOfTopFunc = 1;");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("   };");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("   var privateFunc2OfTopFunc = function() {");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("   };");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("    };");
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.ENTER.toString());
+      IDE.EDITOR.moveCursorUp(1);
 
       IDE.CODEASSISTANT.openForm();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("topFunc()"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("topFunc()");
       IDE.CODEASSISTANT.checkElementNotPresent("localVarOfTopFunc");
       IDE.CODEASSISTANT.checkElementNotPresent("privateFunc1OfTopFunc()");
       IDE.CODEASSISTANT.checkElementNotPresent("localVarOfPrivateFuncOfTopFunc");
       IDE.CODEASSISTANT.checkElementNotPresent("privateFunc2OfTopFunc()");
 
       IDE.CODEASSISTANT.closeForm();
-      IDE.EDITOR.closeTabIgnoringChanges(0);
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
 }

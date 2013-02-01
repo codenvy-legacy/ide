@@ -84,14 +84,14 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEv
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.framework.util.ImageUtil;
 import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.api.SelectionRange;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedEvent;
-import org.exoplatform.ide.editor.api.event.EditorContentChangedHandler;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuEvent;
-import org.exoplatform.ide.editor.api.event.EditorContextMenuHandler;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedEvent;
-import org.exoplatform.ide.editor.api.event.EditorFocusReceivedHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedEvent;
+import org.exoplatform.ide.editor.client.api.event.EditorFocusReceivedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import com.google.gwt.user.client.Timer;
@@ -816,7 +816,7 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
    // }
 
    /**
-    * @see org.exoplatform.ide.editor.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.api.event.EditorContextMenuEvent)
+    * @see org.exoplatform.ide.editor.client.api.event.EditorContextMenuHandler#onEditorContextMenu(org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent)
     */
    @Override
    public void onEditorContextMenu(EditorContextMenuEvent event)

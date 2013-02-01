@@ -409,6 +409,12 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
       {
          display.setApplicationURL(application.getUris().get(0));
       }
+      else
+      {
+         //Set empty field if we specialy unmap all urls and closed url controller window, if whe don't do this, in
+         //info window will be appear old url, that is not good
+         display.setApplicationURL(null);
+      }
       boolean isStarted = ("STARTED".equals(application.getState()));
       display.setStartButtonEnabled(!isStarted);
       display.setStopButtonEnabled(isStarted);

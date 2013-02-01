@@ -67,9 +67,9 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.QueryCapability;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 import org.exoplatform.services.jcr.core.ExtendedSession;
+import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -1286,7 +1286,7 @@ public class JcrFileSystem implements VirtualFileSystem
                            data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                               : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
                      }
-                     if (value.equals(Project.PROJECT_MIME_TYPE))
+                     if (value.get(0).equals(Project.PROJECT_MIME_TYPE) && !data.getType().equals(Project.PROJECT_MIME_TYPE))
                      {
                         convertToProject = true;
                      }
@@ -1295,7 +1295,10 @@ public class JcrFileSystem implements VirtualFileSystem
             }
             data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
             data = getItemData(session, id);
-            LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
+            if (convertToProject)
+            {
+              LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
+            }
             MediaType mediaType = data.getMediaType();
             notifyListeners(new ChangeEvent(this, //
                data.getId(), //
@@ -2298,6 +2301,17 @@ public class JcrFileSystem implements VirtualFileSystem
       catch (RepositoryException e)
       {
          throw new VirtualFileSystemException(e.getMessage(), e);
+      }
+      catch (Exception e)
+      {
+         try
+         {
+            return ((ManageableRepository)repository).getSystemSession(workspaceName);
+         }
+         catch (RepositoryException e1)
+         {
+            throw new VirtualFileSystemException(e.getMessage(), e);
+         }
       }
    }
 

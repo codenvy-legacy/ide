@@ -21,17 +21,16 @@ package org.exoplatform.ide.operation.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Make possibility upload ZIPed folder (IDE-482).
@@ -89,15 +88,15 @@ public class UploadingZippedFolderTest extends BaseTest
       final String sampleFile = "sample.txt";
       final String mineFile = "mine.xml";
 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      //   IDE.TOOLBAR.runCommand(ToolbarCommands.File.REFRESH);
+      // IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + testFolder);
-      IDE.LOADER.waitClosed();
-
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + testFolder));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + folder));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + sampleFile));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + settingsFile));
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + testFolder);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + sampleFile);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + settingsFile);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + folder);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder + "/" + projectFolder);
@@ -105,13 +104,13 @@ public class UploadingZippedFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + testFolder);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + testFolder + "/" + mineFile);
 
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + testFolder + "/" + exoFolder));
-      assertTrue(IDE.PROJECT.EXPLORER.isItemVisible(PROJECT + "/" + testFolder + "/" + mineFile));
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + testFolder + "/" + exoFolder);
+      IDE.PROJECT.EXPLORER.waitItemVisible(PROJECT + "/" + testFolder + "/" + mineFile);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + settingsFile);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + settingsFile);
+      IDE.EDITOR.waitActiveFile();
 
-      String text = IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor();
       assertTrue(text.length() > 0);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.SHOW_PROPERTIES);
@@ -123,7 +122,6 @@ public class UploadingZippedFolderTest extends BaseTest
    {
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.UPLOAD_FOLDER);
       IDE.UPLOAD.waitOpened();
-
       try
       {
          File file = new File(filePath);

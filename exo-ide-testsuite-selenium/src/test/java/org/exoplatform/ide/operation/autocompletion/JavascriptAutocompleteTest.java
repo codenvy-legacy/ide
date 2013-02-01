@@ -2,17 +2,15 @@ package org.exoplatform.ide.operation.autocompletion;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.Map;
+
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.java.FormatJavaCodeWithShortKeysTest;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 public class JavascriptAutocompleteTest extends BaseTest
 {
@@ -63,17 +61,18 @@ public class JavascriptAutocompleteTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "js");
-      IDE.PROJECT.EXPLORER.expandItem(PROJECT + "/" + "js");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "js");
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "js" + "/" + "script.js");
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "js" + "/" + "script.js");
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + "js" + "/" + "script.js");
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
       IDE.GOTOLINE.goToLine(10);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "a.");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("a.");
       IDE.JAVAEDITOR.waitJavaDocContainer();
-      assertThat(IDE.JAVAEDITOR.getTextFronJavaDocContainer().split("\n")).contains(stringJavascriptMethods);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "\n");
-      //IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "d");
-      //for reparse updated code
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaDocContainer().split("\n")).contains(stringJavascriptMethods);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("\n");
+      // IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() +
+      // "d");
+      // for reparse updated code
       Thread.sleep(500);
    }
 
@@ -81,37 +80,37 @@ public class JavascriptAutocompleteTest extends BaseTest
    public void mainDateMethods() throws Exception
    {
       IDE.GOTOLINE.goToLine(21);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "date.");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("date.");
       IDE.JAVAEDITOR.waitJavaDocContainer();
-      assertThat(IDE.JAVAEDITOR.getTextFronJavaDocContainer().split("\n")).contains(stringDateMethods);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "\n");
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaDocContainer().split("\n")).contains(stringDateMethods);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("\n");
    }
 
    @Test
    public void mainNumberMethods() throws Exception
    {
       IDE.GOTOLINE.goToLine(31);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "var numb =10000;\n");
-      //for reparse updated code
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("var numb =10000;\n");
+      // for reparse updated code
       Thread.sleep(500);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "numb.");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("numb.");
       IDE.JAVAEDITOR.waitJavaDocContainer();
 
-      assertThat(IDE.JAVAEDITOR.getTextFronJavaDocContainer()).contains("toFixed(digits) : Number")
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaDocContainer()).contains("toFixed(digits) : Number")
          .contains("toPrecision(digits) : Number").contains("toExponential(digits) : Number")
          .contains("valueOf() : Object");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "\n");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("\n");
    }
 
    @Test
    public void jsonMethods() throws Exception
    {
       IDE.GOTOLINE.goToLine(36);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, "JSON.");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("JSON.");
       IDE.JAVAEDITOR.waitJavaDocContainer();
-      assertThat(IDE.JAVAEDITOR.getTextFronJavaDocContainer()).contains("parse(str) : Object")
+      assertThat(IDE.JAVAEDITOR.getTextFromJavaDocContainer()).contains("parse(str) : Object")
          .contains("valueOf() : Object").contains("stringify(obj) : String");
-
+      IDE.EDITOR.closeTabIgnoringChanges("script.js");
    }
 
 }

@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.operation.contextmenu;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,10 +34,6 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-
-import java.util.Map;
-
-import static org.junit.Assert.*;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -173,7 +175,7 @@ public class ProjectExplorerContextMenuTest extends BaseTest
 
       IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItemNotPresent(PROJECT + "/" + FOLDER1);
-      assertTrue(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER2 + "/" + FOLDER1));
+      IDE.PROJECT.EXPLORER.waitItemPresent(PROJECT + "/" + FOLDER2 + "/" + FOLDER1);
    }
 
 }

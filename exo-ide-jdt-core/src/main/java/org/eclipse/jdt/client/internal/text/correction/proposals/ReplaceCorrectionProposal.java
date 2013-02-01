@@ -14,9 +14,9 @@ import com.google.gwt.user.client.ui.Image;
 
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.eclipse.jdt.client.runtime.CoreException;
-import org.exoplatform.ide.editor.text.IDocument;
-import org.exoplatform.ide.editor.text.edits.ReplaceEdit;
-import org.exoplatform.ide.editor.text.edits.TextEdit;
+import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
+import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 
 public class ReplaceCorrectionProposal extends CUCorrectionProposal
 {

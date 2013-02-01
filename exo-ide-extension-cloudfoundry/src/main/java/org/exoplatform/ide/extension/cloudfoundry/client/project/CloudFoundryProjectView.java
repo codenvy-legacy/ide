@@ -239,7 +239,10 @@ public class CloudFoundryProjectView extends ViewImpl implements CloudFoundryPro
    @Override
    public void setApplicationURL(String url)
    {
-      url = (url != null && url.startsWith("http://")) ? url : "http://" + url;
+      if (url != null)
+      {
+         url = (url.startsWith("http://")) ? url : "http://" + url;
+      }
       urlField.setHref(url);
       urlField.setText(url);
    }

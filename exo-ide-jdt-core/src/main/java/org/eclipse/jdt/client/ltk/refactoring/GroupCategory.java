@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.ltk.refactoring;
 
-import org.exoplatform.ide.editor.runtime.Assert;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * A group category is used to annotate change groups so that

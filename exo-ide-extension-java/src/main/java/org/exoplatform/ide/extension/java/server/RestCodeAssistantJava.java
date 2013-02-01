@@ -54,6 +54,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -357,7 +358,7 @@ public class RestCodeAssistantJava
             List<Property> properties =
                Arrays.<Property> asList(new PropertyImpl("exoide:classpath", dependencies), new PropertyImpl(
                   "exoide:build_error", (String)null));
-            vfs.updateItem(projectId, properties, null);
+            project = (Project)vfs.updateItem(projectId, properties, null);
          }
       }
       else
@@ -372,6 +373,8 @@ public class RestCodeAssistantJava
          LOG.warn("Build failed, exit code: " + buildStatus.getExitCode() + ", message: " + buildStatus.getError());
          throw new BuilderException(buildStatus.getExitCode(), buildStatus.getError(), "text/plain");
       }
+      if (dependencies.isEmpty() || buildStatus.getDownloadUrl().isEmpty())
+         return Collections.emptyList();
       String statusUrl = storageClient.updateTypeIndex(dependencies, buildStatus.getDownloadUrl());
       waitStorageTaskFinish(statusUrl);
       buildId = builderClient.dependenciesCopy(vfs, projectId, "sources");

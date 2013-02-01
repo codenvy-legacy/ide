@@ -3,6 +3,8 @@ package org.exoplatform.ide.operation.java;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -13,8 +15,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.util.Map;
-
 public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
 {
 
@@ -22,6 +22,8 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
 
    final String pathForReopenTestFile = PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "sumcontroller" + "/"
       + "SimpleSum.java";
+
+   final String fileName = "SimpleSum.java";
 
    @BeforeClass
    public static void setUp()
@@ -65,8 +67,9 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
    @Test
    public void findAndReplaceTest() throws Exception
    {
-      IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openJavaClassForFormat(PROJECT);
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE);
@@ -75,7 +78,7 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.FIND_REPLACE);
 
       IDE.FINDREPLACE.typeInFindField("int ss = sumForEdit (c, d);");
 
@@ -91,54 +94,50 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       assertTrue(IDE.FINDREPLACE.isReplaceButtonEnabled());
       IDE.FINDREPLACE.typeInReplaceField("int newVar = sumForEdit (c, d);");
       IDE.FINDREPLACE.clickReplaceButton();
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("int newVar = sumForEdit (c, d);"));
+      IDE.JAVAEDITOR.selectTab(fileName);
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor().contains("int newVar = sumForEdit (c, d);"));
 
    }
 
    @Test
    public void findAndReplaceAllWitNoneCaseSensitive() throws Exception
    {
-      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openJavaClassForFormat(PROJECT);
+      openJavaClassForFormatInAlreadyOpenedProgect(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
-
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
-
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE);
-
       IDE.FINDREPLACE.waitOpened();
       assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.FIND_REPLACE);
 
       IDE.FINDREPLACE.typeInFindField("one");
       IDE.FINDREPLACE.typeInReplaceField("replace");
       assertTrue(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
-
       IDE.FINDREPLACE.clickReplaceAllButton();
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).endsWith(
+
+      IDE.JAVAEDITOR.selectTab(fileName);
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor().endsWith(
          "String replace =\"\";\n" + "String replace =\"\";\n" + "}"));
 
    }
 
-    @Test
+   @Test
    public void findAndReplaceWithNoneCaseSensitive() throws Exception
    {
-      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openJavaClassForFormat(PROJECT);
+      openJavaClassForFormatInAlreadyOpenedProgect(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
-
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE);
       IDE.FINDREPLACE.waitOpened();
       assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.FIND_REPLACE);
 
       IDE.FINDREPLACE.typeInFindField("ONE");
 
@@ -147,16 +146,16 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       assertFalse(IDE.FINDREPLACE.getFindResultText().equals("String not found."));
 
       IDE.FINDREPLACE.clickFindButton();
+      IDE.JAVAEDITOR.selectTab(fileName);
       assertFalse(IDE.FINDREPLACE.getFindResultText().equals("String not found."));
 
    }
 
-    @Test
+   @Test
    public void replaseAllWithCaseSensitive() throws Exception
    {
-      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openJavaClassForFormat(PROJECT);
+      openJavaClassForFormatInAlreadyOpenedProgect(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
@@ -167,25 +166,23 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.FIND_REPLACE);
 
       IDE.FINDREPLACE.typeInFindField("ONE");
       assertTrue(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
       IDE.FINDREPLACE.typeInReplaceField("replace");
       IDE.FINDREPLACE.clickReplaceAllButton();
-
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("String replace")
-         && IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("String one"));
+      IDE.JAVAEDITOR.selectTab(fileName);
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor().contains("String replace")
+         && IDE.JAVAEDITOR.getTextFromJavaEditor().contains("String one"));
 
    }
 
    @Test
    public void replaseAndFindWithCaseSensitive() throws Exception
    {
-
-      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openJavaClassForFormat(PROJECT);
+      openJavaClassForFormatInAlreadyOpenedProgect(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FIND_REPLACE);
@@ -195,35 +192,33 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.FIND_REPLACE);
 
       IDE.FINDREPLACE.typeInFindField("ONE");
       IDE.FINDREPLACE.clickFindButton();
       assertTrue(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
       IDE.FINDREPLACE.typeInReplaceField("replace");
       IDE.FINDREPLACE.clickReplaceFindButton();
-
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("String replace")
-         && IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains("String one"));
+      IDE.JAVAEDITOR.selectTab(fileName);
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor().contains("String replace")
+         && IDE.JAVAEDITOR.getTextFromJavaEditor().contains("String one"));
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
    }
 
    @Test
    public void findWithShortKey() throws Exception
    {
-      driver.navigate().refresh();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      openJavaClassForFormat(PROJECT);
+      openJavaClassForFormatInAlreadyOpenedProgect(PROJECT);
       IDE.PROGRESS_BAR.waitProgressBarControlClose();
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "f");
-      //IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "f");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + "f");
 
       IDE.FINDREPLACE.waitOpened();
       assertFalse(IDE.FINDREPLACE.isReplaceButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isFindButtonEnabled());
       assertFalse(IDE.FINDREPLACE.isReplaceAllButtonEnabled());
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(ToolbarCommands.Editor.FIND_REPLACE));
+      IDE.TOOLBAR.waitForButtonDisabled(ToolbarCommands.Editor.FIND_REPLACE);
 
       IDE.FINDREPLACE.typeInFindField("int ss = sumForEdit (c, d);");
       assertTrue(IDE.FINDREPLACE.isFindButtonEnabled());
@@ -237,9 +232,8 @@ public class FindReplaceFromEditMenuTest extends ServicesJavaTextFuction
       assertTrue(IDE.FINDREPLACE.isReplaceButtonEnabled());
       IDE.FINDREPLACE.typeInReplaceField("int newVar = sumForEdit (c, d);");
       IDE.FINDREPLACE.clickReplaceButton();
-
-      IDE.JAVAEDITOR.getTextFromJavaEditor(0).equals("int newVar = sumForEdit (c, d);");
-
+      IDE.JAVAEDITOR.selectTab(fileName);
+      IDE.JAVAEDITOR.getTextFromJavaEditor().equals("int newVar = sumForEdit (c, d);");
    }
 
 }

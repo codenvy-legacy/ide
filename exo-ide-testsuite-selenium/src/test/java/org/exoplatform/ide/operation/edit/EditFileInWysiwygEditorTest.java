@@ -18,48 +18,36 @@
  */
 package org.exoplatform.ide.operation.edit;
 
+import static org.junit.Assert.assertEquals;
+
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @author <a href="dnochevnov@exoplatform.com">Dmytro Nochevnov</a> 
+ * @author <a href="dnochevnov@exoplatform.com">Dmytro Nochevnov</a>
  * @version $Id:
- *
+ * 
  */
 public class EditFileInWysiwygEditorTest extends BaseTest
 {
 
-   //IDE-123 Edit file in WYSIWYG editor
+   // IDE-123 Edit file in WYSIWYG editor
 
    private final static String FILE_NAME = "EditFileInWysiwygEditor.html";
 
    private final static String PROJECT = EditFileInWysiwygEditorTest.class.getSimpleName();
-
-   private final static String URL = BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-      + "/" + PROJECT + "/";
-
-   private final static String IDE_URL = BASE_URL + "IDE/" + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME
-      + "/" + WS_NAME + "/" + PROJECT + "/";
-
-   private final static String DEFAULT_TEXT_MOZILLA =
-      "<html webdriver=\"true\">\n <head>\n  <title></title>\n </head>\n <body>\n  <br />\n </body>\n</html>";
-
-   private final static String DEFAULT_TEXT_CHROME =
-      "<html>\n <head>\n  <title></title>\n </head>\n <body>\n  <br />\n </body>\n</html>";
 
    private final static String WARNINNG_MASSAGE = "Table height must be a number.";
 
@@ -81,8 +69,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       + "    </tr>\n" + "    <tr>\n" + "     <td>\n" + "      &nbsp;</td>\n" + "     <td>\n" + "      &nbsp;</td>\n"
       + "    </tr>\n" + "   </tbody>\n" + "  </table>\n" + "  <br />\n" + " </body>\n" + "</html>";
 
-   @Before
-   public void setUp()
+   @BeforeClass
+   public static void setUp()
    {
       String filePath = "src/test/resources/org/exoplatform/ide/operation/edit/" + FILE_NAME;
       try
@@ -100,7 +88,8 @@ public class EditFileInWysiwygEditorTest extends BaseTest
    public void editFileInWysiwygEditor() throws Exception
    {
 
-      //step one open project switch between codeeditor and ck-editor. Check kontent
+      // step one open project switch between codeeditor and ck-editor. Check
+      // content
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
@@ -109,13 +98,13 @@ public class EditFileInWysiwygEditorTest extends BaseTest
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
       IDE.EDITOR.clickDesignButton();
       assertEquals(FILE_NAME, IDE.EDITOR.getTabTitle(0).replace(" *", ""));
-      IDE.CK_EDITOR.waitToolsCkEditor(1);
+      IDE.CK_EDITOR.waitToolsCkEditor();
       IDE.selectMainFrame();
 
-      IDE.CK_EDITOR.waitToolsCkEditor(1);
+      IDE.CK_EDITOR.waitToolsCkEditor();
       IDE.CK_EDITOR.clickOnToolCkEditor("Table");
       IDE.CK_EDITOR.waitCkEditorTableOpen();
       IDE.CK_EDITOR.typeToHeightwisiwyngtable("qwe");
@@ -124,77 +113,79 @@ public class EditFileInWysiwygEditorTest extends BaseTest
       assertEquals(IDE.WARNING_DIALOG.getWarningMessage(), WARNINNG_MASSAGE);
       IDE.WARNING_DIALOG.clickOk();
       IDE.WARNING_DIALOG.waitClosed();
+      IDE.CK_EDITOR.clickOnToolCkEditor("Table");
       IDE.CK_EDITOR.waitCkEditorTableOpen();
       IDE.CK_EDITOR.typeToHeightwisiwyngtable("50");
 
-      //step 3 Create default table and check
+      // step 3 Create default table and check
       IDE.CK_EDITOR.clickOkWyswygTable();
       IDE.CK_EDITOR.switchToCkEditorIframe(1);
       isDefaultTableCreated();
 
-      //step 4 Add row in table and check
+      // step 4 Add row in table and check
       IDE.CK_EDITOR.clickOnCellTableCkEditor(3, 1);
       IDE.CK_EDITOR.moveCursorUp();
       IDE.CK_EDITOR.callContextMenuCellTableCkEditor(3, 1);
       IDE.selectMainFrame();
       IDE.CK_EDITOR.switchToContextMenuIframe();
+      IDE.CK_EDITOR.waitContextMenu("Row");
       IDE.CK_EDITOR.moveCursorToRowContextMenu("Row");
       IDE.selectMainFrame();
       IDE.CK_EDITOR.switchToContextSubMenuIframe();
+      IDE.CK_EDITOR.waitContextSubMenu("Insert Row After");
       IDE.CK_EDITOR.clickOnContextSubMenu("Insert Row After");
       IDE.selectMainFrame();
       IDE.CK_EDITOR.switchToCkEditorIframe(1);
       isInsertTableCreated();
 
-      //step 4 select codeeditor and check html code
-      IDE.selectMainFrame();
+      // step 4 select code editor and check html code
       IDE.selectMainFrame();
       IDE.EDITOR.clickSourceButton();
+      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
+      IDE.LOADER.waitClosed();
 
       if (IDE_SETTINGS.getString("selenium.browser.commad").equals("GOOGLE_CHROME"))
       {
-         assertEquals(CODE_AFTER_MODIFED_TABLE, IDE.EDITOR.getTextFromCodeEditor(0));
+         assertEquals(CODE_AFTER_MODIFED_TABLE, IDE.EDITOR.getTextFromCodeEditor());
       }
       else
       {
-         assertEquals(CODE_AFTER_MODIFED_TABLE_MOZILLA, IDE.EDITOR.getTextFromCodeEditor(0));
+         assertEquals(CODE_AFTER_MODIFED_TABLE_MOZILLA, IDE.EDITOR.getTextFromCodeEditor());
       }
-     
-      //step 5 save the file and check table in preview panel 
-      IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
-      IDE.LOADER.waitClosed();
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW, true);
 
+      // step 5 save the file and check table in preview panel
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.SHOW_PREVIEW);
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.SHOW_PREVIEW);
       IDE.PREVIEW.waitHtmlPreviewOpened();
       IDE.PREVIEW.selectPreviewHtmlIFrame();
       isInsertTableCreated();
+      IDE.selectMainFrame();
    }
 
    private void isDefaultTableCreated()
    {
-      assertTrue(IDE.CK_EDITOR.isTablePresent(1, 1));
-      assertTrue(IDE.CK_EDITOR.isTablePresent(1, 2));
-      assertTrue(IDE.CK_EDITOR.isTablePresent(2, 1));
-      assertTrue(IDE.CK_EDITOR.isTablePresent(2, 2));
-      assertTrue(IDE.CK_EDITOR.isTablePresent(3, 1));
-      assertTrue(IDE.CK_EDITOR.isTablePresent(3, 2));
+      IDE.CK_EDITOR.waitTablePresent(1, 1);
+      IDE.CK_EDITOR.waitTablePresent(1, 2);
+      IDE.CK_EDITOR.waitTablePresent(2, 1);
+      IDE.CK_EDITOR.waitTablePresent(2, 2);
+      IDE.CK_EDITOR.waitTablePresent(3, 1);
+      IDE.CK_EDITOR.waitTablePresent(3, 2);
    }
 
    private void isInsertTableCreated()
    {
-      assertTrue(IDE.PREVIEW.isTablePresent(1, 1));
-      assertTrue(IDE.PREVIEW.isTablePresent(1, 2));
-      assertTrue(IDE.PREVIEW.isTablePresent(2, 1));
-      assertTrue(IDE.PREVIEW.isTablePresent(2, 2));
-      assertTrue(IDE.PREVIEW.isTablePresent(3, 1));
-      assertTrue(IDE.PREVIEW.isTablePresent(3, 2));
-      assertTrue(IDE.PREVIEW.isTablePresent(4, 1));
-      assertTrue(IDE.PREVIEW.isTablePresent(4, 2));
+      IDE.PREVIEW.waitTablePresent(1, 1);
+      IDE.PREVIEW.waitTablePresent(1, 2);
+      IDE.PREVIEW.waitTablePresent(2, 1);
+      IDE.PREVIEW.waitTablePresent(2, 2);
+      IDE.PREVIEW.waitTablePresent(3, 1);
+      IDE.PREVIEW.waitTablePresent(3, 2);
+      IDE.PREVIEW.waitTablePresent(4, 1);
+      IDE.PREVIEW.waitTablePresent(4, 2);
    }
 
-   @After
-   public void tearDown() throws Exception
+   @AfterClass
+   public static void tearDown() throws Exception
    {
 
       try

@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.editor.javascript.client.syntaxvalidator;
 
-import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.client.marking.Marker;
 
 /**
  * Class represents JavaScript problem, as detected by the parser.
@@ -53,7 +53,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#getID()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#getID()
     */
    @Override
    public int getID()
@@ -62,7 +62,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#getMessage()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#getMessage()
     */
    @Override
    public String getMessage()
@@ -75,7 +75,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#getLineNumber()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#getLineNumber()
     */
    @Override
    public int getLineNumber()
@@ -84,7 +84,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#getEnd()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#getEnd()
     */
    @Override
    public int getEnd()
@@ -93,7 +93,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#getStart()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#getStart()
     */
    @Override
    public int getStart()
@@ -102,7 +102,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#isError()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#isError()
     */
    @Override
    public boolean isError()
@@ -111,7 +111,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#isWarning()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#isWarning()
     */
    @Override
    public boolean isWarning()
@@ -120,7 +120,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#isBreakpoint()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#isBreakpoint()
     */
    @Override
    public boolean isBreakpoint()
@@ -129,7 +129,7 @@ public class JsProblem implements Marker
    }
 
    /**
-    * @see org.exoplatform.ide.editor.marking.Marker#isCurrentBreakPoint()
+    * @see org.exoplatform.ide.editor.client.marking.Marker#isCurrentBreakPoint()
     */
    @Override
    public boolean isCurrentBreakPoint()

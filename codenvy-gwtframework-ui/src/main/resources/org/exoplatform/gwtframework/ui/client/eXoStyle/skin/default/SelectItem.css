@@ -1,0 +1,104 @@
+@CHARSET "UTF-8";
+
+.selectItem {
+	font-size: 12px;
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	display: table;
+}
+
+.selectItemDisabled {
+	color: #AAA;
+}
+
+.selectItemTitle {
+	white-space: nowrap;
+	font-size: 11px;
+	visibility: visible;
+}
+
+.selectItemTitleHidden {
+	visibility: hidden;
+	display: none;
+}
+
+.labelOrientationTop {
+	margin-bottom: 4px;
+	float: left;
+	width: 100%;
+}
+
+.labelOrientationLeft {
+	margin-right: 5px;
+	margin-top: 3px;
+	float: left;
+}
+
+.labelOrientationRight {
+	width: 100%;
+	margin-left: 5px;
+}
+
+.labelAlignLeft {
+	text-align: left;
+}
+
+.labelAlignRight {
+	text-align: right;
+}
+
+.labelAlignCenter {
+	text-align: center;
+}
+
+.editableSelect { /* 	padding-right: 13px; */
+	width: 130px;
+	height: 21px;
+	background-color: #FFF;
+	border: none;
+}
+
+.combobox-grid {
+	border: solid 1px rgb(170, 170, 170);
+}
+
+.comboboxSelectPanel {
+	overflow: auto !important;
+	border: #aaaaaa 1px solid !important;
+	z-index: 1000001;
+	padding: 0;
+}
+
+.comboBox {
+	font-size: 12px;
+	font-family: Verdana, Bitstream Vera Sans, sans-serif;
+	display: table;
+}
+
+.comboBoxInput {
+	background-color: #FFF;
+	padding: 0;
+	border-left: #aaaaaa 1px solid !important;
+	border-right: none;
+	border-top: none;
+	border-bottom: none;
+	height: 100%;
+}
+
+.comboBoxImageButton {
+	border-left: #aaaaaa 1px solid !important;
+	border-right: none;
+	border-top: none;
+	border-bottom: none;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.comboBoxDocPanel {
+	border-left: none;
+	border-right: #aaaaaa 1px solid;
+	border-top: #aaaaaa 1px solid;
+	border-bottom: #aaaaaa 1px solid;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}

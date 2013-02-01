@@ -1,8 +1,6 @@
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.MenuCommands;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -40,7 +38,7 @@ public class ProjectsMenu extends AbstractTestModule
    */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -57,7 +55,7 @@ public class ProjectsMenu extends AbstractTestModule
    */
    public void waitForProjectAppear(final String namePrj) throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

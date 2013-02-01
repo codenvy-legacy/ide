@@ -53,9 +53,9 @@ import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.api.Editor;
-import org.exoplatform.ide.editor.marking.Markable;
-import org.exoplatform.ide.editor.marking.Marker;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.marking.Markable;
+import org.exoplatform.ide.editor.client.marking.Marker;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -399,6 +399,18 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
     */
    private void startParsing()
    {
+      //TODO temporary solutions need do something smart. 
+      //This need delay start parsing then dependency parsing is finish
+      new Timer () {
+         public void run() {
+            if (!JavaClasspathResolver.getInstance().isStillWork())
+               cancel();
+         }
+       }.scheduleRepeating(1000);
+      
+      
+       
+
       int time = 2000;
       if (workingParsers.containsKey(activeFile.getId()))
       {

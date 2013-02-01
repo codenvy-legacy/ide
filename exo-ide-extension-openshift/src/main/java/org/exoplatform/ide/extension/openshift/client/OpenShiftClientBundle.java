@@ -24,14 +24,14 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * OpenShift client resources (images).
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: May 26, 2011 10:45:11 AM anya $
- * 
+ *
  */
 public interface OpenShiftClientBundle extends ClientBundle
 {
-   OpenShiftClientBundle INSTANCE = GWT.<OpenShiftClientBundle> create(OpenShiftClientBundle.class);
+   OpenShiftClientBundle INSTANCE = GWT.<OpenShiftClientBundle>create(OpenShiftClientBundle.class);
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_32.png")
    ImageResource openShiftLogo();
@@ -113,4 +113,22 @@ public interface OpenShiftClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/openshift/images/controls/openshift_48_Disabled.png")
    ImageResource openShiftControl48Disabled();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/start.png")
+   ImageResource startButton();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/start_Disabled.png")
+   ImageResource startButtonDisabled();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/restart.png")
+   ImageResource restartButton();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/restart_Disabled.png")
+   ImageResource restartButtonDisabled();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/stop.png")
+   ImageResource stopButton();
+
+   @Source("org/exoplatform/ide/extension/openshift/images/buttons/stop_Disabled.png")
+   ImageResource stopButtonDisabled();
 }

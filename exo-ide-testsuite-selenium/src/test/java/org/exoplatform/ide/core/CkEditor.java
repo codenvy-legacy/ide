@@ -27,6 +27,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -84,7 +85,7 @@ public class CkEditor extends AbstractTestModule
 
       String WYSWYG_TABLE_CANCEL_BTN = "//span[@class='cke_dialog_ui_button' and text()='Cancel']";
 
-      //Locators for EditFileInWysiwygEditorTest test
+      // Locators for EditFileInWysiwygEditorTest test
       String CK_EDITOR_CREATED_TABLE =
          "//body[@class='cke_show_borders']//table[@cellspacing='1' and @cellpadding='1' and @style]/tbody/tr[%s]/td[%s]";
 
@@ -105,6 +106,8 @@ public class CkEditor extends AbstractTestModule
       String CK_BOLDITALIC_TEXT_PREFIX = "body.cke_show_borders>em>strong";
 
       String CK_ITALIC_TEXT_PREFIX = "body.cke_show_borders>em";
+
+      String NUM_ACTIVE_EDITOR = "//div[@class='gwt-TabLayoutPanelContent' and @is-active='true']";
 
    }
 
@@ -132,13 +135,20 @@ public class CkEditor extends AbstractTestModule
    @FindBy(xpath = Locators.CODE_MIRROR_EDITOR)
    private WebElement editorCodemirr;
 
+   @FindBy(xpath = Locators.NUM_ACTIVE_EDITOR)
+   private WebElement numActiveEditor;
+
+   @FindBy(xpath = Locators.WYSWYG_TABLE_CANCEL_BTN)
+   private WebElement tableCancelBtn;
+
    /**
     * wait tools panel in ck editor
+    * 
     * @param numEdit
     */
-   public void waitToolsCkEditor(final int numEdit)
+   public void waitToolsCkEditor()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -147,7 +157,8 @@ public class CkEditor extends AbstractTestModule
             try
             {
                WebElement bar =
-                  driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_TOOLS_BAR, numEdit)));
+                  driver().findElement(
+                     By.cssSelector(String.format(Locators.CK_EDITOR_TOOLS_BAR, getActiveCkEditorTabIndex())));
                return bar != null && bar.isDisplayed();
             }
             catch (Exception e)
@@ -159,13 +170,14 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * wait  text in ck editor
+    * wait text in ck editor
+    * 
     * @param text
     * @param tabIndex
     */
-   public void waitIsTextPresent(final String text, final int tabIndex)
+   public void waitIsTextPresent(final String text)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -173,7 +185,7 @@ public class CkEditor extends AbstractTestModule
          {
             try
             {
-               return isTextPresent(text, tabIndex);
+               return isTextPresent(text, getActiveCkEditorTabIndex());
             }
             catch (Exception e)
             {
@@ -185,12 +197,13 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * wait bold-italic text in ck editor
+    * 
     * @param text
     * @param tabIndex
     */
-   public void waitItalicBoldTextPresent(final String text, final int tabIndex)
+   public void waitItalicBoldTextPresent(final String text)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -198,7 +211,7 @@ public class CkEditor extends AbstractTestModule
          {
             try
             {
-               return isBoldItalicTextPresent(text, tabIndex);
+               return isBoldItalicTextPresent(text, getActiveCkEditorTabIndex());
             }
             catch (Exception e)
             {
@@ -210,12 +223,13 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * wait italic text in ck editor
+    * 
     * @param text
     * @param tabIndex
     */
-   public void waitItalicTextPresent(final String text, final int tabIndex)
+   public void waitItalicTextPresent(final String text)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -223,7 +237,7 @@ public class CkEditor extends AbstractTestModule
          {
             try
             {
-               return isItalicTextPresent(text, tabIndex);
+               return isItalicTextPresent(text, getActiveCkEditorTabIndex());
             }
             catch (Exception e)
             {
@@ -235,12 +249,13 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * wait bold text in ck editor
+    * 
     * @param text
     * @param tabIndex
     */
-   public void waitBoldTextPresent(final String text, final int tabIndex)
+   public void waitBoldTextPresent(final String text)
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -248,7 +263,7 @@ public class CkEditor extends AbstractTestModule
          {
             try
             {
-               return isBoldTextPresent(text, tabIndex);
+               return isBoldTextPresent(text, getActiveCkEditorTabIndex());
             }
             catch (Exception e)
             {
@@ -260,6 +275,7 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * return true is text present
+    * 
     * @param text
     */
    public boolean isTextPresent(String text, int tabIndex)
@@ -274,6 +290,7 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * return true is bold text fragment present
+    * 
     * @param text
     */
    public boolean isItalicTextPresent(String text, int tabIndex)
@@ -288,6 +305,7 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * return true is bold text fragment present
+    * 
     * @param text
     */
    public boolean isBoldItalicTextPresent(String text, int tabIndex)
@@ -301,9 +319,10 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-   * return true is bold text fragment present
-   * @param text
-   */
+    * return true is bold text fragment present
+    * 
+    * @param text
+    */
    public boolean isBoldTextPresent(String text, int tabIndex)
    {
       WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
@@ -316,7 +335,7 @@ public class CkEditor extends AbstractTestModule
 
    public void waitCkEditorTableOpen()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -329,27 +348,27 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * start with 1
     * Delete all file content via Ctrl+a, Delete
+    * 
     */
-   public void deleteFileContentInCKEditor(int tabIndex) throws Exception
+   public void deleteFileContentInCKEditor() throws Exception
    {
 
-      typeTextIntoCkEditor(tabIndex, Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
+      typeTextIntoCkEditor(Keys.CONTROL.toString() + "a" + Keys.DELETE.toString());
 
    }
 
    /**
-    * switch to iframe of the ck_editor
-    * and type text
-    * start with one
+    * switch to iframe of the ck_editor and type text start with one
+    * 
     * @param tabIndex
     * @param text
     * @throws Exception
     */
-   public void typeTextIntoCkEditor(int tabIndex, String text) throws Exception
+   public void typeTextIntoCkEditor(String text) throws Exception
    {
-      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      WebElement ckiframe =
+         driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, getActiveCkEditorTabIndex())));
       driver().switchTo().frame(ckiframe);
       ckTextContainer.sendKeys(text);
       IDE().selectMainFrame();
@@ -359,7 +378,8 @@ public class CkEditor extends AbstractTestModule
     * Get the locator of content panel.
     * 
     * 
-    * @param tabIndex starts from 0
+    * @param tabIndex
+    *            starts from 0
     * @return content panel locator
     */
    public String getContentPanelLocator(int tabIndex)
@@ -370,7 +390,8 @@ public class CkEditor extends AbstractTestModule
    /**
     * Select iframe, which contains editor from tab with index tabIndex
     * 
-    * @param tabIndex begins from 0
+    * @param tabIndex
+    *            begins from 0
     */
    public void selectIFrameWithEditor(int tabIndex) throws Exception
    {
@@ -382,14 +403,15 @@ public class CkEditor extends AbstractTestModule
    /**
     * Wait while tab appears in editor
     * 
-    * @param tabIndex - index of tab, starts at 0
+    * @param tabIndex
+    *            - index of tab, starts at 0
     * @throws Exception
     */
    public void waitTabPresent(int tabIndex) throws Exception
    {
       final String tab = Locators.EDITOR_TABSET_LOCATOR + String.format(Locators.TAB_LOCATOR, tabIndex);
 
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -414,7 +436,7 @@ public class CkEditor extends AbstractTestModule
     */
    public void waitSwitchOnCodeEditor()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -431,12 +453,13 @@ public class CkEditor extends AbstractTestModule
    /**
     * Check is file in tabIndex tab opened with CK editor.
     * 
-    * @param tabIndex index of tab, starts at 1
+    * @param tabIndex
+    *            index of tab, starts at 1
     * @throws Exception
     */
    public boolean waitCkEditorOpened(final int ckEditNum) throws Exception
    {
-      return new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      return new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -458,7 +481,8 @@ public class CkEditor extends AbstractTestModule
    /**
     * Check is file in tabIndex tab opened with CK editor.
     * 
-    * @param tabIndex index of tab, starts at 1
+    * @param tabIndex
+    *            index of tab, starts at 1
     * @throws Exception
     */
    public boolean isCkEditorOpened(int tabIndex) throws Exception
@@ -478,16 +502,18 @@ public class CkEditor extends AbstractTestModule
     * 
     * @throws Exception
     */
-   public void clickDesignButton(int numEditor) throws Exception
+   public void clickDesignButton() throws Exception
    {
-      //click 
-      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, numEditor))).click();
-      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, numEditor))).click();
-      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, numEditor))).click();
+      // click
+      //TODO Check this 
+      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, getActiveEditorTabIndex()))).click();
+      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, getActiveEditorTabIndex()))).click();
+      driver().findElement(By.xpath(String.format(Locators.DESIGN_BUTTON_XPATH, getActiveEditorTabIndex()))).click();
    }
 
    /**
     * click on tools on toolbar in ck editor
+    * 
     * @param toolName
     */
    public void clickOnToolCkEditor(String toolName)
@@ -497,6 +523,7 @@ public class CkEditor extends AbstractTestModule
 
    /**
     * type text into height field the WYSYWYG table
+    * 
     * @param toolName
     */
    public void typeToHeightwisiwyngtable(String value)
@@ -514,6 +541,14 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
+    * click on cancel button WYSYWYG table
+    */
+   public void clickCancelWyswygTable()
+   {
+      tableCancelBtn.click();
+   }
+
+   /**
     * switch to CkEditorIframe
     */
    public void switchToCkEditorIframe(int ckEdit)
@@ -524,26 +559,27 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * check is table in ck-editor present
+    * wait is table in ck-editor present
+    * 
     * @param row
     * @param cell
     * @return
     */
-   public boolean isTablePresent(final int row, final int cell)
+   public void waitTablePresent(int row, int cell)
    {
-      WebElement table = driver().findElement(By.xpath(String.format(Locators.CK_EDITOR_CREATED_TABLE, row, cell)));
-      return table != null && table.isDisplayed();
-
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.CK_EDITOR_CREATED_TABLE, row, cell))));
    }
 
    /**
     * move cursor up on one position
-    * @throws InterruptedException 
+    * 
+    * @throws InterruptedException
     */
    public void moveCursorUp() throws InterruptedException
    {
       new Actions(driver()).sendKeys(Keys.ARROW_UP.toString()).build().perform();
-      //heed for set cursor in position
+      // heed for set cursor in position
       Thread.sleep(TestConstants.REDRAW_PERIOD * 2);
    }
 
@@ -556,14 +592,17 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * select tab star with 1 switch to iframe with ck_editor and return text into ck_editor
+    * select tab star with 1 switch to iframe with ck_editor and return text
+    * into ck_editor
+    * 
     * @param tabIndex
-    * @return
+    * @return text
     * @throws Exception
     */
-   public String getTextFromCKEditor(int tabIndex) throws Exception
+   public String getTextFromCKEditor() throws Exception
    {
-      WebElement ckiframe = driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, tabIndex)));
+      WebElement ckiframe =
+         driver().findElement(By.cssSelector(String.format(Locators.CK_EDITOR_IFRAME, getActiveCkEditorTabIndex())));
       driver().switchTo().frame(ckiframe);
       String txt = ckTextContainer.getText();
       IDE().selectMainFrame();
@@ -579,61 +618,58 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * wait sub menu in context menu
-    * with param name
+    * wait sub menu in context menu with param name
+    * 
     * @param name
     */
-   public boolean waitContextSubMenu(final String name)
+   public void waitContextSubMenu(final String name)
    {
-      return new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement elem = driver().findElement(By.xpath(String.format(Locators.CONTEXT_SUB_MENU_ELEMENT, name)));
-               return elem.isDisplayed() && elem != null;
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.CONTEXT_SUB_MENU_ELEMENT, name))));
+   }
 
+   /**
+    * wait sub menu in context menu with param name
+    * 
+    * @param name
+    */
+   public void waitContextMenu(final String name)
+   {
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         Locators.CONTEXT_MAIN_MENU_ELEMENT, name))));
    }
 
    /**
     * @param name
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void clickOnContextSubMenu(String name) throws InterruptedException
    {
       driver().findElement(By.xpath(String.format(Locators.CONTEXT_SUB_MENU_ELEMENT, name))).click();
-      //heed for close context menu
+      // heed for close context menu
       Thread.sleep(TestConstants.REDRAW_PERIOD);
 
    }
 
    /**
-    * move cursor to context menu with
-    * param name
+    * move cursor to context menu with param name
+    * 
     * @param titleMenu
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void moveCursorToRowContextMenu(String titleMenu) throws InterruptedException
    {
       WebElement nameMenu =
          driver().findElement(By.xpath(String.format(Locators.CONTEXT_MAIN_MENU_ELEMENT, titleMenu)));
       new Actions(driver()).moveToElement(nameMenu).build().perform();
-      //heed for open context submenu
+      // heed for open context submenu
       Thread.sleep(TestConstants.REDRAW_PERIOD * 2);
 
    }
 
    /**
-    * click in table from ck-editor 
+    * click in table from ck-editor
+    * 
     * @param row
     * @param cell
     */
@@ -645,16 +681,37 @@ public class CkEditor extends AbstractTestModule
    }
 
    /**
-    * click in table from ck-editor 
+    * click in table from ck-editor
+    * 
     * @param row
     * @param cell
-    * @throws InterruptedException 
+    * @throws InterruptedException
     */
    public void callContextMenuCellTableCkEditor(final int row, final int cell) throws InterruptedException
    {
       WebElement table = driver().findElement(By.xpath(String.format(Locators.CK_EDITOR_CREATED_TABLE, row, cell)));
       new Actions(driver()).contextClick(table).build().perform();
 
+   }
+
+   /**
+    * Getting of index of current active CkEditor
+    * 
+    * @return Active tab index + 1 for CkEditor.
+    */
+   public int getActiveCkEditorTabIndex()
+   {
+      return Integer.parseInt(numActiveEditor.getAttribute("view-id").replace("editor-", "")) + 1;
+   }
+
+   /**
+   * Getting of index of current active editor
+   * 
+   * @return Active editor tab index
+   */
+   public int getActiveEditorTabIndex()
+   {
+      return Integer.parseInt(numActiveEditor.getAttribute("view-id").replace("editor-", ""));
    }
 
 }

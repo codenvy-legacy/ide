@@ -18,11 +18,10 @@
  */
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
+import java.util.Map;
+
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.After;
@@ -30,8 +29,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -41,7 +38,7 @@ import java.util.Map;
 public class RemoveBlockCommentsTest extends ServicesJavaTextFuction
 {
 
-   //JavaRemoveCommentsTest.java
+   // JavaRemoveCommentsTest.java
    private static final String PROJECT = RemoveBlockCommentsTest.class.getSimpleName();
 
    private static final String FILE_NAME = "JavaRemoveCommentsTest.java";
@@ -102,25 +99,27 @@ public class RemoveBlockCommentsTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
       openJavaRemoveCommenTest(PROJECT);
       IDE.GOTOLINE.goToLine(30);
-      //after fix problem in status bar uncomment 
-      //assertEquals("30 : 6", IDE.STATUSBAR.getCursorPosition());
+      // after fix problem in status bar uncomment
+      // assertEquals("30 : 6", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 3; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 23; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      //need wait for reparce
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      // need wait for reparce
       Thread.sleep(4000);
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
 
@@ -131,29 +130,30 @@ public class RemoveBlockCommentsTest extends ServicesJavaTextFuction
    @Test
    public void removeBlockCommentByInnerSelection() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
-      openJavaRemoveCommenTest(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      waitJavaRemoveCommentTestIsReady(PROJECT);
+
       IDE.GOTOLINE.goToLine(31);
-      IDE.JAVAEDITOR.moveCursorRight(0, 6);
-      //after fix problem in status bar uncomment
-      //assertEquals("31 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorRight(6);
+      // after fix problem in status bar uncomment
+      // assertEquals("31 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 1; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 22; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      //need wait for reparce
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      // need wait for reparce
       Thread.sleep(4000);
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
@@ -163,60 +163,59 @@ public class RemoveBlockCommentsTest extends ServicesJavaTextFuction
    @Test
    public void removeBlockCommentByStartSelection() throws Exception
    {
-      driver.navigate().refresh();
-      driver.navigate().refresh();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
-      openJavaRemoveCommenTest(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      waitJavaRemoveCommentTestIsReady(PROJECT);
 
       IDE.GOTOLINE.goToLine(29);
-      IDE.JAVAEDITOR.moveCursorRight(0, 6);
-      //after fix problem in status bar uncomment
+      IDE.JAVAEDITOR.moveCursorRight(6);
+      // after fix problem in status bar uncomment
       // assertEquals("29 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 2; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 22; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));
 
    }
 
-    @Test
+   @Test
    public void removeBlockCommentByEndSelection() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src");
-      openJavaRemoveCommenTest(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + "src" + "/" + "main" + "/" + "java/" + "commenttest" + "/"
+         + "JavaRemoveCommentsTest.java");
+      waitJavaRemoveCommentTestIsReady(PROJECT);
 
       IDE.GOTOLINE.goToLine(32);
-      IDE.JAVAEDITOR.moveCursorRight(0, 6);
-      //after fix problem in status bar uncomment
-      //assertEquals("32 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.JAVAEDITOR.moveCursorRight(6);
+      // after fix problem in status bar uncomment
+      // assertEquals("32 : 7", IDE.STATUSBAR.getCursorPosition());
 
       for (int i = 0; i < 2; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_DOWN);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_DOWN);
       }
 
       for (int i = 0; i < 22; i++)
       {
-         IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
+         IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.SHIFT.toString() + Keys.ARROW_RIGHT);
       }
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + Keys.SHIFT + "\\");
-      String content = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + Keys.SHIFT + "\\");
+      String content = IDE.JAVAEDITOR.getTextFromJavaEditor();
 
       assertFalse(content.contains("/*numbers.add(2);"));
       assertFalse(content.contains("numbers.add(5);*/"));

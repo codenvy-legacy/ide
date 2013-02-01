@@ -57,7 +57,7 @@ public class ContextMenu extends AbstractTestModule
     */
    public void waitOpened()
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
@@ -80,7 +80,7 @@ public class ContextMenu extends AbstractTestModule
     */
    public void waitClosed()
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.core;
 
+import static org.junit.Assert.assertEquals;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import static org.junit.Assert.assertEquals;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -171,7 +171,7 @@ public class CustomizeHotkeys extends AbstractTestModule
     */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -188,7 +188,7 @@ public class CustomizeHotkeys extends AbstractTestModule
     */
    public void waitBindEnabled() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -205,7 +205,7 @@ public class CustomizeHotkeys extends AbstractTestModule
     */
    public void waitUnBindEnabled() throws InterruptedException
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -222,7 +222,7 @@ public class CustomizeHotkeys extends AbstractTestModule
     */
    public void waitOkEnabled() throws InterruptedException
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -240,7 +240,7 @@ public class CustomizeHotkeys extends AbstractTestModule
     */
    public void waitClosed() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

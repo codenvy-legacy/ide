@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.exoplatform.ide</groupId>
 		<artifactId>exo-ide-parent</artifactId>
-		<version>1.2.0-M16-SNAPSHOT</version>
+		<version>1.2.0-M17-SNAPSHOT</version>
 	</parent>
 	<groupId>org.exoplatform.ide</groupId>
 	<artifactId>exo-ide-packaging-application-war</artifactId>
@@ -31,9 +31,9 @@
 			<artifactId>exo-ide-client</artifactId>
 		</dependency>
 
-		<!-- EDITOR EXTENSIONS -->
-
-		<dependency>
+      <!-- EDITOR EXTENSIONS -->
+      
+      <dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-collabeditor</artifactId>
 		</dependency>
@@ -90,10 +90,10 @@
 			<artifactId>exo-ide-editor-yaml</artifactId>
 		</dependency>
 
-		<!-- EXTENSIONS -->
+      <!-- EXTENSIONS -->
 
 
-		<dependency>
+      <dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-gadget</artifactId>
 			<exclusions>
@@ -145,6 +145,11 @@
 					<artifactId>antlr</artifactId>
 					<groupId>antlr</groupId>
 				</exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>eclipse-jdt-core</artifactId>
+            </exclusion>
+
 			</exclusions>
 		</dependency>
 
@@ -172,12 +177,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-cloudbees</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>xstream</artifactId>
-					<groupId>com.thoughtworks.xstream</groupId>
-				</exclusion>
-			</exclusions>
+         <!--exclusions>
+            <exclusion>
+               <artifactId>xstream</artifactId>
+               <groupId>com.thoughtworks.xstream</groupId>
+            </exclusion>
+         </exclusions-->
 		</dependency>
 
 		<dependency>
@@ -223,6 +228,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-extension-googleappengine</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -259,6 +270,12 @@
 		<dependency>
 			<groupId>org.exoplatform.ide</groupId>
 			<artifactId>exo-ide-server</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>httpclient</artifactId>
+					<groupId>org.apache.httpcomponents</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		
 		<dependency>
@@ -343,11 +360,12 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>buildnumber-maven-plugin</artifactId>
-				<version>1.0</version>
+				<version>1.1</version>
 				<configuration>
 					<timestampFormat>{0, date, yyyy-MM-dd HH:mm:ss}</timestampFormat>
 					<doCheck>false</doCheck>
 					<doUpdate>false</doUpdate>
+               <shortRevisionLength>8</shortRevisionLength>
 				</configuration>
 				<executions>
 					<execution>
@@ -369,7 +387,8 @@
 						<phase>process-resources</phase>
 						<configuration>
 							<tasks>
-								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
+								<unjar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
+                               dest="${project.build.directory}/share"/>
 							</tasks>
 						</configuration>
 						<goals>
@@ -385,7 +404,9 @@
 						<phase>compile</phase>
 						<configuration>
 							<tasks>
-								<echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
+								<echo
+                           file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties"
+                           append="false">
 									buildNumber = ${buildNumber}
 									buildTime = ${timestamp}
 									version = ${project.version}</echo>
@@ -399,7 +420,7 @@
 						<configuration>
 							<tasks>
 								<move todir="${project.build.directory}/${project.artifactId}-${project.version}">
-									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE" />
+									<fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE"/>
 								</move>
 							</tasks>
 						</configuration>
@@ -435,8 +456,8 @@
 				</executions>
 			</plugin>
 
-			<!-- configure the GWT-Maven plugin -->
-			<plugin>
+         <!-- configure the GWT-Maven plugin -->
+         <plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
 				<configuration>
@@ -475,7 +496,21 @@
 								**/preloadIDE.js,
 								**/lib/exo-ide-client*,
 								**/lib/exo-ide-collabeditor*,
-								**/lib/exo-ide-editor-*,
+								**/lib/exo-ide-editor-chromattic*,
+								**/lib/exo-ide-editor-codemirror2*,
+								**/lib/exo-ide-editor-css*,
+								**/lib/exo-ide-editor-gadget*,
+								**/lib/exo-ide-editor-groovy*,
+								**/lib/exo-ide-editor-gtmpl*,
+								**/lib/exo-ide-editor-html*,
+								**/lib/exo-ide-editor-java*,
+								**/lib/exo-ide-editor-javascript*,
+								**/lib/exo-ide-editor-jsp*,
+								**/lib/exo-ide-editor-php*,
+								**/lib/exo-ide-editor-python*,
+								**/lib/exo-ide-editor-ruby*,
+								**/lib/exo-ide-editor-xml*,
+								**/lib/exo-ide-editor-yaml*,
 								**/lib/exo-ide-extension-samples*,
 								**/lib/exo-ide-framework-client*,
 								**/lib/exo-ide-jdt-core*,
@@ -500,7 +535,7 @@
                         **/lib/infinispan*,
                         **/lib/c3p0*,
                         **/lib/stax-api*,
-                        **/lib/gwt-dev*,
+                        **/lib/gwt-*,
                         **/lib/sjsxp*,
                         **/lib/*junit*,
                         **/lib/jotm*,
@@ -508,7 +543,7 @@
                         **/lib/activation*,
                         **/lib/annotations-api*,
                         **/lib/sjsxp*,
-                        **/lib/gwt-user*,
+                        **/lib/gwt*,
                         **/lib/postgresql*,
                         **/lib/tools.jar,
                         **/lib/guice-2.0.jar,

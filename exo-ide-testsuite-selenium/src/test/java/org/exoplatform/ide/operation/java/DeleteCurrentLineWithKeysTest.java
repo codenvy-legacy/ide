@@ -2,14 +2,14 @@ package org.exoplatform.ide.operation.java;
 
 import static org.junit.Assert.assertFalse;
 
+import java.util.Map;
+
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 public class DeleteCurrentLineWithKeysTest extends ServicesJavaTextFuction
 {
@@ -46,14 +46,15 @@ public class DeleteCurrentLineWithKeysTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-     
 
       IDE.GOTOLINE.goToLine(1);
       IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "d");
-      String code = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + "d");
+      String code = IDE.JAVAEDITOR.getTextFromJavaEditor();
       assertFalse(code.contains("package sumcontroller;"));
    }
 }

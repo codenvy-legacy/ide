@@ -50,7 +50,7 @@ import org.eclipse.jdt.client.internal.corext.refactoring.util.TightSourceRangeC
 import org.eclipse.jdt.client.runtime.CoreException;
 import org.eclipse.jdt.client.runtime.IStatus;
 import org.eclipse.jdt.client.runtime.Status;
-import org.exoplatform.ide.editor.text.edits.TextEditGroup;
+import org.exoplatform.ide.editor.shared.text.edits.TextEditGroup;
 
 import java.util.List;
 
