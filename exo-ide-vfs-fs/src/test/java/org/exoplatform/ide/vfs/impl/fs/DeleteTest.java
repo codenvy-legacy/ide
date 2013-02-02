@@ -20,6 +20,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -99,6 +101,12 @@ public class DeleteTest extends LocalFileSystemTest
 
       createLock(lockedFilePath, lockToken);
 
+      Map<String, String[]>properties = new HashMap<String, String[]>(2);
+      properties.put("MyProperty01", new String[]{"foo"});
+      properties.put("MyProperty02", new String[]{"bar"});
+      writeProperties(filePath, properties);
+
+
       fileId = pathToId(filePath);
       lockedFileId = pathToId(lockedFilePath);
       protectedFileId = pathToId(protectedFilePath);
@@ -115,6 +123,7 @@ public class DeleteTest extends LocalFileSystemTest
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must be removed. ", exists(filePath));
+      assertNull("Metadata must be removed. ", readProperties(filePath)); // property file must be removed.
    }
 
    public void testDeleteFileLocked() throws Exception
@@ -123,6 +132,7 @@ public class DeleteTest extends LocalFileSystemTest
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must be removed. ", exists(lockedFilePath));
+      assertNull("Lock file must be removed. ", readLock(lockedFilePath)); // lock file must be removed also
    }
 
    public void testDeleteFileLocked_NoLockToken() throws Exception
@@ -133,6 +143,20 @@ public class DeleteTest extends LocalFileSystemTest
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
       assertTrue("File must not be removed. ", exists(lockedFilePath));
+      assertEquals(lockToken, readLock(lockedFilePath)); // lock file must not be removed
+   }
+
+   public void testDeleteFileHavePermissions() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "delete/" + protectedFileId;
+      // File is protected and default principal 'admin' has not write permission.
+      // Replace default principal by principal who has write permission.
+      ConversationState.setCurrent(new ConversationState(new Identity("andrew")));
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals(204, response.getStatus());
+      assertFalse("File must not be removed. ", exists(protectedFilePath));
+      assertNull("ACL file must be removed. ", readACL(protectedFilePath)); // file which stored ACL must be removed
    }
 
    public void testDeleteFileNoPermissions() throws Exception

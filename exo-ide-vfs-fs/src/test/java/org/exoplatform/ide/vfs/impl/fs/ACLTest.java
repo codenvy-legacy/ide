@@ -150,9 +150,7 @@ public class ACLTest extends LocalFileSystemTest
       assertEquals(204, response.getStatus());
 
       // check backend
-      Map<String, Set<BasicPermissions>> updatedPermissions = readACL(filePath);
-      log.info(updatedPermissions);
-      assertTrue(updatedPermissions.isEmpty());
+      assertNull(readACL(filePath));
 
       // check API
       List<AccessControlEntry> updatedAcl =

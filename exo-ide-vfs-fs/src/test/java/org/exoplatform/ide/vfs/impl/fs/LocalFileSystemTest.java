@@ -19,6 +19,7 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import junit.framework.TestCase;
+
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
@@ -46,7 +47,6 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -66,8 +66,6 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -495,9 +493,7 @@ public abstract class LocalFileSystemTest extends TestCase
       }
       catch (FileNotFoundException e)
       {
-         Map<String, Set<BasicPermissions>> result = new HashMap<String, Set<BasicPermissions>>(1);
-         result.put(VirtualFileSystemInfo.ANY_PRINCIPAL, EnumSet.of(BasicPermissions.ALL));
-         return result;
+         return null;
       }
       DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn));
       Map<String, Set<BasicPermissions>> accessList = aclSerializer.read(dis);
@@ -531,10 +527,10 @@ public abstract class LocalFileSystemTest extends TestCase
    protected String readLock(String vfsPath) throws Exception
    {
       java.io.File file = getIoFile(vfsPath);
-      if (!file.isFile())
+      /*if (!file.isFile())
       {
          return null;
-      }
+      }*/
       java.io.File locksDir = new java.io.File(file.getParentFile(), MountPoint.LOCKS_DIR);
       java.io.File lockFile = new java.io.File(locksDir, file.getName() + MountPoint.LOCK_FILE_SUFFIX);
       FileInputStream fIn;

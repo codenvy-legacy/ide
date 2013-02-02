@@ -96,7 +96,7 @@ public class FileUtils
     * @param prefix
     *    prefix, may not be <code>null</code> and must be at least three characters long
     * @return newly create directory
-    * @throws IOException
+    * @throws java.io.IOException
     *    if creation of new directory failed
     */
    public static File createTempDirectory(File parent, String prefix) throws IOException
@@ -127,7 +127,7 @@ public class FileUtils
     * @param prefix
     *    prefix, may not be <code>null</code> and must be at least three characters long
     * @return newly create directory
-    * @throws IOException
+    * @throws java.io.IOException
     *    if creation of new directory failed
     */
    public static File createTempDirectory(String prefix) throws IOException
@@ -147,7 +147,7 @@ public class FileUtils
     * @param url
     *    URL for download
     * @return downloaded file
-    * @throws IOException
+    * @throws java.io.IOException
     *    if any i/o error occurs
     */
    public static File downloadFile(File parent, String prefix, String suffix, URL url) throws IOException
@@ -195,23 +195,91 @@ public class FileUtils
       return file;
    }
 
+   /**
+    * Copy file or directory to the specified destination. Existed files in destination directory will be overwritten.
+    *
+    * @param source
+    *    copy source
+    * @param target
+    *    copy destination
+    * @param filter
+    *    copy filter
+    * @throws java.io.IOException
+    *    if any i/o error occurs
+    */
    public static void copy(File source, File target, FilenameFilter filter) throws IOException
    {
-      copy(source, target, filter, false);
+      copy(source, target, filter, false, true);
    }
 
+   /**
+    * Copy file or directory to the specified destination. Existed files in destination directory will be overwritten.
+    * <p/>
+    * This method use java.nio for coping files.
+    *
+    * @param source
+    *    copy source
+    * @param target
+    *    copy destination
+    * @param filter
+    *    copy filter
+    * @throws java.io.IOException
+    *    if any i/o error occurs
+    */
    public static void nioCopy(File source, File target, FilenameFilter filter) throws IOException
    {
-      copy(source, target, filter, true);
+      copy(source, target, filter, true, true);
    }
 
-   private static void copy(File source, File target, FilenameFilter filter, boolean nio) throws IOException
+   /**
+    * Copy file or directory to the specified destination.
+    *
+    * @param source
+    *    copy source
+    * @param target
+    *    copy destination
+    * @param filter
+    *    copy filter
+    * @param replaceIfExists
+    *    if <code>true</code>  existed files in destination directory will be overwritten
+    * @throws java.io.IOException
+    *    if any i/o error occurs
+    */
+   public static void copy(File source, File target, FilenameFilter filter, boolean replaceIfExists) throws IOException
+   {
+      copy(source, target, filter, false, replaceIfExists);
+   }
+
+   /**
+    * Copy file or directory to the specified destination.
+    * <p/>
+    * This method use java.nio for coping files.
+    *
+    * @param source
+    *    copy source
+    * @param target
+    *    copy destination
+    * @param filter
+    *    copy filter
+    * @param replaceIfExists
+    *    if <code>true</code>  existed files in destination directory will be overwritten
+    * @throws java.io.IOException
+    *    if any i/o error occurs
+    */
+   public static void nioCopy(File source, File target, FilenameFilter filter, boolean replaceIfExists)
+      throws IOException
+   {
+      copy(source, target, filter, true, replaceIfExists);
+   }
+
+   private static void copy(File source, File target, FilenameFilter filter, boolean nio, boolean replaceIfExists)
+      throws IOException
    {
       if (source.isDirectory())
       {
          if (!(target.exists() || target.mkdirs()))
          {
-            throw new IOException(String.format("Unable create directory: %s", target.getAbsolutePath()));
+            throw new IOException(String.format("Unable create directory '%s'. ", target.getAbsolutePath()));
          }
          if (filter == null)
          {
@@ -222,16 +290,6 @@ public class FileUtils
          q.add(source);
          while (!q.isEmpty())
          {
-            try
-            {
-               Thread.sleep(10);
-            }
-            catch (InterruptedException e)
-            {
-               e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-
-
             File current = q.pop();
             File[] list = current.listFiles();
             if (list != null)
@@ -247,7 +305,8 @@ public class FileUtils
                   {
                      if (!(newFile.exists() || newFile.mkdirs()))
                      {
-                        throw new IOException(String.format("Unable create directory: %s", newFile.getAbsolutePath()));
+                        throw new IOException(
+                           String.format("Unable create directory '%s'. ", newFile.getAbsolutePath()));
                      }
                      q.push(f);
                   }
@@ -255,11 +314,11 @@ public class FileUtils
                   {
                      if (nio)
                      {
-                        nioCopyFile(f, newFile);
+                        nioCopyFile(f, newFile, replaceIfExists);
                      }
                      else
                      {
-                        copyFile(f, newFile);
+                        copyFile(f, newFile, replaceIfExists);
                      }
                   }
                }
@@ -271,24 +330,28 @@ public class FileUtils
          File parent = target.getParentFile();
          if (!(parent.exists() || parent.mkdirs()))
          {
-            throw new IOException(String.format("Unable create directory: %s", parent.getAbsolutePath()));
+            throw new IOException(String.format("Unable create directory '%s'. ", parent.getAbsolutePath()));
          }
          if (nio)
          {
-            nioCopyFile(source, target);
+            nioCopyFile(source, target, replaceIfExists);
          }
          else
          {
-            copyFile(source, target);
+            copyFile(source, target, replaceIfExists);
          }
       }
    }
 
-   private static void copyFile(File source, File target) throws IOException
+   private static void copyFile(File source, File target, boolean replaceIfExists) throws IOException
    {
       if (!target.createNewFile()) // atomic
       {
-         throw new IOException(String.format("Item '%s' already exists. ", target.getAbsolutePath()));
+         if (target.exists() && !replaceIfExists)
+         {
+            throw new IOException(String.format("File '%s' already exists. ", target.getAbsolutePath()));
+         }
+         throw new IOException(String.format("Cannot create file '%s'. ", target.getAbsolutePath()));
       }
       FileInputStream in = null;
       FileOutputStream out = null;
@@ -316,11 +379,15 @@ public class FileUtils
       }
    }
 
-   private static void nioCopyFile(File source, File target) throws IOException
+   private static void nioCopyFile(File source, File target, boolean replaceIfExists) throws IOException
    {
       if (!target.createNewFile()) // atomic
       {
-         throw new IOException(String.format("Item '%s' already exists. ", target.getAbsolutePath()));
+         if (target.exists() && !replaceIfExists)
+         {
+            throw new IOException(String.format("File '%s' already exists. ", target.getAbsolutePath()));
+         }
+         throw new IOException(String.format("Cannot create file '%s'. ", target.getAbsolutePath()));
       }
       FileInputStream sourceStream = null;
       FileOutputStream targetStream = null;
@@ -399,7 +466,7 @@ public class FileUtils
       return files;
    }
 
-   public static String countFileHash(java.io.File file, MessageDigest digest) throws IOException
+   public static String countFileHash(File file, MessageDigest digest) throws IOException
    {
       FileInputStream fis = null;
       DigestInputStream dis = null;

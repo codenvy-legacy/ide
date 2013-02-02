@@ -138,7 +138,7 @@ public class AccessControlList
    {
       if (acl.isEmpty() && !override)
       {
-         // Have nothing to do if there is no updates and override flag is not set.
+         // Nothing to do if there is no updates and override flag is not set.
          return;
       }
 

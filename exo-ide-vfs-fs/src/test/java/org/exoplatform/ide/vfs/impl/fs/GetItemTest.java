@@ -41,6 +41,9 @@ public class GetItemTest extends LocalFileSystemTest
    private String protectedFileId;
    private String protectedFilePath;
 
+   private String protectedParentId;
+   private String protectedParentPath;
+
    private String folderId;
    private String folderPath;
 
@@ -52,6 +55,8 @@ public class GetItemTest extends LocalFileSystemTest
       filePath = createFile(testRootPath, "GetObjectTest_File", DEFAULT_CONTENT_BYTES);
       folderPath = createDirectory(testRootPath, "GetObjectTest_Folder");
       protectedFilePath = createFile(testRootPath, "GetObjectTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
+      String protectedParent = createDirectory(testRootPath, "GetObjectTest_ProtectedParent");
+      protectedParentPath = createFile(protectedParent, "GetObjectTest_ProtectedChildFile", DEFAULT_CONTENT_BYTES);
 
       properties = new HashMap<String, String[]>(2);
       properties.put("MyProperty01", new String[]{"hello world"});
@@ -61,10 +66,12 @@ public class GetItemTest extends LocalFileSystemTest
       Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(1);
       accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
       writeACL(protectedFilePath, accessList);
+      writeACL(protectedParent, accessList);
 
       fileId = pathToId(filePath);
       protectedFileId = pathToId(protectedFilePath);
       folderId = pathToId(folderPath);
+      protectedParentId = pathToId(protectedParentPath);
    }
 
    public void testGetFile() throws Exception
@@ -164,6 +171,15 @@ public class GetItemTest extends LocalFileSystemTest
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "item/" + protectedFileId;
+      ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals(403, response.getStatus());
+      log.info(new String(writer.getBody()));
+   }
+
+   public void testGetFileParentNoPermissions() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "item/" + protectedParentId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
