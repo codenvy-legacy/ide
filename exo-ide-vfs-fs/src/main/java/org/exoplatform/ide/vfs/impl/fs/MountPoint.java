@@ -868,7 +868,7 @@ public class MountPoint
 
       if (!FileUtils.deleteRecursive(virtualFile.getIoFile()))
       {
-         LOG.error("Unable delete ACL file {}", virtualFile.getIoFile());
+         LOG.error("Unable delete file {}", virtualFile.getIoFile());
          throw new VirtualFileSystemException(String.format("Unable delete item '%s'. ", virtualFile.getPath()));
       }
 
