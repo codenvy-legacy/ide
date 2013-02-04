@@ -21,6 +21,10 @@
 	<listener>
 		<listener-class>org.everrest.websockets.WSConnectionTracker</listener-class>
 	</listener>
+   <listener>
+      <listener-class>com.google.collide.server.FileEditSessionCleaner</listener-class>
+   </listener>
+
 	<servlet>
 		<servlet-name>EverrestServlet</servlet-name>
 		<servlet-class>org.exoplatform.ide.davmount.DavMountRestServlet</servlet-class>
