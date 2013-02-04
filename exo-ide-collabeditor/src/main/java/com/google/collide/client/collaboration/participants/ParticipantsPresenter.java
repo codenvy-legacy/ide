@@ -100,22 +100,21 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
       {
          activeDocument = null;
          closeView();
+         return;
+      }
+
+      Editor editor = ((CollabEditor)event.getEditor()).getEditor();
+      activeDocument = editor.getDocument();
+      List<Participant> participants = documentToParticipants.get(activeDocument.getId());
+
+      // Don't show view if no any participants except for current user.
+      if (participants != null && participants.size() > 1)
+      {
+         updateParticipantList(participants);
       }
       else
       {
-         Editor editor = ((CollabEditor)event.getEditor()).getEditor();
-         activeDocument = editor.getDocument();
-         List<Participant> participants = documentToParticipants.get(activeDocument.getId());
-
-         // Don't show view if no any participants except for current user.
-         if (participants != null && participants.size() > 1)
-         {
-            updateParticipantList(participants);
-         }
-         else
-         {
-            closeView();
-         }
+         closeView();
       }
    }
 
