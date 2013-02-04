@@ -23,13 +23,18 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CollaborationEditorFileOpenedHandler.java Jan 31, 2013 11:48:50 AM azatsarynnyy $
+ * @version $Id: CollaborationDocumentLinkedHandler.java Jan 31, 2013 11:48:50 AM azatsarynnyy $
  *
  */
 
-public interface CollaborationEditorFileOpenedHandler extends EventHandler
+public interface CollaborationDocumentLinkedHandler extends EventHandler
 {
 
-   void onEditorFileOpened(CollaborationEditorFileOpenedEvent event);
+   /**
+    * Called after the document is linked to a file.
+    * 
+    * @param event {@link CollaborationDocumentLinkedEvent}
+    */
+   void onDocumentLinked(CollaborationDocumentLinkedEvent event);
 
 }

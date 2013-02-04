@@ -20,6 +20,7 @@ package com.google.collide.client.collaboration.participants;
 
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.Resources;
+import com.google.collide.client.code.Participant;
 import com.google.collide.client.collaboration.participants.ParticipantsPresenter.Display;
 import com.google.collide.client.ui.list.SimpleList;
 import com.google.collide.client.ui.list.SimpleList.View;
@@ -31,6 +32,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
@@ -41,7 +43,7 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import java.util.List;
 
 /**
- * View for displaying the participants editing.
+ * View for displaying the collaborators.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ParticipantsView.java Jan 30, 2013 3:21:19 PM azatsarynnyy $
@@ -50,11 +52,30 @@ import java.util.List;
 public class ParticipantsView extends ViewImpl implements Display
 {
 
-   private static final String ID = "ideCollaborationParticipantsView";
+   /**
+    * View's identifier.
+    */
+   private static final String ID = "ideCollaborationCollaboratorsView";
 
-   private static final String TITLE = "Participants";
+   /**
+    * View's title.
+    */
+   private static final String TITLE = "Collaborators";
 
-   private SimpleList<String> participantsList;
+   /**
+    * Initial width of this view.
+    */
+   private static final int WIDTH = 250;
+
+   /**
+    * Initial height of this view.
+    */
+   private static final int HEIGHT = 450;
+
+   /**
+    * Participant list to show.
+    */
+   private SimpleList<Participant> participantsList;
 
    @UiField
    ScrollPanel participantsPanel;
@@ -70,28 +91,39 @@ public class ParticipantsView extends ViewImpl implements Display
 
    public ParticipantsView()
    {
-      super(ID, ViewType.INFORMATION, TITLE);
+      super(ID, ViewType.INFORMATION, TITLE, null, WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
 
       Resources resources = CollabEditorExtension.get().getContext().getResources();
 
       TableElement tableElement = Elements.createTableElement();
       tableElement.setAttribute("style", "width: 100%");
-      participantsList = SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
+      tableElement.setCellSpacing("0");
+      participantsList =
+         SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
 
       // participantsPanel.setStyleName(resources.coreCss().simpleListContainer());
       participantsPanel.add(participantsList);
    }
 
-   private SimpleList.ListItemRenderer<String> listItemRenderer = new SimpleList.ListItemRenderer<String>()
+   private SimpleList.ListItemRenderer<Participant> listItemRenderer = new SimpleList.ListItemRenderer<Participant>()
    {
 
       @Override
-      public void render(Element listItemBase, String itemData)
+      public void render(Element listItemBase, Participant itemData)
       {
-         TableCellElement label = Elements.createTDElement();
-         label.setInnerHTML(itemData);
-         listItemBase.appendChild(label);
+         TableCellElement iconCell = Elements.createTDElement();
+         TableCellElement labelCell = Elements.createTDElement();
+
+         DivElement iconDiv = Elements.createDivElement();
+         iconDiv.setAttribute("style", "background-color: " + itemData.getColor()
+            + "; height: 13px; width: 13px; border-radius: 2px");
+         iconCell.setWidth("15px");
+         iconCell.appendChild(iconDiv);
+
+         labelCell.setInnerHTML(itemData.getDisplayName());
+         listItemBase.appendChild(iconCell);
+         listItemBase.appendChild(labelCell);
       }
 
       @Override
@@ -101,17 +133,17 @@ public class ParticipantsView extends ViewImpl implements Display
       }
    };
 
-   private SimpleList.ListEventDelegate<String> listDelegate = new SimpleList.ListEventDelegate<String>()
+   private SimpleList.ListEventDelegate<Participant> listDelegate = new SimpleList.ListEventDelegate<Participant>()
    {
 
       @Override
-      public void onListItemClicked(Element listItemBase, String itemData)
+      public void onListItemClicked(Element listItemBase, Participant itemData)
       {
          participantsList.getSelectionModel().setSelectedItem(itemData);
       }
 
       @Override
-      public void onListItemDoubleClicked(Element listItemBase, String itemData)
+      public void onListItemDoubleClicked(Element listItemBase, Participant itemData)
       {
          // TODO Auto-generated method stub
 
@@ -119,13 +151,12 @@ public class ParticipantsView extends ViewImpl implements Display
    };
 
    @Override
-   public void setValue(List<String> value)
+   public void setValue(List<Participant> value)
    {
-      // final JsonArray<UserDetails> itemsToDisplay = JsoArray.<UserDetails> create();
-      final JsonArray<String> itemsToDisplay = JsoArray.<String> create();
-      for (String participantModel : value)
+      final JsonArray<Participant> itemsToDisplay = JsoArray.<Participant> create();
+      for (Participant participant : value)
       {
-         itemsToDisplay.add(participantModel);
+         itemsToDisplay.add(participant);
       }
       participantsList.render(itemsToDisplay);
    }

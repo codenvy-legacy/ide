@@ -24,22 +24,23 @@ import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * 
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CollaborationEditorFileOpenedEvent.java Jan 31, 2013 11:47:32 AM azatsarynnyy $
+ * @version $Id: CollaborationDocumentLinkedEvent.java Jan 31, 2013 11:47:32 AM azatsarynnyy $
  *
  */
 
-public class CollaborationEditorFileOpenedEvent extends GwtEvent<CollaborationEditorFileOpenedHandler>
+public class CollaborationDocumentLinkedEvent extends GwtEvent<CollaborationDocumentLinkedHandler>
 {
 
-   public static final GwtEvent.Type<CollaborationEditorFileOpenedHandler> TYPE =
-      new GwtEvent.Type<CollaborationEditorFileOpenedHandler>();
+   public static final GwtEvent.Type<CollaborationDocumentLinkedHandler> TYPE =
+      new GwtEvent.Type<CollaborationDocumentLinkedHandler>();
 
    private Document document;
 
    private ParticipantModel participantModel;
 
-   public CollaborationEditorFileOpenedEvent(Document document, ParticipantModel participantModel)
+   public CollaborationDocumentLinkedEvent(Document document, ParticipantModel participantModel)
    {
       this.document = document;
       this.participantModel = participantModel;
@@ -56,13 +57,13 @@ public class CollaborationEditorFileOpenedEvent extends GwtEvent<CollaborationEd
    }
 
    @Override
-   protected void dispatch(CollaborationEditorFileOpenedHandler handler)
+   protected void dispatch(CollaborationDocumentLinkedHandler handler)
    {
-      handler.onEditorFileOpened(this);
+      handler.onDocumentLinked(this);
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<CollaborationEditorFileOpenedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<CollaborationDocumentLinkedHandler> getAssociatedType()
    {
       return TYPE;
    }

@@ -18,32 +18,36 @@
  */
 package com.google.collide.client.collaboration.participants;
 
-import com.google.collide.client.AppContext;
-import com.google.collide.client.communication.MessageFilter;
-import com.google.collide.client.document.DocumentManager;
-import com.google.collide.dto.NewFileCollaborator;
-import com.google.collide.dto.RoutingTypes;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.code.Participant;
+import com.google.collide.client.code.ParticipantModel.Listener;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.core.client.GWT;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
+ * Presenter for displaying the collaborators.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ParticipantsPresenter.java Jan 30, 2013 3:18:56 PM azatsarynnyy $
  *
  */
-public class ParticipantsPresenter implements ViewClosedHandler, CollaborationEditorFileOpenedHandler, EditorActiveFileChangedHandler
+public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFileChangedHandler,
+   CollaborationDocumentLinkedHandler
 {
    /**
     * View for participants panel.
@@ -55,66 +59,26 @@ public class ParticipantsPresenter implements ViewClosedHandler, CollaborationEd
        * 
        * @param value participant list
        */
-      void setValue(List<String> value);
+      void setValue(List<Participant> value);
    }
 
    private Display display;
-
-   private AppContext appContext;
-
-   private DocumentManager documentManager;
 
    /**
     * Current active file.
     */
    private FileModel activeFile;
 
-   public ParticipantsPresenter(AppContext appContext, DocumentManager documentManager)
-   {
-      this.appContext = appContext;
-      this.documentManager = documentManager;
+   /**
+    * Map of {@link Document} id to the participant list.
+    */
+   private Map<Integer, List<Participant>> documentToParticipants = new HashMap<Integer, List<Participant>>();
 
+   public ParticipantsPresenter()
+   {
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(CollaborationEditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
-      this.appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.NEWFILECOLLABORATOR,
-         newFileCollaboratorMessageRecipient);
-   }
-
-   private final MessageFilter.MessageRecipient<NewFileCollaborator> newFileCollaboratorMessageRecipient =
-      new MessageFilter.MessageRecipient<NewFileCollaborator>()
-      {
-         @Override
-         public void onMessageReceived(NewFileCollaborator message)
-         {
-            addNewCollaborator(message);
-         }
-      };
-
-   private void addNewCollaborator(NewFileCollaborator message)
-   {
-      Document document = documentManager.getDocumentByFilePath(message.getPath());
-
-      IDE.fireEvent(new OutputEvent(String.valueOf(document.getId())));
-
-      if (document != null)
-      {
-//         DocumentCollaborationController collaborationController =
-//            docCollabControllersByDocumentId.get(document.getId());
-//         collaborationController.getParticipantModel().addParticipant(true, message.getParticipant());
-         List<String> list = new ArrayList<String>();
-         list.add(message.getParticipant().getUserDetails().getGivenName());
-         display.setValue(list);
-      }
-   }
-
-   private void bindDisplay()
-   {
-      List<String> list = new ArrayList<String>();
-      list.add("participant 1");
-      list.add("participant 2");
-      display.setValue(list);
+      IDE.addHandler(CollaborationDocumentLinkedEvent.TYPE, this);
    }
 
    /**
@@ -135,12 +99,12 @@ public class ParticipantsPresenter implements ViewClosedHandler, CollaborationEd
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      this.activeFile = event.getFile();
+      activeFile = event.getFile();
+      Editor editor = event.getEditor();
 
-//      if (activeFile == null || !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
-      if (activeFile == null)
+      if (activeFile == null || !(editor instanceof CollabEditor)
+         || !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
       {
-         activeFile = null;
          if (display != null)
          {
             IDE.getInstance().closeView(display.asView().getId());
@@ -148,23 +112,74 @@ public class ParticipantsPresenter implements ViewClosedHandler, CollaborationEd
       }
       else
       {
-         if (display == null)
+         int documentId = ((CollabEditor)editor).getEditor().getDocument().getId();
+         List<Participant> participants = documentToParticipants.get(documentId);
+         // Don't show view if no any participants except for current user.
+         if (participants != null && participants.size() > 1)
          {
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
+            openView();
+            display.setValue(participants);
          }
-         //         display.setValue(participantList);
       }
    }
 
    /**
-    * @see com.google.collide.client.collaboration.participants.CollaborationEditorFileOpenedHandler#onEditorFileOpened(com.google.collide.client.collaboration.participants.CollaborationEditorFileOpenedEvent)
+    * @see com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedHandler#onDocumentLinked(com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedEvent)
     */
    @Override
-   public void onEditorFileOpened(CollaborationEditorFileOpenedEvent event)
+   public void onDocumentLinked(CollaborationDocumentLinkedEvent event)
    {
-//      event.getParticipantModel().getParticipants()
+      final Document document = event.getDocument();
+      event.getParticipantModel().addListener(new Listener()
+      {
+
+         @Override
+         public void participantAdded(Participant participant)
+         {
+            List<Participant> participants = documentToParticipants.get(document.getId());
+            if (participants == null)
+            {
+               participants = new ArrayList<Participant>();
+               documentToParticipants.put(document.getId(), participants);
+            }
+            openView();
+            participants.add(participant);
+            display.setValue(participants);
+         }
+
+         @Override
+         public void participantRemoved(Participant participant)
+         {
+            List<Participant> participants = documentToParticipants.get(document.getId());
+            if (participant == null)
+            {
+               return;
+            }
+            participants.remove(participant);
+            display.setValue(participants);
+
+            // Close view if no any participants except for current user.
+            if (participants.size() <= 1)
+            {
+               if (display != null)
+               {
+                  IDE.getInstance().closeView(display.asView().getId());
+               }
+            }
+         }
+      });
+   }
+
+   /**
+    * Open view.
+    */
+   private void openView()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+      }
    }
 
 }

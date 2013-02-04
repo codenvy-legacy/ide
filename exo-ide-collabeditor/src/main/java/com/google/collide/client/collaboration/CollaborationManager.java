@@ -15,9 +15,8 @@
 package com.google.collide.client.collaboration;
 
 import com.google.collide.client.AppContext;
-import com.google.collide.client.code.ParticipantList;
 import com.google.collide.client.code.ParticipantModel;
-import com.google.collide.client.collaboration.participants.CollaborationEditorFileOpenedEvent;
+import com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedEvent;
 import com.google.collide.client.communication.MessageFilter;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.document.DocumentManager;
@@ -139,7 +138,7 @@ public class CollaborationManager
 
    private final IncomingDocOpDemultiplexer docOpRecipient;
 
-   private JsonIntegerMap<ParticipantList.View> participantsViews = JsonCollections.createIntegerMap();
+//   private JsonIntegerMap<ParticipantList.View> participantsViews = JsonCollections.createIntegerMap();
 
    private CollaborationManager(AppContext appContext, DocumentManager documentManager,
                                 IncomingDocOpDemultiplexer docOpRecipient)
@@ -182,15 +181,17 @@ public class CollaborationManager
 
       String fileEditSessionKey = DocumentMetadata.getFileEditSessionKey(document);
       ParticipantModel participantModel = ParticipantModel.create(appContext.getFrontendApi(), appContext.getMessageFilter(), fileEditSessionKey);
-      ParticipantList.View view = new ParticipantList.View(appContext.getResources());
-      ParticipantList.create(view, appContext.getResources(), participantModel);
-      participantsViews.put(document.getId(),view);
+//      ParticipantList.View view = new ParticipantList.View(appContext.getResources());
+//      ParticipantList.create(view, appContext.getResources(), participantModel);
+//      participantsViews.put(document.getId(),view);
       DocumentCollaborationController docCollabController = new DocumentCollaborationController(
          appContext, participantModel, docOpRecipient, document, selections);
       docCollabController.initialize(fileEditSessionKey,
          DocumentMetadata.getBeginCcRevision(document));
 
       docCollabControllersByDocumentId.put(document.getId(), docCollabController);
+
+      IDE.fireEvent(new CollaborationDocumentLinkedEvent(document, participantModel));
    }
 
    private void handleDocumentUnlinkingFromFile(Document document)
@@ -210,9 +211,7 @@ public class CollaborationManager
       if (docCollabController != null)
       {
          docCollabController.attachToEditor(editor);
-         editor.getBuffer().addUnmanagedElement(participantsViews.get(document.getId()).getElement());
-
-         IDE.fireEvent(new CollaborationEditorFileOpenedEvent(document, docCollabController.getParticipantModel()));
+//         editor.getBuffer().addUnmanagedElement(participantsViews.get(document.getId()).getElement());
       }
    }
 
@@ -224,7 +223,7 @@ public class CollaborationManager
       {
          docCollabController.detachFromEditor();
       }
-      participantsViews.erase(document.getId());
+//      participantsViews.erase(document.getId());
    }
 
    private void addNewCollaborator(NewFileCollaborator message)
