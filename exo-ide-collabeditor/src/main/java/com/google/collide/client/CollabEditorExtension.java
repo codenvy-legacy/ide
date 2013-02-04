@@ -22,6 +22,7 @@ import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
+import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
@@ -69,6 +70,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
+
+      new ParticipantsPresenter();
    }
 
    public AppContext getContext()
@@ -110,8 +113,6 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
                   IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
                   CollaborationManager collaborationManager =
                      CollaborationManager.create(context, documentManager, docOpRecipient);
-
-//                  new ParticipantsPresenter(context, documentManager);
 
                   DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
                   bus.close();

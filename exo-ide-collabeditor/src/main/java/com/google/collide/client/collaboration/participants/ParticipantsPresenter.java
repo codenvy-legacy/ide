@@ -18,32 +18,35 @@
  */
 package com.google.collide.client.collaboration.participants;
 
-import com.google.collide.client.AppContext;
-import com.google.collide.client.communication.MessageFilter;
-import com.google.collide.client.document.DocumentManager;
-import com.google.collide.dto.NewFileCollaborator;
-import com.google.collide.dto.RoutingTypes;
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.code.Participant;
+import com.google.collide.client.code.ParticipantModel.Listener;
+import com.google.collide.client.editor.Editor;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
+ * Presenter for displaying the collaborators.
+ * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ParticipantsPresenter.java Jan 30, 2013 3:18:56 PM azatsarynnyy $
  *
  */
-public class ParticipantsPresenter implements ViewClosedHandler, CollaborationEditorFileOpenedHandler, EditorActiveFileChangedHandler
+public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFileChangedHandler,
+   CollaborationDocumentLinkedHandler
 {
    /**
     * View for participants panel.
@@ -55,66 +58,153 @@ public class ParticipantsPresenter implements ViewClosedHandler, CollaborationEd
        * 
        * @param value participant list
        */
-      void setValue(List<String> value);
+      void setValue(List<Participant> value);
    }
 
+   /**
+    * Display.
+    */
    private Display display;
-
-   private AppContext appContext;
-
-   private DocumentManager documentManager;
 
    /**
     * Current active file.
     */
    private FileModel activeFile;
 
-   public ParticipantsPresenter(AppContext appContext, DocumentManager documentManager)
+   /**
+    * Current active document.
+    */
+   private Document activeDocument;
+
+   /**
+    * Map of {@link Document} id to the participant list.
+    */
+   private Map<Integer, List<Participant>> documentToParticipants = new HashMap<Integer, List<Participant>>();
+
+   public ParticipantsPresenter()
    {
-      this.appContext = appContext;
-      this.documentManager = documentManager;
-
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(CollaborationEditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
-
-      this.appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.NEWFILECOLLABORATOR,
-         newFileCollaboratorMessageRecipient);
+      IDE.addHandler(CollaborationDocumentLinkedEvent.TYPE, this);
    }
 
-   private final MessageFilter.MessageRecipient<NewFileCollaborator> newFileCollaboratorMessageRecipient =
-      new MessageFilter.MessageRecipient<NewFileCollaborator>()
-      {
-         @Override
-         public void onMessageReceived(NewFileCollaborator message)
-         {
-            addNewCollaborator(message);
-         }
-      };
-
-   private void addNewCollaborator(NewFileCollaborator message)
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      Document document = documentManager.getDocumentByFilePath(message.getPath());
+      activeFile = event.getFile();
 
-      IDE.fireEvent(new OutputEvent(String.valueOf(document.getId())));
-
-      if (document != null)
+      if (activeFile == null || !(event.getEditor() instanceof CollabEditor))
       {
-//         DocumentCollaborationController collaborationController =
-//            docCollabControllersByDocumentId.get(document.getId());
-//         collaborationController.getParticipantModel().addParticipant(true, message.getParticipant());
-         List<String> list = new ArrayList<String>();
-         list.add(message.getParticipant().getUserDetails().getGivenName());
-         display.setValue(list);
+         activeDocument = null;
+         closeView();
+         return;
+      }
+
+      Editor editor = ((CollabEditor)event.getEditor()).getEditor();
+      activeDocument = editor.getDocument();
+      List<Participant> participants = documentToParticipants.get(activeDocument.getId());
+
+      // Don't show view if no any participants except for current user.
+      if (participants != null && participants.size() > 1)
+      {
+         updateParticipantList(participants);
+      }
+      else
+      {
+         closeView();
       }
    }
 
-   private void bindDisplay()
+   /**
+    * @see com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedHandler#onDocumentLinked(com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedEvent)
+    */
+   @Override
+   public void onDocumentLinked(CollaborationDocumentLinkedEvent event)
    {
-      List<String> list = new ArrayList<String>();
-      list.add("participant 1");
-      list.add("participant 2");
-      display.setValue(list);
+      final Document document = event.getDocument();
+      event.getParticipantModel().addListener(new Listener()
+      {
+
+         @Override
+         public void participantAdded(Participant participant)
+         {
+            List<Participant> participants = documentToParticipants.get(document.getId());
+            if (participants == null)
+            {
+               participants = new ArrayList<Participant>();
+               documentToParticipants.put(document.getId(), participants);
+            }
+            participants.add(participant);
+
+            if (activeDocument != null && document.getId() == activeDocument.getId())
+            {
+               updateParticipantList(participants);
+            }
+         }
+
+         @Override
+         public void participantRemoved(Participant participant)
+         {
+            List<Participant> participants = documentToParticipants.get(document.getId());
+            if (participant == null)
+            {
+               closeView();
+               return;
+            }
+            participants.remove(participant);
+
+            if (activeDocument != null && document.getId() == activeDocument.getId())
+            {
+               if (participants.size() > 1)
+               {
+                  updateParticipantList(participants);
+               }
+               else
+               {
+                  // Close view if no any participants except for current user.
+                  closeView();
+               }
+            }
+
+         }
+      });
+   }
+
+   /**
+    * Update participant list in view.
+    * 
+    * @param participants participant list
+    */
+   private void updateParticipantList(List<Participant> participants)
+   {
+      openView();
+      display.setValue(participants);
+   }
+
+   /**
+    * Open view.
+    */
+   private void openView()
+   {
+      if (display == null)
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+      }
+   }
+
+   /**
+    * Close view.
+    */
+   private void closeView()
+   {
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 
    /**
@@ -127,44 +217,6 @@ public class ParticipantsPresenter implements ViewClosedHandler, CollaborationEd
       {
          display = null;
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
-    */
-   @Override
-   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
-   {
-      this.activeFile = event.getFile();
-
-//      if (activeFile == null || !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
-      if (activeFile == null)
-      {
-         activeFile = null;
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
-      }
-      else
-      {
-         if (display == null)
-         {
-            display = GWT.create(Display.class);
-            IDE.getInstance().openView(display.asView());
-            bindDisplay();
-         }
-         //         display.setValue(participantList);
-      }
-   }
-
-   /**
-    * @see com.google.collide.client.collaboration.participants.CollaborationEditorFileOpenedHandler#onEditorFileOpened(com.google.collide.client.collaboration.participants.CollaborationEditorFileOpenedEvent)
-    */
-   @Override
-   public void onEditorFileOpened(CollaborationEditorFileOpenedEvent event)
-   {
-//      event.getParticipantModel().getParticipants()
    }
 
 }
