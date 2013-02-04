@@ -21,6 +21,7 @@ package com.google.collide.client.collaboration.participants;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.code.Participant;
 import com.google.collide.client.code.ParticipantModel.Listener;
+import com.google.collide.client.editor.Editor;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.core.client.GWT;
 
@@ -102,16 +103,14 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
       }
       else
       {
-         com.google.collide.client.editor.Editor editor = ((CollabEditor)event.getEditor()).getEditor();
+         Editor editor = ((CollabEditor)event.getEditor()).getEditor();
          activeDocument = editor.getDocument();
-
          List<Participant> participants = documentToParticipants.get(activeDocument.getId());
-         display.setValue(participants);
 
          // Don't show view if no any participants except for current user.
          if (participants != null && participants.size() > 1)
          {
-            openView();
+            updateParticipantList(participants);
          }
          else
          {
@@ -143,8 +142,7 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
 
             if (activeDocument != null && document.getId() == activeDocument.getId())
             {
-               openView();
-               display.setValue(participants);
+               updateParticipantList(participants);
             }
          }
 
@@ -154,22 +152,37 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
             List<Participant> participants = documentToParticipants.get(document.getId());
             if (participant == null)
             {
+               closeView();
                return;
             }
             participants.remove(participant);
 
             if (activeDocument != null && document.getId() == activeDocument.getId())
             {
-               display.setValue(participants);
-               // Close view if no any participants except for current user.
-               if (participants.size() <= 1)
+               if (participants.size() > 1)
                {
+                  updateParticipantList(participants);
+               }
+               else
+               {
+                  // Close view if no any participants except for current user.
                   closeView();
                }
             }
 
          }
       });
+   }
+
+   /**
+    * Update participant list in view.
+    * 
+    * @param participants participant list
+    */
+   private void updateParticipantList(List<Participant> participants)
+   {
+      openView();
+      display.setValue(participants);
    }
 
    /**
