@@ -21,7 +21,8 @@ package org.exoplatform.ide.operation.autocompletion;
 import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.ide.MenuCommands;
-import org.junit.Before;
+import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
@@ -33,39 +34,45 @@ import org.openqa.selenium.Keys;
 public class AutoCompletionXMLTest extends CodeAssistantBaseTest
 {
 
-   @Before
-   public void createProject() throws Exception
+   @BeforeClass
+   public static void createProject() throws Exception
    {
       createProject(AutoCompletionXMLTest.class.getSimpleName());
-      openProject();
+   }
+
+   @After
+   public void forceClosedTabs() throws Exception
+   {
+      IDE.EDITOR.forcedClosureFile(1);
    }
 
    @Test
    public void testXMLAutocompletion() throws Throwable
    {
+      openProject();
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.XML_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/Untitled file.xml");
+      IDE.EDITOR.waitActiveFile();
 
-      String text = IDE.EDITOR.getTextFromCodeEditor(0);
+      String text = IDE.EDITOR.getTextFromCodeEditor();
       assertTrue(text.startsWith("<?xml version='1.0' encoding='UTF-8'?>"));
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + Keys.ENTER.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, "<root>\n\n</root>");
-      IDE.EDITOR.moveCursorUp(0, 1);
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + Keys.ENTER.toString());
+      IDE.EDITOR.typeTextIntoEditor("<root>\n\n</root>");
+      IDE.EDITOR.moveCursorUp(1);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<rot>\n\n</rot>");
-      IDE.EDITOR.moveCursorUp(0, 1);
+      IDE.EDITOR.typeTextIntoEditor("<rot>\n\n</rot>");
+      IDE.EDITOR.moveCursorUp(1);
 
-      IDE.EDITOR.typeTextIntoEditor(0, "<rt>\n\n</rt>");
-      IDE.EDITOR.moveCursorUp(0, 1);
+      IDE.EDITOR.typeTextIntoEditor("<rt>\n\n</rt>");
+      IDE.EDITOR.moveCursorUp(1);
 
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.typeToInput("ro");
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("rot"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("rot");
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      String textAfter = IDE.EDITOR.getTextFromCodeEditor(0);
+      String textAfter = IDE.EDITOR.getTextFromCodeEditor();
       assertTrue(textAfter.contains("<root></root>"));
    }
 

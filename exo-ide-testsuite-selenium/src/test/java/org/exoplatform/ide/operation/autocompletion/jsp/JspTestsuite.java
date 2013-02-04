@@ -18,10 +18,6 @@
  */
 package org.exoplatform.ide.operation.autocompletion.jsp;
 
-import org.exoplatform.ide.operation.autocompletion.jsp.JspTestsuite;
-import org.exoplatform.ide.operation.autocompletion.jsp.JspImplicitObjectsTest;
-import org.exoplatform.ide.operation.autocompletion.jsp.JspTagsTest;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;

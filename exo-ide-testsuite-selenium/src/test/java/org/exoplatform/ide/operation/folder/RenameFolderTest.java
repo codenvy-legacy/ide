@@ -23,7 +23,6 @@ import static org.junit.Assert.assertEquals;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -74,7 +73,7 @@ public class RenameFolderTest extends BaseTest
       IDE.RENAME.rename(NEW_FOLDER_NAME);
 
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + NEW_FOLDER_NAME);
-      Assert.assertFalse(IDE.PROJECT.EXPLORER.isItemPresent(PROJECT + "/" + FOLDER_NAME));
+      IDE.PROJECT.EXPLORER.waitItemNotPresent(PROJECT + "/" + FOLDER_NAME);
 
       assertEquals(404, VirtualFileSystemUtils.get(ORIG_URL).getStatusCode());
       assertEquals(200, VirtualFileSystemUtils.get(RENAME_URL).getStatusCode());

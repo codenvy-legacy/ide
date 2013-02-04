@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.chromattic;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -28,14 +30,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * Test for Chromattic generated node type preview.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Dec 13, 2010 $
- *
+ * 
  */
 public class PreviewNodeTypeTest extends BaseTest
 {
@@ -107,8 +107,6 @@ public class PreviewNodeTypeTest extends BaseTest
    @Test
    public void testGenerateNodeTypeView() throws Exception
    {
-      driver.navigate().refresh();
-
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.LOADER.waitClosed();
 
@@ -117,29 +115,29 @@ public class PreviewNodeTypeTest extends BaseTest
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
+      // Check controls are present and enabled:
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       IDE.PREVIEW_NODE_TYPE.waitOpened();
 
-      //Click "Cancel" button
+      // Click "Cancel" button
       IDE.PREVIEW_NODE_TYPE.clickCancelButton();
       IDE.PREVIEW_NODE_TYPE.waitClosed();
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       IDE.PREVIEW_NODE_TYPE.waitOpened();
 
-      //Click "Generate" button
+      // Click "Generate" button
       IDE.PREVIEW_NODE_TYPE.clickGenerateButton();
       IDE.PREVIEW_NODE_TYPE.waitClosed();
       IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewOpened();
 
-      //Close file and check view with generated code is closed.
+      // Close file and check view with generated code is closed.
       IDE.EDITOR.closeFile(FILE_NAME);
       IDE.EDITOR.waitTabNotPresent(FILE_NAME);
 
@@ -147,38 +145,33 @@ public class PreviewNodeTypeTest extends BaseTest
    }
 
    /**
-   * Tests the preview of generated node type with EXO format.
-   */
+    * Tests the preview of generated node type with EXO format.
+    */
    @Test
    public void testGenerateExoFormat() throws Exception
    {
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
       IDE.LOADER.waitClosed();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
 
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
+      // Check controls are present and enabled:
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       IDE.PREVIEW_NODE_TYPE.waitOpened();
 
-      //Click "Generate" button
+      // Click "Generate" button
       IDE.PREVIEW_NODE_TYPE.selectFormat("EXO");
       IDE.PREVIEW_NODE_TYPE.clickGenerateButton();
       IDE.PREVIEW_NODE_TYPE.waitClosed();
       IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewOpened();
       String text = IDE.PREVIEW_NODE_TYPE.getGeneratedNodeType();
 
-      //Clear formatting:
+      // Clear formatting:
       text = text.replaceAll("\n", "");
       for (int i = 0; i < 8; i++)
       {
@@ -192,40 +185,35 @@ public class PreviewNodeTypeTest extends BaseTest
    }
 
    /**
-      * Tests the preview of generated node type withCND format.
-      * 
-      * @throws Exception
-      */
+    * Tests the preview of generated node type withCND format.
+    * 
+    * @throws Exception
+    */
    @Test
    public void testGenerateCndFormat() throws Exception
    {
-      driver.navigate().refresh();
-
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      //Check controls are present and enabled:
-      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE, true);
+      // Check controls are present and enabled:
+      IDE.TOOLBAR.waitForButtonEnabled(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
 
-      //Click preview node type button and check dialog window appears
+      // Click preview node type button and check dialog window appears
       IDE.TOOLBAR.runCommand(ToolbarCommands.Run.PREVIEW_NODE_TYPE);
       IDE.PREVIEW_NODE_TYPE.waitOpened();
       IDE.PREVIEW_NODE_TYPE.selectFormat("CND");
 
-      //Click "Generate" button
+      // Click "Generate" button
       IDE.PREVIEW_NODE_TYPE.clickGenerateButton();
       IDE.PREVIEW_NODE_TYPE.waitClosed();
       IDE.PREVIEW_NODE_TYPE.waitGeneratedTypeViewOpened();
 
-      //Check generated code:
+      // Check generated code:
       String text = IDE.PREVIEW_NODE_TYPE.getGeneratedNodeType();
 
-      //Clear formatting:
+      // Clear formatting:
       text = text.replaceAll("\n", "");
       for (int i = 0; i < 8; i++)
       {

@@ -20,11 +20,9 @@ package org.exoplatform.ide.core;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -42,6 +40,8 @@ public class Input extends AbstractTestModule
       String COMBOBOX_VALUE_LOCATOR = "//div[@id='" + SUGGEST_BOX_ID + "']//td[contains(., '%s')]";
 
       String ARROW_SELECTOR = "img[image-id=suggest-image]";
+
+      String INPUT_FIELD = "//input[@name='ideUploadFormFilenameField']";
    }
 
    /**
@@ -94,7 +94,7 @@ public class Input extends AbstractTestModule
 
    private void waitSuggestBoxHide()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
@@ -114,7 +114,7 @@ public class Input extends AbstractTestModule
 
    private void waitSuggestBoxShow()
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver driver)
@@ -175,8 +175,7 @@ public class Input extends AbstractTestModule
       {
          if (closeSuggestBox)
          {
-            new Actions(driver()).contextClick(arrow).build().perform();
-            new Actions(driver()).sendKeys(Keys.ESCAPE.toString()).build().perform();
+            driver().findElement(By.xpath(Locators.INPUT_FIELD)).click();
             waitSuggestBoxHide();
          }
       }

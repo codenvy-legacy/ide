@@ -20,14 +20,14 @@ package org.exoplatform.ide.progress;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -70,9 +70,9 @@ public class ProgressViewTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      
+
       IDE.MENU.waitForMenuItemPresent(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.MENU.runCommand(MenuCommands.Git.GIT, MenuCommands.Git.INIT);
       IDE.GIT.INIT_REPOSITORY.waitOpened();
       IDE.GIT.INIT_REPOSITORY.clickInitButton();
@@ -84,7 +84,7 @@ public class ProgressViewTest extends BaseTest
       IDE.PROGRESS_BAR.waitProgressBarView();
 
       String text = IDE.PROGRESS_BAR.getViewText();
-      
+
       assertTrue(text.contains("Initializing "));
    }
 }

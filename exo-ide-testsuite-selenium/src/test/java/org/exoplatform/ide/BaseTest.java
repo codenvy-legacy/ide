@@ -25,7 +25,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.concurrent.TimeUnit;
 
@@ -35,13 +34,10 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
-import com.thoughtworks.selenium.Selenium;
 
 /**
  * Created by The eXo Platform SAS.
@@ -50,6 +46,7 @@ import com.thoughtworks.selenium.Selenium;
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @author <a href="mailto:dmitry.nochevnov@exoplatform.com">Dmytro Nochevnov</a>
+ * @author <a href="mailto:riuvshin@exoplatform.com">Roman Iuvshin</a>
  * @version $Id:   ${date} ${time}
  *
  */
@@ -64,6 +61,8 @@ public abstract class BaseTest
 
    public static final String GIT_PATH = IDE_SETTINGS.getString("git.location");
 
+   protected static ChromeDriverService service;
+
    /**
     * Default workspace.
     */
@@ -72,13 +71,17 @@ public abstract class BaseTest
    /**
     * Second workspace. Needed in some tests.
     */
+
+   public static final String REPO_NAME = IDE_SETTINGS.getString("ide.repository.name");
+
    protected static final String WS_NAME_2 = IDE_SETTINGS.getString("ide.ws.name2");
 
    public static String IDE_HOST = IDE_SETTINGS.getString("ide.host");
 
    public static final int IDE_PORT = Integer.valueOf(IDE_SETTINGS.getString("ide.port"));
 
-   public static String BASE_URL = "https://" + IDE_HOST + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
+   public static String BASE_URL = "https://" + REPO_NAME + "." + IDE_HOST
+      + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
 
    public static final String USER_NAME = IDE_SETTINGS.getString("ide.user.root.name");
 
@@ -88,15 +91,30 @@ public abstract class BaseTest
 
    public static final String NOT_ROOT_USER_PASSWORD = IDE_SETTINGS.getString("ide.user.dev.password");
 
+   public static String FIRST_USER_FOR_INVITE = IDE_SETTINGS.getString("ide.test.invite.user1");
+
+   public static String SECOND_USER_FOR_INVITE = IDE_SETTINGS.getString("ide.test.invite.user2");
+
+   public static String THIRD_USER_FOR_INVITE = IDE_SETTINGS.getString("ide.test.invite.user3");
+
+   public static String SINGLE_USER_FOR_INVITE = IDE_SETTINGS.getString("ide.test.invite.single");
+
+   public static String FIRST_GITHUB_USER_FOR_INVITE = IDE_SETTINGS.getString("ide.test.invite.git.hub.user1");
+
+   public static String SECOND_GITHUB_USER_FOR_INVITE = IDE_SETTINGS.getString("ide.test.invite.git.hub.user2");
+
+   public static String THIRD_GITHUB_USER_FOR_INVITE = IDE_SETTINGS.getString("ide.test.invite.git.hub.user3");
+
    protected static String APPLICATION_URL = BASE_URL + IDE_SETTINGS.getString("ide.app.url");
 
-   protected static String LOGIN_URL = "https://" + IDE_HOST + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
+   protected static String LOGIN_URL = "https://" + REPO_NAME + "." + IDE_HOST
+      + ((IDE_PORT == 80) ? ("") : (":" + IDE_PORT)) + "/";
+
+   protected static String LOGIN_URL_VFS = "https://" + LOGIN_URL.substring(LOGIN_URL.indexOf(".") + 1);
 
    protected static String STANDALONE_LOGIN_URL = BASE_URL + IDE_SETTINGS.getString("ide.login.url");;
 
    public static final String REST_CONTEXT = IDE_SETTINGS.getString("ide.rest.context");
-
-   public static final String REPO_NAME = IDE_SETTINGS.getString("ide.repository.name");
 
    public static final String WEBDAV_CONTEXT = IDE_SETTINGS.getString("ide.webdav.context");
 
@@ -113,8 +131,6 @@ public abstract class BaseTest
    public final static String PRODUCTION_SERVICE_PREFIX = "production/ide-home/users/" + USER_NAME
       + "/settings/userSettings";
 
-   public static Selenium selenium;
-
    /**
     * Default workspace URL.
     */
@@ -127,19 +143,10 @@ public abstract class BaseTest
 
    protected static final String LINE_NUMBERS_COOKIE = "eXo-IDE-" + USER_NAME + "-line-numbers_bool";
 
-   public static Selenium selenium()
-   {
-      return selenium;
-   }
-
    /**
     * URL of default workspace in IDE.
     */
    protected static final String WORKSPACE_URL = ENTRY_POINT_URL + WS_NAME + "/";
-
-   private static int maxRunTestsOnOneSession = 5;
-
-   private static int testsCounter = 0;
 
    private static boolean beforeClass = false;
 
@@ -165,32 +172,33 @@ public abstract class BaseTest
       switch (BROWSER_COMMAND)
       {
          case GOOGLE_CHROME :
+            service =
+               new ChromeDriverService.Builder().usingDriverExecutable(new File("src/test/resources/chromedriver"))
+                  .usingAnyFreePort().build();
+            service.start();
 
-            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-            capabilities.setCapability("chrome.switches", Arrays.asList("--start-maximized"));
-            driver = new ChromeDriver(capabilities);
-
-            // driver = new ChromeDriver(options);
-
+            // For use with ChromeDriver:
+            driver = new ChromeDriver(service);
             break;
          case IE_EXPLORE_PROXY :
             driver = new InternetExplorerDriver();
             break;
          default :
             driver = new FirefoxDriver();
-            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+
+            // for starting Firefox with profile
+            //            FirefoxProfile profile =
+            //               new FirefoxProfile(new File("/home/musienko.maksim/.mozilla/firefox/6gp5q2ex.without-websockets"));
+            //            driver = new FirefoxDriver(profile);
+
+            driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
       }
 
-      selenium = new WebDriverBackedSelenium(driver, APPLICATION_URL);
-
-      IDE = new IDE(selenium(), ENTRY_POINT_URL + WS_NAME + "/", driver);
+      IDE = new IDE(ENTRY_POINT_URL + WS_NAME + "/", driver);
       try
       {
 
-         if (IDE_SETTINGS.getString("selenium.browser.commad").equals("CHROME"))
-         {
-            driver.manage().window().maximize();
-         }
+         driver.manage().window().maximize();
          driver.get(APPLICATION_URL);
          waitIdeLoginPage();
          if (isRunIdeAsStandalone())
@@ -271,20 +279,33 @@ public abstract class BaseTest
    }
 
    @AfterClass
-   public static void killFireFox()
+   public static void killBrowser() throws InterruptedException
    {
-
-      if (IDE.POPUP.isAlertPresent())
+      if (IDE_SETTINGS.getString("selenium.browser.commad").equals("GOOGLE_CHROME"))
       {
-         IDE.POPUP.acceptAlert();
+         if (IDE.POPUP.isAlertPresent())
+         {
+            IDE.POPUP.acceptAlert();
+         }
+         driver.close();
+         if (IDE.POPUP.isAlertPresent())
+         {
+            IDE.POPUP.acceptAlert();
+         }
+         service.stop();
       }
-      driver.quit();
-
-      if (IDE.POPUP.isAlertPresent())
+      else
       {
-         IDE.POPUP.acceptAlert();
+         if (IDE.POPUP.isAlertPresent())
+         {
+            IDE.POPUP.acceptAlert();
+         }
+         driver.quit();
+         if (IDE.POPUP.isAlertPresent())
+         {
+            IDE.POPUP.acceptAlert();
+         }
       }
-
    }
 
    protected boolean isRunIdeAsTenant()

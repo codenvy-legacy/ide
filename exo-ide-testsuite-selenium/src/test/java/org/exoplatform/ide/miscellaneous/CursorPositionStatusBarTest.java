@@ -18,6 +18,9 @@
  */
 package org.exoplatform.ide.miscellaneous;
 
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -26,14 +29,9 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Iuvshyn Roman</a>
- * @version $Id: 
+ * @version $Id:
  * 
  */
 public class CursorPositionStatusBarTest extends BaseTest
@@ -61,7 +59,8 @@ public class CursorPositionStatusBarTest extends BaseTest
    @Test
    public void testCursorPositionInStatusBar() throws Exception
    {
-      //step 1 (open project and file, check first cursor position in statusbar)
+      // step 1 (open project and file, check first cursor position in
+      // statusbar)
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
@@ -70,33 +69,36 @@ public class CursorPositionStatusBarTest extends BaseTest
       IDE.EDITOR.waitTabPresent(1);
       IDE.LOADER.waitClosed();
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
-      // step 2 move cursor on 6 position to the right and check cursor position
-      IDE.EDITOR.moveCursorRight(0, 6);
-      assertEquals("1 : 7", IDE.STATUSBAR.getCursorPosition());
+      // step 2 move cursor on 6 position to the right and check cursor
+      // position
+      IDE.EDITOR.moveCursorRight(6);
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 7");
 
-      //step 3 move cursor on 6 position to the down and check cursor position
-      IDE.EDITOR.moveCursorDown(0, 6);
-      assertEquals("7 : 7", IDE.STATUSBAR.getCursorPosition());
+      // step 3 move cursor on 6 position to the down and check cursor
+      // position
+      IDE.EDITOR.moveCursorDown(6);
+      IDE.STATUSBAR.waitCursorPositionAt("7 : 7");
       IDE.selectMainFrame();
 
-      //step 4 select previous tab and check save cursor position
+      // step 4 select previous tab and check save cursor position
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.CSS_FILE);
       IDE.EDITOR.waitTabPresent(2);
-      //This action is necessary for correctly position the cursor in of previous tab (selectTab(2)and selectTab(1);)
+      // This action is necessary for correctly position the cursor in of
+      // previous tab (selectTab(2)and selectTab(1);)
       IDE.EDITOR.selectTab(2);
       IDE.EDITOR.selectTab(1);
-      assertEquals("7 : 7", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("7 : 7");
 
-      //step 5 refresh browser and check reset cursor position
-      //TODO after fix issue IDE-1392 should be uncomment
-      //      driver.navigate().refresh();
-      //      IDE.STATUSBAR.wait();
-      //      
-      //      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
-      //      IDE.EDITOR.closeTabIgnoringChanges(1);
-      //      IDE.EDITOR.closeFile(0);
+      // step 5 refresh browser and check reset cursor position
+      // TODO after fix issue IDE-1392 should be uncomment
+      // driver.navigate().refresh();
+      // IDE.STATUSBAR.wait();
+      //
+      // assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      // IDE.EDITOR.closeTabIgnoringChanges(1);
+      // IDE.EDITOR.closeFile(0);
    }
 
    @AfterClass

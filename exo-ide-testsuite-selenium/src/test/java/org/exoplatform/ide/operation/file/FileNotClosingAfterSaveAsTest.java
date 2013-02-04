@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -25,77 +27,70 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Nov 3, 2010 $
- *
+ * 
  */
 
-public class FileNotClosingAfterSaveAsTest extends BaseTest
-{
+public class FileNotClosingAfterSaveAsTest extends BaseTest {
 
-   private static final String PROJECT = FileNotClosingAfterSaveAsTest.class.getSimpleName();
+	private static final String PROJECT = FileNotClosingAfterSaveAsTest.class
+			.getSimpleName();
 
-   private static final String FILE_NAME_1 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
-      + System.currentTimeMillis();
+	private static final String FILE_NAME_1 = "file-"
+			+ FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
+			+ System.currentTimeMillis();
 
-   private static final String FILE_NAME_2 = "file-" + FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
-      + System.currentTimeMillis() + "5";
-   
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (Exception e)
-      {
-         
-      }
-   }
-   
-   //http://jira.exoplatform.com/browse/IDE-404
-   @Test
-   public void testFileNotClosingAfterSaveAs() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+	private static final String FILE_NAME_2 = "file-"
+			+ FileNotClosingAfterSaveAsTest.class.getSimpleName() + "-"
+			+ System.currentTimeMillis() + "5";
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitTabPresent(1);
-      IDE.EDITOR.saveAs(1, FILE_NAME_1);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_1);
-      IDE.EDITOR.closeFile(1);
-      
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_1);
-      IDE.EDITOR.typeTextIntoEditor(1, "test test test");
-      IDE.EDITOR.closeTabIgnoringChanges(1);
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (Exception e) {
 
-      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitTabPresent(1);
-      IDE.EDITOR.saveAs(1, FILE_NAME_2);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_2);
-   }
+		}
+	}
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/" + WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME
-            + "/" + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	// http://jira.exoplatform.com/browse/IDE-404
+	@Test
+	public void testFileNotClosingAfterSaveAs() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+		IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+
+		IDE.TOOLBAR
+				.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
+		IDE.EDITOR.waitTabPresent(1);
+		IDE.EDITOR.saveAs(1, FILE_NAME_1);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_1);
+		IDE.EDITOR.closeFile(1);
+
+		IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_1);
+		IDE.EDITOR.waitActiveFile();
+		IDE.EDITOR.typeTextIntoEditor("test test test");
+		IDE.EDITOR.closeTabIgnoringChanges(1);
+
+		IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
+		IDE.EDITOR.waitTabPresent(1);
+		IDE.EDITOR.saveAs(1, FILE_NAME_2);
+		IDE.EDITOR.waitActiveFile();
+	}
+
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(BASE_URL + REST_CONTEXT + "/"
+					+ WEBDAV_CONTEXT + "/" + REPO_NAME + "/" + WS_NAME + "/"
+					+ PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
 }

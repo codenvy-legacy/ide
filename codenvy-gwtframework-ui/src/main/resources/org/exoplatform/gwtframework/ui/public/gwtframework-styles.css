@@ -1,0 +1,46 @@
+@CHARSET "UTF-8";
+
+/*************************************************************************************
+
+IconButton ext
+
+*************************************************************************************/
+
+.exoIconButton {
+	width: 24px;
+	height: 24px;
+	overflow: hidden;
+	background: url("ui/iconbutton/button-background.png");
+}
+
+.exoIconButtonOver
+{
+	background-position: 0px -24px;
+}
+
+.exoIconButtonDown
+{
+	background-position: 0px -48px;
+}
+
+.exoIconButtonSelected
+{
+	background-position: 0px -72px;
+}
+
+.exoIconButtonSelectedOver
+{
+	background-position: 0px -96px;
+}
+
+.exoIconButtonSelectedDown
+{
+	background-position: 0px -120px;
+}
+
+.exoIconButtonInner {
+	width: 16px;
+	height: 16px;
+	overflow: hidden;
+	margin: 4px;
+}

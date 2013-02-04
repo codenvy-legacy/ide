@@ -1,14 +1,13 @@
 package org.exoplatform.ide.operation.java;
 
-import org.exoplatform.ide.MenuCommands;
+import java.util.Map;
+
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 public class GotoLineFromEditMenuTest extends ServicesJavaTextFuction
 {
@@ -46,16 +45,16 @@ public class GotoLineFromEditMenuTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       IDE.LOADER.waitClosed();
       openSpringJavaTetsFile(PROJECT);
-      
-      IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.GO_TO_LINE);
-      IDE.GOTOLINE.waitOpened();
+
       IDE.GOTOLINE.goToLine(15);
       IDE.STATUSBAR.waitCursorPositionAt("15 : 1");
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ARROW_RIGHT.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.ARROW_RIGHT.toString());
       IDE.STATUSBAR.waitCursorPositionAt("15 : 2");
    }
 

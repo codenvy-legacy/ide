@@ -90,32 +90,33 @@ public class ExceptionThrownEventHandler implements ExceptionThrownHandler
       Log.info("Displays Server Disconnected Dialog....");
 
       String message = IDE.IDE_LOCALIZATION_CONSTANT.serverDisconnected();
-      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
-      {
-         @Override
-         public void booleanValueReceived(Boolean value)
-         {
-            if (value != null && value == true)
-            {
-               if (exception.getAsyncRequest() != null)
-               {
-                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
-                  try
-                  {
-                     exception.getAsyncRequest().send(exception.getAsyncRequest().getCallback());
-                  }
-                  catch (RequestException e)
-                  {
-                  }
-               }
-               else if (exception.getAsyncRequest() != null)
-               {
-                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
-                  sendAgain(exception.getAsyncRequest());
-               }
-            }
-         }
-      });
+      Dialogs.getInstance().showError(message);
+//      Dialogs.getInstance().ask("IDE", message, new BooleanValueReceivedHandler()
+//      {
+//         @Override
+//         public void booleanValueReceived(Boolean value)
+//         {
+//            if (value != null && value == true)
+//            {
+//               if (exception.getAsyncRequest() != null)
+//               {
+//                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
+//                  try
+//                  {
+//                     exception.getAsyncRequest().send(exception.getAsyncRequest().getCallback());
+//                  }
+//                  catch (RequestException e)
+//                  {
+//                  }
+//               }
+//               else if (exception.getAsyncRequest() != null)
+//               {
+//                  Log.info("call  < asyncRequest.sendRequest(); > from ServerDisconnectedDialog ");
+//                  sendAgain(exception.getAsyncRequest());
+//               }
+//            }
+//         }
+//      });
    }
 
    private void sendAgain(AsyncRequest request)

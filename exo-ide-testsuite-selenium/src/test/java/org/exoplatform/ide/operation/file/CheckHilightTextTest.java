@@ -18,23 +18,22 @@
  */
 package org.exoplatform.ide.operation.file;
 
-import static org.junit.Assert.assertTrue;
-
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
  * 
- *
+ * 
  */
 public class CheckHilightTextTest extends BaseTest
 {
@@ -101,37 +100,36 @@ public class CheckHilightTextTest extends BaseTest
       IDE.EDITOR.waitTabPresent(0);
       IDE.LOADER.waitClosed();
       IDE.WELCOME_PAGE.close();
-      IDE.WELCOME_PAGE.waitClose();
+      IDE.WELCOME_PAGE.waitClosed();
    }
 
    @Test
-   public void checkXML() throws InterruptedException, Exception
+   public void checkHilight() throws InterruptedException, Exception
    {
+      /*
+       * 1. Check highlighting XML
+       */
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + XML_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
-
-      /*
-       *1. Check highlighting XML
-       */
+      IDE.EDITOR.waitActiveFile();
       checkHilightXML();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
 
       /*
-      * 2. Check highlighting TXT
-      */
+       * 2. Check highlighting TXT
+       */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
       checkHiligtTXT();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
 
       /*
-      * 3. Check highlighting JavaScript
-      */
+       * 3. Check highlighting JavaScript
+       */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
       checkHilightJavaScript();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
@@ -140,8 +138,7 @@ public class CheckHilightTextTest extends BaseTest
        * 4. Check highlighting in HTML
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
-      Thread.sleep(3000);
+      IDE.EDITOR.waitActiveFile();
       checkHilightHTML();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
@@ -150,7 +147,7 @@ public class CheckHilightTextTest extends BaseTest
        * 5. Check highlighting in GROOVY FILE
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
       checkHilightGroovy();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
@@ -159,8 +156,7 @@ public class CheckHilightTextTest extends BaseTest
        * 6. Check highlighting in GOOGLE_GADGET
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-      Thread.sleep(2000);
+      IDE.EDITOR.waitActiveFile();
       checkHiligtGoogleGadget();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
@@ -169,21 +165,24 @@ public class CheckHilightTextTest extends BaseTest
        * 7. Check highlighting in CSS
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + CSS_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
       chekHilightingInCssFile();
       IDE.EDITOR.closeFile(0);
       IDE.EDITOR.waitTabNotPresent(0);
    }
 
    /**
-    * checking key tags in  test - XML file 
+    * checking key tags in test - XML file
+    * 
     * @throws Exception
     */
    public void checkHilightXML() throws Exception
    {
-      //check color highlight in tags "Module" "xml" "userpref" and not highlight "xml-text"
-      // for searching elements used xpath, because check color highlight and location text in DOM
-      IDE.EDITOR.selectIFrameWithEditor(0);
+      // check color highlight in tags "Module" "xml" "userpref" and not
+      // highlight "xml-text"
+      // for searching elements used xpath, because check color highlight and
+      // location text in DOM
+      IDE.EDITOR.selectIFrameWithEditor();
       driver.findElement(By.xpath("//body[@class=\"editbox\"]/span[1][@class='xml-processing' and text()=\"<?xml \"]"))
          .isDisplayed();
       driver.findElement(By.xpath("//body[@class='editbox']/span[4][@class='xml-tagname' and text()=\"Module\"]"))
@@ -199,25 +198,32 @@ public class CheckHilightTextTest extends BaseTest
 
    /**
     * checking color highlight in TXT file
+    * 
     * @throws Exception
     */
    public void checkHiligtTXT() throws Exception
    {
-      //check color highlight in "text content" - word
-      // for searching elements used xpath, because check color highlight and location text in DOM
-      IDE.EDITOR.selectIFrameWithEditor(1);
+      // check color highlight in "text content" - word
+      // for searching elements used xpath, because check color highlight and
+      // location text in DOM
+      IDE.EDITOR.selectIFrameWithEditor();
       driver.findElement(By.xpath("//body[@class='editbox']/span[@class='xml-text' and text()=\"text content\"]"))
          .isDisplayed();
       IDE.selectMainFrame();
    }
 
    /**
-    * checking key tags in  test - Java Script file
+    * checking key tags in test - Java Script file
+    * 
     * @throws Exception
     */
    public void checkHilightJavaScript() throws Exception
    {
-      //chek next elements in example file: var, undo,redo, x+y, 44.4
+      // chek next elements in example file: var, undo,redo, x+y, 44.4
+
+      new WebDriverWait(driver, 5).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath("//div[@class and @tabindex]/div/div[18]//span[@class='javascript-variable-2' and text()='x']")));
+
       driver
          .findElement(
             By.xpath("//div[@class and @tabindex]/div/div[2]//span[text()='//Here you see some JavaScript code. Mess around with it to get']"))
@@ -252,12 +258,14 @@ public class CheckHilightTextTest extends BaseTest
 
    /**
     * check keys elements in the JavaScript file
+    * 
     * @throws Exception
     */
    public void checkHilightHTML() throws Exception
    {
-      IDE.EDITOR.selectIFrameWithEditor(3);
-      //chek next elements in example file: open and closed tags html, function foo (bar, bar), 1px, #448888
+      IDE.EDITOR.selectIFrameWithEditor();
+      // chek next elements in example file: open and closed tags html,
+      // function foo (bar, bar), 1px, #448888
       driver.findElement(By.xpath("//body[@class='editbox']/span[1][@class='xml-punctuation' and text()=\"<\"]"));
       driver.findElement(By.xpath("//body[@class='editbox']/span[2][@class='xml-tagname' and text()=\"html\"]"));
       driver.findElement(By.xpath("//body[@class='editbox']/span[3][@class='xml-punctuation' and text()=\">\"]"));
@@ -275,12 +283,14 @@ public class CheckHilightTextTest extends BaseTest
 
    /**
     * check keys elements in the GROOVY file
+    * 
     * @throws Exception
     */
    public void checkHilightGroovy() throws Exception
    {
-      IDE.EDITOR.selectIFrameWithEditor(4);
-      //chek next elements in example file: import, public class, @Path, ("hello world")
+      IDE.EDITOR.selectIFrameWithEditor();
+      // chek next elements in example file: import, public class, @Path,
+      // ("hello world")
       driver.findElement(By
          .xpath("//body[@class='editbox']/span[1][@class='groovyComment' and text()=\"//simple groovy script\"]"));
       driver.findElement(By.xpath("//body[@class='editbox']/span[10][@class='javaKeyword' and text()=\"import \"]"));
@@ -295,12 +305,13 @@ public class CheckHilightTextTest extends BaseTest
 
    /**
     * check keys elements in the GOOGLE GADGET file
+    * 
     * @throws Exception
     */
    public void checkHiligtGoogleGadget() throws Exception
    {
-      IDE.EDITOR.selectIFrameWithEditor(5);
-      //chek next elements in example file: <?xml, <Module>,</Module> 
+      IDE.EDITOR.selectIFrameWithEditor();
+      // chek next elements in example file: <?xml, <Module>,</Module>
       driver.findElement(By.xpath("//body[@class='editbox']/span[1][@class='xml-processing' and text()=\"<?xml \"]"));
       driver.findElement(By.xpath("//body[@class='editbox']/span[3][@class='xml-punctuation' and text()=\"<\"]"));
       driver.findElement(By.xpath("//body[@class='editbox']/span[4][@class='xml-tagname' and text()=\"Module\"]"));
@@ -317,12 +328,14 @@ public class CheckHilightTextTest extends BaseTest
 
    /**
     * check keys elements in the CSS file
+    * 
     * @throws Exception
     */
    public void chekHilightingInCssFile() throws Exception
    {
-      IDE.EDITOR.selectIFrameWithEditor(6);
-      // chek next elements in example file: /*Some example CSS*,"6em, #000, bold, !important
+      IDE.EDITOR.selectIFrameWithEditor();
+      // chek next elements in example file: /*Some example CSS*,"6em, #000,
+      // bold, !important
       driver.findElement(By
          .xpath("//body[@class='editbox']/span[1][@class='css-comment' and text()=\"/*Some example CSS*/\"]"));
       driver.findElement(By.xpath("//body[@class='editbox']/span[2][@class='css-at' and text()=\"@import \"]"));

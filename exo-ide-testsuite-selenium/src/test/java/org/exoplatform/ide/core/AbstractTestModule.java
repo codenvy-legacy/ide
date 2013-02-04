@@ -18,13 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import com.thoughtworks.selenium.Selenium;
-
 import org.exoplatform.ide.IDE;
-import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -40,11 +34,6 @@ public abstract class AbstractTestModule
    protected WebDriver driver()
    {
       return IDE.getInstance().driver();
-   }
-
-   protected Selenium selenium()
-   {
-      return IDE.getInstance().getSelenium();
    }
 
    protected IDE IDE()

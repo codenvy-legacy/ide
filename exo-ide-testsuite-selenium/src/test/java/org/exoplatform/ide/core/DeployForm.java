@@ -1,8 +1,6 @@
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.MenuCommands;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -53,7 +51,7 @@ public class DeployForm extends AbstractTestModule
    */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -70,7 +68,7 @@ public class DeployForm extends AbstractTestModule
    */
    public void waitPaasListOpened(final String paas) throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

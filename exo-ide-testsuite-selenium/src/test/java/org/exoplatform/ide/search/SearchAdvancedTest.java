@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.search;
 
-import static org.junit.Assert.assertFalse;
+import java.io.IOException;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -26,8 +26,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -70,9 +68,9 @@ public class SearchAdvancedTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.gadget");
-      IDE.EDITOR.deleteFileContent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, openSocialGadgetFileContent);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.typeTextIntoEditor(openSocialGadgetFileContent);
       IDE.EDITOR.saveAs(1, openSocialGadgetFileName);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + openSocialGadgetFileName);
 
@@ -83,7 +81,7 @@ public class SearchAdvancedTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.SEARCH_RESULT.waitOpened();
       IDE.SEARCH_RESULT.waitForItem(PROJECT);
-      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + openSocialGadgetFileContent));
+      IDE.SEARCH_RESULT.waitItemNotPresent(PROJECT + "/" + openSocialGadgetFileContent);
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
@@ -91,7 +89,7 @@ public class SearchAdvancedTest extends BaseTest
       IDE.SEARCH.performSearch("/" + PROJECT, "", "script/groovy");
       IDE.LOADER.waitClosed();
       IDE.SEARCH_RESULT.waitForItem(PROJECT);
-      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + openSocialGadgetFileContent));
+      IDE.SEARCH_RESULT.waitItemNotPresent(PROJECT + "/" + openSocialGadgetFileContent);
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 
@@ -99,7 +97,7 @@ public class SearchAdvancedTest extends BaseTest
       IDE.SEARCH.performSearch("/" + PROJECT, "Привет, свет", "script/groovy");
       IDE.LOADER.waitClosed();
       IDE.SEARCH_RESULT.waitForItem(PROJECT);
-      assertFalse(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + openSocialGadgetFileContent));
+      IDE.SEARCH_RESULT.waitItemNotPresent(PROJECT + "/" + openSocialGadgetFileContent);
       IDE.SEARCH_RESULT.close();
       IDE.SEARCH_RESULT.waitClosed();
 

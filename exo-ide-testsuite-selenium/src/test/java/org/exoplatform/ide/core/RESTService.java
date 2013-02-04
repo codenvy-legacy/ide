@@ -20,6 +20,8 @@ package org.exoplatform.ide.core;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.ToolbarCommands;
@@ -30,8 +32,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.util.List;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -150,7 +150,7 @@ public class RESTService extends AbstractTestModule
    */
    public void waitOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -167,7 +167,7 @@ public class RESTService extends AbstractTestModule
    */
    public void waitClosed() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -192,7 +192,7 @@ public class RESTService extends AbstractTestModule
    */
    public void waitTabOpened(final String title) throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -217,7 +217,7 @@ public class RESTService extends AbstractTestModule
    */
    public void waitGetUrlRestServiceOpened() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -236,7 +236,7 @@ public class RESTService extends AbstractTestModule
    */
    public void waitGetUrlRestServiceClosed() throws InterruptedException
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -261,7 +261,7 @@ public class RESTService extends AbstractTestModule
    */
    public void waitValueOpened(final WebElement table, final String xPathvalueField) throws InterruptedException
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

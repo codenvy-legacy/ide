@@ -18,24 +18,22 @@
  */
 package org.exoplatform.ide.operation.autocompletion.jsp;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.fail;
+
+import java.util.Map;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
-import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: JspImplicitObjectsTest May 5, 2011 3:03:29 PM evgen $
- *
+ * 
  */
 public class JspImplicitObjectsTest extends BaseTest
 {
@@ -77,25 +75,27 @@ public class JspImplicitObjectsTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_NAME + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.GOTOLINE.goToLine(10);
 
       IDE.CODEASSISTANT.openForm();
 
       IDE.CODEASSISTANT.openForm();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("application:javax.servlet.ServletContext"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("config:javax.servlet.ServletConfig"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("exception:java.lang.Throwable"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("out:javax.servlet.jsp.JspWriter"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("page:java.lang.Object"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("pageContext:javax.servlet.jsp.PageContext"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("request:javax.servlet.http.HttpServletRequest"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("response:javax.servlet.http.HttpServletResponse"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("session:javax.servlet.http.HttpSession"));
+
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("application:javax.servlet.ServletContext");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("config:javax.servlet.ServletConfig");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("exception:java.lang.Throwable");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("out:javax.servlet.jsp.JspWriter");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("page:java.lang.Object");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("pageContext:javax.servlet.jsp.PageContext");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("request:javax.servlet.http.HttpServletRequest");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("response:javax.servlet.http.HttpServletResponse");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("session:javax.servlet.http.HttpSession");
+
       IDE.CODEASSISTANT.waitForDocPanelOpened();
       IDE.CODEASSISTANT.checkDocFormPresent();
-    }
+   }
 
    @AfterClass
    public static void tearDown()

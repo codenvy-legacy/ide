@@ -22,12 +22,10 @@ import static org.junit.Assert.fail;
 
 import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
-import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -43,6 +41,7 @@ public class WarningDialog extends AbstractTestModule
 {
    interface Locators
    {
+
       String WARNING_DIALOG_ID = "ideWarningModalView";
 
       String WARNING_DIALOG_LOCATOR = "//div[@view-id='" + WARNING_DIALOG_ID + "']";
@@ -65,22 +64,8 @@ public class WarningDialog extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               WebElement view = input.findElement(By.xpath(Locators.WARNING_DIALOG_LOCATOR));
-               return (view != null && view.isDisplayed());
-            }
-            catch (NoSuchElementException e)
-            {
-               return false;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(Locators.WARNING_DIALOG_LOCATOR)));
    }
 
    /**
@@ -90,22 +75,8 @@ public class WarningDialog extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
-      {
-         @Override
-         public Boolean apply(WebDriver input)
-         {
-            try
-            {
-               input.findElement(By.id(Locators.WARNING_DIALOG_ID));
-               return false;
-            }
-            catch (NoSuchElementException e)
-            {
-               return true;
-            }
-         }
-      });
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.invisibilityOfElementLocated(By
+         .id(Locators.WARNING_DIALOG_ID)));
    }
 
    /**

@@ -18,19 +18,17 @@
  */
 package org.exoplatform.ide.operation.templates;
 
+import static org.junit.Assert.assertEquals;
+
+import java.net.URLEncoder;
+
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.core.Response;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.net.URLEncoder;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Create file from template.
@@ -95,13 +93,14 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
+      IDE.TOOLBAR.waitButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE);
 
       // -------- 2 ----------
       testTemplate(GROOVY_REST_SERVICE, GROOVY_FILE_NAME);
 
       // -------- 3 ----------
-      // Repeat step 2 with items "Empty XML", "Empty HTML", "Empty TEXT", "OpenSocial Gadget" item of left panel.
+      // Repeat step 2 with items "Empty XML", "Empty HTML", "Empty TEXT",
+      // "OpenSocial Gadget" item of left panel.
       testTemplate(EMPTY_XML, XML_FILE_NAME);
       testTemplate(EMPTY_HTML, HTML_FILE_NAME);
       testTemplate(OPENSOCIAL_GADGET, OPENSOCIAL_GADGET_FILE_NAME);
@@ -109,28 +108,27 @@ public class CreateFileFromTemplateTest extends BaseTest
    }
 
    /**
-    * IDE-573: If create new file from template and on opened files exist file with name "Untitled file.html" content of open file
-    * replaced on template content
+    * IDE-573: If create new file from template and on opened files exist file
+    * with name "Untitled file.html" content of open file replaced on template
+    * content
     * 
     * @throws Exception
     */
    @Test
    public void testCreateFileFromTemplateWithDuplicatedName() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-
       /*
-       * 1. Open two html files. They will have names: Untitled file.html, Untitled file 1.html
-       */
-      Assert.assertTrue(IDE.TOOLBAR.isButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE));
+      * 1. Open two html files. They will have names: Untitled file.html,
+      * Untitled file 1.html
+      */
+      IDE.TOOLBAR.waitButtonFromNewPopupMenuEnabled(MenuCommands.New.FILE_FROM_TEMPLATE);
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file.html");
+      IDE.EDITOR.waitActiveFile();
       assertEquals("Untitled file.html *", IDE.EDITOR.getTabTitle(1));
 
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.HTML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/Untitled file 1.html");
+      IDE.EDITOR.waitActiveFile();
       assertEquals("Untitled file 1.html *", IDE.EDITOR.getTabTitle(2));
 
       /*
@@ -138,7 +136,7 @@ public class CreateFileFromTemplateTest extends BaseTest
        */
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
-      assertTrue(IDE.TEMPLATES.isOpened());
+      IDE.TEMPLATES.waitOpenedDialog();
 
       /*
        * 3. Select "Empty HTML" template and click "Create" button
@@ -166,28 +164,32 @@ public class CreateFileFromTemplateTest extends BaseTest
       IDE.EDITOR.closeFile(2);
    }
 
-  
    private void testTemplate(String templateName, String fileName) throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.FILE_FROM_TEMPLATE);
       IDE.TEMPLATES.waitOpened();
-      assertTrue(IDE.TEMPLATES.isOpened());
+      IDE.TEMPLATES.waitOpenedDialog();
       // -------3-------
       // Select "Groovy REST Service" item in the "Create file" window,
-      // change "File Name" field text on "Test Groovy File.groovy" name, click on "Create" button.
+      // change "File Name" field text on "Test Groovy File.groovy" name,
+      // click on "Create" button.
       IDE.TEMPLATES.selectTemplate(templateName);
       IDE.TEMPLATES.setFileName(fileName);
       IDE.TEMPLATES.clickCreateButton();
       IDE.TEMPLATES.waitClosed();
       IDE.EDITOR.waitTabPresent(1);
-      // new file with appropriate titles and highlighting should be opened in the Content Panel
+      // new file with appropriate titles and highlighting should be opened in
+      // the Content Panel
       assertEquals(fileName + " *", IDE.EDITOR.getTabTitle(1));
       // --------4------------
-      // Click on "File->Save File As" top menu command and save file "Test Groovy File.groovy".
+      // Click on "File->Save File As" top menu command and save file
+      // "Test Groovy File.groovy".
       IDE.EDITOR.saveAs(1, fileName);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + fileName);
-      // new file with appropriate name should be appeared in the root folder of
-      // "Workspace" panel in the "Gadget " window and in the root folder of "Server" window.
+      // new file with appropriate name should be appeared in the root folder
+      // of
+      // "Workspace" panel in the "Gadget " window and in the root folder of
+      // "Server" window.
       IDE.EDITOR.closeFile(fileName);
 
       // check file created on server

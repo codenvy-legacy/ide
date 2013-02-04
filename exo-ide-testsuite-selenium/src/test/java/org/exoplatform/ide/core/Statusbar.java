@@ -25,8 +25,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.awt.print.PrinterException;
-
 /**
  * Created by The eXo Platform SAS .
  * 
@@ -81,7 +79,7 @@ public class Statusbar extends AbstractTestModule
 
    public void waitCursorPositionControl()
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -97,7 +95,7 @@ public class Statusbar extends AbstractTestModule
     */
    public void waitDiasspearBuildStatus()
    {
-      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 120).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -118,7 +116,7 @@ public class Statusbar extends AbstractTestModule
 
    public void waitCursorPositionAt(final String position)
    {
-      new WebDriverWait(driver(), 3).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
 
          @Override
@@ -136,7 +134,7 @@ public class Statusbar extends AbstractTestModule
     */
    public void waitBuildFailStatus()
    {
-      new WebDriverWait(driver(), 10).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 120).until(new ExpectedCondition<Boolean>()
       {
 
          @Override

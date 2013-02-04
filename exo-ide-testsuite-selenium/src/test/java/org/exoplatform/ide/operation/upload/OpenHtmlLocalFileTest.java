@@ -21,6 +21,8 @@ package org.exoplatform.ide.operation.upload;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,70 +31,59 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.IOException;
-
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  * 
  */
-public class OpenHtmlLocalFileTest extends BaseTest
-{
-   private static String HTML_NAME = "Example.html";
+public class OpenHtmlLocalFileTest extends BaseTest {
+	private static String HTML_NAME = "Example.html";
 
-   private static String PROJECT = OpenHtmlLocalFileTest.class.getSimpleName();
+	private static String PROJECT = OpenHtmlLocalFileTest.class.getSimpleName();
 
-   private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
+	private static final String FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/upload/Example.html";
 
-   @BeforeClass
-   public static void setUp()
-   {
-      try
-      {
-         VirtualFileSystemUtils.createDefaultProject(PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+	@BeforeClass
+	public static void setUp() {
+		try {
+			VirtualFileSystemUtils.createDefaultProject(PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
-   @Test
-   public void testOpenHtml() throws Exception
-   {
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
-      IDE.LOADER.waitClosed();
+	@Test
+	public void testOpenHtml() throws Exception {
+		IDE.PROJECT.EXPLORER.waitOpened();
+		IDE.LOADER.waitClosed();
+		IDE.PROJECT.OPEN.openProject(PROJECT);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+		IDE.LOADER.waitClosed();
 
-      IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH, MimeType.TEXT_HTML);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_NAME);
-      
-      String text = IDE.EDITOR.getTextFromCodeEditor(0);
+		IDE.UPLOAD.open(MenuCommands.File.OPEN_LOCAL_FILE, FILE_PATH,
+				MimeType.TEXT_HTML);
+		IDE.EDITOR.waitActiveFile();
 
-      assertTrue(text.length() > 0);
+		String text = IDE.EDITOR.getTextFromCodeEditor();
 
-      String fileContent = getFileContent(FILE_PATH);
-      assertEquals(fileContent.split("\n").length, text.split("\n").length);
+		assertTrue(text.length() > 0);
 
-      IDE.EDITOR.saveAs(1, HTML_NAME);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_NAME);
+		String fileContent = getFileContent(FILE_PATH);
+		assertEquals(fileContent.split("\n").length, text.split("\n").length);
 
-      IDE.PROPERTIES.openProperties();
+		IDE.EDITOR.saveAs(1, HTML_NAME);
+		IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_NAME);
 
-      assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
-   }
+		IDE.PROPERTIES.openProperties();
 
-   @AfterClass
-   public static void tearDown()
-   {
-      try
-      {
-         VirtualFileSystemUtils.delete(WS_URL + PROJECT);
-      }
-      catch (IOException e)
-      {
-      }
-   }
+		assertEquals(MimeType.TEXT_HTML, IDE.PROPERTIES.getContentType());
+	}
+
+	@AfterClass
+	public static void tearDown() {
+		try {
+			VirtualFileSystemUtils.delete(WS_URL + PROJECT);
+		} catch (IOException e) {
+		}
+	}
 
 }

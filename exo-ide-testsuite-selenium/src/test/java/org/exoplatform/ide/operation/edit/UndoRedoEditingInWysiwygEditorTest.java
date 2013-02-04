@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.operation.edit;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.ToolbarCommands;
@@ -29,21 +33,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
 /**
  * Created by The eXo Platform SAS.
+ * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id:
- *
+ * 
  */
 public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
 {
 
-   //IDE-122 Undo/Redo Editing in WYSIWYG editor 
+   // IDE-122 Undo/Redo Editing in WYSIWYG editor
 
    private final static String PROJECT = UndoRedoEditingInWysiwygEditorTest.class.getSimpleName();
 
@@ -97,73 +97,71 @@ public class UndoRedoEditingInWysiwygEditorTest extends BaseTest
    public void undoRedoEditingInWysiwydEditorFromEditMenu() throws Exception
    {
 
-      //step 1 open project and walidation error marks 
+      // step 1 open project and walidation error marks
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.EDITOR.clickDesignButton();
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "1,");
-      //delay for emulation of the user input
-      Thread.sleep(1000);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "2,");
-      //delay for emulation of the user input
-      Thread.sleep(1000);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "3");
-      //delay for emulation of the user input
-      Thread.sleep(1000);
-      assertEquals("1," + "2," + "3", IDE.CK_EDITOR.getTextFromCKEditor(1));
+      IDE.CK_EDITOR.typeTextIntoCkEditor("1");
+      IDE.CK_EDITOR.typeTextIntoCkEditor("\n");
+      IDE.CK_EDITOR.typeTextIntoCkEditor("2");
+      // delay for emulation of the user input
+      assertEquals("1" + "\n" + "2", IDE.CK_EDITOR.getTextFromCKEditor());
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1");
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1");
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.UNDO);
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "");
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.REDO);
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1");
 
       IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.REDO);
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1,2,3");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1");
 
+      IDE.TOOLBAR.runCommand(ToolbarCommands.Editor.REDO);
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1" + "\n" + "2");
+      IDE.EDITOR.forcedClosureFile(1);
    }
 
    @Test
    public void undoRedoEditingFromShortKeys() throws Exception
    {
 
-      //step 1 open project and walidation error marks 
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + HTML_FILE);
-      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE);
+      // step 1 open project and walidation error marks
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + GOOGLE_GADGET);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GOOGLE_GADGET);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.EDITOR.clickDesignButton();
 
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "1,");
-      //delay for emulation of the user input
-      Thread.sleep(500);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "2,");
-      //delay for emulation of the user input
-      Thread.sleep(500);
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, "3");
-      //delay for emulation of the user input
-      Thread.sleep(500);
+      IDE.CK_EDITOR.typeTextIntoCkEditor("1");
+      IDE.CK_EDITOR.typeTextIntoCkEditor("\n");
+      IDE.CK_EDITOR.typeTextIntoCkEditor("2");
 
-      assertEquals("1," + "2," + "3", IDE.CK_EDITOR.getTextFromCKEditor(1));
+      assertEquals("1" + "\n" + "2Hello, world!", IDE.CK_EDITOR.getTextFromCKEditor());
 
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "z");
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "z");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "z");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1\nHello, world!");
 
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "z");
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "z");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1Hello, world!");
 
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "y");
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "z");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "Hello, world!");
 
-      IDE.CK_EDITOR.typeTextIntoCkEditor(1, Keys.CONTROL.toString() + "y");
-      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(1), "1,2,3");
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "y");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1Hello, world!");
+
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "y");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1\nHello, world!");
+
+      IDE.CK_EDITOR.typeTextIntoCkEditor(Keys.CONTROL.toString() + "y");
+      assertEquals(IDE.CK_EDITOR.getTextFromCKEditor(), "1\n2Hello, world!");
    }
 }

@@ -9,7 +9,7 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
-   <version>1.2.0-M16-SNAPSHOT</version>
+   <version>1.2.0-M17-SNAPSHOT</version>
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
@@ -139,13 +139,13 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>exo-gwtframework-commons</artifactId>
-            <version>${org.exoplatform.gwtframework.version}</version>
+            <artifactId>codenvy-gwtframework-commons</artifactId>
+            <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.gwt</groupId>
-            <artifactId>exo-gwtframework-ui</artifactId>
-            <version>${org.exoplatform.gwtframework.version}</version>
+            <artifactId>codenvy-gwtframework-ui</artifactId>
+            <version>${project.version}</version>
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
@@ -847,6 +847,8 @@
       </plugins>
    </build>
    <modules>
+      <module>codenvy-gwtframework-commons</module>
+      <module>codenvy-gwtframework-ui</module>
       <module>exo-ide-dev-resources</module>
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>

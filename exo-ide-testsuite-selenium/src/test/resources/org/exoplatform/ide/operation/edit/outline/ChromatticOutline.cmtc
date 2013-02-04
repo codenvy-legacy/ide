@@ -2,6 +2,11 @@ package dependencies;
 
 import org.chromattic.api.annotations.PrimaryType
 import org.chromattic.api.annotations.Property
+import javax.persistence.ManyToOne
+import org.chromattic.api.annotations.Mandatory
+import java.nio.MappedByteBuffer
+import org.chromattic.api.annotations.MappedBy
+import javax.ws.rs.DefaultValue
 
 @PrimaryType(name="nt:unstructured")
 class DataObject

@@ -18,6 +18,12 @@
  */
 package org.exoplatform.ide.operation.file;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
+import java.io.IOException;
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -26,12 +32,6 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 /**
  * @author <a href="mailto:musienko.maxim@gmail.com">Musienko Maxim</a>
@@ -119,44 +119,46 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
 
-      //step 1 check all files is present, open all files, checks default content.
+      // step 1 check all files is present, open all files, checks default
+      // content.
       checkAllFilesPresent();
 
-      //close welcome tab for easy indexing of tabs and iframes in testcase
+      // close welcome tab for easy indexing of tabs and iframes in testcase
       IDE.EDITOR.clickCloseEditorButton(0);
       IDE.EDITOR.waitTabNotPresent(0);
       checkDefaultContentInOpenFiles();
 
-      //step 2 change file (add string "change file" into CSS, gadget, html and js file)
+      // step 2 change file (add string "change file" into CSS, gadget, html
+      // and js file)
       IDE.EDITOR.selectTab("newCssFile.css");
-      IDE.EDITOR.typeTextIntoEditor(0, "Change file\n");
+      IDE.EDITOR.typeTextIntoEditor("Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitNoContentModificationMark("newCssFile.css");
       assertFalse(IDE.EDITOR.isFileContentChanged(0));
 
       IDE.EDITOR.selectTab("newHtmlFile.html");
-      IDE.EDITOR.typeTextIntoEditor(1, "Change file\n");
+      IDE.EDITOR.typeTextIntoEditor("Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitNoContentModificationMark("newHtmlFile.html");
       assertFalse(IDE.EDITOR.isFileContentChanged(1));
 
       IDE.EDITOR.selectTab("newJavaScriptFile.js");
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(2, "Change file\n");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor("Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitNoContentModificationMark("newJavaScriptFile.js");
       assertFalse(IDE.EDITOR.isFileContentChanged(2));
 
       IDE.EDITOR.selectTab("newGroovyFile.groovy");
-      IDE.EDITOR.typeTextIntoEditor(4, "Change file\n");
+      IDE.EDITOR.typeTextIntoEditor("Change file\n");
       IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitNoContentModificationMark("newGroovyFile.groovy");
       assertFalse(IDE.EDITOR.isFileContentChanged(4));
 
-      //step 3 close all files
+      // step 3 close all files
       IDE.EDITOR.clickCloseEditorButton(CSS_FILE_NAME);
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitTabNotPresent(CSS_FILE_NAME);
@@ -185,7 +187,8 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
       IDE.LOADER.waitClosed();
       IDE.EDITOR.waitTabNotPresent(XML_FILE_NAME);
 
-      //step 4 reopen all files check changed and not changed file. Check save button state
+      // step 4 reopen all files check changed and not changed file. Check
+      // save button state
       driver.navigate().refresh();
       checkAllFilesPresent();
       IDE.EDITOR.clickCloseEditorButton(0);
@@ -194,114 +197,114 @@ public class OpeningSavingAndClosingFilesTest extends BaseTest
    }
 
    /**
-    * method is check all status (change and not change) after 
-    * previous steps
+    * method is check all status (change and not change) after previous steps
+    * 
     * @throws Exception
     */
    private void checkStatusReopenedFiles() throws Exception
    {
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + CSS_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
-      assertEquals("Change file\n" + DEFAULT_CONTENT_CSS_FILE, IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled("Save");
+      IDE.EDITOR.waitActiveFile();
+      assertEquals("Change file\n" + DEFAULT_CONTENT_CSS_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
-      IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
-      assertEquals("Change file\n" + DEFAULT_CONTENT_HTML_FILE, IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled("Save");
+      IDE.EDITOR.selectTab(HTML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      assertEquals("Change file\n" + DEFAULT_CONTENT_HTML_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
-      IDE.EDITOR.selectTab(2);
-      assertEquals("Change file\n" + DEFAULT_CONTENT_JS_FILE, IDE.JAVAEDITOR.getTextFromJavaEditor(2));
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
+      IDE.TOOLBAR.waitForButtonDisabled("Save");
+      IDE.EDITOR.selectTab(JS_FILE_NAME);
+      assertEquals("Change file\n" + DEFAULT_CONTENT_JS_FILE, IDE.JAVAEDITOR.getTextFromJavaEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
-      IDE.EDITOR.selectTab(3);
-      assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor(3));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled("Save");
+      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
-      IDE.EDITOR.selectTab(4);
-      assertEquals("Change file\n" + DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor(4));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled("Save");
+      IDE.EDITOR.selectTab(GROOVY_FILE_NAME);
+      assertEquals("Change file\n" + DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
-      IDE.EDITOR.selectTab(5);
-      assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor(5));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled("Save");
+      IDE.EDITOR.selectTab(XML_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
-      assertFalse(IDE.TOOLBAR.isButtonEnabled("Save"));
-      IDE.EDITOR.selectTab(6);
-      assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor(6));
+      IDE.EDITOR.waitActiveFile();
+      IDE.TOOLBAR.waitForButtonDisabled("Save");
+      IDE.EDITOR.selectTab(TXT_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor());
    }
 
    /**
     * @throws Exception
     */
+   // TODO CHECK THIS TEST
    private void checkDefaultContentInOpenFiles() throws Exception
    {
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + CSS_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + CSS_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_CSS_FILE, IDE.EDITOR.getTextFromCodeEditor(0));
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(DEFAULT_CONTENT_CSS_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + HTML_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
-      IDE.EDITOR.selectTab(1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + HTML_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_HTML_FILE, IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.selectTab(HTML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(DEFAULT_CONTENT_HTML_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + JS_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
-      IDE.EDITOR.selectTab(2);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + JS_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_JS_FILE, IDE.JAVAEDITOR.getTextFromJavaEditor(2));
+      IDE.JAVAEDITOR.waitJavaEditorIsActive();
+      IDE.EDITOR.selectTab(JS_FILE_NAME);
+      assertEquals(DEFAULT_CONTENT_JS_FILE, IDE.JAVAEDITOR.getTextFromJavaEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GADGET_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-      IDE.EDITOR.selectTab(3);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GADGET_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor(3));
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.selectTab(GADGET_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(DEFAULT_CONTENT_GADGET_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + GROOVY_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
-      IDE.EDITOR.selectTab(4);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + GROOVY_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor(4));
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.selectTab(GROOVY_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(DEFAULT_CONTENT_GROOVY_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + XML_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
-      IDE.EDITOR.selectTab(5);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + XML_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor(5));
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.selectTab(XML_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(DEFAULT_CONTENT_XML_FILE, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TXT_FILE_NAME);
       IDE.LOADER.waitClosed();
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
-      IDE.EDITOR.selectTab(6);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TXT_FILE_NAME);
-      assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor(6));
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.selectTab(TXT_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
+      assertEquals(DEFAULT_CONTENT_TXT_FILE, IDE.EDITOR.getTextFromCodeEditor());
    }
 
    /**

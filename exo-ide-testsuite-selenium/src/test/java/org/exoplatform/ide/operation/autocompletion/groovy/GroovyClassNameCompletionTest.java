@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
@@ -27,8 +29,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -60,36 +60,36 @@ public class GroovyClassNameCompletionTest extends CodeAssistantBaseTest
       }
 
    }
-   
-   
+
    @Test
    public void testGroovyClassNameCompletion() throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
+      IDE.EDITOR.waitActiveFile();
 
       IDE.GOTOLINE.goToLine(9);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollection");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "\nCollection");
 
       // open autocomplete form
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.waitForDocPanelOpened();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("Collection"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("Collection");
 
-      // can does not work on standalone because different orders in list 
+      // can does not work on standalone because different orders in list
       IDE.CODEASSISTANT.closeForm();
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nCollectionCertStore");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "\nCollectionCertStore");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.waitForDocPanelOpened();
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("CollectionCertStoreParameters"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("CollectionCertStoreParameters");
 
-      
-      IDE.CODEASSISTANT.setFocusTInput(); //insure that focus set to proposal from
+      IDE.CODEASSISTANT.setFocusTInput(); // insure that focus set to proposal
+      // from
       IDE.CODEASSISTANT.moveCursorDown(1);
 
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("CollectionCertStoreParameters"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("CollectionCertStoreParameters"));
+      IDE.EDITOR.closeTabIgnoringChanges(1);
    }
 
 }

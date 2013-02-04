@@ -1,8 +1,8 @@
 <html>
    <head>
      <%
-        import com.codenvy.Identity;
-            import org.exoplatform.services.security.ConversationState;
+       import org.exoplatform.services.security.Identity;
+       import org.exoplatform.services.security.ConversationState;
      %>
    </head>
    <script>

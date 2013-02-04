@@ -18,13 +18,13 @@
  */
 package org.exoplatform.ide.core;
 
-import org.exoplatform.ide.BaseTest;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
@@ -42,21 +42,16 @@ public class LockFile extends AbstractTestModule
    private final String TOOLBAR_LOCK_ICON_ACTIVE =
       "table.exo-popupMenuTable>tbody>tr[item-enabled=true]>td.exo-popupMenuIconField>img";
 
-   private final String TOOLBAR_LOCK_LABEL_DISABLED =
-      "//table[@class='exo-popupMenuTable']/tbody//tr[@item-enabled='false']//td/nobr[text()='Lock File']";
-
    private final String TOOLBAR_LOCK_ICON_DISABLED =
-      "table.exo-popupMenuTable>tbody>tr[item-enabled=false]>td.exo-popupMenuIconFieldDisabled>img";
+      "//div[@id='exoIDEToolbar']//div[@enabled='false' and @title='Lock File']";
 
-   private final String TOOLBAR_UNLOCK_LABEL_ACTIVE =
-      "//table[@class='exo-popupMenuTable']/tbody//tr[@item-enabled='true']//td/nobr[text()='Unlock File']";
+   private final String TOOLBAR_UNLOCK_LABEL_ACTIVE = "//div[@id='exoIDEToolbar']//div[@title='Unlock File']";
 
    private final String CHEK_UNLOCK_IMAGE =
       "//table[@class='exo-popupMenuTable']/tbody//tr[@item-enabled='true']//td//img[@src='%s']";
 
    private final String EDIT_MENU_DISABLE_ICON =
       "//table[@class='exo-popupMenuTable']//td[@class='exo-popupMenuTitleFieldDisabled']/nobr[text()='Lock File']";
-   
 
    private final String LOCK_ICON_ON_TAB = "//div[@tab-bar-index='%s']//span[@title]/img[@id='fileReadonly']";
 
@@ -67,10 +62,7 @@ public class LockFile extends AbstractTestModule
    @FindBy(css = TOOLBAR_LOCK_ICON_ACTIVE)
    private WebElement lockIconIsActive;
 
-   @FindBy(xpath = TOOLBAR_LOCK_LABEL_DISABLED)
-   private WebElement lockLabelDisabled;
-
-   @FindBy(css = TOOLBAR_LOCK_ICON_DISABLED)
+   @FindBy(xpath = TOOLBAR_LOCK_ICON_DISABLED)
    private WebElement lockIconDisabled;
 
    @FindBy(xpath = TOOLBAR_UNLOCK_LABEL_ACTIVE)
@@ -80,32 +72,51 @@ public class LockFile extends AbstractTestModule
    private WebElement disabledLockIconInEditMenu;
 
    /**
-    * return true if submenu lock active in menu Edit 
-    * @return
+    * Wait  submenu lock active in menu Edit 
     */
-   public boolean isLockCommandActive()
+   public void waitLockCommandActive() throws Exception
    {
-      try
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
-         return lockIconIsActive != null && lockIconIsActive.isDisplayed() && lockLabelIsActive != null
-            && lockLabelIsActive.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               return lockIconIsActive != null && lockIconIsActive.isDisplayed() && lockLabelIsActive != null
+                  && lockLabelIsActive.isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
-    * return true if submenu lock active in menu Edit 
-    * @return
+    * Wait submenu lock active in menu Edit 
     * @throws Exception 
     */
-   public boolean isLockIconViewOnFileInProjecrExplorer(String path) throws Exception
+   public void waitLockIconViewOnFileInProjecrExplorer(final String path) throws Exception
    {
-      WebElement isElemLock = driver().findElement(By.id(IDE().PROJECT.EXPLORER.getItemId(path)));
-      WebElement iconOnElem = isElemLock.findElement(By.id("resourceLocked"));
-      return iconOnElem != null && iconOnElem.isDisplayed();
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            try
+            {
+               WebElement isElemLock = driver().findElement(By.id(IDE().PROJECT.EXPLORER.getItemId(path)));
+               WebElement iconOnElem = isElemLock.findElement(By.id("resourceLocked"));
+               return iconOnElem != null && iconOnElem.isDisplayed();
+            }
+            catch (Exception e)
+            {
+               return false;
+            }
+         }
+      });
    }
 
    /**
@@ -113,67 +124,47 @@ public class LockFile extends AbstractTestModule
     * start with 0
     * @return
     */
-   public boolean isLockIconOnTabView(int index)
+   public void waitLockIconOnTabView(int index)
    {
-      WebElement elem = driver().findElement(By.xpath(String.format(LOCK_ICON_ON_TAB, index)));
-      return elem != null && elem.isDisplayed();
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(
+         LOCK_ICON_ON_TAB, index))));
    }
 
    /**
-    * return true if submenu lock not active in menu Edit
-    * @return
+    * Wait  submenu lock not active in menu Edit
     */
-   public boolean isLockCommandNotActive()
+   public void waitLockCommandNotActive()
    {
-      try
-      {
-         return lockIconDisabled != null && lockIconDisabled.isDisplayed() && lockLabelDisabled != null
-            && lockLabelDisabled.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(TOOLBAR_LOCK_ICON_DISABLED)));
    }
 
-   // check is menu not present
+   //   // check is menu not present
+   //   /**
+   //    * retiurn true if submenu lock not present in Edit menu 
+   //    * @return
+   //    * 
+   //    */
+   //   public boolean isLockCommandsNotView()
+   //   {
+   //      try
+   //      {
+   //         return (isLockCommandNotActive() == false && isLockCommandActive() == false);
+   //      }
+   //      catch (Exception e)
+   //      {
+   //         return false;
+   //      }
+   //
+   //   }
+
    /**
-    * retiurn true if submenu lock not present in Edit menu 
-    * @return
-    * 
+    * Wait active unlock submenu in Edit 
     */
-   public boolean isLockCommandsNotView()
+   public void waitUnLockCommandActive()
    {
-      try
-      {
-         return (isLockCommandNotActive() == false && isLockCommandActive() == false);
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
-
-   }
-
-   /**
-    * check unlock submenu in Edit 
-    * @return
-    */
-   public boolean isUnLockCommandActive()
-   {
-      try
-      {
-         WebElement elem =
-            driver().findElement(
-               By.xpath(String.format(CHEK_UNLOCK_IMAGE, BaseTest.BASE_URL + "IDE/ui/popup/check.gif")));
-         return elem != null && elem.isDisplayed() && unLockEnabled != null && unLockEnabled.isDisplayed()
-            && lockIconIsActive != null && lockIconIsActive.isDisplayed();
-      }
-      catch (Exception e)
-      {
-         return false;
-      }
-
+      new WebDriverWait(driver(), 30).until(ExpectedConditions.visibilityOfElementLocated(By
+         .xpath(TOOLBAR_UNLOCK_LABEL_ACTIVE)));
    }
 
    /**
@@ -183,15 +174,14 @@ public class LockFile extends AbstractTestModule
        */
    public void waitLockActiveOpened() throws Exception
    {
-      new WebDriverWait(driver(), 2).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
             try
             {
-               return lockIconDisabled != null && lockIconDisabled.isDisplayed() && lockLabelDisabled != null
-                  && lockLabelDisabled.isDisplayed();
+               return lockIconDisabled != null && lockIconDisabled.isDisplayed();
             }
             catch (NoSuchElementException e)
             {
@@ -207,7 +197,7 @@ public class LockFile extends AbstractTestModule
     */
    public void waitDisabledLockIconInEditMenu() throws Exception
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)

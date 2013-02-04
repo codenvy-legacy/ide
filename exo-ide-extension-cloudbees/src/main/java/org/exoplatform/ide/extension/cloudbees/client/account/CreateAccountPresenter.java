@@ -91,7 +91,7 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
 
    public CreateAccountPresenter()
    {
-   //   IDE.getInstance().addControl(new CreateAccountControl());
+      IDE.getInstance().addControl(new CreateAccountControl());
 
       IDE.addHandler(CreateAccountEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);

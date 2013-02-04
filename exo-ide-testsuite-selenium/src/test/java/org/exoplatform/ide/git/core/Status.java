@@ -18,10 +18,10 @@
  */
 package org.exoplatform.ide.git.core;
 
-import org.exoplatform.ide.core.AbstractTestModule;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.exoplatform.ide.core.AbstractTestModule;
 
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>

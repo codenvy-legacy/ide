@@ -31,7 +31,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: Dec 6, 2010 $
- *
+ * 
  */
 public class ImportStatementInsertionTest extends CodeAssistantBaseTest
 {
@@ -53,74 +53,78 @@ public class ImportStatementInsertionTest extends CodeAssistantBaseTest
       {
          fail("Can't create project structure");
       }
-      
+
       openProject();
    }
 
-   //GWTX-64: "Don't insert "import <FQN>;" statement if this is class from default package or 
-   //there is existed import in the header."
+   // GWTX-64: "Don't insert "import <FQN>;" statement if this is class from
+   // default package or
+   // there is existed import in the header."
    @Test
    public void testServiceFile() throws Exception
    {
       IDE.WELCOME_PAGE.close();
-      //open file
+      // open file
       IDE.PROJECT.EXPLORER.waitForItem(projectName + "/" + SERVICE_FILE_NAME);
       IDE.PROJECT.EXPLORER.openItem(projectName + "/" + SERVICE_FILE_NAME);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + SERVICE_FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
-      //Go to line 14, type "B" symbol and then click on Ctrl+Space. 
-      //Then select "Base64" class item from non-default package and press "Enter" key.
-      IDE.EDITOR.moveCursorDown(0,14);
-      IDE.EDITOR.typeTextIntoEditor(0, "B");
-      
+      // Go to line 14, type "B" symbol and then click on Ctrl+Space.
+      // Then select "Base64" class item from non-default package and press
+      // "Enter" key.
+      IDE.EDITOR.moveCursorDown(14);
+      IDE.EDITOR.typeTextIntoEditor("B");
+
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.typeToInput("ase64");
       IDE.CODEASSISTANT.typeToInput("\n");
 
-      //test import statement
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("// simple groovy script"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.Path"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.GET"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.PathParam"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Path("));
+      // test import statement
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("// simple groovy script"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.Path"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.GET"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.PathParam"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import java.util.prefs.Base64"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("@Path("));
 
-      //Empty line 14, type "B" symbol and then click on Ctrl+Space. 
-      //Then select "BitSet" class item from default package and press "Enter" key.
+      // Empty line 14, type "B" symbol and then click on Ctrl+Space.
+      // Then select "BitSet" class item from default package and press
+      // "Enter" key.
       IDE.GOTOLINE.goToLine(14);
-      IDE.EDITOR.deleteLinesInEditor(0, 1);
-      IDE.EDITOR.typeTextIntoEditor(0, "B");
+      IDE.EDITOR.deleteLinesInEditor(1);
+      IDE.EDITOR.typeTextIntoEditor("B");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.waitForInput();
       IDE.CODEASSISTANT.typeToInput("itSet\n");
-      
-      
-      //test import statement
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("// simple groovy script"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.Path"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.GET"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.PathParam"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Path("));
 
-      //Empty line 16 and then click on Ctrl+Space. 
-      //Then select "HelloWorld" class item with current class name and press "Enter" key.
+      // test import statement
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("// simple groovy script"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.Path"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.GET"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.PathParam"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import java.util.prefs.Base64"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("@Path("));
+
+      // Empty line 16 and then click on Ctrl+Space.
+      // Then select "HelloWorld" class item with current class name and press
+      // "Enter" key.
       IDE.GOTOLINE.goToLine(16);
-      IDE.EDITOR.deleteLinesInEditor(0, 1);
-      IDE.EDITOR.typeTextIntoEditor(0, " ");
+      IDE.EDITOR.deleteLinesInEditor(1);
+      IDE.EDITOR.typeTextIntoEditor(" ");
       IDE.CODEASSISTANT.openForm();
       IDE.CODEASSISTANT.waitForInput();
       IDE.CODEASSISTANT.setFocusTInput();
       IDE.CODEASSISTANT.typeToInput("HelloWorld");
       IDE.CODEASSISTANT.insertSelectedItem();
 
-      //test import statement
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("// simple groovy script"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.Path"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.GET"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import javax.ws.rs.PathParam"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("import java.util.prefs.Base64"));
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("@Path("));
+      // test import statement
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("// simple groovy script"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.Path"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.GET"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import javax.ws.rs.PathParam"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("import java.util.prefs.Base64"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("@Path("));
+      IDE.EDITOR.closeTabIgnoringChanges(SERVICE_FILE_NAME);
 
    }
 }

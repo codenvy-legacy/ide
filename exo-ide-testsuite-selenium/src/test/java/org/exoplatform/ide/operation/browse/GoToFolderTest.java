@@ -92,7 +92,7 @@ public class GoToFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
@@ -101,24 +101,28 @@ public class GoToFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       // Go to folder and go
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
-
-      // close all folders, refresh Project Explorer Three. And reproduce goto folder operations with
+      IDE.EDITOR.closeFile(FILE_1);
+      IDE.EDITOR.waitTabNotPresent(FILE_1);
+      // close all folders, refresh Project Explorer Three. And reproduce goto
+      // folder operations with
       // second file
-      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_1);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_2);
+      //      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      //      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
+      //      IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
+
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
+      IDE.EDITOR.waitActiveFile();
 
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT + "/" + FOLDER_2);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
 
@@ -127,41 +131,43 @@ public class GoToFolderTest extends BaseTest
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
 
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
+
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
-
-      IDE.EDITOR.closeFile(FILE_1);
-      IDE.EDITOR.waitTabNotPresent(FILE_1);
-
       IDE.EDITOR.closeFile(FILE_2);
       IDE.EDITOR.waitTabNotPresent(FILE_2);
+
+      // Checking that refresh button works properly.
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
+      IDE.PROJECT.EXPLORER.clickOpenCloseButton(PROJECT);
+      IDE.TOOLBAR.runCommand(MenuCommands.File.REFRESH_TOOLBAR);
+      IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
+      IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
+
    }
 
    @Test
    public void testGoToFolderSearchPanel() throws Exception
    {
-
-      driver.navigate().refresh();
-      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_2);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
-      
-      
+
       IDE.TOOLBAR.runCommand(MenuCommands.File.SEARCH);
       IDE.SEARCH.waitPerformSearchOpened();
       IDE.SEARCH.clickSearchButton();
       IDE.SEARCH_RESULT.waitOpened();
 
+      IDE.SEARCH_RESULT.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.SEARCH_RESULT.openItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
+      IDE.EDITOR.waitActiveFile();
+
       IDE.MENU.runCommand(MenuCommands.View.VIEW, MenuCommands.View.GO_TO_FOLDER);
-      
+
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_2 + "/" + FILE_2);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + FOLDER_1 + "/" + FILE_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1);
 
    }
-
 }

@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.git.core;
 
-import com.thoughtworks.selenium.Selenium;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
@@ -76,8 +74,6 @@ public class GIT
       String ERROR = "Error";
    }
 
-   private Selenium selenium;
-
    private static GIT instance;
 
    public static GIT getInstance()
@@ -85,9 +81,8 @@ public class GIT
       return instance;
    }
 
-   public GIT(Selenium selenium, WebDriver driver)
+   public GIT(WebDriver driver)
    {
-      this.selenium = selenium;
       instance = this;
 
       INIT_REPOSITORY = PageFactory.initElements(driver, InitRepository.class);
@@ -103,11 +98,6 @@ public class GIT
       REMOTES = PageFactory.initElements(driver, Remotes.class);
       PUSH = PageFactory.initElements(driver, Push.class);
       PULL = PageFactory.initElements(driver, Pull.class);
-   }
-
-   public Selenium getSelenium()
-   {
-      return selenium;
    }
 
    public InitRepository INIT_REPOSITORY;

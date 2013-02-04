@@ -20,22 +20,16 @@ package org.exoplatform.ide.operation.file;
 
 import static org.junit.Assert.assertEquals;
 
-import com.google.gwt.user.client.Command;
+import java.net.URLEncoder;
+import java.util.Map;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
-import org.exoplatform.ide.TestConstants;
-import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.net.URLEncoder;
-import java.util.Map;
 
 /**
  * IDE-49: Deleting XML file with non-latin name.

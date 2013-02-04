@@ -1,7 +1,8 @@
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
+
+import java.util.Map;
 
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
@@ -9,12 +10,15 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.util.Map;
+import org.openqa.selenium.Keys;
 
 public class FormatJavaCodeFromEditMenuTest extends ServicesJavaTextFuction
 {
    private static final String PROJECT = FormatJavaCodeFromEditMenuTest.class.getSimpleName();
+
+   private static final String TXT_FILE_NAME = "TestTextFile.txt";
+
+   private static final String JAVA_FILE_NAME = "SimpleSum.java";
 
    @BeforeClass
    public static void setUp()
@@ -42,30 +46,42 @@ public class FormatJavaCodeFromEditMenuTest extends ServicesJavaTextFuction
    }
 
    @Test
-   public void selectAllDeleteUndoRedoTest() throws Exception
+   public void formatJavaCodeFromEditMenuTest() throws Exception
    {
+
       final String codeAfterEdit =
-         "package sumcontroller;" + "\n" + "   int c = 225;" + "\n" + "      return a + b;" + "\n"
-            + "   //For Find/replase test" + "\n" + "}" + "\n" + "public class SimpleSum" + "\n" + "{"
-            + "\n" + "   int d = 1;" + "\n" + "   public int sumForEdit(int a, int b)" + "\n" + "   {" + "\n" + "   }"
-            + "\n" + "   int ss = sumForEdit(c, d);" + "\n" + "   String ONE = \"\";" + "\n"+"   String one = \"\";";
+         "package sumcontroller;\n\npublic class SimpleSum\n{\n   int c = 225;\n\n   int d = 1;\n\n   public int sumForEdit(int a, int b)\n   {\n      return a + b;\n   }\n\n   int ss = sumForEdit(c, d);\n\n   //For Find/replase test\n   String ONE = \"\";\n\n   String one = \"\";\n}";
 
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openJavaClassForFormat(PROJECT);
-      String initialText = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
 
+      //formating code.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.FORMAT);
-      //need for format text
-      String initialText2 = IDE.JAVAEDITOR.getTextFromJavaEditor(0);
-      System.out.println("<<<<<<<<<<<<<<<<<<<<<:" + "\n" + initialText2);
-      Thread.sleep(500);
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE);
+      IDE.EDITOR.waitNoContentModificationMark(JAVA_FILE_NAME);
 
-      //After applying format function to java editor this method should be rewrite.
-      //We should compare all text after formatting
-      assertEquals(IDE.JAVAEDITOR.getTextFromJavaEditor(0), codeAfterEdit);
+      //copy formated code
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + "a");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + "c");
 
+      IDE.EDITOR.closeFile(JAVA_FILE_NAME);
+
+      // create and paste formated code in new txt file to validate formating.
+      IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL.toString() + "v");
+      IDE.MENU.runCommand(MenuCommands.File.FILE, MenuCommands.File.SAVE_AS);
+      IDE.ASK_FOR_VALUE_DIALOG.waitOpened();
+      IDE.ASK_FOR_VALUE_DIALOG.setValue(TXT_FILE_NAME);
+      IDE.ASK_FOR_VALUE_DIALOG.clickOkButton();
+      IDE.ASK_FOR_VALUE_DIALOG.waitClosed();
+      IDE.EDITOR.waitNoContentModificationMark(JAVA_FILE_NAME);
+
+      //comparing
+      assertEquals(IDE.EDITOR.getTextFromCodeEditor(), codeAfterEdit);
    }
-
 }

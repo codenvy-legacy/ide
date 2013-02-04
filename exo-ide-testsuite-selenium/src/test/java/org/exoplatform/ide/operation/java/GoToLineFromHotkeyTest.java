@@ -1,13 +1,13 @@
 package org.exoplatform.ide.operation.java;
 
+import java.util.Map;
+
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 public class GoToLineFromHotkeyTest extends ServicesJavaTextFuction
 {
@@ -45,15 +45,20 @@ public class GoToLineFromHotkeyTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.CONTROL.toString() + "l");
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.CONTROL.toString() + "l");
       IDE.GOTOLINE.waitOpened();
-      IDE.GOTOLINE.goToLine(5);
+      IDE.GOTOLINE.typeIntoLineNumberField(String.valueOf(5));
+      IDE.GOTOLINE.clickGoButton();
+      IDE.GOTOLINE.waitClosed();
+
       IDE.STATUSBAR.waitCursorPositionAt("5 : 1");
 
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.ARROW_RIGHT.toString());
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.ARROW_RIGHT.toString());
       IDE.STATUSBAR.waitCursorPositionAt("5 : 2");
    }
 

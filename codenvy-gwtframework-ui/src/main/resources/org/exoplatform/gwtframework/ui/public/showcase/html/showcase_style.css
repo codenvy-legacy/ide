@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+@IMPORT url("../../eXoStyle/skin/default/style.css");
+@IMPORT url("../../eXoStyle/skin/default/button.css");
+@IMPORT url("../../eXoStyle/skin/default/shadow.css");
+@IMPORT url("../../eXoStyle/skin/default/window.css");
+@IMPORT url("../../eXoStyle/skin/default/menubar.css");
+@IMPORT url("../../eXoStyle/skin/default/popupmenu.css");
+@IMPORT url("../../eXoStyle/skin/default/statusbar.css");
+@IMPORT url("../../eXoStyle/skin/default/tree.css");
+@IMPORT url("../../eXoStyle/skin/default/autocompleteform.css");
+
+@IMPORT url("../../eXoStyle/skin/default/component-loader.css");
+@IMPORT url("../../eXoStyle/skin/default/component-toolbar.css");
+@IMPORT url("../../eXoStyle/skin/default/component-icon-button.css");
+@IMPORT url("../../eXoStyle/skin/default/component-popup-button.css");
+@IMPORT url("../../eXoStyle/skin/default/component-text-input.css");
+@IMPORT url("../../eXoStyle/skin/default/component-button.css");

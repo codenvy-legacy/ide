@@ -18,8 +18,6 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
-
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;

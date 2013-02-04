@@ -19,8 +19,9 @@
 package org.exoplatform.ide.operation.upload;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
 
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -28,9 +29,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS .
@@ -88,18 +86,16 @@ public class UploadMimeTypeAutoCompletionTest extends BaseTest
       {
       }
       IDE.UPLOAD.typeToMimeTypeField("application/");
-      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("application/javascript", "application/java"));
-      assertFalse(IDE.UPLOAD.isMimeTypeContainsProposes("text/javascript"));
+      IDE.UPLOAD.waitMimeTypeContainsProposes("application/javascript", "application/java");
+      IDE.UPLOAD.waitMimeTypeNotContainsProposes("text/javascript");
 
       IDE.UPLOAD.typeToMimeTypeField("text/");
-      assertTrue(IDE.UPLOAD.isMimeTypeContainsProposes("text/javascript", "text/html", "text/css", "text/plain",
-         "text/xml"));
-      assertFalse(IDE.UPLOAD.isMimeTypeContainsProposes("application/javascript"));
+      IDE.UPLOAD.waitMimeTypeContainsProposes("text/javascript", "text/html", "text/css", "text/plain", "text/xml");
+      IDE.UPLOAD.waitMimeTypeNotContainsProposes("application/javascript");
 
       String mimeTypeToSelect = "text/html";
       IDE.UPLOAD.selectMimeTypeByName(mimeTypeToSelect);
 
       assertEquals(mimeTypeToSelect, IDE.UPLOAD.getMimeTypeValue());
    }
-
 }

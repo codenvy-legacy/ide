@@ -1,11 +1,9 @@
 package org.exoplatform.ide.operation.java;
 
-import static org.junit.Assert.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.BaseTest;
+import java.util.Map;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
@@ -13,9 +11,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.interactions.Actions;
-
-import java.util.Map;
 
 public class SelectAllFromEditMenuTest extends ServicesJavaTextFuction
 {
@@ -53,23 +48,25 @@ public class SelectAllFromEditMenuTest extends ServicesJavaTextFuction
    {
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
+      IDE.PROGRESS_BAR.waitProgressBarControlClose();
+      IDE.PROJECT.PACKAGE_EXPLORER.waitAndClosePackageExplorer();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
       openSpringJavaTetsFile(PROJECT);
-      IDE.JAVAEDITOR.setCursorToJavaEditor(0);
+      IDE.JAVAEDITOR.setCursorToJavaEditor();
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.SELECT_ALL);
-      //need for setting selection area
+      // need for setting selection area
       Thread.sleep(500);
-      IDE.JAVAEDITOR.typeTextIntoJavaEditor(0, Keys.BACK_SPACE.toString());
-      //need for reparce in java editor
+      IDE.JAVAEDITOR.typeTextIntoJavaEditor(Keys.BACK_SPACE.toString());
+      // need for reparce in java editor
       Thread.sleep(500);
       IDE.TOOLBAR.runCommand(MenuCommands.File.SAVE);
       IDE.LOADER.waitClosed();
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).isEmpty());
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor().isEmpty());
 
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.UNDO_TYPING);
 
-      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor(0).contains(
+      assertTrue(IDE.JAVAEDITOR.getTextFromJavaEditor().contains(
          "public class SumController extends AbstractController {"));
    }
 

@@ -51,6 +51,8 @@ public class PreviewNodeType extends AbstractTestModule
       static final String GENERATED_TYPE_VIEW_LOCATOR = "//div[@view-id='" + GENERATED_TYPE_VIEW_ID + "']";
 
       static final String GENERATED_TYPE_FRAME = GENERATED_TYPE_VIEW_LOCATOR + "//iframe";
+
+      static final String OPERATION_FORM = "//div[@id='operation']/ancestor::div[contains(@style, 'height: 300')]";
    }
 
    @FindBy(xpath = Locators.VIEW_LOCATOR)
@@ -71,6 +73,9 @@ public class PreviewNodeType extends AbstractTestModule
    @FindBy(xpath = Locators.GENERATED_TYPE_FRAME)
    private WebElement generatedTypeFrame;
 
+   @FindBy(xpath = Locators.OPERATION_FORM)
+   private WebElement operationForm;
+
    /**
     * Wait Preview node type view opened.
     * 
@@ -78,7 +83,7 @@ public class PreviewNodeType extends AbstractTestModule
     */
    public void waitOpened() throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -102,7 +107,7 @@ public class PreviewNodeType extends AbstractTestModule
     */
    public void waitClosed() throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -138,7 +143,7 @@ public class PreviewNodeType extends AbstractTestModule
     */
    public void waitGeneratedTypeViewOpened() throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -162,7 +167,7 @@ public class PreviewNodeType extends AbstractTestModule
     */
    public void waitGeneratedTypeViewClosed() throws Exception
    {
-      new WebDriverWait(driver(), 4).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
@@ -187,7 +192,8 @@ public class PreviewNodeType extends AbstractTestModule
     */
    public boolean isGeneratedTypeViewOpened()
    {
-      return (generatedTypeView != null && generatedTypeView.isDisplayed());
+      return (operationForm != null && operationForm.isDisplayed() && generatedTypeView != null && generatedTypeView
+         .isDisplayed());
    }
 
    /**

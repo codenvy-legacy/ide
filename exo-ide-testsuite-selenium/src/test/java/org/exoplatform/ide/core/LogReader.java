@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.core;
 
+import org.exoplatform.ide.TestConstants;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -41,6 +42,8 @@ public class LogReader extends AbstractTestModule
 
    private static final String ENABLED_ATTR = "enabled";
 
+   private static final String OPERATION_FORM = "//div[@id='operation']/ancestor::div[contains(@style, 'height: 300')]";
+
    @FindBy(xpath = LOG_READER_VIEW)
    private WebElement view;
 
@@ -53,14 +56,25 @@ public class LogReader extends AbstractTestModule
    @FindBy(xpath = NEXT_BUTTON_LOCATOR)
    private WebElement nextButton;
 
+   @FindBy(xpath = OPERATION_FORM)
+   private WebElement operationForm;
+
    public void waitOpened()
    {
-      new WebDriverWait(driver(), 5).until(new ExpectedCondition<Boolean>()
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
       {
          @Override
          public Boolean apply(WebDriver input)
          {
-            return view != null && view.isDisplayed() && content != null;
+            try
+            {
+               Thread.sleep(TestConstants.PAGE_LOAD_PERIOD);
+            }
+            catch (InterruptedException e)
+            {
+            }
+            return operationForm != null && operationForm.isDisplayed() && view != null && view.isDisplayed()
+               && content != null;
          }
       });
    }
@@ -70,9 +84,28 @@ public class LogReader extends AbstractTestModule
       return isButtonEnabled(prevButton);
    }
 
-   public boolean isNextButtonEnabled()
+   public void waitNextButtonEnabled()
    {
-      return isButtonEnabled(nextButton);
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return isButtonEnabled(nextButton);
+         }
+      });
+   }
+
+   public void waitNextButtonDisabled()
+   {
+      new WebDriverWait(driver(), 30).until(new ExpectedCondition<Boolean>()
+      {
+         @Override
+         public Boolean apply(WebDriver input)
+         {
+            return !(isButtonEnabled(nextButton));
+         }
+      });
    }
 
    public void clickPrevButton()

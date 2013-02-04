@@ -20,7 +20,8 @@ package org.exoplatform.ide.operation.autocompletion.groovy;
 
 import static org.junit.Assert.assertTrue;
 
-import org.exoplatform.common.http.client.ModuleException;
+import java.io.IOException;
+
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.operation.autocompletion.CodeAssistantBaseTest;
@@ -28,8 +29,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.io.IOException;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
@@ -65,22 +64,22 @@ public class GroovyKeywordsAutocompletionTest extends CodeAssistantBaseTest
    public void testGroovyKeywordsAutocompletion() throws Exception
    {
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.REST_SERVICE_FILE);
-      IDE.EDITOR.waitActiveFile(projectName + "/" + "Untitled file.grs");
+      IDE.EDITOR.waitActiveFile();
 
-      IDE.EDITOR.moveCursorDown(0, 9);
+      IDE.EDITOR.moveCursorDown(9);
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString() + "\nn");
+      IDE.EDITOR.typeTextIntoEditor(Keys.END.toString() + "\nn");
       IDE.CODEASSISTANT.openForm();
 
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("name:String"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("native"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("new"));
-      assertTrue(IDE.CODEASSISTANT.isElementPresent("null"));
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("name:String");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("native");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("new");
+      IDE.CODEASSISTANT.waitForElementInCodeAssistant("null");
 
       IDE.CODEASSISTANT.moveCursorDown(3);
 
       IDE.CODEASSISTANT.insertSelectedItem();
-      assertTrue(IDE.EDITOR.getTextFromCodeEditor(0).contains("null"));
+      assertTrue(IDE.EDITOR.getTextFromCodeEditor().contains("null"));
 
    }
 

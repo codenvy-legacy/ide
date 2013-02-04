@@ -22,17 +22,18 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.Keys;
-
-import java.util.Map;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -45,7 +46,9 @@ public class EditorContextMenuTest extends BaseTest
 
    private final static String FILE_NAME = "contextmenu.txt";
 
-   private final static String FILE_CONTENT = "Testing context menu.";
+   private final static String FILE_CONTENT = "Testing context menu.\nTesting context menu.";
+
+   private final static String FILE_CONTENT_2 = "sting context menu.\nTesting context menu.";
 
    private final static String EDIT_CONTENT = " Test Undo/Redo.";
 
@@ -82,6 +85,12 @@ public class EditorContextMenuTest extends BaseTest
       }
    }
 
+   @After
+   public void forceCloseEditorTab() throws Exception
+   {
+      IDE.EDITOR.forcedClosureFile(1);
+   }
+
    @Test
    public void testSelectAll() throws Exception
    {
@@ -92,77 +101,70 @@ public class EditorContextMenuTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
-
-      IDE.EDITOR.openContextMenu(0);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.moveCursorDown(2);
+      IDE.EDITOR.openContextMenu();
       IDE.CONTEXT_MENU.waitOpened();
       IDE.CONTEXT_MENU.runCommand(MenuCommands.Edit.SELECT_ALL);
       IDE.CONTEXT_MENU.waitClosed();
-
-      assertEquals(FILE_CONTENT, IDE.EDITOR.getSelectedText(0));
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL + "c");
+      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.typeTextIntoEditor(Keys.CONTROL + "v");
+      assertEquals(FILE_CONTENT, IDE.EDITOR.getTextFromCodeEditor());
    }
 
    @Test
    public void testDeleteText() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.EDITOR.selectTab(FILE_NAME);
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.HOME.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.chord(Keys.SHIFT, Keys.ARROW_RIGHT));
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.chord(Keys.SHIFT, Keys.ARROW_RIGHT));
-
-      IDE.EDITOR.openContextMenu(0);
+      IDE.EDITOR.typeTextIntoEditor(Keys.HOME.toString());
+      IDE.EDITOR.typeTextIntoEditor(Keys.chord(Keys.SHIFT, Keys.ARROW_RIGHT));
+      IDE.EDITOR.typeTextIntoEditor(Keys.chord(Keys.SHIFT, Keys.ARROW_RIGHT));
+      IDE.EDITOR.openContextMenu();
       IDE.CONTEXT_MENU.waitOpened();
       IDE.CONTEXT_MENU.runCommand(MenuCommands.Edit.DELETE);
       IDE.CONTEXT_MENU.waitClosed();
-
-      assertEquals("sting context menu.", IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT_2, IDE.EDITOR.getTextFromCodeEditor());
    }
 
    @Test
    public void testUndoRedoChanges() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.LOADER.waitClosed();
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.EDITOR.selectTab(FILE_NAME);
-      IDE.EDITOR.openContextMenu(0);
+      IDE.EDITOR.openContextMenu();
       IDE.CONTEXT_MENU.waitOpened();
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.REDO_TYPING));
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.UNDO_TYPING));
       IDE.CONTEXT_MENU.closeContextMenu();
       IDE.CONTEXT_MENU.waitClosed();
 
-      IDE.EDITOR.typeTextIntoEditor(0, Keys.END.toString());
-      IDE.EDITOR.typeTextIntoEditor(0, EDIT_CONTENT);
-      IDE.EDITOR.openContextMenu(0);
+      IDE.EDITOR.typeTextIntoEditor(Keys.ARROW_DOWN.toString() + Keys.END.toString());
+      IDE.EDITOR.typeTextIntoEditor(EDIT_CONTENT);
+      IDE.EDITOR.openContextMenu();
       IDE.CONTEXT_MENU.waitOpened();
       assertTrue(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.UNDO_TYPING));
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.REDO_TYPING));
       IDE.CONTEXT_MENU.runCommand(MenuCommands.Edit.UNDO_TYPING);
       IDE.CONTEXT_MENU.waitClosed();
 
-      assertEquals(FILE_CONTENT, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT, IDE.EDITOR.getTextFromCodeEditor());
 
-      IDE.EDITOR.openContextMenu(0);
+      IDE.EDITOR.openContextMenu();
       IDE.CONTEXT_MENU.waitOpened();
       assertFalse(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.UNDO_TYPING));
       assertTrue(IDE.CONTEXT_MENU.isCommandEnabled(MenuCommands.Edit.REDO_TYPING));
       IDE.CONTEXT_MENU.runCommand(MenuCommands.Edit.REDO_TYPING);
       IDE.CONTEXT_MENU.waitClosed();
 
-      assertEquals(FILE_CONTENT + EDIT_CONTENT, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(FILE_CONTENT + EDIT_CONTENT, IDE.EDITOR.getTextFromCodeEditor());
    }
 }

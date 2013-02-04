@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.operation.browse;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -28,11 +27,9 @@ import org.exoplatform.ide.MenuCommands;
 import org.exoplatform.ide.TestConstants;
 import org.exoplatform.ide.ToolbarCommands;
 import org.exoplatform.ide.VirtualFileSystemUtils;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.interactions.Actions;
 
 /**
  * Created by The eXo Platform SAS.
@@ -44,16 +41,21 @@ import org.openqa.selenium.interactions.Actions;
 public class UsingKeyboardTest extends BaseTest
 {
 
-   private static final String TEST_SUBFOLDER = UsingKeyboardTest.class.getSimpleName() + "1";
+   private static final String TEST_SUBFOLDER = "subFolder";
 
-   private static final String PROJECT = UsingKeyboardTest.class.getSimpleName() + "2";
+   private static final String PROJECT = "project";
 
-   private static final String TEST_FILE = "usingKeyboardTestGoogleGadget.xml";
+   private static final String TEST_FILE = "Gadget.xml";
 
-   private static final String TEST_FILE_PATH = "src/test/resources/org/exoplatform/ide/operation/file/" + TEST_FILE;
+   private static final String NEW_FILE = "newcreatedfile.xml";
 
-   @Before
-   public void setUp() throws Exception
+   private static final String TEST_FILE_PATH =
+      "src/test/resources/org/exoplatform/ide/operation/file/usingKeyboardTestGoogleGadget.xml";
+
+   private Robot robot;
+
+   @BeforeClass
+   public static void setUp() throws Exception
    {
       try
       {
@@ -67,139 +69,150 @@ public class UsingKeyboardTest extends BaseTest
    }
 
    /**
-    * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
+    * Keyboard works in the TreeGrid only within the Mozilla Firefox browser
+    * with SmartGWT 2.2, 2.3
     * 
     * @throws Exception
     */
    @Test
    public void testUsingKeyboardInNavigationPanel() throws Exception
    {
+      robot = new Robot();
+
       IDE.PROJECT.EXPLORER.waitOpened();
       IDE.PROJECT.OPEN.openProject(PROJECT);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
-
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
-      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT + "/" + TEST_SUBFOLDER, Keys.ARROW_UP.toString());
-      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT, Keys.ARROW_LEFT.toString());
+
+      Thread.sleep(2000);
+      robot.keyPress(KeyEvent.VK_UP);
+      robot.keyRelease(KeyEvent.VK_UP);
+      robot.keyPress(KeyEvent.VK_LEFT);
+      robot.keyRelease(KeyEvent.VK_LEFT);
+
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
 
       IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT, Keys.ARROW_RIGHT.toString());
+
+      Thread.sleep(2000);
+      robot.keyPress(KeyEvent.VK_RIGHT);
+      robot.keyRelease(KeyEvent.VK_RIGHT);
+
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
 
       // test keyboard with opened Content Panel
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
+      IDE.EDITOR.waitActiveFile();
 
-      // test java.awt.event.KeyEvent.VK_UP,java.awt.event.KeyEvent.VK_LEFT
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      IDE.PROJECT.EXPLORER.typeKeysToItem(PROJECT, Keys.ARROW_LEFT.toString());
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
+
+      Thread.sleep(2000);
+      robot.keyPress(KeyEvent.VK_UP);
+      robot.keyRelease(KeyEvent.VK_UP);
+
+      robot.keyPress(KeyEvent.VK_LEFT);
+      robot.keyRelease(KeyEvent.VK_LEFT);
+
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_SUBFOLDER);
       IDE.PROJECT.EXPLORER.waitForItemNotVisible(PROJECT + "/" + TEST_FILE);
       IDE.EDITOR.forcedClosureFile(1);
    }
 
    /**
-    * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
+    * Keyboard works in the TreeGrid only within the Mozilla Firefox browser
+    * with SmartGWT 2.2, 2.3
     * 
     * @throws Exception
     */
    @Test
    public void testUsingKeyboardInSearchPanel() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
+      robot = new Robot();
 
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT);
+      IDE.PROJECT.EXPLORER.openItem(PROJECT);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER);
       IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER);
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.OPENSOCIAL_GADGET_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_SUBFOLDER + "/Untitled file.gadget");
-      IDE.EDITOR.saveAndCloseFile(1, TEST_FILE);
-      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER + "/" + TEST_FILE);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.saveAndCloseFile(1, NEW_FILE);
+      IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_SUBFOLDER + "/" + NEW_FILE);
 
-      IDE.PROJECT.EXPLORER.selectItem(PROJECT);
-      Thread.sleep(2000);
-      IDE.SEARCH.performSearch("/" + PROJECT, "", MimeType.GOOGLE_GADGET);
+      IDE.PROJECT.EXPLORER.selectItem(PROJECT + "/" + TEST_SUBFOLDER + "/" + NEW_FILE);
+      IDE.SEARCH.performSearch("/" + PROJECT + "/" + TEST_SUBFOLDER, "", MimeType.GOOGLE_GADGET);
       IDE.SEARCH_RESULT.waitOpened();
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + TEST_FILE));
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + TEST_SUBFOLDER + "/" + NEW_FILE);
 
-      //move with keys in search three
-      IDE.SEARCH_RESULT.selectItem(PROJECT);
-      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.ARROW_DOWN.toString());
-      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.ARROW_UP.toString());
-      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.ARROW_LEFT.toString());
+      // move with keys in search three
+      IDE.SEARCH_RESULT.selectItem(PROJECT + "/" + TEST_SUBFOLDER + "/" + NEW_FILE);
 
-      //for GOOGLE CHROME method IDE.SEARCH_RESULT.typeKeys(Keys.ARROW_LEFT.toString());
-      // does not work in Chrome browser
-      if (IDE_SETTINGS.getString("selenium.browser.commad").equals("GOOGLE_CHROME"))
-      {
-         new Actions(driver).sendKeys(Keys.ARROW_LEFT).build().perform();
-      }
-      else
-         Thread.sleep(TestConstants.REDRAW_PERIOD);
-      assertFalse(IDE.SEARCH_RESULT.isItemVisible(PROJECT + "/" + TEST_FILE));
-      //expand search item, select search element and check select
-      IDE.SEARCH_RESULT.selectItem(PROJECT);
-      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.RIGHT.toString());
-      IDE.SEARCH_RESULT.typeKeysToItem(PROJECT, Keys.DOWN.toString());
-      IDE.SEARCH_RESULT.waitItemIsSelected(IDE.SEARCH_RESULT.getWebElem(PROJECT + "/" + TEST_FILE));
-      assertTrue(IDE.SEARCH_RESULT.isItemVisible(PROJECT + "/" + TEST_FILE));
+      Thread.sleep(2000);
+      robot.keyPress(KeyEvent.VK_UP);
+      robot.keyRelease(KeyEvent.VK_UP);
+      robot.keyPress(KeyEvent.VK_UP);
+      robot.keyRelease(KeyEvent.VK_UP);
+      robot.keyPress(KeyEvent.VK_LEFT);
+      robot.keyRelease(KeyEvent.VK_LEFT);
+
+      IDE.SEARCH_RESULT.waitItemNotPresent(PROJECT + "/" + TEST_SUBFOLDER + "/" + NEW_FILE);
+      IDE.SEARCH_RESULT.close();
    }
 
    /**
-    * Keyboard works in the TreeGrid only within the Mozilla Firefox browser with SmartGWT 2.2, 2.3
+    * Keyboard works in the TreeGrid only within the Mozilla Firefox browser
+    * with SmartGWT 2.2, 2.3
     * 
     * @throws Exception
     */
    @Test
    public void testUsingKeyboardInOutlinePanel() throws Exception
    {
-      driver.navigate().refresh();
-      IDE.PROJECT.EXPLORER.waitOpened();
-      IDE.PROJECT.OPEN.openProject(PROJECT);
+      robot = new Robot();
+
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + TEST_FILE);
-
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + TEST_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + TEST_FILE);
-
+      IDE.EDITOR.waitActiveFile();
+      //TODO Pause for build outline tree
+      //after implementation method for check ready state, should be remove
+      Thread.sleep(5000);
       // open Outline Panel
       IDE.TOOLBAR.runCommand(ToolbarCommands.View.SHOW_OUTLINE);
       IDE.OUTLINE.waitOpened();
 
-      IDE.EDITOR.moveCursorDown(0, 2);
+      IDE.EDITOR.selectTab(TEST_FILE);
+      IDE.EDITOR.moveCursorDown(2);
       Thread.sleep(TestConstants.SLEEP);
 
       // check outline tree
-      assertTrue(IDE.OUTLINE.isItemPresent("Module"));
-      assertTrue(IDE.OUTLINE.isItemPresent("ModulePrefs"));
-      assertTrue(IDE.OUTLINE.isItemPresent("Content"));
-      // IDE.OUTLINE.assertElementNotPresentOutlineTree("CDATA");
+      IDE.OUTLINE.waitItemPresent("Module");
+      IDE.OUTLINE.waitItemPresent("ModulePrefs");
+      IDE.OUTLINE.waitItemPresent("Content");
 
       // verify keyboard key pressing within the outline
       IDE.OUTLINE.selectItem("Module");
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("2 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("2 : 1");
 
       // open "Content" node in the Outline Panel and got to "CDATA" node
 
       IDE.OUTLINE.selectItem("Content");
 
-      //On this moment outline component change. Keys in outline tree does not work. Logic of the test should  change
-      //Old logic cooment
-      // IDE.OUTLINE.typeKeys(Keys.ARROW_DOWN.toString() + Keys.ARROW_DOWN + Keys.ARROW_RIGHT + Keys.ARROW_DOWN);
-      // assertTrue(IDE.OUTLINE.isItemPresent("CDATA"));
+      Thread.sleep(2000);
+      robot.keyPress(KeyEvent.VK_DOWN);
+      robot.keyRelease(KeyEvent.VK_DOWN);
+      robot.keyPress(KeyEvent.VK_DOWN);
+      robot.keyRelease(KeyEvent.VK_DOWN);
 
-      IDE.GOTOLINE.goToLine(6);
       IDE.OUTLINE.waitItemAtPosition("CDATA", 4);
-      IDE.OUTLINE.isItemSelected(5);
-      assertEquals("6 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.OUTLINE.waitElementIsSelect("CDATA");
+      IDE.STATUSBAR.waitCursorPositionAt("6 : 1");
 
       IDE.EDITOR.forcedClosureFile(1);
    }
 
-   @After
-   public void tearDown() throws Exception
+   @AfterClass
+   public static void tearDown() throws Exception
    {
       VirtualFileSystemUtils.delete(WS_URL + PROJECT);
    }

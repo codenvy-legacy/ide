@@ -19,7 +19,8 @@
 package org.exoplatform.ide.search;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
+import java.io.IOException;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -28,8 +29,6 @@ import org.exoplatform.ide.VirtualFileSystemUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.io.IOException;
 
 /**
  * Created by The eXo Platform SAS.
@@ -88,9 +87,9 @@ public class SearchInRootFolderTest extends BaseTest
 
       // Create and save
       IDE.TOOLBAR.runCommandFromNewPopupMenu(MenuCommands.New.TEXT_FILE);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + folder1Name + "/Untitled file.txt");
-      IDE.EDITOR.deleteFileContent(0);
-      IDE.EDITOR.typeTextIntoEditor(0, restFileContent);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.deleteFileContent();
+      IDE.EDITOR.typeTextIntoEditor(restFileContent);
       IDE.EDITOR.saveAs(1, restFileName);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + folder1Name + "/" + restFileName);
 
@@ -122,9 +121,9 @@ public class SearchInRootFolderTest extends BaseTest
 
       assertEquals(4, IDE.SEARCH_RESULT.getResultCount());
 
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + folder1Name + "/" + restFileName));
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + folder2Name + "/" + restFileName));
-      assertTrue(IDE.SEARCH_RESULT.isItemPresent(PROJECT + "/" + folder2Name + "/" + copyofRestFileName));
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + folder1Name + "/" + restFileName);
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + folder2Name + "/" + restFileName);
+      IDE.SEARCH_RESULT.waitItemPresent(PROJECT + "/" + folder2Name + "/" + copyofRestFileName);
    }
 
    @AfterClass

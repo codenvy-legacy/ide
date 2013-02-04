@@ -20,6 +20,8 @@ package org.exoplatform.ide.operation.edit;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Map;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
 import org.exoplatform.ide.MenuCommands;
@@ -29,12 +31,10 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.Map;
-
 /**
  * @author <a href="mailto:roman.iyvshyn@exoplatform.com">Roman Iyvshyn</a>
  * @version $Id: Aug 11, 2010
- *
+ * 
  */
 public class DeleteCurrentLineTest extends BaseTest
 {
@@ -108,87 +108,87 @@ public class DeleteCurrentLineTest extends BaseTest
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FILE_NAME_1);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_1);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_1);
+      IDE.EDITOR.waitActiveFile();
 
       currentTextInEditor = Lines.DEFAULT_TEXT;
-      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor());
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
-      //----- 1 -----------
+      // ----- 1 -----------
       // Click on "Edit->Delete Current Line" top menu command.
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
       currentTextInEditor = Lines.LINE_2 + Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
-      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor());
 
-      //----- 2 -----------
-      //Press "Ctrl+D" keys.
-      IDE.EDITOR.deleteLinesInEditor(0, 1);
+      // ----- 2 -----------
+      // Press "Ctrl+D" keys.
+      IDE.EDITOR.deleteLinesInEditor(1);
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
 
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_5 + Lines.LINE_6 + Lines.LINE_7;
-      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor());
 
-      //----- 3 -----------
-      //Move cursor down on 2 lines
-      IDE.EDITOR.moveCursorDown(0, 2);
+      // ----- 3 -----------
+      // Move cursor down on 2 lines
+      IDE.EDITOR.moveCursorDown(2);
 
-      //----- 4 -----------
-      //Press "Ctrl+D"
-      IDE.EDITOR.deleteLinesInEditor(0, 1);
+      // ----- 4 -----------
+      // Press "Ctrl+D"
+      IDE.EDITOR.deleteLinesInEditor(1);
       IDE.STATUSBAR.waitCursorPositionControl();
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_6 + Lines.LINE_7;
-      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
-      assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor());
+      IDE.STATUSBAR.waitCursorPositionAt("3 : 1");
 
-      //----- 5 -----------
-      //Click on "Edit->Delete Current Line" top menu command
+      // ----- 5 -----------
+      // Click on "Edit->Delete Current Line" top menu command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4 + Lines.LINE_7;
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
-      assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor());
+      IDE.STATUSBAR.waitCursorPositionAt("3 : 1");
 
-      //----- 6 -----------
-      //Click on "Edit->Delete Current Line" top menu command
+      // ----- 6 -----------
+      // Click on "Edit->Delete Current Line" top menu command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
       currentTextInEditor = Lines.LINE_3 + Lines.LINE_4.trim();
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor(0));
+      assertEquals(currentTextInEditor, IDE.EDITOR.getTextFromCodeEditor());
 
       IDE.STATUSBAR.waitCursorPositionAt("3 : 1");
-      assertEquals("3 : 1", IDE.STATUSBAR.getCursorPosition());
 
-      //----- 7 -----------
-      //Open empty text file
+      // ----- 7 -----------
+      // Open empty text file
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_NAME_2);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_NAME_2);
+      IDE.EDITOR.waitActiveFile();
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
-      IDE.EDITOR.typeTextIntoEditor(1, Lines.TEXT_LINE_1);
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
+      IDE.EDITOR.typeTextIntoEditor(Lines.TEXT_LINE_1);
 
-      //----- 8 -----------
-      //Go to line 2 and click on "Edit->Delete Current Line" top menu command
+      // ----- 8 -----------
+      // Go to line 2 and click on "Edit->Delete Current Line" top menu
+      // command
       IDE.MENU.runCommand(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.DELETE_CURRENT_LINE);
-      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor());
 
-      //----- 9 -----------
-      //Press "Ctrl+D" keys
-      IDE.EDITOR.deleteLinesInEditor(1, 1);
+      // ----- 9 -----------
+      // Press "Ctrl+D" keys
+      IDE.EDITOR.deleteLinesInEditor(1);
 
       IDE.EDITOR.selectTab(1);
 
       IDE.EDITOR.selectTab(2);
       IDE.STATUSBAR.waitCursorPositionControl();
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
-      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor());
 
-      IDE.EDITOR.deleteLinesInEditor(1, 1);
-      assertEquals("1 : 1", IDE.STATUSBAR.getCursorPosition());
-      assertEquals("", IDE.EDITOR.getTextFromCodeEditor(1));
+      IDE.EDITOR.deleteLinesInEditor(1);
+      IDE.STATUSBAR.waitCursorPositionAt("1 : 1");
+      assertEquals("", IDE.EDITOR.getTextFromCodeEditor());
    }
 }

@@ -4,7 +4,7 @@
    <parent>
       <artifactId>exo-ide-parent</artifactId>
       <groupId>org.exoplatform.ide</groupId>
-      <version>1.2.0-M16-SNAPSHOT</version>
+      <version>1.2.0-M17-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-samples</artifactId>
@@ -46,7 +46,7 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>
-         <artifactId>exo-gwtframework-ui</artifactId>
+         <artifactId>codenvy-gwtframework-ui</artifactId>
          <scope>provided</scope>
       </dependency>
       <dependency>

@@ -19,8 +19,6 @@
 package org.exoplatform.ide.operation.cutcopy;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.BaseTest;
@@ -50,9 +48,8 @@ public class CopyFileTest extends BaseTest
    private static final String FILE_CONTENT_2 = "hello ";
 
    /**
-    * BeforeClass create such structure:
-    * FOLDER_1
-    *    FILE_GROOVY - file with sample content
+    * BeforeClass create such structure: FOLDER_1 FILE_GROOVY - file with
+    * sample content
     */
    @BeforeClass
    public static void setUp()
@@ -95,20 +92,20 @@ public class CopyFileTest extends BaseTest
       /*
        * Check Cut and Copy commands must be enabled
        */
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.COPY_TOOLBAR));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.COPY_MENU);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.COPY_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.COPY_TOOLBAR);
 
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.CUT_TOOLBAR));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.CUT_MENU);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.CUT_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.CUT_TOOLBAR);
 
       /*
        * Check Paste command must be disabled
        */
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.TOOLBAR.waitButtonPresentAtLeft(MenuCommands.Edit.PASTE_TOOLBAR);
+      IDE.TOOLBAR.waitForButtonDisabled(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
        * Click Copy command on toolbar
@@ -116,10 +113,10 @@ public class CopyFileTest extends BaseTest
       IDE.TOOLBAR.runCommand(MenuCommands.Edit.COPY_TOOLBAR);
 
       /*
-       * Check Paste must be enabled 
+       * Check Paste must be enabled
        */
-      assertTrue(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      assertTrue(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      IDE.MENU.waitCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.TOOLBAR.waitForButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR);
 
       /*
        * Select project in workspace panel
@@ -135,15 +132,15 @@ public class CopyFileTest extends BaseTest
       /*
        * Check Paste command must be disabled
        */
-      assertFalse(IDE.MENU.isCommandEnabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU));
-      assertFalse(IDE.TOOLBAR.isButtonEnabled(MenuCommands.Edit.PASTE_TOOLBAR));
+      IDE.MENU.waitCommandDisabled(MenuCommands.Edit.EDIT_MENU, MenuCommands.Edit.PASTE_MENU);
+      IDE.TOOLBAR.waitForButtonDisabled(MenuCommands.Edit.PASTE_TOOLBAR);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1);
       IDE.PROJECT.EXPLORER.waitForItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_GROOVY);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_GROOVY);
-      IDE.EDITOR.typeTextIntoEditor(0, FILE_CONTENT_2);
+      IDE.EDITOR.waitActiveFile();
+      IDE.EDITOR.typeTextIntoEditor(FILE_CONTENT_2);
       IDE.EDITOR.waitFileContentModificationMark(FILE_GROOVY);
       IDE.TOOLBAR.runCommand(ToolbarCommands.File.SAVE);
       IDE.EDITOR.waitNoContentModificationMark(FILE_GROOVY);
@@ -153,18 +150,17 @@ public class CopyFileTest extends BaseTest
        * Open files
        */
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FOLDER_1 + "/" + FILE_GROOVY);
+      IDE.EDITOR.waitActiveFile();
 
       IDE.PROJECT.EXPLORER.openItem(PROJECT + "/" + FILE_GROOVY);
-      IDE.EDITOR.waitActiveFile(PROJECT + "/" + FILE_GROOVY);
+      IDE.EDITOR.waitActiveFile();
 
       /*
        * Check files content
        */
       IDE.EDITOR.selectTab(1);
-      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(1));
+      assertEquals(FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor());
       IDE.EDITOR.selectTab(2);
-      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor(2));
+      assertEquals(FILE_CONTENT_2 + FILE_CONTENT_1, IDE.EDITOR.getTextFromCodeEditor());
    }
-
 }
