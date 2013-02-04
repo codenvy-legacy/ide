@@ -30,6 +30,7 @@ import com.google.collide.json.shared.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import elemental.html.DivElement;
@@ -92,20 +93,21 @@ public class ParticipantsView extends ViewImpl implements Display
    public ParticipantsView()
    {
       super(ID, ViewType.INFORMATION, TITLE, null, WIDTH, HEIGHT);
-      add(uiBinder.createAndBindUi(this));
-
       Resources resources = CollabEditorExtension.get().getContext().getResources();
+      setIcon(new Image(resources.getCollaboratorsImage()));
+      add(uiBinder.createAndBindUi(this));
 
       TableElement tableElement = Elements.createTableElement();
       tableElement.setAttribute("style", "width: 100%");
       tableElement.setCellSpacing("0");
       participantsList =
          SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
-
-      // participantsPanel.setStyleName(resources.coreCss().simpleListContainer());
       participantsPanel.add(participantsList);
    }
 
+   /**
+    * Called each time we render an item in the list.
+    */
    private SimpleList.ListItemRenderer<Participant> listItemRenderer = new SimpleList.ListItemRenderer<Participant>()
    {
 
@@ -133,6 +135,9 @@ public class ParticipantsView extends ViewImpl implements Display
       }
    };
 
+   /**
+    * Receives events fired on items in the list.
+    */
    private SimpleList.ListEventDelegate<Participant> listDelegate = new SimpleList.ListEventDelegate<Participant>()
    {
 
@@ -150,13 +155,19 @@ public class ParticipantsView extends ViewImpl implements Display
       }
    };
 
+   /**
+    * @see com.google.collide.client.collaboration.participants.ParticipantsPresenter.Display#setValue(java.util.List)
+    */
    @Override
    public void setValue(List<Participant> value)
    {
       final JsonArray<Participant> itemsToDisplay = JsoArray.<Participant> create();
-      for (Participant participant : value)
+      if (value != null)
       {
-         itemsToDisplay.add(participant);
+         for (Participant participant : value)
+         {
+            itemsToDisplay.add(participant);
+         }
       }
       participantsList.render(itemsToDisplay);
    }

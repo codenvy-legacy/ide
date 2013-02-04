@@ -24,14 +24,12 @@ import com.google.collide.client.code.ParticipantModel.Listener;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.core.client.GWT;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
@@ -62,12 +60,20 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
       void setValue(List<Participant> value);
    }
 
+   /**
+    * Display.
+    */
    private Display display;
 
    /**
     * Current active file.
     */
    private FileModel activeFile;
+
+   /**
+    * Current active document.
+    */
+   private Document activeDocument;
 
    /**
     * Map of {@link Document} id to the participant list.
@@ -82,43 +88,34 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
-    */
-   @Override
-   public void onViewClosed(ViewClosedEvent event)
-   {
-      if (event.getView() instanceof Display)
-      {
-         display = null;
-      }
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
     */
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
       activeFile = event.getFile();
-      Editor editor = event.getEditor();
 
-      if (activeFile == null || !(editor instanceof CollabEditor)
-         || !MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
+      if (activeFile == null || !(event.getEditor() instanceof CollabEditor))
       {
-         if (display != null)
-         {
-            IDE.getInstance().closeView(display.asView().getId());
-         }
+         activeDocument = null;
+         closeView();
       }
       else
       {
-         int documentId = ((CollabEditor)editor).getEditor().getDocument().getId();
-         List<Participant> participants = documentToParticipants.get(documentId);
+         com.google.collide.client.editor.Editor editor = ((CollabEditor)event.getEditor()).getEditor();
+         activeDocument = editor.getDocument();
+
+         List<Participant> participants = documentToParticipants.get(activeDocument.getId());
+         display.setValue(participants);
+
          // Don't show view if no any participants except for current user.
          if (participants != null && participants.size() > 1)
          {
             openView();
-            display.setValue(participants);
+         }
+         else
+         {
+            closeView();
          }
       }
    }
@@ -142,9 +139,13 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
                participants = new ArrayList<Participant>();
                documentToParticipants.put(document.getId(), participants);
             }
-            openView();
             participants.add(participant);
-            display.setValue(participants);
+
+            if (activeDocument != null && document.getId() == activeDocument.getId())
+            {
+               openView();
+               display.setValue(participants);
+            }
          }
 
          @Override
@@ -156,16 +157,17 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
                return;
             }
             participants.remove(participant);
-            display.setValue(participants);
 
-            // Close view if no any participants except for current user.
-            if (participants.size() <= 1)
+            if (activeDocument != null && document.getId() == activeDocument.getId())
             {
-               if (display != null)
+               display.setValue(participants);
+               // Close view if no any participants except for current user.
+               if (participants.size() <= 1)
                {
-                  IDE.getInstance().closeView(display.asView().getId());
+                  closeView();
                }
             }
+
          }
       });
    }
@@ -179,6 +181,29 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
       {
          display = GWT.create(Display.class);
          IDE.getInstance().openView(display.asView());
+      }
+   }
+
+   /**
+    * Close view.
+    */
+   private void closeView()
+   {
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
+    */
+   @Override
+   public void onViewClosed(ViewClosedEvent event)
+   {
+      if (event.getView() instanceof Display)
+      {
+         display = null;
       }
    }
 

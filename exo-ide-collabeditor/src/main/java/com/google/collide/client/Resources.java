@@ -59,4 +59,7 @@ public interface Resources extends
 
   @Source("com/google/collide/client/collaboration/delta_icon_Disabled.png")
   ImageResource getCollaborationImageDisabled();
+
+  @Source("com/google/collide/client/collaboration/collaborators.png")
+  ImageResource getCollaboratorsImage();
 }
