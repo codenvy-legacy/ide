@@ -813,6 +813,15 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    private void updateTargets()
    {
+      for (Property property : openedProject.getProperties())
+      {
+         if (property.getName().equals(ProjectProperties.TARGET.value()))
+         {
+            loadProject();
+            return;
+         }
+      }
+
       List<String> supportedPaaS = new ArrayList<String>();
       for (PaaS paas : IDE.getInstance().getPaaSes())
       {
