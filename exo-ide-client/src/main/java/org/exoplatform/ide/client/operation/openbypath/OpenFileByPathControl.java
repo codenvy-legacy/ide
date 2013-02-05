@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
@@ -40,7 +41,7 @@ import java.util.List;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
  * @version $Id: $
  */
@@ -60,7 +61,7 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    private boolean browserPanelSelected = true;
 
    /**
-    * 
+    *
     */
    public OpenFileByPathControl()
    {
@@ -95,7 +96,7 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    }
 
    /**
-    * 
+    *
     */
    private void updateEnabling()
    {
@@ -118,7 +119,8 @@ public class OpenFileByPathControl extends SimpleControl implements IDEControl, 
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay
+         || event.getView() instanceof PackageExplorerDisplay)
       {
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();

@@ -54,11 +54,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * 
+ *
  * {@link ComboBoxField} represents the select list with input field.
  * After typing text to input field, items in popup list are filtered.
  * <p/>
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -66,12 +66,13 @@ import java.util.Collection;
 public class ComboBoxField extends Composite implements HasValue<String>
 {
    private static ComboBoxUiBinder uiBinder = GWT.create(ComboBoxUiBinder.class);
-   
-   interface ComboBoxUiBinder extends UiBinder<Widget, ComboBoxField> {
+
+   interface ComboBoxUiBinder extends UiBinder<Widget, ComboBoxField>
+   {
    }
-   
+
    private static final String SUGGEST_PANEL_ID = "exoSuggestPanel";
-   
+
    /**
     * Suggest box.
     */
@@ -90,7 +91,9 @@ public class ComboBoxField extends Composite implements HasValue<String>
    private boolean enabled = true;
 
    private boolean showDefaultSuggestions = false;
-   
+
+   private boolean suggestionShown = false;
+
    @UiField
    Image image;
 
@@ -102,8 +105,17 @@ public class ComboBoxField extends Composite implements HasValue<String>
       oracle = new MultiWordSuggestOracleExt();
       suggestDisplay = new ComboboxSuggestDisplay();
       suggestBox = new SuggestBox(oracle, new TextBox(), suggestDisplay);
-      
+
       initWidget(uiBinder.createAndBindUi(this));
+
+      suggestBox.addSelectionHandler(new SelectionHandler<Suggestion>()
+      {
+         @Override
+         public void onSelection(SelectionEvent<Suggestion> event)
+         {
+            suggestionShown = false;
+         }
+      });
 
       suggestBox.getTextBox().setStyleName(resource.css().comboBoxInput(), true);
       image.getElement().setAttribute("image-id", "suggest-image");
@@ -113,10 +125,19 @@ public class ComboBoxField extends Composite implements HasValue<String>
          @Override
          public void onClick(ClickEvent event)
          {
-            showDefaultSuggestions = true;
-            suggestBox.showSuggestionList();
-            showDefaultSuggestions = false;
-            suggestBox.setFocus(true);
+            GWT.log("click event: " + suggestionShown);
+            if (!suggestionShown)
+            {
+               showDefaultSuggestions = true;
+               suggestBox.showSuggestionList();
+               showDefaultSuggestions = false;
+               suggestBox.setFocus(true);
+               suggestionShown = !suggestionShown;
+            }
+            else
+            {
+               suggestionShown = !suggestionShown;
+            }
          }
       });
       adjustSuggestingPopupSize();
@@ -126,6 +147,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
    /*
     * -------- HasValue methods --------------
     */
+
    /**
     * @see com.google.gwt.user.client.ui.HasValue#getValue()
     */
@@ -169,7 +191,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
    {
       suggestBox.setText(value);
    }
-   
+
    /**
     * @see com.google.gwt.user.client.ui.HasValue#setValue(java.lang.Object, boolean)
     */
@@ -182,15 +204,18 @@ public class ComboBoxField extends Composite implements HasValue<String>
    /*
     * -------- Combobox API --------------
     */
+
    /**
     * Set is element enabled.
-    * 
+    *
     * @param enabled the enabled to set
     */
    public void setEnabled(boolean enabled)
    {
       if (this.enabled == enabled)
+      {
          return;
+      }
       this.enabled = enabled;
       suggestBox.getTextBox().setEnabled(enabled);
       if (enabled)
@@ -216,7 +241,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
    {
       setWidth(width + "px");
    }
-   
+
    @Override
    public void setWidth(String width)
    {
@@ -226,7 +251,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
 
    /**
     * Set the name of text box of element.
-    * 
+    *
     * @param name - the name
     */
    public void setName(String name)
@@ -236,19 +261,19 @@ public class ComboBoxField extends Composite implements HasValue<String>
 
    /**
     * Set height of popup suggest list.
-    * 
+    *
     * @param height - the height of popup list
     */
    public void setPickListHeight(int height)
    {
       suggestDisplay.setHeight(height);
    }
-   
+
    /**
     * Set value map: 
     * first argument -the text of the item to be added,
     * second argument - the item's value, to be submitted if it is part of a FormPanel; cannot be null,
-    * 
+    *
     * @param values
     */
    public void setValueMap(String[] values)
@@ -283,7 +308,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
       //need to keep input field inside the box
       suggestBox.getTextBox().setHeight("100%");
    }
-   
+
    /**
     * @see com.google.gwt.user.client.ui.UIObject#setHeight(java.lang.String)
     */
@@ -299,9 +324,10 @@ public class ComboBoxField extends Composite implements HasValue<String>
    /*
     * -------- Inner classes and implementation --------------
     */
+
    /**
     * Implements Suggestion interface.
-    * 
+    *
     */
    private class Word implements Suggestion
    {
@@ -334,7 +360,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
 
    /**
     * Represents class for suggest display for combobox field.
-    * 
+    *
     * Use custom css style, can set width and heidght of picklist in combobox.
     */
    protected class ComboboxSuggestDisplay extends DefaultSuggestionDisplay
@@ -342,7 +368,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
       private static final String DEFAULT_HEIGHT = "200px";
 
       /**
-       * 
+       *
        */
       public ComboboxSuggestDisplay()
       {
@@ -359,10 +385,10 @@ public class ComboBoxField extends Composite implements HasValue<String>
          popupPanel.getElement().setId(SUGGEST_PANEL_ID);
          return popupPanel;
       }
-      
+
       @Override
       protected void showSuggestions(SuggestBox suggestBox, Collection<? extends Suggestion> suggestions,
-         boolean isDisplayStringHTML, boolean isAutoSelectEnabled, final SuggestionCallback callback)
+                                     boolean isDisplayStringHTML, boolean isAutoSelectEnabled, final SuggestionCallback callback)
       {
          super.showSuggestions(suggestBox, suggestions, isDisplayStringHTML, isAutoSelectEnabled, callback);
          adjustSuggestingPopupSize();
@@ -372,7 +398,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
       {
          super.getPopupPanel().setWidth(width);
       }
-      
+
       /**
        * Set width in pixels.
        * @param width
@@ -390,14 +416,14 @@ public class ComboBoxField extends Composite implements HasValue<String>
       {
          super.getPopupPanel().setHeight(height + "px");
       }
-      
+
       public void setHeight(String height)
       {
          super.getPopupPanel().setHeight(height);
       }
 
    }
-   
+
    private class MultiWordSuggestOracleExt extends MultiWordSuggestOracle
    {
       /**
@@ -407,15 +433,19 @@ public class ComboBoxField extends Composite implements HasValue<String>
       public void requestSuggestions(Request request, Callback callback)
       {
          if (showDefaultSuggestions)
+         {
             super.requestDefaultSuggestions(request, callback);
+         }
          else
+         {
             super.requestSuggestions(request, callback);
+         }
       }
    }
 
    private class ValueChangeEventImpl extends ValueChangeEvent<String>
    {
-      
+
       /**
        * @param value
        */
@@ -423,9 +453,9 @@ public class ComboBoxField extends Composite implements HasValue<String>
       {
          super(value);
       }
-      
+
    }
-   
+
    private void adjustSuggestingPopupSize()
    {
       int width = getOffsetWidth() - 2;
@@ -434,7 +464,7 @@ public class ComboBoxField extends Composite implements HasValue<String>
          suggestDisplay.setWidth(width + "px");
       }
    }
-   
+
    /**
     * This handler is invoked on window resize and changes suggesting popup panel width.
     */

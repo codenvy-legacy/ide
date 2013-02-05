@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.NavigatorDisplay;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
@@ -39,10 +40,10 @@ import java.util.List;
 
 /**
  * Opens upload zip folder dialog window.
- * 
+ *
  * @author <a href="mailto:oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: Dec 10, 2010 $
- * 
+ *
  */
 @RolesAllowed({"administrators", "developers"})
 public class UploadZipControl extends SimpleControl implements IDEControl, ItemsSelectedHandler,
@@ -58,7 +59,7 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
    private List<Item> selectedItems = new ArrayList<Item>();
 
    /**
-    * 
+    *
     */
    public UploadZipControl()
    {
@@ -82,7 +83,7 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
    }
 
    /**
-    * 
+    *
     */
    private void updateEnabling()
    {
@@ -135,7 +136,8 @@ public class UploadZipControl extends SimpleControl implements IDEControl, Items
    @Override
    public void onViewVisibilityChanged(ViewVisibilityChangedEvent event)
    {
-      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay)
+      if (event.getView() instanceof NavigatorDisplay || event.getView() instanceof ProjectExplorerDisplay
+         || event.getView() instanceof PackageExplorerDisplay)
       {
          browserPanelSelected = event.getView().isViewVisible();
          updateEnabling();

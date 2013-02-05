@@ -1,0 +1,47 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+             xmlns:g="urn:import:com.google.gwt.user.client.ui"
+             xmlns:f="urn:import:org.exoplatform.gwtframework.ui.client.component">
+
+	<ui:style type='org.exoplatform.ide.extension.samples.client.inviting.manage.InvitedDeveloperTile.Style'>
+
+		.userField {
+         width: 100%;
+         height: auto;
+         overflow: hidden;
+         position: relative;
+         float: left;
+         clear: both;
+      }
+
+      .userField:hover {
+         background: #F5F5FF;
+      }
+
+      .imageCorrect {
+         margin-top: -3px;
+      }
+
+      .bold {
+         font-weight: bold;
+      }
+
+      .userFieldBodySelected {
+      }
+
+      .userFieldBody {
+      }
+	</ui:style>
+
+	<g:HTMLPanel styleName="{style.userField}">
+      <div style="">
+         <div style="float:left; margin:10px"><g:Label ui:field="invitedId"></g:Label></div>
+         <div style="float:right; margin:10px">
+            <div style="float:left; margin-right:10px"><g:Label ui:field="inviteRole"></g:Label></div>
+            <div style="float:right; width:23px"><f:ImageButton ui:field="revokeImage"
+                                                                styleName="{style.imageCorrect}"></f:ImageButton></div>
+         </div>
+      </div>
+	</g:HTMLPanel>
+
+</ui:UiBinder>
