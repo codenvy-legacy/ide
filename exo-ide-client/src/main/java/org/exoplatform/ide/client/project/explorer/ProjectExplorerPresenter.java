@@ -97,7 +97,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;

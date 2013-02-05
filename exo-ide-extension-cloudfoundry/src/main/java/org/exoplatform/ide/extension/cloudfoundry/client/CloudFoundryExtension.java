@@ -53,10 +53,10 @@ import java.util.List;
 
 /**
  * CloudFoundry extention for IDE.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryExtension.java Jul 7, 2011 5:00:41 PM vereshchaka $
- * 
+ *
  */
 public class CloudFoundryExtension extends Extension implements InitializeServicesHandler
 {
@@ -94,7 +94,7 @@ public class CloudFoundryExtension extends Extension implements InitializeServic
       IDE.getInstance().registerPaaS(
          new PaaS("CloudFoundry", "Cloud Foundry", new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48()),
             new Image(CloudFoundryClientBundle.INSTANCE.cloudFoundry48Disabled()), Arrays.asList(ProjectType.JSP,
-               ProjectType.RUBY_ON_RAILS, ProjectType.SPRING), new DeployApplicationPresenter()));
+            ProjectType.RUBY_ON_RAILS, ProjectType.SPRING, ProjectType.WAR), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

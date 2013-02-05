@@ -46,10 +46,10 @@ import java.util.List;
 
 /**
  * CloudBees extention for IDE.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBeesExtension.java Jun 23, 2011 10:11:59 AM vereshchaka $
- * 
+ *
  */
 public class CloudBeesExtension extends Extension implements InitializeServicesHandler
 {
@@ -81,7 +81,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
    {
       IDE.getInstance().registerPaaS(
          new PaaS("CloudBees", "CloudBees", new Image(CloudBeesClientBundle.INSTANCE.cloudBees48()), new Image(
-            CloudBeesClientBundle.INSTANCE.cloudBees48Disabled()), Arrays.asList(ProjectType.JSP),
+            CloudBeesClientBundle.INSTANCE.cloudBees48Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.WAR),
             new org.exoplatform.ide.extension.cloudbees.client.deploy.DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);

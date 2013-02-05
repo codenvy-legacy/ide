@@ -103,7 +103,7 @@ public class OpenShiftExtension extends Extension implements InitializeServicesH
       IDE.getInstance().registerPaaS(
          new PaaS("OpenShift", "OpenShift", new Image(OpenShiftClientBundle.INSTANCE.openShiftControl48()), new Image(
             OpenShiftClientBundle.INSTANCE.openShiftControl48Disabled()), Arrays.asList(ProjectType.RUBY_ON_RAILS,
-            ProjectType.PHP, ProjectType.JSP, ProjectType.PYTHON), true, new DeployApplicationPresenter()));
+            ProjectType.PHP, ProjectType.JSP, ProjectType.PYTHON, ProjectType.WAR), true, new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
