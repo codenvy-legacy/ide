@@ -42,8 +42,12 @@ public final class TypeProposalInfo extends MemberProposalInfo
    @Override
    protected String getURL()
    {
-      return docContext + Signature.toString(new String(fProposal.getSignature())) + "&projectid=" + projectId
-         + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
+	   String sig = Signature.toString(new String(fProposal.getSignature()));
+	   if (sig.contains("{") || sig.contains("}")){
+		   return null;
+	   }
+	   
+      return docContext + sig + "&projectid=" + projectId + "&vfsid=" + VirtualFileSystem.getInstance().getInfo().getId() + "&isclass=true";
 
    }
 
