@@ -18,6 +18,8 @@
  */
 package org.eclipse.jdt.client.refactoring.rename;
 
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -61,7 +63,6 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -315,6 +316,14 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
    public void onRename(RefactoringRenameEvent event)
    {
       fileToRenameFromPackageExplorer = event.getFile();
+
+      FileModel fileToRename = fileToRenameFromPackageExplorer == null? activeFile : fileToRenameFromPackageExplorer;
+      CollaborationManager collaborationManager = CollabEditorExtension.get().getCollaborationManager();
+      if(collaborationManager.isFileOpened(fileToRename.getPath()))
+      {
+         Dialogs.getInstance().showError("Can't perform refactoring. This file opened by other user(s).");
+         return;
+      }
 
       if (isUnsavedFilesExist())
       {
