@@ -152,4 +152,6 @@ public class RoutingTypes {
   public static final int NEWFILECOLLABORATOR = 125;
   public static final int CLOSEEDITOR = 126;
   public static final int FILECOLLABORATORGONE = 127;
+  public static final int GETOPENEDFILESINWORKSPACE=128;
+  public static final int GETOPENEDFILESINWORKSPACERESPONSE=129;
 }

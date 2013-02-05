@@ -17,6 +17,7 @@ package com.google.collide.client.collaboration;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedEvent;
+import com.google.collide.client.communication.FrontendApi.ApiCallback;
 import com.google.collide.client.communication.MessageFilter;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.document.DocumentManager;
@@ -27,9 +28,12 @@ import com.google.collide.client.util.JsIntegerMap;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileCollaboratorGone;
 import com.google.collide.dto.FileContents;
+import com.google.collide.dto.GetOpenendFilesInWorkspaceResponse;
 import com.google.collide.dto.NewFileCollaborator;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
+import com.google.collide.dto.ServerError.FailureReason;
+import com.google.collide.dto.client.DtoClientImpls.GetOpenendFilesInWorkspaceImpl;
 import com.google.collide.json.client.Jso;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonIntegerMap;
@@ -155,6 +159,20 @@ public class CollaborationManager
          appContext.getPushChannel().getListenerRegistrar().add(pushChannelListener));
       appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.NEWFILECOLLABORATOR, newFileCollaboratorMessageRecipient);
       appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.FILECOLLABORATORGONE, fileCollaboratorGoneMessageRecipient);
+      appContext.getFrontendApi().GET_ALL_FILES.send(GetOpenendFilesInWorkspaceImpl.make(),new ApiCallback<GetOpenendFilesInWorkspaceResponse>()
+      {
+         @Override
+         public void onFail(FailureReason reason)
+         {
+            //do nothing
+         }
+
+         @Override
+         public void onMessageReceived(GetOpenendFilesInWorkspaceResponse message)
+         {
+            openedFilesInWorkspace.putAll(message.getOpenedFiles());
+         }
+      });
    }
 
    public static CollaborationManager create(AppContext appContext, DocumentManager documentManager,

@@ -9,8 +9,37 @@ public class DtoClientImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "bca179ae3917468565f0178049f263e405e02437";
 
+   public static class GetOpenendFilesInWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace {
+      protected GetOpenendFilesInWorkspaceImpl() {}
 
-  public static class AddMembersResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.AddMembersResponse {
+      public static native GetOpenendFilesInWorkspaceImpl make() /*-{
+         return {
+            _type: 128
+         };
+      }-*/;  }
+
+
+   public static class GetOpenendFilesInWorkspaceResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspaceResponse {
+      protected GetOpenendFilesInWorkspaceResponseImpl() {}
+
+      @Override
+      public final native com.google.collide.json.shared.JsonStringMap<com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> getOpenedFiles() /*-{
+         return this["openedFiles"];
+      }-*/;
+
+      public final native GetOpenendFilesInWorkspaceResponseImpl setOpenedFiles(com.google.collide.json.client.JsoStringMap<com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> openedFiles) /*-{
+         this["openedFiles"] = openedFiles;
+         return this;
+      }-*/;
+
+      public final native boolean hasOpenedFiles() /*-{
+         return this.hasOwnProperty("openedFiles");
+      }-*/;
+
+   }
+
+
+   public static class AddMembersResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.AddMembersResponse {
     protected AddMembersResponseImpl() {}
 
     @Override

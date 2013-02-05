@@ -23,6 +23,7 @@ import com.google.collide.dto.GetEditSessionCollaborators;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetFileContents;
 import com.google.collide.dto.GetFileContentsResponse;
+import com.google.collide.dto.GetOpenendFilesInWorkspaceResponse;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.ServerToClientDocOps;
@@ -33,7 +34,9 @@ import com.google.collide.dto.server.DtoServerImpls.FileCollaboratorGoneImpl;
 import com.google.collide.dto.server.DtoServerImpls.FileContentsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetEditSessionCollaboratorsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
+import com.google.collide.dto.server.DtoServerImpls.GetOpenendFilesInWorkspaceResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.NewFileCollaboratorImpl;
+import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
@@ -42,6 +45,7 @@ import com.google.collide.server.participants.Participants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.everrest.websockets.WSConnection;
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.commons.StringUtils;
@@ -74,6 +78,22 @@ import java.util.concurrent.TimeUnit;
 
 public class EditSessions implements Startable
 {
+   private class WSConnectionListener implements org.everrest.websockets.WSConnectionListener
+   {
+      @Override
+      public void onOpen(WSConnection connection)
+      {
+      }
+
+      @Override
+      public void onClose(WSConnection connection)
+      {
+         String userId = connection.getHttpSession().getId();
+         closeAllSessions(userId);
+//         participants.removeParticipant(userId);
+      }
+   }
+
    private static final Log LOG = ExoLogger.getLogger(EditSessions.class);
 
    private static final Gson gson = new GsonBuilder().registerTypeAdapter(
@@ -92,6 +112,8 @@ public class EditSessions implements Startable
    // This is important mapping for server side to avoid mapping the same resource twice.
    private final ConcurrentMap<String, FileEditSession> editSessionsByResourceId =
       new ConcurrentHashMap<String, FileEditSession>();
+
+   private WSConnectionListener listener = new WSConnectionListener();
 
    public EditSessions(Participants participants, VirtualFileSystemRegistry vfsRegistry)
    {
@@ -136,12 +158,15 @@ public class EditSessions implements Startable
    public void start()
    {
       saveScheduler.scheduleAtFixedRate(new SaveTask(), 2500, 2500, TimeUnit.MILLISECONDS);
+      listener = new WSConnectionListener();
+      WSConnectionContext.registerConnectionListener(listener);
    }
 
    @Override
    public void stop()
    {
       saveScheduler.shutdownNow();
+      WSConnectionContext.removeConnectionListener(listener);
    }
 
    public GetFileContentsResponse openSession(GetFileContents contentsRequest)
@@ -282,11 +307,29 @@ public class EditSessions implements Startable
    public List<String> closeAllSessions(String userId)
    {
       List<String> result = new ArrayList<String>();
+      Set<String> sendTo = new LinkedHashSet<String>();
+      sendTo.addAll(participants.getAllParticipantId());
+      sendTo.remove(userId);
+
       for (Map.Entry<String, FileEditSession> e : editSessionsByResourceId.entrySet())
       {
-         if (e.getValue().removeCollaborator(userId))
+         FileEditSession editSession = e.getValue();
+         if (editSession.removeCollaborator(userId))
          {
             result.add(e.getKey());
+            if (!sendTo.isEmpty())
+            {
+               broadcastToClients(
+                  FileCollaboratorGoneImpl.make().setPath(editSession.getPath())
+                     .setParticipant(participants.getParticipant(userId)).toJson(),
+                  sendTo
+               );
+            }
+            LOG.debug("Close edit session {}, user {} ", editSession.getFileEditSessionKey(), userId);
+            if (editSession.getCollaborators().isEmpty())
+            {
+               editSessionsByResourceId.remove(editSession.getResourceId());
+            }
          }
       }
       return result;
@@ -464,4 +507,16 @@ public class EditSessions implements Startable
       return GetEditSessionCollaboratorsResponseImpl.make()
          .setParticipants(participants.getParticipants(editSession.getCollaborators()));
    }
+
+   public GetOpenendFilesInWorkspaceResponse getOpenendFiles()
+   {
+      GetOpenendFilesInWorkspaceResponseImpl response = GetOpenendFilesInWorkspaceResponseImpl.make();
+      for(FileEditSession session : editSessionsByResourceId.values())
+      {
+        response.putOpenedFiles(session.getPath(),
+           (ArrayList<ParticipantUserDetailsImpl>)participants.getParticipants(session.getCollaborators()));
+      }
+      return response;
+   }
+
 }

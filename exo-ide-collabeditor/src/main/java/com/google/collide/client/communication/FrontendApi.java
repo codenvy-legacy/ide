@@ -32,6 +32,8 @@ import com.google.collide.dto.GetEditSessionCollaborators;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetFileContents;
 import com.google.collide.dto.GetFileContentsResponse;
+import com.google.collide.dto.GetOpenendFilesInWorkspace;
+import com.google.collide.dto.GetOpenendFilesInWorkspaceResponse;
 import com.google.collide.dto.GetWorkspaceMetaData;
 import com.google.collide.dto.GetWorkspaceMetaDataResponse;
 import com.google.collide.dto.GetWorkspaceParticipants;
@@ -201,6 +203,9 @@ public class FrontendApi {
    * Send a keep-alive for the client in a workspace.
    */
   public final SendApi<CloseEditor> CLOSE_EDITOR = makeApi("ide/collab_editor/documents/close");
+
+   public final RequestResponseApi<GetOpenendFilesInWorkspace, GetOpenendFilesInWorkspaceResponse> GET_ALL_FILES =
+      makeApi("ide/collab_editor/documents/all");
 
   /**
    * Gets the list of workspace participants.

@@ -2,7 +2,6 @@
 package com.google.collide.dto.server;
 
 import com.google.collide.dtogen.server.JsonSerializable;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -23,6 +22,229 @@ public class DtoServerImpls {
   private  DtoServerImpls() {}
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "bca179ae3917468565f0178049f263e405e02437";
+
+   public static class GetOpenendFilesInWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace, JsonSerializable {
+
+      private GetOpenendFilesInWorkspaceImpl() {
+         super(128);
+      }
+
+      protected GetOpenendFilesInWorkspaceImpl(int type) {
+         super(type);
+      }
+
+
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof GetOpenendFilesInWorkspaceImpl)) {
+            return false;
+         }
+         GetOpenendFilesInWorkspaceImpl other = (GetOpenendFilesInWorkspaceImpl) o;
+         return true;
+      }
+
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         return hash;
+      }
+
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static GetOpenendFilesInWorkspaceImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         GetOpenendFilesInWorkspaceImpl dto = new GetOpenendFilesInWorkspaceImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         return dto;
+      }
+      public static GetOpenendFilesInWorkspaceImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
+
+   public static class MockGetOpenendFilesInWorkspaceImpl extends GetOpenendFilesInWorkspaceImpl {
+      protected MockGetOpenendFilesInWorkspaceImpl() {}
+
+      public static GetOpenendFilesInWorkspaceImpl make() {
+         return new GetOpenendFilesInWorkspaceImpl();
+      }
+
+   }
+
+   public static class GetOpenendFilesInWorkspaceResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetOpenendFilesInWorkspaceResponse, JsonSerializable {
+
+      private GetOpenendFilesInWorkspaceResponseImpl() {
+         super(129);
+      }
+
+      protected GetOpenendFilesInWorkspaceResponseImpl(int type) {
+         super(type);
+      }
+
+      public static GetOpenendFilesInWorkspaceResponseImpl make() {
+         return new GetOpenendFilesInWorkspaceResponseImpl();
+      }
+
+      protected java.util.Map<String, java.util.ArrayList<ParticipantUserDetailsImpl>> openedFiles;
+      private boolean _hasOpenedFiles;
+
+      public boolean hasOpenedFiles() {
+         return _hasOpenedFiles;
+      }
+
+      @Override
+      public com.google.collide.json.shared.JsonStringMap<com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> getOpenedFiles() {
+         ensureOpenedFiles();
+         return (com.google.collide.json.shared.JsonStringMap) new com.google.collide.json.server.JsonStringMapAdapter(openedFiles);
+      }
+
+      public GetOpenendFilesInWorkspaceResponseImpl setOpenedFiles(java.util.Map<String, java.util.ArrayList<ParticipantUserDetailsImpl>> v) {
+         _hasOpenedFiles = true;
+         openedFiles = v;
+         return this;
+      }
+
+      public void putOpenedFiles(String k, java.util.ArrayList<ParticipantUserDetailsImpl> v) {
+         ensureOpenedFiles();
+         openedFiles.put(k, v);
+      }
+
+      public void clearOpenedFiles() {
+         ensureOpenedFiles();
+         openedFiles.clear();
+      }
+
+      private void ensureOpenedFiles() {
+         if (!_hasOpenedFiles) {
+            setOpenedFiles(openedFiles != null ? openedFiles : new java.util.HashMap<String, java.util.ArrayList<ParticipantUserDetailsImpl>>());
+         }
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof GetOpenendFilesInWorkspaceResponseImpl)) {
+            return false;
+         }
+         GetOpenendFilesInWorkspaceResponseImpl other = (GetOpenendFilesInWorkspaceResponseImpl) o;
+         if (this._hasOpenedFiles != other._hasOpenedFiles) {
+            return false;
+         }
+         if (this._hasOpenedFiles) {
+            if (!this.openedFiles.equals(other.openedFiles)) {
+               return false;
+            }
+         }
+         return true;
+      }
+
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         hash = hash * 31 + (_hasOpenedFiles ? openedFiles.hashCode() : 0);
+         return hash;
+      }
+
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
+
+         JsonObject openedFilesOut = new JsonObject();
+         ensureOpenedFiles();
+         for (Map.Entry<String, java.util.ArrayList<ParticipantUserDetailsImpl>> entry0 : openedFiles.entrySet()) {
+            java.util.ArrayList<ParticipantUserDetailsImpl> openedFiles_ = entry0.getValue();
+            JsonArray openedFilesOut_ = new JsonArray();
+            for (ParticipantUserDetailsImpl openedFiles__ : openedFiles_) {
+               JsonElement openedFilesOut__ = openedFiles__ == null ? JsonNull.INSTANCE : openedFiles__.toJsonElement();
+               openedFilesOut_.add(openedFilesOut__);
+            }
+            openedFilesOut.add(entry0.getKey(), openedFilesOut_);
+         }
+         result.add("openedFiles", openedFilesOut);
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static GetOpenendFilesInWorkspaceResponseImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         GetOpenendFilesInWorkspaceResponseImpl dto = new GetOpenendFilesInWorkspaceResponseImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         if (json.has("openedFiles")) {
+            JsonElement openedFilesIn = json.get("openedFiles");
+            java.util.HashMap<String, java.util.ArrayList<ParticipantUserDetailsImpl>> openedFilesOut = null;
+            if (openedFilesIn != null && !openedFilesIn.isJsonNull()) {
+               openedFilesOut = new java.util.HashMap<String, java.util.ArrayList<ParticipantUserDetailsImpl>>();
+               java.util.Set<Map.Entry<String, JsonElement>> entries0 = openedFilesIn.getAsJsonObject().entrySet();
+               for (Map.Entry<String, JsonElement> entry0 : entries0) {
+                  JsonElement openedFilesIn_ = entry0.getValue();
+                  java.util.ArrayList<ParticipantUserDetailsImpl> openedFilesOut_ = null;
+                  if (openedFilesIn_ != null && !openedFilesIn_.isJsonNull()) {
+                     openedFilesOut_ = new java.util.ArrayList<ParticipantUserDetailsImpl>();
+                     java.util.Iterator<JsonElement> openedFilesIn_Iterator = openedFilesIn_.getAsJsonArray().iterator();
+                     while (openedFilesIn_Iterator.hasNext()) {
+                        JsonElement openedFilesIn__ = openedFilesIn_Iterator.next();
+                        ParticipantUserDetailsImpl openedFilesOut__ = ParticipantUserDetailsImpl.fromJsonElement(openedFilesIn__);
+                        openedFilesOut_.add(openedFilesOut__);
+                     }
+                  }
+                  openedFilesOut.put(entry0.getKey(), openedFilesOut_);
+               }
+            }
+            dto.setOpenedFiles(openedFilesOut);
+         }
+
+         return dto;
+      }
+      public static GetOpenendFilesInWorkspaceResponseImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
 
   public static class AddMembersResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.AddMembersResponse, JsonSerializable {
 
