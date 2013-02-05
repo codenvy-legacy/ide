@@ -28,10 +28,12 @@ import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileCollaboratorGone;
 import com.google.collide.dto.FileContents;
 import com.google.collide.dto.NewFileCollaborator;
+import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.json.client.Jso;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonIntegerMap;
+import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
@@ -140,6 +142,8 @@ public class CollaborationManager
 
 //   private JsonIntegerMap<ParticipantList.View> participantsViews = JsonCollections.createIntegerMap();
 
+   private JsonStringMap<JsonArray<ParticipantUserDetails>> openedFilesInWorkspace = JsonCollections.createMap();
+
    private CollaborationManager(AppContext appContext, DocumentManager documentManager,
                                 IncomingDocOpDemultiplexer docOpRecipient)
    {
@@ -234,6 +238,21 @@ public class CollaborationManager
          DocumentCollaborationController collaborationController = docCollabControllersByDocumentId.get(document.getId());
          collaborationController.getParticipantModel().addParticipant(true, message.getParticipant());
       }
+
+      if(!openedFilesInWorkspace.containsKey(message.getPath()))
+      {
+         openedFilesInWorkspace.put(message.getPath(),JsonCollections.<ParticipantUserDetails>createArray());
+      }
+      openedFilesInWorkspace.get(message.getPath()).add(message.getParticipant());
+      //TODO add notification
+//      DivElement divElement = Elements.createDivElement();
+//      divElement.setInnerHTML("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> open file: " + message.getPath());
+//      Popup popup = Popup.create(appContext.getResources());
+//      popup.setContentElement(divElement);
+//      popup.setDelay(2000);
+//      new PositionerBuilder().buildMousePositioner();
+
+
    }
 
    private void removeCollaborator(FileCollaboratorGone message)
@@ -244,5 +263,38 @@ public class CollaborationManager
          DocumentCollaborationController collaborationController = docCollabControllersByDocumentId.get(document.getId());
          collaborationController.getParticipantModel().removeParticipant(message.getParticipant());
       }
+
+      JsonArray<ParticipantUserDetails> participants = openedFilesInWorkspace.get(message.getPath());
+      ParticipantUserDetails toRemove = null;
+      for(ParticipantUserDetails p : participants.asIterable())
+      {
+         if(p.getParticipant().getId().equals(message.getParticipant().getParticipant().getId()))
+         {
+            toRemove = p;
+            break;
+         }
+      }
+
+      if(toRemove != null)
+      {
+         participants.remove(toRemove);
+      }
+
+      if(participants.isEmpty())
+      {
+         openedFilesInWorkspace.remove(message.getPath());
+      }
    }
+
+   public boolean isFileOpened(String path)
+   {
+      return openedFilesInWorkspace.containsKey(path);
+   }
+
+   public JsonArray<String> getOpenedFiles()
+   {
+      return openedFilesInWorkspace.getKeys();
+   }
+
+
 }

@@ -53,6 +53,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 
    private DocumentManager documentManager;
 
+   private CollaborationManager collaborationManager;
+
    public static CollabEditorExtension get()
    {
       return instance;
@@ -84,6 +86,11 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       return documentManager;
    }
 
+   public CollaborationManager getCollaborationManager()
+   {
+      return collaborationManager;
+   }
+
    /**
     * {@inheritDoc}
     */
@@ -111,8 +118,7 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
                   context.initializeCollaboration();
 //                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
                   IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
-                  CollaborationManager collaborationManager =
-                     CollaborationManager.create(context, documentManager, docOpRecipient);
+                  collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient);
 
                   DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
                   bus.close();

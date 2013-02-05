@@ -41,6 +41,7 @@ import com.google.collide.json.server.JsonArrayListAdapter;
 import com.google.collide.server.participants.Participants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.commons.StringUtils;
@@ -186,7 +187,7 @@ public class EditSessions implements Startable
       {
          editSession.addCollaborator(userId);
          Set<String> sendTo = new LinkedHashSet<String>();
-         sendTo.addAll(editSession.getCollaborators());
+         sendTo.addAll(participants.getAllParticipantId());
          sendTo.remove(userId);
          if (!sendTo.isEmpty())
          {
@@ -241,7 +242,7 @@ public class EditSessions implements Startable
          if (editSession.removeCollaborator(userId))
          {
             Set<String> sendTo = new LinkedHashSet<String>();
-            sendTo.addAll(editSession.getCollaborators());
+            sendTo.addAll(participants.getAllParticipantId());
             sendTo.remove(userId);
             if (!sendTo.isEmpty())
             {

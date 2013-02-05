@@ -19,9 +19,10 @@ import com.google.collide.client.common.BaseResources;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.gutter.GutterNotificationResources;
 import com.google.collide.client.editor.renderer.LineNumberRenderer;
+import com.google.collide.client.ui.popup.CenterPanel;
+import com.google.collide.client.ui.popup.Popup;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.CssResource.NotStrict;
-import com.google.collide.client.ui.popup.Popup;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
@@ -41,8 +42,8 @@ public interface Resources extends
     // TODO: Once we have actual consumers of the Tooltip class, we
     // can just have them extend it instead of doing it on the base interface.
 //    Tooltip.Resources,
-    Popup.Resources
-    {
+    Popup.Resources, CenterPanel.Resources
+{
 
   /**
    * Interface for css resources.

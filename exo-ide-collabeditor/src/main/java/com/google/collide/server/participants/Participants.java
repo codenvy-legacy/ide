@@ -24,6 +24,7 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,6 +61,11 @@ public class Participants
 
       resp.setParticipants(collaboratorsArr);
       return resp;
+   }
+
+   public Collection<String> getAllParticipantId()
+   {
+      return loggedInUsers.keySet();
    }
 
    public List<ParticipantUserDetailsImpl> getParticipants(Set<String> userIds)

@@ -18,23 +18,24 @@
  */
 package org.exoplatform.ide.client.operation.cutcopy;
 
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.gwt.http.client.RequestException;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.control.Docking;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
-import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
-import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
+import org.exoplatform.ide.client.operation.ItemsOperationPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
@@ -47,20 +48,16 @@ import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
  */
-public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemDeletedHandler, ItemsSelectedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler, CutItemsHandler,
-   CopyItemsHandler
+public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
+   implements PasteItemsHandler, ItemDeletedHandler, ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, ApplicationSettingsReceivedHandler, CutItemsHandler, CopyItemsHandler
 {
 
    private Folder folderFromPaste;
@@ -79,10 +76,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
-   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
-
-   private Map<String, String> lockTokens;
-
    public CutCopyPasteItemsCommandHandler()
    {
       IDE.getInstance().addControl(new CutItemsCommand(), Docking.TOOLBAR);
@@ -92,9 +85,6 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       IDE.addHandler(PasteItemsEvent.TYPE, this);
       IDE.addHandler(ItemDeletedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
-      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
 
       IDE.addHandler(CopyItemsEvent.TYPE, this);
       IDE.addHandler(CutItemsEvent.TYPE, this);
@@ -112,11 +102,37 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
    {
       itemsToCut.clear();
       itemsToCopy.clear();
-
-      for (FileModel f : openedFiles.values())
+      CollaborationManager collaborationManager = CollabEditorExtension.get().getCollaborationManager();
+      for (Item i : selectedItems)
       {
-         for (Item i : selectedItems)
+         for (String path : collaborationManager.getOpenedFiles().asIterable())
          {
+            if (path.startsWith(i.getPath()))
+            {
+               Dialogs.getInstance().showError(
+                  "Can't cut <b>" + i.getName() + "</b>. This folder contains file(s) opened by other users.");
+               return;
+            }
+         }
+         if (collaborationManager.isFileOpened(i.getPath()))
+         {
+            Dialogs.getInstance().showError("Can't cut <b>" + i.getName() + "</b>. This file opened by other users.");
+            return;
+         }
+         for (FileModel f : openedFiles.values())
+         {
+            if (openedEditors.containsKey(f.getId()))
+            {
+               if (openedEditors.get(f.getId()) instanceof CollabEditor)
+               {
+                  if (collaborationManager.isFileOpened(f.getPath()))
+                  {
+                     Dialogs.getInstance().showError(
+                        "Can't cut <b>" + f.getName() + "</b>. This file opened by other users.");
+                     return;
+                  }
+               }
+            }
             if (f.getPath().equals(i.getPath()))
             {
                Dialogs.getInstance().showError(IDE.NAVIGATION_CONSTANT.cutOpenFile(f.getName()));
@@ -127,15 +143,20 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
                Dialogs.getInstance().showError(IDE.NAVIGATION_CONSTANT.cutFolderHasOpenFile(i.getName(), f.getName()));
                return;
             }
+
          }
+
+
       }
       itemsToCut.addAll(selectedItems);
       IDE.fireEvent(new ItemsToPasteSelectedEvent());
    }
 
-   /****************************************************************************************************
+   /**
+    * *************************************************************************************************
     * PASTE
-    ****************************************************************************************************/
+    * **************************************************************************************************
+    */
    public void onPasteItems(PasteItemsEvent event)
    {
       if (itemsToCopy.size() != 0)
@@ -170,9 +191,11 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       return ((ItemContext)item).getParent();
    }
 
-   /****************************************************************************************************
+   /**
+    * *************************************************************************************************
     * COPY
-    ****************************************************************************************************/
+    * **************************************************************************************************
+    */
 
    private void copyNextItem()
    {
@@ -231,9 +254,11 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
       IDE.fireEvent(new RefreshBrowserEvent(folderToPaste, folderToPaste));
    }
 
-   /****************************************************************************************************
+   /**
+    * *************************************************************************************************
     * CUT
-    ****************************************************************************************************/
+    * **************************************************************************************************
+    */
 
    private void cutNextItem()
    {
@@ -370,25 +395,4 @@ public class CutCopyPasteItemsCommandHandler implements PasteItemsHandler, ItemD
    {
       selectedItems = event.getSelectedItems();
    }
-
-   public void onEditorFileOpened(EditorFileOpenedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   public void onEditorFileClosed(EditorFileClosedEvent event)
-   {
-      openedFiles = event.getOpenedFiles();
-   }
-
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
-      if (event.getApplicationSettings().getValueAsMap("lock-tokens") == null)
-      {
-         event.getApplicationSettings().setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
-      }
-
-      lockTokens = event.getApplicationSettings().getValueAsMap("lock-tokens");
-   }
-
 }
