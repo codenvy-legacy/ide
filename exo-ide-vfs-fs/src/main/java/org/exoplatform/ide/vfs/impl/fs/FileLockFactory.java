@@ -45,9 +45,6 @@ package org.exoplatform.ide.vfs.impl.fs;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Advisory file locks. It does not prevent access to the file from other programs.
  * <p/>
@@ -74,9 +71,11 @@ import java.util.Map;
  */
 class FileLockFactory
 {
+   private static final int MAX_RECURSIVE_LOCKS = (1 << 10) - 1;
    /** Max number of threads allowed to access file. */
    private final int maxThreads;
-   private final Map<Path, Integer> threads;
+   // Tail of the "lock table".
+   private final Node tail = new Node(null, 0, null);
 
    /**
     * @param maxThreads
@@ -90,7 +89,6 @@ class FileLockFactory
          throw new IllegalArgumentException();
       }
       this.maxThreads = maxThreads;
-      threads = new HashMap<Path, Integer>();
    }
 
    FileLock getLock(Path path, boolean exclusive)
@@ -100,8 +98,7 @@ class FileLockFactory
 
    private synchronized void acquire(Path path, int permits)
    {
-      int permittedThreads;
-      while ((permittedThreads = getPermittedThreads(path)) < permits)
+      while (!tryAcquire(path, permits))
       {
          try
          {
@@ -109,18 +106,17 @@ class FileLockFactory
          }
          catch (InterruptedException e)
          {
+            notify();
             throw new VirtualFileSystemRuntimeException(e);
          }
       }
-      threads.put(path, permittedThreads - permits);
    }
 
    private synchronized void acquire(Path path, int permits, long timeoutMilliseconds)
    {
       final long endTime = System.currentTimeMillis() + timeoutMilliseconds;
       long waitTime = timeoutMilliseconds;
-      int permittedThreads;
-      while ((permittedThreads = getPermittedThreads(path)) < permits)
+      while (!tryAcquire(path, permits))
       {
          try
          {
@@ -128,6 +124,7 @@ class FileLockFactory
          }
          catch (InterruptedException e)
          {
+            notify();
             throw new VirtualFileSystemRuntimeException(e);
          }
          long now = System.currentTimeMillis();
@@ -137,42 +134,118 @@ class FileLockFactory
          }
          waitTime = endTime - now;
       }
-      threads.put(path, permittedThreads - permits);
    }
 
    private synchronized void release(Path path, int permits)
    {
-      int permittedThreads = getPermittedThreads(path) + permits;
-      if (permittedThreads >= maxThreads)
+      Node node = tail;
+      while (node != null)
       {
-         threads.remove(path);
-      }
-      else
-      {
-         threads.put(path, permittedThreads);
+         Node prev = node.prev;
+         if (prev == null)
+         {
+            break;
+         }
+         if (prev.path.equals(path))
+         {
+            if (prev.threadDeep == 1)
+            {
+               // If last recursive lock.
+               prev.permits += permits;
+               if (prev.permits >= maxThreads)
+               {
+                  // remove
+                  node.prev = prev.prev;
+                  prev.prev = null;
+               }
+            }
+            else
+            {
+               --prev.threadDeep;
+            }
+         }
+         node = node.prev;
       }
       notifyAll();
    }
 
-   private int getPermittedThreads(Path path)
+   private boolean tryAcquire(Path path, int permits)
    {
-      Integer permittedThreads = threads.get(path);
-      if (permittedThreads == null)
+      Node node = tail.prev;
+      final Thread current = Thread.currentThread();
+      while (node != null)
       {
-         permittedThreads = maxThreads;
+         if (node.path.equals(path))
+         {
+            if (node.threadId == current.getId())
+            {
+               // Current thread already has direct lock for this path
+               if (node.threadDeep > MAX_RECURSIVE_LOCKS)
+               {
+                  throw new Error("Max number of recursive locks exceeded. ");
+               }
+               ++node.threadDeep;
+               return true;
+            }
+            if (node.permits > permits)
+            {
+               // Lock already exists and current thread is not owner of this lock,
+               // but lock is not exclusive and we can "share" it for other thread.
+               node.permits -= permits; // decrement number of allowed concurrent threads
+               return true;
+            }
+            // Lock is exclusive or max number of allowed concurrent thread is reached.
+            return false;
+         }
+         else if ((node.path.isChild(path) || path.isChild(node.path)) && node.permits <= permits)
+         {
+            // Found some path which already has lock that prevents us to get required permits.
+            // There is two possibilities:
+            // 1. Parent of the path we try to lock already locked
+            // 2. Child of the path we try to lock already locked
+            // Need to check is such lock obtained by current thread or not.
+            // If such lock obtained by other thread stop here immediately there is no reasons to continue.
+            if (node.threadId != current.getId())
+            {
+               return false;
+            }
+         }
+         node = node.prev;
       }
-      Path parent;
-      while ((parent = path.getParent()) != null)
-      {
-         Integer parentPermittedThreads = threads.get(parent);
-         if (parentPermittedThreads != null)
-            permittedThreads -= parentPermittedThreads;
-         path = parent;
-      }
-      return permittedThreads;// == null ? maxThreads : permittedThreads;
+      // If we are here there is no lock for path yet.
+      tail.prev = new Node(path, maxThreads - permits, tail.prev);
+      return true;
    }
 
    /* =============================================== */
+
+   private static class Node
+   {
+      final Path path;
+      final long threadId = Thread.currentThread().getId();
+      int permits;
+      int threadDeep;
+      Node prev;
+
+      Node(Path path, int permits, Node prev)
+      {
+         this.path = path;
+         this.permits = permits;
+         this.prev = prev;
+         threadDeep = 1;
+      }
+
+      @Override
+      public String toString()
+      {
+         return "Node{" +
+            "path=" + path +
+            ", threadId=" + threadId +
+            ", permits=" + permits +
+            ", prev=" + prev +
+            '}';
+      }
+   }
 
    class FileLock
    {
@@ -181,7 +254,6 @@ class FileLockFactory
 
       private FileLock(Path path, int permits)
       {
-         //To change body of created methods use File | Settings | File Templates.
          this.path = path;
          this.permits = permits;
       }
@@ -204,7 +276,7 @@ class FileLockFactory
        * @param timeoutMilliseconds
        *    maximum time (in milliseconds) to wait for access permit
        * @return this FileLock instance
-       * @throws FileLockTimeoutException
+       * @throws org.exoplatform.ide.vfs.impl.fs.FileLockTimeoutException
        *    if waiting timeout reached
        */
       FileLock acquire(long timeoutMilliseconds)
@@ -217,6 +289,12 @@ class FileLockFactory
       void release()
       {
          FileLockFactory.this.release(path, permits);
+      }
+
+      /** Returns <code>true</code> if this lock is exclusive and <code>false</code> otherwise. */
+      boolean isExclusive()
+      {
+         return permits == FileLockFactory.this.maxThreads;
       }
    }
 }

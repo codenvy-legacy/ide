@@ -143,7 +143,7 @@ final class Path
       }
       for (int i = 0, parentLength = parent.elements.length; i < parentLength; i++)
       {
-         if (parent.elements[i].equals(this.elements[i]))
+         if (!parent.elements[i].equals(this.elements[i]))
          {
             return false;
          }
