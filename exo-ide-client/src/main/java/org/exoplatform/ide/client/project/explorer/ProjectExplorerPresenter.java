@@ -830,6 +830,12 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          }
       }
 
+      if (supportedPaaS.size() == 0)
+      {
+         loadProject();
+         return;
+      }
+
       openedProject.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), supportedPaaS));
 
       try
