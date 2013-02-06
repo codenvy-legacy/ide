@@ -113,6 +113,12 @@ public interface IdeNavigationLocalizationConstant extends Messages
    /*
     * CreateFileCommandHandler
     */
+   @Key("createFile.dialog.title")
+   String createNewFileDialogTitle();
+
+   @Key("createFile.name.title")
+   String createNewFileDialogNameFieldTitle();
+
    @Key("createFile.untitledFile.name")
    String createFileUntitledFileName();
 
