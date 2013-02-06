@@ -20,6 +20,7 @@ package org.exoplatform.ide.invite;
 
 import org.exoplatform.services.organization.Group;
 import org.exoplatform.services.organization.GroupHandler;
+import org.exoplatform.services.organization.MembershipHandler;
 import org.exoplatform.services.organization.MembershipType;
 import org.exoplatform.services.organization.OrganizationService;
 import org.exoplatform.services.organization.User;
@@ -63,7 +64,19 @@ public class IdeInviteUserService implements InviteUserService
       organizationService.getMembershipHandler().linkMembership(newUser, usersGroup, membership, true);
 
    }
-   
+
+   @Override
+   public void removeUser(String userId) throws Exception
+   {
+      UserHandler userHandler = organizationService.getUserHandler();
+      MembershipHandler membershipHandler = organizationService.getMembershipHandler();
+
+      User user = userHandler.findUserByName(userId);
+      membershipHandler.removeMembershipByUser(user.getUserName(), false);
+
+      userHandler.removeUser(user.getUserName(), false);
+   }
+
    @Override
    public boolean isUserRegistered(String userId) throws Exception
    {
