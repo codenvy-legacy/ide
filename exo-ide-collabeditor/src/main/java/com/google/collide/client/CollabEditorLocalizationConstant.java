@@ -16,27 +16,29 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.google.collide.client.collaboration.participants;
-
-import com.google.collide.shared.document.Document;
-import com.google.gwt.event.shared.EventHandler;
+package com.google.collide.client;
 
 /**
- * {@link EventHandler} for handling event when {@link Document} linked to a file.
+ * Interface to represent the constants contained in resource bundle: 'CollabEditorLocalizationConstant.properties'.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CollaborationDocumentLinkedHandler.java Jan 31, 2013 11:48:50 AM azatsarynnyy $
+ * @version $Id: CollabEditorLocalizationConstant.java Feb 6, 2013 3:04:53 PM azatsarynnyy $
  *
  */
-
-public interface CollaborationDocumentLinkedHandler extends EventHandler
+public interface CollabEditorLocalizationConstant extends com.google.gwt.i18n.client.Messages
 {
 
-   /**
-    * Called after the document is linked to a file.
-    * 
-    * @param event {@link CollaborationDocumentLinkedEvent}
-    */
-   void onDocumentLinked(CollaborationDocumentLinkedEvent event);
+   // Controls
+   @Key("control.collaborators.id")
+   String collaboratorsControlId();
+
+   @Key("control.collaborators.title")
+   String collaboratorsControlTitle();
+
+   @Key("control.collaborators.prompt.show")
+   String collaboratorsControlPromptShow();
+
+   @Key("control.collaborators.prompt.hide")
+   String collaboratorsControlPromptHide();
 
 }
