@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-
 /**
  * NewFolderPageViewImpl is the view of NewFolder wizard.
  * 
@@ -57,6 +56,7 @@ public class NewFolderPageViewImpl extends Composite implements NewFolderPageVie
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getFolderName()
    {
       return folderName.getText();
@@ -65,6 +65,7 @@ public class NewFolderPageViewImpl extends Composite implements NewFolderPageVie
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
@@ -74,5 +75,14 @@ public class NewFolderPageViewImpl extends Composite implements NewFolderPageVie
    void onFolderNameKeyUp(KeyUpEvent event)
    {
       delegate.checkEnteredInformation();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setFolderName(String name)
+   {
+      folderName.setText(name);
    }
 }

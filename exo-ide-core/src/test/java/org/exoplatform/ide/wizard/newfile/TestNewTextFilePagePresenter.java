@@ -29,6 +29,7 @@ import com.google.gwt.junit.GWTMockUtilities;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.resources.model.File;
@@ -61,6 +62,9 @@ public class TestNewTextFilePagePresenter
    @Mock
    private Project project;
 
+   @Mock
+   private SelectionAgent selectionAgent;
+
    private NewTextFilePagePresenter presenter;
 
    @Before
@@ -80,7 +84,7 @@ public class TestNewTextFilePagePresenter
       ResourceProvider resourceProvider = mock(ResourceProvider.class);
       when(resourceProvider.getActiveProject()).thenReturn(project);
 
-      presenter = new NewTextFilePagePresenter(null, view, resourceProvider);
+      presenter = new NewTextFilePagePresenter(null, view, resourceProvider, selectionAgent);
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
    }
 
@@ -99,7 +103,7 @@ public class TestNewTextFilePagePresenter
       when(view.getFileName()).thenReturn("");
       when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
 
-      presenter.checkEnteredInformation();
+      presenter.onValueChanged();
 
       assertEquals(presenter.getNotice(), "The file name can't be empty.");
       assertEquals(presenter.isCompleted(), !IS_COMPLITED);
@@ -114,7 +118,7 @@ public class TestNewTextFilePagePresenter
       when(view.getFileName()).thenReturn("test*");
       when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
 
-      presenter.checkEnteredInformation();
+      presenter.onValueChanged();
 
       assertEquals(presenter.getNotice(), "The file name has incorrect symbol.");
       assertEquals(presenter.isCompleted(), !IS_COMPLITED);
@@ -141,7 +145,7 @@ public class TestNewTextFilePagePresenter
       when(view.getFileName()).thenReturn(fileName);
       when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
 
-      presenter.checkEnteredInformation();
+      presenter.onValueChanged();
 
       assertEquals(presenter.getNotice(), "The file name must end in one of the following extensions [txt].");
       assertEquals(presenter.isCompleted(), !IS_COMPLITED);
@@ -175,7 +179,7 @@ public class TestNewTextFilePagePresenter
       when(view.getFileName()).thenReturn(newFileName);
       when(project.getChildren()).thenReturn(children);
 
-      presenter.checkEnteredInformation();
+      presenter.onValueChanged();
 
       assertEquals(presenter.getNotice(), "The file with same name already exists.");
       assertEquals(presenter.isCompleted(), !IS_COMPLITED);
@@ -201,7 +205,7 @@ public class TestNewTextFilePagePresenter
       when(view.getFileName()).thenReturn(fileName);
       when(project.getChildren()).thenReturn(JsonCollections.<Resource> createArray());
 
-      presenter.checkEnteredInformation();
+      presenter.onValueChanged();
 
       assertEquals(presenter.getNotice(), null);
       assertEquals(presenter.isCompleted(), IS_COMPLITED);

@@ -60,7 +60,7 @@ public abstract class AbstractEditorPresenter extends AbstractPartPresenter impl
    protected void updateDirtyState(boolean dirty)
    {
       dirtyState = dirty;
-      firePropertyChange(EditorPartPresenter.PROP_TITLE);
+      firePropertyChange(EditorPartPresenter.TITLE_PROPERTY);
       firePropertyChange(EditorPartPresenter.PROP_DIRTY);
    }
 

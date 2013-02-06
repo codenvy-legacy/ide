@@ -24,6 +24,7 @@ import com.google.inject.Inject;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.rest.MimeType;
 import org.exoplatform.ide.util.loging.Log;
@@ -43,9 +44,9 @@ public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter
     * @param resourceProvider
     */
    @Inject
-   public NewTextFilePagePresenter(Resources resources, ResourceProvider resourceProvider)
+   public NewTextFilePagePresenter(Resources resources, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
-      this(resources.newResourceIcon(), new NewGenericFilePageViewImpl(), resourceProvider);
+      this(resources.newResourceIcon(), new NewGenericFilePageViewImpl(), resourceProvider, selectionAgent);
    }
 
    /**
@@ -57,24 +58,28 @@ public class NewTextFilePagePresenter extends AbstractNewFilePagePresenter
     * @param view
     * @param resourceProvider
     */
-   protected NewTextFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider)
+   protected NewTextFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider,
+      SelectionAgent selectionAgent)
    {
-      super("Create a new empty text file", image, view, "txt", resourceProvider);
+      super("Create a new empty text file", image, view, "txt", resourceProvider, selectionAgent);
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void doFinish()
    {
       String fileName = view.getFileName() + (hasExtension() ? "" : '.' + getFileExtension());
 
       project.createFile(project, fileName, "", MimeType.TEXT_PLAIN, new AsyncCallback<File>()
       {
+         @Override
          public void onSuccess(File result)
          {
          }
 
+         @Override
          public void onFailure(Throwable caught)
          {
             // TODO : Handle error to be able to display message to the User

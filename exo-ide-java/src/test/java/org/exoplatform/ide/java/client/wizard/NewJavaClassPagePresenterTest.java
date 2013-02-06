@@ -19,7 +19,10 @@
 package org.exoplatform.ide.java.client.wizard;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.core.editor.EditorAgent;
+import org.exoplatform.ide.java.client.projectmodel.CompilationUnit;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -42,12 +45,15 @@ public class NewJavaClassPagePresenterTest extends WizardsBaseTest
    @Mock
    private EditorAgent editorAgent;
 
+   @Mock
+   private SelectionAgent selectionAgent;
+
    private NewJavaClassPagePresenter presenter;
 
    @Before
    public void setUp()
    {
-      presenter = new NewJavaClassPagePresenter(view, resourceProvider, editorAgent);
+      presenter = new NewJavaClassPagePresenter(view, resourceProvider, editorAgent, selectionAgent);
       presenter.setUpdateDelegate(updateDelegate);
       when(view.getClassName()).thenReturn("MyClass");
       when(view.getClassType()).thenReturn("Class");
@@ -74,6 +80,7 @@ public class NewJavaClassPagePresenterTest extends WizardsBaseTest
    {
       presenter.checkTypeName();
       presenter.doFinish();
-      verify(project).createCompilationUnit(eq(sourceFolder), eq("MyClass.java"), contains("class MyClass"), (AsyncCallback)any());
+      verify(project).createCompilationUnit(eq(sourceFolder), eq("MyClass.java"), contains("class MyClass"),
+         (AsyncCallback<CompilationUnit>)any());
    }
 }

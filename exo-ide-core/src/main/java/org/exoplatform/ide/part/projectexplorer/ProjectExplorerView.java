@@ -45,6 +45,6 @@ public interface ProjectExplorerView extends View<ProjectExplorerView.ActionDele
        * 
        * @param resource node
        */
-      void onNodeAction(Resource resource);
+      void onResourceAction(Resource resource);
    }
 }

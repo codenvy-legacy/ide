@@ -26,6 +26,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.paas.PaaSAgent;
@@ -66,6 +67,7 @@ import org.exoplatform.ide.resources.FileType;
 import org.exoplatform.ide.resources.ModelProvider;
 import org.exoplatform.ide.resources.ResourceProviderComponent;
 import org.exoplatform.ide.resources.model.GenericModelProvider;
+import org.exoplatform.ide.selection.SelectionAgentImpl;
 import org.exoplatform.ide.toolbar.ToolbarPresenter;
 import org.exoplatform.ide.toolbar.ToolbarView;
 import org.exoplatform.ide.toolbar.ToolbarViewImpl;
@@ -91,6 +93,8 @@ public class CoreGinModule extends AbstractGinModule
       bind(ExtensionRegistry.class).in(Singleton.class);
       bind(StandardComponentInitializer.class).in(Singleton.class);
       bind(PaaSAgent.class).to(PaaSAgentImpl.class).in(Singleton.class);
+
+      bind(SelectionAgent.class).to(SelectionAgentImpl.class).in(Singleton.class);
 
       resourcesAPIconfigure();
 

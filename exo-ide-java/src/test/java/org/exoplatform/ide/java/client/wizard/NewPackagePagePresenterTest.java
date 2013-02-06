@@ -19,6 +19,8 @@
 package org.exoplatform.ide.java.client.wizard;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.java.client.projectmodel.Package;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,12 +44,14 @@ public class NewPackagePagePresenterTest extends WizardsBaseTest
 
    private NewPackagePagePresenter presenter;
 
+   @Mock
+   private SelectionAgent selectionAgent;
 
    @Before
    public void setUp() throws Exception
    {
       when(view.getPackageName()).thenReturn("client");
-      presenter = new NewPackagePagePresenter(view, resourceProvider);
+      presenter = new NewPackagePagePresenter(view, resourceProvider, selectionAgent);
       presenter.setUpdateDelegate(updateDelegate);
 
    }

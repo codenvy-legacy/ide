@@ -24,6 +24,7 @@ import com.google.inject.Singleton;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.menu.ExtendedCommand;
 import org.exoplatform.ide.wizard.WizardPresenter;
@@ -43,6 +44,8 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
 
    private final ProjectOpenedExpression expression;
 
+   private final SelectionAgent selectionAgent;
+
    /**
     * Create command.
     *
@@ -52,19 +55,21 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
     */
    @Inject
    public ShowNewFolderWizardCommand(Resources resources, ResourceProvider resourceProvider,
-      ProjectOpenedExpression expression)
+      ProjectOpenedExpression expression, SelectionAgent selectionAgent)
    {
       this.resources = resources;
       this.resourceProvider = resourceProvider;
       this.expression = expression;
+      this.selectionAgent = selectionAgent;
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void execute()
    {
-      NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider);
+      NewFolderPagePresenter page = new NewFolderPagePresenter(resources, resourceProvider, selectionAgent);
       WizardPresenter wizardDialog = new WizardPresenter(page, "Create folder");
       wizardDialog.showWizard();
    }
@@ -72,6 +77,7 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
+   @Override
    public ImageResource getIcon()
    {
       return resources.folder();
@@ -80,6 +86,7 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
+   @Override
    public Expression inContext()
    {
       return null;
@@ -88,6 +95,7 @@ public class ShowNewFolderWizardCommand implements ExtendedCommand
    /**
     * {@inheritDoc}
     */
+   @Override
    public Expression canExecute()
    {
       return expression;

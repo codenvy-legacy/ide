@@ -21,7 +21,9 @@ package org.exoplatform.ide.java.client.wizard;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.java.client.JavaClientBundle;
 import org.exoplatform.ide.java.client.core.JavaConventions;
 import org.exoplatform.ide.java.client.core.JavaCore;
@@ -61,13 +63,23 @@ public class NewPackagePagePresenter extends AbstractWizardPagePresenter impleme
    private String errorMessage;
 
    @Inject
-   public NewPackagePagePresenter(NewPackagePageView view, ResourceProvider resourceProvider)
+   public NewPackagePagePresenter(NewPackagePageView view, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
       super("New Java Package", JavaClientBundle.INSTANCE.packageItem());
       this.view = view;
       view.setDelegate(this);
       project = resourceProvider.getActiveProject();
       init();
+      
+      if (selectionAgent.getSelection() != null && selectionAgent.getSelection().getFirstElement() instanceof Folder)
+      {
+         Folder selectedFolder = (Folder)selectionAgent.getSelection().getFirstElement();
+         if (parents.indexOf(selectedFolder) >= 0)
+         {
+            view.selectParent(parents.indexOf(selectedFolder));
+            parent = selectedFolder;
+         }
+      }
    }
 
    private void init()

@@ -21,13 +21,16 @@ package org.exoplatform.ide.java.client.wizard;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 import com.google.inject.Inject;
+
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.core.editor.EditorAgent;
 import org.exoplatform.ide.java.client.JavaClientBundle;
 import org.exoplatform.ide.java.client.core.JavaConventions;
 import org.exoplatform.ide.java.client.core.JavaCore;
 import org.exoplatform.ide.java.client.projectmodel.CompilationUnit;
 import org.exoplatform.ide.java.client.projectmodel.JavaProject;
+import org.exoplatform.ide.java.client.projectmodel.Package;
 import org.exoplatform.ide.java.client.projectmodel.SourceFolder;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
@@ -44,12 +47,11 @@ import org.exoplatform.ide.wizard.WizardPagePresenter;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: 
  */
-public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
-   implements NewJavaClassPageView.ActionDelegate
+public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter implements
+   NewJavaClassPageView.ActionDelegate
 {
 
-   private enum JavaTypes
-   {
+   private enum JavaTypes {
       CLASS("Class"), INTERFACE("Interface"), ENUM("Enum"), ANNOTATION("Annotation");
 
       private String value;
@@ -92,7 +94,8 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
    private boolean notJavaProject;
 
    @Inject
-   public NewJavaClassPagePresenter(NewJavaClassPageView view, ResourceProvider provider, EditorAgent editorAgent)
+   public NewJavaClassPagePresenter(NewJavaClassPageView view, ResourceProvider provider, EditorAgent editorAgent,
+      SelectionAgent selectionAgent)
    {
       super(CAPTION, JavaClientBundle.INSTANCE.newClassWizz());
       this.view = view;
@@ -100,6 +103,16 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       activeProject = provider.getActiveProject();
       view.setDelegate(this);
       init();
+
+      if (selectionAgent.getSelection() != null && selectionAgent.getSelection().getFirstElement() instanceof Folder)
+      {
+         Folder selectedFolder = (Folder)selectionAgent.getSelection().getFirstElement();
+         if (parents.indexOf(selectedFolder) >= 0)
+         {
+            view.selectParent(parents.indexOf(selectedFolder));
+            parent = selectedFolder;
+         }
+      }
    }
 
    private void init()
@@ -121,7 +134,7 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
             parents.add(sf);
             for (Resource r : sf.getChildren().asIterable())
             {
-               if (r instanceof org.exoplatform.ide.java.client.projectmodel.Package)
+               if (r instanceof Package)
                {
                   parentNames.add(r.getName());
                   parents.add((Folder)r);
@@ -215,19 +228,19 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
       {
          switch (JavaTypes.valueOf(view.getClassType().toUpperCase()))
          {
-            case CLASS:
+            case CLASS :
                createClass(view.getClassName());
                break;
 
-            case INTERFACE:
+            case INTERFACE :
                createInterface(view.getClassName());
                break;
 
-            case ENUM:
+            case ENUM :
                createEnum(view.getClassName());
                break;
 
-            case ANNOTATION:
+            case ANNOTATION :
                createAnnotation(view.getClassName());
                break;
          }
@@ -331,20 +344,21 @@ public class NewJavaClassPagePresenter extends AbstractWizardPagePresenter
     */
    private void validate(String value)
    {
-      IStatus status = JavaConventions.validateCompilationUnitName(value, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
-         JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
+      IStatus status =
+         JavaConventions.validateCompilationUnitName(value, JavaCore.getOption(JavaCore.COMPILER_SOURCE),
+            JavaCore.getOption(JavaCore.COMPILER_COMPLIANCE));
       switch (status.getSeverity())
       {
-         case IStatus.WARNING:
+         case IStatus.WARNING :
             errorMessage = status.getMessage();
             isTypeNameValid = true;
             break;
-         case IStatus.OK:
+         case IStatus.OK :
             isTypeNameValid = true;
             errorMessage = null;
             break;
 
-         default:
+         default :
             isTypeNameValid = false;
             errorMessage = status.getMessage();
             break;

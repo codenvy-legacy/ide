@@ -19,6 +19,7 @@ package org.exoplatform.ide.part;
 import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.presenter.Presenter;
+import org.exoplatform.ide.selection.Selection;
 
 /**
  * Part is a main UI block of the IDE. 
@@ -31,7 +32,12 @@ public interface PartPresenter extends Presenter
     * The property id for <code>getTitle</code>, <code>getTitleImage</code>
      * and <code>getTitleToolTip</code>.
     */
-   public static final int PROP_TITLE = 0x001;
+   public static final int TITLE_PROPERTY = 0x001;
+
+   /**
+    * The property id for <code>getSelection</code>.
+    */
+   public static final int SELECTION_PROPERTY = 0x002;
 
    /**
     * Title of the Part
@@ -39,7 +45,7 @@ public interface PartPresenter extends Presenter
     * @return
     */
    public String getTitle();
-   
+
    /**
     * Returns the title image of this part.  If this value changes 
     * the part must fire a property listener event with 
@@ -81,7 +87,7 @@ public interface PartPresenter extends Presenter
     * @return allow close
     */
    public boolean onClose();
-   
+
    /**
     * Adds a listener for changes to properties of this part.
     * Has no effect if an identical listener is already registered.
@@ -89,7 +95,11 @@ public interface PartPresenter extends Presenter
     * @param listener a property listener
     */
    public void addPropertyListener(PropertyListener listener);
-   
+
+   /**
+    * @return The {@link Selection} of this Part.
+    */
+   public Selection<?> getSelection();
 
    /**
     * Removes the given property listener from this part.

@@ -52,6 +52,13 @@ public interface NewPackagePageView extends View<NewPackagePageView.ActionDelega
    void setParents(JsonArray<String> parents);
 
    /**
+    * Select parent by index
+    * 
+    * @param index of the parent in the list
+    */
+   void selectParent(int indexOf);
+
+   /**
     * Get new package name.
     * @return the new package name
     */
@@ -61,4 +68,5 @@ public interface NewPackagePageView extends View<NewPackagePageView.ActionDelega
     * Disable all ui components.
     */
    void disableAllUi();
+
 }

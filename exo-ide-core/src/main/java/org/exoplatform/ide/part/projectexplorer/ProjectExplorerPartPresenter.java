@@ -31,6 +31,7 @@ import org.exoplatform.ide.resources.FileEvent;
 import org.exoplatform.ide.resources.FileEvent.FileOperation;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Resource;
+import org.exoplatform.ide.selection.Selection;
 
 /**
  * Project Explorer display Project Model in a dedicated Part (view).
@@ -133,19 +134,6 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
    }
 
    /**
-    * Opens file.
-    * 
-    * @param resource
-    */
-   protected void openFile(Resource resource)
-   {
-      if (resource.isFile())
-      {
-         eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
-      }
-   }
-
-   /**
    * {@inheritDoc}
    */
    @Override
@@ -177,8 +165,14 @@ public class ProjectExplorerPartPresenter extends AbstractPartPresenter implemen
     * {@inheritDoc}
     */
    @Override
-   public void onNodeAction(Resource resource)
+   public void onResourceAction(Resource resource)
    {
-      openFile(resource);
+      // set selection
+      setSelection(new Selection<Resource>(resource));
+      // open file
+      if (resource.isFile())
+      {
+         eventBus.fireEvent(new FileEvent((File)resource, FileOperation.OPEN));
+      }
    }
 }
