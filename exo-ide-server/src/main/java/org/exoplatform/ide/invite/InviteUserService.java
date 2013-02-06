@@ -30,8 +30,6 @@ public interface InviteUserService
 {
    void addUser(Invite invite) throws Exception;
 
-   void removeUser(String userId) throws Exception;
-
    boolean isUserRegisteredGlobally(String userId) throws Exception;
 
    boolean isUserRegistered(String userId) throws Exception;

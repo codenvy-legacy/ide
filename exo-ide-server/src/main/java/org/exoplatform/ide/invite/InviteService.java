@@ -385,12 +385,8 @@ public class InviteService
    {
       try
       {
-         Invite invite = getInvite(inviteUuid);
-
-         inviteUserService.removeUser(invite.getEmail());
-
          SessionProvider sessionProvider = sessionProviderService.getSystemSessionProvider(null);
-         registry.removeEntry(sessionProvider, INVITES_ROOT + '/' + invite.getUuid());
+         registry.removeEntry(sessionProvider, INVITES_ROOT + '/' + inviteUuid);
       }
       catch (RepositoryException e)
       {
