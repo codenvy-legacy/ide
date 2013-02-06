@@ -82,7 +82,7 @@ public class AppfogExtension extends Extension implements InitializeServicesHand
       IDE.getInstance().registerPaaS(
          new PaaS("AppFog", "AppFog", new Image(AppfogClientBundle.INSTANCE.appfog48()), new Image(
             AppfogClientBundle.INSTANCE.appfog48Disabled()), Arrays.asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS,
-            ProjectType.SPRING, ProjectType.PYTHON, ProjectType.PHP), new DeployApplicationPresenter()));
+            ProjectType.SPRING, ProjectType.PYTHON, ProjectType.PHP, ProjectType.WAR), new DeployApplicationPresenter()));
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 
       IDE.getInstance().addControl(new AppfogControlGroup());
