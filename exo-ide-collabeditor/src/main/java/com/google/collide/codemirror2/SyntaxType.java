@@ -154,6 +154,7 @@ public enum SyntaxType {
    */
   private static JsonStringMap<SyntaxType> createMimeTypeToSyntaxTypeMap() {
     JsonStringMap<SyntaxType> tmp = JsonCollections.createMap();
+    tmp.put(MimeType.TEXT_CSS, SyntaxType.CSS);
     tmp.put(MimeType.TEXT_HTML, SyntaxType.HTML);
     tmp.put(MimeType.APPLICATION_JAVA, SyntaxType.JAVA);
     tmp.put(MimeType.APPLICATION_JAVASCRIPT, SyntaxType.JS);

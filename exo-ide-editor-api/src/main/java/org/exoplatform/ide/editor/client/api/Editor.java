@@ -113,8 +113,8 @@ public interface Editor extends IsWidget
     * Moves cursor to specified position (row, column). If there are now such row or column in the specified row in the text, then cursor
     * will be stayed as it.
     * 
-    * @param column
     * @param row
+    * @param column
     */
    void setCursorPosition(int row, int column);
 
