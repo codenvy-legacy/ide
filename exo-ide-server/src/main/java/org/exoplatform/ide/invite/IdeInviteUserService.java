@@ -66,18 +66,6 @@ public class IdeInviteUserService implements InviteUserService
    }
 
    @Override
-   public void removeUser(String userId) throws Exception
-   {
-      UserHandler userHandler = organizationService.getUserHandler();
-      MembershipHandler membershipHandler = organizationService.getMembershipHandler();
-
-      User user = userHandler.findUserByName(userId);
-      membershipHandler.removeMembershipByUser(user.getUserName(), false);
-
-      userHandler.removeUser(user.getUserName(), false);
-   }
-
-   @Override
    public boolean isUserRegistered(String userId) throws Exception
    {
       UserHandler userHandler = organizationService.getUserHandler();
