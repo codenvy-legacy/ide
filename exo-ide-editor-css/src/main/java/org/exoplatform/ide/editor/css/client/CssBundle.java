@@ -18,10 +18,8 @@
  */
 package org.exoplatform.ide.editor.css.client;
 
-import com.google.gwt.resources.client.ImageResource;
-
 import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.ClientBundle.Source;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -45,5 +43,8 @@ public interface CssBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/editor/css/public/images/css/css.png")
    ImageResource cssImage();
+
+   @Source("org/exoplatform/ide/editor/css/client/images/css-property.png")
+   ImageResource cssProperty();
 
 }

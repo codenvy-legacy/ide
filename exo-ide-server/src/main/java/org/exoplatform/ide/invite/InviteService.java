@@ -67,8 +67,8 @@ public class InviteService
    private final InviteMessagePropertiesProvider inviteMessagePropertiesProvider;
 
    public InviteService(RegistryService registry, SessionProviderService sessionProviderService,
-      MailSenderClient mailSender, InviteUserService inviteUserService,
-      InviteMessagePropertiesProvider messagePropertiesProvider, TemplateResolver templateResolver)
+                        MailSenderClient mailSender, InviteUserService inviteUserService,
+                        InviteMessagePropertiesProvider messagePropertiesProvider, TemplateResolver templateResolver)
    {
       this.registry = registry;
       this.mailSender = mailSender;
@@ -80,7 +80,7 @@ public class InviteService
 
    /**
     * Accept invite.
-    * 
+    *
     * @param inviteId
     * @return - information about accepted invite.
     * @throws InviteException
@@ -119,7 +119,7 @@ public class InviteService
 
    /**
     * Check if user already registered in the organization service.
-    * 
+    *
     * @param userName
     *           - name of the user
     * @return -true if user already registered in organization service
@@ -141,7 +141,7 @@ public class InviteService
 
    /**
     * Check if user already registered in the organization service.
-    * 
+    *
     * @param userName
     *           - name of the user
     * @return -true if user already registered in organization service
@@ -164,7 +164,7 @@ public class InviteService
    /**
     * Check if invite is valid. After predefined period of time invite can
     * become invalid
-    * 
+    *
     * @param userMail
     *           - user email
     * @return - invite information corresponding to the argument.
@@ -194,7 +194,7 @@ public class InviteService
 
    /**
     * Send invite to specific user.
-    * 
+    *
     * @param from
     *           - email of invite initiator.
     * @param to
@@ -237,6 +237,7 @@ public class InviteService
          }
 
          doSendMail(to, "Codenvy <noreply@codenvy.com>", inviteMessageProperties);
+         LOG.info("EVENT#user-invite# EMAIL#" + to + "#");
       }
       catch (SendingIdeMailException e)
       {
@@ -291,7 +292,7 @@ public class InviteService
    /**
     * Save invite in the Registry. If invite for user already exist - it will be
     * removed.
-    * 
+    *
     * @param invite
     *           - invite to save.
     * @throws InviteException
@@ -376,7 +377,7 @@ public class InviteService
 
    /**
     * Remove invite from persistent storage.
-    * 
+    *
     * @param inviteUuid
     *           - id of invite to remove.
     * @throws InviteException
@@ -393,12 +394,16 @@ public class InviteService
          LOG.error(e.getLocalizedMessage(), e);
          throw new InviteException("Unable to remove existed invite.", e);
       }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
     * Check if invite is valid. After predefined period of time invite can
     * become invalid
-    * 
+    *
     * @param inviteId
     *           - id of invite
     * @return - invite information corresponding to the argument.

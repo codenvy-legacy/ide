@@ -851,4 +851,9 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       editor.getBuffer().onResize();
    }
+
+   public com.google.collide.client.editor.Editor getEditor()
+   {
+      return editor;
+   }
 }

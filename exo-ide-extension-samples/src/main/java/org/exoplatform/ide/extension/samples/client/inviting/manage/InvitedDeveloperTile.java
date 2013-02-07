@@ -81,6 +81,7 @@ public class InvitedDeveloperTile extends Composite
       }
       else if (invite.isActivated())
       {
+         revokeImage.setEnabled(false);
          inviteRole.getElement().setInnerHTML("<span style=\"color:green\">Accepted</span>");
       }
       else

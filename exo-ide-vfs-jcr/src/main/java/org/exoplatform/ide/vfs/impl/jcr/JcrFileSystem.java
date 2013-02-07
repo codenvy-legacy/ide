@@ -357,7 +357,7 @@ public class JcrFileSystem implements VirtualFileSystem
             project.getMimeType(), //
             ChangeEvent.ChangeType.CREATED)
          );
-         LOG.info("EVENT#project-created# PROJECT#" + name + "#");
+         LOG.info("EVENT#project-created# PROJECT#" + name + "# TYPE#" + type + "#");
          return project;
       }
       finally
@@ -382,6 +382,8 @@ public class JcrFileSystem implements VirtualFileSystem
          MediaType mediaType = data.getMediaType();
          ItemType type = data.getType();
          String name = data.getName();
+         List<Property> props = data.getProperties(PropertyFilter.valueOf("vfs:projectType"));
+         String projectType = props.size() == 0 ? "" : props.get(0).getValue().get(0);
          if (listeners != null && type == ItemType.PROJECT)
          {
             listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)data), new ProjectUpdateListener(id));
@@ -389,7 +391,7 @@ public class JcrFileSystem implements VirtualFileSystem
          data.delete(lockToken);
          if (type == ItemType.PROJECT)
          {
-            LOG.info("EVENT#project-destroyed# PROJECT#"+ name +"#");
+            LOG.info("EVENT#project-destroyed# PROJECT#" + name + "# TYPE#" + projectType + "#");
          }
          notifyListeners(new ChangeEvent(this, //
             id, //
@@ -1286,7 +1288,9 @@ public class JcrFileSystem implements VirtualFileSystem
                            data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                               : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
                      }
-                     if (value.get(0).equals(Project.PROJECT_MIME_TYPE) && !data.getType().equals(Project.PROJECT_MIME_TYPE))
+                     List<Property> props = data.getProperties(PropertyFilter.valueOf("vfs:mimeType"));
+                     String dmType = props.size() == 0 ? "" : props.get(0).getValue().get(0);
+                     if (value.get(0).equals(Project.PROJECT_MIME_TYPE) && !dmType.equals(Project.PROJECT_MIME_TYPE))
                      {
                         convertToProject = true;
                      }
@@ -1295,10 +1299,6 @@ public class JcrFileSystem implements VirtualFileSystem
             }
             data.updateProperties(properties, addMixinTypes, removeMixinTypes, lockToken);
             data = getItemData(session, id);
-            if (convertToProject)
-            {
-              LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "#");
-            }
             MediaType mediaType = data.getMediaType();
             notifyListeners(new ChangeEvent(this, //
                data.getId(), //
@@ -1306,6 +1306,12 @@ public class JcrFileSystem implements VirtualFileSystem
                mediaType != null ? mediaType.toString() : null, //
                ChangeEvent.ChangeType.PROPERTIES_UPDATED)
             );
+         }
+         if (convertToProject)
+         {
+            List<Property> props = data.getProperties(PropertyFilter.valueOf("vfs:projectType"));
+            String projectType = props.size() == 0 ? "" : props.get(0).getValue().get(0);
+            LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "# TYPE#" + projectType + "#");
          }
          return fromItemData(data, PropertyFilter.ALL_FILTER);
       }
@@ -1512,7 +1518,6 @@ public class JcrFileSystem implements VirtualFileSystem
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
                
-               LOG.info("EVENT#project-created# PROJECT#" + parentData.getName() + "#");
                List<Property> properties;
                try
                {
@@ -1530,6 +1535,17 @@ public class JcrFileSystem implements VirtualFileSystem
                {
                   current.updateProperties(properties, null, null, null);
                }
+
+               String projectType = "";
+               for (Property prop : properties)
+               {
+                  if ("vfs:projectType".equals(prop.getName()))
+                  {
+                     projectType = prop.getValue().get(0);
+                     break;
+                  }
+               }
+               LOG.info("EVENT#project-created# PROJECT#" + parentData.getName() + "# TYPE#" + projectType + "#");
             }
             else
             {

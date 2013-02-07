@@ -34,10 +34,12 @@ import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -67,7 +69,7 @@ public class AppfogService
 
    protected AppfogService(Appfog appfog, VirtualFileSystemRegistry vfsRegistry)
    {
-      // Use this constructor when deploy CloudfoundryService as singleton resource.
+      // Use this constructor when deploy AppfogService as singleton resource.
       this.appfog = appfog;
       this.vfsRegistry = vfsRegistry;
    }

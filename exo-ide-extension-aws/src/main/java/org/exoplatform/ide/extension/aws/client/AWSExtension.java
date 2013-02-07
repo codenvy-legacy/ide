@@ -56,7 +56,7 @@ import java.util.Arrays;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Sep 13, 2012 2:57:21 PM anya $
- * 
+ *
  */
 public class AWSExtension extends Extension implements InitializeServicesHandler
 {
@@ -82,7 +82,7 @@ public class AWSExtension extends Extension implements InitializeServicesHandler
       IDE.getInstance().registerPaaS(
          new PaaS("AWS", "AWS Elastic Beanstalk", new Image(AWSClientBundle.INSTANCE.elasticBeanstalk48()), new Image(
             AWSClientBundle.INSTANCE.elasticBeanstalk48Disabled()), Arrays.asList(ProjectType.JAVA, ProjectType.SPRING,
-            ProjectType.JSP, ProjectType.AWS, ProjectType.WAR), new DeployApplicationPresenter()));
+            ProjectType.JSP, ProjectType.AWS, ProjectType.WAR, ProjectType.WAR), new DeployApplicationPresenter()));
 
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
 

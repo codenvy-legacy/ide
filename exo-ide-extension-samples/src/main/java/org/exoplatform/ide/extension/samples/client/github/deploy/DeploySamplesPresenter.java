@@ -61,7 +61,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * Presenter for deploying samples imported from GitHub.
@@ -416,11 +418,6 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
       String projectType = data.getType();
       folderModel.getProperties().add(new PropertyImpl("vfs:mimeType", ProjectModel.PROJECT_MIME_TYPE));
       folderModel.getProperties().add(new PropertyImpl("vfs:projectType", projectType));
-
-      if (!data.getTargets().isEmpty())
-      {
-         folderModel.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), data.getTargets()));
-      }
 
       ItemWrapper item = new ItemWrapper(new ProjectModel());
       ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);

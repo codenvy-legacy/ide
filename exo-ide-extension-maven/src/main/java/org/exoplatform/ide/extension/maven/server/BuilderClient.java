@@ -158,11 +158,12 @@ public class BuilderClient
     * @throws VirtualFileSystemException
     *    if any error in VFS
     */
-   public String build(VirtualFileSystem vfs, String projectId) throws IOException,
+   public String build(VirtualFileSystem vfs, String projectId, String projectName, String projectType) throws IOException,
       BuilderException, VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/builder/maven/build");
       String buildId = run(url, vfs.exportZip(projectId));
+      LOG.info("EVENT#project-built# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
       startCheckingBuildStatus(buildId);
       return buildId;
    }
@@ -183,11 +184,13 @@ public class BuilderClient
     * @throws VirtualFileSystemException
     *    if any error in VFS
     */
-   public String deploy(VirtualFileSystem vfs, String projectId) throws IOException, BuilderException,
+   public String deploy(VirtualFileSystem vfs, String projectId, String projectName, String projectType) throws IOException, BuilderException,
       VirtualFileSystemException
    {
       URL url = new URL(baseURL + "/builder/maven/deploy");
       String buildId = run(url, vfs.exportZip(projectId));
+      LOG.info("EVENT#project-built# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+      LOG.info("EVENT#project-deployed# PROJECT#" + projectName + "# TYPE#" + projectType + "# PAAS#LOCAL#");
       startCheckingBuildStatus(buildId);
       return buildId;
    }

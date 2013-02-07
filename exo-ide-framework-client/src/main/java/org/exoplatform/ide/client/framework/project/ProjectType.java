@@ -20,12 +20,13 @@ package org.exoplatform.ide.client.framework.project;
 
 /**
  * Defined types of projects.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 24, 2012 12:15:43 PM anya $
- * 
+ *
  */
-public enum ProjectType {
+public enum ProjectType
+{
    PHP("PHP"), //
    JSP("Servlet/JSP"), //
    JAVA("Java"), //
@@ -40,6 +41,7 @@ public enum ProjectType {
    SPRING("Spring"), //
    EXO("eXo"), //
    UNDEFINED("Undefined"), //
+   DEFAULT("default"), //
    AWS("Amazon Web Services"),//
    MultiModule("Maven Multi-module");
 
