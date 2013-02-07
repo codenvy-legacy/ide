@@ -19,19 +19,20 @@
 package com.google.collide.client.collaboration.participants;
 
 import com.google.collide.client.CollabEditor;
+import com.google.collide.client.Resources;
 import com.google.collide.client.code.Participant;
 import com.google.collide.client.code.ParticipantModel.Listener;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.shared.document.Document;
 import com.google.gwt.core.client.GWT;
 
+import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,8 +46,8 @@ import java.util.Map;
  * @version $Id: ParticipantsPresenter.java Jan 30, 2013 3:18:56 PM azatsarynnyy $
  *
  */
-public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFileChangedHandler,
-   CollaborationDocumentLinkedHandler
+public class ParticipantsPresenter implements ShowHideParticipantsHandler, ViewClosedHandler,
+   EditorActiveFileChangedHandler, CollaborationDocumentLinkedHandler
 {
    /**
     * View for participants panel.
@@ -67,25 +68,33 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
    private Display display;
 
    /**
-    * Current active file.
-    */
-   private FileModel activeFile;
-
-   /**
     * Current active document.
     */
    private Document activeDocument;
+
+   /**
+    * Participants list for active file.
+    */
+   private List<Participant> participantsList = new ArrayList<Participant>();
 
    /**
     * Map of {@link Document} id to the participant list.
     */
    private Map<Integer, List<Participant>> documentToParticipants = new HashMap<Integer, List<Participant>>();
 
-   public ParticipantsPresenter()
+   /**
+    * Creates new instance of {@link ParticipantsPresenter}.
+    * 
+    * @param resources {@link Resource}
+    */
+   public ParticipantsPresenter(Resources resources)
    {
+      IDE.addHandler(ShowHideParticipantsEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(CollaborationDocumentLinkedEvent.TYPE, this);
+
+      IDE.getInstance().addControl(new ShowHideParticipantsControl(resources), Docking.TOOLBAR);
    }
 
    /**
@@ -94,27 +103,25 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
    @Override
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      activeFile = event.getFile();
-
-      if (activeFile == null || !(event.getEditor() instanceof CollabEditor))
+      org.exoplatform.ide.editor.client.api.Editor activeEditor = event.getEditor();
+      if (event.getFile() == null || activeEditor == null || !(activeEditor instanceof CollabEditor))
       {
          activeDocument = null;
          closeView();
          return;
       }
 
-      Editor editor = ((CollabEditor)event.getEditor()).getEditor();
+      Editor editor = ((CollabEditor)activeEditor).getEditor();
       activeDocument = editor.getDocument();
-      List<Participant> participants = documentToParticipants.get(activeDocument.getId());
-
-      // Don't show view if no any participants except for current user.
-      if (participants != null && participants.size() > 1)
+      participantsList = documentToParticipants.get(activeDocument.getId());
+      if (participantsList == null)
       {
-         updateParticipantList(participants);
+         participantsList = new ArrayList<Participant>();
       }
-      else
+
+      if (display != null)
       {
-         closeView();
+         display.setValue(participantsList);
       }
    }
 
@@ -131,69 +138,37 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
          @Override
          public void participantAdded(Participant participant)
          {
-            List<Participant> participants = documentToParticipants.get(document.getId());
-            if (participants == null)
+            participantsList = documentToParticipants.get(document.getId());
+            if (participantsList == null)
             {
-               participants = new ArrayList<Participant>();
-               documentToParticipants.put(document.getId(), participants);
+               participantsList = new ArrayList<Participant>();
+               documentToParticipants.put(document.getId(), participantsList);
             }
-            participants.add(participant);
+            participantsList.add(participant);
 
-            if (activeDocument != null && document.getId() == activeDocument.getId())
+            if (display != null && activeDocument != null && document.getId() == activeDocument.getId())
             {
-               updateParticipantList(participants);
+               display.setValue(participantsList);
             }
          }
 
          @Override
          public void participantRemoved(Participant participant)
          {
-            List<Participant> participants = documentToParticipants.get(document.getId());
+            participantsList = documentToParticipants.get(document.getId());
             if (participant == null)
             {
                closeView();
                return;
             }
-            participants.remove(participant);
+            participantsList.remove(participant);
 
-            if (activeDocument != null && document.getId() == activeDocument.getId())
+            if (display != null && activeDocument != null && document.getId() == activeDocument.getId())
             {
-               if (participants.size() > 1)
-               {
-                  updateParticipantList(participants);
-               }
-               else
-               {
-                  // Close view if no any participants except for current user.
-                  closeView();
-               }
+               display.setValue(participantsList);
             }
-
          }
       });
-   }
-
-   /**
-    * Update participant list in view.
-    * 
-    * @param participants participant list
-    */
-   private void updateParticipantList(List<Participant> participants)
-   {
-      openView();
-      display.setValue(participants);
-   }
-
-   /**
-    * Open view.
-    */
-   private void openView()
-   {
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-      }
    }
 
    /**
@@ -219,4 +194,21 @@ public class ParticipantsPresenter implements ViewClosedHandler, EditorActiveFil
       }
    }
 
+   /**
+    * @see com.google.collide.client.collaboration.participants.ShowHideParticipantsHandler#onShowHideParticipants(com.google.collide.client.collaboration.participants.ShowHideParticipantsEvent)
+    */
+   @Override
+   public void onShowHideParticipants(ShowHideParticipantsEvent event)
+   {
+      if (!event.isShow())
+      {
+         closeView();
+      }
+      else if (display == null)
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         display.setValue(participantsList);
+      }
+   }
 }

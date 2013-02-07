@@ -18,25 +18,19 @@
  */
 package com.google.collide.client.collaboration.participants;
 
-import com.google.collide.shared.document.Document;
 import com.google.gwt.event.shared.EventHandler;
 
 /**
- * {@link EventHandler} for handling event when {@link Document} linked to a file.
+ * {@link EventHandler} for listening {@link ShowHideParticipantsEvent}s.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CollaborationDocumentLinkedHandler.java Jan 31, 2013 11:48:50 AM azatsarynnyy $
+ * @version $Id: ShowHideParticipantsHandler.java Feb 6, 2013 12:34:27 PM azatsarynnyy $
  *
  */
-
-public interface CollaborationDocumentLinkedHandler extends EventHandler
+public interface ShowHideParticipantsHandler extends EventHandler
 {
-
    /**
-    * Called after the document is linked to a file.
-    * 
-    * @param event {@link CollaborationDocumentLinkedEvent}
+    * @param event {@link ShowHideParticipantsEvent}
     */
-   void onDocumentLinked(CollaborationDocumentLinkedEvent event);
-
+   void onShowHideParticipants(ShowHideParticipantsEvent event);
 }
