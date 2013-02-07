@@ -100,24 +100,24 @@ public class BuilderClientServiceImpl extends BuilderClientService
     * @throws RequestException
     * @see org.exoplatform.ide.extension.maven.client.BuilderClientService#build(java.lang.String, java.lang.String, org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
-   public void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+   public void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException
    {
       final String requesrUrl = restServiceContext + BUILD;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
    @Override
-   public void buildAndPublish(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+   public void buildAndPublish(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException
    {
       final String requesrUrl = restServiceContext + DEPLOY;
 
-      String params = "vfsid=" + vfsId + "&projectid=" + projectId;
+      String params = "vfsid=" + vfsId + "&projectid=" + projectId + "&name=" + projectName + "&type=" + projectType;
       callback.setSuccessCodes(new int[]{200, 201, 202, 204, 207, 1223});
       AsyncRequest.build(RequestBuilder.GET, requesrUrl + "?" + params)
          .header(HTTPHeader.CONTENT_TYPE, MimeType.APPLICATION_JSON).send(callback);

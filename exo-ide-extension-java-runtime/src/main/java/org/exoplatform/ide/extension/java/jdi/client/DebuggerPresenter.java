@@ -267,7 +267,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          public void onClick(ClickEvent event)
          {
             doDisconnectDebugger();
-            doStopApp();
+//            doStopApp();
          }
       });
 
@@ -431,6 +431,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                   breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
                   currentBreakPoint = null;
                   IDE.eventBus().fireEvent(new DebuggerDisconnectedEvent());
+                  doStopApp();
                }
 
                @Override
@@ -630,6 +631,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    private void onEventListReceived(DebuggerEventList eventList)
    {
       String filePath = null;
+      System.out.println("DebuggerPresenter.onEventListReceived()" + eventList.getEvents().size());
       if (eventList != null && eventList.getEvents().size() > 0)
       {
          Location location;
@@ -1141,7 +1143,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onStopApp(StopAppEvent event)
    {
       doDisconnectDebugger();
-      doStopApp();
+//      doStopApp();
    }
 
    private void doStopApp()
@@ -1447,6 +1449,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       public void onSuccess(DebuggerEventList result)
       {
+         System.out.println("DebuggerPresenter.enclosing_method()" + result.getEvents().size());
          onEventListReceived(result);
       }
 

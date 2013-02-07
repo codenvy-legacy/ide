@@ -61,7 +61,7 @@ public abstract class BuilderClientService
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void build(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+   public abstract void build(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
 
    /**
@@ -72,7 +72,7 @@ public abstract class BuilderClientService
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void buildAndPublish(String projectId, String vfsId, AsyncRequestCallback<StringBuilder> callback)
+   public abstract void buildAndPublish(String projectId, String vfsId, String projectName, String projectType, AsyncRequestCallback<StringBuilder> callback)
       throws RequestException;
 
    /**
@@ -91,7 +91,8 @@ public abstract class BuilderClientService
     * @param callback callback
     * @throws RequestException
     */
-   public abstract void status(String buildid, AsyncRequestCallback<BuildStatus> callback) throws RequestException;
+   public abstract void status(String buildid, AsyncRequestCallback<BuildStatus> callback)
+      throws RequestException;
 
    /**
     * Get build log.

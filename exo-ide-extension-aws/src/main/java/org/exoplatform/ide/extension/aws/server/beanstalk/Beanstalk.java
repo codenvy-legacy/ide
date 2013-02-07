@@ -64,6 +64,7 @@ import com.amazonaws.services.elasticbeanstalk.model.UpdateEnvironmentResult;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.extension.aws.server.AWSAuthenticator;
 import org.exoplatform.ide.extension.aws.server.AWSClient;
@@ -85,6 +86,8 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -105,6 +108,8 @@ import java.util.Map;
  */
 public class Beanstalk extends AWSClient
 {
+   private static final Log LOG = ExoLogger.getLogger(Beanstalk.class);
+
    public Beanstalk(AWSAuthenticator authenticator)
    {
       super(authenticator);
@@ -251,7 +256,9 @@ public class Beanstalk extends AWSClient
 
       // Be sure project is accessible before start creation an application.
       // VirtualFileSystemException thrown if something wrong.
-      vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
+      Item itm = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
+      LOG.info("EVENT#application-created# PROJECT#" + itm.getName() + "# TYPE#"
+         + itm.getPropertyValue("vfs:projectType") + "# PAAS#Amazon#");
 
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       AmazonS3 s3Client = getS3Client();
