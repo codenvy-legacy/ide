@@ -847,7 +847,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
                protected void onSuccess(ItemWrapper result)
                {
                   openedProject = (ProjectModel)result.getItem();
-                  IDE.fireEvent(new OutputEvent("Target list updated.", OutputMessage.Type.INFO));
                   loadProject();
                }
 
