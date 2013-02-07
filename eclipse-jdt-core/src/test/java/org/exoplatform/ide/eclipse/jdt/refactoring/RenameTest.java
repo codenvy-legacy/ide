@@ -33,6 +33,7 @@ import org.exoplatform.ide.eclipse.jdt.JdtBaseTest;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,6 +44,7 @@ import java.util.Random;
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  */
+@Ignore
 public class RenameTest extends JdtBaseTest
 {
 

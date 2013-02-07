@@ -116,7 +116,7 @@ public class WorkspaceResource implements IWorkspace
 
    private IWorkspaceDescription description;
 
-   protected NotificationManager notificationManager;
+//   protected NotificationManager notificationManager;
 
 
    protected final CopyOnWriteArrayList<ILifecycleListener> lifecycleListeners = new CopyOnWriteArrayList<ILifecycleListener>();
@@ -159,8 +159,8 @@ public class WorkspaceResource implements IWorkspace
       _workManager = new WorkManager(this);
       _workManager.startup(null);
       _workManager.postWorkspaceStartup();
-      notificationManager = new NotificationManager(this);
-      notificationManager.startup(null);
+//      notificationManager = new NotificationManager(this);
+//      notificationManager.startup(null);
       description = new WorkspaceDescription();
       tree = new ElementTree();
       /* tree should only be modified during operations */
@@ -226,8 +226,8 @@ public class WorkspaceResource implements IWorkspace
     */
    public void addResourceChangeListener(IResourceChangeListener listener)
    {
-      notificationManager.addListener(listener,
-         IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.POST_CHANGE);
+//      notificationManager.addListener(listener,
+//         IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.POST_CHANGE);
    }
 
    /* (non-Javadoc)
@@ -235,7 +235,7 @@ public class WorkspaceResource implements IWorkspace
     */
    public void addResourceChangeListener(IResourceChangeListener listener, int eventMask)
    {
-      notificationManager.addListener(listener, eventMask);
+//      notificationManager.addListener(listener, eventMask);
    }
 
 
@@ -283,8 +283,8 @@ public class WorkspaceResource implements IWorkspace
 
    public void broadcastPostChange()
    {
-      ResourceChangeEvent event = new ResourceChangeEvent(this, IResourceChangeEvent.POST_CHANGE, 0, null);
-      notificationManager.broadcastChanges(tree, event, true);
+//      ResourceChangeEvent event = new ResourceChangeEvent(this, IResourceChangeEvent.POST_CHANGE, 0, null);
+//      notificationManager.broadcastChanges(tree, event, true);
    }
 
    /**
@@ -937,11 +937,11 @@ public class WorkspaceResource implements IWorkspace
          workManager.setBuild(build);
          // if we are not exiting a top level operation then just decrement the count and return
          depthOne = workManager.getPreparedOperationDepth() == 1;
-         if (!(notificationManager.shouldNotify() || depthOne))
-         {
-            notificationManager.requestNotify();
-            return;
-         }
+//         if (!(notificationManager.shouldNotify() || depthOne))
+//         {
+//            notificationManager.requestNotify();
+//            return;
+//         }
          // do the following in a try/finally to ensure that the operation tree is nulled at the end
          // as we are completing a top level operation.
          try
