@@ -237,6 +237,7 @@ public class InviteService
          }
 
          doSendMail(to, "Codenvy <noreply@codenvy.com>", inviteMessageProperties);
+         LOG.info("EVENT#user-invite# EMAIL#" + to + "#");
       }
       catch (SendingIdeMailException e)
       {

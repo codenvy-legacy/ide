@@ -213,7 +213,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       try
       {
-         BuilderClientService.getInstance().build(projectId, vfs.getId(),
+         BuilderClientService.getInstance().build(projectId, vfs.getId(), project.getName(), project.getProjectType(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
@@ -281,7 +281,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
       try
       {
-         BuilderClientService.getInstance().buildAndPublish(projectId, vfs.getId(),
+         BuilderClientService.getInstance().buildAndPublish(projectId, vfs.getId(), project.getName(), project.getProjectType(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
                @Override
