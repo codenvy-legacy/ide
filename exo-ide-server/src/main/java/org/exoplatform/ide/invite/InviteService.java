@@ -206,17 +206,7 @@ public class InviteService
    public void sendInviteByMail(String from, String to, String mailBody) throws InviteException
    {
       // check if specified user is already registered
-
-      Invite newInvite1 = new Invite();
-      newInvite1.setEmail(Math.random() + "@site.com");
-      newInvite1.setActivated(false);
-      newInvite1.setInvitationTime(System.currentTimeMillis());
-      newInvite1.setPassword(NameGenerator.generate(null, 12));
-      newInvite1.setUuid(UUID.randomUUID().toString());
-
-      saveInvite(newInvite1);
-
-      /*if (isUserRegisteredInOrganization(to))
+      if (isUserRegisteredInOrganization(to))
       {
          throw new InviteException(403, to + " already registered in the system");
       }
@@ -263,7 +253,7 @@ public class InviteService
          }
 
          throw new InviteException(e.getStatus(), e.getLocalizedMessage());
-      }*/
+      }
    }
 
    private void doSendMail(String to, String from, Map<String, Object> inviteMessageProperties) throws InviteException,
