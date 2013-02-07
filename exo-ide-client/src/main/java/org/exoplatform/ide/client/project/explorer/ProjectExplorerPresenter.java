@@ -72,6 +72,9 @@ import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconE
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
@@ -94,7 +97,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
-import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.client.model.SettingsService;
 import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
@@ -123,6 +125,7 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.util.ArrayList;
@@ -807,6 +810,59 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
    }
 
+   private void updateTargets()
+   {
+      for (Property property : openedProject.getProperties())
+      {
+         if (property.getName().equals(ProjectProperties.TARGET.value()))
+         {
+            loadProject();
+            return;
+         }
+      }
+
+      List<String> supportedPaaS = new ArrayList<String>();
+      for (PaaS paas : IDE.getInstance().getPaaSes())
+      {
+         if (paas.getSupportedProjectTypes().contains(ProjectType.fromValue(openedProject.getProjectType())))
+         {
+            supportedPaaS.add(paas.getId());
+         }
+      }
+
+      if (supportedPaaS.size() == 0)
+      {
+         loadProject();
+         return;
+      }
+
+      openedProject.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), supportedPaaS));
+
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(openedProject, null,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  openedProject = (ProjectModel)result.getItem();
+                  loadProject();
+               }
+
+               @Override
+               protected void onFailure(Throwable e)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(e));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
    @Override
    public void onOpenProject(OpenProjectEvent event)
    {
@@ -824,15 +880,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
 
       openedProject = new ProjectModel(event.getProject());
-      if (isOldProjectType(openedProject))
-      {
-         setTargets(openedProject);
-      }
-      else
-      {
-         loadProject();
-      }
-
+      updateTargets();
    }
 
    @Override
@@ -853,14 +901,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
       else
       {
-         if (isOldProjectType(openedProject))
-         {
-            setTargets(openedProject);
-         }
-         else
-         {
-            loadProject();
-         }
+         updateTargets();
       }
    }
 
@@ -1299,56 +1340,6 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          {
             refreshProjectsList();
          }
-      }
-   }
-
-   /**
-    * TODO Temporary method.
-    *
-    * Detected whether project type is deprecated or not.
-    *
-    * @param project
-    * @return <code>true</code> if deprecated
-    */
-   private boolean isOldProjectType(ProjectModel project)
-   {
-      return ProjectResolver.deprecatedTypes.contains(project.getProjectType())
-         && project.getPropertyValues(ProjectProperties.TARGET.value()) == null;
-   }
-
-   /**
-    * TODO Temporary method.
-    *
-    * Is used to detect and set targets to deprecated project types (to support them).
-    *
-    * @param project
-    */
-   private void setTargets(ProjectModel project)
-   {
-      ArrayList<String> targets = ProjectResolver.resolveProjectTarget(project.getProjectType());
-      project.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), targets));
-
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-         {
-
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               loadProject();
-            }
-
-            @Override
-            protected void onFailure(Throwable e)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(e));
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 

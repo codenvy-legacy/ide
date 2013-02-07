@@ -211,7 +211,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       document = new org.exoplatform.ide.editor.shared.text.Document(text);
       document.addDocumentListener(documentAdaptor);
-//      hoverPresenter = new HoverPresenter(this, editor, document);
+      hoverPresenter = new HoverPresenter(this, editor, document);
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
 
@@ -705,6 +705,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
       return contentAssistant;
    }
 
+
    /**
     * @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback)
     */
@@ -749,7 +750,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                   @Override
                   public void execute()
                   {
-                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();
+                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();                     
                      searchCompleteCallback.onSearchComplete(matches > 0);
                   }
                });
@@ -775,7 +776,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                {
                   searchCompleteCallback.onSearchComplete(false);
                }
-
+               
                if (editor.getSelection().hasSelection())
                {
                   searchCompleteCallback.onSearchComplete(true);

@@ -25,22 +25,25 @@ import org.exoplatform.gwtframework.commons.loader.EmptyLoader;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
+import org.exoplatform.ide.extension.samples.client.inviting.manage.Invite;
+import java.util.List;
+import javax.ws.rs.core.MediaType;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 public class InviteClientService
 {
-   
+
    private static InviteClientService instance;
-   
+
    public static InviteClientService getInstance()
    {
       return instance;
    }
-   
+
    private String restServiceContext;
 
    public InviteClientService(String restServiceContext)
@@ -51,9 +54,22 @@ public class InviteClientService
 
    public void inviteUser(String email, String message, AsyncRequestCallback<String> callback) throws RequestException
    {
-      String url = restServiceContext + "/invite/" + email;      
+      String url = restServiceContext + "/invite/" + email;
       AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
          .header(HTTPHeader.CONTENTTYPE, "text/html; charset=utf-8").data(message).send(callback);
    }
 
+   public void getInvitesList(AsyncRequestCallback<List<Invite>> callback) throws RequestException
+   {
+      String url = restServiceContext + "/invite/users";
+      AsyncRequest.build(RequestBuilder.GET, url).loader(new EmptyLoader())
+         .header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON).send(callback);
+   }
+
+   public void invalidateInvite(String uuid, AsyncRequestCallback<Void> callback) throws RequestException
+   {
+      String url = restServiceContext + "/invite/invalidate";
+      AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader()).data(uuid)
+         .header(HTTPHeader.CONTENT_TYPE, "text/html; charset=utf-8").send(callback);
+   }
 }

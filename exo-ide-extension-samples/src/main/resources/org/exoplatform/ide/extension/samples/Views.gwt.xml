@@ -70,11 +70,16 @@
    </replace-with>
       
    <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter.Display"/>
    </replace-with>
 
    <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersView">
-      <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display" />
+      <when-type-is
+         class="org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display"/>
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitesView">
+      <when-type-is class="org.exoplatform.ide.extension.samples.client.inviting.manage.ManageInvitePresenter.Display"/>
+   </replace-with>
 </module>

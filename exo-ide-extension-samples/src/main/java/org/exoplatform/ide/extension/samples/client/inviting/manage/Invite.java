@@ -16,21 +16,27 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.invite;
+package org.exoplatform.ide.extension.samples.client.inviting.manage;
 
 /**
- * We need this class temporary. 
- * After finish work with UserDB and REST API for it we will remove it. 
- *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: UserService.java Jan 3, 2013 vetal $
- *
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public interface InviteUserService
+public interface Invite
 {
-   void addUser(Invite invite) throws Exception;
+   public void setEmail(String email);
 
-   boolean isUserRegisteredGlobally(String userId) throws Exception;
+   public String getEmail();
 
-   boolean isUserRegistered(String userId) throws Exception;
+   public void setUuid(String uuid);
+
+   public String getUuid();
+
+   public void setActivated(Boolean activated);
+
+   public Boolean isActivated();
+
+   public void setValid(Boolean valid);
+
+   public Boolean isValid();
 }

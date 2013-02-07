@@ -420,8 +420,8 @@ public class Autocompleter implements ContentAssistant
          {
             int row = document.getLineOfOffset(selection.x);
             int lineOffset = document.getLineOffset(row);
-            //TODO add text selection
             exoEditor.setCursorPosition(row + 1, selection.x - lineOffset + 1);
+            exoEditor.selectRange(row + 1, selection.x - lineOffset, row + 1, selection.x - lineOffset + selection.y);
          }
       }
       catch (BadLocationException e)

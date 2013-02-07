@@ -59,7 +59,7 @@ import java.util.List;
  */
 public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHandler
 {
-   
+
    public interface Display extends IsView
    {
       HasClickHandlers getOkButton();
@@ -91,10 +91,10 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
       folderId = event.getFolderId();
       String url =
          Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId();
-      
+
       properties = event.getProperties();
       String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
-      
+
       try
       {
          AsyncRequest.build(RequestBuilder.POST, url, false)
@@ -234,10 +234,13 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
       }
       finally
       {
-         IDE.getInstance().closeView(display.asView().getId());
+         if (display != null)
+         {
+            IDE.getInstance().closeView(display.asView().getId());
+         }
       }
    }
-   
+
    private void openPreparedProject(String folderId)
    {
       try
@@ -265,6 +268,6 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
-   
-   
+
+
 }

@@ -16,21 +16,28 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.invite;
+package org.exoplatform.ide.extension.samples.client.inviting.manage;
+
+import java.util.Comparator;
 
 /**
- * We need this class temporary. 
- * After finish work with UserDB and REST API for it we will remove it. 
- *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: UserService.java Jan 3, 2013 vetal $
- *
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public interface InviteUserService
+public class InvitesComparator implements Comparator<Invite>
 {
-   void addUser(Invite invite) throws Exception;
+   @Override
+   public int compare(Invite o1, Invite o2)
+   {
+      Invite developerA = o1;
+      Invite developerB = o2;
 
-   boolean isUserRegisteredGlobally(String userId) throws Exception;
+      //pick up workspace owner
+      if (o1.isActivated() == null || o2.isActivated() == null)
+      {
+         return 1;
+      }
 
-   boolean isUserRegistered(String userId) throws Exception;
+      return -developerA.isActivated().compareTo(developerB.isActivated());
+   }
 }

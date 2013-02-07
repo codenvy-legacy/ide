@@ -47,11 +47,11 @@ import javax.ws.rs.core.Response;
 public class IdeInviteService
 {
    private static final Log LOG = ExoLogger.getLogger(IdeInviteService.class);
-   
+
    private final String sender = "Cloud-IDE <noreply@cloud-ide.com>";
 
    private final InviteService inviteService;
-   
+
    private DSASignatureChecker dsaSignatureChecker;
 
 
@@ -103,7 +103,7 @@ public class IdeInviteService
     * configured not correctly</td>
     * </tr>
     * </table>
-    * 
+    *
     * @param mailRecipient
     *           - address of invited person
     * @param mailBody
@@ -116,18 +116,22 @@ public class IdeInviteService
    @RolesAllowed("users")
    @Consumes("text/*")
    public Response sendInvite(@PathParam("mailrecipient") String mailRecipient,
-      @QueryParam("mailsender") String mailSender, String mailBody) throws SendingIdeMailException, InviteException
+                              @QueryParam("mailsender") String mailSender, String mailBody) throws SendingIdeMailException, InviteException
    {
       String userId = null;
       if (ConversationState.getCurrent() != null)
+      {
          userId = ConversationState.getCurrent().getIdentity().getUserId();
+      }
       else
+      {
          userId = sender;
+      }
       String from = (mailSender == null || mailSender.isEmpty()) ? userId : mailSender;
       inviteService.sendInviteByMail(from, mailRecipient, mailBody);
       return Response.ok().entity("Invitation mail sent successfully").build();
    }
-   
+
 
    /**
     * Sends email message to invited person and creates record about sent invite
@@ -175,7 +179,7 @@ public class IdeInviteService
     * configured not correctly</td>
     * </tr>
     * </table>
-    * 
+    *
     * @param mailRecipient
     *           - address of invited person
     * @param mailBody
@@ -188,7 +192,7 @@ public class IdeInviteService
    @Path("signed/{mailrecipient}")
    @Consumes("text/*")
    public Response sendSignedInvite(@PathParam("mailrecipient") String mailRecipient, @QueryParam("signature") String signature,
-      @QueryParam("mailsender") String mailsender, String mailBody) throws SendingIdeMailException, InviteException
+                                    @QueryParam("mailsender") String mailsender, String mailBody) throws SendingIdeMailException, InviteException
    {
       try
       {
@@ -248,11 +252,11 @@ public class IdeInviteService
     * "registrationDate":1296719524469, "email":"test@gmail.com",
     * "activated":false, "uuid":"ba544821-2105-4233-85a0-022d21683eff",
     * "password":"***" }
-    * 
+    *
     * @return the Response with corresponded status (200)
     */
    @GET
-   @RolesAllowed("users")
+   @Path("users")
    @Produces(MediaType.APPLICATION_JSON)
    public List<Invite> getListOfInvitedUsers() throws InviteException
    {
@@ -285,7 +289,7 @@ public class IdeInviteService
     * <td>error during processing request</td>
     * </tr>
     * </table>
-    * 
+    *
     * @param userName
     *           - user name of target person
     * @return the Response with corresponded status (200)
@@ -306,6 +310,13 @@ public class IdeInviteService
          MediaType.TEXT_PLAIN).build();
    }
 
+   @POST
+   @Path("/invalidate")
+   public void invalidateInvite(String uuid) throws InviteException
+   {
+      inviteService.removeInvite(uuid);
+   }
+
    private static String getParameterValue(InitParams params, String parameterName) throws ConfigurationException
    {
       ValueParam parameterValueParam = params.getValueParam(parameterName);
@@ -316,5 +327,5 @@ public class IdeInviteService
       }
       return parameterValueParam.getValue();
    }
-   
+
 }

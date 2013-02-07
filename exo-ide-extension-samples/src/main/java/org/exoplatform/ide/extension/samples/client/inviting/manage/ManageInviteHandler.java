@@ -16,21 +16,15 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.invite;
+package org.exoplatform.ide.extension.samples.client.inviting.manage;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- * We need this class temporary. 
- * After finish work with UserDB and REST API for it we will remove it. 
- *
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: UserService.java Jan 3, 2013 vetal $
- *
+ * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
+ * @version $Id: $
  */
-public interface InviteUserService
+public interface ManageInviteHandler extends EventHandler
 {
-   void addUser(Invite invite) throws Exception;
-
-   boolean isUserRegisteredGlobally(String userId) throws Exception;
-
-   boolean isUserRegistered(String userId) throws Exception;
+   public void onManageInvite(ManageInviteEvent event);
 }
