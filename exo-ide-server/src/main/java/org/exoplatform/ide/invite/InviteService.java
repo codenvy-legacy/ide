@@ -207,7 +207,16 @@ public class InviteService
    {
       // check if specified user is already registered
 
-      if (isUserRegisteredInOrganization(to))
+      Invite newInvite1 = new Invite();
+      newInvite1.setEmail(Math.random() + "@site.com");
+      newInvite1.setActivated(false);
+      newInvite1.setInvitationTime(System.currentTimeMillis());
+      newInvite1.setPassword(NameGenerator.generate(null, 12));
+      newInvite1.setUuid(UUID.randomUUID().toString());
+
+      saveInvite(newInvite1);
+
+      /*if (isUserRegisteredInOrganization(to))
       {
          throw new InviteException(403, to + " already registered in the system");
       }
@@ -253,7 +262,7 @@ public class InviteService
          }
 
          throw new InviteException(e.getStatus(), e.getLocalizedMessage());
-      }
+      }*/
    }
 
    private void doSendMail(String to, String from, Map<String, Object> inviteMessageProperties) throws InviteException,
@@ -386,16 +395,27 @@ public class InviteService
       try
       {
          SessionProvider sessionProvider = sessionProviderService.getSystemSessionProvider(null);
-         registry.removeEntry(sessionProvider, INVITES_ROOT + '/' + inviteUuid);
+         RegistryEntry entry = getOrCreateInviteRoot(sessionProvider);
+         Document inviteDocument = entry.getDocument();
+         Element root = inviteDocument.getDocumentElement();
+         NodeList invitedUsers = root.getChildNodes();
+
+         for (int i = 0; i < invitedUsers.getLength(); i++)
+         {
+            Node invitedUser = invitedUsers.item(i);
+            if (inviteUuid.equals(invitedUser.getAttributes().getNamedItem("uuid").getNodeValue()))
+            {
+               registry.removeEntry(sessionProvider, INVITES_ROOT + '/' + invitedUser.getNodeName());
+               return;
+            }
+         }
+
+         throw new InviteException("Invite doesn't exist.");
       }
       catch (RepositoryException e)
       {
          LOG.error(e.getLocalizedMessage(), e);
          throw new InviteException("Unable to remove existed invite.", e);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
       }
    }
 

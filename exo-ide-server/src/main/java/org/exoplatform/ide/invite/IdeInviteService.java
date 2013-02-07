@@ -311,10 +311,17 @@ public class IdeInviteService
    }
 
    @POST
-   @Path("/invalidate")
-   public void invalidateInvite(String uuid) throws InviteException
+   @Path("/invalidate/{username}")
+   public void invalidateInvite(@PathParam("username") String userName) throws InviteException
    {
-      inviteService.removeInvite(uuid);
+      Invite invite = inviteService.getInviteByUserName(userName);
+
+      if (invite.isActivated() || invite.getEmail().equals(ConversationState.getCurrent().getIdentity().getUserId()))
+      {
+         throw new InviteException("You can't revoke access from already accepted user or itself.");
+      }
+
+      inviteService.removeInvite(invite.getUuid());
    }
 
    private static String getParameterValue(InitParams params, String parameterName) throws ConfigurationException

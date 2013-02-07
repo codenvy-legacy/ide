@@ -78,6 +78,15 @@ public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter
          add(w, getElement());
       }
 
+      public void clear()
+      {
+         for (int i = 0; i < getChildren().size(); i++)
+         {
+            getChildren().remove(i);
+         }
+         getElement().setInnerHTML("");
+      }
+
       /**
        * Adds a new child widget to the panel, attaching its Element to the
        * specified container Element.
@@ -160,5 +169,14 @@ public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter
    public HasClickHandlers getCloseButton()
    {
       return closeButton;
+   }
+
+   @Override
+   public void clearInvitedDevelopers()
+   {
+      if (userListWidget != null)
+      {
+         userListWidget.clear();
+      }
    }
 }
