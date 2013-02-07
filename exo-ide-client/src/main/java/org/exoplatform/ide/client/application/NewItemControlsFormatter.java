@@ -22,9 +22,9 @@ import org.exoplatform.gwtframework.ui.client.command.Control;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.ControlsFormatter;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
-import org.exoplatform.ide.client.navigation.control.NewFileControl;
-import org.exoplatform.ide.client.navigation.control.NewItemPopupToolbarControl;
-import org.exoplatform.ide.client.navigation.event.CreateNewFileEvent;
+import org.exoplatform.ide.client.operation.createfile.CreateNewFileEvent;
+import org.exoplatform.ide.client.operation.createfile.NewFileControl;
+import org.exoplatform.ide.client.operation.createfile.NewItemPopupToolbarControl;
 
 import java.util.ArrayList;
 import java.util.Collections;

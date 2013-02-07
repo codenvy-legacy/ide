@@ -23,6 +23,7 @@ import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.navigation.event.CreateFileFromTemplateEvent;
+import org.exoplatform.ide.client.operation.createfile.NewFileControl;
 
 /**
  * Created by The eXo Platform SAS .
