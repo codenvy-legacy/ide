@@ -25,6 +25,8 @@ import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.security.RolesAllowed;
@@ -35,8 +37,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 
 /**
  * This class contains services for sending email messages to users of bundle
@@ -260,7 +264,24 @@ public class IdeInviteService
    @Produces(MediaType.APPLICATION_JSON)
    public List<Invite> getListOfInvitedUsers() throws InviteException
    {
-      return inviteService.getInvites(false);
+      List<Invite> filteredByCurrentUser = new ArrayList<Invite>();
+
+      if (ConversationState.getCurrent() == null)
+      {
+         throw new InviteException("Error getting current user id.");
+      }
+
+      String currentId = ConversationState.getCurrent().getIdentity().getUserId();
+
+      for (Invite invite : inviteService.getInvites(false))
+      {
+         if (invite.getFrom() != null && invite.getFrom().equals(currentId))
+         {
+            filteredByCurrentUser.add(invite);
+         }
+      }
+
+      return filteredByCurrentUser;
    }
 
    /**

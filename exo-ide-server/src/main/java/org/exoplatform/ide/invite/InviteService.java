@@ -26,6 +26,7 @@ import org.exoplatform.services.jcr.ext.registry.RegistryEntry;
 import org.exoplatform.services.jcr.ext.registry.RegistryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -211,7 +212,15 @@ public class InviteService
          throw new InviteException(403, to + " already registered in the system");
       }
 
+      if (ConversationState.getCurrent() == null)
+      {
+         throw new InviteException("Error getting current user id.");
+      }
+
+      String currentId = ConversationState.getCurrent().getIdentity().getUserId();
+
       Invite newInvite = new Invite();
+      newInvite.setFrom(currentId);
       newInvite.setEmail(to);
       newInvite.setActivated(false);
       newInvite.setInvitationTime(System.currentTimeMillis());
