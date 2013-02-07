@@ -29,6 +29,7 @@ import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
 import com.google.collide.codemirror2.CodeMirror2;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -53,7 +54,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 
    private DocumentManager documentManager;
 
-   public static final CollabEditorLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(CollabEditorLocalizationConstant.class);
+   public static final CollabEditorLocalizationConstant LOCALIZATION_CONSTANT = GWT.create(
+      CollabEditorLocalizationConstant.class);
 
    private CollaborationManager collaborationManager;
 
