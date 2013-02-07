@@ -14,13 +14,9 @@
 
 package com.google.collide.client.communication;
 
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-
-import com.google.collide.client.communication.VertxBus.ReplySender;
-
-import com.google.collide.client.communication.VertxBus.ReplyHandler;
-
 import com.google.collide.client.bootstrap.BootstrapSession;
+import com.google.collide.client.communication.VertxBus.ReplyHandler;
+import com.google.collide.client.communication.VertxBus.ReplySender;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
@@ -31,6 +27,8 @@ import com.google.collide.json.client.Jso;
 import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.gwt.user.client.Timer;
+
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +54,7 @@ public class PushChannel {
       return null;
     }
 
-    VertxBus eventBus = VertxBusWebsoketImpl.create();
+    VertxBus eventBus = VertxBusWebsoketImpl.createWithPing();
     PushChannel pushChannel = new PushChannel(eventBus, messageFilter, statusManager);
     pushChannel.init();
     return pushChannel;

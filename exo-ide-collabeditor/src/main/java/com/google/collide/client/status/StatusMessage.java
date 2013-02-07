@@ -18,7 +18,6 @@ import com.google.collide.client.util.Elements;
 import com.google.collide.json.client.JsoArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-
 import elemental.client.Browser;
 import elemental.html.AnchorElement;
 import elemental.html.SpanElement;
@@ -60,7 +59,7 @@ public class StatusMessage {
   public static final StatusAction RELOAD_ACTION = new StatusAction() {
     @Override
     public void renderAction(SpanElement actionContainer) {
-      actionContainer.setTextContent("Reload Collide");
+      actionContainer.setTextContent("Reload Codenvy");
     }
 
     @Override

@@ -17,7 +17,6 @@ package com.google.collide.client.util;
 import com.google.collide.json.client.Jso;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -247,18 +246,18 @@ public class AnimationController {
     this.showEndHandler = new ShowTransitionEndHandler();
     this.hideEndHandler = new HideTransitionEndHandler();
 
-    /*
-     * TODO: Remove this entirely when we move
-     * to FF4.0. Animations do not work on older versions of FF.
-     */
-    boolean isFirefox = BrowserUtils.isFirefox();
+//    /*
+//     * TODO: Remove this entirely when we move
+//     * to FF4.0. Animations do not work on older versions of FF.
+//     */
+//    boolean isFirefox = BrowserUtils.isFirefox();
 
     /*
      * If none of the animated properties are being animated, then the CSS
      * transition end listener may not execute at all. In that case, we
      * show/hide the element immediately.
      */
-    this.isAnimated = !isFirefox && (options.collapse || options.fade);
+    this.isAnimated = (options.collapse || options.fade);
   }
 
   /**

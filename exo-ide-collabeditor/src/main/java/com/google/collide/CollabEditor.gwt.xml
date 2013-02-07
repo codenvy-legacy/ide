@@ -10,6 +10,7 @@
 
    <inherits name="com.google.gwt.user.User" />
    <inherits name="elemental.Elemental" />
+   <inherits name="com.codenvy.ide.Notification" />
 
    <inherits name="com.google.common.base.Base" />
    <inherits name="com.google.common.collect.Collect" />

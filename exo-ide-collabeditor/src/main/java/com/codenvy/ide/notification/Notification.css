@@ -1,0 +1,15 @@
+.notification{
+   background: -webkit-linear-gradient(top, rgb(82, 96, 108) 0%, rgb(47, 59, 69) 99%, rgb(255, 255, 255) 100%);
+   background: -o-linear-gradient(top, rgb(82, 96, 108) 0%, rgb(47, 59, 69) 99%, rgb(255, 255, 255) 100%);
+   background: -ms-linear-gradient(top, rgb(82, 96, 108) 0%, rgb(47, 59, 69) 99%, rgb(255, 255, 255) 100%);
+   background: -moz-linear-gradient(top, rgb(82, 96, 108) 0%, rgb(47, 59, 69) 99%, rgb(255, 255, 255) 100%);
+   background: linear-gradient(to bottom, rgb(82, 96, 108) 0%, rgb(47, 59, 69) 99%, rgb(255, 255, 255) 100%);
+   border-radius: 4px;
+   color: #EFEFEF;
+   min-height: 35px;
+   min-width: 275px;
+   padding: 5px;
+   -moz-box-shadow: 0px 0px 10px 1px #52ade0;
+   -webkit-box-shadow: 0px 0px 10px 1px #52ade0;
+   box-shadow: 0px 0px 10px 1px #52ade0;
+}

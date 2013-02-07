@@ -14,6 +14,9 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.notification.Notification;
+import com.codenvy.ide.notification.NotificationManager;
+import com.codenvy.ide.notification.NotificationManager.InitialPositionCallback;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedEvent;
@@ -41,6 +44,7 @@ import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 
@@ -52,6 +56,8 @@ import org.exoplatform.ide.client.framework.module.IDE;
  */
 public class CollaborationManager
 {
+
+   public static final int DURATION = 3000;
 
    private final LifecycleListener lifecycleListener = new LifecycleListener()
    {
@@ -148,6 +154,8 @@ public class CollaborationManager
 
    private JsonStringMap<JsonArray<ParticipantUserDetails>> openedFilesInWorkspace = JsonCollections.createMap();
 
+   private final NotificationManager notificationManager;
+
    private CollaborationManager(AppContext appContext, DocumentManager documentManager,
                                 IncomingDocOpDemultiplexer docOpRecipient)
    {
@@ -171,6 +179,20 @@ public class CollaborationManager
          public void onMessageReceived(GetOpenendFilesInWorkspaceResponse message)
          {
             openedFilesInWorkspace.putAll(message.getOpenedFiles());
+         }
+      });
+      notificationManager = new NotificationManager(new InitialPositionCallback()
+      {
+         @Override
+         public int getBorderX()
+         {
+            return Window.getClientWidth() - 5;
+         }
+
+         @Override
+         public int getBorderY()
+         {
+            return 20;
          }
       });
    }
@@ -262,15 +284,8 @@ public class CollaborationManager
          openedFilesInWorkspace.put(message.getPath(),JsonCollections.<ParticipantUserDetails>createArray());
       }
       openedFilesInWorkspace.get(message.getPath()).add(message.getParticipant());
-      //TODO add notification
-//      DivElement divElement = Elements.createDivElement();
-//      divElement.setInnerHTML("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> open file: " + message.getPath());
-//      Popup popup = Popup.create(appContext.getResources());
-//      popup.setContentElement(divElement);
-//      popup.setDelay(2000);
-//      new PositionerBuilder().buildMousePositioner();
-
-
+      notificationManager.addNotification(new Notification("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> open file: " + message.getPath(),
+         DURATION));
    }
 
    private void removeCollaborator(FileCollaboratorGone message)
@@ -283,6 +298,9 @@ public class CollaborationManager
       }
 
       JsonArray<ParticipantUserDetails> participants = openedFilesInWorkspace.get(message.getPath());
+      if(participants == null)
+         return;
+
       ParticipantUserDetails toRemove = null;
       for(ParticipantUserDetails p : participants.asIterable())
       {
@@ -302,6 +320,7 @@ public class CollaborationManager
       {
          openedFilesInWorkspace.remove(message.getPath());
       }
+      notificationManager.addNotification(new Notification("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> close file: " + message.getPath(),DURATION));
    }
 
    public boolean isFileOpened(String path)

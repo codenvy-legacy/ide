@@ -22,7 +22,9 @@ import com.google.collide.client.util.logging.Log;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+
 import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.websocket.Message;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
@@ -41,6 +43,11 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder
  */
 public class VertxBusWebsoketImpl implements VertxBus
 {
+
+   /**
+    * Period (in milliseconds) to send heartbeat pings.
+    */
+   private static final int HEARTBEAT_PERIOD = 50 * 1000;
 
    private RESTMessageBus messageBus;
 
@@ -67,6 +74,35 @@ public class VertxBusWebsoketImpl implements VertxBus
 
 
    }
+
+   public static VertxBus createWithPing()
+   {
+      VertxBusWebsoketImpl vertxBus = (VertxBusWebsoketImpl)create();
+      vertxBus.heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
+      return vertxBus;
+   }
+
+   /**
+    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
+    */
+   protected final Timer heartbeatTimer = new Timer()
+   {
+      @Override
+      public void run()
+      {
+         RequestMessage message =
+            RequestMessageBuilder.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
+               .getRequestMessage();
+         try
+         {
+           messageBus.send(message, null);
+         }
+         catch (WebSocketException e)
+         {
+            // nothing to do
+         }
+      }
+   };
 
    @Override
    public void setOnOpenCallback(final ConnectionListener callback)

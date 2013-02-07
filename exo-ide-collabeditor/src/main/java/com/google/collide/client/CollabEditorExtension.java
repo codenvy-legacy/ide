@@ -26,6 +26,7 @@ import com.google.collide.client.collaboration.participants.ParticipantsPresente
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
+import com.google.collide.client.status.StatusPresenter;
 import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
 import com.google.collide.codemirror2.CodeMirror2;
@@ -185,7 +186,7 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 //    styleBuilder.append(resources.workspaceNavigationOutlineNodeRendererCss().getText());
       styleBuilder.append(resources.workspaceNavigationParticipantListCss().getText());
 //    styleBuilder.append(resources.searchContainerCss().getText());
-//    styleBuilder.append(resources.statusPresenterCss().getText());
+      styleBuilder.append(resources.statusPresenterCss().getText());
 //    styleBuilder.append(resources.noFileSelectedPanelCss().getText());
 //    styleBuilder.append(resources.diffRendererCss().getText());
 //    styleBuilder.append(resources.deltaInfoBarCss().getText());
@@ -228,6 +229,11 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       styleBuilder.append(resources.notificationCss().getText());
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
+
+      // Status Presenter
+      StatusPresenter statusPresenter = StatusPresenter.create(context.getResources());
+      Elements.getBody().appendChild(statusPresenter.getView().getElement());
+      context.getStatusManager().setHandler(statusPresenter);
    }
 
 }
