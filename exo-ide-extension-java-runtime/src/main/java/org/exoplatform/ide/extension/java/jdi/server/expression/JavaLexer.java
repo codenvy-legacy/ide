@@ -1,22 +1,4 @@
-/*
- * Copyright (C) 2011 eXo Platform SAS.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 org/exoplatform/ide/extension/java/jdi/server/expression/Java.g 2012-04-02 10:57:06
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 org/exoplatform/ide/extension/java/jdi/server/expression/Java.g 2013-02-07 15:54:12
 
 package org.exoplatform.ide.extension.java.jdi.server.expression;
 
@@ -2339,16 +2321,16 @@ public class JavaLexer extends Lexer {
 
 
                 switch (alt1) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:29: HEX_DIGIT
-                   {
-                   mHEX_DIGIT(); 
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1083:29: HEX_DIGIT
+            	    {
+            	    mHEX_DIGIT(); 
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt1 >= 1 ) break loop1;
+            	default :
+            	    if ( cnt1 >= 1 ) break loop1;
                         EarlyExitException eee =
                             new EarlyExitException(1, input);
                         throw eee;
@@ -2433,16 +2415,16 @@ public class JavaLexer extends Lexer {
 
 
                         switch (alt3) {
-                       case 1 :
-                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:35: '0' .. '9'
-                           {
-                           matchRange('0','9'); 
+                    	case 1 :
+                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1085:35: '0' .. '9'
+                    	    {
+                    	    matchRange('0','9'); 
 
-                           }
-                           break;
+                    	    }
+                    	    break;
 
-                       default :
-                           break loop3;
+                    	default :
+                    	    break loop3;
                         }
                     } while (true);
 
@@ -2503,16 +2485,16 @@ public class JavaLexer extends Lexer {
 
 
                 switch (alt6) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:22: '0' .. '7'
-                   {
-                   matchRange('0','7'); 
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1087:22: '0' .. '7'
+            	    {
+            	    matchRange('0','7'); 
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt6 >= 1 ) break loop6;
+            	default :
+            	    if ( cnt6 >= 1 ) break loop6;
                         EarlyExitException eee =
                             new EarlyExitException(6, input);
                         throw eee;
@@ -2635,16 +2617,16 @@ public class JavaLexer extends Lexer {
 
 
                         switch (alt8) {
-                       case 1 :
-                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1096:10: '0' .. '9'
-                           {
-                           matchRange('0','9'); 
+                    	case 1 :
+                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1096:10: '0' .. '9'
+                    	    {
+                    	    matchRange('0','9'); 
 
-                           }
-                           break;
+                    	    }
+                    	    break;
 
-                       default :
-                           if ( cnt8 >= 1 ) break loop8;
+                    	default :
+                    	    if ( cnt8 >= 1 ) break loop8;
                                 EarlyExitException eee =
                                     new EarlyExitException(8, input);
                                 throw eee;
@@ -2698,16 +2680,16 @@ public class JavaLexer extends Lexer {
 
 
                                 switch (alt9) {
-                               case 1 :
-                                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:18: '0' .. '9'
-                                   {
-                                   matchRange('0','9'); 
+                            	case 1 :
+                            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1098:18: '0' .. '9'
+                            	    {
+                            	    matchRange('0','9'); 
 
-                                   }
-                                   break;
+                            	    }
+                            	    break;
 
-                               default :
-                                   break loop9;
+                            	default :
+                            	    break loop9;
                                 }
                             } while (true);
 
@@ -2805,16 +2787,16 @@ public class JavaLexer extends Lexer {
 
 
                         switch (alt14) {
-                       case 1 :
-                           // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:14: '0' .. '9'
-                           {
-                           matchRange('0','9'); 
+                    	case 1 :
+                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1102:14: '0' .. '9'
+                    	    {
+                    	    matchRange('0','9'); 
 
-                           }
-                           break;
+                    	    }
+                    	    break;
 
-                       default :
-                           if ( cnt14 >= 1 ) break loop14;
+                    	default :
+                    	    if ( cnt14 >= 1 ) break loop14;
                                 EarlyExitException eee =
                                     new EarlyExitException(14, input);
                                 throw eee;
@@ -2925,16 +2907,16 @@ public class JavaLexer extends Lexer {
 
 
                 switch (alt19) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1106:34: '0' .. '9'
-                   {
-                   matchRange('0','9'); 
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1106:34: '0' .. '9'
+            	    {
+            	    matchRange('0','9'); 
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt19 >= 1 ) break loop19;
+            	default :
+            	    if ( cnt19 >= 1 ) break loop19;
                         EarlyExitException eee =
                             new EarlyExitException(19, input);
                         throw eee;
@@ -3062,31 +3044,31 @@ public class JavaLexer extends Lexer {
 
 
                 switch (alt21) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:14: ESCAPE_SEQUENCE
-                   {
-                   mESCAPE_SEQUENCE(); 
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:14: ESCAPE_SEQUENCE
+            	    {
+            	    mESCAPE_SEQUENCE(); 
 
-                   }
-                   break;
-               case 2 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:32: ~ ( '\\\\' | '\"' )
-                   {
-                   if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
-                       input.consume();
+            	    }
+            	    break;
+            	case 2 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1116:32: ~ ( '\\\\' | '\"' )
+            	    {
+            	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
+            	        input.consume();
 
-                   }
-                   else {
-                       MismatchedSetException mse = new MismatchedSetException(null,input);
-                       recover(mse);
-                       throw mse;}
+            	    }
+            	    else {
+            	        MismatchedSetException mse = new MismatchedSetException(null,input);
+            	        recover(mse);
+            	        throw mse;}
 
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   break loop21;
+            	default :
+            	    break loop21;
                 }
             } while (true);
 
@@ -3354,16 +3336,16 @@ public class JavaLexer extends Lexer {
 
 
                 switch (alt24) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1139:24: JAVA_ID_PART
-                   {
-                   mJAVA_ID_PART(); 
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1139:24: JAVA_ID_PART
+            	    {
+            	    mJAVA_ID_PART(); 
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   break loop24;
+            	default :
+            	    break loop24;
                 }
             } while (true);
 
@@ -3495,16 +3477,16 @@ public class JavaLexer extends Lexer {
 
 
                 switch (alt25) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1176:42: .
-                   {
-                   matchAny(); 
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1176:42: .
+            	    {
+            	    matchAny(); 
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   break loop25;
+            	default :
+            	    break loop25;
                 }
             } while (true);
 
@@ -3550,24 +3532,24 @@ public class JavaLexer extends Lexer {
 
 
                 switch (alt26) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:12: ~ ( '\\n' | '\\r' )
-                   {
-                   if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
-                       input.consume();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/Java.g:1187:12: ~ ( '\\n' | '\\r' )
+            	    {
+            	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
+            	        input.consume();
 
-                   }
-                   else {
-                       MismatchedSetException mse = new MismatchedSetException(null,input);
-                       recover(mse);
-                       throw mse;}
+            	    }
+            	    else {
+            	        MismatchedSetException mse = new MismatchedSetException(null,input);
+            	        recover(mse);
+            	        throw mse;}
 
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   break loop26;
+            	default :
+            	    break loop26;
                 }
             } while (true);
 
