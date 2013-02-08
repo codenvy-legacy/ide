@@ -21,7 +21,12 @@ package org.exoplatform.ide.extension.cloudbees.server.rest;
 import org.exoplatform.ide.extension.cloudbees.server.CloudBees;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesAccount;
 import org.exoplatform.ide.extension.cloudbees.shared.CloudBeesUser;
+import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.net.URL;
 import java.util.List;
@@ -44,6 +49,8 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/cloudbees")
 public class CloudBeesService
 {
+   private static final Log LOG = ExoLogger.getLogger(CloudBeesService.class);
+
    @Inject
    private CloudBees cloudbees;
 
@@ -90,8 +97,15 @@ public class CloudBeesService
       @QueryParam("war") URL war //
    ) throws Exception
    {
-      return cloudbees.createApplication(appId, message,
-         vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, war);
+      Map<String, String> app = cloudbees.createApplication(appId, message, vfsId != null ? vfsRegistry.getProvider(vfsId).newInstance(null, null) : null, projectId, war);
+      if (projectId != null && vfsId != null)
+      {
+         VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
+         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+            + "# PAAS#CloudFoundry#");
+      }
+      return app;
    }
 
    @Path("apps/update")
