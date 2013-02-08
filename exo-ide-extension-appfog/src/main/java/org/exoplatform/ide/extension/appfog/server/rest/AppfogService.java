@@ -34,6 +34,10 @@ import org.exoplatform.ide.extension.appfog.shared.SystemInfo;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.net.URL;
@@ -57,6 +61,8 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/appfog")
 public class AppfogService
 {
+   private static final Log LOG = ExoLogger.getLogger(AppfogService.class);
+
    @javax.inject.Inject
    private Appfog appfog;
 
@@ -168,9 +174,19 @@ public class AppfogService
       String infraName = params.get("infra");
 
       //TODO to use enum type of infrastructures
-      return appfog.createApplication(params.get("server"), params.get("name"), params.get("type"),
-         params.get("url"), instances, mem, noStart, params.get("runtime"), params.get("command"), debugMode, vfs,
-         params.get("projectid"), warURL, InfraType.fromValue(infraName));
+      AppfogApplication app =
+         appfog.createApplication(params.get("server"), params.get("name"), params.get("type"), params.get("url"),
+            instances, mem, noStart, params.get("runtime"), params.get("command"), debugMode, vfs,
+            params.get("projectid"), warURL, InfraType.fromValue(infraName));
+
+      String projectId = params.get("projectid");
+      if (projectId != null)
+      {
+         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+            + "# PAAS#Appfog#");
+      }
+      return app;
    }
 
    @Path("apps/start")
