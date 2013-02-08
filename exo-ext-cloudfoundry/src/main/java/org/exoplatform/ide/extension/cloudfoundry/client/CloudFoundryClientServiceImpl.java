@@ -31,7 +31,6 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.loader.Loader;
 import org.exoplatform.ide.rest.AsyncRequest;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
@@ -41,6 +40,8 @@ import org.exoplatform.ide.websocket.MessageBus;
 import org.exoplatform.ide.websocket.WebSocketException;
 import org.exoplatform.ide.websocket.rest.RequestMessage;
 import org.exoplatform.ide.websocket.rest.RequestMessageBuilder;
+
+import java.util.List;
 
 /**
  * Implementation for {@link CloudFoundryClientService}.
@@ -299,10 +300,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getFrameworks()
     */
    @Override
-   public void getFrameworks(AsyncRequestCallback<JsonArray<Framework>> callback, String server)
+   public void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
       throws RequestException
    {
-      // TODO JsonArray
       String url = restServiceContext + FRAMEWORKS;
       url += (server != null) ? "?server=" + server : "";
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
@@ -569,9 +569,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException
    {
-      // TODO JsonArray
       String url = restServiceContext + APPS;
 
       server = checkServerUrl(server);
@@ -589,9 +588,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTargets(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException
+   public void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException
    {
-      // TODO JsonArray
       String url = restServiceContext + TARGETS;
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)

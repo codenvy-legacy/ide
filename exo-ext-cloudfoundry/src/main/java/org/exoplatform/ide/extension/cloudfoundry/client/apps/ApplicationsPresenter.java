@@ -30,9 +30,10 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -47,7 +48,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
 
    private String currentServer;
 
-   private JsonArray<String> servers = JsonCollections.createArray();
+   private List<String> servers = new ArrayList<String>();
 
    private EventBus eventBus;
 
@@ -89,8 +90,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
       {
          CloudFoundryClientService.getInstance().getApplicationList(
             currentServer,
-            new CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
-               JsonCollections.<CloudFoundryApplication> createArray()), new LoggedInHandler()
+            new CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>>(new ApplicationListUnmarshaller(
+               new ArrayList<CloudFoundryApplication>()), new LoggedInHandler()
             {
                @Override
                public void onLoggedIn()
@@ -101,7 +102,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
             {
 
                @Override
-               protected void onSuccess(JsonArray<CloudFoundryApplication> result)
+               protected void onSuccess(List<CloudFoundryApplication> result)
                {
                   view.setApplications(result);
                   view.setServer(currentServer);
@@ -124,24 +125,22 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    {
       try
       {
-         CloudFoundryClientService.getInstance()
-            .getTargets(
-               new AsyncRequestCallback<JsonArray<String>>(new TargetsUnmarshaller(JsonCollections
-                  .<String> createArray()))
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
+            {
+               @Override
+               protected void onSuccess(List<String> result)
                {
-                  @Override
-                  protected void onSuccess(JsonArray<String> result)
-                  {
-                     servers = result;
-                     view.setServers(servers);
-                  }
+                  servers = result;
+                  view.setServers(servers);
+               }
 
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  }
-               });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
       }
       catch (RequestException e)
       {

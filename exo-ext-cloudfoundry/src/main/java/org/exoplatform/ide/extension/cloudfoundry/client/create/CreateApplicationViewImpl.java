@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 
-import org.exoplatform.ide.json.JsonArray;
+import java.util.List;
 
 /**
  * 
@@ -312,7 +312,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void setTypeValues(JsonArray<String> types)
+   public void setTypeValues(List<String> types)
    {
       type.clear();
 
@@ -380,7 +380,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
     * {@inheritDoc}
     */
    @Override
-   public void setServerValues(JsonArray<String> servers)
+   public void setServerValues(List<String> servers)
    {
       server.clear();
 

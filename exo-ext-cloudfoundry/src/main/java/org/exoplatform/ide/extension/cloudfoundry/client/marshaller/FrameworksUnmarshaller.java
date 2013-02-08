@@ -28,8 +28,9 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.rest.Unmarshallable;
+
+import java.util.List;
 
 /**
  * Unmarshaller for frameworks list.
@@ -37,11 +38,11 @@ import org.exoplatform.ide.rest.Unmarshallable;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: FrameworksUnmarshaller.java Jul 8, 2011 11:12:16 AM vereshchaka $
  */
-public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framework>>
+public class FrameworksUnmarshaller implements Unmarshallable<List<Framework>>
 {
-   private JsonArray<Framework> frameworks;
+   private List<Framework> frameworks;
 
-   public FrameworksUnmarshaller(JsonArray<Framework> frameworks)
+   public FrameworksUnmarshaller(List<Framework> frameworks)
    {
       this.frameworks = frameworks;
    }
@@ -86,7 +87,7 @@ public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framewor
     * {@inheritDoc}
     */
    @Override
-   public JsonArray<Framework> getPayload()
+   public List<Framework> getPayload()
    {
       return frameworks;
    }

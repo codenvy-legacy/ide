@@ -33,9 +33,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.exoplatform.ide.json.JsonArray;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -207,27 +204,27 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
     * {@inheritDoc}
     */
    @Override
-   public void setApplicationUris(JsonArray<String> applications)
+   public void setApplicationUris(List<String> applications)
    {
       setItemsIntoCellTable(applications, urisTable);
    }
 
-   private void setItemsIntoCellTable(JsonArray<String> items, CellTable<String> table)
+   private void setItemsIntoCellTable(List<String> items, CellTable<String> table)
    {
-      List<String> list = new ArrayList<String>();
-      for (int i = 0; i < items.size(); i++)
-      {
-         list.add(items.get(i));
-      }
+      //      List<String> list = new ArrayList<String>();
+      //      for (int i = 0; i < items.size(); i++)
+      //      {
+      //         list.add(items.get(i));
+      //      }
 
-      table.setRowData(list);
+      table.setRowData(items);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setApplicationServices(JsonArray<String> services)
+   public void setApplicationServices(List<String> services)
    {
       setItemsIntoCellTable(services, servicesTable);
    }
@@ -236,7 +233,7 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
     * {@inheritDoc}
     */
    @Override
-   public void setApplicationEnvironments(JsonArray<String> environments)
+   public void setApplicationEnvironments(List<String> environments)
    {
       setItemsIntoCellTable(environments, environmentsTable);
    }

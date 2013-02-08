@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.create;
 
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.view.View;
+
+import java.util.List;
 
 /**
  * 
@@ -79,7 +80,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
 
    public void focusInNameField();
 
-   public void setTypeValues(JsonArray<String> types);
+   public void setTypeValues(List<String> types);
 
    public void enableTypeField(boolean enable);
 
@@ -98,7 +99,7 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
     * 
     * @param servers
     */
-   void setServerValues(JsonArray<String> servers);
+   void setServerValues(List<String> servers);
 
    /**
     * Close dialog.

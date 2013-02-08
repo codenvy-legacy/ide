@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.info;
 
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.view.View;
+
+import java.util.List;
 
 /**
  * 
@@ -49,11 +50,11 @@ public interface ApplicationInfoView extends View<ApplicationInfoView.ActionDele
 
    public void setModel(String text);
 
-   public void setApplicationUris(JsonArray<String> applications);
+   public void setApplicationUris(List<String> applications);
 
-   public void setApplicationServices(JsonArray<String> services);
+   public void setApplicationServices(List<String> services);
 
-   public void setApplicationEnvironments(JsonArray<String> environments);
+   public void setApplicationEnvironments(List<String> environments);
 
    public void showDialog();
 

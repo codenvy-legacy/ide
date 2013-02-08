@@ -41,9 +41,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import org.exoplatform.ide.json.JsonArray;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -319,16 +317,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
     * {@inheritDoc}
     */
    @Override
-   public void setApplications(JsonArray<CloudFoundryApplication> apps)
+   public void setApplications(List<CloudFoundryApplication> apps)
    {
-      // TODO...
-      List<CloudFoundryApplication> list = new ArrayList<CloudFoundryApplication>();
-      for (int i = 0; i < apps.size(); i++)
-      {
-         list.add(apps.get(i));
-      }
-
-      appsTable.setRowData(list);
+      appsTable.setRowData(apps);
    }
 
    /**
@@ -369,7 +360,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
     * {@inheritDoc}
     */
    @Override
-   public void setServers(JsonArray<String> servers)
+   public void setServers(List<String> servers)
    {
       server.clear();
 

@@ -19,8 +19,9 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.apps;
 
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.view.View;
+
+import java.util.List;
 
 /**
  * 
@@ -44,13 +45,13 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate>
       public void doDeleteApplication(CloudFoundryApplication app);
    }
 
-   public void setApplications(JsonArray<CloudFoundryApplication> apps);
+   public void setApplications(List<CloudFoundryApplication> apps);
 
    public String getServer();
 
    public void setServer(String server);
 
-   public void setServers(JsonArray<String> servers);
+   public void setServers(List<String> servers);
 
    /**
     *Close dialog.

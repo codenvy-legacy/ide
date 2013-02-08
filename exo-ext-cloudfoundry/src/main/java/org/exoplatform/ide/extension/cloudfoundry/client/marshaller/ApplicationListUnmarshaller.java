@@ -28,21 +28,22 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.rest.Unmarshallable;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  Aug 18, 2011 evgen $
  */
-public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<CloudFoundryApplication>>
+public class ApplicationListUnmarshaller implements Unmarshallable<List<CloudFoundryApplication>>
 {
-   private JsonArray<CloudFoundryApplication> apps;
+   private List<CloudFoundryApplication> apps;
 
    /**
     * @param apps
     */
-   public ApplicationListUnmarshaller(JsonArray<CloudFoundryApplication> apps)
+   public ApplicationListUnmarshaller(List<CloudFoundryApplication> apps)
    {
       this.apps = apps;
    }
@@ -87,7 +88,7 @@ public class ApplicationListUnmarshaller implements Unmarshallable<JsonArray<Clo
     * {@inheritDoc}
     */
    @Override
-   public JsonArray<CloudFoundryApplication> getPayload()
+   public List<CloudFoundryApplication> getPayload()
    {
       return apps;
    }

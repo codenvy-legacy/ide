@@ -24,8 +24,9 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.rest.Unmarshallable;
+
+import java.util.List;
 
 /**
  * Unmarshaller for the list of targets, received from server.
@@ -33,11 +34,11 @@ import org.exoplatform.ide.rest.Unmarshallable;
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: TargetsUnmarshaller.java Sep 21, 2011 5:34:51 PM vereshchaka $
  */
-public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>>
+public class TargetsUnmarshaller implements Unmarshallable<List<String>>
 {
-   private JsonArray<String> targets;
+   private List<String> targets;
 
-   public TargetsUnmarshaller(JsonArray<String> targets)
+   public TargetsUnmarshaller(List<String> targets)
    {
       this.targets = targets;
    }
@@ -64,7 +65,7 @@ public class TargetsUnmarshaller implements Unmarshallable<JsonArray<String>>
     * {@inheritDoc}
     */
    @Override
-   public JsonArray<String> getPayload()
+   public List<String> getPayload()
    {
       return targets;
    }

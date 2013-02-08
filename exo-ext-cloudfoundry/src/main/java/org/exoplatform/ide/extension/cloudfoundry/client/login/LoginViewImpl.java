@@ -34,7 +34,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import org.exoplatform.ide.json.JsonArray;
+import java.util.List;
 
 /**
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
@@ -180,7 +180,7 @@ public class LoginViewImpl extends DialogBox implements LoginView
     * {@inheritDoc}
     */
    @Override
-   public void setServerValues(JsonArray<String> servers)
+   public void setServerValues(List<String> servers)
    {
       server.clear();
 

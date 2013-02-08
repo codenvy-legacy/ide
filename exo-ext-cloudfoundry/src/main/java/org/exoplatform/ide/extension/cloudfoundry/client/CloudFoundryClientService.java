@@ -25,9 +25,10 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
 import org.exoplatform.ide.websocket.WebSocketException;
+
+import java.util.List;
 
 /**
  * Client service for CloudFoundry.
@@ -37,6 +38,7 @@ import org.exoplatform.ide.websocket.WebSocketException;
  */
 public abstract class CloudFoundryClientService
 {
+
    private static CloudFoundryClientService instance;
 
    public static CloudFoundryClientService getInstance()
@@ -54,7 +56,7 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void getFrameworks(AsyncRequestCallback<JsonArray<Framework>> callback, String server)
+   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
       throws RequestException;
 
    /**
@@ -271,7 +273,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException;
 
    /**
     * Get Cloud Foundry system information.
@@ -286,7 +288,7 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException;
+   public abstract void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException;
 
    /**
     * @param callback callback, that client has to implement to handle response from server

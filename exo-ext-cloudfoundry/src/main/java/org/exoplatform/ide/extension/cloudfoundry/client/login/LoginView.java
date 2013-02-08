@@ -18,8 +18,9 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
-import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.view.View;
+
+import java.util.List;
 
 /**
  * 
@@ -66,7 +67,7 @@ public interface LoginView extends View<LoginView.ActionDelegate>
     * 
     * @param targets
     */
-   void setServerValues(JsonArray<String> servers);
+   void setServerValues(List<String> servers);
 
    /**
     * Close dialog.

@@ -36,14 +36,15 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
-import org.exoplatform.ide.json.JsonArray;
-import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.output.event.OutputEvent;
 import org.exoplatform.ide.output.event.OutputMessage;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.websocket.WebSocketException;
 import org.exoplatform.ide.websocket.rest.AutoBeanUnmarshallerWS;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -86,7 +87,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private CreateApplicationView view;
 
-   private JsonArray<Framework> frameworks;
+   private List<Framework> frameworks;
 
    /**
     * Public url to war file of application.
@@ -116,7 +117,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view, EventBus eventBus)
    {
-      this.frameworks = JsonCollections.createArray();
+      this.frameworks = new ArrayList<Framework>();
 
       this.resourceProvider = resourceProvider;
       this.view = view;
@@ -130,7 +131,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       this.view.focusInNameField();
 
       // set default values to fields
-      this.view.setTypeValues(JsonCollections.<String> createArray());
+      this.view.setTypeValues(new ArrayList<String>());
       this.view.setInstances("1");
       this.view.setAutodetectType(true);
    }
@@ -470,12 +471,12 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       if (value)
       {
-         view.setTypeValues(JsonCollections.<String> createArray());
+         view.setTypeValues(new ArrayList<String>());
          view.setMemory("");
       }
       else
       {
-         final JsonArray<String> frameworkArray = getApplicationTypes(frameworks);
+         final List<String> frameworkArray = getApplicationTypes(frameworks);
          view.setTypeValues(frameworkArray);
          view.setSelectedIndexForTypeSelectItem(0);
          getFrameworks(view.getServer());
@@ -488,13 +489,11 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * @param frameworks - list of available frameworks
     * @return an array of types
     */
-   private JsonArray<String> getApplicationTypes(JsonArray<Framework> frameworks)
+   private List<String> getApplicationTypes(List<Framework> frameworks)
    {
-      JsonArray<String> frameworkNames = JsonCollections.createArray();
-
-      for (int i = 0; i < frameworks.size(); i++)
+      List<String> frameworkNames = new ArrayList<String>();
+      for (Framework framework : frameworks)
       {
-         Framework framework = frameworks.get(i);
          frameworkNames.add(framework.getDisplayName() != null ? framework.getDisplayName() : framework.getName());
       }
 
@@ -515,31 +514,20 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       try
       {
          CloudFoundryClientService.getInstance().getFrameworks(
-            new CloudFoundryAsyncRequestCallback<JsonArray<Framework>>(new FrameworksUnmarshaller(
-               JsonCollections.<Framework> createArray()), getFrameworksLoggedInHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<List<Framework>>(
+               new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null, eventBus)
             {
                @Override
-               protected void onSuccess(JsonArray<Framework> result)
+               protected void onSuccess(List<Framework> result)
                {
                   if (!result.isEmpty())
                   {
                      frameworks = result;
-
-                     JsonArray<String> fw = JsonCollections.createArray();
-                     for (int i = 0; i < frameworks.size(); i++)
-                     {
-                        Framework framework = frameworks.get(i);
-
-                        String item =
-                           framework.getDisplayName() != null ? framework.getDisplayName() : framework.getName();
-                        fw.add(item);
-                     }
-
+                     List<String> fw = getApplicationTypes(result);
                      view.setTypeValues(fw);
                      Framework framework = findFrameworkByName(fw.get(0));
                      view.setMemory(String.valueOf(framework.getMemory()));
                   }
-
                }
             }, server);
       }
