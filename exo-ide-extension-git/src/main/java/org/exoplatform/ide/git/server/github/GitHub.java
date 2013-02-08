@@ -33,6 +33,9 @@ import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
 import org.exoplatform.ide.git.shared.GitHubRepository;
+import org.exoplatform.ide.invite.Invite;
+import org.exoplatform.ide.invite.InviteException;
+import org.exoplatform.ide.invite.InviteService;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
@@ -58,18 +61,27 @@ public class GitHub
 
    private final GitHubAuthenticator authenticator;
 
-   private final OAuthTokenProvider oauthTokenProvider;;
+   private final OAuthTokenProvider oauthTokenProvider;
 
-   public GitHub(InitParams initParams, GitHubAuthenticator authenticator, OAuthTokenProvider oauthTokenProvider)
+   private final InviteService inviteService;
+
+   public GitHub(InitParams initParams,
+                 GitHubAuthenticator authenticator,
+                 OAuthTokenProvider oauthTokenProvider,
+                 InviteService inviteService)
    {
-      this(readValueParam(initParams, "github-user"), authenticator, oauthTokenProvider);
+      this(readValueParam(initParams, "github-user"), authenticator, oauthTokenProvider, inviteService);
    }
 
-   public GitHub(String userName, GitHubAuthenticator authenticator, OAuthTokenProvider oauthTokenProvider)
+   public GitHub(String userName,
+                 GitHubAuthenticator authenticator,
+                 OAuthTokenProvider oauthTokenProvider,
+                 InviteService inviteService)
    {
       this.userName = userName;
       this.authenticator = authenticator;
       this.oauthTokenProvider = oauthTokenProvider;
+      this.inviteService = inviteService;
    }
 
    private static String readValueParam(InitParams initParams, String paramName)
@@ -78,14 +90,16 @@ public class GitHub
       {
          ValueParam vp = initParams.getValueParam(paramName);
          if (vp != null)
+         {
             return vp.getValue();
+         }
       }
       return null;
    }
 
    /**
     * Get the list of public repositories by user's name.
-    * 
+    *
     * @param user name of user
     * @return an array of repositories
     * @throws IOException if any i/o errors occurs
@@ -108,7 +122,9 @@ public class GitHub
       JsonValue reposArray = JsonHelper.parseJson(response);
       reposArray = formatJsonArray(reposArray);
       if (reposArray == null || !reposArray.isArray())
+      {
          return null;
+      }
 
       try
       {
@@ -145,8 +161,10 @@ public class GitHub
                jsonUser = formatObject(jsonUser);
                GitHubUserImpl gitHubUser = ObjectBuilder.createObject(GitHubUserImpl.class, jsonUser);
                if (gitHubUser.getEmail() != null && !gitHubUser.getEmail().isEmpty()
-                    && !gitHubUser.getEmail().equals(userId))
-               collaborators.getCollaborators().add(gitHubUser);
+                  && !gitHubUser.getEmail().equals(userId) && !isAlreadyInvited(gitHubUser.getEmail()))
+               {
+                  collaborators.getCollaborators().add(gitHubUser);
+               }
             }
          }
          return collaborators;
@@ -157,9 +175,35 @@ public class GitHub
       }
    }
 
+   private boolean isAlreadyInvited(String collaborator) throws GitHubException
+   {
+      try
+      {
+         if (ConversationState.getCurrent() == null)
+         {
+            throw new GitHubException(500, "Error getting current user id.", "text/plain");
+         }
+
+         String currentId = ConversationState.getCurrent().getIdentity().getUserId();
+
+         for (Invite invite : inviteService.getInvites(false))
+         {
+            if (invite.getFrom() != null && invite.getFrom().equals(currentId) && invite.getEmail().equals(collaborator))
+            {
+               return true;
+            }
+         }
+         return false;
+      }
+      catch (InviteException e)
+      {
+         throw new GitHubException(500, e.getMessage(), "text/plain");
+      }
+   }
+
    /**
     * Log in GitHub.
-    * 
+    *
     * @param credentials user's credentials
     * @throws IOException
     * @throws GitHubException
@@ -176,19 +220,23 @@ public class GitHub
          authenticate(credentials, http);
 
          if (http.getResponseCode() != 204)
+         {
             throw fault(http);
+         }
          authenticator.writeCredentials(credentials);
       }
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
    /**
     * Get the array of the extended repositories of the authorized user.
-    * 
+    *
     * @return array of the repositories
     * @throws IOException
     * @throws GitHubException
@@ -205,7 +253,7 @@ public class GitHub
       {
          throw new GitHubException(401, "Authentication required.\n", "text/plain");
       }
-      
+
       return getRepositories(credentials, oauthToken);
    }
 
@@ -221,11 +269,13 @@ public class GitHub
    {
       String url = "https://api.github.com/user/repos";
       url += (oauthToken != null) ? "?access_token=" + oauthToken : "";
-      
+
       String response = doJsonRequest(url, "GET", credentials, 200);
       JsonValue reposArray = JsonHelper.parseJson(response);
       if (reposArray == null || !reposArray.isArray())
+      {
          return null;
+      }
       reposArray = formatJsonArray(reposArray);
       try
       {
@@ -241,7 +291,7 @@ public class GitHub
 
    /**
     * Formats the keys of JSON array objects for them to be represented as beans.
-    * 
+    *
     * @param source JSON value
     * @return {@link JsonValue} formated JSON array
     */
@@ -282,7 +332,7 @@ public class GitHub
    /**
     * Format key in the following way: <code>ssh_url</code> to <code>sshUrl</code>, <code>pushed_at</code> to
     * <code>pushedAt</code>.
-    * 
+    *
     * @param key source key
     * @return {@link String} formated key
     */
@@ -315,7 +365,7 @@ public class GitHub
 
    /**
     * Do json request (without authorization!)
-    * 
+    *
     * @param url the request url
     * @param method the request method
     * @param success expected success code of request
@@ -339,7 +389,9 @@ public class GitHub
          }
 
          if (http.getResponseCode() != success)
+         {
             throw fault(http);
+         }
 
          InputStream input = http.getInputStream();
          String result;
@@ -356,7 +408,9 @@ public class GitHub
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
@@ -368,20 +422,26 @@ public class GitHub
          int responseCode = http.getResponseCode();
          errorStream = http.getErrorStream();
          if (errorStream == null)
+         {
             return new GitHubException(responseCode, null, null);
+         }
 
          int length = http.getContentLength();
          String body = readBody(errorStream, length);
 
          if (body != null)
+         {
             return new GitHubException(responseCode, body, http.getContentType());
+         }
 
          return new GitHubException(responseCode, null, null);
       }
       finally
       {
          if (errorStream != null)
+         {
             errorStream.close();
+         }
       }
    }
 
@@ -392,7 +452,9 @@ public class GitHub
       {
          byte[] b = new byte[contentLength];
          for (int point = -1, off = 0; (point = input.read(b, off, contentLength - off)) > 0; off += point) //
-         ;
+         {
+            ;
+         }
          body = new String(b);
       }
       else if (contentLength < 0)
@@ -401,7 +463,9 @@ public class GitHub
          byte[] buf = new byte[1024];
          int point = -1;
          while ((point = input.read(buf)) != -1)
+         {
             bout.write(buf, 0, point);
+         }
          body = bout.toString();
       }
       return body;
@@ -409,7 +473,7 @@ public class GitHub
 
    /**
     * Add Basic authentication headers to HttpURLConnection.
-    * 
+    *
     * @param credentials GitHub account credentials
     * @param http HttpURLConnection
     * @throws IOException if any i/o errors occurs

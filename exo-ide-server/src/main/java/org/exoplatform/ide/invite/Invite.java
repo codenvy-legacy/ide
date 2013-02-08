@@ -32,89 +32,66 @@ public class Invite
     */
    private final static long INVITE_EXPIRATION_TIME = TimeUnit.DAYS.toMillis(14);
 
-   /**
-    * @see java.lang.Object#hashCode()
-    */
    @Override
-   public int hashCode()
+   public boolean equals(Object o)
    {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + (activated ? 1231 : 1237);
-      result = prime * result + ((email == null) ? 0 : email.hashCode());
-      result = prime * result + (int)(invitationTime ^ (invitationTime >>> 32));
-      result = prime * result + ((password == null) ? 0 : password.hashCode());
-      result = prime * result + ((uuid == null) ? 0 : uuid.hashCode());
-      result = prime * result + (valid ? 1231 : 1237);
-      return result;
-   }
-
-   /**
-    * @see java.lang.Object#equals(java.lang.Object)
-    */
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
+      if (this == o)
       {
          return true;
       }
-      if (obj == null)
+      if (o == null || getClass() != o.getClass())
       {
          return false;
       }
-      if (!(obj instanceof Invite))
+
+      Invite invite = (Invite)o;
+
+      if (activated != invite.activated)
       {
          return false;
       }
-      Invite other = (Invite)obj;
-      if (activated != other.activated)
+      if (invitationTime != invite.invitationTime)
       {
          return false;
       }
-      if (email == null)
-      {
-         if (other.email != null)
-         {
-            return false;
-         }
-      }
-      else if (!email.equals(other.email))
+      if (valid != invite.valid)
       {
          return false;
       }
-      if (invitationTime != other.invitationTime)
+      if (!email.equals(invite.email))
       {
          return false;
       }
-      if (password == null)
-      {
-         if (other.password != null)
-         {
-            return false;
-         }
-      }
-      else if (!password.equals(other.password))
+      if (from != null ? !from.equals(invite.from) : invite.from != null)
       {
          return false;
       }
-      if (uuid == null)
-      {
-         if (other.uuid != null)
-         {
-            return false;
-         }
-      }
-      else if (!uuid.equals(other.uuid))
+      if (!password.equals(invite.password))
       {
          return false;
       }
-      if (valid != other.valid)
+      if (!uuid.equals(invite.uuid))
       {
          return false;
       }
+
       return true;
    }
+
+   @Override
+   public int hashCode()
+   {
+      int result = from != null ? from.hashCode() : 0;
+      result = 31 * result + email.hashCode();
+      result = 31 * result + uuid.hashCode();
+      result = 31 * result + password.hashCode();
+      result = 31 * result + (activated ? 1 : 0);
+      result = 31 * result + (valid ? 1 : 0);
+      result = 31 * result + (int)(invitationTime ^ (invitationTime >>> 32));
+      return result;
+   }
+
+   private String from;
 
    private String email;
 
@@ -127,6 +104,16 @@ public class Invite
    private boolean valid;
 
    private long invitationTime;
+
+   public void setFrom(String from)
+   {
+      this.from = from;
+   }
+
+   public String getFrom()
+   {
+      return from;
+   }
 
    public void setEmail(String email)
    {
@@ -195,16 +182,15 @@ public class Invite
    @Override
    public String toString()
    {
-      final StringBuffer sb = new StringBuffer();
-      sb.append("Invite");
-      sb.append("{email='").append(email).append('\'');
-      sb.append(", uuid='").append(uuid).append('\'');
-      sb.append(", password='").append(password).append('\'');
-      sb.append(", activated=").append(activated);
-      sb.append(", valid=").append(valid);
-      sb.append(", invitationTime=").append(invitationTime);
-      sb.append('}');
-      return sb.toString();
+      return "Invite{" +
+         "from='" + from + '\'' +
+         ", email='" + email + '\'' +
+         ", uuid='" + uuid + '\'' +
+         ", password='" + password + '\'' +
+         ", activated=" + activated +
+         ", valid=" + valid +
+         ", invitationTime=" + invitationTime +
+         '}';
    }
 
    public Element asElementAttributes(Document invitesDocument)
@@ -216,6 +202,7 @@ public class Invite
       newInvite.setAttribute("activated", Boolean.toString(activated));
       //valid field is not persisted,it is calculated on read
       newInvite.setAttribute("invitationTime", Long.toString(invitationTime));
+      newInvite.setAttribute("from", from);
       return newInvite;
    }
 
@@ -227,6 +214,11 @@ public class Invite
       invite.setUuid(attributes.getNamedItem("uuid").getNodeValue());
       invite.setPassword(attributes.getNamedItem("password").getNodeValue());
       invite.setActivated(Boolean.parseBoolean(attributes.getNamedItem("activated").getNodeValue()));
+
+      if (attributes.getNamedItem("from") != null)
+      {
+         invite.setFrom(attributes.getNamedItem("from").getNodeValue());
+      }
 
       //support of invitationTime in other places discontinued.
       if (attributes.getNamedItem("invitationTime") != null)

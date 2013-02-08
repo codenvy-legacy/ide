@@ -39,8 +39,7 @@ public class ManageInviteControl extends SimpleControl implements IDEControl
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      //TODO change images
-      setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
+      setImages(SamplesClientBundle.INSTANCE.manageInvite(), SamplesClientBundle.INSTANCE.manageInviteDisable());
       setEvent(new ManageInviteEvent());
       setVisible(true);
       setEnabled(true);

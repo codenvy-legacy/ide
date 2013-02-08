@@ -48,6 +48,8 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -70,6 +72,8 @@ import java.util.Set;
 public class AppEngineClient
 {
    private final OAuthTokenProvider oauthTokenProvider;
+
+   private static final Log LOG = ExoLogger.getLogger(AppEngineClient.class);
 
    public AppEngineClient(OAuthTokenProvider oauthTokenProvider)
    {
@@ -427,6 +431,8 @@ public class AppEngineClient
                writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
                writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
             }
+            LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+               + "# PAAS#GAE#");
             return app;
          }
          case PYTHON:
@@ -444,6 +450,8 @@ public class AppEngineClient
                writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
                writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
             }
+            LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+               + "# PAAS#GAE#");
             return app;
          }
          default:

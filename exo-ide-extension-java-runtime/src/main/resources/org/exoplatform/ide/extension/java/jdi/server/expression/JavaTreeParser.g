@@ -847,7 +847,8 @@ primaryExpression returns [ExpressionValue value]
 															{
 
 															   String name = $o.start.getChildCount() == 0 ? $o.start.getText() : $o.start.getChild(1).getText();
-																$value = ev.invokeMethod(latest.getValue(), name, $arguments.args);
+																$value = ev.invokeMethod(o.value.getValue(), name, $arguments.args);
+																
 															}
   | explicitConstructorCall 
 															{

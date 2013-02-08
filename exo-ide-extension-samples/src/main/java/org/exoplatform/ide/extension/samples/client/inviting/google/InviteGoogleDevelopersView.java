@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 public class InviteGoogleDevelopersView extends ViewImpl implements
    org.exoplatform.ide.extension.samples.client.inviting.google.InviteGoogleDevelopersPresenter.Display
@@ -80,7 +80,7 @@ public class InviteGoogleDevelopersView extends ViewImpl implements
 
       /**
        * Adds a new child widget
-       * 
+       *
        * @param w the widget to be added
        */
       public void add(Widget w)
@@ -91,7 +91,7 @@ public class InviteGoogleDevelopersView extends ViewImpl implements
       /**
        * Adds a new child widget to the panel, attaching its Element to the
        * specified container Element.
-       * 
+       *
        * @param child the child widget to be added
        * @param container the element within which the child will be contained
        */
@@ -144,7 +144,7 @@ public class InviteGoogleDevelopersView extends ViewImpl implements
 
    public InviteGoogleDevelopersView()
    {
-      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()), WIDTH, HEIGHT);
+      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.invite()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       setCloseOnEscape(true);
    }
