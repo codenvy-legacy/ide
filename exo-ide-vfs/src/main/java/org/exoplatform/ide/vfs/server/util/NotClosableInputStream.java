@@ -16,30 +16,31 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server;
+package org.exoplatform.ide.vfs.server.util;
 
-import org.exoplatform.commons.utils.MimeTypeResolver;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * Resolves media type from file name extension.
+ * Wrapper for InputStream which prevent close of wrapped stream.
+ * <p/>
+ * For example,  useful if need read content of ZipEntry but prevent close ZipInputStream.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public enum MediaTypes
+public final class NotClosableInputStream extends FilterInputStream
 {
-   INSTANCE;
-
-   final MimeTypeResolver resolver;
-
-   private MediaTypes()
+   public NotClosableInputStream(InputStream delegate)
    {
-      resolver = new MimeTypeResolver();
-      resolver.setDefaultMimeType("text/plain");
+      super(delegate);
    }
 
-   public String getMediaType(String filename)
+   /** @see java.io.InputStream#close() */
+   @Override
+   public void close() throws IOException
    {
-      return resolver.getMimeType(filename);
    }
 }
+

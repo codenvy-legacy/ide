@@ -21,11 +21,14 @@ package org.exoplatform.ide.vfs.impl.fs;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.ExitCodes;
+import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -35,6 +38,9 @@ public class CopyTest extends LocalFileSystemTest
 {
    private final String fileName = "CopyTest_File";
    private final String folderName = "CopyTest_Folder";
+   private final String projectName = "CopyTest_Project";
+
+   private Map<String,String[]> projectProperties;
 
    private String destinationPath;
    private String destinationId;
@@ -42,11 +48,17 @@ public class CopyTest extends LocalFileSystemTest
    private String protectedDestinationPath;
    private String protectedDestinationId;
 
+   private String destinationProjectPath;
+   private String destinationProjectId;
+
    private String fileId;
    private String filePath;
 
    private String folderId;
    private String folderPath;
+
+   private String projectId;
+   private String projectPath;
 
    @Override
    protected void setUp() throws Exception
@@ -56,8 +68,17 @@ public class CopyTest extends LocalFileSystemTest
       filePath = createFile(testRootPath, fileName, DEFAULT_CONTENT_BYTES);
       folderPath = createDirectory(testRootPath, folderName);
       createTree(folderPath, 6, 4, null);
+      projectPath = createDirectory(testRootPath, projectName);
+      createTree(projectPath, 6, 4, null);
       destinationPath = createDirectory(testRootPath, "CopyTest_DestinationFolder");
       protectedDestinationPath = createDirectory(testRootPath, "CopyTest_ProtectedDestinationFolder");
+      destinationProjectPath = createDirectory(testRootPath, "CopyTest_DestinationProject");
+
+      projectProperties = new HashMap<String, String[]>(2);
+      projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
+      projectProperties.put("vfs:projectType", new String[]{"java"});
+      writeProperties(projectPath, projectProperties);
+      writeProperties(destinationProjectPath, projectProperties);
 
       Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
       accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
@@ -66,8 +87,14 @@ public class CopyTest extends LocalFileSystemTest
 
       fileId = pathToId(filePath);
       folderId = pathToId(folderPath);
+      projectId = pathToId(projectPath);
       destinationId = pathToId(destinationPath);
       protectedDestinationId = pathToId(protectedDestinationPath);
+      destinationProjectId = pathToId(destinationProjectPath);
+
+      // check we see items as projects
+      assertEquals(ItemType.PROJECT, getItem(projectId).getItemType());
+      assertEquals(ItemType.PROJECT, getItem(destinationProjectId).getItemType());
    }
 
    public void testCopyFile() throws Exception
@@ -76,7 +103,7 @@ public class CopyTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + destinationId;
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       String expectedPath = destinationPath + '/' + fileName;
       assertTrue("Source file not found. ", exists(filePath));
       assertTrue("Not found file in destination location. ", exists(expectedPath));
@@ -94,6 +121,23 @@ public class CopyTest extends LocalFileSystemTest
       // untouched ??
       assertTrue(exists(existedFile));
       assertTrue(Arrays.equals(existedFileContent, readFile(existedFile)));
+   }
+
+   public void testCopyFileHavePermissionsDestination() throws Exception
+   {
+      // Destination resource is protected but set user who has permits as current.
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "copy/" + fileId + '?' + "parentId=" + protectedDestinationId;
+      ConversationState user = new ConversationState(new Identity("andrew"));
+      user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
+      ConversationState.setCurrent(user);
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      String expectedPath = protectedDestinationPath + '/' + fileName;
+      assertTrue("Source file not found. ", exists(filePath));
+      assertTrue("Not found file in destination location. ", exists(expectedPath));
+      assertTrue(Arrays.equals(DEFAULT_CONTENT_BYTES, readFile(expectedPath)));
    }
 
    public void testCopyFileNoPermissionsDestination() throws Exception
@@ -117,10 +161,10 @@ public class CopyTest extends LocalFileSystemTest
       final long end = System.currentTimeMillis();
       log.info(">>>>> Copy tree time: {}ms", (end - start));
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       String expectedPath = destinationPath + '/' + folderName;
       assertTrue("Source folder not found. ", exists(folderPath));
-      assertTrue("Not found file in destination location. ", exists(expectedPath));
+      assertTrue("Not found folder in destination location. ", exists(expectedPath));
       compareDirectories(folderPath, expectedPath);
    }
 
@@ -132,5 +176,42 @@ public class CopyTest extends LocalFileSystemTest
       assertEquals(400, response.getStatus());
       assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
       assertTrue("Source folder not found. ", exists(folderPath));
+   }
+
+   public void testCopyProject() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "copy/" + projectId + '?' + "parentId=" + destinationId;
+      final long start = System.currentTimeMillis();
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      final long end = System.currentTimeMillis();
+      log.info(">>>>> Copy tree time: {}ms", (end - start));
+      log.info(new String(writer.getBody()));
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      String expectedPath = destinationPath + '/' + projectName;
+      assertTrue("Source project not found. ", exists(projectPath));
+      assertTrue("Not found project in destination location. ", exists(expectedPath));
+      compareDirectories(projectPath, expectedPath);
+      validateProperties(projectPath, projectProperties);  // check source is not updated
+      validateProperties(expectedPath, projectProperties); // check properties is copied
+   }
+
+   public void testCopyProjectToProject() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "copy/" + projectId + '?' + "parentId=" + destinationProjectId;
+      final long start = System.currentTimeMillis();
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
+      final long end = System.currentTimeMillis();
+      log.info(">>>>> Copy tree time: {}ms", (end - start));
+      log.info(new String(writer.getBody()));
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      String expectedPath = destinationProjectPath + '/' + projectName;
+      assertTrue("Source project not found. ", exists(projectPath));
+      assertTrue("Not found project in destination location. ", exists(expectedPath));
+      compareDirectories(projectPath, expectedPath);
+      validateProperties(projectPath, projectProperties);  // check source is not updated
+      validateProperties(expectedPath, projectProperties); // check properties is copied
+      validateProperties(destinationProjectPath, projectProperties);  // check destination project
    }
 }

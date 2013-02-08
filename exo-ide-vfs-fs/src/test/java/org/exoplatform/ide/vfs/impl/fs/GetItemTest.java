@@ -80,7 +80,7 @@ public class GetItemTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "item/" + fileId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FILE, item.getItemType());
       assertEquals(fileId, item.getId());
@@ -94,7 +94,7 @@ public class GetItemTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "itembypath" + filePath;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FILE, item.getItemType());
       assertEquals(fileId, item.getId());
@@ -112,7 +112,7 @@ public class GetItemTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "itembypath" + filePath + '?' + "versionId=" + 0;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FILE, item.getItemType());
       assertEquals(fileId, item.getId());
@@ -141,7 +141,7 @@ public class GetItemTest extends LocalFileSystemTest
       // No filter - all properties
       String requestPath = SERVICE_URI + "item/" + fileId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       Item i = (Item)response.getEntity();
 
       assertEquals(e1.getValue()[0], i.getPropertyValue(e1.getKey()));
@@ -151,7 +151,7 @@ public class GetItemTest extends LocalFileSystemTest
       requestPath = SERVICE_URI + "item/" + fileId + '?' + "propertyFilter=" + e1.getKey();
 
       response = launcher.service("GET", requestPath, BASE_URI, null, null, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       i = (Item)response.getEntity();
 
       assertEquals(e1.getValue()[0], i.getPropertyValue(e1.getKey()));
@@ -200,7 +200,7 @@ public class GetItemTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "item/" + folderId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FOLDER, item.getItemType());
       assertEquals(folderId, item.getId());
@@ -214,7 +214,7 @@ public class GetItemTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "itembypath" + folderPath;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       Item item = (Item)response.getEntity();
       assertEquals(ItemType.FOLDER, item.getItemType());
       assertEquals(folderId, item.getId());

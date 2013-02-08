@@ -47,17 +47,25 @@ public class FileLockFactoryTest extends TestCase
    public void testLock() throws Exception
    {
       final AtomicBoolean acquired = new AtomicBoolean(false);
+      final CountDownLatch waiter = new CountDownLatch(1);
       Thread t = new Thread()
       {
          @Override
          public void run()
          {
-            fileLockFactory.getLock(path, true).acquire();
-            acquired.set(true);
+            try
+            {
+               fileLockFactory.getLock(path, true).acquire();
+               acquired.set(true);
+            }
+            finally
+            {
+               waiter.countDown();
+            }
          }
       };
       t.start();
-      t.join(1000);
+      waiter.await();
       assertTrue(acquired.get());
    }
 
@@ -85,8 +93,8 @@ public class FileLockFactoryTest extends TestCase
             }
             finally
             {
-               exclusiveLock.release();
                acquired.getAndDecrement();
+               exclusiveLock.release();
                waiter.countDown();
             }
          }
@@ -126,9 +134,7 @@ public class FileLockFactoryTest extends TestCase
             }
          }
       };
-      Thread t = new Thread(task);
-      t.setDaemon(true);
-      t.start();
+      new Thread(task).start();
       starter.await(); // wait while child thread acquire exclusive lock
       FileLockFactory.FileLock timeoutExclusiveLock = fileLockFactory.getLock(path, true);
       try
@@ -155,11 +161,11 @@ public class FileLockFactoryTest extends TestCase
          public void run()
          {
             FileLockFactory.FileLock lock = fileLockFactory.getLock(path, false);
+            lock.acquire();
+            acquired.incrementAndGet();
+            starter.countDown();
             try
             {
-               lock.acquire();
-               acquired.incrementAndGet();
-               starter.countDown();
                Thread.sleep(1000);
             }
             catch (InterruptedException ignored)
@@ -167,8 +173,8 @@ public class FileLockFactoryTest extends TestCase
             }
             finally
             {
-               lock.release();
                acquired.getAndDecrement();
+               lock.release();
                waiter.countDown();
             }
          }
@@ -192,8 +198,8 @@ public class FileLockFactoryTest extends TestCase
             }
             finally
             {
-               exclusiveLock.release();
                acquired.getAndDecrement();
+               exclusiveLock.release();
                waiter.countDown();
             }
          }
@@ -208,5 +214,101 @@ public class FileLockFactoryTest extends TestCase
       {
          throw errors.get(0);
       }
+   }
+
+   public void testHierarchyLock() throws Throwable
+   {
+      final AtomicInteger acquired = new AtomicInteger(0);
+      final Path parent = path.getParent();
+      final CountDownLatch starter = new CountDownLatch(1);
+      final CountDownLatch waiter = new CountDownLatch(2);
+      Runnable parentTask = new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            FileLockFactory.FileLock lock = fileLockFactory.getLock(parent, true);
+            lock.acquire();
+            acquired.incrementAndGet();
+            starter.countDown();
+            try
+            {
+               Thread.sleep(100);
+            }
+            catch (InterruptedException ignored)
+            {
+            }
+            finally
+            {
+               acquired.getAndDecrement();
+               lock.release();
+               waiter.countDown();
+            }
+         }
+      };
+      final List<Throwable> errors = new ArrayList<Throwable>(1);
+      Runnable childTask = new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            FileLockFactory.FileLock lock = fileLockFactory.getLock(path, false);
+            try
+            {
+               lock.acquire();
+               // This thread must be blocked while another thread keeps lock.
+               assertEquals(0, acquired.getAndIncrement());
+            }
+            catch (Throwable e)
+            {
+               errors.add(e);
+            }
+            finally
+            {
+               lock.release();
+               acquired.getAndDecrement();
+               waiter.countDown();
+            }
+         }
+      };
+      new Thread(parentTask).start();
+      starter.await();
+      new Thread(childTask).start();
+      waiter.await();
+      assertEquals(0, acquired.get()); // all locks must be released
+
+      if (!errors.isEmpty())
+      {
+         throw errors.get(0);
+      }
+   }
+
+   public void testLockSameThread() throws Exception
+   {
+      final AtomicInteger acquired = new AtomicInteger(0);
+      final CountDownLatch waiter = new CountDownLatch(1);
+      Runnable task = new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            try
+            {
+               FileLockFactory.FileLock lock1 = fileLockFactory.getLock(path, true);
+               FileLockFactory.FileLock lock2 = fileLockFactory.getLock(path, true);
+               lock1.acquire();
+               acquired.incrementAndGet();
+               lock2.acquire(1000); // try with timeout.
+               acquired.incrementAndGet();
+            }
+            finally
+            {
+               waiter.countDown();
+            }
+         }
+      };
+      new Thread(task).start();
+      waiter.await();
+      assertEquals(2, acquired.get());
    }
 }

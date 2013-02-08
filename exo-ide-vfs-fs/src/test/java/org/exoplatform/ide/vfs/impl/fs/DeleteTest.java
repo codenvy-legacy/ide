@@ -123,7 +123,7 @@ public class DeleteTest extends LocalFileSystemTest
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must be removed. ", exists(filePath));
-      assertNull("Metadata must be removed. ", readProperties(filePath)); // property file must be removed.
+      assertNull("Properties must be removed. ", readProperties(filePath));
    }
 
    public void testDeleteFileLocked() throws Exception
@@ -132,7 +132,7 @@ public class DeleteTest extends LocalFileSystemTest
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must be removed. ", exists(lockedFilePath));
-      assertNull("Lock file must be removed. ", readLock(lockedFilePath)); // lock file must be removed also
+      assertNull("Lock file must be removed. ", readLock(lockedFilePath));
    }
 
    public void testDeleteFileLocked_NoLockToken() throws Exception
@@ -152,7 +152,9 @@ public class DeleteTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "delete/" + protectedFileId;
       // File is protected and default principal 'admin' has not write permission.
       // Replace default principal by principal who has write permission.
-      ConversationState.setCurrent(new ConversationState(new Identity("andrew")));
+      ConversationState user = new ConversationState(new Identity("andrew"));
+      user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
+      ConversationState.setCurrent(user);
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must not be removed. ", exists(protectedFilePath));

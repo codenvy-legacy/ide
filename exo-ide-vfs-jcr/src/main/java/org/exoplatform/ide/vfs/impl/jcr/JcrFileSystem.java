@@ -19,18 +19,20 @@
 package org.exoplatform.ide.vfs.impl.jcr;
 
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.io.input.CountingInputStream;
 import org.everrest.core.impl.provider.json.JsonException;
 import org.everrest.core.impl.provider.json.JsonGenerator;
 import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
-import org.exoplatform.commons.utils.MimeTypeResolver;
 import org.exoplatform.ide.vfs.server.ContentStream;
+import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
+import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
 import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.util.MediaTypes;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
+import org.exoplatform.ide.vfs.server.exceptions.HtmlErrorFormatter;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
@@ -38,13 +40,14 @@ import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
+import org.exoplatform.ide.vfs.server.util.ZipContent;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.ExitCodes;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.FileImpl;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.FolderImpl;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
@@ -71,12 +74,7 @@ import org.exoplatform.services.jcr.core.ManageableRepository;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -115,7 +113,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -128,24 +125,6 @@ import javax.ws.rs.core.UriBuilder;
  */
 public class JcrFileSystem implements VirtualFileSystem
 {
-   enum Resolver
-   {
-      INSTANCE;
-      /*=====================================*/
-      final MimeTypeResolver resolver;
-
-      private Resolver()
-      {
-         resolver = new MimeTypeResolver();
-         resolver.setDefaultMimeType("text/plain");
-      }
-
-      public MediaType getMediaType(String filename)
-      {
-         return MediaType.valueOf(resolver.getMimeType(filename));
-      }
-   }
-
    static final Set<String> SKIPPED_QUERY_PROPERTIES = new HashSet<String>(Arrays.asList("jcr:path", "jcr:score"));
 
    protected final Repository repository;
@@ -158,7 +137,7 @@ public class JcrFileSystem implements VirtualFileSystem
    private VirtualFileSystemInfo vfsInfo;
    private final String vfsID;
 
-   private final Log LOG = ExoLogger.getLogger(JcrFileSystem.class);
+   private static final Log LOG = ExoLogger.getLogger(JcrFileSystem.class);
      
    public JcrFileSystem(Repository repository,
                         String workspaceName,
@@ -216,11 +195,6 @@ public class JcrFileSystem implements VirtualFileSystem
          if (!(ItemType.PROJECT == parent.getType() || ItemType.FOLDER == parent.getType()))
          {
             throw new InvalidArgumentException("Unable copy. Item specified as parent is not a folder or project. ");
-         }
-         if (ItemType.PROJECT == parent.getType() && ItemType.PROJECT == object.getType())
-         {
-            throw new ConstraintException("Unable copy. Item specified as parent is a project. "
-               + "Project cannot contains another project.");
          }
          ItemData newObject = object.copyTo((FolderData)parent);
          Item copy = fromItemData(newObject, PropertyFilter.ALL_FILTER);
@@ -285,7 +259,7 @@ public class JcrFileSystem implements VirtualFileSystem
    /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#createFolder(String, String) */
    @Path("folder/{parentId}")
    @Override
-   public FolderImpl createFolder(@PathParam("parentId") String parentId, //
+   public Folder createFolder(@PathParam("parentId") String parentId, //
                                   @QueryParam("name") String name //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
@@ -302,7 +276,7 @@ public class JcrFileSystem implements VirtualFileSystem
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
             mediaType2NodeTypeResolver.getFolderMixins((String)null), //
             null);
-         FolderImpl folder = (FolderImpl)fromItemData(newFolder, PropertyFilter.ALL_FILTER);
+         Folder folder = (Folder)fromItemData(newFolder, PropertyFilter.ALL_FILTER);
          notifyListeners(new ChangeEvent(this, //
             folder.getId(), //
             folder.getPath(), //
@@ -350,14 +324,14 @@ public class JcrFileSystem implements VirtualFileSystem
             mediaType2NodeTypeResolver.getFolderNodeType((String)null), //
             mediaType2NodeTypeResolver.getFolderMixins(Project.PROJECT_MIME_TYPE), //
             properties);
-         ProjectImpl project = (ProjectImpl)fromItemData(newProject, PropertyFilter.ALL_FILTER);
+         Project project = (Project)fromItemData(newProject, PropertyFilter.ALL_FILTER);
          notifyListeners(new ChangeEvent(this, //
             project.getId(), //
             project.getPath(), //
             project.getMimeType(), //
             ChangeEvent.ChangeType.CREATED)
          );
-         LOG.info("EVENT#project-created# PROJECT#" + name + "# TYPE#" + type + "#");
+         LOG.info("EVENT#project-created# PROJECT#" + name + "# TYPE#" + project.getProjectType() + "#");
          return project;
       }
       finally
@@ -382,8 +356,6 @@ public class JcrFileSystem implements VirtualFileSystem
          MediaType mediaType = data.getMediaType();
          ItemType type = data.getType();
          String name = data.getName();
-         List<Property> props = data.getProperties(PropertyFilter.valueOf("vfs:projectType"));
-         String projectType = props.size() == 0 ? "" : props.get(0).getValue().get(0);
          if (listeners != null && type == ItemType.PROJECT)
          {
             listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)data), new ProjectUpdateListener(id));
@@ -391,7 +363,7 @@ public class JcrFileSystem implements VirtualFileSystem
          data.delete(lockToken);
          if (type == ItemType.PROJECT)
          {
-            LOG.info("EVENT#project-destroyed# PROJECT#" + name + "# TYPE#" + projectType + "#");
+            LOG.info("EVENT#project-destroyed# PROJECT#" + name + "# TYPE#" + ((ProjectData)data).getProjectType() + "#");
          }
          notifyListeners(new ChangeEvent(this, //
             id, //
@@ -619,10 +591,10 @@ public class JcrFileSystem implements VirtualFileSystem
             permissions.add(bp.value());
          }
          Session session = session();
-         FolderImpl root;
+         Folder root;
          try
          {
-            root = (FolderImpl)fromItemData(getItemDataByPath(session, "/"), PropertyFilter.valueOf(PropertyFilter.ALL));
+            root = (Folder)fromItemData(getItemDataByPath(session, "/"), PropertyFilter.valueOf(PropertyFilter.ALL));
          }
          finally
          {
@@ -873,16 +845,13 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Unable move. Item specified as parent is not a folder or project. ");
          }
-         if (ItemType.PROJECT == parent.getType() && ItemType.PROJECT == object.getType())
-         {
-            throw new ConstraintException("Unable move. Item specified as parent is not a folder. " +
-               "Project cannot be moved to another one. ");
-         }
+         final String oldPath = object.getPath();
          String movedId = object.moveTo((FolderData)parent, lockToken);
          Item moved = fromItemData(getItemData(session, movedId), PropertyFilter.ALL_FILTER);
          notifyListeners(new ChangeEvent(this, //
             moved.getId(), //
             moved.getPath(), //
+            oldPath, //
             moved.getMimeType(), //
             ChangeEvent.ChangeType.MOVED)
          );
@@ -923,11 +892,13 @@ public class JcrFileSystem implements VirtualFileSystem
                data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                   : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
          }
+         final String oldPath = data.getPath();
          String renamedId = data.rename(newname, newMediaType, lockToken, addMixinTypes, removeMixinTypes);
          Item renamed = fromItemData(getItemData(session, renamedId), PropertyFilter.ALL_FILTER);
          notifyListeners(new ChangeEvent(this, //
             renamed.getId(), //
             renamed.getPath(), //
+            oldPath, //
             renamed.getMimeType(), //
             ChangeEvent.ChangeType.RENAMED)
          );
@@ -1288,9 +1259,7 @@ public class JcrFileSystem implements VirtualFileSystem
                            data.getType() == ItemType.FILE ? mediaType2NodeTypeResolver.getFileMixins(newMediaType)
                               : mediaType2NodeTypeResolver.getFolderMixins(newMediaType);
                      }
-                     List<Property> props = data.getProperties(PropertyFilter.valueOf("vfs:mimeType"));
-                     String dmType = props.size() == 0 ? "" : props.get(0).getValue().get(0);
-                     if (value.get(0).equals(Project.PROJECT_MIME_TYPE) && !dmType.equals(Project.PROJECT_MIME_TYPE))
+                     if (value.get(0).equals(Project.PROJECT_MIME_TYPE) && data.getType() != ItemType.PROJECT)
                      {
                         convertToProject = true;
                      }
@@ -1384,7 +1353,7 @@ public class JcrFileSystem implements VirtualFileSystem
                      }
                      catch (JsonException e)
                      {
-                        throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+                        throw new VirtualFileSystemException(e.getMessage(), e);
                      }
                   }
                   else
@@ -1414,37 +1383,6 @@ public class JcrFileSystem implements VirtualFileSystem
       }
    }
 
-   /** Delete java.io.File after close. */
-   private static final class DeleteOnCloseFileInputStream extends FileInputStream
-   {
-      private final java.io.File file;
-      private boolean deleted = false;
-
-      public DeleteOnCloseFileInputStream(java.io.File file) throws FileNotFoundException
-      {
-         super(file);
-         this.file = file;
-      }
-
-      /** @see java.io.FileInputStream#close() */
-      @Override
-      public void close() throws IOException
-      {
-         try
-         {
-            super.close();
-         }
-         finally
-         {
-            if (!deleted)
-            {
-               deleted = file.delete();
-            }
-         }
-         //System.out.println("---> " + file.getAbsolutePath() + ", exists : " + file.exists());
-      }
-   }
-
    /** @see org.exoplatform.ide.vfs.server.VirtualFileSystem#importZip(java.lang.String, java.io.InputStream, Boolean) */
    @Path("import/{parentId}")
    @Override
@@ -1465,14 +1403,8 @@ public class JcrFileSystem implements VirtualFileSystem
                + "Item specified as parent is not a folder or project. ");
          }
 
-         final ZipContent zipContent = spoolZipStream(in);
-
-         if (zipContent.isProject && ItemType.PROJECT == parentData.getType())
-         {
-            throw new ConstraintException("Unable import from zip. Project cannot be imported to another one. ");
-         }
-
-         zip = new ZipInputStream(zipContent.data);
+         final ZipContent zipContent = ZipContent.newInstance(in);
+         zip = new ZipInputStream(zipContent.zippedData);
          // Wrap zip stream to prevent close it. We can pass stream to other method
          // and it can read content of current ZipEntry but not able to close original
          // stream of ZIPed data.
@@ -1529,22 +1461,15 @@ public class JcrFileSystem implements VirtualFileSystem
                }
                catch (JsonException e)
                {
-                  throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
+                  throw new VirtualFileSystemException(e.getMessage(), e);
                }
                if (properties.size() > 0)
                {
                   current.updateProperties(properties, null, null, null);
                }
 
-               String projectType = "";
-               for (Property prop : properties)
-               {
-                  if ("vfs:projectType".equals(prop.getName()))
-                  {
-                     projectType = prop.getValue().get(0);
-                     break;
-                  }
-               }
+               List<Property> props = current.getProperties(PropertyFilter.valueOf("vfs:projectType"));
+               String projectType = props.size() == 0 ? "" : props.get(0).getValue().get(0);
                LOG.info("EVENT#project-created# PROJECT#" + parentData.getName() + "# TYPE#" + projectType + "#");
             }
             else
@@ -1556,7 +1481,7 @@ public class JcrFileSystem implements VirtualFileSystem
                }
                else
                {
-                  final MediaType mediaType = Resolver.INSTANCE.getMediaType(name);
+                  final MediaType mediaType = MediaType.valueOf(MediaTypes.INSTANCE.getMediaType(name));
                   current.createFile(name, //
                      mediaType2NodeTypeResolver.getFileNodeType(mediaType), //
                      mediaType2NodeTypeResolver.getFileContentNodeType(mediaType), //
@@ -1579,181 +1504,6 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             zip.close();
          }
-      }
-   }
-
-   /** Wrapper for ZipInputStream that make possible read content of ZipEntry but prevent close ZipInputStream. */
-   private static final class NotClosableInputStream extends FilterInputStream
-   {
-      public NotClosableInputStream(InputStream delegate)
-      {
-         super(delegate);
-      }
-
-      /** @see java.io.InputStream#close() */
-      @Override
-      public void close() throws IOException
-      {
-      }
-   }
-
-   /** Memory threshold. If zip stream over this size it spooled in file. */
-   private static final int BUFFER = 102400; // 100k
-   /** The threshold after that checking of ZIP ratio started. */
-   private static final long ZIP_THRESHOLD = 1000000;
-   /**
-    * Max compression ratio. If the number of bytes uncompressed data is exceed the number
-    * of bytes of compressed stream more than this ratio (and number of uncompressed data
-    * is more than threshold) then VirtualFileSystemRuntimeException is thrown.
-    */
-   private static final int ZIP_RATIO = 100;
-
-   /**
-    * Spool content of zip in memory or in file.
-    *
-    * @param src
-    *    source zip
-    * @return spool zip
-    * @throws IOException
-    *    if any i/o error occur
-    */
-   private ZipContent spoolZipStream(InputStream src) throws IOException
-   {
-      java.io.File file = null;
-      byte[] inMemory = null;
-
-      int count = 0;
-      ByteArrayOutputStream inMemorySpool = new ByteArrayOutputStream(BUFFER);
-
-      int bytes;
-      byte[] buff = new byte[8192];
-      while (count <= BUFFER && (bytes = src.read(buff)) != -1)
-      {
-         inMemorySpool.write(buff, 0, bytes);
-         count += bytes;
-      }
-
-      InputStream in;
-      if (count > BUFFER)
-      {
-         file = java.io.File.createTempFile("import", ".zip");
-         FileOutputStream fileSpool = new FileOutputStream(file);
-         try
-         {
-            inMemorySpool.writeTo(fileSpool);
-            while ((bytes = src.read(buff)) != -1)
-            {
-               fileSpool.write(buff, 0, bytes);
-            }
-         }
-         finally
-         {
-            fileSpool.close();
-         }
-         in = new FileInputStream(file);
-      }
-      else
-      {
-         inMemory = inMemorySpool.toByteArray();
-         in = new ByteArrayInputStream(inMemory);
-      }
-
-      ZipInputStream zip = null;
-      try
-      {
-         // Counts numbers of compressed data.
-         final CountingInputStream compressedCounter = new CountingInputStream(in);
-         zip = new ZipInputStream(compressedCounter);
-         // Counts number of uncompressed data.
-         CountingInputStream uncompressedCounter = new CountingInputStream(zip)
-         {
-            @Override
-            public int read() throws IOException
-            {
-               int i = super.read();
-               checkCompressionRatio();
-               return i;
-            }
-
-            @Override
-            public int read(byte[] b, int off, int len) throws IOException
-            {
-               int i = super.read(b, off, len);
-               checkCompressionRatio();
-               return i;
-            }
-
-            @Override
-            public int read(byte[] b) throws IOException
-            {
-               int i = super.read(b);
-               checkCompressionRatio();
-               return i;
-            }
-
-            @Override
-            public long skip(long length) throws IOException
-            {
-               long i = super.skip(length);
-               checkCompressionRatio();
-               return i;
-            }
-
-            private void checkCompressionRatio()
-            {
-               long uncompressedBytes = getByteCount(); // number of uncompressed bytes
-               if (uncompressedBytes > ZIP_THRESHOLD)
-               {
-                  long compressedBytes = compressedCounter.getByteCount(); // number of compressed bytes
-                  if (uncompressedBytes > (ZIP_RATIO * compressedBytes))
-                  {
-                     throw new VirtualFileSystemRuntimeException("Zip bomb detected. ");
-                  }
-               }
-            }
-         };
-
-         boolean isProject = false;
-
-         ZipEntry zipEntry;
-         while ((zipEntry = zip.getNextEntry()) != null)
-         {
-            if (".project".equals(zipEntry.getName()))
-            {
-               isProject = true;
-            }
-            else if (!zipEntry.isDirectory())
-            {
-               while (uncompressedCounter.read(buff) != -1)
-               {
-                  // Read full data from stream to be able detect zip-bomb.
-               }
-            }
-         }
-
-         return new ZipContent(
-            inMemory != null ? new ByteArrayInputStream(inMemory) : new DeleteOnCloseFileInputStream(file),
-            isProject
-         );
-      }
-      finally
-      {
-         if (zip != null)
-         {
-            zip.close();
-         }
-      }
-   }
-
-   private static final class ZipContent
-   {
-      final InputStream data;
-      final boolean isProject;
-
-      ZipContent(InputStream data, boolean isProject)
-      {
-         this.data = data;
-         this.isProject = isProject;
       }
    }
 
@@ -1888,13 +1638,13 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       catch (VirtualFileSystemException e)
       {
-         sendErrorAsHTML(e);
+         HtmlErrorFormatter.sendErrorAsHTML(e);
          // never thrown
          throw e;
       }
       catch (IOException e)
       {
-         sendErrorAsHTML(e);
+         HtmlErrorFormatter.sendErrorAsHTML(e);
          // never thrown
          throw e;
       }
@@ -1958,13 +1708,13 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       catch (VirtualFileSystemException e)
       {
-         sendErrorAsHTML(e);
+         HtmlErrorFormatter.sendErrorAsHTML(e);
          // never thrown
          throw e;
       }
       catch (IOException e)
       {
-         sendErrorAsHTML(e);
+         HtmlErrorFormatter.sendErrorAsHTML(e);
          // never thrown
          throw e;
       }
@@ -2347,53 +2097,5 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       return !(a == null || b == null)
          && a.getType().equalsIgnoreCase(b.getType()) && a.getSubtype().equalsIgnoreCase(b.getSubtype());
-   }
-
-   /**
-    * Throws WebApplicationException that contains error message in HTML format.
-    *
-    * @param e
-    *    exception
-    */
-   private void sendErrorAsHTML(Exception e)
-   {
-      // GWT framework (used on client side) requires result in HTML format if use HTML forms.
-      if (e instanceof ItemAlreadyExistException)
-      {
-         throw new WebApplicationException(Response.ok(formatAsHtml(e.getMessage(), ExitCodes.ITEM_EXISTS),
-            MediaType.TEXT_HTML).build());
-      }
-      else if (e instanceof ItemNotFoundException)
-      {
-         throw new WebApplicationException(Response.ok(formatAsHtml(e.getMessage(), ExitCodes.ITEM_NOT_FOUND),
-            MediaType.TEXT_HTML).build());
-      }
-      else if (e instanceof InvalidArgumentException)
-      {
-         throw new WebApplicationException(Response.ok(formatAsHtml(e.getMessage(), ExitCodes.INVALID_ARGUMENT),
-            MediaType.TEXT_HTML).build());
-      }
-      else if (e instanceof ConstraintException)
-      {
-         throw new WebApplicationException(Response.ok(formatAsHtml(e.getMessage(), ExitCodes.CONSTRAINT),
-            MediaType.TEXT_HTML).build());
-      }
-      else if (e instanceof PermissionDeniedException)
-      {
-         throw new WebApplicationException(Response.ok(formatAsHtml(e.getMessage(), ExitCodes.NOT_PERMITTED),
-            MediaType.TEXT_HTML).build());
-      }
-      else if (e instanceof LockException)
-      {
-         throw new WebApplicationException(Response.ok(formatAsHtml(e.getMessage(), ExitCodes.LOCK_CONFLICT),
-            MediaType.TEXT_HTML).build());
-      }
-      throw new WebApplicationException(Response.ok(formatAsHtml(e.getMessage(), ExitCodes.INTERNAL_ERROR),
-         MediaType.TEXT_HTML).build());
-   }
-
-   private String formatAsHtml(String message, int exitCode)
-   {
-      return "<pre>Code: " + exitCode + " Text: " + message + "</pre>";
    }
 }

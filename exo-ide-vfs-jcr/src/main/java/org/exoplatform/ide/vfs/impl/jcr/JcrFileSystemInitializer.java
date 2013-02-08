@@ -210,6 +210,25 @@ public final class JcrFileSystemInitializer implements Startable
    @Override
    public void stop()
    {
+      for (JcrFileSystemConfiguration conf : configurations)
+      {
+         try
+         {
+            vfsRegistry.unregisterProvider(conf.getId());
+         }
+         catch (VirtualFileSystemException e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
+      }
+      try
+      {
+         vfsRegistry.unregisterProvider("default");
+      }
+      catch (VirtualFileSystemException e)
+      {
+         LOG.error(e.getMessage(), e);
+      }
    }
 
    void initializeProviders()

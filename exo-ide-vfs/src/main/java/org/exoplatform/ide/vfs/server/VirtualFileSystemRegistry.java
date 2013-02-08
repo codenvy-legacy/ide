@@ -46,9 +46,9 @@ public class VirtualFileSystemRegistry
       }
    }
 
-   public boolean unregisterProvider(String vfsId) throws VirtualFileSystemException
+   public void unregisterProvider(String vfsId) throws VirtualFileSystemException
    {
-      return providers.remove(id(vfsId)) != null;
+      providers.remove(id(vfsId));
    }
 
    public VirtualFileSystemProvider getProvider(String vfsId) throws VirtualFileSystemException
@@ -66,7 +66,7 @@ public class VirtualFileSystemRegistry
       return Collections.unmodifiableCollection(providers.values());
    }
 
-   private static String id(String vfsId)
+   private String id(String vfsId)
    {
       return vfsId == null ? "default" : vfsId;
    }

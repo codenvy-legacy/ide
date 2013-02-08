@@ -86,7 +86,7 @@ public class ChildrenTest extends LocalFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       log.info(new String(writer.getBody()));
       @SuppressWarnings("unchecked")
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
@@ -128,7 +128,7 @@ public class ChildrenTest extends LocalFileSystemTest
       // Get all children.
       String requestPath = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
       List<Object> all = new ArrayList<Object>(4);
@@ -152,7 +152,7 @@ public class ChildrenTest extends LocalFileSystemTest
       // Get all children.
       String requestPath = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
       List<Object> all = new ArrayList<Object>(4);
@@ -175,7 +175,7 @@ public class ChildrenTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
       assertEquals(4, children.getItems().size());
@@ -197,7 +197,7 @@ public class ChildrenTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "children/" + folderId + '?' + "propertyFilter=" + e1.getKey();
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
       assertEquals(4, children.getItems().size());
@@ -214,7 +214,7 @@ public class ChildrenTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "children/" + folderId + '?' + "itemType=" + "folder";
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       ItemList<Item> children = (ItemList<Item>)response.getEntity();
       assertEquals(2, children.getItems().size());

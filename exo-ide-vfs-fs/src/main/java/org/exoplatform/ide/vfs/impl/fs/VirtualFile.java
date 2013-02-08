@@ -19,13 +19,17 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.MediaTypes;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.ide.vfs.server.util.MediaTypes;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -45,40 +49,39 @@ public class VirtualFile implements Comparable<VirtualFile>
       this.mountPoint = mountPoint;
    }
 
-   public String getName()
+   public String getName() throws VirtualFileSystemException
    {
       return path.getName();
    }
 
-   public String getPath()
+   public String getPath() throws VirtualFileSystemException
    {
       return path.toString();
    }
 
-   public boolean exists()
+   public boolean exists() throws VirtualFileSystemException
    {
       return getIoFile().exists();
    }
 
-   public boolean isRoot()
+   public boolean isRoot() throws VirtualFileSystemException
    {
       return path.isRoot();
    }
 
-   public boolean isFile()
+   public boolean isFile() throws VirtualFileSystemException
    {
       return getIoFile().isFile();
    }
 
-   public boolean isFolder()
+   public boolean isFolder() throws VirtualFileSystemException
    {
       return getIoFile().isDirectory();
    }
 
-   public boolean isProject()
+   public boolean isProject() throws VirtualFileSystemException
    {
-      // TODO
-      return false; // isDirectory() && new java.io.File(ioFile, ".project").exists();
+      return isFolder() && Project.PROJECT_MIME_TYPE.equals(getMediaType());
    }
 
    public VirtualFile getParent() throws VirtualFileSystemException
@@ -96,9 +99,11 @@ public class VirtualFile implements Comparable<VirtualFile>
       return mountPoint.getContent(this);
    }
 
-   public void updateContent(String mediaType, InputStream content, String lockToken) throws VirtualFileSystemException
+   public VirtualFile updateContent(String mediaType, InputStream content, String lockToken)
+      throws VirtualFileSystemException
    {
       mountPoint.updateContent(this, mediaType, content, lockToken);
+      return this;
    }
 
    public String getMediaType() throws VirtualFileSystemException
@@ -131,12 +136,28 @@ public class VirtualFile implements Comparable<VirtualFile>
 
    public List<Property> getProperties(PropertyFilter filter) throws VirtualFileSystemException
    {
+      if (PropertyFilter.NONE_FILTER == filter)
+      {
+         // Do not 'disturb' backend if we already know result is always empty.
+         return Collections.emptyList();
+      }
       return mountPoint.getProperties(this, filter);
    }
 
-   public String getFirstPropertyValue(String name) throws VirtualFileSystemException
+   public VirtualFile updateProperties(List<Property> properties, String lockToken) throws VirtualFileSystemException
+   {
+      mountPoint.updateProperties(this, properties, lockToken);
+      return this;
+   }
+
+   public String getPropertyValue(String name) throws VirtualFileSystemException
    {
       return mountPoint.getPropertyValue(this, name);
+   }
+
+   public String[] getPropertyValues(String name) throws VirtualFileSystemException
+   {
+      return mountPoint.getPropertyValues(this, name);
    }
 
    //
@@ -163,6 +184,18 @@ public class VirtualFile implements Comparable<VirtualFile>
 
    //
 
+   public ContentStream zip() throws IOException, VirtualFileSystemException
+   {
+      return mountPoint.zip(this);
+   }
+
+   public void unzip(InputStream zipped, boolean overwrite) throws IOException, VirtualFileSystemException
+   {
+      mountPoint.unzip(this, zipped, overwrite);
+   }
+
+   //
+
    public String lock() throws VirtualFileSystemException
    {
       return mountPoint.lock(this);
@@ -185,10 +218,11 @@ public class VirtualFile implements Comparable<VirtualFile>
       return mountPoint.getACL(this);
    }
 
-   public void updateACL(List<AccessControlEntry> acl, boolean override, String lockToken)
+   public VirtualFile updateACL(List<AccessControlEntry> acl, boolean override, String lockToken)
       throws VirtualFileSystemException
    {
       mountPoint.updateACL(this, acl, override, lockToken);
+      return this;
    }
 
    //
@@ -205,7 +239,7 @@ public class VirtualFile implements Comparable<VirtualFile>
 
    public VirtualFile createProject(String name, List<Property> properties) throws VirtualFileSystemException
    {
-      return null; // TODO
+      return mountPoint.createProject(this, name, properties);
    }
 
    //
@@ -213,23 +247,39 @@ public class VirtualFile implements Comparable<VirtualFile>
    @Override
    public int compareTo(VirtualFile other)
    {
-      if (isProject())
+      // To get nice order of items:
+      // 1. Projects
+      // 2. Regular folders
+      // 3. Files
+      if (other == null)
       {
-         return other.isProject() ? getName().compareTo(other.getName()) : -1;
+         throw new NullPointerException();
       }
-      else if (other.isProject())
+      try
       {
-         return 1;
+         if (isProject())
+         {
+            return other.isProject() ? getName().compareTo(other.getName()) : -1;
+         }
+         else if (other.isProject())
+         {
+            return 1;
+         }
+         else if (isFolder())
+         {
+            return other.isFolder() ? getName().compareTo(other.getName()) : -1;
+         }
+         else if (other.isFolder())
+         {
+            return 1;
+         }
+         return getName().compareTo(other.getName());
       }
-      else if (isFolder())
+      catch (VirtualFileSystemException e)
       {
-         return other.isFolder() ? getName().compareTo(other.getName()) : -1;
+         // cannot continue if failed to determine item type.
+         throw new VirtualFileSystemRuntimeException(e.getMessage(), e);
       }
-      else if (other.isFolder())
-      {
-         return 1;
-      }
-      return getName().compareTo(other.getName());
    }
 
    /* =================== */

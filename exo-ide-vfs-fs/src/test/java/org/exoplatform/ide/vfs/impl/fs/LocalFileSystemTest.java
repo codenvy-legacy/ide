@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
@@ -47,6 +46,7 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
@@ -79,9 +79,21 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissi
 
 public abstract class LocalFileSystemTest extends TestCase
 {
-   protected static EventListenerList eventListenerList;
+   protected static final String VFS_ID = "fs1";
+   protected static final String WORKSPACE = "my-ws";
+   protected static EventListenerList eventListenerList = new EventListenerList();
    protected static VirtualFileSystemRegistry virtualFileSystemRegistry = new VirtualFileSystemRegistry();
-   protected static LocalFileSystemMounter mounter = new LocalFileSystemMounter(virtualFileSystemRegistry);
+
+   static
+   {
+      // enable assertion to test state of some components.
+      enableAssertion(MountPoint.class);
+   }
+
+   private static void enableAssertion(Class<?> clazz)
+   {
+      clazz.getClassLoader().setPackageAssertionStatus(clazz.getPackage().getName(), true);
+   }
 
    static
    {
@@ -89,18 +101,6 @@ public abstract class LocalFileSystemTest extends TestCase
    }
 
    protected static final String ROOT_ID = "$root$"; // copy from LocalFileSystem
-
-   protected final String BASE_URI = "http://localhost/service";
-   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/fs/";
-   protected final String DEFAULT_CONTENT = "__TEST__";
-   protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
-
-   protected Log log = ExoLogger.getExoLogger(getClass());
-
-   private java.io.File ioRoot;
-
-   protected String testRootPath;
-   protected ResourceLauncher launcher;
 
    protected static final FileFilter SERVICE_DIR_FILTER = new FileFilter()
    {
@@ -112,6 +112,21 @@ public abstract class LocalFileSystemTest extends TestCase
       }
    };
 
+   protected final String BASE_URI = "http://localhost/service";
+   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/" + VFS_ID +'/';
+   protected final String DEFAULT_CONTENT = "__TEST__";
+   protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
+
+   protected Log log = ExoLogger.getExoLogger(getClass());
+
+   protected String testRootPath;
+   protected ResourceLauncher launcher;
+
+   protected java.io.File root;
+   private java.io.File testFsIoRoot;
+   private LocalFileSystemProvider provider;
+   private MountPoint mountPoint;
+
    /** @see junit.framework.TestCase#setUp() */
    @Override
    protected void setUp() throws Exception
@@ -119,21 +134,29 @@ public abstract class LocalFileSystemTest extends TestCase
       super.setUp();
 
       System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
-
-      ioRoot = createRootDirectory();
+      // root directory for virtual file systems
+      root = createRootDirectory();
+      System.setProperty("org.exoplatform.ide.server.fs-root-path", root.getAbsolutePath());
+      // backend for test virtual filesystem
+      testFsIoRoot = new java.io.File(root, WORKSPACE);
+      // directory for test
       final String testName = getName();
+      // path to test directory
       testRootPath = '/' + testName;
-      assertTrue(new java.io.File(ioRoot, testName).mkdirs());
+      assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-      mounter.mount(ioRoot, "fs");
+      provider = new LocalFileSystemProvider(VFS_ID);
+      provider.mount(testFsIoRoot);
+      mountPoint = provider.getMounts().iterator().next();
+      virtualFileSystemRegistry.registerProvider(VFS_ID, provider);
 
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
       dependencies.addComponent(EventListenerList.class, eventListenerList);
       ResourceBinder resources = new ResourceBinderImpl();
       ProviderBinder providers = new ApplicationProviderBinder();
-      RequestHandler requestHandler = new RequestHandlerImpl(new RequestDispatcher(resources),
-         providers, dependencies, new EverrestConfiguration());
+      RequestHandler requestHandler =
+         new RequestHandlerImpl(new RequestDispatcher(resources), providers, dependencies, new EverrestConfiguration());
       ApplicationContextImpl.setCurrent(new ApplicationContextImpl(null, null, ProviderBinder.getInstance()));
       launcher = new ResourceLauncher(requestHandler);
 
@@ -142,15 +165,17 @@ public abstract class LocalFileSystemTest extends TestCase
 
       // RUNTIME VARIABLES
       ConversationState user = new ConversationState(new Identity("admin"));
+      user.setAttribute("currentTenant", WORKSPACE);
       ConversationState.setCurrent(user);
    }
 
-   // Directory "fs" in "target" folder of maven project.
+   // Directory "fs-root" in "target" folder of maven project.
+   // It is root where all (but we have only one at the in test) virtual filesystems are bound.
    private java.io.File createRootDirectory() throws Exception
    {
       java.io.File root = new java.io.File(
          new java.io.File(Thread.currentThread().getContextClassLoader().getResource(".").toURI()).getParentFile(),
-         "fs");
+         "fs-root");
       if (!(root.exists() || root.mkdirs()))
       {
          fail("Unable create directory for test content.");
@@ -161,8 +186,10 @@ public abstract class LocalFileSystemTest extends TestCase
    /** @see junit.framework.TestCase#tearDown() */
    protected void tearDown() throws Exception
    {
-      assertTrue("Unable unmount local filesystem. ", mounter.unmount(ioRoot));
-      if (!FileUtils.deleteRecursive(ioRoot))
+      mountPoint.getFileLockFactory().checkClean();
+      assertTrue("Unable unmount local filesystem. ", provider.unmount(testFsIoRoot));
+      virtualFileSystemRegistry.unregisterProvider(VFS_ID);
+      if (!FileUtils.deleteRecursive(testFsIoRoot))
       {
          fail("Unable clean test content. ");
       }
@@ -189,7 +216,7 @@ public abstract class LocalFileSystemTest extends TestCase
 
    protected java.io.File getIoFile(String vfsPath)
    {
-      return new java.io.File(ioRoot, vfsPath);
+      return new java.io.File(testFsIoRoot, vfsPath);
    }
 
    protected byte[] readFile(String vfsPath) throws IOException
@@ -198,12 +225,13 @@ public abstract class LocalFileSystemTest extends TestCase
       FileInputStream fIn = new FileInputStream(f);
       byte[] bytes = new byte[(int)f.length()];
       fIn.read(bytes);
+      fIn.close();
       return bytes;
    }
 
-   protected void writeFile(String parent, byte[] content) throws IOException
+   protected void writeFile(String vfsPath, byte[] content) throws IOException
    {
-      FileOutputStream fOut = new FileOutputStream(getIoFile(parent));
+      FileOutputStream fOut = new FileOutputStream(getIoFile(vfsPath));
       fOut.write(content);
       fOut.close();
    }
@@ -263,10 +291,13 @@ public abstract class LocalFileSystemTest extends TestCase
       return num;
    }
 
-   protected void compareDirectories(String d1, String d2) throws Exception
+   protected void compareDirectories(String a, String b) throws IOException
    {
-      java.io.File a = getIoFile(d1);
-      java.io.File b = getIoFile(d2);
+      compareDirectories(getIoFile(a), getIoFile(b));
+   }
+
+   protected void compareDirectories(java.io.File a, java.io.File b) throws IOException
+   {
       if (!a.isDirectory() || !b.isDirectory())
       {
          fail();
@@ -582,7 +613,7 @@ public abstract class LocalFileSystemTest extends TestCase
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       ContainerResponse response = launcher.service(httpMethod, url, BASE_URI, headers, body, writer, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       List<Item> items = ((ItemList<Item>)response.getEntity()).getItems();
       List<Object> all = new ArrayList<Object>(expected.size());
@@ -691,6 +722,32 @@ public abstract class LocalFileSystemTest extends TestCase
             assertEquals(
                UriBuilder.fromPath(SERVICE_URI).path("move").path(item.getId()).queryParam("parentId", "[parentId]")
                   .build().toString(),
+               link.getHref());
+         }
+      }
+
+      link = links.get(Link.REL_RENAME);
+      if (item.getParentId() == null)
+      {
+         assertNull(String.format("'%s' link not allowed for root folder. ", Link.REL_RENAME), link);
+      }
+      else
+      {
+         assertNotNull(String.format("'%s' link not found. ", Link.REL_RENAME), link);
+         assertEquals(MediaType.APPLICATION_JSON, link.getType());
+         assertEquals(Link.REL_RENAME, link.getRel());
+         if (item.getItemType() == ItemType.FILE && ((File)item).isLocked())
+         {
+            assertEquals(
+               UriBuilder.fromPath(SERVICE_URI).path("rename").path(item.getId()).queryParam("newname", "[newname]")
+                  .queryParam("mediaType", "[mediaType]").queryParam("lockToken", "[lockToken]").build().toString(),
+               link.getHref());
+         }
+         else
+         {
+            assertEquals(
+               UriBuilder.fromPath(SERVICE_URI).path("rename").path(item.getId()).queryParam("newname", "[newname]")
+                  .queryParam("mediaType", "[mediaType]").build().toString(),
                link.getHref());
          }
       }
@@ -839,89 +896,88 @@ public abstract class LocalFileSystemTest extends TestCase
       }
    }
 
-// TODO
-//   protected void validateUrlTemplates(VirtualFileSystemInfo info) throws Exception
-//   {
-//      Map<String, Link> templates = info.getUrlTemplates();
-//      //log.info(">>>>>>>>>\n" + templates);
-//
-//      Link template = templates.get(Link.REL_ITEM);
-//      assertNotNull("'" + Link.REL_ITEM + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_ITEM, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path("[id]").build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_ITEM_BY_PATH);
-//      assertNotNull("'" + Link.REL_ITEM_BY_PATH + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_ITEM_BY_PATH, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("itembypath").path("[path]").build().toString(),
-//         template.getHref());
-//
-//      template = templates.get(Link.REL_COPY);
-//      assertNotNull("'" + Link.REL_COPY + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_COPY, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("copy").path("[id]").queryParam("parentId", "[parentId]")
-//         .build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_MOVE);
-//      assertNotNull("'" + Link.REL_MOVE + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_MOVE, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("move").path("[id]").queryParam("parentId", "[parentId]")
-//         .queryParam("lockToken", "[lockToken]").build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_CREATE_FILE);
-//      assertNotNull("'" + Link.REL_CREATE_FILE + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_CREATE_FILE, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("file").path("[parentId]").queryParam("name", "[name]")
-//         .build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_CREATE_FOLDER);
-//      assertNotNull("'" + Link.REL_CREATE_FOLDER + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_CREATE_FOLDER, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("folder").path("[parentId]").queryParam("name", "[name]")
-//         .build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_CREATE_PROJECT);
-//      assertNotNull("'" + Link.REL_CREATE_PROJECT + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_CREATE_PROJECT, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("project").path("[parentId]").queryParam("name", "[name]")
-//         .queryParam("type", "[type]").build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_LOCK);
-//      assertNotNull("'" + Link.REL_LOCK + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_LOCK, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("lock").path("[id]").build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_UNLOCK);
-//      assertNotNull("'" + Link.REL_UNLOCK + "' template not found. ", template);
-//      assertEquals(null, template.getType());
-//      assertEquals(Link.REL_UNLOCK, template.getRel());
-//      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("unlock").path("[id]").queryParam("lockToken", "[lockToken]")
-//         .build().toString(), template.getHref());
-//
-//      template = templates.get(Link.REL_SEARCH);
-//      assertNotNull("'" + Link.REL_SEARCH + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_SEARCH, template.getRel());
-//      assertEquals(
-//         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("statement", "[statement]")
-//            .queryParam("maxItems", "[maxItems]").queryParam("skipCount", "[skipCount]").build().toString(),
-//         template.getHref());
-//
-//      template = templates.get(Link.REL_SEARCH_FORM);
-//      assertNotNull("'" + Link.REL_SEARCH_FORM + "' template not found. ", template);
-//      assertEquals(MediaType.APPLICATION_JSON, template.getType());
-//      assertEquals(Link.REL_SEARCH_FORM, template.getRel());
-//      assertEquals(
-//         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("maxItems", "[maxItems]")
-//            .queryParam("skipCount", "[skipCount]").queryParam("propertyFilter", "[propertyFilter]").build().toString(),
-//         template.getHref());
-//   }
+   protected void validateUrlTemplates(VirtualFileSystemInfo info) throws Exception
+   {
+      Map<String, Link> templates = info.getUrlTemplates();
+      //log.info(">>>>>>>>>\n" + templates);
+
+      Link template = templates.get(Link.REL_ITEM);
+      assertNotNull("'" + Link.REL_ITEM + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_ITEM, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("item").path("[id]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_ITEM_BY_PATH);
+      assertNotNull("'" + Link.REL_ITEM_BY_PATH + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_ITEM_BY_PATH, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("itembypath").path("[path]").build().toString(),
+         template.getHref());
+
+      template = templates.get(Link.REL_COPY);
+      assertNotNull("'" + Link.REL_COPY + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_COPY, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("copy").path("[id]").queryParam("parentId", "[parentId]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_MOVE);
+      assertNotNull("'" + Link.REL_MOVE + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_MOVE, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("move").path("[id]").queryParam("parentId", "[parentId]")
+         .queryParam("lockToken", "[lockToken]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_FILE);
+      assertNotNull("'" + Link.REL_CREATE_FILE + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_FILE, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("file").path("[parentId]").queryParam("name", "[name]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_FOLDER);
+      assertNotNull("'" + Link.REL_CREATE_FOLDER + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_FOLDER, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("folder").path("[parentId]").queryParam("name", "[name]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_CREATE_PROJECT);
+      assertNotNull("'" + Link.REL_CREATE_PROJECT + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_CREATE_PROJECT, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("project").path("[parentId]").queryParam("name", "[name]")
+         .queryParam("type", "[type]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_LOCK);
+      assertNotNull("'" + Link.REL_LOCK + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_LOCK, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("lock").path("[id]").build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_UNLOCK);
+      assertNotNull("'" + Link.REL_UNLOCK + "' template not found. ", template);
+      assertEquals(null, template.getType());
+      assertEquals(Link.REL_UNLOCK, template.getRel());
+      assertEquals(UriBuilder.fromPath(SERVICE_URI).path("unlock").path("[id]").queryParam("lockToken", "[lockToken]")
+         .build().toString(), template.getHref());
+
+      template = templates.get(Link.REL_SEARCH);
+      assertNotNull("'" + Link.REL_SEARCH + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_SEARCH, template.getRel());
+      assertEquals(
+         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("statement", "[statement]")
+            .queryParam("maxItems", "[maxItems]").queryParam("skipCount", "[skipCount]").build().toString(),
+         template.getHref());
+
+      template = templates.get(Link.REL_SEARCH_FORM);
+      assertNotNull("'" + Link.REL_SEARCH_FORM + "' template not found. ", template);
+      assertEquals(MediaType.APPLICATION_JSON, template.getType());
+      assertEquals(Link.REL_SEARCH_FORM, template.getRel());
+      assertEquals(
+         UriBuilder.fromPath(SERVICE_URI).path("search").queryParam("maxItems", "[maxItems]")
+            .queryParam("skipCount", "[skipCount]").queryParam("propertyFilter", "[propertyFilter]").build().toString(),
+         template.getHref());
+   }
 }

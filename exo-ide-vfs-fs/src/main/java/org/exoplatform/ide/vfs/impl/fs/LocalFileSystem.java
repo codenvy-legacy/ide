@@ -23,15 +23,15 @@ import org.apache.commons.fileupload.FileItem;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
+import org.exoplatform.ide.vfs.server.exceptions.HtmlErrorFormatter;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
-import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.NotSupportedException;
-import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.FileImpl;
@@ -51,6 +51,7 @@ import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
 
@@ -65,6 +66,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -76,7 +78,8 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissions;
+import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
+import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.*;
 
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
@@ -87,10 +90,10 @@ public class LocalFileSystem implements VirtualFileSystem
    private static final String ROOT_ID = "$root$";
    private static final String FAKE_VERSION_ID = "0";
 
-   private final String vfsId;
-   private final URI baseUri;
-   private final EventListenerList listeners;
-   private final MountPoint mountPoint;
+   final String vfsId;
+   final URI baseUri;
+   final EventListenerList listeners;
+   final MountPoint mountPoint;
 
    private VirtualFileSystemInfoImpl vfsInfo;
 
@@ -107,12 +110,12 @@ public class LocalFileSystem implements VirtualFileSystem
    public Item copy(@PathParam("id") String id, //
                     @QueryParam("parentId") String parentId) throws VirtualFileSystemException
    {
-      VirtualFile virtualFileCopy = idToVirtualFile(id).copyTo(idToVirtualFile(parentId));
-      Item copy = fromVirtualFile(virtualFileCopy, PropertyFilter.ALL_FILTER);
+      final VirtualFile virtualFileCopy = idToVirtualFile(id).copyTo(idToVirtualFile(parentId));
+      final Item copy = fromVirtualFile(virtualFileCopy, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeEvent.ChangeType.CREATED));
+            new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED));
       }
       return copy;
    }
@@ -124,13 +127,13 @@ public class LocalFileSystem implements VirtualFileSystem
                           @DefaultValue(MediaType.APPLICATION_OCTET_STREAM) @HeaderParam("Content-Type") MediaType mediaType, //
                           InputStream content) throws VirtualFileSystemException
    {
-      VirtualFile newVirtualFile = idToVirtualFile(parentId)
+      final VirtualFile newVirtualFile = idToVirtualFile(parentId)
          .createFile(name, mediaType != null ? mediaType.toString() : null, content);
-      File file = (File)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
+      final File file = (File)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeEvent.ChangeType.CREATED));
+            new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED));
       }
       return file;
    }
@@ -140,26 +143,40 @@ public class LocalFileSystem implements VirtualFileSystem
    public Folder createFolder(@PathParam("parentId") String parentId, //
                               @QueryParam("name") String name) throws VirtualFileSystemException
    {
-      VirtualFile newVirtualFile = idToVirtualFile(parentId).createFolder(name);
-      Folder folder = (Folder)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
+      final VirtualFile newVirtualFile = idToVirtualFile(parentId).createFolder(name);
+      final Folder folder = (Folder)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(),
-            ChangeEvent.ChangeType.CREATED));
+            ChangeType.CREATED));
       }
       return folder;
    }
 
+   @Path("project/{parentId}")
+   @Consumes(MediaType.APPLICATION_JSON)
    @Override
-   public Project createProject(String parentId, String name, String type, List<Property> properties)
-      throws VirtualFileSystemException
+   public Project createProject(@PathParam("parentId") String parentId, //
+                                @QueryParam("name") String name, //
+                                @QueryParam("type") String type, //
+                                List<Property> properties) throws VirtualFileSystemException
    {
-      VirtualFile newVirtualFile = idToVirtualFile(parentId).createProject(name, properties);
-      Project project = (Project)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
+      if (properties == null)
+      {
+         properties = new ArrayList<Property>(2);
+      }
+      if (type != null)
+      {
+         properties.add(new PropertyImpl("vfs:projectType", type));
+      }
+      properties.add(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE));
+
+      final VirtualFile newVirtualFile = idToVirtualFile(parentId).createProject(name, properties);
+      final Project project = (Project)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(),
-            ChangeEvent.ChangeType.CREATED));
+            ChangeType.CREATED));
       }
       return project;
    }
@@ -169,16 +186,13 @@ public class LocalFileSystem implements VirtualFileSystem
    public void delete(@PathParam("id") String id, //
                       @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException
    {
-      VirtualFile virtualFile = idToVirtualFile(id);
-
+      final VirtualFile virtualFile = idToVirtualFile(id);
       final String path = virtualFile.getPath();
       final String mediaType = virtualFile.getMediaType();
-
       virtualFile.delete(lockToken);
-
       if (listeners != null)
       {
-         listeners.notifyListeners(new ChangeEvent(this, id, path, mediaType, ChangeEvent.ChangeType.DELETED));
+         listeners.notifyListeners(new ChangeEvent(this, id, path, mediaType, ChangeType.DELETED));
       }
    }
 
@@ -203,7 +217,7 @@ public class LocalFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is negative. ");
       }
 
-      ItemType itemTypeType;
+      final ItemType itemTypeType;
       if (itemType != null)
       {
          try
@@ -220,9 +234,9 @@ public class LocalFileSystem implements VirtualFileSystem
          itemTypeType = null;
       }
 
-      VirtualFile virtualFile = idToVirtualFile(folderId);
+      final VirtualFile virtualFile = idToVirtualFile(folderId);
 
-      List<VirtualFile> children = virtualFile.getChildren();
+      final List<VirtualFile> children = virtualFile.getChildren();
       int totalNumber = children.size();
       if (itemTypeType != null)
       {
@@ -247,8 +261,8 @@ public class LocalFileSystem implements VirtualFileSystem
          children.subList(0, skipCount).clear();
       }
 
-      List<Item> list;
-      boolean hasMoreItems;
+      final List<Item> list;
+      final boolean hasMoreItems;
       if (maxItems > 0)
       {
          list = new ArrayList<Item>();
@@ -269,7 +283,7 @@ public class LocalFileSystem implements VirtualFileSystem
          hasMoreItems = false;
       }
 
-      ItemList<Item> result = new ItemListImpl<Item>(list);
+      final ItemList<Item> result = new ItemListImpl<Item>(list);
       result.setNumItems(totalNumber);
       result.setHasMoreItems(hasMoreItems);
 
@@ -283,7 +297,7 @@ public class LocalFileSystem implements VirtualFileSystem
                            @DefaultValue(PropertyFilter.NONE) @QueryParam("propertyFilter") PropertyFilter propertyFilter)
       throws VirtualFileSystemException
    {
-      VirtualFile virtualFile = idToVirtualFile(folderId);
+      final VirtualFile virtualFile = idToVirtualFile(folderId);
       if (!virtualFile.isFolder())
       {
          throw new InvalidArgumentException(
@@ -300,8 +314,8 @@ public class LocalFileSystem implements VirtualFileSystem
       {
          return null;
       }
-      List<VirtualFile> children = virtualFile.getChildren();
-      List<ItemNode> level = new ArrayList<ItemNode>(children.size());
+      final List<VirtualFile> children = virtualFile.getChildren();
+      final List<ItemNode> level = new ArrayList<ItemNode>(children.size());
       for (VirtualFile i : children)
       {
          level.add(new ItemNodeImpl(fromVirtualFile(i, propertyFilter, false), getTreeLevel(i, depth - 1, propertyFilter)));
@@ -329,25 +343,24 @@ public class LocalFileSystem implements VirtualFileSystem
    {
       if (vfsInfo == null)
       {
-         BasicPermissions[] basicPermissions = BasicPermissions.values();
-         List<String> permissions = new ArrayList<String>(basicPermissions.length);
+         final BasicPermissions[] basicPermissions = BasicPermissions.values();
+         final List<String> permissions = new ArrayList<String>(basicPermissions.length);
          for (BasicPermissions bp : basicPermissions)
          {
             permissions.add(bp.value());
          }
-         // TODO : update capabilities when implement locks, ACL and query.
+         // TODO : update capabilities when implement query.
          vfsInfo =
-            new VirtualFileSystemInfoImpl(this.vfsId, false, false, VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL,
-               VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, VirtualFileSystemInfoImpl.ACLCapability.NONE,
-               VirtualFileSystemInfoImpl.QueryCapability.NONE, createUrlTemplates(),
-               (Folder)fromVirtualFile(mountPoint.getRoot(), PropertyFilter.ALL_FILTER));
+            new VirtualFileSystemInfoImpl(this.vfsId, false, true, VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL,
+               VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, ACLCapability.MANAGE, QueryCapability.NONE,
+               createUrlTemplates(), (Folder)fromVirtualFile(mountPoint.getRoot(), PropertyFilter.ALL_FILTER));
       }
       return vfsInfo;
    }
 
    private Map<String, Link> createUrlTemplates()
    {
-      Map<String, Link> templates = new LinkedHashMap<String, Link>();
+      final Map<String, Link> templates = new LinkedHashMap<String, Link>();
 
       templates.put(Link.REL_ITEM, //
          new LinkImpl(createURI("item", "[id]"), Link.REL_ITEM, MediaType.APPLICATION_JSON));
@@ -417,7 +430,7 @@ public class LocalFileSystem implements VirtualFileSystem
                              @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter)
       throws VirtualFileSystemException
    {
-      VirtualFile virtualFile = getVirtualFileByPath(path);
+      final VirtualFile virtualFile = getVirtualFileByPath(path);
       if (virtualFile.isFile())
       {
          if (!(versionId == null || FAKE_VERSION_ID.equals(versionId)))
@@ -464,7 +477,7 @@ public class LocalFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");
       }
 
-      VirtualFile virtualFile = idToVirtualFile(id);
+      final VirtualFile virtualFile = idToVirtualFile(id);
       if (!virtualFile.isFile())
       {
          throw new InvalidArgumentException(String.format("Object '%s' is not a file. ", virtualFile.getName()));
@@ -490,9 +503,15 @@ public class LocalFileSystem implements VirtualFileSystem
                     @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException
    {
 
-      VirtualFile moved = idToVirtualFile(id).moveTo(idToVirtualFile(parentId), lockToken);
-      // TODO : listeners
-      return fromVirtualFile(moved, PropertyFilter.ALL_FILTER);
+      final VirtualFile origin = idToVirtualFile(id);
+      final String oldPath = origin.getPath();
+      final Item moved = fromVirtualFile(origin.moveTo(idToVirtualFile(parentId), lockToken), PropertyFilter.ALL_FILTER);
+      if (listeners != null)
+      {
+         listeners.notifyListeners(
+            new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED));
+      }
+      return moved;
    }
 
    @Path("rename/{id}")
@@ -508,28 +527,39 @@ public class LocalFileSystem implements VirtualFileSystem
          return getItem(id, PropertyFilter.ALL_FILTER);
       }
 
-      VirtualFile renamed = idToVirtualFile(id)
-         .rename(newName, newMediaType == null ? null : newMediaType.toString(), lockToken);
+      final VirtualFile origin = idToVirtualFile(id);
+      final String oldPath = origin.getPath();
+      final Item renamed = fromVirtualFile(
+         origin.rename(newName, newMediaType == null ? null : newMediaType.toString(), lockToken),
+         PropertyFilter.ALL_FILTER);
+      if (listeners != null)
+      {
+         listeners.notifyListeners(
+            new ChangeEvent(this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED));
+      }
 
-      // TODO
-//      if (listeners != null)
-//      {
-//         listeners.notifyListeners(
-//            new ChangeEvent(this, renamed.getId(), renamed.getPath(), renamed.getMimeType(), ChangeEvent.ChangeType.RENAMED));
-//      }
-      return fromVirtualFile(renamed, PropertyFilter.ALL_FILTER);
+      return renamed;
+   }
+
+   @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+   @Override
+   public ItemList<Item> search(MultivaluedMap<String, String> query, //
+                                @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+                                @QueryParam("skipCount") int skipCount, //
+                                @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
+   ) throws NotSupportedException, VirtualFileSystemException
+   {
+      throw new NotSupportedException("Not supported. "); // TODO
    }
 
    @Override
-   public ItemList<Item> search(MultivaluedMap<String, String> query, int maxItems, int skipCount, PropertyFilter propertyFilter) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
+   public ItemList<Item> search(@QueryParam("statement") String statement, //
+                                @DefaultValue("-1") @QueryParam("maxItems") int maxItems, //
+                                @QueryParam("skipCount") int skipCount //
+   ) throws NotSupportedException, VirtualFileSystemException
    {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
-   }
-
-   @Override
-   public ItemList<Item> search(String statement, int maxItems, int skipCount) throws NotSupportedException, InvalidArgumentException, VirtualFileSystemException
-   {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      // No plan to support SQL at the moment.
+      throw new NotSupportedException("Not supported. ");
    }
 
    @Path("unlock/{id}")
@@ -549,12 +579,11 @@ public class LocalFileSystem implements VirtualFileSystem
                          @QueryParam("lockToken") String lockToken //
    ) throws VirtualFileSystemException
    {
-      VirtualFile virtualFile = idToVirtualFile(id);
-      virtualFile.updateACL(acl, override, lockToken);
+      final VirtualFile virtualFile = idToVirtualFile(id).updateACL(acl, override, lockToken);
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(),
-            virtualFile.getMediaType(), ChangeEvent.ChangeType.ACL_UPDATED));
+            virtualFile.getMediaType(), ChangeType.ACL_UPDATED));
       }
    }
 
@@ -566,38 +595,53 @@ public class LocalFileSystem implements VirtualFileSystem
       InputStream newContent, //
       @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException
    {
-      VirtualFile virtualFile = idToVirtualFile(id);
-      virtualFile.updateContent(mediaType != null ? mediaType.toString() : null, newContent, lockToken);
+      final VirtualFile virtualFile = idToVirtualFile(id)
+         .updateContent(mediaType != null ? mediaType.toString() : null, newContent, lockToken);
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(),
-            virtualFile.getMediaType(), ChangeEvent.ChangeType.CONTENT_UPDATED));
+            virtualFile.getMediaType(), ChangeType.CONTENT_UPDATED));
       }
    }
 
+   @Path("item/{id}")
    @Override
-   public Item updateItem(String id, List<Property> properties, String lockToken) throws ItemNotFoundException, LockException, PermissionDeniedException, VirtualFileSystemException
+   public Item updateItem(@PathParam("id") String id, //
+                          List<Property> properties, //
+                          @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException
    {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      final VirtualFile virtualFile = idToVirtualFile(id).updateProperties(properties, lockToken);
+      final Item updated = fromVirtualFile(virtualFile, PropertyFilter.ALL_FILTER);
+      if (listeners != null)
+      {
+         listeners.notifyListeners(new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(),
+            ChangeType.PROPERTIES_UPDATED));
+      }
+      return updated;
    }
 
+   @Path("export/{folderId}")
    @Override
-   public ContentStream exportZip(String folderId) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   public ContentStream exportZip(@PathParam("folderId") String folderId) throws IOException, VirtualFileSystemException
    {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      return idToVirtualFile(folderId).zip();
    }
 
+   @Path("import/{parentId}")
    @Override
-   public void importZip(String parentId, InputStream in, Boolean overwrite) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   public void importZip(@PathParam("parentId") String parentId, //
+                         InputStream in, //
+                         @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
+   ) throws VirtualFileSystemException, IOException
    {
-      //To change body of implemented methods use File | Settings | File Templates.
+      idToVirtualFile(parentId).unzip(in, overwrite);
    }
 
    @Path("downloadfile/{id}")
    @Override
    public Response downloadFile(@PathParam("id") String id) throws VirtualFileSystemException
    {
-      ContentStream content = getContent(id);
+      final ContentStream content = getContent(id);
       return Response
          .ok(content.getStream(), content.getMimeType())
          .lastModified(content.getLastModificationDate())
@@ -606,44 +650,215 @@ public class LocalFileSystem implements VirtualFileSystem
          .build();
    }
 
+   @Path("uploadfile/{parentId}")
    @Override
-   public Response uploadFile(String parentId, Iterator<FileItem> formData) throws ItemNotFoundException, InvalidArgumentException, ItemAlreadyExistException, PermissionDeniedException, VirtualFileSystemException, IOException
+   public Response uploadFile(@PathParam("parentId") String parentId, //
+                              java.util.Iterator<FileItem> formData //
+   ) throws IOException, VirtualFileSystemException
    {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      try
+      {
+         FileItem contentItem = null;
+         String mediaType = null;
+         String name = null;
+         boolean overwrite = false;
+
+         while (formData.hasNext())
+         {
+            FileItem item = formData.next();
+            if (!item.isFormField())
+            {
+               if (contentItem == null)
+               {
+                  contentItem = item;
+               }
+               else
+               {
+                  throw new InvalidArgumentException("More then one upload file is found but only one should be. ");
+               }
+            }
+            else if ("mimeType".equals(item.getFieldName()))
+            {
+               mediaType = item.getString().trim();
+            }
+            else if ("name".equals(item.getFieldName()))
+            {
+               name = item.getString().trim();
+            }
+            else if ("overwrite".equals(item.getFieldName()))
+            {
+               overwrite = Boolean.parseBoolean(item.getString().trim());
+            }
+         }
+
+         if (contentItem == null)
+         {
+            throw new InvalidArgumentException("Cannot find file for upload. ");
+         }
+         if (name == null || name.isEmpty())
+         {
+            name = contentItem.getName();
+         }
+         if (mediaType == null || mediaType.isEmpty())
+         {
+            mediaType = contentItem.getContentType();
+         }
+
+         try
+         {
+            createFile(
+               parentId,
+               name,
+               mediaType == null ? MediaType.APPLICATION_OCTET_STREAM_TYPE : MediaType.valueOf(mediaType),
+               contentItem.getInputStream()
+            );
+         }
+         catch (ItemAlreadyExistException e)
+         {
+            if (!overwrite)
+            {
+               throw new ItemAlreadyExistException("Unable upload file. Item with the same name exists. ");
+            }
+
+            final VirtualFile file = getVirtualFileByPath(idToVirtualFile(parentId).getPath() + '/' + name)
+               .updateContent(mediaType, contentItem.getInputStream(), null);
+            if (listeners != null)
+            {
+               listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(file), file.getPath(),
+                  file.getMediaType(), ChangeType.CONTENT_UPDATED));
+            }
+         }
+
+         return Response.ok("", MediaType.TEXT_HTML).build();
+      }
+      catch (VirtualFileSystemException e)
+      {
+         HtmlErrorFormatter.sendErrorAsHTML(e);
+         // never thrown
+         throw e;
+      }
+      catch (IOException e)
+      {
+         HtmlErrorFormatter.sendErrorAsHTML(e);
+         // never thrown
+         throw e;
+      }
    }
 
+   @Path("downloadzip/{folderId}")
    @Override
-   public Response downloadZip(String folderId) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   public Response downloadZip(@PathParam("folderId") String folderId) throws IOException, VirtualFileSystemException
    {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      final ContentStream zip = exportZip(folderId);
+      return Response //
+         .ok(zip.getStream(), zip.getMimeType()) //
+         .lastModified(zip.getLastModificationDate()) //
+         .header(HttpHeaders.CONTENT_LENGTH, Long.toString(zip.getLength())) //
+         .header("Content-Disposition", "attachment; filename=\"" + zip.getFileName() + '"') //
+         .build();
    }
 
+   @Path("uploadzip/{parentId}")
    @Override
-   public Response uploadZip(String parentId, Iterator<FileItem> formData) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, IOException, VirtualFileSystemException
+   public Response uploadZip(@PathParam("parentId") String parentId, //
+                             Iterator<FileItem> formData) throws IOException, VirtualFileSystemException
    {
-      return null;  //To change body of implemented methods use File | Settings | File Templates.
+      try
+      {
+         FileItem contentItem = null;
+         boolean overwrite = false;
+         while (formData.hasNext())
+         {
+            FileItem item = formData.next();
+            if (!item.isFormField())
+            {
+               if (contentItem == null)
+               {
+                  contentItem = item;
+               }
+               else
+               {
+                  throw new InvalidArgumentException("More then one upload file is found but only one should be. ");
+               }
+            }
+            else if ("overwrite".equals(item.getFieldName()))
+            {
+               overwrite = Boolean.parseBoolean(item.getString().trim());
+            }
+         }
+         if (contentItem == null)
+         {
+            throw new InvalidArgumentException("Cannot find file for upload. ");
+         }
+         importZip(parentId, contentItem.getInputStream(), overwrite);
+         return Response.ok("", MediaType.TEXT_HTML).build();
+      }
+      catch (VirtualFileSystemException e)
+      {
+         HtmlErrorFormatter.sendErrorAsHTML(e);
+         // never thrown
+         throw e;
+      }
+      catch (IOException e)
+      {
+         HtmlErrorFormatter.sendErrorAsHTML(e);
+         // never thrown
+         throw e;
+      }
    }
 
+   @Path("watch/start/{projectId}")
    @Override
-   public void startWatchUpdates(String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException
+   public void startWatchUpdates(@PathParam("projectId") String projectId) throws VirtualFileSystemException
    {
-      //To change body of implemented methods use File | Settings | File Templates.
+      if (listeners == null)
+      {
+         throw new VirtualFileSystemException("EventListenerList is not configured properly. ");
+      }
+      final VirtualFile project = idToVirtualFile(projectId);
+      if (!project.isProject())
+      {
+         throw new InvalidArgumentException(String.format("Item '%s' is not a project. ", project.getPath()));
+      }
+      if (!listeners.addEventListener(
+         ProjectUpdateEventFilter.newFilter(this, project), new ProjectUpdateListener(projectId)))
+      {
+         throw new InvalidArgumentException(
+            String.format("Project '%s' is under watching already. ", project.getPath()));
+      }
+      List<Property> properties = new ArrayList<Property>(1);
+      properties.add(new PropertyImpl("vfs:lastUpdateTime", "0"));
+      project.updateProperties(properties, null);
    }
 
+   @Path("watch/stop/{projectId}")
    @Override
-   public void stopWatchUpdates(String projectId) throws ItemNotFoundException, InvalidArgumentException, VirtualFileSystemException
+   public void stopWatchUpdates(@PathParam("projectId") String projectId) throws VirtualFileSystemException
    {
-      //To change body of implemented methods use File | Settings | File Templates.
+      if (listeners != null)
+      {
+         final VirtualFile project = idToVirtualFile(projectId);
+         if (!project.isProject())
+         {
+            return;
+         }
+         if (!listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, project),
+            new ProjectUpdateListener(projectId)))
+         {
+            throw new InvalidArgumentException(
+               String.format("Project '%s' is not under watching. ", project.getPath()));
+         }
+      }
    }
 
    /* ==================================================================== */
 
-   private VirtualFile getVirtualFileByPath(String path) throws VirtualFileSystemException
+   VirtualFile getVirtualFileByPath(String path) throws VirtualFileSystemException
    {
       return mountPoint.getVirtualFile(path);
    }
 
-   private VirtualFile idToVirtualFile(String id) throws VirtualFileSystemException
+   VirtualFile idToVirtualFile(String id) throws VirtualFileSystemException
    {
       if (ROOT_ID.equals(id))
       {
@@ -666,11 +881,12 @@ public class LocalFileSystem implements VirtualFileSystem
       }
       catch (ItemNotFoundException e)
       {
+         // re-throw to have correct message
          throw new ItemNotFoundException(String.format("Object '%s' does not exists. ", id));
       }
    }
 
-   private String virtualFileToId(VirtualFile virtualFile) throws VirtualFileSystemException
+   String virtualFileToId(VirtualFile virtualFile) throws VirtualFileSystemException
    {
       if (virtualFile.isRoot())
       {
@@ -716,7 +932,7 @@ public class LocalFileSystem implements VirtualFileSystem
 
       if (virtualFile.isProject())
       {
-         String projectType = virtualFile.getFirstPropertyValue("vfs:projectType");
+         String projectType = virtualFile.getPropertyValue("vfs:projectType");
          return new ProjectImpl(id, name, mediaType == null ? Project.PROJECT_MIME_TYPE : mediaType, path,
             parentId, created, virtualFile.getProperties(propertyFilter),
             addLinks ? createProjectLinks(id, parentId) : null, projectType);
@@ -733,7 +949,7 @@ public class LocalFileSystem implements VirtualFileSystem
                                              boolean locked,
                                              String parentId) throws VirtualFileSystemException
    {
-      Map<String, Link> links = new LinkedHashMap<String, Link>();
+      final Map<String, Link> links = new LinkedHashMap<String, Link>();
 
       links.put(Link.REL_SELF, //
          new LinkImpl(createURI("item", id), Link.REL_SELF, MediaType.APPLICATION_JSON));
@@ -798,7 +1014,7 @@ public class LocalFileSystem implements VirtualFileSystem
    private Map<String, Link> createFolderLinks(String id, boolean isRoot, String parentId)
       throws VirtualFileSystemException
    {
-      Map<String, Link> links = createBaseFolderLinks(id, isRoot, parentId);
+      final Map<String, Link> links = createBaseFolderLinks(id, isRoot, parentId);
 
       links.put(Link.REL_CREATE_PROJECT, //
          new LinkImpl(createURI("project", id, "name", "[name]", "type", "[type]"), Link.REL_CREATE_PROJECT,
@@ -815,7 +1031,7 @@ public class LocalFileSystem implements VirtualFileSystem
    private Map<String, Link> createBaseFolderLinks(String id, boolean isRoot, String parentId)
       throws VirtualFileSystemException
    {
-      Map<String, Link> links = new LinkedHashMap<String, Link>();
+      final Map<String, Link> links = new LinkedHashMap<String, Link>();
 
       links.put(Link.REL_SELF, //
          new LinkImpl(createURI("item", id), Link.REL_SELF, MediaType.APPLICATION_JSON));
@@ -823,25 +1039,25 @@ public class LocalFileSystem implements VirtualFileSystem
       links.put(Link.REL_ACL, //
          new LinkImpl(createURI("acl", id), Link.REL_ACL, MediaType.APPLICATION_JSON));
 
-      links.put(Link.REL_DELETE, //
-         new LinkImpl(createURI("delete", id), Link.REL_DELETE, null));
-
-      links.put(Link.REL_COPY, //
-         new LinkImpl(createURI("copy", id, "parentId", "[parentId]"), Link.REL_COPY, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_MOVE, //
-         new LinkImpl(createURI("move", id, "parentId", "[parentId]"), Link.REL_MOVE, MediaType.APPLICATION_JSON));
-
       if (!isRoot)
       {
          links.put(Link.REL_PARENT, //
             new LinkImpl(createURI("item", parentId), Link.REL_PARENT, MediaType.APPLICATION_JSON));
-      }
 
-      links.put(
-         Link.REL_RENAME, //
-         new LinkImpl(createURI("rename", id, "newname", "[newname]", "mediaType", "[mediaType]"),
-            Link.REL_RENAME, MediaType.APPLICATION_JSON));
+         links.put(Link.REL_DELETE, //
+            new LinkImpl(createURI("delete", id), Link.REL_DELETE, null));
+
+         links.put(Link.REL_COPY, //
+            new LinkImpl(createURI("copy", id, "parentId", "[parentId]"), Link.REL_COPY, MediaType.APPLICATION_JSON));
+
+         links.put(Link.REL_MOVE, //
+            new LinkImpl(createURI("move", id, "parentId", "[parentId]"), Link.REL_MOVE, MediaType.APPLICATION_JSON));
+
+         links.put(
+            Link.REL_RENAME, //
+            new LinkImpl(createURI("rename", id, "newname", "[newname]", "mediaType", "[mediaType]"),
+               Link.REL_RENAME, MediaType.APPLICATION_JSON));
+      }
 
       links.put(Link.REL_CHILDREN, //
          new LinkImpl(createURI("children", id), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
@@ -875,7 +1091,7 @@ public class LocalFileSystem implements VirtualFileSystem
 
    private String createURI(String rel, String id, String... query)
    {
-      UriBuilder uriBuilder = UriBuilder.fromUri(baseUri);
+      final UriBuilder uriBuilder = UriBuilder.fromUri(baseUri);
       uriBuilder.path(VirtualFileSystemFactory.class, "getFileSystem");
       uriBuilder.path(rel);
       if (id != null)

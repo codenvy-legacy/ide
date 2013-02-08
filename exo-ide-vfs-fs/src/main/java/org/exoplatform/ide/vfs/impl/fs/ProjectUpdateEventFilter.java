@@ -16,11 +16,10 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.impl.memory;
+package org.exoplatform.ide.vfs.impl.fs;
 
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.PathFilter;
@@ -35,12 +34,17 @@ class ProjectUpdateEventFilter extends ChangeEventFilter
 {
    private final String vfsId;
    private final String projectId;
+   // Use root i/o file as additional identifier.
+   // VirtualFileSystem IDs is the same (or potentially may be the same) for different workspaces (tenants),
+   // but each workspace has own unique location on local filesystem. We use this location to avoid
+   // sending events between workspaces (tenants).
+   private final java.io.File ioRoot;
    private final ChangeEventFilter delegate;
 
-   static ProjectUpdateEventFilter newFilter(String vfsId, MemoryFolder project)
+   static ProjectUpdateEventFilter newFilter(LocalFileSystem vfs, VirtualFile project) throws VirtualFileSystemException
    {
-      ChangeEventFilter filter = ChangeEventFilter.createAndFilter(
-         new VfsIDFilter(vfsId),
+      final ChangeEventFilter filter = ChangeEventFilter.createAndFilter(
+         new VfsIDFilter(vfs.vfsId),
          new PathFilter(project.getPath() + "/.*"), // events for all project items
          ChangeEventFilter.createOrFilter( // created, updated, deleted, renamed or moved
             new TypeFilter(ChangeEvent.ChangeType.CREATED),
@@ -48,15 +52,23 @@ class ProjectUpdateEventFilter extends ChangeEventFilter
             new TypeFilter(ChangeEvent.ChangeType.DELETED),
             new TypeFilter(ChangeEvent.ChangeType.RENAMED),
             new TypeFilter(ChangeEvent.ChangeType.MOVED)
-         ));
-      return new ProjectUpdateEventFilter(filter, vfsId, project.getId());
+         )
+      );
+      return new ProjectUpdateEventFilter(
+         filter,
+         vfs.vfsId,
+         vfs.virtualFileToId(project),
+         vfs.mountPoint.getRoot().getIoFile()
+      );
    }
 
    @Override
    public boolean matched(ChangeEvent event) throws VirtualFileSystemException
    {
-      VirtualFileSystem vfs = event.getVirtualFileSystem();
-      return vfs instanceof MemoryFileSystem && delegate.matched(event);
+      final VirtualFileSystem vfs = event.getVirtualFileSystem();
+      return (vfs instanceof LocalFileSystem)
+         && ioRoot.equals(((LocalFileSystem)vfs).mountPoint.getRoot().getIoFile())
+         && delegate.matched(event);
    }
 
    @Override
@@ -72,6 +84,11 @@ class ProjectUpdateEventFilter extends ChangeEventFilter
       }
 
       ProjectUpdateEventFilter other = (ProjectUpdateEventFilter)o;
+
+      if (!ioRoot.equals(other.ioRoot))
+      {
+         return false;
+      }
 
       if (vfsId == null)
       {
@@ -95,15 +112,17 @@ class ProjectUpdateEventFilter extends ChangeEventFilter
    public final int hashCode()
    {
       int hash = 7;
+      hash = 31 * hash + ioRoot.hashCode();
       hash = 31 * hash + (vfsId != null ? vfsId.hashCode() : 0);
       hash = 31 * hash + projectId.hashCode();
       return hash;
    }
 
-   private ProjectUpdateEventFilter(ChangeEventFilter delegate, String vfsId, String projectId)
+   private ProjectUpdateEventFilter(ChangeEventFilter delegate, String vfsId, String projectId, java.io.File ioRoot)
    {
       this.delegate = delegate;
       this.vfsId = vfsId;
       this.projectId = projectId;
+      this.ioRoot = ioRoot;
    }
 }

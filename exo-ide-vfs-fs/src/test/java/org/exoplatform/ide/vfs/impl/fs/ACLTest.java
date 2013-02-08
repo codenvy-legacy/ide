@@ -21,6 +21,8 @@ package org.exoplatform.ide.vfs.impl.fs;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -73,7 +75,7 @@ public class ACLTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "acl/" + fileId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       @SuppressWarnings("unchecked")
       List<AccessControlEntry> acl = (List<AccessControlEntry>)response.getEntity();
       assertEquals(accessList, toMap(acl));
@@ -156,6 +158,37 @@ public class ACLTest extends LocalFileSystemTest
       List<AccessControlEntry> updatedAcl =
          (List<AccessControlEntry>)launcher.service("GET", requestPath, BASE_URI, null, null, null).getEntity();
       assertTrue(updatedAcl.isEmpty());
+   }
+
+   @SuppressWarnings("unchecked")
+   public void testUpdateACLHavePermissions() throws Exception
+   {
+      // Remove permissions for current user, see LocalFileSystemTest.setUp()
+      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
+      writeACL(filePath, accessList);
+
+      String requestPath = SERVICE_URI + "acl/" + fileId;
+      // Give write permission for john. No changes for other users.
+      String acl = "[{\"principal\":\"admin\",\"permissions\":[\"read\", \"write\"]}]";
+      Map<String, List<String>> h = new HashMap<String, List<String>>(1);
+      h.put("Content-Type", Arrays.asList("application/json"));
+      // File is protected and default principal 'admin' has not write permission.
+      // Replace default principal by principal who has write permission.
+      ConversationState user = new ConversationState(new Identity("andrew"));
+      user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
+      ConversationState.setCurrent(user);
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, h, acl.getBytes(), null);
+      assertEquals(204, response.getStatus());
+
+      accessList.get("admin").add(BasicPermissions.WRITE);
+      // check backend
+      Map<String, Set<BasicPermissions>> updatedAccessList = readACL(filePath);
+      log.info(updatedAccessList);
+      assertEquals(accessList, updatedAccessList);
+
+      // check API
+      assertEquals(accessList,
+         toMap((List<AccessControlEntry>)launcher.service("GET", requestPath, BASE_URI, null, null, null).getEntity()));
    }
 
    @SuppressWarnings("unchecked")

@@ -217,6 +217,11 @@ class FileLockFactory
       return true;
    }
 
+   synchronized void checkClean()
+   {
+      assert tail.prev == null;
+   }
+
    /* =============================================== */
 
    private static class Node

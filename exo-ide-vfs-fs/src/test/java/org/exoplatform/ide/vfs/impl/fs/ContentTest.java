@@ -78,7 +78,7 @@ public class ContentTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "content/" + fileId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       assertTrue(Arrays.equals(content, writer.getBody()));
       assertEquals("text/plain", writer.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
    }
@@ -89,7 +89,7 @@ public class ContentTest extends LocalFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "downloadfile/" + fileId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       assertTrue(Arrays.equals(content, writer.getBody()));
       assertEquals("text/plain", writer.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
       assertEquals(String.format("attachment; filename=\"%s\"", "ContentTest_File"),
@@ -119,7 +119,7 @@ public class ContentTest extends LocalFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "contentbypath" + filePath;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       log.info(new String(writer.getBody()));
       assertTrue(Arrays.equals(content, writer.getBody()));
       assertEquals("text/plain", writer.getHeaders().getFirst(HttpHeaders.CONTENT_TYPE));
@@ -176,8 +176,8 @@ public class ContentTest extends LocalFileSystemTest
       // Request must fail since 'admin' has not 'write' permission (only 'read').
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
-      assertTrue(Arrays.equals(content, readFile(protectedFilePath))); // content must not be updated
-      assertNull(readProperties(filePath)); // no additional properties
+      assertTrue("Content must not be updated", Arrays.equals(content, readFile(protectedFilePath)));
+      assertNull("Properties must not be updated", readProperties(filePath));
    }
 
    public void testUpdateContentLocked() throws Exception
@@ -209,7 +209,7 @@ public class ContentTest extends LocalFileSystemTest
       // File is locked.
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
-      assertTrue(Arrays.equals(content, readFile(lockedFilePath))); // content must not be updated
-      assertNull(readProperties(lockedFilePath)); // no additional properties
+      assertTrue("Content must not be updated", Arrays.equals(content, readFile(lockedFilePath)));
+      assertNull("Properties must not be updated", readProperties(lockedFilePath));
    }
 }

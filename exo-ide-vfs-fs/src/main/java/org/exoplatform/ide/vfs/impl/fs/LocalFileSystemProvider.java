@@ -23,8 +23,12 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.services.security.ConversationState;
 
 import java.net.URI;
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Implementation of VirtualFileSystemProvider for plain file system.
@@ -35,26 +39,90 @@ import java.net.URI;
 public class LocalFileSystemProvider implements VirtualFileSystemProvider
 {
    private final String id;
-   /*private*/ final MountPoint mountPoint;
+   private final ConcurrentMap<java.io.File, MountPoint> mounts;
+   private final java.io.File mountRoot;
 
    /**
     * @param id
     *    virtual file system identifier
-    * @param mountPoint
-    *    virtual file system entry
     */
-   LocalFileSystemProvider(String id, MountPoint mountPoint)
+   public LocalFileSystemProvider(String id)
    {
       this.id = id;
-      this.mountPoint = mountPoint;
+      this.mounts = new ConcurrentHashMap<java.io.File, MountPoint>();
+      this.mountRoot = new java.io.File(System.getProperty("org.exoplatform.ide.server.fs-root-path"));
    }
 
+   /**
+    * Get new instance of LocalFileSystem. If virtual file system is not mounted yet if mounted automatically when used
+    * first time.
+    */
    @Override
-   public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners) throws VirtualFileSystemException
+   public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
+      throws VirtualFileSystemException
    {
+      // TODO : this is temporary solution. Waiting when cloud infrastructure will provide something better for us.
+      final String wsName = (String)ConversationState.getCurrent().getAttribute("currentTenant");
+      final java.io.File wsRoot = new java.io.File(mountRoot, wsName);
+      if (!(wsRoot.exists() || wsRoot.mkdirs()))
+      {
+         // critical error cannot continue
+         throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", id));
+      }
+      MountPoint mount = mounts.get(wsRoot);
+      if (mount == null)
+      {
+         MountPoint newMount = new MountPoint(wsRoot);
+         mount = mounts.putIfAbsent(wsRoot, newMount);
+         if (mount == null)
+         {
+            mount = newMount;
+         }
+      }
       return new LocalFileSystem(id,
          requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
          listeners,
-         mountPoint);
+         mount);
+   }
+
+   /**
+    * Mount backing local filesystem.
+    *
+    * @param ioFile
+    *    root point on the backing local filesystem
+    * @throws VirtualFileSystemException
+    *    if mount is failed, e.g. if virtual filesystem with specified <code>vfsId</code> already exists
+    * @see org.exoplatform.ide.vfs.server.VirtualFileSystem
+    */
+   public void mount(java.io.File ioFile) throws VirtualFileSystemException
+   {
+      if (mounts.putIfAbsent(ioFile, new MountPoint(ioFile)) != null)
+      {
+         throw new VirtualFileSystemException(String.format("Local filesystem '%s' already mounted. ", ioFile));
+      }
+   }
+
+   /**
+    * Unmount backing local filesystem. This method release resources allocated by MountPoint.
+    *
+    * @param ioFile
+    *    root point on the backing local filesystem
+    * @return <code>true</code> if specified local file system path successfully unmounted and <code>false</code> if
+    *         specified path was not mounted
+    */
+   public boolean unmount(java.io.File ioFile) throws VirtualFileSystemException
+   {
+      final MountPoint mount = mounts.remove(ioFile);
+      if (mount != null)
+      {
+         mount.reset();
+         return true;
+      }
+      return false;
+   }
+
+   public Collection<MountPoint> getMounts()
+   {
+      return java.util.Collections.unmodifiableCollection(mounts.values());
    }
 }

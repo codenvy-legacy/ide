@@ -75,7 +75,7 @@ public class LockTest extends LocalFileSystemTest
       String requestPath = SERVICE_URI + "lock/" + fileId;
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       log.info(new String(writer.getBody()));
-      assertEquals(200, response.getStatus());
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       LockToken result = (LockToken)response.getEntity();
       assertEquals("Lock file not found or lock token invalid. ", result.getLockToken(), readLock(filePath));
       assertTrue("File must be locked. ", ((File)getItem(fileId)).isLocked());
