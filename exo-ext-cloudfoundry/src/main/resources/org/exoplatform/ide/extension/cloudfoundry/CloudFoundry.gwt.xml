@@ -10,5 +10,5 @@
    <inherits name='com.google.web.bindery.autobean.AutoBean'/>
    
    <source path="client"/>
-   <source path="shared"/>
+   <source path="" />
 </module>

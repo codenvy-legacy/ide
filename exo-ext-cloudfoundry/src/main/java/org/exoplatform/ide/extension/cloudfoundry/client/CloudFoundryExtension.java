@@ -25,6 +25,11 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.ide.api.ui.paas.PaaSAgent;
 import org.exoplatform.ide.extension.Extension;
+import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
+import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
+import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
+import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowProjectPropertiesCommand;
+import org.exoplatform.ide.menu.MainMenuPresenter;
 
 /**
  * Extension add Cloud Foundry support to the IDE Application.
@@ -51,9 +56,16 @@ public class CloudFoundryExtension
    private static final String ID = "CloudFoundry";
 
    @Inject
-   public CloudFoundryExtension(PaaSAgent paasAgent)
+   public CloudFoundryExtension(PaaSAgent paasAgent, MainMenuPresenter menu,
+      ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
+      ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand)
    {
       // TODO Auto-generated constructor stub
       //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, wizardPage, preferencePage);
+
+      menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
+      menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);
+      menu.addMenuItem("PaaS/CloudFoudry/Switch Account...", loginCommand);
+      menu.addMenuItem("Project/Paas/CloudFoudry", showProjectPropertiesCommand);
    }
 }

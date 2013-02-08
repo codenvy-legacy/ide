@@ -20,10 +20,10 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.job.Job;
-import org.exoplatform.ide.job.Job.JobStatus;
-import org.exoplatform.ide.job.JobChangeEvent;
-import org.exoplatform.ide.rest.RequestStatusHandler;
+import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
+import org.exoplatform.ide.client.framework.job.Job;
+import org.exoplatform.ide.client.framework.job.Job.JobStatus;
+import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -42,38 +42,35 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestInProgress(java.lang.String)
+    * {@inheritDoc}
     */
    @Override
    public void requestInProgress(String id)
    {
       Job job = new Job(id, JobStatus.STARTED);
       job.setStartMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationStarted(applicationName));
-      //      IDE.fireEvent(new JobChangeEvent(job));
       eventBus.fireEvent(new JobChangeEvent(job));
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestFinished(java.lang.String)
+    * {@inheritDoc}
     */
    @Override
    public void requestFinished(String id)
    {
       Job job = new Job(id, JobStatus.FINISHED);
       job.setFinishMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationFinished(applicationName));
-      //      IDE.fireEvent(new JobChangeEvent(job));
       eventBus.fireEvent(new JobChangeEvent(job));
    }
 
    /**
-    * @see org.exoplatform.gwtframework.commons.rest.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
+    * {@inheritDoc}
     */
    @Override
    public void requestError(String id, Throwable exception)
    {
       Job job = new Job(id, JobStatus.ERROR);
       job.setError(exception);
-      //      IDE.fireEvent(new JobChangeEvent(job));
       eventBus.fireEvent(new JobChangeEvent(job));
    }
 }

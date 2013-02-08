@@ -565,4 +565,12 @@ public class ResourceProviderComponent implements ResourceProvider
       return name.substring(lastDotPos + 1);
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getVfsId()
+   {
+      return vfsInfo.getId();
+   }
 }

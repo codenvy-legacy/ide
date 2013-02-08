@@ -24,6 +24,13 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
 
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
@@ -31,13 +38,9 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Credentials;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.loader.Loader;
-import org.exoplatform.ide.rest.AsyncRequest;
-import org.exoplatform.ide.rest.AsyncRequestCallback;
+import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.rest.HTTPHeader;
 import org.exoplatform.ide.rest.MimeType;
-
-import java.util.List;
 
 /**
  * Implementation for {@link CloudFoundryClientService}.
@@ -118,17 +121,14 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    /**
     * WebSocket message bus.
     */
-   // TODO
-   //   private MessageBus wsMessageBus;
+   private MessageBus wsMessageBus;
 
-   //   public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus)
-   public CloudFoundryClientServiceImpl(String restContext, Loader loader, EventBus eventBus)
+   public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
+      this.wsMessageBus = wsMessageBus;
       this.eventBus = eventBus;
-      // TODO
-      //      this.wsMessageBus = wsMessageBus;
    }
 
    /**
@@ -172,34 +172,34 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     *       java.lang.String, java.lang.String, int, int, boolean, java.lang.String, java.lang.String, java.lang.String,
     *       org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback)
     */
-   //   @Override
-   //   public void createWS(String server, String name, String type, String url, int instances, int memory,
-   //      boolean nostart, String vfsId, String projectId, String war,
-   //      CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException
-   //   {
-   //      server = checkServerUrl(server);
-   //
-   //      CreateApplicationRequest createApplicationRequest =
-   //         CloudFoundryExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
-   //      createApplicationRequest.setName(name);
-   //      createApplicationRequest.setServer(server);
-   //      createApplicationRequest.setType(type);
-   //      createApplicationRequest.setUrl(url);
-   //      createApplicationRequest.setInstances(instances);
-   //      createApplicationRequest.setMemory(memory);
-   //      createApplicationRequest.setNostart(nostart);
-   //      createApplicationRequest.setVfsid(vfsId);
-   //      createApplicationRequest.setProjectid(projectId);
-   //      createApplicationRequest.setWar(war);
-   //
-   //      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
-   //      callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name));
-   //
-   //      RequestMessage message =
-   //         RequestMessageBuilder.build(RequestBuilder.POST, CREATE).data(data)
-   //            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
-   //      wsMessageBus.send(message, callback);
-   //   }
+   @Override
+   public void createWS(String server, String name, String type, String url, int instances, int memory,
+      boolean nostart, String vfsId, String projectId, String war,
+      CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException
+   {
+      server = checkServerUrl(server);
+
+      CreateApplicationRequest createApplicationRequest =
+         CloudFoundryExtension.AUTO_BEAN_FACTORY.createApplicationRequest().as();
+      createApplicationRequest.setName(name);
+      createApplicationRequest.setServer(server);
+      createApplicationRequest.setType(type);
+      createApplicationRequest.setUrl(url);
+      createApplicationRequest.setInstances(instances);
+      createApplicationRequest.setMemory(memory);
+      createApplicationRequest.setNostart(nostart);
+      createApplicationRequest.setVfsid(vfsId);
+      createApplicationRequest.setProjectid(projectId);
+      createApplicationRequest.setWar(war);
+
+      String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
+      callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus));
+
+      RequestMessage message =
+         RequestMessageBuilder.build(RequestBuilder.POST, CREATE).data(data)
+            .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).getRequestMessage();
+      wsMessageBus.send(message, callback);
+   }
 
    private String checkServerUrl(String server)
    {
@@ -299,8 +299,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getFrameworks()
     */
    @Override
-   public void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server) throws RequestException
+   public void getFrameworks(AsyncRequestCallback<JsonArray<Framework>> callback, String server)
+      throws RequestException
    {
+      // TODO JsonArray
       String url = restServiceContext + FRAMEWORKS;
       url += (server != null) ? "?server=" + server : "";
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader)
@@ -567,8 +569,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    @Override
    public void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException
+      CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException
    {
+      // TODO JsonArray
       String url = restServiceContext + APPS;
 
       server = checkServerUrl(server);
@@ -586,8 +589,9 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @see org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTargets(org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback)
     */
    @Override
-   public void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException
+   public void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException
    {
+      // TODO JsonArray
       String url = restServiceContext + TARGETS;
 
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON)

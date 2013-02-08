@@ -20,21 +20,20 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 
 import com.google.gwt.http.client.RequestException;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.rest.AsyncRequestCallback;
-
-import java.util.List;
+import org.exoplatform.ide.json.JsonArray;
 
 /**
  * Client service for CloudFoundry.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryClientService.java Jul 12, 2011 10:24:53 AM vereshchaka $
- * 
  */
 public abstract class CloudFoundryClientService
 {
@@ -55,7 +54,7 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback - callback, that client has to implement to receive response
     */
-   public abstract void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
+   public abstract void getFrameworks(AsyncRequestCallback<JsonArray<Framework>> callback, String server)
       throws RequestException;
 
    /**
@@ -94,10 +93,9 @@ public abstract class CloudFoundryClientService
     * @param war URL to pre-builded war file. May be present for java (spring, grails, java-web) applications ONLY
     * @param callback callback, that client has to implement to receive response
     */
-   // TODO
-   //   public abstract void createWS(String server, String name, String type, String url, int instances, int memory,
-   //      boolean nostart, String vfsId, String projectId, String war,
-   //      CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException;
+   public abstract void createWS(String server, String name, String type, String url, int instances, int memory,
+      boolean nostart, String vfsId, String projectId, String war,
+      CloudFoundryRESTfulRequestCallback<CloudFoundryApplication> callback) throws WebSocketException;
 
    /**
     * Log in CloudFoundry account.
@@ -273,7 +271,7 @@ public abstract class CloudFoundryClientService
     * @param callback callback, that client has to implement to handle response from server.
     */
    public abstract void getApplicationList(String server,
-      CloudFoundryAsyncRequestCallback<List<CloudFoundryApplication>> callback) throws RequestException;
+      CloudFoundryAsyncRequestCallback<JsonArray<CloudFoundryApplication>> callback) throws RequestException;
 
    /**
     * Get Cloud Foundry system information.
@@ -288,7 +286,7 @@ public abstract class CloudFoundryClientService
     * 
     * @param callback callback, that client has to implement to handle response from server
     */
-   public abstract void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException;
+   public abstract void getTargets(AsyncRequestCallback<JsonArray<String>> callback) throws RequestException;
 
    /**
     * @param callback callback, that client has to implement to handle response from server
@@ -341,7 +339,7 @@ public abstract class CloudFoundryClientService
     */
    public abstract void deleteService(String server, String name, CloudFoundryAsyncRequestCallback<Object> callback)
       throws RequestException;
-   
+
    /**
     * Bind service to application.
     * 

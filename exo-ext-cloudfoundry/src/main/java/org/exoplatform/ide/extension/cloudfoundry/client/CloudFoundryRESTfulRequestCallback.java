@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -22,24 +22,26 @@ import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
-import org.exoplatform.ide.commons.exception.ServerException;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
 
 /**
- * Asynchronous CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
+ * WebSocket CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
  * exception, in this case - the {@link LoginEvent} is fired.
  * 
- * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
- * @version $Id: CloudFoundryAsyncRequestCallback.java Jul 8, 2011 3:36:01 PM vereshchaka $
+ * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
+ * @version $Id: CloudFoundryRESTfulRequestCallback.java Nov 30, 2012 9:58:20 AM azatsarynnyy $
+ *
+ * @param <T>
  * 
- * @see CloudFoundryRESTfulRequestCallback
+ * @see CloudFoundryAsyncRequestCallback
  */
-public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCallback<T>
+public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallback<T>
 {
    private LoggedInHandler loggedIn;
 
@@ -47,17 +49,17 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
 
    private String loginUrl;
 
-   private EventBus eventBus;
-
    private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
 
-   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+   private EventBus eventBus;
+
+   public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, EventBus eventBus)
    {
       this(unmarshaller, loggedIn, loginCanceled, null, eventBus);
    }
 
-   public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
+   public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus)
    {
       super(unmarshaller);
@@ -107,9 +109,9 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             }
             else
             {
-               msg = "Status:&nbsp;" + serverException.getHTTPStatus() + "&nbsp;" + serverException.getStatusText();
+               msg = "Status:&nbsp;" + serverException.getHTTPStatus();// + "&nbsp;" + serverException.getStatusText();
             }
-            //TODO
+            // TODO
             //            Dialogs.getInstance().showError(msg);
             Window.alert(msg);
             return;

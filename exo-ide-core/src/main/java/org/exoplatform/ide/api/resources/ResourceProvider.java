@@ -133,4 +133,10 @@ public interface ResourceProvider extends Component
     */
    public FileType getFileType(File file);
    
+   /**
+    * 
+    * @return
+    */
+   // TODO
+   public String getVfsId();
 }
