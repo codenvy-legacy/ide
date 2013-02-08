@@ -44,6 +44,10 @@ import org.exoplatform.ide.extension.aws.shared.beanstalk.UpdateEnvironmentReque
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.net.URL;
@@ -68,6 +72,8 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/aws/beanstalk")
 public class BeanstalkService
 {
+   private static final Log LOG = ExoLogger.getLogger(BeanstalkService.class);
+
    @javax.inject.Inject
    private VirtualFileSystemRegistry vfsRegistry;
    @javax.inject.Inject
@@ -126,8 +132,17 @@ public class BeanstalkService
       VirtualFileSystem vfs = vfsRegistry.getProvider(vfsId).newInstance(null, null);
       String warURLStr = params.getWar();
       URL warURL = warURLStr == null || warURLStr.isEmpty() ? null : new URL(warURLStr);
-      return beanstalk.createApplication(params.getApplicationName(), params.getDescription(), params.getS3Bucket(),
+      ApplicationInfo app =
+         beanstalk.createApplication(params.getApplicationName(), params.getDescription(), params.getS3Bucket(),
          params.getS3Key(), vfs, projectId, warURL);
+
+      if (projectId != null)
+      {
+         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+            + "# PAAS#AWS:BeansTalk#");
+      }
+      return app;
    }
 
    @Path("apps/info")

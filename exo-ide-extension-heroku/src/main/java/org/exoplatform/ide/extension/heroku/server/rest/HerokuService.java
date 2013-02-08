@@ -28,8 +28,12 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +61,8 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/heroku")
 public class HerokuService
 {
+   private static final Log LOG = ExoLogger.getLogger(HerokuService.class);
+
    @Inject
    private Heroku heroku;
 
@@ -124,7 +130,12 @@ public class HerokuService
       List<Property> properties = new ArrayList<Property>(1);
       properties.add(p);
       vfs.updateItem(projectId, properties, null);
-
+      if (projectId != null)
+      {
+         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+            + "# PAAS#OpenShift#");
+      }
       return application;
    }
 

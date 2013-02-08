@@ -72,8 +72,6 @@ import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconE
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;

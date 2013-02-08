@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 public class InviteGitHubDevelopersView extends ViewImpl implements
    org.exoplatform.ide.extension.samples.client.inviting.github.InviteGitHubDevelopersPresenter.Display
@@ -69,62 +69,64 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
       {
          setElement(e);
       }
-      
+
       /**
        * Adds a new child widget
-       * 
+       *
        * @param w the widget to be added
        */
-      public void add(Widget w) {
-        add(w, getElement());
+      public void add(Widget w)
+      {
+         add(w, getElement());
       }
 
       /**
        * Adds a new child widget to the panel, attaching its Element to the
        * specified container Element.
-       * 
+       *
        * @param child the child widget to be added
        * @param container the element within which the child will be contained
        */
-      protected void add(Widget child, Element container) {
-        // Detach new child.
-        child.removeFromParent();
+      protected void add(Widget child, Element container)
+      {
+         // Detach new child.
+         child.removeFromParent();
 
-        // Logical attach.
-        getChildren().add(child);
+         // Logical attach.
+         getChildren().add(child);
 
-        // Physical attach.
-        DOM.appendChild(container, child.getElement());
+         // Physical attach.
+         DOM.appendChild(container, child.getElement());
 
-        // Adopt.
-        adopt(child);
+         // Adopt.
+         adopt(child);
       }
-      
+
    }
-   
+
    UserListWidget userListWidget;
 
    @UiField
    DivElement userListElement;
-   
+
    @UiField
    CheckBox checkAll;
-   
+
    @UiField
    ImageButton inviteButton, cancelButton;
-   
+
    @UiField
    TextAreaElement inviteMessage;
-   
+
    public InviteGitHubDevelopersView()
    {
-      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()), WIDTH, HEIGHT);
+      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.invite()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       setCloseOnEscape(true);
    }
-   
+
    private Map<GitHubUser, GitHubUserTile> cards = new HashMap<GitHubUser, GitHubUserTile>();
-   
+
    @Override
    public void setDevelopers(List<GitHubUser> userList, GitHubUserSelectionChangedHandler selectionChangedHandler)
    {
@@ -133,7 +135,7 @@ public class InviteGitHubDevelopersView extends ViewImpl implements
          userListWidget.removeFromParent();
       }
       userListWidget = new UserListWidget((Element)userListElement.cast());
-      
+
       cards.clear();
       for (GitHubUser user : userList)
       {

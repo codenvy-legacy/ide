@@ -60,6 +60,7 @@ public class DebuggerEventListUnmarshallerWS implements Unmarshallable<DebuggerE
    @Override
    public void unmarshal(ResponseMessage response) throws UnmarshallerException
    {
+      events.getEvents().clear();
       JSONObject jObj = JSONParser.parseStrict(response.getBody()).isObject();
       if (jObj == null)
       {

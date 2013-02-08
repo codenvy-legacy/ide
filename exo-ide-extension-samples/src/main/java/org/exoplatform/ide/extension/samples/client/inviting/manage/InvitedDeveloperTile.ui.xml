@@ -37,9 +37,9 @@
       <div style="">
          <div style="float:left; margin:10px"><g:Label ui:field="invitedId"></g:Label></div>
          <div style="float:right; margin:10px">
-            <div style="float:left; margin-right:10px"><g:Label ui:field="inviteRole"></g:Label></div>
-            <div style="float:right; width:23px"><f:ImageButton ui:field="revokeImage"
-                                                                styleName="{style.imageCorrect}"></f:ImageButton></div>
+            <div style="float:left;"><g:Label ui:field="inviteRole"></g:Label></div>
+            <div style="float:right;"><f:ImageButton ui:field="revokeImage"
+                                                     styleName="{style.imageCorrect}"></f:ImageButton></div>
          </div>
       </div>
 	</g:HTMLPanel>

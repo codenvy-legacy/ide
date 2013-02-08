@@ -66,10 +66,10 @@ public class InviteClientService
          .header(HTTPHeader.ACCEPT, MediaType.APPLICATION_JSON).send(callback);
    }
 
-   public void invalidateInvite(String uuid, AsyncRequestCallback<Void> callback) throws RequestException
+   public void invalidateInvite(String email, AsyncRequestCallback<Void> callback) throws RequestException
    {
-      String url = restServiceContext + "/invite/invalidate";
-      AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader()).data(uuid)
+      String url = restServiceContext + "/invite/invalidate/" + email;
+      AsyncRequest.build(RequestBuilder.POST, url).loader(new EmptyLoader())
          .header(HTTPHeader.CONTENT_TYPE, "text/html; charset=utf-8").send(callback);
    }
 }

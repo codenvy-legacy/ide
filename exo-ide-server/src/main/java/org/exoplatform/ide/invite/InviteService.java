@@ -26,6 +26,7 @@ import org.exoplatform.services.jcr.ext.registry.RegistryEntry;
 import org.exoplatform.services.jcr.ext.registry.RegistryService;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -206,13 +207,20 @@ public class InviteService
    public void sendInviteByMail(String from, String to, String mailBody) throws InviteException
    {
       // check if specified user is already registered
-
       if (isUserRegisteredInOrganization(to))
       {
          throw new InviteException(403, to + " already registered in the system");
       }
 
+      if (ConversationState.getCurrent() == null)
+      {
+         throw new InviteException("Error getting current user id.");
+      }
+
+      String currentId = ConversationState.getCurrent().getIdentity().getUserId();
+
       Invite newInvite = new Invite();
+      newInvite.setFrom(currentId);
       newInvite.setEmail(to);
       newInvite.setActivated(false);
       newInvite.setInvitationTime(System.currentTimeMillis());
@@ -237,6 +245,7 @@ public class InviteService
          }
 
          doSendMail(to, "Codenvy <noreply@codenvy.com>", inviteMessageProperties);
+         LOG.info("EVENT#user-invite# EMAIL#" + to + "#");
       }
       catch (SendingIdeMailException e)
       {
@@ -386,16 +395,27 @@ public class InviteService
       try
       {
          SessionProvider sessionProvider = sessionProviderService.getSystemSessionProvider(null);
-         registry.removeEntry(sessionProvider, INVITES_ROOT + '/' + inviteUuid);
+         RegistryEntry entry = getOrCreateInviteRoot(sessionProvider);
+         Document inviteDocument = entry.getDocument();
+         Element root = inviteDocument.getDocumentElement();
+         NodeList invitedUsers = root.getChildNodes();
+
+         for (int i = 0; i < invitedUsers.getLength(); i++)
+         {
+            Node invitedUser = invitedUsers.item(i);
+            if (inviteUuid.equals(invitedUser.getAttributes().getNamedItem("uuid").getNodeValue()))
+            {
+               registry.removeEntry(sessionProvider, INVITES_ROOT + '/' + invitedUser.getNodeName());
+               return;
+            }
+         }
+
+         throw new InviteException("Invite doesn't exist.");
       }
       catch (RepositoryException e)
       {
          LOG.error(e.getLocalizedMessage(), e);
          throw new InviteException("Unable to remove existed invite.", e);
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
       }
    }
 
