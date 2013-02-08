@@ -35,7 +35,7 @@ import org.exoplatform.ide.vfs.shared.Item;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 @RolesAllowed({"administrators", "developers"})
 public class InviteGitHubCollaboratorsControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
@@ -55,7 +55,7 @@ public class InviteGitHubCollaboratorsControl extends SimpleControl implements I
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
+      setImages(SamplesClientBundle.INSTANCE.invite(), SamplesClientBundle.INSTANCE.inviteDisable());
       setEvent(new InviteGitHubCollaboratorsEvent());
    }
 
@@ -111,7 +111,7 @@ public class InviteGitHubCollaboratorsControl extends SimpleControl implements I
             return;
          }
       }
-      
+
       setEnabled(false);
    }
 

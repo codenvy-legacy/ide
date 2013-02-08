@@ -25,14 +25,14 @@ import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Samples client resources (images).
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: SamplesClientBundle.java Sep 2, 2011 12:33:49 PM vereshchaka $
- * 
+ *
  */
 public interface SamplesClientBundle extends ClientBundle
 {
-   SamplesClientBundle INSTANCE = GWT.<SamplesClientBundle> create(SamplesClientBundle.class);
+   SamplesClientBundle INSTANCE = GWT.<SamplesClientBundle>create(SamplesClientBundle.class);
 
    /**
     * Css resources for project wizard.
@@ -41,29 +41,41 @@ public interface SamplesClientBundle extends ClientBundle
    Style css();
 
    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background.png")
-   ImageResource invitePageHeaderBackground();   
-   
+   ImageResource invitePageHeaderBackground();
+
    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background-48.png")
-   ImageResource invitePageHeaderBackground48();  
-   
+   ImageResource invitePageHeaderBackground48();
+
    @Source("org/exoplatform/ide/extension/samples/client/images/invite/user-default-photo.png")
-   ImageResource userDefaultPhoto();  
+   ImageResource userDefaultPhoto();
 
    /*
     * Buttons
     */
    @Source("org/exoplatform/ide/extension/samples/client/images/github_logo.png")
    ImageResource gitHubLogo();
-   
+
    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome.png")
    ImageResource welcome();
 
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/manage.png")
+   ImageResource manageInvite();
+
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/manage_disable.png")
+   ImageResource manageInviteDisable();
+
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite.png")
+   ImageResource invite();
+
+   @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite_disable.png")
+   ImageResource inviteDisable();
+
    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/welcome-disabled.png")
    ImageResource welcomeDisabled();
-   
+
    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github.png")
    ImageResource gitHub();
-   
+
    @Source("org/exoplatform/ide/extension/samples/client/images/buttons/github_Disabled.png")
    ImageResource gitHubDisabled();
 
@@ -105,7 +117,7 @@ public interface SamplesClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/background.png")
    ImageResource welcomePageBgHeader();
-   
+
    @Source("org/exoplatform/ide/extension/samples/client/images/welcome/bg-top-container.png")
    ImageResource welcomePageBgTopContainer();
 
@@ -157,9 +169,9 @@ public interface SamplesClientBundle extends ClientBundle
    public interface Style extends CssResource
    {
       String inviteHeader();
-      
+
       String inviteHeader48();
-      
+
       String table();
 
       String itemsTree();

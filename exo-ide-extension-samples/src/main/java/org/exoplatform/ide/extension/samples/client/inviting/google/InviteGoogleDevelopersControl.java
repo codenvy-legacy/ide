@@ -26,7 +26,7 @@ import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 @RolesAllowed({"administrators", "developers"})
 public class InviteGoogleDevelopersControl extends SimpleControl implements IDEControl
@@ -43,8 +43,8 @@ public class InviteGoogleDevelopersControl extends SimpleControl implements IDEC
       super(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
-      setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());
-      setEvent(new InviteGoogleDevelopersEvent());      
+      setImages(SamplesClientBundle.INSTANCE.invite(), SamplesClientBundle.INSTANCE.inviteDisable());
+      setEvent(new InviteGoogleDevelopersEvent());
       setEnabled(true);
       setVisible(true);
    }

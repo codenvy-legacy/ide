@@ -113,7 +113,7 @@ public class ManageInvitesView extends ViewImpl implements ManageInvitePresenter
 
    public ManageInvitesView()
    {
-      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.welcome()), WIDTH, HEIGHT);
+      super(ID, "modal", TITLE, new Image(SamplesClientBundle.INSTANCE.manageInvite()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       setCloseOnEscape(true);
 
