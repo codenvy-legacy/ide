@@ -21,14 +21,14 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
-import org.exoplatform.ide.client.framework.websocket.rest.Unmarshallable;
-import org.exoplatform.ide.client.framework.websocket.rest.exceptions.ServerException;
+import org.exoplatform.ide.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.commons.exception.ServerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginEvent;
+import org.exoplatform.ide.rest.HTTPStatus;
+import org.exoplatform.ide.websocket.rest.RequestCallback;
+import org.exoplatform.ide.websocket.rest.Unmarshallable;
 
 /**
  * WebSocket CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized

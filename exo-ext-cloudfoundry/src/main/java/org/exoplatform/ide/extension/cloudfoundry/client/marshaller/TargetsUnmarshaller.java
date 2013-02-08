@@ -23,9 +23,9 @@ import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.rest.Unmarshallable;
 
 /**
  * Unmarshaller for the list of targets, received from server.

@@ -25,11 +25,11 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 
-import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
-import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.rest.Unmarshallable;
 
 /**
  * Unmarshaller for frameworks list.
@@ -78,7 +78,7 @@ public class FrameworksUnmarshaller implements Unmarshallable<JsonArray<Framewor
       }
       catch (Exception e)
       {
-         throw new UnmarshallerException("Can't parse applications information.");
+         throw new UnmarshallerException("Can't parse applications information.", e);
       }
    }
 

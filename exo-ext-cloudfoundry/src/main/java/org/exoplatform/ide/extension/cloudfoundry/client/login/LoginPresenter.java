@@ -23,15 +23,15 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.HTTPStatus;
-import org.exoplatform.ide.client.framework.output.event.OutputEvent;
-import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
+import org.exoplatform.ide.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.commons.exception.ServerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.output.event.OutputEvent;
+import org.exoplatform.ide.output.event.OutputMessage.Type;
+import org.exoplatform.ide.rest.AsyncRequestCallback;
+import org.exoplatform.ide.rest.HTTPStatus;
 
 /**
  * 

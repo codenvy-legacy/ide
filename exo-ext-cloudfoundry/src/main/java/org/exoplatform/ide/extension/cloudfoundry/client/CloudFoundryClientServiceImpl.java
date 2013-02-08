@@ -24,13 +24,6 @@ import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.gwtframework.commons.loader.Loader;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.websocket.MessageBus;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
@@ -39,8 +32,15 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.loader.Loader;
+import org.exoplatform.ide.rest.AsyncRequest;
+import org.exoplatform.ide.rest.AsyncRequestCallback;
 import org.exoplatform.ide.rest.HTTPHeader;
 import org.exoplatform.ide.rest.MimeType;
+import org.exoplatform.ide.websocket.MessageBus;
+import org.exoplatform.ide.websocket.WebSocketException;
+import org.exoplatform.ide.websocket.rest.RequestMessage;
+import org.exoplatform.ide.websocket.rest.RequestMessageBuilder;
 
 /**
  * Implementation for {@link CloudFoundryClientService}.

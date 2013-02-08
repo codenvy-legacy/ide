@@ -20,14 +20,14 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 
 import com.google.gwt.http.client.RequestException;
 
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.rest.AsyncRequestCallback;
+import org.exoplatform.ide.websocket.WebSocketException;
 
 /**
  * Client service for CloudFoundry.

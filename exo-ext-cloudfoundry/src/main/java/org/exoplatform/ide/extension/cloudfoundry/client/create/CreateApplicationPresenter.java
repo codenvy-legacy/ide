@@ -24,20 +24,26 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.core.event.RefreshBrowserEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.output.event.OutputEvent;
+import org.exoplatform.ide.output.event.OutputMessage;
 import org.exoplatform.ide.resources.model.Project;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
+import org.exoplatform.ide.websocket.WebSocketException;
+import org.exoplatform.ide.websocket.rest.AutoBeanUnmarshallerWS;
 
 /**
  * 
@@ -174,8 +180,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          }
          catch (NumberFormatException e)
          {
-            // TODO
-            //            IDE.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
+            eventBus
+               .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
          }
       }
 
@@ -201,8 +207,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (NumberFormatException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
+         eventBus
+            .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
       }
       boolean nostart = !view.isStartAfterCreation();
 
@@ -266,8 +272,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -275,7 +280,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    {
       // TODO
       //      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-      //      IDE.fireEvent(new BuildProjectEvent());
+      // Need for Maven
+      //      eventBus.fireEvent(new BuildProjectEvent());
    }
 
    /**
@@ -300,45 +306,44 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
       createApplicationREST(appData, project, loggedInHandler);
 
-      // TODO I amn't sure
-      //      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
-      //         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
-      //
-      //      try
-      //      {
-      //         CloudFoundryClientService.getInstance().createWS(
-      //            appData.server,
-      //            appData.name,
-      //            appData.type,
-      //            appData.url,
-      //            appData.instances,
-      //            appData.memory,
-      //            appData.nostart,
-      //            resourceProvider.getVfsId(),
-      //            project.getId(),
-      //            warUrl,
-      //            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-      //               appData.server)
-      //            {
-      //               @Override
-      //               protected void onSuccess(CloudFoundryApplication result)
-      //               {
-      //                  onAppCreatedSuccess(result);
-      //                  IDE.fireEvent(new RefreshBrowserEvent(project));
-      //               }
-      //
-      //               @Override
-      //               protected void onFailure(Throwable exception)
-      //               {
-      //                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-      //                  super.onFailure(exception);
-      //               }
-      //            });
-      //      }
-      //      catch (WebSocketException e)
-      //      {
-      //         createApplicationREST(appData, project, loggedInHandler);
-      //      }
+      AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
+         new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
+
+      try
+      {
+         CloudFoundryClientService.getInstance().createWS(
+            appData.server,
+            appData.name,
+            appData.type,
+            appData.url,
+            appData.instances,
+            appData.memory,
+            appData.nostart,
+            resourceProvider.getVfsId(),
+            project.getId(),
+            warUrl,
+            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+               appData.server, eventBus)
+            {
+               @Override
+               protected void onSuccess(CloudFoundryApplication result)
+               {
+                  onAppCreatedSuccess(result);
+                  eventBus.fireEvent(new RefreshBrowserEvent(project));
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  super.onFailure(exception);
+               }
+            });
+      }
+      catch (WebSocketException e)
+      {
+         createApplicationREST(appData, project, loggedInHandler);
+      }
    }
 
    /**
@@ -375,23 +380,20 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                protected void onSuccess(CloudFoundryApplication result)
                {
                   onAppCreatedSuccess(result);
-                  // TODO
-                  //                  IDE.fireEvent(new RefreshBrowserEvent(project));
+                  eventBus.fireEvent(new RefreshBrowserEvent(project));
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
                   super.onFailure(exception);
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+         eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
       }
    }
 
@@ -415,20 +417,17 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          {
             msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
          }
-         // TODO
-         //         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       }
       else if ("STARTED".equals(app.getState()) && app.getInstances() != app.getRunningInstances())
       {
          String msg = lb.applicationWasNotStarted(app.getName());
-         // TODO
-         //         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
       }
       else
       {
          String msg = lb.applicationCreatedSuccessfully(app.getName());
-         // TODO
-         //         IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       }
    }
 
@@ -546,8 +545,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
@@ -653,6 +651,5 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //         IDE.fireEvent(new ExceptionThrownEvent(msg));
       //         return;
       //      }
-
    }
 }

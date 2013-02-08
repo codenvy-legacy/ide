@@ -20,10 +20,10 @@ package org.exoplatform.ide.extension.cloudfoundry.client;
 
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.gwtframework.commons.rest.RequestStatusHandler;
-import org.exoplatform.ide.client.framework.job.Job;
-import org.exoplatform.ide.client.framework.job.Job.JobStatus;
-import org.exoplatform.ide.client.framework.job.JobChangeEvent;
+import org.exoplatform.ide.job.Job;
+import org.exoplatform.ide.job.Job.JobStatus;
+import org.exoplatform.ide.job.JobChangeEvent;
+import org.exoplatform.ide.rest.RequestStatusHandler;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
