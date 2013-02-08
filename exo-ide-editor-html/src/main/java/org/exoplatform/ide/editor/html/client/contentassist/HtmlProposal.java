@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.css.client.contentassist;
+package org.exoplatform.ide.editor.html.client.contentassist;
 
 import com.google.collide.client.util.logging.Log;
 import com.google.gwt.user.client.ui.Image;
@@ -25,25 +25,31 @@ import com.google.gwt.user.client.ui.Widget;
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
-import org.exoplatform.ide.editor.css.client.CssEditorExtension;
+import org.exoplatform.ide.editor.html.client.HtmlEditorExtension;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.edits.MalformedTreeException;
 import org.exoplatform.ide.editor.shared.text.edits.ReplaceEdit;
 
 /**
- * Completion proposal for CSS.
+ * Completion proposal for HTML.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CssProposal.java Feb 5, 2013 12:31:32 PM azatsarynnyy $
+ * @version $Id: HtmlProposal.java Feb 7, 2013 11:51:45 AM azatsarynnyy $
  *
  */
-public class CssProposal implements CompletionProposal
+public class HtmlProposal implements CompletionProposal
 {
 
-   private static final String PROPERTY_TERMINATOR = ";";
+   private static final String ELEMENT_SEPARATOR_CLOSE = ">";
 
-   private static final String PROPERTY_SEPARATOR = ": ";
+   private static final String ELEMENT_SELF_CLOSE = " />";
+
+   private static final String ELEMENT_SEPARATOR_OPEN_FINISHTAG = "</";
+
+   private static final String ATTRIBUTE_SEPARATOR_OPEN = "=\"";
+
+   private static final String ATTRIBUTE_SEPARATOR_CLOSE = "\"";
 
    /**
     * Proposal text label.
@@ -51,7 +57,7 @@ public class CssProposal implements CompletionProposal
    private String proposal;
 
    /**
-    * CSS type of autocompletion.
+    * HTML type of autocompletion.
     */
    private CompletionType type;
 
@@ -71,25 +77,28 @@ public class CssProposal implements CompletionProposal
    private int jumpLength;
 
    /**
-    * Length of selection (in chars) before cursor position after jump.
+    * Holds map of HTML tags with corresponding attributes.
     */
-   private int selectionCount;
+   private HtmlTagsAndAttributes htmlAttributes;
 
    /**
-    * Constructs new {@link CssProposal} instance with the given proposal, prefix and offset.
+    * Constructs new {@link HtmlProposal} instance with the given proposal, prefix and offset.
     * 
     * @param proposal proposal text label
-    * @param type CSS type of autocompletion
+    * @param type type of autocompletion
     * @param prefix
     * @param offset
+    * @param htmlAttributes
     */
-   public CssProposal(String proposal, CompletionType type, String prefix, int offset)
+   public HtmlProposal(String proposal, CompletionType type, String prefix, int offset,
+      HtmlTagsAndAttributes htmlAttributes)
    {
       super();
       this.proposal = proposal;
       this.type = type;
       this.prefix = prefix;
       this.offset = offset;
+      this.htmlAttributes = htmlAttributes;
    }
 
    /**
@@ -114,7 +123,7 @@ public class CssProposal implements CompletionProposal
    }
 
    /**
-    * Compute string to insert depending on what type of CSS autocompletion.
+    * Compute string to insert depending on what type of HTML autocompletion.
     * 
     * @return result proposal label to insert
     */
@@ -122,29 +131,19 @@ public class CssProposal implements CompletionProposal
    {
       switch (type)
       {
-         case CLASS :
-            // In this case implicit autocompletion workflow should trigger,
-            // and so execution should never reach this point.
-            Log.warn(getClass(), "Invocation of this method in not allowed for type " + type);
-            return null;
-         case PROPERTY :
-            String addend = proposal + PROPERTY_SEPARATOR + PROPERTY_TERMINATOR;
-            jumpLength = addend.length() - PROPERTY_TERMINATOR.length();
-            return addend;
-         case VALUE :
-            int start = proposal.indexOf('<');
-            int end = proposal.indexOf('>');
-
-            if ((start >= 0) && (start < end))
+         case ELEMENT :
+            if (htmlAttributes.isSelfClosedTag(proposal))
             {
-               jumpLength = start;
-               selectionCount = ((end + 1) - start);
-            }
-            else
-            {
+               String addend = proposal + ELEMENT_SELF_CLOSE;
                jumpLength = proposal.length();
+               return addend;
             }
-            return proposal;
+            jumpLength = proposal.length() + ELEMENT_SEPARATOR_CLOSE.length();
+            return proposal + ELEMENT_SEPARATOR_CLOSE + ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal
+               + ELEMENT_SEPARATOR_CLOSE;
+         case ATTRIBUTE :
+            jumpLength = proposal.length() + ATTRIBUTE_SEPARATOR_OPEN.length();
+            return proposal + ATTRIBUTE_SEPARATOR_OPEN + ATTRIBUTE_SEPARATOR_CLOSE;
          default :
             Log.warn(getClass(), "Invocation of this method in not allowed for type " + type);
             return null;
@@ -157,7 +156,7 @@ public class CssProposal implements CompletionProposal
    @Override
    public Point getSelection(IDocument document)
    {
-      return new Point(offset + jumpLength - prefix.length(), selectionCount);
+      return new Point(offset + jumpLength - prefix.length(), 0);
    }
 
    /**
@@ -185,9 +184,16 @@ public class CssProposal implements CompletionProposal
    public Image getImage()
    {
       Image image = new Image();
-      if(type == CompletionType.PROPERTY)
+      switch (type)
       {
-         image.setResource(CssEditorExtension.RESOURCES.cssProperty());
+         case ELEMENT :
+            image.setResource(HtmlEditorExtension.RESOURCES.tag());
+            break;
+         case ATTRIBUTE :
+            image.setResource(HtmlEditorExtension.RESOURCES.attribute());
+            break;
+         default :
+            break;
       }
       return image;
    }

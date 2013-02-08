@@ -16,34 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.editor.css.client;
+package org.exoplatform.ide.editor.html.client;
 
 import com.google.collide.client.CollabEditor;
 
 import org.exoplatform.ide.editor.css.client.contentassist.CssAutocompleter;
 import org.exoplatform.ide.editor.css.client.contentassist.CssContentAssistProcessor;
+import org.exoplatform.ide.editor.html.client.contentassist.HtmlAutocompleter;
+import org.exoplatform.ide.editor.html.client.contentassist.HtmlContentAssistProcessor;
+import org.exoplatform.ide.editor.javascript.client.codemirror.JavaScriptAutocompleter;
+import org.exoplatform.ide.editor.javascript.client.contentassist.JavaScriptContentAssistProcessor;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
- * CSS editor based on {@link CollabEditor}.
+ * HTML editor based on {@link CollabEditor}.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: CssEditor.java Feb 4, 2013 1:09:50 PM azatsarynnyy $
+ * @version $Id: HtmlEditor.java Feb 7, 2013 10:48:00 AM azatsarynnyy $
  *
  */
-public class CssEditor extends CollabEditor
+public class HtmlEditor extends CollabEditor
 {
+
    /**
-    * Constructs new editor for the provided MIME-type.
+    * Constructs new editor for the given MIME-type.
     * 
     * @param mimeType
     */
-   public CssEditor(String mimeType)
+   public HtmlEditor(String mimeType)
    {
       super(mimeType);
-      CssAutocompleter autocompleter = CssAutocompleter.create();
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(autocompleter);
-      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
-         new CssContentAssistProcessor(autocompleter));
+      CssAutocompleter cssAutocompleter = CssAutocompleter.create();
+      HtmlAutocompleter htmlAutocompleter = HtmlAutocompleter.create(cssAutocompleter, new JavaScriptAutocompleter());
+
+      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(htmlAutocompleter);
+
+      editorBundle.getAutocompleter().addContentAssitProcessor(
+         IDocument.DEFAULT_CONTENT_TYPE,
+         new HtmlContentAssistProcessor(htmlAutocompleter, new CssContentAssistProcessor(cssAutocompleter),
+            new JavaScriptContentAssistProcessor()));
    }
+
 }

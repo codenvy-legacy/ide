@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.editor.javascript.client.codemirror;
 
+import com.google.collide.client.documentparser.DocumentParser;
+
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.code.autocomplete.AutocompleteResult;
@@ -50,10 +52,9 @@ public class JavaScriptAutocompleter extends LanguageSpecificAutocompleter
     * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#getExplicitAction(com.google.collide.client.editor.selection.SelectionModel, com.google.collide.client.code.autocomplete.SignalEventEssence, boolean)
     */
    @Override
-   protected ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
+   public ExplicitAction getExplicitAction(SelectionModel selectionModel, SignalEventEssence signal,
       boolean popupIsShown)
    {
-      
       return autocompleter.getExplicitAction(selectionModel, signal, popupIsShown, getParser());
    }
 
@@ -81,5 +82,13 @@ public class JavaScriptAutocompleter extends LanguageSpecificAutocompleter
    @Override
    public void cleanup()
    {
+   }
+
+   /**
+    * @see com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter#attach(com.google.collide.client.documentparser.DocumentParser)
+    */
+   @Override
+   public void attach(DocumentParser parser) {
+     super.attach(parser);
    }
 }
