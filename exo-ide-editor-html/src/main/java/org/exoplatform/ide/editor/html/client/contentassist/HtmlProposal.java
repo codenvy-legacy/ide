@@ -134,9 +134,8 @@ public class HtmlProposal implements CompletionProposal
          case ELEMENT :
             if (htmlAttributes.isSelfClosedTag(proposal))
             {
-               String addend = proposal + ELEMENT_SELF_CLOSE;
                jumpLength = proposal.length();
-               return addend;
+               return proposal + ELEMENT_SELF_CLOSE;
             }
             jumpLength = proposal.length() + ELEMENT_SEPARATOR_CLOSE.length();
             return proposal + ELEMENT_SEPARATOR_CLOSE + ELEMENT_SEPARATOR_OPEN_FINISHTAG + proposal
