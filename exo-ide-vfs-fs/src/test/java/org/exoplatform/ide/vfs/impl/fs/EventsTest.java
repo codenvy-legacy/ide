@@ -19,10 +19,14 @@
 package org.exoplatform.ide.vfs.impl.fs;
 
 import org.everrest.core.impl.ContainerResponse;
+import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
+import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -226,71 +230,86 @@ public class EventsTest extends LocalFileSystemTest
       assertEquals(filePath, event.getOldItemPath());
    }
 
-   public void testProjectUpdateEventsRepositoryIsolation() throws Exception
+   public void testProjectUpdateEventsIsolation() throws Exception
    {
       /* IDE-1768 */
 
       // Original issue is for JCR implementation but actual for plain file system backend also.
 
       // We already have one virtual filesystem 'fs'.
-      // Create one more. Events from one file
+      // Create one more. Events from one filesystem must not be visible to another one.
 
-      // Now have the same structure in two different repositories.
-      // This is the same what we have in exo-cloud.
+      // convert regular folder to projects.
+      Map<String, String[]> properties = new HashMap<String, String[]>(1);
+      properties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
+      writeProperties(folderPath, properties);
 
+      // Now create new root directory for virtual file system.
       java.io.File testFsIoRoot2 = new java.io.File(root, "my-ws2");
-      assertTrue(testFsIoRoot2.mkdirs());
+      java.io.File testRoot2 = new java.io.File(testFsIoRoot2, testRootPath);
+      assertTrue(testRoot2.mkdirs());
+      // copy all items to new virtual filesystem
+      FileUtils.copy(getIoFile(testRootPath), testRoot2, null);
 
-//      ProjectData project = (ProjectData)ItemData.fromNode(projectNode, "/");
-//      ProjectData project1 = (ProjectData)ItemData.fromNode(projectNode1, "/");
-//      final boolean[] notified = {false};
-//      final boolean[] notified1 = {false};
-//
-//      ChangeEventFilter filter = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
-//         session.getRepository(), "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
-//      ChangeEventFilter filter1 = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
-//         repository1, "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
-//
-//      ProjectUpdateListener listener = new ProjectUpdateListener(project.getId())
-//      {
-//         @Override
-//         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-//         {
-//            notified[0] = true;
-//            super.handleEvent(event);
-//         }
-//      };
-//
-//      ProjectUpdateListener listener1 = new ProjectUpdateListener(project1.getId())
-//      {
-//         @Override
-//         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-//         {
-//            notified1[0] = true;
-//            super.handleEvent(event);
-//         }
-//      };
-//
-//      // Register listeners for both projects.
-//      assertTrue(listeners.addEventListener(filter, listener));
-//      // This one must not be notified.
-//      assertTrue(listeners.addEventListener(filter1, listener1));
-//
-//      String requestPath = SERVICE_URI + "file/" + project.getId() + "?" + "name=file";
-//      Map<String, List<String>> headers = new HashMap<String, List<String>>();
-//      List<String> contentType = new ArrayList<String>();
-//      contentType.add("text/plain;charset=utf8");
-//      headers.put("Content-Type", contentType);
-//
-//      // Create file. As result only repository 'db1' get notification.
-//      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, new byte[0], null);
-//      assertEquals(200, response.getStatus());
-//
-//      assertTrue("Listener must be notified. ", notified[0]);
-//      assertFalse("Listener must not be notified. ", notified1[0]);
-//
-//      // test removing
-//      assertTrue(listeners.removeEventListener(filter, listener));
-//      assertTrue(listeners.removeEventListener(filter1, listener1));
+      // Now have the same structure in two different workspaces (tenants).
+      // This is the same what we have in cloud infrastructure.
+
+      provider.mount(testFsIoRoot2);
+
+      ConversationState state = ConversationState.getCurrent();
+      LocalFileSystem vfs1 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
+      String previous = (String)state.getAttribute("currentTenant");
+      state.setAttribute("currentTenant", "my-ws2");
+      LocalFileSystem vfs2 = (LocalFileSystem)provider.newInstance(null, eventListenerList);
+      // restore previous
+      state.setAttribute("currentTenant", previous);
+
+      VirtualFile project1 = vfs1.getVirtualFileByPath(folderPath);
+      VirtualFile project2 = vfs2.getVirtualFileByPath(folderPath);
+
+      ChangeEventFilter filter1 = ProjectUpdateEventFilter.newFilter(vfs1, project1);
+      ChangeEventFilter filter2 = ProjectUpdateEventFilter.newFilter(vfs2, project2);
+      final boolean[] notified1 = {false};
+      final boolean[] notified2 = {false};
+
+      ProjectUpdateListener listener1 = new ProjectUpdateListener(vfs1.virtualFileToId(project1))
+      {
+         @Override
+         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
+         {
+            notified1[0] = true;
+            super.handleEvent(event);
+         }
+      };
+
+      ProjectUpdateListener listener2 = new ProjectUpdateListener(vfs2.virtualFileToId(project2))
+      {
+         @Override
+         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
+         {
+            notified2[0] = true;
+            super.handleEvent(event);
+         }
+      };
+
+      // Register listeners for both projects.
+      assertTrue(eventListenerList.addEventListener(filter1, listener1));
+      // This one must not be notified.
+      assertTrue(eventListenerList.addEventListener(filter2, listener2));
+
+      String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=file";
+      Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+      headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
+
+      // Create file. As result only repository 'db1' get notification.
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, new byte[0], null);
+      assertEquals(200, response.getStatus());
+
+      assertTrue("Listener must be notified. ", notified1[0]);
+      assertFalse("Listener must not be notified. ", notified2[0]);
+
+      // test removing
+      assertTrue(eventListenerList.removeEventListener(filter1, listener1));
+      assertTrue(eventListenerList.removeEventListener(filter2, listener2));
    }
 }

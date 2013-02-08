@@ -123,8 +123,9 @@ public abstract class LocalFileSystemTest extends TestCase
    protected ResourceLauncher launcher;
 
    protected java.io.File root;
+   protected LocalFileSystemProvider provider;
+
    private java.io.File testFsIoRoot;
-   private LocalFileSystemProvider provider;
    private MountPoint mountPoint;
 
    /** @see junit.framework.TestCase#setUp() */
@@ -189,7 +190,7 @@ public abstract class LocalFileSystemTest extends TestCase
       mountPoint.getFileLockFactory().checkClean();
       assertTrue("Unable unmount local filesystem. ", provider.unmount(testFsIoRoot));
       virtualFileSystemRegistry.unregisterProvider(VFS_ID);
-      if (!FileUtils.deleteRecursive(testFsIoRoot))
+      if (!FileUtils.deleteRecursive(root))
       {
          fail("Unable clean test content. ");
       }
