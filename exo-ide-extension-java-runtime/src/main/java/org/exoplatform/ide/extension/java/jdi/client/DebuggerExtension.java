@@ -61,6 +61,9 @@ public class DebuggerExtension extends Extension implements InitializeServicesHa
    /** Channel for the messages containing message which informs about debugger is disconnected. */
    public static final String DISCONNECT_CHANNEL = "debugger:disconnected:";
    
+   /** Channel for the messages containing message which informs about application is stopped. */
+   public static final String APPLICATION_STOP_CHANNEL = "runner:application-stopped:";
+   
 
    @Override
    public void initialize()
