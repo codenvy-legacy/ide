@@ -62,11 +62,11 @@ public class UpdateTest extends LocalFileSystemTest
       lockedFilePath = createFile(testRootPath, "UpdateTest_LockedFile", DEFAULT_CONTENT_BYTES);
       protectedFilePath = createFile(testRootPath, "UpdateTest_ProtectedFile", DEFAULT_CONTENT_BYTES);
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
 
-      writeACL(protectedFilePath, accessList);
+      writePermissions(protectedFilePath, permissions);
       createLock(lockedFilePath, lockToken);
 
       fileId = pathToId(filePath);

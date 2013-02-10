@@ -62,7 +62,12 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
       throws VirtualFileSystemException
    {
       // TODO : this is temporary solution. Waiting when cloud infrastructure will provide something better for us.
-      final String wsName = (String)ConversationState.getCurrent().getAttribute("currentTenant");
+      String wsName = (String)ConversationState.getCurrent().getAttribute("currentTenant");
+      if (wsName == null)
+      {
+         wsName = "default";
+      }
+      // -----
       final java.io.File wsRoot = new java.io.File(mountRoot, wsName);
       if (!(wsRoot.exists() || wsRoot.mkdirs()))
       {

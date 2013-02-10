@@ -24,6 +24,8 @@ import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemImpl;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -40,6 +42,7 @@ public class ChildrenTest extends LocalFileSystemTest
 {
    private Map<String, String[]> properties;
    private String fileId;
+   private String folderPath;
    private String folderId;
    private String protectedFolderId;
    private Set<String> childrenNames;
@@ -49,7 +52,7 @@ public class ChildrenTest extends LocalFileSystemTest
    {
       super.setUp();
 
-      String folderPath = createDirectory(testRootPath, "ChildrenTest_Folder");
+      folderPath = createDirectory(testRootPath, "ChildrenTest_Folder");
       String file01 = createFile(folderPath, "FILE01", DEFAULT_CONTENT_BYTES);
       String file02 = createFile(folderPath, "FILE02", DEFAULT_CONTENT_BYTES);
       String folder01 = createDirectory(folderPath, "FOLDER01");
@@ -72,9 +75,9 @@ public class ChildrenTest extends LocalFileSystemTest
       String filePath = createFile(testRootPath, "ChildrenTest_File", DEFAULT_CONTENT_BYTES);
 
       String protectedFolderPath = createDirectory(testRootPath, "ChildrenTest_ProtectedFolder");
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(1);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      writeACL(protectedFolderPath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      writePermissions(protectedFolderPath, permissions);
 
       fileId = pathToId(filePath);
       folderId = pathToId(folderPath);
@@ -114,10 +117,43 @@ public class ChildrenTest extends LocalFileSystemTest
       log.info(new String(writer.getBody()));
    }
 
+   public void testGetChildrenHavePermissions() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "children/" + protectedFolderId;
+      // Replace default principal by principal who has read permission.
+      ConversationState user = new ConversationState(new Identity("andrew"));
+      user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
+      ConversationState.setCurrent(user);
+      // ---
+      ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      log.info(new String(writer.getBody()));
+      @SuppressWarnings("unchecked")
+      ItemList<Item> children = (ItemList<Item>)response.getEntity();
+      assertTrue(children.getItems().isEmpty()); // folder is empty
+      assertEquals(0, children.getNumItems());
+   }
+
    public void testGetChildrenNoPermissions() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "children/" + protectedFolderId;
+      ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
+      assertEquals(403, response.getStatus());
+      log.info(new String(writer.getBody()));
+   }
+
+   public void testGetChildrenNoPermissions2() throws Exception
+   {
+      // Have permission for read folder but have not permission to read one of its child.
+      String protectedItemPath = folderPath + '/' + childrenNames.iterator().next();
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      writePermissions(protectedItemPath, permissions);
+
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "children/" + folderId;
       ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));

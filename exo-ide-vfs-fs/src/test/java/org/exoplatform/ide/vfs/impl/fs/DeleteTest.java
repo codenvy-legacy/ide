@@ -65,9 +65,9 @@ public class DeleteTest extends LocalFileSystemTest
    {
       super.setUp();
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
 
       filePath = createFile(testRootPath, "DeleteTest_File", DEFAULT_CONTENT_BYTES);
       lockedFilePath = createFile(testRootPath, "DeleteTest_LockedFile", DEFAULT_CONTENT_BYTES);
@@ -84,7 +84,7 @@ public class DeleteTest extends LocalFileSystemTest
 
       List<String> l = flattenDirectory(protectedChildFolderPath);
       // Find one child in the list and remove write permission for 'admin'.
-      writeACL(protectedChildFolderPath + '/' + l.get(new Random().nextInt(l.size())), accessList);
+      writePermissions(protectedChildFolderPath + '/' + l.get(new Random().nextInt(l.size())), permissions);
 
       l = flattenDirectory(lockedChildFolderPath);
       // Find one child in the list and lock it.
@@ -96,8 +96,8 @@ public class DeleteTest extends LocalFileSystemTest
          }
       }
 
-      writeACL(protectedFilePath, accessList);
-      writeACL(protectedFolderPath, accessList);
+      writePermissions(protectedFilePath, permissions);
+      writePermissions(protectedFolderPath, permissions);
 
       createLock(lockedFilePath, lockToken);
 
@@ -158,7 +158,7 @@ public class DeleteTest extends LocalFileSystemTest
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, writer, null);
       assertEquals(204, response.getStatus());
       assertFalse("File must not be removed. ", exists(protectedFilePath));
-      assertNull("ACL file must be removed. ", readACL(protectedFilePath)); // file which stored ACL must be removed
+      assertNull("ACL file must be removed. ", readPermissions(protectedFilePath)); // file which stored ACL must be removed
    }
 
    public void testDeleteFileNoPermissions() throws Exception

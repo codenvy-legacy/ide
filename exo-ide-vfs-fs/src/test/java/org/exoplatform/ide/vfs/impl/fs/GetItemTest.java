@@ -22,6 +22,8 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -63,10 +65,10 @@ public class GetItemTest extends LocalFileSystemTest
       properties.put("MyProperty02", new String[]{"to be or not to be"});
       writeProperties(filePath, properties);
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(1);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      writeACL(protectedFilePath, accessList);
-      writeACL(protectedParent, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      writePermissions(protectedFilePath, permissions);
+      writePermissions(protectedParent, permissions);
 
       fileId = pathToId(filePath);
       protectedFileId = pathToId(protectedFilePath);
@@ -129,6 +131,9 @@ public class GetItemTest extends LocalFileSystemTest
       assertEquals(405, response.getStatus());
    }
 
+   /*
+    * ---
+    */
 
    @SuppressWarnings("rawtypes")
    public void testGetFilePropertyFilter() throws Exception
@@ -167,6 +172,25 @@ public class GetItemTest extends LocalFileSystemTest
       log.info(new String(writer.getBody()));
    }
 
+   public void testGetFileHavePermissions() throws Exception
+   {
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "item/" + protectedFileId;
+      // Replace default principal by principal who has read permission.
+      ConversationState user = new ConversationState(new Identity("andrew"));
+      user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
+      ConversationState.setCurrent(user);
+      // ---
+      ContainerResponse response = launcher.service("GET", requestPath, BASE_URI, null, null, writer, null);
+      log.info(new String(writer.getBody()));
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      Item item = (Item)response.getEntity();
+      assertEquals(ItemType.FILE, item.getItemType());
+      assertEquals(protectedFileId, item.getId());
+      assertEquals(protectedFilePath, item.getPath());
+      validateLinks(item);
+   }
+
    public void testGetFileNoPermissions() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
@@ -185,7 +209,7 @@ public class GetItemTest extends LocalFileSystemTest
       log.info(new String(writer.getBody()));
    }
 
-   public void testGetFileNoPermissions_ByPath() throws Exception
+   public void testGetFileByPathNoPermissions() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "itembypath" + protectedFilePath;

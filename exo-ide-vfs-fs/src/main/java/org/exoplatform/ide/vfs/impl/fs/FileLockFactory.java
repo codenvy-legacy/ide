@@ -18,31 +18,6 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-/**
- * Advisory file lock. It does not prevent access to the file from other programs.
- * <p/>
- * Usage:
- * <pre>
- *      FileLockFactory lockFactory = ...
- *
- *      public void doSomething(Path path)
- *      {
- *         FileLock exclusiveLock = lockFactory.getLock(path, true).acquire(30000);
- *         try
- *         {
- *            ... // do something
- *         }
- *         finally
- *         {
- *            exclusiveLock.release();
- *         }
- *      }
- * </pre>
- *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
- */
-
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 
 /**
@@ -69,7 +44,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeExcepti
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class FileLockFactory
+final class FileLockFactory
 {
    private static final int MAX_RECURSIVE_LOCKS = (1 << 10) - 1;
    /** Max number of threads allowed to access file. */
@@ -252,7 +227,7 @@ class FileLockFactory
       }
    }
 
-   class FileLock
+   final class FileLock
    {
       private final Path path;
       private final int permits;

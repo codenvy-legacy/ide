@@ -80,10 +80,10 @@ public class CopyTest extends LocalFileSystemTest
       writeProperties(projectPath, projectProperties);
       writeProperties(destinationProjectPath, projectProperties);
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      writeACL(protectedDestinationPath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      writePermissions(protectedDestinationPath, permissions);
 
       fileId = pathToId(filePath);
       folderId = pathToId(folderPath);

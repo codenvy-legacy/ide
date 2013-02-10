@@ -73,10 +73,10 @@ public class ImportTest extends LocalFileSystemTest
       folderWithFilesPath = createDirectory(testRootPath, "ImportTest_WithFiles");
       protectedFolderPath = createDirectory(testRootPath, "ImportTest_Protected");
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      accessList.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-      writeACL(protectedFolderPath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+      writePermissions(protectedFolderPath, permissions);
 
       srcFolderPath = createDirectory(testRootPath, "ImportTestFolderSource");
       createTree(srcFolderPath, 6, 4, null);
@@ -204,10 +204,10 @@ public class ImportTest extends LocalFileSystemTest
 
    public void testImportFileExistsAndProtected() throws Exception
    {
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      accessList.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-      writeACL(existedFile, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+      writePermissions(existedFile, permissions);
 
       String path = SERVICE_URI + "import/" + folderWithFilesId + '?' + "overwrite=" + true;
       Map<String, List<String>> headers = new HashMap<String, List<String>>(1);

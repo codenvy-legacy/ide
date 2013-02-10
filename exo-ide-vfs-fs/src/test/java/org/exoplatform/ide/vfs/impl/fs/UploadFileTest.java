@@ -51,10 +51,10 @@ public class UploadFileTest extends LocalFileSystemTest
       folderPath = createDirectory(testRootPath, "UploadTest");
       protectedFolderPath = createDirectory(testRootPath, "UploadTest_Protected");
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      accessList.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-      writeACL(protectedFolderPath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+      writePermissions(protectedFolderPath, permissions);
 
       folderId = pathToId(folderPath);
       protectedFolderId = pathToId(protectedFolderPath);
@@ -162,10 +162,10 @@ public class UploadFileTest extends LocalFileSystemTest
       final String fileMediaType = "application/octet-stream";
       final String fileContent = "existed protected file";
       String path = createFile(folderPath, fileName, fileContent.getBytes());
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      accessList.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
-      writeACL(path, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      permissions.put("andrew", EnumSet.of(BasicPermissions.READ, BasicPermissions.WRITE));
+      writePermissions(path, permissions);
       // File is protected by ACL and may not be overwritten even if 'overwrite' parameter is 'true'
       ContainerResponse response = doUploadFile(folderId, fileName, fileMediaType, DEFAULT_CONTENT, "", "", true);
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus()); // always 200 even for errors

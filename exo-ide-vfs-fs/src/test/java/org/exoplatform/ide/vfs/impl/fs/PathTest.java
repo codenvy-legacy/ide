@@ -80,6 +80,25 @@ public class PathTest extends TestCase
       assertEquals("/a/b/c/d", parsed.newPath("/c/d").toString());
    }
 
+   public void testChildPath()
+   {
+      Path parent = Path.fromString("/a/b/c");
+      Path child1 =  Path.fromString("/a/b/c/d");
+      Path child2 =  Path.fromString("/a/b/c/d/e");
+      assertTrue(child1.isChild(parent));
+      assertTrue(child2.isChild(parent));
+      assertTrue(child2.isChild(child1));
+      assertFalse(child1.isChild(child2));
+      assertFalse(parent.isChild(child1));
+   }
+
+   public void testParentPath()
+   {
+      Path path =  Path.fromString("/a/b/c/d");
+      Path expectedParent = Path.fromString("/a/b/c");
+      assertEquals(expectedParent, path.getParent());
+   }
+
    public void testIllegalPath()
    {
       for (String s : illegal)

@@ -22,6 +22,8 @@ import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,10 +61,10 @@ public class CreateTest extends LocalFileSystemTest
       projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});
       writeProperties(projectPath, projectProperties);
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      writeACL(protectedFolderPath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      writePermissions(protectedFolderPath, permissions);
 
       folderId = pathToId(folderPath);
       protectedFolderId = pathToId(protectedFolderPath);
@@ -96,7 +98,8 @@ public class CreateTest extends LocalFileSystemTest
       createFile(folderPath, name, null);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "file/" + folderId + '?' + "name=" + name;
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
+      ContainerResponse response =
+         launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(400, response.getStatus());
    }
@@ -112,7 +115,8 @@ public class CreateTest extends LocalFileSystemTest
       headers.put("Content-Type", contentType);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), writer, null);
+      ContainerResponse response =
+         launcher.service("POST", requestPath, BASE_URI, headers, content.getBytes(), writer, null);
       log.info(new String(writer.getBody()));
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       String expectedPath = '/' + name;
@@ -164,13 +168,32 @@ public class CreateTest extends LocalFileSystemTest
       assertEquals(400, response.getStatus());
    }
 
+   public void testCreateFileHavePermissions() throws Exception
+   {
+      String name = "testCreateFileHavePermissions";
+      String content = "test create file";
+      ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
+      String requestPath = SERVICE_URI + "file/" + protectedFolderId + '?' + "name=" + name;
+      // Replace default principal by principal who has write permission.
+      ConversationState user = new ConversationState(new Identity("andrew"));
+      user.setAttribute("currentTenant", ConversationState.getCurrent().getAttribute("currentTenant"));
+      ConversationState.setCurrent(user);
+      // --
+      ContainerResponse response =
+         launcher.service("POST", requestPath, BASE_URI, null, content.getBytes(), writer, null);
+      assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
+      String expectedPath = protectedFolderPath + '/' + name;
+      assertTrue("File was not created in expected location. ", exists(expectedPath));
+      assertEquals(content, new String(readFile(expectedPath)));
+   }
+
    public void testCreateFileNoPermissions() throws Exception
    {
       String name = "testCreateFileNoPermissions";
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "file/" + protectedFolderId + '?' + "name=" + name;
       ContainerResponse response =
-         launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT.getBytes(), writer, null);
+         launcher.service("POST", requestPath, BASE_URI, null, DEFAULT_CONTENT_BYTES, writer, null);
       log.info(new String(writer.getBody()));
       assertEquals(403, response.getStatus());
       assertFalse(exists(protectedFolderPath + '/' + name));

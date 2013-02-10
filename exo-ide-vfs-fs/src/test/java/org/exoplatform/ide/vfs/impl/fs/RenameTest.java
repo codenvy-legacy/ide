@@ -93,11 +93,11 @@ public class RenameTest extends LocalFileSystemTest
 
       createLock(lockedFilePath, lockToken);
 
-      HashMap<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      writeACL(protectedFilePath, accessList);
-      writeACL(protectedFolderPath, accessList);
+      HashMap<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      writePermissions(protectedFilePath, permissions);
+      writePermissions(protectedFolderPath, permissions);
 
       fileId = pathToId(filePath);
       lockedFileId = pathToId(lockedFilePath);

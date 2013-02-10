@@ -58,10 +58,10 @@ public class LockTest extends LocalFileSystemTest
 
       createLock(lockedFilePath, lockToken);
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      writeACL(protectedFilePath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      writePermissions(protectedFilePath, permissions);
 
       fileId = pathToId(filePath);
       folderId = pathToId(folderPath);

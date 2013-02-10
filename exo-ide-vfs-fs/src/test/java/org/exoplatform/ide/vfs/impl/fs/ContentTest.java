@@ -62,9 +62,9 @@ public class ContentTest extends LocalFileSystemTest
 
       createLock(lockedFilePath, lockToken);
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(1);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      writeACL(protectedFilePath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      writePermissions(protectedFilePath, permissions);
 
       fileId = pathToId(filePath);
       lockedFileId = pathToId(lockedFilePath);
@@ -161,11 +161,11 @@ public class ContentTest extends LocalFileSystemTest
 
    public void testUpdateContentNoPermissions() throws Exception
    {
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(1);
       // Restore 'read' permission for 'admin'.
       // All requests in test use this principal by default.
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
-      writeACL(protectedFilePath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
+      writePermissions(protectedFilePath, permissions);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "content/" + protectedFileId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>(1);

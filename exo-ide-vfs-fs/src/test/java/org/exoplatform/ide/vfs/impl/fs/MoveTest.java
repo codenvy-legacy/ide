@@ -90,9 +90,9 @@ public class MoveTest extends LocalFileSystemTest
    {
       super.setUp();
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(2);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      accessList.put("admin", EnumSet.of(BasicPermissions.READ));
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(2);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      permissions.put("admin", EnumSet.of(BasicPermissions.READ));
 
       properties = new HashMap<String, String[]>(2);
       properties.put("MyProperty01", new String[]{"foo"});
@@ -114,7 +114,7 @@ public class MoveTest extends LocalFileSystemTest
 
       List<String> l = flattenDirectory(protectedChildFolderPath);
       // Find one child in the list and remove write permission for 'admin'.
-      writeACL(protectedChildFolderPath + '/' + l.get(new Random().nextInt(l.size())), accessList);
+      writePermissions(protectedChildFolderPath + '/' + l.get(new Random().nextInt(l.size())), permissions);
 
       l = flattenDirectory(lockedChildFolderPath);
       // Find one child in the list and lock it.
@@ -132,9 +132,9 @@ public class MoveTest extends LocalFileSystemTest
 
       createLock(lockedFilePath, lockToken);
 
-      writeACL(protectedDestinationPath, accessList);
-      writeACL(protectedFilePath, accessList);
-      writeACL(protectedFolderPath, accessList);
+      writePermissions(protectedDestinationPath, permissions);
+      writePermissions(protectedFilePath, permissions);
+      writePermissions(protectedFolderPath, permissions);
 
       projectProperties = new HashMap<String, String[]>(2);
       projectProperties.put("vfs:mimeType", new String[]{Project.PROJECT_MIME_TYPE});

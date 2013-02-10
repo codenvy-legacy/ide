@@ -71,9 +71,9 @@ public class ExportTest extends LocalFileSystemTest
       protectedFolderPath = createDirectory(testRootPath, "ExportTest_ProtectedFolder");
       createTree(protectedFolderPath, 6, 4, null);
 
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(1);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
-      writeACL(protectedFolderPath, accessList);
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      writePermissions(protectedFolderPath, permissions);
 
       folderId = pathToId(folderPath);
       projectId = pathToId(projectPath);
@@ -122,11 +122,11 @@ public class ExportTest extends LocalFileSystemTest
 
    public void testExportFolderNoPermissions2() throws Exception
    {
-      Map<String, Set<BasicPermissions>> accessList = new HashMap<String, Set<BasicPermissions>>(1);
-      accessList.put("andrew", EnumSet.of(BasicPermissions.ALL));
+      Map<String, Set<BasicPermissions>> permissions = new HashMap<String, Set<BasicPermissions>>(1);
+      permissions.put("andrew", EnumSet.of(BasicPermissions.ALL));
       List<String> l = flattenDirectory(folderPath);
       // Find one child in the list and remove write permission for 'admin'.
-      writeACL(folderPath + '/' + l.get(new Random().nextInt(l.size())), accessList);
+      writePermissions(folderPath + '/' + l.get(new Random().nextInt(l.size())), permissions);
 
       // From now have permission to read folder but have not permission to read any child of folder.
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();

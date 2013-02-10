@@ -493,9 +493,7 @@ public abstract class LocalFileSystemTest extends TestCase
       validateProperties(vfsPath, expectedProperties, false);
    }
 
-   private AclSerializer aclSerializer = new AclSerializer();
-
-   protected java.io.File writeACL(String vfsPath, Map<String, Set<BasicPermissions>> accessList)
+   protected java.io.File writePermissions(String vfsPath, Map<String, Set<BasicPermissions>> permissions)
       throws IOException
    {
       java.io.File file = getIoFile(vfsPath);
@@ -507,13 +505,13 @@ public abstract class LocalFileSystemTest extends TestCase
 
       java.io.File aclFile = new java.io.File(aclDir, file.getName() + MountPoint.ACL_FILE_SUFFIX);
       DataOutputStream dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
-      aclSerializer.write(dos, accessList);
+      new AccessControlList(permissions).write(dos);
       dos.close();
 
       return aclFile;
    }
 
-   protected Map<String, Set<BasicPermissions>> readACL(String vfsPath) throws Exception
+   protected Map<String, Set<BasicPermissions>> readPermissions(String vfsPath) throws Exception
    {
       java.io.File file = getIoFile(vfsPath);
       java.io.File aclDir = new java.io.File(file.getParentFile(), MountPoint.ACL_DIR);
@@ -528,7 +526,7 @@ public abstract class LocalFileSystemTest extends TestCase
          return null;
       }
       DataInputStream dis = new DataInputStream(new BufferedInputStream(fIn));
-      Map<String, Set<BasicPermissions>> accessList = aclSerializer.read(dis);
+      Map<String, Set<BasicPermissions>> accessList = AccessControlList.read(dis).getPermissionMap();
       dis.close();
       return accessList;
    }

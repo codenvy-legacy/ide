@@ -55,7 +55,12 @@ public class AccessControlList
 
    public AccessControlList(AccessControlList accessControlList)
    {
-      this(copy(accessControlList.permissionMap));
+      this(accessControlList.permissionMap);
+   }
+
+   public AccessControlList(Map<String, Set<BasicPermissions>> permissions)
+   {
+      this.permissionMap = copy(permissions);
    }
 
    private static Map<String, Set<BasicPermissions>> copy(Map<String, Set<BasicPermissions>> source)
@@ -66,11 +71,6 @@ public class AccessControlList
          copy.put(e.getKey(), EnumSet.copyOf(e.getValue()));
       }
       return copy;
-   }
-
-   private AccessControlList(Map<String, Set<BasicPermissions>> permissions)
-   {
-      this.permissionMap = permissions;
    }
 
    public boolean isEmpty()
@@ -97,6 +97,11 @@ public class AccessControlList
          acl.add(new AccessControlEntryImpl(e.getKey(), plainPermissions));
       }
       return acl;
+   }
+
+   Map<String, Set<BasicPermissions>> getPermissionMap()
+   {
+      return copy(permissionMap);
    }
 
    public boolean hasPermission(String userId, BasicPermissions permission)

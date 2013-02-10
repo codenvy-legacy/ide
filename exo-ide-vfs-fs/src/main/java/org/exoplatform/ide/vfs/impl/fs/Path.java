@@ -98,8 +98,8 @@ final class Path
       {
          throw new IllegalArgumentException("Invalid end or begin index. ");
       }
-      int len = endIndex - beginIndex;
-      String[] subPath = new String[len];
+      final int len = endIndex - beginIndex;
+      final String[] subPath = new String[len];
       System.arraycopy(elements, beginIndex, subPath, 0, len);
       return new Path(subPath);
    }
@@ -153,12 +153,12 @@ final class Path
 
    Path newPath(String name)
    {
-      String[] relative = parse(name);
+      final String[] relative = parse(name);
       if (relative.length == 0)
       {
          return this; // It is safety to return this instance since it is immutable.
       }
-      String[] absolute = new String[elements.length + relative.length];
+      final String[] absolute = new String[elements.length + relative.length];
       System.arraycopy(elements, 0, absolute, 0, elements.length);
       System.arraycopy(relative, 0, absolute, elements.length, relative.length);
       return new Path(absolute);
@@ -166,7 +166,7 @@ final class Path
 
    Path newPath(Path relative)
    {
-      String[] absolute = new String[elements.length + relative.elements.length];
+      final String[] absolute = new String[elements.length + relative.elements.length];
       System.arraycopy(elements, 0, absolute, 0, elements.length);
       System.arraycopy(relative.elements, 0, absolute, elements.length, relative.elements.length);
       return new Path(absolute);

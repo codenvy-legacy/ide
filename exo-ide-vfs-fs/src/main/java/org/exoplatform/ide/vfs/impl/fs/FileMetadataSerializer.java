@@ -52,8 +52,8 @@ public class FileMetadataSerializer implements DataSerializer<Map<String, String
    @Override
    public Map<String, String[]> read(DataInput input) throws IOException
    {
-      int recordsNum = input.readInt();
-      Map<String, String[]> props = new HashMap<String, String[]>(recordsNum);
+      final int recordsNum = input.readInt();
+      final Map<String, String[]> props = new HashMap<String, String[]>(recordsNum);
       int readRecords = 0;
       while (readRecords < recordsNum)
       {
