@@ -607,11 +607,11 @@ public class MountPoint
       {
          throw new InvalidArgumentException("Unable rename root folder. ");
       }
-      final FileLockFactory.FileLock lock =
-         fileLockFactory.getLock(virtualFile.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
+      final VirtualFile parent = getParent(virtualFile);
+      final FileLockFactory.FileLock parentLock =
+         fileLockFactory.getLock(parent.getInternalPath(), true).acquire(LOCK_FILE_TIMEOUT);
       try
       {
-         final VirtualFile parent = getParent(virtualFile);
          if (!hasPermission(virtualFile, getCurrentUserId(), BasicPermissions.WRITE))
          {
             throw new PermissionDeniedException(
@@ -650,7 +650,7 @@ public class MountPoint
       }
       finally
       {
-         lock.release();
+         parentLock.release();
       }
    }
 
@@ -1356,7 +1356,8 @@ public class MountPoint
       java.io.File locksDir = path.isRoot()
          ? new java.io.File(ioRoot, LOCKS_DIR)
          : new java.io.File(ioRoot, path.getParent().newPath(LOCKS_DIR).toIoPath());
-      locksDir.mkdirs();
+      boolean result = locksDir.mkdirs();
+      assert result || locksDir.exists();
       return new java.io.File(locksDir, path.getName() + LOCK_FILE_SUFFIX);
    }
 
@@ -1471,7 +1472,8 @@ public class MountPoint
       java.io.File aclDir = path.isRoot()
          ? new java.io.File(ioRoot, ACL_DIR)
          : new java.io.File(ioRoot, path.getParent().newPath(ACL_DIR).toIoPath());
-      aclDir.mkdirs();
+      boolean result = aclDir.mkdirs();
+      assert result || aclDir.exists();
       return new java.io.File(aclDir, path.getName() + ACL_FILE_SUFFIX);
    }
 
@@ -1688,7 +1690,8 @@ public class MountPoint
       java.io.File metadataDir = path.isRoot()
          ? new java.io.File(ioRoot, PROPS_DIR)
          : new java.io.File(ioRoot, path.getParent().newPath(PROPS_DIR).toIoPath());
-      metadataDir.mkdirs();
+      boolean result = metadataDir.mkdirs();
+      assert result || metadataDir.exists();
       return new java.io.File(metadataDir, path.getName() + PROPERTIES_FILE_SUFFIX);
    }
 
