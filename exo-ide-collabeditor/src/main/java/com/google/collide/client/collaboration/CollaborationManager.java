@@ -36,6 +36,7 @@ import com.google.collide.dto.NewFileCollaborator;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.ServerError.FailureReason;
+import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.client.DtoClientImpls.GetOpenendFilesInWorkspaceImpl;
 import com.google.collide.json.client.Jso;
 import com.google.collide.json.shared.JsonArray;
@@ -43,6 +44,8 @@ import com.google.collide.json.shared.JsonIntegerMap;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.util.JsonCollections;
+import com.google.collide.shared.util.ListenerManager;
+import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 import com.google.gwt.user.client.Window;
 
@@ -56,6 +59,13 @@ import org.exoplatform.ide.client.framework.module.IDE;
  */
 public class CollaborationManager
 {
+
+   public interface ParticipantsListener
+   {
+      void userOpenFile(String path, UserDetails user);
+
+      void userCloseFile(String path, UserDetails user);
+   }
 
    public static final int DURATION = 3000;
 
@@ -153,6 +163,8 @@ public class CollaborationManager
 //   private JsonIntegerMap<ParticipantList.View> participantsViews = JsonCollections.createIntegerMap();
 
    private JsonStringMap<JsonArray<ParticipantUserDetails>> openedFilesInWorkspace = JsonCollections.createMap();
+
+   private final ListenerManager<ParticipantsListener> participantsListenerManager = ListenerManager.create();
 
    private final NotificationManager notificationManager;
 
@@ -270,7 +282,7 @@ public class CollaborationManager
 //      participantsViews.erase(document.getId());
    }
 
-   private void addNewCollaborator(NewFileCollaborator message)
+   private void addNewCollaborator(final NewFileCollaborator message)
    {
       Document document = documentManager.getDocumentByFilePath(message.getPath());
       if(document != null)
@@ -286,9 +298,17 @@ public class CollaborationManager
       openedFilesInWorkspace.get(message.getPath()).add(message.getParticipant());
       notificationManager.addNotification(new Notification("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> open file: " + message.getPath(),
          DURATION));
+      participantsListenerManager.dispatch(new Dispatcher<ParticipantsListener>()
+      {
+         @Override
+         public void dispatch(ParticipantsListener listener)
+         {
+            listener.userOpenFile(message.getPath(), message.getParticipant().getUserDetails());
+         }
+      });
    }
 
-   private void removeCollaborator(FileCollaboratorGone message)
+   private void removeCollaborator(final FileCollaboratorGone message)
    {
       Document document = documentManager.getDocumentByFilePath(message.getPath());
       if(document != null)
@@ -321,6 +341,14 @@ public class CollaborationManager
          openedFilesInWorkspace.remove(message.getPath());
       }
       notificationManager.addNotification(new Notification("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> close file: " + message.getPath(),DURATION));
+      participantsListenerManager.dispatch(new Dispatcher<ParticipantsListener>()
+      {
+         @Override
+         public void dispatch(ParticipantsListener listener)
+         {
+            listener.userCloseFile(message.getPath(), message.getParticipant().getUserDetails());
+         }
+      });
    }
 
    public boolean isFileOpened(String path)
@@ -328,9 +356,20 @@ public class CollaborationManager
       return openedFilesInWorkspace.containsKey(path);
    }
 
+   public JsonArray<ParticipantUserDetails> getParticipantsForFile(String path)
+   {
+      return openedFilesInWorkspace.get(path);
+   }
+
+
    public JsonArray<String> getOpenedFiles()
    {
       return openedFilesInWorkspace.getKeys();
+   }
+
+   public ListenerManager<ParticipantsListener> getParticipantsListenerManager()
+   {
+      return participantsListenerManager;
    }
 
 

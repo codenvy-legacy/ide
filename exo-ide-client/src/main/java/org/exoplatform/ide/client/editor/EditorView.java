@@ -19,26 +19,7 @@
 package org.exoplatform.ide.client.editor;
 
 import com.google.collide.client.CollabEditor;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.exoplatform.ide.client.Images;
-import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.util.ImageUtil;
-import org.exoplatform.ide.client.framework.util.Utils;
-import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.model.FileModel;
-
 import com.google.collide.client.CollabEditorExtension;
-import com.google.collide.client.collaboration.CollaborationEditorView;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.client.util.logging.Log;
@@ -56,6 +37,23 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.LayoutPanel;
 import com.google.gwt.user.client.ui.ToggleButton;
+
+import org.exoplatform.ide.client.Images;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.util.ImageUtil;
+import org.exoplatform.ide.client.framework.util.Utils;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>

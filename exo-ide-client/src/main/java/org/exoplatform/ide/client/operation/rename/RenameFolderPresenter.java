@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.operation.rename;
 
+import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.gwt.core.client.GWT;
@@ -31,11 +32,11 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
@@ -284,7 +285,9 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements Re
             {
                if(path.startsWith(i.getPath()))
                {
-                  Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This folder contains file(s) opened by other users.");
+                  new ResourceLockedPresenter(
+                     new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false);
                   return;
                }
             }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.operation.rename;
 
+import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
@@ -32,6 +33,7 @@ import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.eclipse.jdt.client.refactoring.rename.RefactoringRenameEvent;
@@ -345,14 +347,20 @@ public class RenameFilePresenter extends ItemsOperationPresenter
                {
                   if(collaborationManager.isFileOpened(i.getPath()))
                   {
-                     Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
+//                     Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
+                     new ResourceLockedPresenter(
+                        new SafeHtmlBuilder().appendHtmlConstant("Can't rename file <b>").appendEscaped(
+                           i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
                      return;
                   }
                }
             }
             if(collaborationManager.isFileOpened(i.getPath()))
             {
-               Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
+//               Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This file opened by other users.");
+               new ResourceLockedPresenter(
+                  new SafeHtmlBuilder().appendHtmlConstant("Can't rename file <b>").appendEscaped(
+                     i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
                return;
             }
             for(String path : collaborationManager.getOpenedFiles().asIterable())
@@ -360,6 +368,9 @@ public class RenameFilePresenter extends ItemsOperationPresenter
                if(path.startsWith(i.getPath()))
                {
                   Dialogs.getInstance().showError("Can't rename <b>" + i.getName() + "</b>. This folder contains file(s) opened by other users.");
+                  new ResourceLockedPresenter(
+                     new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false);
                   return;
                }
             }

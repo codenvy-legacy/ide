@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.operation.deleteitem;
 
+import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
@@ -26,6 +27,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
@@ -158,30 +160,37 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
       }
 
       //check if deleted file in collaboration mode
-      for(Item i : itemsToDelete)
+      for (Item i : itemsToDelete)
       {
-         if(openedEditors.containsKey(i.getId()))
+         if (openedEditors.containsKey(i.getId()))
          {
-            if(openedEditors.get(i.getId()) instanceof CollabEditor)
+            if (openedEditors.get(i.getId()) instanceof CollabEditor)
             {
-               if(collaborationManager.isFileOpened(i.getPath()))
+               if (collaborationManager.isFileOpened(i.getPath()))
                {
-                  Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
+                  //                  Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
+                  new ResourceLockedPresenter(
+                     new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
                   return false;
                }
             }
          }
-         if(collaborationManager.isFileOpened(i.getPath()))
+         if (collaborationManager.isFileOpened(i.getPath()))
          {
-            Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
+            new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
+               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
+            //            Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
             return false;
          }
 
-         for(String path : collaborationManager.getOpenedFiles().asIterable())
+         for (String path : collaborationManager.getOpenedFiles().asIterable())
          {
-            if(path.startsWith(i.getPath()))
+            if (path.startsWith(i.getPath()))
             {
-               Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This folder contains file(s) opened by other users.");
+               new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
+                  i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, i instanceof FileModel);
+               //               Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
                return false;
             }
          }

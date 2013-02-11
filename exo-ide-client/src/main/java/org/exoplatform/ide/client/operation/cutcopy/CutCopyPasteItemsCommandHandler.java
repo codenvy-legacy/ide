@@ -18,10 +18,12 @@
  */
 package org.exoplatform.ide.client.operation.cutcopy;
 
+import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -109,14 +111,18 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
          {
             if (path.startsWith(i.getPath()))
             {
-               Dialogs.getInstance().showError(
-                  "Can't cut <b>" + i.getName() + "</b>. This folder contains file(s) opened by other users.");
+               new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
+                  i.getName()).appendHtmlConstant("</b>.").toSafeHtml(), collaborationManager, path, i instanceof FileModel);
+//               Dialogs.getInstance().showError(
+//                  "Can't cut <b>" + i.getName() + "</b>. ");
+               //This folder contains file(s) opened by other users.
                return;
             }
          }
          if (collaborationManager.isFileOpened(i.getPath()))
          {
-            Dialogs.getInstance().showError("Can't cut <b>" + i.getName() + "</b>. This file opened by other users.");
+            new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
+               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
             return;
          }
          for (FileModel f : openedFiles.values())
@@ -127,8 +133,8 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
                {
                   if (collaborationManager.isFileOpened(f.getPath()))
                   {
-                     Dialogs.getInstance().showError(
-                        "Can't cut <b>" + f.getName() + "</b>. This file opened by other users.");
+                     new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
+                        f.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, f.getPath(), true);
                      return;
                   }
                }
