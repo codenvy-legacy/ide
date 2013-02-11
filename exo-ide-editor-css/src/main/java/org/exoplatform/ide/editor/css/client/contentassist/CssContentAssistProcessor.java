@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcesso
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 
 /**
- * A content assist processor proposes completions and
+ * A {@link ContentAssistProcessor} proposes completions and
  * computes context information for CSS content.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>

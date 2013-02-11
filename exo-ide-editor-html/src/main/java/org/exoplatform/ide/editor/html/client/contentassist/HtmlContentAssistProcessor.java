@@ -100,28 +100,28 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
    private HtmlAutocompleter htmlAutocompleter;
 
    /**
-    * Autocompleter for CSS.
+    * A {@link ContentAssistProcessor} for CSS.
     */
-   private CssContentAssistProcessor cssAutocompleter;
+   private CssContentAssistProcessor cssProcessor;
 
    /**
-    * Autocompleter for JavaScript.
+    * A {@link ContentAssistProcessor} for JavaScript.
     */
-   private JavaScriptContentAssistProcessor jsAutocompleter;
+   private JavaScriptContentAssistProcessor jsProcessor;
 
    /**
     * Constructs new {@link HtmlContentAssistProcessor} instance.
     * 
     * @param htmlAutocompleter {@link HtmlAutocompleter}
-    * @param cssAutocompleter {@link CssAutocompleter}
-    * @param jsAutocompleter {@link JavaScriptAutocompleter}
+    * @param cssProcessor {@link CssContentAssistProcessor}
+    * @param jsProcessor {@link JavaScriptContentAssistProcessor}
     */
-   public HtmlContentAssistProcessor(HtmlAutocompleter htmlAutocompleter, CssContentAssistProcessor cssAutocompleter,
-      JavaScriptContentAssistProcessor jsAutocompleter)
+   public HtmlContentAssistProcessor(HtmlAutocompleter htmlAutocompleter, CssContentAssistProcessor cssProcessor,
+      JavaScriptContentAssistProcessor jsProcessor)
    {
       this.htmlAutocompleter = htmlAutocompleter;
-      this.cssAutocompleter = cssAutocompleter;
-      this.jsAutocompleter = jsAutocompleter;
+      this.cssProcessor = cssProcessor;
+      this.jsProcessor = jsProcessor;
    }
 
    /**
@@ -155,13 +155,13 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
       putModeAnchors(line, modes);
       String mode = TokenUtil.findModeForColumn(initialMode, modes, column);
 
-      if (cssAutocompleter != null && CodeMirror2.CSS.equals(mode))
+      if (cssProcessor != null && CodeMirror2.CSS.equals(mode))
       {
-         return cssAutocompleter.computeCompletionProposals(viewer, offset);
+         return cssProcessor.computeCompletionProposals(viewer, offset);
       }
-      else if (jsAutocompleter != null && CodeMirror2.JAVASCRIPT.equals(mode))
+      else if (jsProcessor != null && CodeMirror2.JAVASCRIPT.equals(mode))
       {
-         return jsAutocompleter.computeCompletionProposals(viewer, offset);
+         return jsProcessor.computeCompletionProposals(viewer, offset);
       }
 
       if (selection.hasSelection())
@@ -186,7 +186,8 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
             for (int i = 0; i < proposals.size(); i++)
             {
                AutocompleteProposal proposal = proposals.get(i);
-               proposalArray[i] = new HtmlProposal(proposal.getName(), CompletionType.ATTRIBUTE, "", offset, htmlAttributes);
+               proposalArray[i] =
+                  new HtmlProposal(proposal.getName(), CompletionType.ATTRIBUTE, "", offset, htmlAttributes);
             }
             return proposalArray;
          }
@@ -235,7 +236,8 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
          for (int i = 0; i < searchTags.size(); i++)
          {
             AutocompleteProposal proposal = searchTags.get(i);
-            proposalArray[i] = new HtmlProposal(proposal.getName(), CompletionType.ELEMENT, value, offset, htmlAttributes);
+            proposalArray[i] =
+               new HtmlProposal(proposal.getName(), CompletionType.ELEMENT, value, offset, htmlAttributes);
          }
          return proposalArray;
       }
@@ -244,20 +246,20 @@ public class HtmlContentAssistProcessor implements ContentAssistProcessor
          value = (TokenType.ATTRIBUTE == type) ? value : "";
          JsonArray<AutocompleteProposal> proposals =
             htmlAttributes.searchAttributes(tag.getTagName(), tag.getAttributes(), value);
-         //       dirtyScope = tag;
-         //       dirtyScope.setDelegate(dirtyScopeDelegate);
-         if (tag.isDirty())
-         {
-            //         return AutocompleteProposals.PARSING;
-            return null;
-         }
+         //         dirtyScope = tag;
+         //         dirtyScope.setDelegate(dirtyScopeDelegate);
+         //         if (tag.isDirty())
+         //         {
+         //            return AutocompleteProposals.PARSING;
+         //         }
 
          CompletionProposal[] proposalArray = new CompletionProposal[proposals.size()];
 
          for (int i = 0; i < proposals.size(); i++)
          {
             AutocompleteProposal proposal = proposals.get(i);
-            proposalArray[i] = new HtmlProposal(proposal.getName(), CompletionType.ATTRIBUTE, value, offset, htmlAttributes);
+            proposalArray[i] =
+               new HtmlProposal(proposal.getName(), CompletionType.ATTRIBUTE, value, offset, htmlAttributes);
          }
          return proposalArray;
       }
