@@ -14,8 +14,10 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
+
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
-import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.FocusManager;
@@ -39,6 +41,9 @@ import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
+import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
+import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**
@@ -70,8 +75,9 @@ public class AutocompleteUiController implements AutocompleteBox {
     int maxHeight();
   }
   
-  private static final int MAX_COMPLETIONS_TO_SHOW = 100;
-  private static final AutocompleteProposal CAPPED_INDICATOR = new AutocompleteProposal("");
+  private static final int MAX_COMPLETIONS_TO_SHOW = 150;
+//  private static final AutocompleteProposal CAPPED_INDICATOR = new AutocompleteProposal("");
+  private static final CompletionProposal CAPPED_INDICATOR = new CappedIndicatorProposal();
 
   private final SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
       new SimpleList.ListItemRenderer<CompletionProposal>() {
@@ -287,7 +293,7 @@ public class AutocompleteUiController implements AutocompleteBox {
           itemsToDisplay.add(items[i]);
        }
       //itemsToDisplay = items.getItems().slice(0, MAX_COMPLETIONS_TO_SHOW);
-      //itemsToDisplay.add(CAPPED_INDICATOR);
+      itemsToDisplay.add(CAPPED_INDICATOR);
     }
     list.render(itemsToDisplay);
 
@@ -365,5 +371,72 @@ public class AutocompleteUiController implements AutocompleteBox {
 
   SimpleList<CompletionProposal> getList() {
     return list;
+  }
+
+  /**
+   * Empty {@link CompletionProposal} used to add special label for indicating that proposals list is tщo much to show.
+   */
+  private static class CappedIndicatorProposal implements CompletionProposal {
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument)
+    */
+   @Override
+   public void apply(IDocument document) {}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getSelection(org.exoplatform.ide.editor.shared.text.IDocument)
+    */
+   @Override
+   public Point getSelection(IDocument document) {return null;}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getAdditionalProposalInfo()
+    */
+   @Override
+   public Widget getAdditionalProposalInfo() {return null;}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getDisplayString()
+    */
+   @Override
+   public String getDisplayString() {return null;}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getImage()
+    */
+   @Override
+   public Image getImage() {return null;}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getContextInformation()
+    */
+   @Override
+   public ContextInformation getContextInformation() {return null;}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#apply(org.exoplatform.ide.editor.shared.text.IDocument, char, int)
+    */
+   @Override
+   public void apply(IDocument document, char trigger, int offset) {}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isValidFor(org.exoplatform.ide.editor.shared.text.IDocument, int)
+    */
+   @Override
+   public boolean isValidFor(IDocument document, int offset) {return false;}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#getTriggerCharacters()
+    */
+   @Override
+   public char[] getTriggerCharacters() {return null;}
+
+   /**
+    * @see org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal#isAutoInsertable()
+    */
+   @Override
+   public boolean isAutoInsertable() {return false;}
+     
   }
 }

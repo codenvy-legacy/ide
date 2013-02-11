@@ -29,7 +29,7 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcesso
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 
 /**
- * A content assist processor proposes completions and
+ * A {@link ContentAssistProcessor} proposes completions and
  * computes context information for CSS content.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
@@ -47,7 +47,17 @@ public class CssContentAssistProcessor implements ContentAssistProcessor
    /**
     * Autocompleter for CSS.
     */
-   private CssAutocompleter autocompleter = CssAutocompleter.create();
+   private CssAutocompleter autocompleter;
+
+   /**
+    * Creates new {@link CssContentAssistProcessor} instance.
+    * 
+    * @param autocompleter {@link CssAutocompleter}
+    */
+   public CssContentAssistProcessor(CssAutocompleter cssAutocompleter)
+   {
+      autocompleter = cssAutocompleter;
+   }
 
    /**
     * @see org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor#computeCompletionProposals(org.exoplatform.ide.editor.client.api.Editor, int)
@@ -59,11 +69,11 @@ public class CssContentAssistProcessor implements ContentAssistProcessor
       AutocompleteProposals autocompletionProposals = autocompleter.findAutocompletions(selection, null);
 
       CssCompletionQuery completionQuery = autocompleter.getCompletionQuery();
-      CompletionType completionType = null;
-      if (completionQuery != null)
+      if (completionQuery == null)
       {
-         completionType = completionQuery.getCompletionType();
+         return null;
       }
+      CompletionType completionType = completionQuery.getCompletionType();
 
       CompletionProposal[] proposalArray = new CompletionProposal[autocompletionProposals.getItems().size()];
       for (int i = 0; i < autocompletionProposals.getItems().size(); i++)
