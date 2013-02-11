@@ -120,7 +120,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 {
 
    private Display display;
-
+   
    private DebuggerInfo debuggerInfo;
 
    private CurrentEditorBreakPoint currentBreakPoint;
@@ -215,6 +215,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       void setChangeValueButtonEnable(boolean isEnable);
 
       void setEvaluateExpressionButtonEnable(boolean isEnable);
+      
+      void showExpirationDialog(BooleanValueReceivedHandler handler);
+      
+      void closeExpirationDialog();
    }
 
    public DebuggerPresenter(BreakpointsManager breakpointsManager)
@@ -518,7 +522,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    }
 
-   private void enabelButtons()
+   private void enableButtons()
    {
       if (display != null)
       {
@@ -609,7 +613,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    /**
     * Stop checking events from debugger.
     * If not subscribed on appropriate WebSocket channel then stops previously launched timer.
-    * If subscribed then unsubscribes from channel.
+    * If subscribed then unsubscribe from channel.
     */
    private void stopCheckingEvents()
    {
@@ -622,8 +626,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       {
          try
          {
-            IDE.messageBus().unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
-            IDE.messageBus().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
+            if (IDE.messageBus().isHandlerSubscribed(debuggerEventsHandler, debuggerEventsChannel))
+               IDE.messageBus().unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
+            
+            if (IDE.messageBus().isHandlerSubscribed(expireSoonAppsHandler, expireSoonAppChannel))
+               IDE.messageBus().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
          }
          catch (WebSocketException e)
          {
@@ -669,7 +676,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
             }
             doGetDump();
-            enabelButtons();
+            enableButtons();
          }
          if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath()))
          {
@@ -752,7 +759,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       if (display != null)
+      {
+         display.closeExpirationDialog();
          IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 
    /**
@@ -1220,7 +1230,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    @Override
    public void onAppStopped(AppStoppedEvent appStopedEvent)
    {
-
       String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStoped(appStopedEvent.getAppName());
       IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       runningApp = null;
@@ -1268,6 +1277,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
       currentBreakPoint = null;
    }
+
 
    private void doRemoveAllBreakPoints()
    {
@@ -1385,6 +1395,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     */
    private SubscriptionHandler<Object> expireSoonAppsHandler = new SubscriptionHandler<Object>()
    {
+
       @Override
       public void onSuccess(Object result)
       {
@@ -1398,15 +1409,18 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             // nothing to do
          }
 
-         Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeTitle(),
-            DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeQuestion(), new BooleanValueReceivedHandler()
+         display.showExpirationDialog(new BooleanValueReceivedHandler()
             {
                @Override
                public void booleanValueReceived(Boolean value)
                {
-                  if (value == true)
+                  if (value)
                   {
                      prolongExpirationTime();
+                  }
+                  else
+                  {
+                     doDisconnectDebugger();
                   }
                }
             });
@@ -1443,13 +1457,16 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          {
             // nothing to do
          }
-
          if (display != null)
+         {
+            display.closeExpirationDialog();
             IDE.getInstance().closeView(display.asView().getId());
+         }
          if (runningApp != null)
          {
             IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(), Type.INFO));
-//            IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
+            IDE.fireEvent(new DebuggerDisconnectedEvent());
+            IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
          }
       }
 
