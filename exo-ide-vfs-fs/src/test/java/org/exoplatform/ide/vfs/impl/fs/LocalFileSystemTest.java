@@ -137,7 +137,6 @@ public abstract class LocalFileSystemTest extends TestCase
       System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
       // root directory for virtual file systems
       root = createRootDirectory();
-      System.setProperty("org.exoplatform.ide.server.fs-root-path", root.getAbsolutePath());
       // backend for test virtual filesystem
       testFsIoRoot = new java.io.File(root, WORKSPACE);
       // directory for test
@@ -146,7 +145,7 @@ public abstract class LocalFileSystemTest extends TestCase
       testRootPath = '/' + testName;
       assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-      provider = new LocalFileSystemProvider(VFS_ID);
+      provider = new LocalFileSystemProvider(VFS_ID, root);
       provider.mount(testFsIoRoot);
       mountPoint = provider.getMounts().iterator().next();
       virtualFileSystemRegistry.registerProvider(VFS_ID, provider);

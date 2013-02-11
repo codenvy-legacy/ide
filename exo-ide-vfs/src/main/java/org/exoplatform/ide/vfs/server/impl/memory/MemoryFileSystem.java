@@ -1149,21 +1149,35 @@ public class MemoryFileSystem implements VirtualFileSystem
             }
             else if (".project".equals(name))
             {
-               List<Property> properties;
-               try
+               JsonParser jp = new JsonParser();
+               jp.parse(noCloseZip);
+               Property[] array = (Property[])ObjectBuilder.createArray(PropertyImpl[].class, jp.getJsonObject());
+               if (array.length > 0)
                {
-                  JsonParser jp = new JsonParser();
-                  jp.parse(noCloseZip);
-                  Property[] array = (Property[])ObjectBuilder.createArray(PropertyImpl[].class, jp.getJsonObject());
-                  properties = Arrays.asList(array);
+                  List<Property> list = new ArrayList<Property>(array.length);
+                  Collections.addAll(list, array);
+                  boolean hasMimeType = false;
+                  for (int i = 0, size = list.size(); i < size && !hasMimeType; i++)
+                  {
+                     Property property = list.get(i);
+                     if ("vfs:mimeType".equals(property.getName())
+                        && !(property.getValue() == null || property.getValue().isEmpty()))
+                     {
+                        hasMimeType = true;
+                     }
+                  }
+
+                  if (!hasMimeType)
+                  {
+                     list.add(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE));
+                  }
+
+                  current.updateProperties(list);
                }
-               catch (JsonException e)
+               else
                {
-                  throw new VirtualFileSystemException(e.getMessage(), e);
-               }
-               if (properties.size() > 0)
-               {
-                  current.updateProperties(properties);
+                  current.updateProperties(
+                     Collections.<Property>singletonList(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE)));
                }
             }
             else
@@ -1191,6 +1205,10 @@ public class MemoryFileSystem implements VirtualFileSystem
             zip.closeEntry();
          }
          context.putItem(folder);
+      }
+      catch (JsonException e)
+      {
+         throw new VirtualFileSystemException(e.getMessage(), e);
       }
       finally
       {

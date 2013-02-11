@@ -46,11 +46,11 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
     * @param id
     *    virtual file system identifier
     */
-   public LocalFileSystemProvider(String id)
+   public LocalFileSystemProvider(String id, java.io.File mountRoot)
    {
       this.id = id;
       this.mounts = new ConcurrentHashMap<java.io.File, MountPoint>();
-      this.mountRoot = new java.io.File(System.getProperty("org.exoplatform.ide.server.fs-root-path"));
+      this.mountRoot = mountRoot;
    }
 
    /**

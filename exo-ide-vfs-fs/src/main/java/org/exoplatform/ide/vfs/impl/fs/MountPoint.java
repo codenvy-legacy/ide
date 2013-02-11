@@ -38,6 +38,7 @@ import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
 import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
 import org.exoplatform.ide.vfs.server.util.ZipContent;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -57,7 +58,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -1132,10 +1132,36 @@ public class MountPoint
                   final JsonParser parser = new JsonParser();
                   parser.parse(noCloseZip);
                   final Property[] array =
-                     (Property[])ObjectBuilder.createArray(PropertyImpl[].class, parser.getJsonObject());
+                     (Property[])ObjectBuilder.createArray(Property[].class, parser.getJsonObject());
                   if (array.length > 0)
                   {
-                     updateProperties(current, Arrays.asList(array), null);
+                     List<Property> list = new ArrayList<Property>(array.length);
+                     Collections.addAll(list, array);
+                     boolean hasMimeType = false;
+                     for (int i = 0, size = list.size(); i < size && !hasMimeType; i++)
+                     {
+                        Property property = list.get(i);
+                        if ("vfs:mimeType".equals(property.getName())
+                           && !(property.getValue() == null || property.getValue().isEmpty()))
+                        {
+                           hasMimeType = true;
+                        }
+                     }
+
+                     if (!hasMimeType)
+                     {
+                        list.add(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE));
+                     }
+
+                     updateProperties(current, list, null);
+                  }
+                  else
+                  {
+                     updateProperties(
+                        current,
+                        Collections.<Property>singletonList(new PropertyImpl("vfs:mimeType", Project.PROJECT_MIME_TYPE)),
+                        null
+                     );
                   }
                }
                else

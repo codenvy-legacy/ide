@@ -54,6 +54,8 @@ import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfoImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,6 +89,7 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.*;
  */
 public class LocalFileSystem implements VirtualFileSystem
 {
+   private static final Log LOG = ExoLogger.getLogger(LocalFileSystem.class);
    private static final String ROOT_ID = "$root$";
    private static final String FAKE_VERSION_ID = "0";
 
@@ -178,6 +181,7 @@ public class LocalFileSystem implements VirtualFileSystem
          listeners.notifyListeners(new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(),
             ChangeType.CREATED));
       }
+      LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", name, project.getProjectType());
       return project;
    }
 
@@ -189,10 +193,22 @@ public class LocalFileSystem implements VirtualFileSystem
       final VirtualFile virtualFile = idToVirtualFile(id);
       final String path = virtualFile.getPath();
       final String mediaType = virtualFile.getMediaType();
+      String name = null;
+      String projectType = null;
+      final boolean isProject = virtualFile.isProject();
+      if (isProject)
+      {
+         name = virtualFile.getName();
+         projectType = virtualFile.getPropertyValue("vfs:projectType");
+      }
       virtualFile.delete(lockToken);
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, id, path, mediaType, ChangeType.DELETED));
+      }
+      if (isProject)
+      {
+         LOG.info("EVENT#project-destroyed# PROJECT#{}# TYPE#{}#", name, projectType);
       }
    }
 
@@ -610,12 +626,19 @@ public class LocalFileSystem implements VirtualFileSystem
                           List<Property> properties, //
                           @QueryParam("lockToken") String lockToken) throws VirtualFileSystemException
    {
-      final VirtualFile virtualFile = idToVirtualFile(id).updateProperties(properties, lockToken);
+      final VirtualFile virtualFile = idToVirtualFile(id);
+      final boolean isProjectBefore = virtualFile.isProject();
+      virtualFile.updateProperties(properties, lockToken);
+      final boolean isProjectAfter = virtualFile.isProject();
       final Item updated = fromVirtualFile(virtualFile, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(),
             ChangeType.PROPERTIES_UPDATED));
+      }
+      if (!isProjectBefore && isProjectAfter)
+      {
+         LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", updated.getName(), ((Project)updated).getProjectType());
       }
       return updated;
    }
@@ -634,7 +657,15 @@ public class LocalFileSystem implements VirtualFileSystem
                          @DefaultValue("false") @QueryParam("overwrite") Boolean overwrite //
    ) throws VirtualFileSystemException, IOException
    {
-      idToVirtualFile(parentId).unzip(in, overwrite);
+      final VirtualFile parent = idToVirtualFile(parentId);
+      final boolean isProjectBefore = parent.isProject();
+      parent.unzip(in, overwrite);
+      final boolean isProjectAfter = parent.isProject();
+      if (!isProjectBefore && isProjectAfter)
+      {
+         LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", parent.getName(),
+            parent.getPropertyValue("vfs:projectType"));
+      }
    }
 
    @Path("downloadfile/{id}")
