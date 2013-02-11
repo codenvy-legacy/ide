@@ -157,6 +157,7 @@ public class AutocompleteUiController implements AutocompleteBox {
     this.css = res.autocompleteComponentCss();
 
     box = Elements.createDivElement();
+    box.setId("codenvy-ide-autocomplete-panel");
     // Prevent our mouse events from going to the editor
     DomUtils.stopMousePropagation(box);
 
