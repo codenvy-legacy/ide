@@ -205,6 +205,8 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                @Override
                protected void onSuccess(List<GitHubRepository> result)
                {
+                  openView();
+                  display.setFinishButtonEnabled(false);
                   List<ProjectData> projectDataList = new ArrayList<ProjectData>();
                   readonlyUrls.clear();
                   for (GitHubRepository repo : result)
@@ -313,8 +315,6 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                   }
                   else
                   {
-                     openView();
-                     display.setFinishButtonEnabled(false);
                      getUserRepos();
                   }
                }
@@ -374,9 +374,13 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
    {
       String remoteUri = "";
       if (display.getReadOnlyModeField().getValue())
-        remoteUri = repo.getReadOnlyUrl();
+      {
+         remoteUri = repo.getReadOnlyUrl();
+      }
       else
-         remoteUri = repo.getRepositoryUrl(); 
+      {
+         remoteUri = repo.getRepositoryUrl();
+      }
       if (!remoteUri.endsWith(".git"))
       {
          remoteUri += ".git";
@@ -448,7 +452,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
    {
       IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), OutputMessage.Type.INFO));
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
-      
+
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
@@ -458,9 +462,9 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
             if (userRepo != null)
             {
                IDE.fireEvent(new CloneRepositoryCompleteEvent(userRepo[0], userRepo[1]));
-            }                        
+            }
          }
-      });      
+      });
    }
 
    @Override
