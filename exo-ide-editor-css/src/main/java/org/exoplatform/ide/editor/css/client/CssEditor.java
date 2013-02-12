@@ -41,8 +41,9 @@ public class CssEditor extends CollabEditor
    public CssEditor(String mimeType)
    {
       super(mimeType);
-      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(CssAutocompleter.create());
+      CssAutocompleter autocompleter = CssAutocompleter.create();
+      editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(autocompleter);
       editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE,
-         new CssContentAssistProcessor());
+         new CssContentAssistProcessor(autocompleter));
    }
 }

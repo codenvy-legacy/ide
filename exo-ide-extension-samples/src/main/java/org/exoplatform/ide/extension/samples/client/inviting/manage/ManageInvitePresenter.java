@@ -44,6 +44,8 @@ public class ManageInvitePresenter implements ManageInviteHandler, ViewClosedHan
    {
       public void setInvitedDevelopers(List<Invite> invites, RevokeInviteHandler revokeInviteHandler);
 
+      public void clearInvitedDevelopers();
+
       public HasClickHandlers getCloseButton();
    }
 
@@ -86,6 +88,7 @@ public class ManageInvitePresenter implements ManageInviteHandler, ViewClosedHan
    {
       try
       {
+         display.clearInvitedDevelopers();
          InvitedDeveloperUnmarshaller unmarshaller = new InvitedDeveloperUnmarshaller(new ArrayList<Invite>());
          InviteClientService.getInstance().getInvitesList(new AsyncRequestCallback<List<Invite>>(unmarshaller)
          {
@@ -103,7 +106,7 @@ public class ManageInvitePresenter implements ManageInviteHandler, ViewClosedHan
       }
       catch (RequestException e)
       {
-         Dialogs.getInstance().showError("Can't get access list.");
+         Dialogs.getInstance().showError("Can't get invite list.");
       }
    }
 
@@ -119,8 +122,8 @@ public class ManageInvitePresenter implements ManageInviteHandler, ViewClosedHan
    @Override
    public void onRevokeInvite(final Invite invite)
    {
-      final String title = "Revoke access";
-      final String message = "Revoke access for user: <b>" + invite.getEmail() + "</b> from current tenant?";
+      final String title = "Revoke invite";
+      final String message = "Revoke invite for user: <b>" + invite.getEmail() + "</b>?";
       Dialogs.getInstance().ask(title, message, new BooleanValueReceivedHandler()
       {
          @Override
@@ -138,7 +141,7 @@ public class ManageInvitePresenter implements ManageInviteHandler, ViewClosedHan
    {
       try
       {
-         InviteClientService.getInstance().invalidateInvite(invite.getUuid(), new AsyncRequestCallback<Void>()
+         InviteClientService.getInstance().invalidateInvite(invite.getEmail(), new AsyncRequestCallback<Void>()
          {
             @Override
             protected void onSuccess(Void result)

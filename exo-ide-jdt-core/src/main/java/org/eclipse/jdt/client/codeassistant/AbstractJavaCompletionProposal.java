@@ -666,8 +666,10 @@ public abstract class AbstractJavaCompletionProposal implements IJavaCompletionP
     */
    public Image getImage()
    {
-      if(fImage == null)
-            fImage = new Image(JavaClientBundle.INSTANCE.blankImage());
+      if (fImage == null)
+      {
+         fImage = new Image(JavaClientBundle.INSTANCE.blankImage());
+      }
       return fImage;
    }
 

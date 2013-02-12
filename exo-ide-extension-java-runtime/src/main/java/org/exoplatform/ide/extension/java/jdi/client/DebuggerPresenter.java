@@ -120,7 +120,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
 {
 
    private Display display;
-
+   
    private DebuggerInfo debuggerInfo;
 
    private CurrentEditorBreakPoint currentBreakPoint;
@@ -161,6 +161,12 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     * Channel identifier to receive events when application expiration time will left.
     */
    private String expireSoonAppChannel;
+   
+   /**
+    * Channel identifier to receive events when application stop.
+    */
+   private String applicationStoppedChannel;
+
 
    /**
     * Used to check if events from debugger receiving over WebSocket or over HTTP.
@@ -209,6 +215,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       void setChangeValueButtonEnable(boolean isEnable);
 
       void setEvaluateExpressionButtonEnable(boolean isEnable);
+      
+      void showExpirationDialog(BooleanValueReceivedHandler handler);
+      
+      void closeExpirationDialog();
    }
 
    public DebuggerPresenter(BreakpointsManager breakpointsManager)
@@ -447,6 +457,9 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             IDE.fireEvent(new ExceptionThrownEvent(e));
          }
       }
+      else {
+         doStopApp();
+      }
    }
 
    private void doGetDump()
@@ -509,7 +522,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       }
    }
 
-   private void enabelButtons()
+   private void enableButtons()
    {
       if (display != null)
       {
@@ -600,7 +613,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    /**
     * Stop checking events from debugger.
     * If not subscribed on appropriate WebSocket channel then stops previously launched timer.
-    * If subscribed then unsubscribes from channel.
+    * If subscribed then unsubscribe from channel.
     */
    private void stopCheckingEvents()
    {
@@ -613,8 +626,11 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       {
          try
          {
-            IDE.messageBus().unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
-            IDE.messageBus().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
+            if (IDE.messageBus().isHandlerSubscribed(debuggerEventsHandler, debuggerEventsChannel))
+               IDE.messageBus().unsubscribe(debuggerEventsChannel, debuggerEventsHandler);
+            
+            if (IDE.messageBus().isHandlerSubscribed(expireSoonAppsHandler, expireSoonAppChannel))
+               IDE.messageBus().unsubscribe(expireSoonAppChannel, expireSoonAppsHandler);
          }
          catch (WebSocketException e)
          {
@@ -660,7 +676,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
                currentBreakPoint = new CurrentEditorBreakPoint(location.getLineNumber(), "BreakPoint", filePath);
             }
             doGetDump();
-            enabelButtons();
+            enableButtons();
          }
          if (filePath != null && filePath.equalsIgnoreCase(activeFile.getPath()))
          {
@@ -743,7 +759,10 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onDebuggerDisconnected(DebuggerDisconnectedEvent event)
    {
       if (display != null)
+      {
+         display.closeExpirationDialog();
          IDE.getInstance().closeView(display.asView().getId());
+      }
    }
 
    /**
@@ -1096,6 +1115,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       IDE.fireEvent(new AppStartedEvent(app));
       runningApp = app;
+      try
+      {
+         applicationStoppedChannel = DebuggerExtension.APPLICATION_STOP_CHANNEL + runningApp.getName();
+         IDE.messageBus().subscribe(applicationStoppedChannel, applicationStoppedHandler);
+      }
+      catch (WebSocketException e)
+      {
+         // nothing to do
+      }
    }
 
    private void onApplicationStartFailure(Throwable exception)
@@ -1143,6 +1171,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    public void onStopApp(StopAppEvent event)
    {
       doDisconnectDebugger();
+      try
+      {
+         IDE.messageBus().unsubscribe(expireSoonAppChannel, applicationStoppedHandler);
+      }
+      catch (WebSocketException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
 //      doStopApp();
    }
 
@@ -1193,7 +1230,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
    @Override
    public void onAppStopped(AppStoppedEvent appStopedEvent)
    {
-
       String msg = DebuggerExtension.LOCALIZATION_CONSTANT.applicationStoped(appStopedEvent.getAppName());
       IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       runningApp = null;
@@ -1241,6 +1277,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       breakpointsManager.unmarkCurrentBreakPoint(currentBreakPoint);
       currentBreakPoint = null;
    }
+
 
    private void doRemoveAllBreakPoints()
    {
@@ -1358,6 +1395,7 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
     */
    private SubscriptionHandler<Object> expireSoonAppsHandler = new SubscriptionHandler<Object>()
    {
+
       @Override
       public void onSuccess(Object result)
       {
@@ -1371,15 +1409,18 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
             // nothing to do
          }
 
-         Dialogs.getInstance().ask(DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeTitle(),
-            DebuggerExtension.LOCALIZATION_CONSTANT.prolongExpirationTimeQuestion(), new BooleanValueReceivedHandler()
+         display.showExpirationDialog(new BooleanValueReceivedHandler()
             {
                @Override
                public void booleanValueReceived(Boolean value)
                {
-                  if (value == true)
+                  if (value)
                   {
                      prolongExpirationTime();
+                  }
+                  else
+                  {
+                     doDisconnectDebugger();
                   }
                }
             });
@@ -1416,12 +1457,15 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          {
             // nothing to do
          }
-
          if (display != null)
+         {
+            display.closeExpirationDialog();
             IDE.getInstance().closeView(display.asView().getId());
+         }
          if (runningApp != null)
          {
             IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(), Type.INFO));
+            IDE.fireEvent(new DebuggerDisconnectedEvent());
             IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
          }
       }
@@ -1439,6 +1483,48 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
          }
       }
    };
+   
+   
+   /**
+    * Handler for processing debugger disconnected event.
+    */
+   private SubscriptionHandler<Object> applicationStoppedHandler = new SubscriptionHandler<Object>()
+   {
+      @Override
+      protected void onSuccess(Object result)
+      {
+         try
+         {
+            IDE.messageBus().unsubscribe(applicationStoppedChannel, this);
+         }
+         catch (WebSocketException e)
+         {
+            // nothing to do
+         }
+
+         if (display != null)
+            IDE.getInstance().closeView(display.asView().getId());
+         if (runningApp != null)
+         {
+//            IDE.fireEvent(new OutputEvent(DebuggerExtension.LOCALIZATION_CONSTANT.debuggerDisconnected(), Type.INFO));
+            IDE.fireEvent(new AppStoppedEvent(runningApp.getName(), false));
+         }
+      }
+
+      @Override
+      protected void onFailure(Throwable exception)
+      {
+         try
+         {
+            IDE.messageBus().unsubscribe(applicationStoppedChannel, this);
+         }
+         catch (WebSocketException e)
+         {
+            // nothing to do
+         }
+      }
+   };
+
 
    /**
     * Handler for processing events which is received from debugger over WebSocket connection.
@@ -1449,7 +1535,6 @@ public class DebuggerPresenter implements DebuggerConnectedHandler, DebuggerDisc
       @Override
       public void onSuccess(DebuggerEventList result)
       {
-         System.out.println("DebuggerPresenter.enclosing_method()" + result.getEvents().size());
          onEventListReceived(result);
       }
 

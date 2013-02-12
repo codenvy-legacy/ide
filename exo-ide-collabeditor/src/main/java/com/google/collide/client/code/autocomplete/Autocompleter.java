@@ -323,39 +323,38 @@ public class Autocompleter implements ContentAssistant
       }
 
 //      LanguageSpecificAutocompleter autocompleter = getLanguageSpecificAutocompleter(contentType);
-//      ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
-//
-//      switch (action.getType())
-//      {
-//         case EXPLICIT_COMPLETE :
-//            boxTrigger = null;
-//            performExplicitCompletion(action.getExplicitAutocompletion());
-//            return true;
-//
-//         case DEFERRED_COMPLETE :
-//            boxTrigger = trigger;
-//            scheduleRequestAutocomplete();
-//            return false;
-//
-//         case CLOSE_POPUP :
-//            dismissAutocompleteBox();
-//            return false;
-//
-//         default :
-//            return false;
-//      }
+      ExplicitAction action = autocompleters.getExplicitAction(editor.getSelection(), trigger, popup.isShowing());
+
+      switch (action.getType())
+      {
+         case EXPLICIT_COMPLETE :
+            boxTrigger = null;
+            performExplicitCompletion(action.getExplicitAutocompletion());
+            return true;
+
+         case DEFERRED_COMPLETE :
+            boxTrigger = trigger;
+            scheduleRequestAutocomplete();
             return false;
+
+         case CLOSE_POPUP :
+            dismissAutocompleteBox();
+            return false;
+
+         default :
+            return false;
+      }
    }
 
    private static boolean isActionSpace(SignalEventEssence trigger)
    {
       if (UserAgent.isMac())
       {
-         return (trigger.metaKey) && (trigger.keyCode == ' ') &&(!trigger.altKey) && (!trigger.metaKey) &&(!trigger.shiftKey) && (trigger.type == KeySignalType.INPUT);
+         return (trigger.metaKey) && (trigger.keyCode == ' ') && (!trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) && (trigger.type == KeySignalType.INPUT);
       }
       else
       {
-         return (trigger.ctrlKey) && (trigger.keyCode == ' ') &&(!trigger.altKey) && (!trigger.metaKey) &&(!trigger.shiftKey) && (trigger.type == KeySignalType.INPUT);
+         return (trigger.ctrlKey) && (trigger.keyCode == ' ') && (!trigger.altKey) && (!trigger.metaKey) && (!trigger.shiftKey) && (trigger.type == KeySignalType.INPUT);
       }
    }
 
@@ -382,7 +381,7 @@ public class Autocompleter implements ContentAssistant
       stop();
 
 //      LanguageSpecificAutocompleter autocompleter = getAutocompleter(parser.getSyntaxType());
-//      autocompleters.attach(parser);
+      autocompleters.attach(parser);
    }
 
 //   protected LanguageSpecificAutocompleter getLanguageSpecificAutocompleter(String contentType)

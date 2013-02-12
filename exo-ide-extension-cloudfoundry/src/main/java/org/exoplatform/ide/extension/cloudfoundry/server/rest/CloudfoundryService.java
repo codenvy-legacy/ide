@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server.rest;
 
+import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.extension.cloudfoundry.server.Cloudfoundry;
 import org.exoplatform.ide.extension.cloudfoundry.server.CloudfoundryException;
 import org.exoplatform.ide.extension.cloudfoundry.server.DebugMode;
@@ -28,10 +29,13 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Instance;
 import org.exoplatform.ide.extension.cloudfoundry.shared.ProvisionedService;
 import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
-import org.exoplatform.ide.commons.ParsingResponseException;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.IOException;
 import java.net.URL;
@@ -55,6 +59,8 @@ import javax.ws.rs.core.MediaType;
 @Path("ide/cloudfoundry")
 public class CloudfoundryService
 {
+   private static final Log LOG = ExoLogger.getLogger(CloudfoundryService.class);
+
    @javax.inject.Inject
    private Cloudfoundry cloudfoundry;
 
@@ -162,10 +168,19 @@ public class CloudfoundryService
 
       String warURLStr = params.get("war");
       URL warURL = warURLStr == null || warURLStr.isEmpty() ? null : new URL(warURLStr);
+      CloudFoundryApplication app =
+         cloudfoundry.createApplication(params.get("server"), params.get("name"), params.get("type"),
+            params.get("url"), instances, mem, noStart, params.get("runtime"), params.get("command"), debugMode, vfs,
+            params.get("projectid"), warURL);
 
-      return cloudfoundry.createApplication(params.get("server"), params.get("name"), params.get("type"),
-         params.get("url"), instances, mem, noStart, params.get("runtime"), params.get("command"), debugMode, vfs,
-         params.get("projectid"), warURL);
+      String projectId = params.get("projectid");
+      if (projectId != null)
+      {
+         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#application-created# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType()
+            + "# PAAS#CloudFoundry#");
+      }
+      return app;
    }
 
    @Path("apps/start")

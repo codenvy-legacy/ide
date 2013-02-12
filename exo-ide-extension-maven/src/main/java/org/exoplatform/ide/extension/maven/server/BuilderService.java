@@ -78,10 +78,12 @@ public class BuilderService
    @Path("build")
    public Response build(@QueryParam("projectid") String projectId, //
                          @QueryParam("vfsid") String vfsId, //
+                         @QueryParam("name") String projectName, //
+                         @QueryParam("type") String projectType, //
                          @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
-      final String buildID = builder.build(vfs, projectId);
+      final String buildID = builder.build(vfs, projectId, projectName, projectType);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
       return Response.status(202).location(location).entity(location.toString()).build();
    }
@@ -111,13 +113,15 @@ public class BuilderService
    @Path("deploy")
    public Response deploy(@QueryParam("projectid") String projectId, //
                          @QueryParam("vfsid") String vfsId, //
+                         @QueryParam("name") String projectName, //
+                         @QueryParam("type") String projectType, //
                          @Context UriInfo uriInfo) throws BuilderException, IOException, VirtualFileSystemException
    {
       VirtualFileSystem vfs = virtualFileSystemRegistry.getProvider(vfsId).newInstance(null, null);
 //      Item project = vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
 //      ContentStream pom = vfs.getContent(project.getPath() + "/pom.xml",null);
       
-      final String buildID = builder.deploy(vfs, projectId);
+      final String buildID = builder.deploy(vfs, projectId, projectName, projectType);
       final URI location = uriInfo.getBaseUriBuilder().path(getClass(), "status").build(buildID);
       return Response.status(202).location(location).entity(location.toString()).build();
    }

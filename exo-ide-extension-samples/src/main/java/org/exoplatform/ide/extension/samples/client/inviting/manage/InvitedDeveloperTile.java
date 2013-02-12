@@ -76,22 +76,24 @@ public class InvitedDeveloperTile extends Composite
 
       if (invite.isActivated() == null)
       {
+         revokeImage.setVisible(false);
          revokeImage.setEnabled(false);
          inviteRole.getElement().setInnerHTML("<span style=\"font-weight:bold\">Owner</span>");
       }
       else if (invite.isActivated())
       {
+         revokeImage.setVisible(false);
          revokeImage.setEnabled(false);
          inviteRole.getElement().setInnerHTML("<span style=\"color:green\">Accepted</span>");
       }
       else
       {
-         inviteRole.getElement().setInnerHTML("<span style=\"color:red\">Pending</span>");
+         inviteRole.getElement().setInnerHTML("<span style=\"color:red; margin-right:10px\">Pending</span>");
       }
 
       revokeImage.setImage(new Image(SamplesClientBundle.INSTANCE.cancel()));
       revokeImage.setDisabledImage(new Image(SamplesClientBundle.INSTANCE.cancelDisabled()));
-      revokeImage.setPixelSize(16, 16);
+      revokeImage.setPixelSize(25, 16);
 
       revokeImage.addClickHandler(new ClickHandler()
       {

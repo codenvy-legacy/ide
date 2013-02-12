@@ -1,22 +1,4 @@
-/*
- * Copyright (C) 2011 eXo Platform SAS.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
- */
-// $ANTLR 3.3 Nov 30, 2010 12:50:56 org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g 2012-04-20 17:13:32
+// $ANTLR 3.3 Nov 30, 2010 12:50:56 org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g 2013-02-07 15:54:13
 
 package org.exoplatform.ide.extension.java.jdi.server.expression;
 
@@ -293,8 +275,8 @@ public class JavaTreeParser extends TreeParser {
     private ExpressionValue latest;
 
     public JavaTreeParser(TreeNodeStream input, Evaluator ev) {
-       this(input);
-       this.ev = ev;
+    	this(input);
+    	this.ev = ev;
     }
 
     /**
@@ -310,10 +292,10 @@ public class JavaTreeParser extends TreeParser {
      *  @param pNewState  <code>true</code> if error messages should be collected.
      */
     public void enableErrorMessageCollection(boolean pNewState) {
-       mMessageCollectionEnabled = pNewState;
-       if (mMessages == null && mMessageCollectionEnabled) {
-          mMessages = new ArrayList<String>();
-       }
+    	mMessageCollectionEnabled = pNewState;
+    	if (mMessages == null && mMessageCollectionEnabled) {
+    		mMessages = new ArrayList<String>();
+    	}
     }
 
     /**
@@ -327,11 +309,11 @@ public class JavaTreeParser extends TreeParser {
      */
     @Override
     public void emitErrorMessage(String pMessage) {
-       if (mMessageCollectionEnabled) {
-          mMessages.add(pMessage);
-       } else {
-          super.emitErrorMessage(pMessage);
-       }
+    	if (mMessageCollectionEnabled) {
+    		mMessages.add(pMessage);
+    	} else {
+    		super.emitErrorMessage(pMessage);
+    	}
     }
 
     /**
@@ -342,7 +324,7 @@ public class JavaTreeParser extends TreeParser {
      *           list may be empty if no error message has been emited.
      */
     public List<String> getMessages() {
-       return mMessages;
+    	return mMessages;
     }
 
     /**
@@ -351,7 +333,7 @@ public class JavaTreeParser extends TreeParser {
      *  @return  <code>true</code> if parsing a Java source has caused at least one error message.
      */
     public boolean hasErrors() {
-       return mHasErrors;
+    	return mHasErrors;
     }
 
 
@@ -407,20 +389,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt2) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: importDeclaration
-                   {
-                   pushFollow(FOLLOW_importDeclaration_in_javaSource97);
-                   importDeclaration();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: importDeclaration
+            	    {
+            	    pushFollow(FOLLOW_importDeclaration_in_javaSource97);
+            	    importDeclaration();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   break loop2;
+            	default :
+            	    break loop2;
                 }
             } while (true);
 
@@ -436,20 +418,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt3) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: typeDeclaration
-                   {
-                   pushFollow(FOLLOW_typeDeclaration_in_javaSource100);
-                   typeDeclaration();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: typeDeclaration
+            	    {
+            	    pushFollow(FOLLOW_typeDeclaration_in_javaSource100);
+            	    typeDeclaration();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   break loop3;
+            	default :
+            	    break loop3;
                 }
             } while (true);
 
@@ -875,21 +857,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt13) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: type
-                   {
-                   pushFollow(FOLLOW_type_in_extendsClause257);
-                   type();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: type
+            	    {
+            	    pushFollow(FOLLOW_type_in_extendsClause257);
+            	    type();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt13 >= 1 ) break loop13;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt13 >= 1 ) break loop13;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(13, input);
                         throw eee;
@@ -940,21 +922,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt14) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: type
-                   {
-                   pushFollow(FOLLOW_type_in_implementsClause277);
-                   type();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: type
+            	    {
+            	    pushFollow(FOLLOW_type_in_implementsClause277);
+            	    type();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt14 >= 1 ) break loop14;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt14 >= 1 ) break loop14;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(14, input);
                         throw eee;
@@ -1005,21 +987,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt15) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: genericTypeParameter
-                   {
-                   pushFollow(FOLLOW_genericTypeParameter_in_genericTypeParameterList297);
-                   genericTypeParameter();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: genericTypeParameter
+            	    {
+            	    pushFollow(FOLLOW_genericTypeParameter_in_genericTypeParameterList297);
+            	    genericTypeParameter();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt15 >= 1 ) break loop15;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt15 >= 1 ) break loop15;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(15, input);
                         throw eee;
@@ -1124,21 +1106,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt17) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: type
-                   {
-                   pushFollow(FOLLOW_type_in_bound337);
-                   type();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: type
+            	    {
+            	    pushFollow(FOLLOW_type_in_bound337);
+            	    type();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt17 >= 1 ) break loop17;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt17 >= 1 ) break loop17;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(17, input);
                         throw eee;
@@ -1189,21 +1171,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt18) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: enumConstant
-                   {
-                   pushFollow(FOLLOW_enumConstant_in_enumTopLevelScope357);
-                   enumConstant();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: enumConstant
+            	    {
+            	    pushFollow(FOLLOW_enumConstant_in_enumTopLevelScope357);
+            	    enumConstant();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt18 >= 1 ) break loop18;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt18 >= 1 ) break loop18;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(18, input);
                         throw eee;
@@ -1355,20 +1337,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt22) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: classScopeDeclarations
-                       {
-                       pushFollow(FOLLOW_classScopeDeclarations_in_classTopLevelScope405);
-                       classScopeDeclarations();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: classScopeDeclarations
+                	    {
+                	    pushFollow(FOLLOW_classScopeDeclarations_in_classTopLevelScope405);
+                	    classScopeDeclarations();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop22;
+                	default :
+                	    break loop22;
                     }
                 } while (true);
 
@@ -1829,20 +1811,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt33) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: interfaceScopeDeclarations
-                       {
-                       pushFollow(FOLLOW_interfaceScopeDeclarations_in_interfaceTopLevelScope555);
-                       interfaceScopeDeclarations();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: interfaceScopeDeclarations
+                	    {
+                	    pushFollow(FOLLOW_interfaceScopeDeclarations_in_interfaceTopLevelScope555);
+                	    interfaceScopeDeclarations();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop33;
+                	default :
+                	    break loop33;
                     }
                 } while (true);
 
@@ -2142,21 +2124,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt40) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: variableDeclarator
-                   {
-                   pushFollow(FOLLOW_variableDeclarator_in_variableDeclaratorList662);
-                   variableDeclarator();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: variableDeclarator
+            	    {
+            	    pushFollow(FOLLOW_variableDeclarator_in_variableDeclaratorList662);
+            	    variableDeclarator();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt40 >= 1 ) break loop40;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt40 >= 1 ) break loop40;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(40, input);
                         throw eee;
@@ -2406,16 +2388,16 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt44) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: ARRAY_DECLARATOR
-                       {
-                       match(input,ARRAY_DECLARATOR,FOLLOW_ARRAY_DECLARATOR_in_arrayDeclaratorList762); if (state.failed) return ;
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: ARRAY_DECLARATOR
+                	    {
+                	    match(input,ARRAY_DECLARATOR,FOLLOW_ARRAY_DECLARATOR_in_arrayDeclaratorList762); if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop44;
+                	default :
+                	    break loop44;
                     }
                 } while (true);
 
@@ -2463,20 +2445,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt45) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: variableInitializer
-                       {
-                       pushFollow(FOLLOW_variableInitializer_in_arrayInitializer782);
-                       variableInitializer();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: variableInitializer
+                	    {
+                	    pushFollow(FOLLOW_variableInitializer_in_arrayInitializer782);
+                	    variableInitializer();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop45;
+                	default :
+                	    break loop45;
                     }
                 } while (true);
 
@@ -2524,21 +2506,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt46) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: qualifiedIdentifier
-                   {
-                   pushFollow(FOLLOW_qualifiedIdentifier_in_throwsClause802);
-                   qualifiedIdentifier();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: qualifiedIdentifier
+            	    {
+            	    pushFollow(FOLLOW_qualifiedIdentifier_in_throwsClause802);
+            	    qualifiedIdentifier();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt46 >= 1 ) break loop46;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt46 >= 1 ) break loop46;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(46, input);
                         throw eee;
@@ -2589,20 +2571,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt47) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: modifier
-                       {
-                       pushFollow(FOLLOW_modifier_in_modifierList822);
-                       modifier();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: modifier
+                	    {
+                	    pushFollow(FOLLOW_modifier_in_modifierList822);
+                	    modifier();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop47;
+                	default :
+                	    break loop47;
                     }
                 } while (true);
 
@@ -2820,20 +2802,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt49) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: localModifier
-                       {
-                       pushFollow(FOLLOW_localModifier_in_localModifierList917);
-                       localModifier();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: localModifier
+                	    {
+                	    pushFollow(FOLLOW_localModifier_in_localModifierList917);
+                	    localModifier();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop49;
+                	default :
+                	    break loop49;
                     }
                 } while (true);
 
@@ -3033,21 +3015,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt53) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: typeIdent
-                   {
-                   pushFollow(FOLLOW_typeIdent_in_qualifiedTypeIdent1021);
-                   typeIdent();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: typeIdent
+            	    {
+            	    pushFollow(FOLLOW_typeIdent_in_qualifiedTypeIdent1021);
+            	    typeIdent();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt53 >= 1 ) break loop53;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt53 >= 1 ) break loop53;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(53, input);
                         throw eee;
@@ -3187,21 +3169,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt55) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: genericTypeArgument
-                   {
-                   pushFollow(FOLLOW_genericTypeArgument_in_genericTypeArgumentList1118);
-                   genericTypeArgument();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: genericTypeArgument
+            	    {
+            	    pushFollow(FOLLOW_genericTypeArgument_in_genericTypeArgumentList1118);
+            	    genericTypeArgument();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt55 >= 1 ) break loop55;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt55 >= 1 ) break loop55;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(55, input);
                         throw eee;
@@ -3408,20 +3390,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt59) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: formalParameterStandardDecl
-                       {
-                       pushFollow(FOLLOW_formalParameterStandardDecl_in_formalParameterList1197);
-                       formalParameterStandardDecl();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: formalParameterStandardDecl
+                	    {
+                	    pushFollow(FOLLOW_formalParameterStandardDecl_in_formalParameterList1197);
+                	    formalParameterStandardDecl();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop59;
+                	default :
+                	    break loop59;
                     }
                 } while (true);
 
@@ -3644,20 +3626,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt62) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotation
-                       {
-                       pushFollow(FOLLOW_annotation_in_annotationList1297);
-                       annotation();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotation
+                	    {
+                	    pushFollow(FOLLOW_annotation_in_annotationList1297);
+                	    annotation();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop62;
+                	default :
+                	    break loop62;
                     }
                 } while (true);
 
@@ -3815,21 +3797,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                         switch (alt64) {
-                       case 1 :
-                           // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotationInitializer
-                           {
-                           pushFollow(FOLLOW_annotationInitializer_in_annotationInitializers1358);
-                           annotationInitializer();
+                    	case 1 :
+                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotationInitializer
+                    	    {
+                    	    pushFollow(FOLLOW_annotationInitializer_in_annotationInitializers1358);
+                    	    annotationInitializer();
 
-                           state._fsp--;
-                           if (state.failed) return ;
+                    	    state._fsp--;
+                    	    if (state.failed) return ;
 
-                           }
-                           break;
+                    	    }
+                    	    break;
 
-                       default :
-                           if ( cnt64 >= 1 ) break loop64;
-                           if (state.backtracking>0) {state.failed=true; return ;}
+                    	default :
+                    	    if ( cnt64 >= 1 ) break loop64;
+                    	    if (state.backtracking>0) {state.failed=true; return ;}
                                 EarlyExitException eee =
                                     new EarlyExitException(64, input);
                                 throw eee;
@@ -3960,20 +3942,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                             switch (alt66) {
-                           case 1 :
-                               // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotationElementValue
-                               {
-                               pushFollow(FOLLOW_annotationElementValue_in_annotationElementValue1409);
-                               annotationElementValue();
+                        	case 1 :
+                        	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotationElementValue
+                        	    {
+                        	    pushFollow(FOLLOW_annotationElementValue_in_annotationElementValue1409);
+                        	    annotationElementValue();
 
-                               state._fsp--;
-                               if (state.failed) return ;
+                        	    state._fsp--;
+                        	    if (state.failed) return ;
 
-                               }
-                               break;
+                        	    }
+                        	    break;
 
-                           default :
-                               break loop66;
+                        	default :
+                        	    break loop66;
                             }
                         } while (true);
 
@@ -4045,20 +4027,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt68) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotationScopeDeclarations
-                       {
-                       pushFollow(FOLLOW_annotationScopeDeclarations_in_annotationTopLevelScope1441);
-                       annotationScopeDeclarations();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: annotationScopeDeclarations
+                	    {
+                	    pushFollow(FOLLOW_annotationScopeDeclarations_in_annotationTopLevelScope1441);
+                	    annotationScopeDeclarations();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop68;
+                	default :
+                	    break loop68;
                     }
                 } while (true);
 
@@ -4273,20 +4255,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt71) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: blockStatement
-                       {
-                       pushFollow(FOLLOW_blockStatement_in_block1530);
-                       blockStatement();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: blockStatement
+                	    {
+                	    pushFollow(FOLLOW_blockStatement_in_block1530);
+                	    blockStatement();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop71;
+                	default :
+                	    break loop71;
                     }
                 } while (true);
 
@@ -5044,21 +5026,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt81) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: catchClause
-                   {
-                   pushFollow(FOLLOW_catchClause_in_catches1838);
-                   catchClause();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: catchClause
+            	    {
+            	    pushFollow(FOLLOW_catchClause_in_catches1838);
+            	    catchClause();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   if ( cnt81 >= 1 ) break loop81;
-                   if (state.backtracking>0) {state.failed=true; return ;}
+            	default :
+            	    if ( cnt81 >= 1 ) break loop81;
+            	    if (state.backtracking>0) {state.failed=true; return ;}
                         EarlyExitException eee =
                             new EarlyExitException(81, input);
                         throw eee;
@@ -5155,20 +5137,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt82) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: switchCaseLabel
-                       {
-                       pushFollow(FOLLOW_switchCaseLabel_in_switchBlockLabels1879);
-                       switchCaseLabel();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: switchCaseLabel
+                	    {
+                	    pushFollow(FOLLOW_switchCaseLabel_in_switchBlockLabels1879);
+                	    switchCaseLabel();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop82;
+                	default :
+                	    break loop82;
                     }
                 } while (true);
 
@@ -5206,20 +5188,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt84) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: switchCaseLabel
-                       {
-                       pushFollow(FOLLOW_switchCaseLabel_in_switchBlockLabels1885);
-                       switchCaseLabel();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: switchCaseLabel
+                	    {
+                	    pushFollow(FOLLOW_switchCaseLabel_in_switchBlockLabels1885);
+                	    switchCaseLabel();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop84;
+                	default :
+                	    break loop84;
                     }
                 } while (true);
 
@@ -5271,20 +5253,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                 switch (alt85) {
-               case 1 :
-                   // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: blockStatement
-                   {
-                   pushFollow(FOLLOW_blockStatement_in_switchCaseLabel1907);
-                   blockStatement();
+            	case 1 :
+            	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: blockStatement
+            	    {
+            	    pushFollow(FOLLOW_blockStatement_in_switchCaseLabel1907);
+            	    blockStatement();
 
-                   state._fsp--;
-                   if (state.failed) return ;
+            	    state._fsp--;
+            	    if (state.failed) return ;
 
-                   }
-                   break;
+            	    }
+            	    break;
 
-               default :
-                   break loop85;
+            	default :
+            	    break loop85;
                 }
             } while (true);
 
@@ -5331,20 +5313,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt86) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: blockStatement
-                       {
-                       pushFollow(FOLLOW_blockStatement_in_switchDefaultLabel1927);
-                       blockStatement();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: blockStatement
+                	    {
+                	    pushFollow(FOLLOW_blockStatement_in_switchDefaultLabel1927);
+                	    blockStatement();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop86;
+                	default :
+                	    break loop86;
                     }
                 } while (true);
 
@@ -5431,20 +5413,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                             switch (alt87) {
-                           case 1 :
-                               // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
-                               {
-                               pushFollow(FOLLOW_expression_in_forInit1974);
-                               expression();
+                        	case 1 :
+                        	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
+                        	    {
+                        	    pushFollow(FOLLOW_expression_in_forInit1974);
+                        	    expression();
 
-                               state._fsp--;
-                               if (state.failed) return ;
+                        	    state._fsp--;
+                        	    if (state.failed) return ;
 
-                               }
-                               break;
+                        	    }
+                        	    break;
 
-                           default :
-                               break loop87;
+                        	default :
+                        	    break loop87;
                             }
                         } while (true);
 
@@ -5552,20 +5534,20 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt90) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
-                       {
-                       pushFollow(FOLLOW_expression_in_forUpdater2025);
-                       expression();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
+                	    {
+                	    pushFollow(FOLLOW_expression_in_forUpdater2025);
+                	    expression();
 
-                       state._fsp--;
-                       if (state.failed) return ;
+                	    state._fsp--;
+                	    if (state.failed) return ;
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop90;
+                	default :
+                	    break loop90;
                     }
                 } while (true);
 
@@ -5652,8 +5634,8 @@ public class JavaTreeParser extends TreeParser {
             match(input, Token.UP, null); if (state.failed) return value;
             if ( state.backtracking==0 ) {
 
-                                                               value = expression2;
-                                                             
+              															    value = expression2;
+              															  
             }
 
             }
@@ -5696,8 +5678,8 @@ public class JavaTreeParser extends TreeParser {
             match(input, Token.UP, null); if (state.failed) return value;
             if ( state.backtracking==0 ) {
 
-                                     value = expr3;
-                                   
+              							  value = expr3;
+              							
             }
 
             }
@@ -6062,8 +6044,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.operation(a, b, (PLUS_ASSIGN5!=null?PLUS_ASSIGN5.getType():0));
-                                                                  
+                      															  value = ev.operation(a, b, (PLUS_ASSIGN5!=null?PLUS_ASSIGN5.getType():0));
+                      														  
                     }
 
                     }
@@ -6088,8 +6070,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.operation(a, b, (MINUS_ASSIGN6!=null?MINUS_ASSIGN6.getType():0));
-                                                                  
+                      															  value = ev.operation(a, b, (MINUS_ASSIGN6!=null?MINUS_ASSIGN6.getType():0));
+                      														  
                     }
 
                     }
@@ -6114,8 +6096,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.operation(a, b, (STAR_ASSIGN7!=null?STAR_ASSIGN7.getType():0));
-                                                                  
+                      															  value = ev.operation(a, b, (STAR_ASSIGN7!=null?STAR_ASSIGN7.getType():0));
+                      														  
                     }
 
                     }
@@ -6140,8 +6122,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (DIV_ASSIGN8!=null?DIV_ASSIGN8.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (DIV_ASSIGN8!=null?DIV_ASSIGN8.getType():0));
+                      														  
                     }
 
                     }
@@ -6639,8 +6621,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (BIT_SHIFT_RIGHT25!=null?BIT_SHIFT_RIGHT25.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (BIT_SHIFT_RIGHT25!=null?BIT_SHIFT_RIGHT25.getType():0));
+                      														  
                     }
 
                     }
@@ -6665,8 +6647,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (SHIFT_RIGHT26!=null?SHIFT_RIGHT26.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (SHIFT_RIGHT26!=null?SHIFT_RIGHT26.getType():0));
+                      														  
                     }
 
                     }
@@ -6691,8 +6673,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (GREATER_THAN27!=null?GREATER_THAN27.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (GREATER_THAN27!=null?GREATER_THAN27.getType():0));
+                      														  
                     }
 
                     }
@@ -6717,8 +6699,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (SHIFT_LEFT28!=null?SHIFT_LEFT28.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (SHIFT_LEFT28!=null?SHIFT_LEFT28.getType():0));
+                      														  
                     }
 
                     }
@@ -6743,8 +6725,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.operation(a, b, (LESS_THAN29!=null?LESS_THAN29.getType():0));
-                                                                  
+                      															  value = ev.operation(a, b, (LESS_THAN29!=null?LESS_THAN29.getType():0));
+                      														  
                     }
 
                     }
@@ -6769,8 +6751,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (PLUS30!=null?PLUS30.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (PLUS30!=null?PLUS30.getType():0));
+                      														  
                     }
 
                     }
@@ -6795,8 +6777,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (MINUS31!=null?MINUS31.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (MINUS31!=null?MINUS31.getType():0));
+                      														  
                     }
 
                     }
@@ -6821,8 +6803,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (STAR32!=null?STAR32.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (STAR32!=null?STAR32.getType():0));
+                      														  
                     }
 
                     }
@@ -6847,8 +6829,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (DIV33!=null?DIV33.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (DIV33!=null?DIV33.getType():0));
+                      														  
                     }
 
                     }
@@ -6873,8 +6855,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.operation(a, b, (MOD34!=null?MOD34.getType():0));
-                                                                  
+                      														    value = ev.operation(a, b, (MOD34!=null?MOD34.getType():0));
+                      														  
                     }
 
                     }
@@ -6894,8 +6876,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.unaryOperation(a, (UNARY_PLUS35!=null?UNARY_PLUS35.getType():0));
-                                                                  
+                      														    value = ev.unaryOperation(a, (UNARY_PLUS35!=null?UNARY_PLUS35.getType():0));
+                      														  
                     }
 
                     }
@@ -6915,8 +6897,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.unaryOperation(a, (UNARY_MINUS36!=null?UNARY_MINUS36.getType():0));
-                                                                  
+                      														    value = ev.unaryOperation(a, (UNARY_MINUS36!=null?UNARY_MINUS36.getType():0));
+                      														  
                     }
 
                     }
@@ -6936,8 +6918,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    throw new ExpressionException("Operation '++' is not supported yet. ");
-                                                                  
+                      														    throw new ExpressionException("Operation '++' is not supported yet. ");
+                      														  
                     }
 
                     }
@@ -6957,8 +6939,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    throw new ExpressionException("Operation '--' is not supported yet. ");
-                                                                  
+                      														    throw new ExpressionException("Operation '--' is not supported yet. ");
+                      														  
                     }
 
                     }
@@ -6978,8 +6960,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    throw new ExpressionException("Operation '++' is not supported yet. ");
-                                                                  
+                      														    throw new ExpressionException("Operation '++' is not supported yet. ");
+                      														  
                     }
 
                     }
@@ -6999,8 +6981,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    throw new ExpressionException("Operation '--' is not supported yet. ");
-                                                                  
+                      														    throw new ExpressionException("Operation '--' is not supported yet. ");
+                      														  
                     }
 
                     }
@@ -7020,8 +7002,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.unaryOperation(a, (NOT37!=null?NOT37.getType():0));
-                                                                  
+                      														    value = ev.unaryOperation(a, (NOT37!=null?NOT37.getType():0));
+                      														  
                     }
 
                     }
@@ -7041,8 +7023,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = ev.unaryOperation(a, (LOGICAL_NOT38!=null?LOGICAL_NOT38.getType():0));
-                                                                  
+                      														    value = ev.unaryOperation(a, (LOGICAL_NOT38!=null?LOGICAL_NOT38.getType():0));
+                      														  
                     }
 
                     }
@@ -7067,8 +7049,8 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    throw new ExpressionException("Operation 'cast' is not supported yet. ");
-                                                                  
+                      														    throw new ExpressionException("Operation 'cast' is not supported yet. ");
+                      														  
                     }
 
                     }
@@ -7083,8 +7065,8 @@ public class JavaTreeParser extends TreeParser {
                     if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                    value = (primaryExpression39!=null?primaryExpression39.value:null);
-                                                                  
+                      														    value = (primaryExpression39!=null?primaryExpression39.value:null);
+                      														  
                     }
 
                     }
@@ -7279,8 +7261,8 @@ public class JavaTreeParser extends TreeParser {
                             if (state.failed) return retval;
                             if ( state.backtracking==0 ) {
 
-                                                                             retval.value = (e!=null?e.value:null);
-                                                                           
+                              															  retval.value = (e!=null?e.value:null);
+                              															
                             }
                             // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:801:7: ( IDENT | THIS | SUPER | innerNewExpression | CLASS )
                             int alt92=5;
@@ -7325,13 +7307,13 @@ public class JavaTreeParser extends TreeParser {
                                     IDENT40=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_primaryExpression4353); if (state.failed) return retval;
                                     if ( state.backtracking==0 ) {
 
-                                                                                     if (((CommonTree)retval.start).getParent().getType() != METHOD_CALL) {
-                                                                                        retval.value = ev.getField(latest.getValue(), (IDENT40!=null?IDENT40.getText():null));
-                                                                                       if (retval.value == null) {
-                                                                                         throw new ExpressionException("Unknown field " + (IDENT40!=null?IDENT40.getText():null));
-                                                                                       }
-                                                                                     }
-                                                                                   
+                                      															  if (((CommonTree)retval.start).getParent().getType() != METHOD_CALL) {
+                                          													       retval.value = ev.getField(latest.getValue(), (IDENT40!=null?IDENT40.getText():null));
+                                      	      												    if (retval.value == null) {
+                                      															      throw new ExpressionException("Unknown field " + (IDENT40!=null?IDENT40.getText():null));
+                                      															    }
+                                      															  }
+                                      															
                                     }
 
                                     }
@@ -7342,8 +7324,8 @@ public class JavaTreeParser extends TreeParser {
                                     match(input,THIS,FOLLOW_THIS_in_primaryExpression4383); if (state.failed) return retval;
                                     if ( state.backtracking==0 ) {
 
-                                                                                     retval.value = ev.getThisObject();
-                                                                                   
+                                      															  retval.value = ev.getThisObject();
+                                      															
                                     }
 
                                     }
@@ -7422,8 +7404,8 @@ public class JavaTreeParser extends TreeParser {
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                     retval.value = parenthesizedExpression41;
-                                                                   
+                      															  retval.value = parenthesizedExpression41;
+                      															
                     }
 
                     }
@@ -7434,19 +7416,19 @@ public class JavaTreeParser extends TreeParser {
                     IDENT42=(CommonTree)match(input,IDENT,FOLLOW_IDENT_in_primaryExpression4558); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                      if (((CommonTree)retval.start).getParent().getType() != METHOD_CALL) {
-                                                                         retval.value = ev.getLocalVariable((IDENT42!=null?IDENT42.getText():null));
-                                                                         if (retval.value == null) {
-                                                                           retval.value = ev.getField(latest.getValue(), (IDENT42!=null?IDENT42.getText():null));
-                                                                         }
-                                                                         if (retval.value == null) {
+                      																if (((CommonTree)retval.start).getParent().getType() != METHOD_CALL) {
+                      																	retval.value = ev.getLocalVariable((IDENT42!=null?IDENT42.getText():null));
+                      																	if (retval.value == null) {
+                      																	  retval.value = ev.getField(latest.getValue(), (IDENT42!=null?IDENT42.getText():null));
+                      																	}
+                      																	if (retval.value == null) {
                                                                            throw new ExpressionException("Unknown local variable or field " + (IDENT42!=null?IDENT42.getText():null));
                                                                          }
-                                                                      } else {
-                                                                         retval.value = ev.getThisObject();
-                                                                      }
+                      																} else {
+                      																   retval.value = ev.getThisObject();
+                      																}
 
-                                                                   
+                      															
                     }
 
                     }
@@ -7494,15 +7476,16 @@ public class JavaTreeParser extends TreeParser {
                     if ( state.backtracking==0 ) {
 
 
-                                                                      String name = (o!=null?((CommonTree)o.start):null).getChildCount() == 0 ? (o!=null?((CommonTree)o.start):null).getText() : (o!=null?((CommonTree)o.start):null).getChild(1).getText();
-                                                                      retval.value = ev.invokeMethod(latest.getValue(), name, arguments43);
-                                                                   
+                      															   String name = (o!=null?((CommonTree)o.start):null).getChildCount() == 0 ? (o!=null?((CommonTree)o.start):null).getText() : (o!=null?((CommonTree)o.start):null).getChild(1).getText();
+                      																retval.value = ev.invokeMethod(o.value.getValue(), name, arguments43);
+                      																
+                      															
                     }
 
                     }
                     break;
                 case 5 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:852:5: explicitConstructorCall
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:853:5: explicitConstructorCall
                     {
                     pushFollow(FOLLOW_explicitConstructorCall_in_primaryExpression4618);
                     explicitConstructorCall();
@@ -7511,14 +7494,14 @@ public class JavaTreeParser extends TreeParser {
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                     throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
-                                                                   
+                      															  throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
+                      															
                     }
 
                     }
                     break;
                 case 6 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:857:3: ^( ARRAY_ELEMENT_ACCESS arr= primaryExpression index= expression )
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:858:3: ^( ARRAY_ELEMENT_ACCESS arr= primaryExpression index= expression )
                     {
                     match(input,ARRAY_ELEMENT_ACCESS,FOLLOW_ARRAY_ELEMENT_ACCESS_in_primaryExpression4645); if (state.failed) return retval;
 
@@ -7537,14 +7520,14 @@ public class JavaTreeParser extends TreeParser {
                     match(input, Token.UP, null); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                     retval.value = ev.getArrayElement((arr!=null?arr.value:null).getValue(), index.getValue());
-                                                                   
+                      															  retval.value = ev.getArrayElement((arr!=null?arr.value:null).getValue(), index.getValue());
+                      															
                     }
 
                     }
                     break;
                 case 7 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:861:5: literal
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:862:5: literal
                     {
                     pushFollow(FOLLOW_literal_in_primaryExpression4677);
                     literal44=literal();
@@ -7553,14 +7536,14 @@ public class JavaTreeParser extends TreeParser {
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                     retval.value = literal44;
-                                                                   
+                      															  retval.value = literal44;
+                      															
                     }
 
                     }
                     break;
                 case 8 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:865:5: newExpression
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:866:5: newExpression
                     {
                     pushFollow(FOLLOW_newExpression_in_primaryExpression4701);
                     newExpression();
@@ -7569,26 +7552,26 @@ public class JavaTreeParser extends TreeParser {
                     if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                     throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
-                                                                   
+                      															  throw new ExpressionException("Unable create new instance. Operation not supported yet. ");
+                      															
                     }
 
                     }
                     break;
                 case 9 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:869:5: THIS
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:870:5: THIS
                     {
                     match(input,THIS,FOLLOW_THIS_in_primaryExpression4725); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                     retval.value = ev.getThisObject();
-                                                                   
+                      															  retval.value = ev.getThisObject();
+                      															
                     }
 
                     }
                     break;
                 case 10 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:873:5: arrayTypeDeclarator
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:874:5: arrayTypeDeclarator
                     {
                     pushFollow(FOLLOW_arrayTypeDeclarator_in_primaryExpression4749);
                     arrayTypeDeclarator();
@@ -7599,13 +7582,13 @@ public class JavaTreeParser extends TreeParser {
                     }
                     break;
                 case 11 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:874:5: SUPER
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:875:5: SUPER
                     {
                     match(input,SUPER,FOLLOW_SUPER_in_primaryExpression4755); if (state.failed) return retval;
                     if ( state.backtracking==0 ) {
 
-                                                                     retval.value = ev.getThisObject();
-                                                                   
+                      															  retval.value = ev.getThisObject();
+                      															
                     }
 
                     }
@@ -7614,7 +7597,7 @@ public class JavaTreeParser extends TreeParser {
             }
             if ( state.backtracking==0 ) {
 
-                                                               latest = retval.value;
+                    													    latest = retval.value;
                                                            
             }
         }
@@ -7631,12 +7614,12 @@ public class JavaTreeParser extends TreeParser {
 
 
     // $ANTLR start "explicitConstructorCall"
-    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:880:1: explicitConstructorCall : ( ^( THIS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? arguments ) | ^( SUPER_CONSTRUCTOR_CALL ( primaryExpression )? ( genericTypeArgumentList )? arguments ) );
+    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:881:1: explicitConstructorCall : ( ^( THIS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? arguments ) | ^( SUPER_CONSTRUCTOR_CALL ( primaryExpression )? ( genericTypeArgumentList )? arguments ) );
     public final void explicitConstructorCall() throws RecognitionException {
         int explicitConstructorCall_StartIndex = input.index();
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 65) ) { return ; }
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:881:3: ( ^( THIS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? arguments ) | ^( SUPER_CONSTRUCTOR_CALL ( primaryExpression )? ( genericTypeArgumentList )? arguments ) )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:882:3: ( ^( THIS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? arguments ) | ^( SUPER_CONSTRUCTOR_CALL ( primaryExpression )? ( genericTypeArgumentList )? arguments ) )
             int alt99=2;
             int LA99_0 = input.LA(1);
 
@@ -7655,12 +7638,12 @@ public class JavaTreeParser extends TreeParser {
             }
             switch (alt99) {
                 case 1 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:882:3: ^( THIS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? arguments )
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:883:3: ^( THIS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? arguments )
                     {
                     match(input,THIS_CONSTRUCTOR_CALL,FOLLOW_THIS_CONSTRUCTOR_CALL_in_explicitConstructorCall4789); if (state.failed) return ;
 
                     match(input, Token.DOWN, null); if (state.failed) return ;
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:882:27: ( genericTypeArgumentList )?
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:883:27: ( genericTypeArgumentList )?
                     int alt96=2;
                     int LA96_0 = input.LA(1);
 
@@ -7693,12 +7676,12 @@ public class JavaTreeParser extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:884:3: ^( SUPER_CONSTRUCTOR_CALL ( primaryExpression )? ( genericTypeArgumentList )? arguments )
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:885:3: ^( SUPER_CONSTRUCTOR_CALL ( primaryExpression )? ( genericTypeArgumentList )? arguments )
                     {
                     match(input,SUPER_CONSTRUCTOR_CALL,FOLLOW_SUPER_CONSTRUCTOR_CALL_in_explicitConstructorCall4804); if (state.failed) return ;
 
                     match(input, Token.DOWN, null); if (state.failed) return ;
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:884:28: ( primaryExpression )?
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:885:28: ( primaryExpression )?
                     int alt97=2;
                     int LA97_0 = input.LA(1);
 
@@ -7720,7 +7703,7 @@ public class JavaTreeParser extends TreeParser {
 
                     }
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:884:47: ( genericTypeArgumentList )?
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:885:47: ( genericTypeArgumentList )?
                     int alt98=2;
                     int LA98_0 = input.LA(1);
 
@@ -7768,18 +7751,18 @@ public class JavaTreeParser extends TreeParser {
 
 
     // $ANTLR start "arrayTypeDeclarator"
-    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:887:1: arrayTypeDeclarator : ^( ARRAY_DECLARATOR ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType ) ) ;
+    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:888:1: arrayTypeDeclarator : ^( ARRAY_DECLARATOR ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType ) ) ;
     public final void arrayTypeDeclarator() throws RecognitionException {
         int arrayTypeDeclarator_StartIndex = input.index();
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 66) ) { return ; }
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:888:3: ( ^( ARRAY_DECLARATOR ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType ) ) )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:889:3: ^( ARRAY_DECLARATOR ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType ) )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:889:3: ( ^( ARRAY_DECLARATOR ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType ) ) )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:890:3: ^( ARRAY_DECLARATOR ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType ) )
             {
             match(input,ARRAY_DECLARATOR,FOLLOW_ARRAY_DECLARATOR_in_arrayTypeDeclarator4834); if (state.failed) return ;
 
             match(input, Token.DOWN, null); if (state.failed) return ;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:891:5: ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:892:5: ( arrayTypeDeclarator | qualifiedIdentifier | primitiveType )
             int alt100=3;
             switch ( input.LA(1) ) {
             case ARRAY_DECLARATOR:
@@ -7815,7 +7798,7 @@ public class JavaTreeParser extends TreeParser {
 
             switch (alt100) {
                 case 1 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:892:7: arrayTypeDeclarator
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:893:7: arrayTypeDeclarator
                     {
                     pushFollow(FOLLOW_arrayTypeDeclarator_in_arrayTypeDeclarator4848);
                     arrayTypeDeclarator();
@@ -7826,7 +7809,7 @@ public class JavaTreeParser extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:893:9: qualifiedIdentifier
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:894:9: qualifiedIdentifier
                     {
                     pushFollow(FOLLOW_qualifiedIdentifier_in_arrayTypeDeclarator4858);
                     qualifiedIdentifier();
@@ -7837,7 +7820,7 @@ public class JavaTreeParser extends TreeParser {
                     }
                     break;
                 case 3 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:894:9: primitiveType
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:895:9: primitiveType
                     {
                     pushFollow(FOLLOW_primitiveType_in_arrayTypeDeclarator4868);
                     primitiveType();
@@ -7869,12 +7852,12 @@ public class JavaTreeParser extends TreeParser {
 
 
     // $ANTLR start "newExpression"
-    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:899:1: newExpression : ( ^( STATIC_ARRAY_CREATOR ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction ) ) | ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? qualifiedTypeIdent arguments ( classTopLevelScope )? ) );
+    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:900:1: newExpression : ( ^( STATIC_ARRAY_CREATOR ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction ) ) | ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? qualifiedTypeIdent arguments ( classTopLevelScope )? ) );
     public final void newExpression() throws RecognitionException {
         int newExpression_StartIndex = input.index();
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 67) ) { return ; }
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:900:3: ( ^( STATIC_ARRAY_CREATOR ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction ) ) | ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? qualifiedTypeIdent arguments ( classTopLevelScope )? ) )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:901:3: ( ^( STATIC_ARRAY_CREATOR ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction ) ) | ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? qualifiedTypeIdent arguments ( classTopLevelScope )? ) )
             int alt105=2;
             int LA105_0 = input.LA(1);
 
@@ -7893,12 +7876,12 @@ public class JavaTreeParser extends TreeParser {
             }
             switch (alt105) {
                 case 1 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:901:3: ^( STATIC_ARRAY_CREATOR ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction ) )
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:902:3: ^( STATIC_ARRAY_CREATOR ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction ) )
                     {
                     match(input,STATIC_ARRAY_CREATOR,FOLLOW_STATIC_ARRAY_CREATOR_in_newExpression4900); if (state.failed) return ;
 
                     match(input, Token.DOWN, null); if (state.failed) return ;
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:903:5: ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction )
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:904:5: ( primitiveType newArrayConstruction | ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction )
                     int alt102=2;
                     int LA102_0 = input.LA(1);
 
@@ -7917,7 +7900,7 @@ public class JavaTreeParser extends TreeParser {
                     }
                     switch (alt102) {
                         case 1 :
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:904:7: primitiveType newArrayConstruction
+                            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:905:7: primitiveType newArrayConstruction
                             {
                             pushFollow(FOLLOW_primitiveType_in_newExpression4914);
                             primitiveType();
@@ -7933,9 +7916,9 @@ public class JavaTreeParser extends TreeParser {
                             }
                             break;
                         case 2 :
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:905:9: ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction
+                            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:906:9: ( genericTypeArgumentList )? qualifiedTypeIdent newArrayConstruction
                             {
-                            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:905:9: ( genericTypeArgumentList )?
+                            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:906:9: ( genericTypeArgumentList )?
                             int alt101=2;
                             int LA101_0 = input.LA(1);
 
@@ -7979,12 +7962,12 @@ public class JavaTreeParser extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:909:3: ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? qualifiedTypeIdent arguments ( classTopLevelScope )? )
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:910:3: ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? qualifiedTypeIdent arguments ( classTopLevelScope )? )
                     {
                     match(input,CLASS_CONSTRUCTOR_CALL,FOLLOW_CLASS_CONSTRUCTOR_CALL_in_newExpression4951); if (state.failed) return ;
 
                     match(input, Token.DOWN, null); if (state.failed) return ;
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:909:28: ( genericTypeArgumentList )?
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:910:28: ( genericTypeArgumentList )?
                     int alt103=2;
                     int LA103_0 = input.LA(1);
 
@@ -8016,7 +7999,7 @@ public class JavaTreeParser extends TreeParser {
 
                     state._fsp--;
                     if (state.failed) return ;
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:909:82: ( classTopLevelScope )?
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:910:82: ( classTopLevelScope )?
                     int alt104=2;
                     int LA104_0 = input.LA(1);
 
@@ -8059,18 +8042,18 @@ public class JavaTreeParser extends TreeParser {
 
 
     // $ANTLR start "innerNewExpression"
-    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:912:1: innerNewExpression : ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? IDENT arguments ( classTopLevelScope )? ) ;
+    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:913:1: innerNewExpression : ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? IDENT arguments ( classTopLevelScope )? ) ;
     public final void innerNewExpression() throws RecognitionException {
         int innerNewExpression_StartIndex = input.index();
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 68) ) { return ; }
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:913:3: ( ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? IDENT arguments ( classTopLevelScope )? ) )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:914:3: ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? IDENT arguments ( classTopLevelScope )? )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:914:3: ( ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? IDENT arguments ( classTopLevelScope )? ) )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:915:3: ^( CLASS_CONSTRUCTOR_CALL ( genericTypeArgumentList )? IDENT arguments ( classTopLevelScope )? )
             {
             match(input,CLASS_CONSTRUCTOR_CALL,FOLLOW_CLASS_CONSTRUCTOR_CALL_in_innerNewExpression4979); if (state.failed) return ;
 
             match(input, Token.DOWN, null); if (state.failed) return ;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:914:28: ( genericTypeArgumentList )?
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:915:28: ( genericTypeArgumentList )?
             int alt106=2;
             int LA106_0 = input.LA(1);
 
@@ -8098,7 +8081,7 @@ public class JavaTreeParser extends TreeParser {
 
             state._fsp--;
             if (state.failed) return ;
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:914:69: ( classTopLevelScope )?
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:915:69: ( classTopLevelScope )?
             int alt107=2;
             int LA107_0 = input.LA(1);
 
@@ -8139,12 +8122,12 @@ public class JavaTreeParser extends TreeParser {
 
 
     // $ANTLR start "newArrayConstruction"
-    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:917:1: newArrayConstruction : ( arrayDeclaratorList arrayInitializer | ( expression )+ ( arrayDeclaratorList )? );
+    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:918:1: newArrayConstruction : ( arrayDeclaratorList arrayInitializer | ( expression )+ ( arrayDeclaratorList )? );
     public final void newArrayConstruction() throws RecognitionException {
         int newArrayConstruction_StartIndex = input.index();
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 69) ) { return ; }
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:918:3: ( arrayDeclaratorList arrayInitializer | ( expression )+ ( arrayDeclaratorList )? )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:919:3: ( arrayDeclaratorList arrayInitializer | ( expression )+ ( arrayDeclaratorList )? )
             int alt110=2;
             int LA110_0 = input.LA(1);
 
@@ -8163,7 +8146,7 @@ public class JavaTreeParser extends TreeParser {
             }
             switch (alt110) {
                 case 1 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:919:3: arrayDeclaratorList arrayInitializer
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:920:3: arrayDeclaratorList arrayInitializer
                     {
                     pushFollow(FOLLOW_arrayDeclaratorList_in_newArrayConstruction5005);
                     arrayDeclaratorList();
@@ -8179,9 +8162,9 @@ public class JavaTreeParser extends TreeParser {
                     }
                     break;
                 case 2 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:920:5: ( expression )+ ( arrayDeclaratorList )?
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:921:5: ( expression )+ ( arrayDeclaratorList )?
                     {
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:920:5: ( expression )+
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:921:5: ( expression )+
                     int cnt108=0;
                     loop108:
                     do {
@@ -8194,21 +8177,21 @@ public class JavaTreeParser extends TreeParser {
 
 
                         switch (alt108) {
-                       case 1 :
-                           // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
-                           {
-                           pushFollow(FOLLOW_expression_in_newArrayConstruction5013);
-                           expression();
+                    	case 1 :
+                    	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
+                    	    {
+                    	    pushFollow(FOLLOW_expression_in_newArrayConstruction5013);
+                    	    expression();
 
-                           state._fsp--;
-                           if (state.failed) return ;
+                    	    state._fsp--;
+                    	    if (state.failed) return ;
 
-                           }
-                           break;
+                    	    }
+                    	    break;
 
-                       default :
-                           if ( cnt108 >= 1 ) break loop108;
-                           if (state.backtracking>0) {state.failed=true; return ;}
+                    	default :
+                    	    if ( cnt108 >= 1 ) break loop108;
+                    	    if (state.backtracking>0) {state.failed=true; return ;}
                                 EarlyExitException eee =
                                     new EarlyExitException(108, input);
                                 throw eee;
@@ -8216,7 +8199,7 @@ public class JavaTreeParser extends TreeParser {
                         cnt108++;
                     } while (true);
 
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:920:17: ( arrayDeclaratorList )?
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:921:17: ( arrayDeclaratorList )?
                     int alt109=2;
                     int LA109_0 = input.LA(1);
 
@@ -8257,7 +8240,7 @@ public class JavaTreeParser extends TreeParser {
 
 
     // $ANTLR start "arguments"
-    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:923:1: arguments returns [List < com.sun.jdi.Value > args] : ^( ARGUMENT_LIST (e= expression )* ) ;
+    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:924:1: arguments returns [List < com.sun.jdi.Value > args] : ^( ARGUMENT_LIST (e= expression )* ) ;
     public final List < com.sun.jdi.Value > arguments() throws RecognitionException {
         List < com.sun.jdi.Value > args = null;
         int arguments_StartIndex = input.index();
@@ -8266,19 +8249,19 @@ public class JavaTreeParser extends TreeParser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 70) ) { return args; }
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:924:3: ( ^( ARGUMENT_LIST (e= expression )* ) )
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:925:17: ^( ARGUMENT_LIST (e= expression )* )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:925:3: ( ^( ARGUMENT_LIST (e= expression )* ) )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:926:17: ^( ARGUMENT_LIST (e= expression )* )
             {
             if ( state.backtracking==0 ) {
 
-                                                            args = new ArrayList<com.sun.jdi.Value>();
-                                                          
+              														    args = new ArrayList<com.sun.jdi.Value>();
+              														  
             }
             match(input,ARGUMENT_LIST,FOLLOW_ARGUMENT_LIST_in_arguments5060); if (state.failed) return args;
 
             if ( input.LA(1)==Token.DOWN ) {
                 match(input, Token.DOWN, null); if (state.failed) return args;
-                // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:930:5: (e= expression )*
+                // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:931:5: (e= expression )*
                 loop111:
                 do {
                     int alt111=2;
@@ -8290,25 +8273,25 @@ public class JavaTreeParser extends TreeParser {
 
 
                     switch (alt111) {
-                   case 1 :
-                       // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:931:7: e= expression
-                       {
-                       pushFollow(FOLLOW_expression_in_arguments5076);
-                       e=expression();
+                	case 1 :
+                	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:932:7: e= expression
+                	    {
+                	    pushFollow(FOLLOW_expression_in_arguments5076);
+                	    e=expression();
 
-                       state._fsp--;
-                       if (state.failed) return args;
-                       if ( state.backtracking==0 ) {
+                	    state._fsp--;
+                	    if (state.failed) return args;
+                	    if ( state.backtracking==0 ) {
 
-                                                                        args.add(e.getValue());
-                                                                      
-                       }
+                	      															  args.add(e.getValue());
+                	      															
+                	    }
 
-                       }
-                       break;
+                	    }
+                	    break;
 
-                   default :
-                       break loop111;
+                	default :
+                	    break loop111;
                     }
                 } while (true);
 
@@ -8332,7 +8315,7 @@ public class JavaTreeParser extends TreeParser {
 
 
     // $ANTLR start "literal"
-    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:939:1: literal returns [ExpressionValue value] : ( HEX_LITERAL | OCTAL_LITERAL | DECIMAL_LITERAL | FLOATING_POINT_LITERAL | CHARACTER_LITERAL | STRING_LITERAL | TRUE | FALSE | NULL );
+    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:940:1: literal returns [ExpressionValue value] : ( HEX_LITERAL | OCTAL_LITERAL | DECIMAL_LITERAL | FLOATING_POINT_LITERAL | CHARACTER_LITERAL | STRING_LITERAL | TRUE | FALSE | NULL );
     public final ExpressionValue literal() throws RecognitionException {
         ExpressionValue value = null;
         int literal_StartIndex = input.index();
@@ -8347,7 +8330,7 @@ public class JavaTreeParser extends TreeParser {
 
         try {
             if ( state.backtracking>0 && alreadyParsedRule(input, 71) ) { return value; }
-            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:940:3: ( HEX_LITERAL | OCTAL_LITERAL | DECIMAL_LITERAL | FLOATING_POINT_LITERAL | CHARACTER_LITERAL | STRING_LITERAL | TRUE | FALSE | NULL )
+            // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:941:3: ( HEX_LITERAL | OCTAL_LITERAL | DECIMAL_LITERAL | FLOATING_POINT_LITERAL | CHARACTER_LITERAL | STRING_LITERAL | TRUE | FALSE | NULL )
             int alt112=9;
             switch ( input.LA(1) ) {
             case HEX_LITERAL:
@@ -8405,109 +8388,109 @@ public class JavaTreeParser extends TreeParser {
 
             switch (alt112) {
                 case 1 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:941:3: HEX_LITERAL
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:942:3: HEX_LITERAL
                     {
                     HEX_LITERAL45=(CommonTree)match(input,HEX_LITERAL,FOLLOW_HEX_LITERAL_in_literal5125); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.hexValue((HEX_LITERAL45!=null?HEX_LITERAL45.getText():null));
-                                                                   
+                      															  value = ev.hexValue((HEX_LITERAL45!=null?HEX_LITERAL45.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 2 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:945:5: OCTAL_LITERAL
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:946:5: OCTAL_LITERAL
                     {
                     OCTAL_LITERAL46=(CommonTree)match(input,OCTAL_LITERAL,FOLLOW_OCTAL_LITERAL_in_literal5149); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.octalValue((OCTAL_LITERAL46!=null?OCTAL_LITERAL46.getText():null));
-                                                                   
+                      															  value = ev.octalValue((OCTAL_LITERAL46!=null?OCTAL_LITERAL46.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 3 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:949:5: DECIMAL_LITERAL
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:950:5: DECIMAL_LITERAL
                     {
                     DECIMAL_LITERAL47=(CommonTree)match(input,DECIMAL_LITERAL,FOLLOW_DECIMAL_LITERAL_in_literal5173); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.decimalValue((DECIMAL_LITERAL47!=null?DECIMAL_LITERAL47.getText():null));
-                                                                   
+                      															  value = ev.decimalValue((DECIMAL_LITERAL47!=null?DECIMAL_LITERAL47.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 4 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:953:5: FLOATING_POINT_LITERAL
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:954:5: FLOATING_POINT_LITERAL
                     {
                     FLOATING_POINT_LITERAL48=(CommonTree)match(input,FLOATING_POINT_LITERAL,FOLLOW_FLOATING_POINT_LITERAL_in_literal5197); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.floating_pointValue((FLOATING_POINT_LITERAL48!=null?FLOATING_POINT_LITERAL48.getText():null));
-                                                                   
+                      															  value = ev.floating_pointValue((FLOATING_POINT_LITERAL48!=null?FLOATING_POINT_LITERAL48.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 5 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:957:5: CHARACTER_LITERAL
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:958:5: CHARACTER_LITERAL
                     {
                     CHARACTER_LITERAL49=(CommonTree)match(input,CHARACTER_LITERAL,FOLLOW_CHARACTER_LITERAL_in_literal5221); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.charValue((CHARACTER_LITERAL49!=null?CHARACTER_LITERAL49.getText():null));
-                                                                   
+                      															  value = ev.charValue((CHARACTER_LITERAL49!=null?CHARACTER_LITERAL49.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 6 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:961:5: STRING_LITERAL
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:962:5: STRING_LITERAL
                     {
                     STRING_LITERAL50=(CommonTree)match(input,STRING_LITERAL,FOLLOW_STRING_LITERAL_in_literal5245); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.stringValue((STRING_LITERAL50!=null?STRING_LITERAL50.getText():null));
-                                                                   
+                      															  value = ev.stringValue((STRING_LITERAL50!=null?STRING_LITERAL50.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 7 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:965:5: TRUE
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:966:5: TRUE
                     {
                     TRUE51=(CommonTree)match(input,TRUE,FOLLOW_TRUE_in_literal5269); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.booleanValue((TRUE51!=null?TRUE51.getText():null));
-                                                                   
+                      															  value = ev.booleanValue((TRUE51!=null?TRUE51.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 8 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:969:5: FALSE
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:970:5: FALSE
                     {
                     FALSE52=(CommonTree)match(input,FALSE,FOLLOW_FALSE_in_literal5293); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.booleanValue((FALSE52!=null?FALSE52.getText():null));
-                                                                   
+                      															  value = ev.booleanValue((FALSE52!=null?FALSE52.getText():null));
+                      															
                     }
 
                     }
                     break;
                 case 9 :
-                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:973:5: NULL
+                    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:974:5: NULL
                     {
                     match(input,NULL,FOLLOW_NULL_in_literal5317); if (state.failed) return value;
                     if ( state.backtracking==0 ) {
 
-                                                                     value = ev.nullValue();
-                                                                   
+                      															  value = ev.nullValue();
+                      															
                     }
 
                     }
@@ -8558,20 +8541,20 @@ public class JavaTreeParser extends TreeParser {
 
 
             switch (alt143) {
-           case 1 :
-               // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
-               {
-               pushFollow(FOLLOW_expression_in_synpred132_JavaTreeParser1974);
-               expression();
+        	case 1 :
+        	    // org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g:0:0: expression
+        	    {
+        	    pushFollow(FOLLOW_expression_in_synpred132_JavaTreeParser1974);
+        	    expression();
 
-               state._fsp--;
-               if (state.failed) return ;
+        	    state._fsp--;
+        	    if (state.failed) return ;
 
-               }
-               break;
+        	    }
+        	    break;
 
-           default :
-               break loop143;
+        	default :
+        	    break loop143;
             }
         } while (true);
 
@@ -8588,7 +8571,7 @@ public class JavaTreeParser extends TreeParser {
         try {
             synpred132_JavaTreeParser_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re); //NOSONAR
+            System.err.println("impossible: "+re);
         }
         boolean success = !state.failed;
         input.rewind(start);
@@ -8602,7 +8585,7 @@ public class JavaTreeParser extends TreeParser {
         try {
             synpred125_JavaTreeParser_fragment(); // can never throw exception
         } catch (RecognitionException re) {
-            System.err.println("impossible: "+re);//NOSONAR
+            System.err.println("impossible: "+re);
         }
         boolean success = !state.failed;
         input.rewind(start);

@@ -22,6 +22,9 @@ import com.google.gdata.data.contacts.ContactEntry;
 import com.google.gdata.data.extensions.Email;
 import com.google.gdata.util.ServiceException;
 
+import org.exoplatform.ide.invite.Invite;
+import org.exoplatform.ide.invite.InviteException;
+import org.exoplatform.ide.invite.InviteService;
 import org.exoplatform.ide.security.oauth.OAuthTokenProvider;
 import org.exoplatform.services.security.ConversationState;
 
@@ -40,7 +43,7 @@ import javax.ws.rs.core.Response;
 
 /**
  * This REST service is used for getting user's Google Contacts.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: GoogleContactsService.java Aug 20, 2012 4:44:58 PM azatsarynnyy $
  *
@@ -54,13 +57,16 @@ public class GoogleContactsRestService
    @Inject
    private OAuthTokenProvider oauthTokenProvider;
 
+   @Inject
+   private InviteService inviteService;
+
    /**
     * Fetch all user's contacts.
-    * 
+    *
     * @return {@link List} of user's contacts
     * @throws ServiceException
     *    if any error in Google Contacts Service 
-    * @throws IOException 
+    * @throws IOException
     *    if any i/o errors occur
     */
    @GET
@@ -68,8 +74,33 @@ public class GoogleContactsRestService
    @Produces(MediaType.APPLICATION_JSON)
    public List<GoogleContact> getContactList() throws IOException, ServiceException
    {
+      //getting filtered by workspace owner invites
+      List<String> filteredByCurrentUser = new ArrayList<String>();
+      try
+      {
+         if (ConversationState.getCurrent() == null)
+         {
+            throw new ServiceException("Error getting current user id.");
+         }
 
+         String currentId = ConversationState.getCurrent().getIdentity().getUserId();
+
+         for (Invite invite : inviteService.getInvites(false))
+         {
+            if (invite.getFrom() != null && invite.getFrom().equals(currentId))
+            {
+               filteredByCurrentUser.add(invite.getEmail());
+            }
+         }
+      }
+      catch (InviteException e)
+      {
+         throw new ServiceException(e.getMessage(), e);
+      }
+
+      //getting google contacts
       List<GoogleContact> contactList = new ArrayList<GoogleContact>();
+      outer:
       for (ContactEntry contactEntry : client.getAllContacts())
       {
          List<Email> contactEmailList = contactEntry.getEmailAddresses();
@@ -79,16 +110,21 @@ public class GoogleContactsRestService
             continue;
          }
 
+         List<String> emails = new ArrayList<String>();
+         for (Email email : contactEmailList)
+         {
+            //check if contact is already invited, if true - than we don't displayed him from invite proposals
+            if (filteredByCurrentUser.contains(email.getAddress()))
+            {
+               continue outer;
+            }
+            emails.add(email.getAddress());
+         }
+
          GoogleContact contact = new GoogleContact();
          contact.setId(contactEntry.getSelfLink().getHref());
          contact.setName(contactEntry.getTitle().getPlainText());
          contact.setPhotoBase64(client.getContactPhotoAsBase64(contactEntry));
-
-         List<String> emails = new ArrayList<String>();
-         for (Email email : contactEmailList)
-         {
-            emails.add(email.getAddress());
-         }
          contact.setEmailAddresses(emails);
 
          contactList.add(contact);

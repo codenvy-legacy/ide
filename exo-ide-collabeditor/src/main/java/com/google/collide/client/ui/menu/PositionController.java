@@ -202,7 +202,7 @@ public class PositionController {
         case BOTTOM:
           return anchorRect.getBottom() + offsetY;
         case TOP_TOP:
-            return anchorRect.getTop();
+           return anchorRect.getTop();
         default:
           return 0;
       }
@@ -413,11 +413,10 @@ public class PositionController {
      * Aligns the middle of the element to the middle of the anchor.
      */
     MIDDLE,
-
-     /**
-      * Aligns the top of the element to the top of the anchor.
-      */
-     TOP_TOP,
+    /**
+     * Aligns the top of the element to the top of the anchor.
+     */
+    TOP_TOP,
   }
 
   public enum HorizontalAlign {

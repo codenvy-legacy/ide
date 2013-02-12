@@ -18,10 +18,9 @@
  */
 package org.exoplatform.ide.editor.java;
 
-import com.google.collide.client.editor.Editor.DocumentListener;
-
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.editor.Editor.DocumentListener;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.Position;
 

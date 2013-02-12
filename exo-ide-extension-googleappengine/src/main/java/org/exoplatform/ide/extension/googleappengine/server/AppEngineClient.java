@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.googleappengine.server;
 
-import static com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
-import static com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
-import static com.google.apphosting.utils.config.BackendsXml.State;
 import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
 import static org.exoplatform.ide.commons.FileUtils.downloadFile;
 import static org.exoplatform.ide.commons.ZipUtils.unzip;
 
 import com.google.appengine.tools.admin.AppAdmin;
+import com.google.appengine.tools.admin.AppAdminFactory.ApplicationProcessingOptions;
+import com.google.appengine.tools.admin.AppAdminFactory.ConnectOptions;
 import com.google.appengine.tools.admin.AppVersionUpload;
 import com.google.appengine.tools.admin.Application;
 import com.google.appengine.tools.admin.CronEntry;
@@ -34,6 +33,7 @@ import com.google.appengine.tools.admin.IdeAppAdmin;
 import com.google.appengine.tools.admin.ResourceLimits;
 import com.google.appengine.tools.admin.UpdateListener;
 import com.google.apphosting.utils.config.BackendsXml;
+import com.google.apphosting.utils.config.BackendsXml.State;
 
 import org.exoplatform.ide.extension.googleappengine.server.python.PythonApplication;
 import org.exoplatform.ide.extension.googleappengine.shared.ApplicationInfo;
@@ -45,7 +45,11 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,6 +59,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +72,8 @@ import java.util.Set;
 public class AppEngineClient
 {
    private final OAuthTokenProvider oauthTokenProvider;
+
+   private static final Log LOG = ExoLogger.getLogger(AppEngineClient.class);
 
    public AppEngineClient(OAuthTokenProvider oauthTokenProvider)
    {
@@ -418,7 +425,15 @@ public class AppEngineClient
                PropertyFilter.NONE_FILTER);
             java.io.File appDir = createTempDirectory(null, "ide-appengine");
             unzip(vfs.exportZip(webApp.getId()).getStream(), appDir);
-            return new JavaApplication(Application.readApplication(appDir.getAbsolutePath()));
+            JavaApplication app = new JavaApplication(Application.readApplication(appDir.getAbsolutePath()));
+            if (vfs != null && projectId != null)
+            {
+               writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
+               writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
+            }
+            LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+               + "# PAAS#GAE#");
+            return app;
          }
          case PYTHON:
          {
@@ -429,11 +444,28 @@ public class AppEngineClient
             {
                projectFile.delete();
             }
-            return new PythonApplication(appDir);
+            PythonApplication app = new PythonApplication(appDir);
+            if (vfs != null && projectId != null)
+            {
+               writeProjectProperty(vfs, projectId, "gae-application", app.getAppId());
+               writeProjectProperty(vfs, projectId, "gae-target", app.getServer());
+            }
+            LOG.info("EVENT#application-created# PROJECT#" + project.getName() + "# TYPE#" + project.getProjectType()
+               + "# PAAS#GAE#");
+            return app;
          }
          default:
             throw new RuntimeException("Unsupported type of application " + type);
       }
+   }
+
+   private void writeProjectProperty(VirtualFileSystem vfs, String projectId, String propertyName, String propertyValue)
+      throws VirtualFileSystemException
+   {
+      Property p = new PropertyImpl(propertyName, propertyValue);
+      List<Property> properties = new ArrayList<Property>(1);
+      properties.add(p);
+      vfs.updateItem(projectId, properties, null);
    }
 
    private enum ProjectType

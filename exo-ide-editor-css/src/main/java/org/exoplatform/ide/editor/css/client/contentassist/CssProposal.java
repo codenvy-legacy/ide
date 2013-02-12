@@ -46,9 +46,14 @@ public class CssProposal implements CompletionProposal
    private static final String PROPERTY_SEPARATOR = ": ";
 
    /**
-    * Proposal text label.
+    * Proposal's text label.
     */
    private String proposal;
+
+   /**
+    * Proposal's text label with escaped characters '<' and '>'.
+    */
+   private String escapedLabel;
 
    /**
     * CSS type of autocompletion.
@@ -60,17 +65,20 @@ public class CssProposal implements CompletionProposal
     */
    private String prefix;
 
+   /**
+    * Text offset.
+    */
    private final int offset;
 
    /**
-    * The additional amount of chars to move cursor after applying proposal.
+    * Number of chars, relative to beginning of replacement to move cursor right.
     */
    private int jumpLength;
 
    /**
-    * Amount of chars to select after applying proposal.
+    * Length of selection (in chars) before cursor position after jump.
     */
-   private int selectLength;
+   private int selectionCount;
 
    /**
     * Constructs new {@link CssProposal} instance with the given proposal, prefix and offset.
@@ -111,7 +119,7 @@ public class CssProposal implements CompletionProposal
    }
 
    /**
-    * Compute string to insert depending on what of CSS autocompletion.
+    * Compute string to insert depending on what type of CSS autocompletion.
     * 
     * @return result proposal label to insert
     */
@@ -122,7 +130,7 @@ public class CssProposal implements CompletionProposal
          case CLASS :
             // In this case implicit autocompletion workflow should trigger,
             // and so execution should never reach this point.
-            Log.warn(getClass(), "Invocation of this method in not allowed for type CLASS");
+            Log.warn(getClass(), "Invocation of this method in not allowed for type " + type);
             return null;
          case PROPERTY :
             String addend = proposal + PROPERTY_SEPARATOR + PROPERTY_TERMINATOR;
@@ -135,7 +143,7 @@ public class CssProposal implements CompletionProposal
             if ((start >= 0) && (start < end))
             {
                jumpLength = start;
-               selectLength = ((end + 1) - start);
+               selectionCount = ((end + 1) - start);
             }
             else
             {
@@ -143,6 +151,7 @@ public class CssProposal implements CompletionProposal
             }
             return proposal;
          default :
+            Log.warn(getClass(), "Invocation of this method in not allowed for type " + type);
             return null;
       }
    }
@@ -153,7 +162,7 @@ public class CssProposal implements CompletionProposal
    @Override
    public Point getSelection(IDocument document)
    {
-      return new Point(offset + jumpLength + -prefix.length(), selectLength);
+      return new Point(offset + jumpLength - prefix.length(), selectionCount);
    }
 
    /**
@@ -171,7 +180,11 @@ public class CssProposal implements CompletionProposal
    @Override
    public String getDisplayString()
    {
-      return proposal;
+      if (escapedLabel == null)
+      {
+         escapedLabel = proposal.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      }
+      return escapedLabel;
    }
 
    /**

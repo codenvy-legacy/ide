@@ -12,7 +12,6 @@ package org.eclipse.jdt.client.codeassistant;
 
 import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Frame;
-
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
