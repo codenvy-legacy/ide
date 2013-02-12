@@ -28,17 +28,28 @@ import com.google.gwt.user.client.ui.Widget;
  */
 public class Notification extends Composite
 {
-   private final int duration;
 
-   public Notification(final String message, final int duration)
+   public enum NotificationType
    {
-      this(new HTML(message, true), duration);
+      INFO, MESSAGE, ERROR
    }
 
-   public Notification(final Widget widget, final int duration)
+
+   private final int duration;
+
+   private NotificationType type;
+
+   public Notification(final String message, final int duration, NotificationType type)
+   {
+      this(new HTML(message, true), duration, type);
+
+   }
+
+   public Notification(final Widget widget, final int duration, NotificationType type)
    {
       this.duration = duration;
       super.initWidget(widget);
+      this.type = type;
    }
 
    /**
@@ -49,4 +60,8 @@ public class Notification extends Composite
       return duration;
    }
 
+   public NotificationType getType()
+   {
+      return type;
+   }
 }

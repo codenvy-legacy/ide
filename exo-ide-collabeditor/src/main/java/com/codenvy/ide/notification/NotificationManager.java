@@ -19,6 +19,7 @@
 package com.codenvy.ide.notification;
 
 
+import com.codenvy.ide.notification.Notification.NotificationType;
 import com.google.collide.client.util.AnimationController;
 import com.google.collide.client.util.AnimationController.AnimationStateListener;
 import com.google.collide.client.util.AnimationController.State;
@@ -41,7 +42,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.Window.ScrollEvent;
 import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.PopupPanel;
@@ -65,7 +65,11 @@ public class NotificationManager
 
    public interface Css extends CssResource
    {
-      String notification();
+      @ClassName("notification-info")
+      String notificationInfo();
+
+      @ClassName("notification-message")
+      String notificationMessage();
    }
 
    public interface Resources extends ClientBundle
@@ -78,7 +82,7 @@ public class NotificationManager
    }
 
 
-   private class NotificationPanel extends Composite
+   private class NotificationPanel extends PopupPanel
    {
       private final Image close = new Image(resources.closeImage());
 
@@ -86,9 +90,27 @@ public class NotificationManager
 
       private final AbsolutePanel panel = new AbsolutePanel();
 
-      public NotificationPanel(final Widget widget, final PopupPanel popup)
+      private int duration;
+
+      private Timer timer = new Timer()
       {
-         super.initWidget(focus);
+         @Override
+         public void run()
+         {
+            if (isShowing())
+            {
+               animationController.hide((Element)getElement());
+            }
+         }
+      };
+
+      ;
+
+      public NotificationPanel(final Widget widget, int duration)
+      {
+         super(false, false);
+         this.duration = duration;
+         add(focus);
          focus.setWidget(panel);
          widget.getElement().getStyle().setPaddingTop(20, Unit.PX);
          panel.add(widget);
@@ -98,8 +120,7 @@ public class NotificationManager
             @Override
             public void onClick(final ClickEvent event)
             {
-               animationController.hide((Element)popup.getElement());
-               //               popup.hide();
+               animationController.hide((Element)getElement());
             }
          });
          focus.addMouseOverHandler(new MouseOverHandler()
@@ -109,6 +130,7 @@ public class NotificationManager
             public void onMouseOver(final MouseOverEvent event)
             {
                panel.add(close, panel.getOffsetWidth() - 20, 0);
+               timer.cancel();
             }
          });
          focus.addMouseOutHandler(new MouseOutHandler()
@@ -117,10 +139,19 @@ public class NotificationManager
             public void onMouseOut(final MouseOutEvent event)
             {
                panel.remove(close);
+               scheduleCloseTimer();
             }
          });
+
       }
 
+      public void scheduleCloseTimer()
+      {
+         if(duration>0)
+         {
+           timer.schedule(duration);
+         }
+      }
    }
 
    private static final int MAX_SHOWING_NOTIFICATIONS = 10;
@@ -133,9 +164,9 @@ public class NotificationManager
 
    private final LinkedList<Notification> notifications = new LinkedList<Notification>();
 
-   private final LinkedList<PopupPanel> popups = new LinkedList<PopupPanel>();
+   private final LinkedList<NotificationPanel> popups = new LinkedList<NotificationPanel>();
 
-   private final LinkedList<PopupPanel> pendingPopups = new LinkedList<PopupPanel>();
+   private final LinkedList<NotificationPanel> pendingPopups = new LinkedList<NotificationPanel>();
 
    private final LinkedList<Notification> pendingNotifications = new LinkedList<Notification>();
 
@@ -166,17 +197,16 @@ public class NotificationManager
 
    public void addNotification(final Notification notification)
    {
-      final PopupPanel pop = new PopupPanel(false, false);
-      final NotificationPanel panel = new NotificationPanel(notification, pop);
-      pop.setStyleName(resources.styles().notification());
-      pop.setWidget(panel);
-      pop.setAnimationEnabled(false);
-      pop.addCloseHandler(new CloseHandler<PopupPanel>()
+      //      final PopupPanel pop = new PopupPanel(false, false);
+      final NotificationPanel panel = new NotificationPanel(notification, notification.getDuration());
+      panel.setStyleName(computeStyle(notification.getType()));
+      panel.setAnimationEnabled(false);
+      panel.addCloseHandler(new CloseHandler<PopupPanel>()
       {
          @Override
          public void onClose(final CloseEvent<PopupPanel> event)
          {
-            final int idx = popups.indexOf(pop);
+            final int idx = popups.indexOf(panel);
             notifications.remove(idx);
             popups.remove(idx);
             reflow();
@@ -186,24 +216,36 @@ public class NotificationManager
 
       if (popups.size() == MAX_SHOWING_NOTIFICATIONS)
       {
-         pendingPopups.add(pop);
+         pendingPopups.add(panel);
          pendingNotifications.add(notification);
       }
       else
       {
-         positionAndShow(pop, notification);
+         positionAndShow(panel, notification);
 
          notifications.add(notification);
-         popups.add(pop);
+         popups.add(panel);
+      }
+   }
+
+   private String computeStyle(NotificationType type)
+   {
+      switch (type)
+      {
+         case MESSAGE:
+            return resources.styles().notificationMessage();
+         case INFO:
+         default:
+            return resources.styles().notificationInfo();
       }
    }
 
    private void checkPending()
    {
-      if(!pendingNotifications.isEmpty())
+      if (!pendingNotifications.isEmpty())
       {
          Notification notification = pendingNotifications.removeFirst();
-         PopupPanel pop = pendingPopups.removeFirst();
+         NotificationPanel pop = pendingPopups.removeFirst();
          positionAndShow(pop, notification);
          notifications.add(notification);
          popups.add(pop);
@@ -219,12 +261,11 @@ public class NotificationManager
       }
    }
 
-   ;
 
-   private void positionAndShow(final PopupPanel pop, final Notification notification)
+   private void positionAndShow(final NotificationPanel pop, final Notification notification)
    {
       pop.setVisible(false);
-      PopupPanel last = null;
+      NotificationPanel last = null;
       if (!notifications.isEmpty())
       {
          last = popups.getLast();
@@ -262,27 +303,17 @@ public class NotificationManager
       });
       animationController.show((Element)pop.getElement());
 
-      new Timer()
-      {
-         @Override
-         public void run()
-         {
-            if (pop.isShowing())
-            {
-               animationController.hide((Element)pop.getElement());
-            }
-         }
-      }.schedule(notification.getDuration());
+      pop.scheduleCloseTimer();
 
    }
 
    private void reflow()
    {
-      PopupPanel last = null;
+      NotificationPanel last = null;
       int y = 0;
       for (int i = 0; i < popups.size(); i++)
       {
-         final PopupPanel pop = popups.get(i);
+         final NotificationPanel pop = popups.get(i);
          y = (last == null) ? position.getBorderY() : y + last.getOffsetHeight() + SPACING;
          pop.setPopupPosition(position.getBorderX() - pop.getOffsetWidth(), y);
          last = pop;

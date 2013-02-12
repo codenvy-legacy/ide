@@ -19,11 +19,14 @@
 package com.google.collide.client.collaboration;
 
 import com.codenvy.ide.notification.Notification;
+import com.codenvy.ide.notification.Notification.NotificationType;
 import com.codenvy.ide.notification.NotificationManager;
+import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
 import com.google.collide.client.communication.MessageFilter;
 import com.google.collide.client.communication.MessageFilter.MessageRecipient;
 import com.google.collide.dto.FileOperationNotification;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.UserDetails;
 
@@ -51,10 +54,13 @@ public class NotificationController implements ParticipantsListener
 
    private CollaborationManager collaborationManager;
 
+   private UsersModel usersModel;
+
    public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
-      MessageFilter messageFilter)
+      MessageFilter messageFilter, UsersModel usersModel)
    {
       this.collaborationManager = collaborationManager;
+      this.usersModel = usersModel;
       collaborationManager.getParticipantsListenerManager().add(this);
       this.manager = manager;
       messageFilter.registerMessageRecipient(RoutingTypes.FILEOPERATIONNOTIFICATION,
@@ -65,19 +71,43 @@ public class NotificationController implements ParticipantsListener
    public void userOpenFile(String path, UserDetails user)
    {
       manager.addNotification(
-         new Notification("User <b>" + user.getDisplayName() + "</b> open file: " + path, DURATION));
+         new Notification("User <b>" + user.getDisplayName() + "</b> open file: " + path, DURATION, NotificationType.INFO));
    }
 
    @Override
    public void userCloseFile(String path, UserDetails user)
    {
       manager.addNotification(
-         new Notification("User <b>" + user.getDisplayName() + "</b> close file: " + path, DURATION));
+         new Notification("User <b>" + user.getDisplayName() + "</b> close file: " + path, DURATION, NotificationType.INFO));
    }
 
    private void showFileOperationNotification(FileOperationNotification notification)
    {
-      manager.addNotification(new Notification("User " + notification.getUserId() + " file:" + notification.getFilePath() + " target: " + notification.getTarget() + " operation: " + notification.getOperation(), 10000));
+      UserDetails user = usersModel.getUserById(notification.getUserId());
+      String targetPaht = notification.getTarget();
+      targetPaht = targetPaht.substring(targetPaht.lastIndexOf('/')+1, targetPaht.length());
+      String fileName = notification.getFilePath();
+      fileName = fileName.substring(fileName.lastIndexOf('/')+1 , fileName.length());
+      manager.addNotification(new Notification(
+         "User <b>" + user.getDisplayName() + "</b> wont to " + getOperationName(notification.getOperation())+ " <b>" +targetPaht + "</b> and ask you to close file <b>" + fileName +"</b>", -1, NotificationType.MESSAGE));
+   }
+
+   private String getOperationName(Operation operation)
+   {
+      switch (operation)
+      {
+         case RENAME:
+            return "rename";
+         case DELETE:
+            return "delete";
+         case MOVE:
+            return "move";
+         case REFACTORING:
+            return "perform refactoring";
+
+         default:
+            return operation.name().toLowerCase();
+      }
    }
 
 }

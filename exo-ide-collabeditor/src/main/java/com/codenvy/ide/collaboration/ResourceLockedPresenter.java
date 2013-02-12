@@ -48,7 +48,7 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
    public interface ResourceLockedMessages extends Messages
    {
       @DefaultMessage("This file is opened by {0} users.")
-      @AlternateMessage({"one", "This file is opened other user."})
+      @AlternateMessage({"one", "This file is opened by other user."})
       String file(@PluralCount int users);
 
       @DefaultMessage("This folder contains file(s) opened by {0} users.")

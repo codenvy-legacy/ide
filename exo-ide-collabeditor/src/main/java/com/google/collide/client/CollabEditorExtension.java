@@ -144,8 +144,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 //                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
                   IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
                   collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient);
-                  new NotificationController(notificationManager, collaborationManager, context.getMessageFilter());
-                  new UsersModel(context.getFrontendApi(), context.getMessageFilter());
+                  UsersModel usersModel = new UsersModel(context.getFrontendApi(), context.getMessageFilter());
+                  new NotificationController(notificationManager, collaborationManager, context.getMessageFilter(),usersModel);
 
                   DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
                   bus.close();

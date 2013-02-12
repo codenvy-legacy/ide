@@ -28,10 +28,11 @@ import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.ServerError.FailureReason;
+import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.UserLogOutDto;
 import com.google.collide.dto.client.DtoClientImpls.GetWorkspaceParticipantsImpl;
-import com.google.collide.json.shared.JsonArray;
+import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
 
 /**
@@ -55,6 +56,7 @@ public class UsersModel
       @Override
       public void onMessageReceived(UserLogInDto message)
       {
+         participants.put(message.getParticipant().getUserDetails().getUserId(), message.getParticipant());
       }
    };
 
@@ -63,10 +65,11 @@ public class UsersModel
       @Override
       public void onMessageReceived(UserLogOutDto message)
       {
+         participants.remove(message.getParticipant().getUserId());
       }
    };
 
-   private final JsonArray<ParticipantUserDetails> participants = JsonCollections.createArray();
+   private final JsonStringMap<ParticipantUserDetails> participants = JsonCollections.createMap();
 
    public UsersModel(FrontendApi frontendApi, MessageFilter messageFilter)
    {
@@ -85,10 +88,18 @@ public class UsersModel
          public void onMessageReceived(GetWorkspaceParticipantsResponse message)
          {
             //TOOD use listener
-            participants.addAll(message.getParticipants());
+            for(ParticipantUserDetails user : message.getParticipants().asIterable())
+            {
+              participants.put(user.getUserDetails().getUserId(), user);
+            }
          }
       });
 
 
+   }
+
+   public UserDetails getUserById(String userId)
+   {
+      return participants.get(userId).getUserDetails();
    }
 }
