@@ -55,7 +55,7 @@ public final class LocalFileSystemInitializer implements Startable
          readValuesParam(initParams, "id"),
          registry,
          listeners,
-         new java.io.File(readValueParam(initParams, "mountRoot", System.getProperty("org.exoplatform.ide.server.fs-root-path")))
+         new java.io.File(readValueParam(initParams, "mount-root", System.getProperty("org.exoplatform.ide.server.fs-root-path")))
       );
    }
 

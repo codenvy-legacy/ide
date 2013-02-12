@@ -356,6 +356,11 @@ public class JcrFileSystem implements VirtualFileSystem
          MediaType mediaType = data.getMediaType();
          ItemType type = data.getType();
          String name = data.getName();
+         String projectType = null;
+         if (type == ItemType.PROJECT)
+         {
+            projectType = ((ProjectData)data).getProjectType();
+         }
          if (listeners != null && type == ItemType.PROJECT)
          {
             listeners.removeEventListener(ProjectUpdateEventFilter.newFilter(this, (ProjectData)data), new ProjectUpdateListener(id));
@@ -363,7 +368,7 @@ public class JcrFileSystem implements VirtualFileSystem
          data.delete(lockToken);
          if (type == ItemType.PROJECT)
          {
-            LOG.info("EVENT#project-destroyed# PROJECT#" + name + "# TYPE#" + ((ProjectData)data).getProjectType() + "#");
+            LOG.info("EVENT#project-destroyed# PROJECT#" + name + "# TYPE#" + projectType + "#");
          }
          notifyListeners(new ChangeEvent(this, //
             id, //

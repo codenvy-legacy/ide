@@ -68,7 +68,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
          wsName = "default";
       }
       // -----
-      final java.io.File wsRoot = new java.io.File(mountRoot, wsName);
+      final java.io.File wsRoot = new java.io.File(mountRoot, wsName + java.io.File.separatorChar + id);
       if (!(wsRoot.exists() || wsRoot.mkdirs()))
       {
          // critical error cannot continue
@@ -96,7 +96,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
     * @param ioFile
     *    root point on the backing local filesystem
     * @throws VirtualFileSystemException
-    *    if mount is failed, e.g. if virtual filesystem with specified <code>vfsId</code> already exists
+    *    if mount is failed, e.g. if specified <code>ioFile</code> already mounted
     * @see org.exoplatform.ide.vfs.server.VirtualFileSystem
     */
    public void mount(java.io.File ioFile) throws VirtualFileSystemException

@@ -245,7 +245,7 @@ public class EventsTest extends LocalFileSystemTest
       writeProperties(folderPath, properties);
 
       // Now create new root directory for virtual file system.
-      java.io.File testFsIoRoot2 = new java.io.File(root, "my-ws2");
+      java.io.File testFsIoRoot2 = new java.io.File(root, "my-ws2" + java.io.File.separatorChar + VFS_ID);
       java.io.File testRoot2 = new java.io.File(testFsIoRoot2, testRootPath);
       assertTrue(testRoot2.mkdirs());
       // copy all items to new virtual filesystem

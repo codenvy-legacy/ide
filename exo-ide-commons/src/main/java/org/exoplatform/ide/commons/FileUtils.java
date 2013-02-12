@@ -351,7 +351,6 @@ public class FileUtils
          {
             throw new IOException(String.format("File '%s' already exists. ", target.getAbsolutePath()));
          }
-         throw new IOException(String.format("Cannot create file '%s'. ", target.getAbsolutePath()));
       }
       FileInputStream in = null;
       FileOutputStream out = null;
@@ -387,7 +386,6 @@ public class FileUtils
          {
             throw new IOException(String.format("File '%s' already exists. ", target.getAbsolutePath()));
          }
-         throw new IOException(String.format("Cannot create file '%s'. ", target.getAbsolutePath()));
       }
       FileInputStream sourceStream = null;
       FileOutputStream targetStream = null;

@@ -319,7 +319,7 @@ public class LocalFileSystem implements VirtualFileSystem
          throw new InvalidArgumentException(
             String.format("Unable get tree. Item '%s' is not a folder. ", virtualFile.getPath()));
       }
-      return new ItemNodeImpl(fromVirtualFile(virtualFile, propertyFilter, false),
+      return new ItemNodeImpl(fromVirtualFile(virtualFile, propertyFilter),
          getTreeLevel(virtualFile, depth, propertyFilter));
    }
 
@@ -334,7 +334,7 @@ public class LocalFileSystem implements VirtualFileSystem
       final List<ItemNode> level = new ArrayList<ItemNode>(children.size());
       for (VirtualFile i : children)
       {
-         level.add(new ItemNodeImpl(fromVirtualFile(i, propertyFilter, false), getTreeLevel(i, depth - 1, propertyFilter)));
+         level.add(new ItemNodeImpl(fromVirtualFile(i, propertyFilter), getTreeLevel(i, depth - 1, propertyFilter)));
       }
       return level;
    }
@@ -963,10 +963,10 @@ public class LocalFileSystem implements VirtualFileSystem
 
       if (virtualFile.isProject())
       {
-         String projectType = virtualFile.getPropertyValue("vfs:projectType");
+         final String projectType = virtualFile.getPropertyValue("vfs:projectType");
          return new ProjectImpl(id, name, mediaType == null ? Project.PROJECT_MIME_TYPE : mediaType, path,
             parentId, created, virtualFile.getProperties(propertyFilter),
-            addLinks ? createProjectLinks(id, parentId) : null, projectType);
+            addLinks ? createProjectLinks(id, parentId) : null, projectType == null ? "default" : projectType);
       }
 
       return new FolderImpl(id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path,

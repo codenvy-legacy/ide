@@ -497,7 +497,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException("Unable get tree. Item '" + object.getName() + "' is not a folder. ");
       }
-      return new ItemNodeImpl(fromMemoryItem(object, propertyFilter, false), getTreeLevel(object, depth, propertyFilter));
+      return new ItemNodeImpl(fromMemoryItem(object, propertyFilter), getTreeLevel(object, depth, propertyFilter));
    }
 
    private List<ItemNode> getTreeLevel(MemoryItem object, int depth, PropertyFilter propertyFilter)
@@ -512,7 +512,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       List<ItemNode> level = new ArrayList<ItemNode>();
       for (MemoryItem i : children)
       {
-         level.add(new ItemNodeImpl(fromMemoryItem(i, propertyFilter, false), getTreeLevel(i, depth - 1, propertyFilter)));
+         level.add(new ItemNodeImpl(fromMemoryItem(i, propertyFilter), getTreeLevel(i, depth - 1, propertyFilter)));
       }
       return level;
    }

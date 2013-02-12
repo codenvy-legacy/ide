@@ -138,7 +138,7 @@ public abstract class LocalFileSystemTest extends TestCase
       // root directory for virtual file systems
       root = createRootDirectory();
       // backend for test virtual filesystem
-      testFsIoRoot = new java.io.File(root, WORKSPACE);
+      testFsIoRoot = new java.io.File(root, WORKSPACE + java.io.File.separatorChar + VFS_ID);
       // directory for test
       final String testName = getName();
       // path to test directory

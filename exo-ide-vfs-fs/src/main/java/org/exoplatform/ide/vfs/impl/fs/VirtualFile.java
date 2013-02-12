@@ -23,6 +23,7 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.server.util.MediaTypes;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
+import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -109,7 +110,7 @@ public class VirtualFile implements Comparable<VirtualFile>
    public String getMediaType() throws VirtualFileSystemException
    {
       String mediaType = mountPoint.getPropertyValue(this, "vfs:mimeType");
-      if (mediaType == null)
+      if (mediaType == null && isFile())
       {
          mediaType = MediaTypes.INSTANCE.getMediaType(path.getName());
       }
