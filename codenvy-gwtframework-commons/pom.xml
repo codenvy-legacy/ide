@@ -19,7 +19,10 @@
    <artifactId>codenvy-gwtframework-commons</artifactId>
    <packaging>jar</packaging>
    <name>eXo GWT Framework :: Commons</name>
-
+   <properties>
+      <!-- Repositories URLs -->
+      <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
+    </properties>
    <dependencies>
 
       <dependency>

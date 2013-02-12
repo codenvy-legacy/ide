@@ -19,16 +19,10 @@
 package org.exoplatform.ide.extension.java.jdi.server;
 
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-import static org.exoplatform.ide.commons.FileUtils.countFileHash;
-import static org.exoplatform.ide.commons.FileUtils.createTempDirectory;
-import static org.exoplatform.ide.commons.FileUtils.deleteRecursive;
-import static org.exoplatform.ide.commons.FileUtils.downloadFile;
-import static org.exoplatform.ide.commons.FileUtils.list;
+import static org.exoplatform.ide.commons.FileUtils.*;
 import static org.exoplatform.ide.commons.JsonHelper.toJson;
 import static org.exoplatform.ide.commons.NameGenerator.generate;
-import static org.exoplatform.ide.commons.ZipUtils.listEntries;
-import static org.exoplatform.ide.commons.ZipUtils.unzip;
-import static org.exoplatform.ide.commons.ZipUtils.zipDir;
+import static org.exoplatform.ide.commons.ZipUtils.*;
 
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;

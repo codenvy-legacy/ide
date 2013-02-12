@@ -28,10 +28,12 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.extension.samples.client.SamplesClientBundle;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

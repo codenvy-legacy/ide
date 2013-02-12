@@ -20,7 +20,6 @@ import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.RelativeClientRect;
 import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.Window;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.css.CSSStyleDeclaration.Unit;
 import elemental.html.ClientRect;

@@ -39,6 +39,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
