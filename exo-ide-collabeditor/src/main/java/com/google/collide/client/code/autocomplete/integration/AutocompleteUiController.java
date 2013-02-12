@@ -14,16 +14,20 @@
 
 package com.google.collide.client.code.autocomplete.integration;
 
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.Widget;
-
 import com.google.collide.client.code.autocomplete.AutocompleteBox;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.FocusManager;
 import com.google.collide.client.ui.list.SimpleList;
 import com.google.collide.client.ui.list.SimpleList.View;
+import com.google.collide.client.ui.menu.AutoHideComponent.AutoHideHandler;
 import com.google.collide.client.ui.menu.AutoHideController;
+import com.google.collide.client.ui.menu.PositionController.HorizontalAlign;
+import com.google.collide.client.ui.menu.PositionController.Position;
+import com.google.collide.client.ui.menu.PositionController.Positioner;
+import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
+import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
+import com.google.collide.client.ui.popup.Popup;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.dom.DomUtils;
@@ -33,6 +37,9 @@ import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.common.base.Preconditions;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Widget;
 import elemental.css.CSSStyleDeclaration;
 import elemental.dom.Node;
 import elemental.html.ClientRect;
@@ -52,7 +59,7 @@ import org.waveprotocol.wave.client.common.util.SignalEvent;
  */
 public class AutocompleteUiController implements AutocompleteBox {
 
-  public interface Resources extends SimpleList.Resources {
+  public interface Resources extends SimpleList.Resources, Popup.Resources {
     @Source("AutocompleteComponent.css")
     Css autocompleteComponentCss();
   }
@@ -74,10 +81,16 @@ public class AutocompleteUiController implements AutocompleteBox {
 
     int maxHeight();
   }
-  
+
+  private static final int DELAY_MILLIS = 2000;
+
   private static final int MAX_COMPLETIONS_TO_SHOW = 150;
 //  private static final AutocompleteProposal CAPPED_INDICATOR = new AutocompleteProposal("");
   private static final CompletionProposal CAPPED_INDICATOR = new CappedIndicatorProposal();
+
+  private static final String AUTOCOMPLETE_PANEL_ID = "codenvy-ide-autocomplete-panel";
+
+  private static final String AUTOCOMPLETE_DOC_PANEL_ID = "codenvy-ide-autocomplete-doc-panel";
 
   private final SimpleList.ListItemRenderer<CompletionProposal> listItemRenderer =
       new SimpleList.ListItemRenderer<CompletionProposal>() {
@@ -89,7 +102,7 @@ public class AutocompleteUiController implements AutocompleteBox {
 
           if (itemData != CAPPED_INDICATOR) {
             icon.appendChild((Node)itemData.getImage().getElement());
-            label.setTextContent(itemData.getDisplayString());
+            label.setInnerHTML(itemData.getDisplayString());
             //group.setTextContent(itemData.getPath().getPathString());
           } else {
             label.setTextContent("Type for more results");
@@ -115,6 +128,8 @@ public class AutocompleteUiController implements AutocompleteBox {
             return;
           }
           list.getSelectionModel().setSelectedItem(itemData);
+          infoTimer.cancel();
+          infoTimer.schedule(DELAY_MILLIS);
         }
 
         @Override
@@ -124,6 +139,7 @@ public class AutocompleteUiController implements AutocompleteBox {
                return;
             }
             delegate.onSelect(itemData);
+            infoTimer.cancel();
          }
       };
 
@@ -152,12 +168,15 @@ public class AutocompleteUiController implements AutocompleteBox {
    */
   private CompletionProposal[] autocompleteProposals;
 
+  private Popup infoPopup;
+
+  private Positioner positioner;
+
   public AutocompleteUiController(Editor editor, Resources res) {
     this.editor = editor;
     this.css = res.autocompleteComponentCss();
 
     box = Elements.createDivElement();
-    box.setId("codenvy-ide-autocomplete-panel");
     // Prevent our mouse events from going to the editor
     DomUtils.stopMousePropagation(box);
 
@@ -165,6 +184,7 @@ public class AutocompleteUiController implements AutocompleteBox {
     tableElement.setClassName(css.items());
 
     container = Elements.createDivElement(css.container());
+    container.setId(AUTOCOMPLETE_PANEL_ID);
     DomUtils.preventExcessiveScrollingPropagation(container);
     container.appendChild(tableElement);
     box.appendChild(container);
@@ -180,7 +200,80 @@ public class AutocompleteUiController implements AutocompleteBox {
     autoHideController = AutoHideController.create(box);
     autoHideController.setCaptureOutsideClickOnClose(false);
     autoHideController.setDelay(-1);
+
+    autoHideController.setAutoHideHandler(new AutoHideHandler()
+    {
+
+      @Override
+      public void onShow()
+      {
+      }
+
+      @Override
+      public void onHide()
+      {
+         infoTimer.cancel();
+      }
+   });
+  positioner = new PositionerBuilder().setPosition(Position.NO_OVERLAP).setVerticalAlign(
+     VerticalAlign.TOP_TOP).setHorizontalAlign(HorizontalAlign.RIGHT).buildAnchorPositioner(box);
+  infoPopup = Popup.create(res);
+  infoPopup.getView().getElement().setId(AUTOCOMPLETE_DOC_PANEL_ID);
+  infoPopup.addPartner(box);
+  infoPopup.addPartnerClickTargets(box);
+  infoPopup.setDelay(-1);
+  infoPopup.setAutoHideHandler(new AutoHideHandler()
+  {
+
+     @Override
+     public void onShow()
+     {
+     }
+
+     @Override
+     public void onHide()
+     {
+        autoHideController.removePartner(infoPopup.getView().getElement());
+        autoHideController.removePartnerClickTargets(infoPopup.getView().getElement());
+     }
+  });
+}
+
+private Timer infoTimer = new Timer()
+{
+
+  @Override
+  public void run()
+  {
+     if (list.getSelectionModel().getSelectedItem() != null)
+     {
+        CompletionProposal item = list.getSelectionModel().getSelectedItem();
+        Widget widget = item.getAdditionalProposalInfo();
+        showPopup(widget);
+     }
   }
+};
+
+/**
+* @param widget
+*/
+private void showPopup(Widget widget)
+{
+  if (widget == null)
+  {
+     infoPopup.hide();
+     return;
+  }
+  if (infoPopup.isShowing())
+  {
+     infoPopup.hide();
+  }
+  infoPopup.setContentElement((Element)widget.getElement());
+  infoPopup.getView().getElement().getStyle().setHeight(box.getClientHeight() + "px");
+  infoPopup.show(positioner);
+  autoHideController.addPartner(infoPopup.getView().getElement());
+  autoHideController.addPartnerClickTargets(infoPopup.getView().getElement());
+}
 
   @Override
   public boolean isShowing() {
@@ -215,6 +308,8 @@ public class AutocompleteUiController implements AutocompleteBox {
        {
           list.getSelectionModel().selectNext();
        }
+       infoTimer.cancel();
+       infoTimer.schedule(DELAY_MILLIS);
       return true;
     }
 
@@ -227,6 +322,8 @@ public class AutocompleteUiController implements AutocompleteBox {
        {
           list.getSelectionModel().selectPrevious();
        }
+       infoTimer.cancel();
+       infoTimer.schedule(DELAY_MILLIS);
       return true;
     }
 
@@ -237,11 +334,15 @@ public class AutocompleteUiController implements AutocompleteBox {
 
     if (signal.keyCode == KeyCodes.KEY_PAGEUP) {
       list.getSelectionModel().selectPreviousPage();
+      infoTimer.cancel();
+      infoTimer.schedule(DELAY_MILLIS);
       return true;
     }
 
     if (signal.keyCode == KeyCodes.KEY_PAGEDOWN) {
       list.getSelectionModel().selectNextPage();
+      infoTimer.cancel();
+      infoTimer.schedule(DELAY_MILLIS);
       return true;
     }
 
@@ -269,6 +370,7 @@ public class AutocompleteUiController implements AutocompleteBox {
     if (hadFocus && !focusManager.hasFocus()) {
       focusManager.focus();
     }
+    infoPopup.destroy();
   }
 
   @Override
@@ -300,6 +402,8 @@ public class AutocompleteUiController implements AutocompleteBox {
 
     if (list.getSelectionModel().getSelectedItem() == null) {
       list.getSelectionModel().setSelectedItem(0);
+      infoTimer.cancel();
+      infoTimer.schedule(DELAY_MILLIS);
     }
 
     String hintText = null;//items.getHint();

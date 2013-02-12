@@ -322,21 +322,21 @@ public class CompletionProposalLabelProvider
       StringBuilder b = new StringBuilder();
       // b.append("<span style=\"position: absolute; height: 10px; font-size: 10px; margin-top: -5px; margin-left: -6px; color=#6d0000;\">S</span>");
 
-      b.append("<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; ");
-      b.append("height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">");
-      if (Modifier.isAbstract(flags))
-         b.append("<font color ='#004e00' style='float: right;'>A</font>");
-      if (Modifier.isFinal(flags))
-         b.append("<font color ='#174c83' style='float: right;'>F</font>");
-      if (Modifier.isStatic(flags))
-         b.append("<font color ='#6d0000' style='float: right;'>S</font>");
-      if (Modifier.isVolatile(flags))
-         b.append("<font color ='#174c83' style='float: right;'>V</font>");
-      if (Modifier.isTransient(flags))
-         b.append("<font color ='#174c83' style='float: right;'>T</font>");
-      if (Modifier.isSynchronized(flags))
-         b.append("<font color ='#004e00' style='float: right;'>Sc</font>");
-      b.append("</span>");
+//      b.append("<span style = \"position: absolute; margin-top: -5px; margin-left: -25px; width: 22px; ");
+//      b.append("height: 10px; font-family:  font-family: Verdana,Bitstream Vera Sans,sans-serif; font-size: 10px; \">");
+//      if (Modifier.isAbstract(flags))
+//         b.append("<font color ='#004e00' style='float: right;'>A</font>");
+//      if (Modifier.isFinal(flags))
+//         b.append("<font color ='#174c83' style='float: right;'>F</font>");
+//      if (Modifier.isStatic(flags))
+//         b.append("<font color ='#6d0000' style='float: right;'>S</font>");
+//      if (Modifier.isVolatile(flags))
+//         b.append("<font color ='#174c83' style='float: right;'>V</font>");
+//      if (Modifier.isTransient(flags))
+//         b.append("<font color ='#174c83' style='float: right;'>T</font>");
+//      if (Modifier.isSynchronized(flags))
+//         b.append("<font color ='#004e00' style='float: right;'>Sc</font>");
+//      b.append("</span>");
 
       return b.toString();
    }

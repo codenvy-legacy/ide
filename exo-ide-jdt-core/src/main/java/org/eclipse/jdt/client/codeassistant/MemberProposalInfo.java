@@ -10,8 +10,8 @@
  *******************************************************************************/
 package org.eclipse.jdt.client.codeassistant;
 
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.ui.Frame;
-
 import com.google.gwt.user.client.ui.Widget;
 
 import org.eclipse.jdt.client.core.CompletionProposal;
@@ -39,7 +39,6 @@ public abstract class MemberProposalInfo extends ProposalInfo
    /**
     * Creates a new proposal info.
     * 
-    * @param project the java project to reference when resolving types
     * @param proposal the proposal to generate information for
     */
    public MemberProposalInfo(CompletionProposal proposal, String projectId, String docContext)
@@ -64,6 +63,9 @@ public abstract class MemberProposalInfo extends ProposalInfo
       if (url != null)
       {
          frame = new Frame(url);
+         frame.setSize("100%", "100%");
+         frame.removeStyleName("gwt-Frame");
+         frame.getElement().getStyle().setBorderWidth(0, Unit.PX);
       }
       return frame;
    }
