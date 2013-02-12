@@ -108,7 +108,9 @@ public class ProgressPresenter extends JobManager implements JobChangeHandler, S
             jobs = job;
             display.updateJobs(jobs);
             if (jobs.isEmpty())
+            {
                control.hide();
+            }
          }
       });
    }
@@ -139,7 +141,16 @@ public class ProgressPresenter extends JobManager implements JobChangeHandler, S
 
       if (job.getStatus() == JobStatus.FINISHED)
       {
-         control.hide();
+         Job nextStartedJob = getNextStartedJob();
+         if (nextStartedJob == null)
+         {
+            control.hide();
+         }
+         else
+         {
+            control.updateState(nextStartedJob);
+            control.show();
+         }
       }
       else
       {
@@ -151,6 +162,23 @@ public class ProgressPresenter extends JobManager implements JobChangeHandler, S
       {
          display.updateOrAddJob(job);
       }
+   }
+
+   /**
+    * Returns first {@link Job} which is started.
+    * 
+    * @return started {@link Job}
+    */
+   private Job getNextStartedJob()
+   {
+      for (String key : jobs.keySet())
+      {
+         if (jobs.get(key).getStatus() == JobStatus.STARTED)
+         {
+            return jobs.get(key);
+         }
+      }
+      return null;
    }
 
    private void showJobInWindow(Job job)
