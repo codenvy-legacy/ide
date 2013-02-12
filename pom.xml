@@ -14,8 +14,8 @@
    <packaging>pom</packaging>
    <name>eXo IDE :: Parent</name>
    <scm>
-      <connection>scm:git:git@github.com:exodev/ide.git</connection>
-      <developerConnection>scm:git:git@github.com:exodev/ide.git</developerConnection>
+      <connection>scm:git:git@github.com:codenvy/ide.git</connection>
+      <developerConnection>scm:git:git@github.com:codenvy/ide.git</developerConnection>
       <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
    </scm>
    <properties>

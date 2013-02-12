@@ -535,9 +535,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             writeBuildInfo(buildStatus);
             checkIfProjectIsUnderWatching();
          }
-//         message.append("\r\nYou can download the build result <a href=\"").append(buildStatus.getDownloadUrl())
-//            .append("\">here</a>");
-
          if (publishAfterBuild)
          {
             getPublishArtifactResult();
@@ -555,9 +552,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
             exceptionMessage += ": " + errorMessage;
          }
 
-         statusHandler.requestError(projectId, new Exception(exceptionMessage));
+         statusHandler.requestError(projectId, new Exception("Building of project failed", new Throwable(exceptionMessage)));
       }
-      System.out.println("BuildProjectPresenter.afterBuildFinished()" + message.toString());
       showBuildMessage(message.toString());
       display.stopAnimation();
       IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
