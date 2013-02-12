@@ -21,6 +21,7 @@ package org.exoplatform.ide.client.operation.rename;
 import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -287,7 +288,7 @@ public class RenameFolderPresenter extends ItemsOperationPresenter implements Re
                {
                   new ResourceLockedPresenter(
                      new SafeHtmlBuilder().appendHtmlConstant("Can't rename folder <b>").appendEscaped(
-                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false);
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, false,i.getPath() , Operation.RENAME);
                   return;
                }
             }

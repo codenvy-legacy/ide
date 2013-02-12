@@ -21,6 +21,7 @@ package org.eclipse.jdt.client.refactoring.rename;
 import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -324,7 +325,8 @@ public class RefactoringRenamePresenter implements RefactoringRenameHandler, Vie
       if(collaborationManager.isFileOpened(fileToRename.getPath()))
       {
          new ResourceLockedPresenter(
-            new SafeHtmlBuilder().appendHtmlConstant("Can't perform refactoring.").toSafeHtml(), collaborationManager, fileToRename.getPath(), true);
+            new SafeHtmlBuilder().appendHtmlConstant("Can't perform refactoring.").toSafeHtml(), collaborationManager, fileToRename.getPath(), true,fileToRename.getPath() ,
+            Operation.REFACTORING );
          return;
       }
 

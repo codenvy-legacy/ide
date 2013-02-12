@@ -46,21 +46,19 @@ public class NotificationController implements ParticipantsListener
       }
    };
 
-   private void showFileOperationNotification(FileOperationNotification notification)
-   {
-      manager.addNotification(new Notification("User " + notification.getUserId(), 10000));
-   }
 
    private NotificationManager manager;
 
    private CollaborationManager collaborationManager;
 
-   public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,  MessageFilter messageFilter)
+   public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
+      MessageFilter messageFilter)
    {
       this.collaborationManager = collaborationManager;
       collaborationManager.getParticipantsListenerManager().add(this);
       this.manager = manager;
-      messageFilter.registerMessageRecipient(RoutingTypes.FILEOPERATIONNOTIFICATION, fileOperationNotificationRecipient);
+      messageFilter.registerMessageRecipient(RoutingTypes.FILEOPERATIONNOTIFICATION,
+         fileOperationNotificationRecipient);
    }
 
    @Override
@@ -76,4 +74,10 @@ public class NotificationController implements ParticipantsListener
       manager.addNotification(
          new Notification("User <b>" + user.getDisplayName() + "</b> close file: " + path, DURATION));
    }
+
+   private void showFileOperationNotification(FileOperationNotification notification)
+   {
+      manager.addNotification(new Notification("User " + notification.getUserId() + " file:" + notification.getFilePath() + " target: " + notification.getTarget() + " operation: " + notification.getOperation(), 10000));
+   }
+
 }

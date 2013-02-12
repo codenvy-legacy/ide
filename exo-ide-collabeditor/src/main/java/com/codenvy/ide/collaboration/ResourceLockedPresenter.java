@@ -53,7 +53,7 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
 
       @DefaultMessage("This folder contains file(s) opened by {0} users.")
       @AlternateMessage({"one", "This folder contains file(s) opened by other user."})
-      String folder(@PluralCount  int size);
+      String folder(@PluralCount int size);
    }
 
 
@@ -67,11 +67,18 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
 
    private boolean file;
 
-   public ResourceLockedPresenter(SafeHtml message, CollaborationManager manager, String path, boolean isFile)
+   private String targetPaht;
+
+   private Operation operation;
+
+   public ResourceLockedPresenter(SafeHtml message, CollaborationManager manager, String path, boolean isFile,
+      String targetPaht, Operation operation)
    {
       this.manager = manager;
       this.path = path;
       file = isFile;
+      this.targetPaht = targetPaht;
+      this.operation = operation;
       view = GWT.create(ResourceLockedView.class);
       view.setDelegate(this);
       IDE.getInstance().openView(view);
@@ -84,7 +91,7 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
    private void updateUserList(String path)
    {
       JsonArray<ParticipantUserDetails> participants = manager.getParticipantsForFile(path);
-      if(participants == null)
+      if (participants == null)
       {
          Dialogs.getInstance().showInfo("All users close file, now you may perform operation.");
          onClose();
@@ -92,13 +99,13 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
       }
 
       SafeHtmlBuilder builder = new SafeHtmlBuilder();
-      if(file)
+      if (file)
       {
-      builder.appendHtmlConstant(MESSAGES.file(participants.size()));
+         builder.appendHtmlConstant(MESSAGES.file(participants.size()));
       }
       else
       {
-      builder.appendHtmlConstant(MESSAGES.folder(participants.size()));
+         builder.appendHtmlConstant(MESSAGES.folder(participants.size()));
       }
       view.setUserList(builder.toSafeHtml());
    }
@@ -121,10 +128,11 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
    {
       FileOperationNotificationImpl notification = FileOperationNotificationImpl.make();
       notification.setFilePath(path);
-      notification.setOperation(Operation.DELETE);
-      notification.setTarget(path);
+      notification.setOperation(operation);
+      notification.setTarget(targetPaht);
       notification.setUserId(BootstrapSession.getBootstrapSession().getUserId());
       CollabEditorExtension.get().getContext().getFrontendApi().FILE_OPERATION_NOTIFY.send(notification);
+      view.setNotifyButtonEnabled(false);
    }
 
    /**
@@ -133,7 +141,7 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
    @Override
    public void userOpenFile(String path, UserDetails user)
    {
-      if(path.equals(this.path))
+      if (path.equals(this.path))
       {
          updateUserList(path);
       }
@@ -145,7 +153,7 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
    @Override
    public void userCloseFile(String path, UserDetails user)
    {
-      if(path.equals(this.path))
+      if (path.equals(this.path))
       {
          updateUserList(path);
       }

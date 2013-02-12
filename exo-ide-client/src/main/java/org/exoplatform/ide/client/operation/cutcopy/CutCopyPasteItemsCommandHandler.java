@@ -22,6 +22,7 @@ import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
@@ -112,7 +113,8 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
             if (path.startsWith(i.getPath()))
             {
                new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
-                  i.getName()).appendHtmlConstant("</b>.").toSafeHtml(), collaborationManager, path, i instanceof FileModel);
+                  i.getName()).appendHtmlConstant("</b>.").toSafeHtml(), collaborationManager, path, i instanceof FileModel,i.getPath() ,
+                  Operation.MOVE );
 //               Dialogs.getInstance().showError(
 //                  "Can't cut <b>" + i.getName() + "</b>. ");
                //This folder contains file(s) opened by other users.
@@ -122,7 +124,7 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
          if (collaborationManager.isFileOpened(i.getPath()))
          {
             new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
-               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
+               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,i.getPath() ,Operation.MOVE );
             return;
          }
          for (FileModel f : openedFiles.values())
@@ -134,7 +136,7 @@ public class CutCopyPasteItemsCommandHandler extends ItemsOperationPresenter
                   if (collaborationManager.isFileOpened(f.getPath()))
                   {
                      new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't cut <b>").appendEscaped(
-                        f.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, f.getPath(), true);
+                        f.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, f.getPath(), true,f.getPath() ,Operation.MOVE );
                      return;
                   }
                }

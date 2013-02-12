@@ -22,6 +22,7 @@ import com.codenvy.ide.collaboration.ResourceLockedPresenter;
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
 import com.google.collide.client.collaboration.CollaborationManager;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -171,7 +172,8 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
                   //                  Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
                   new ResourceLockedPresenter(
                      new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true, i.getPath(),
+                     Operation.DELETE );
                   return false;
                }
             }
@@ -179,7 +181,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
          if (collaborationManager.isFileOpened(i.getPath()))
          {
             new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true);
+               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,i.getPath() ,Operation.DELETE );
             //            Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
             return false;
          }
@@ -189,7 +191,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
             if (path.startsWith(i.getPath()))
             {
                new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-                  i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, i instanceof FileModel);
+                  i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, i instanceof FileModel, i.getPath() ,Operation.DELETE );
                //               Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
                return false;
             }
