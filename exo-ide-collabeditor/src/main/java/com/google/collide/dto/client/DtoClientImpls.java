@@ -9,6 +9,112 @@ public class DtoClientImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "bca179ae3917468565f0178049f263e405e02437";
 
+   public static class UserLogOutDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UserLogOutDto {
+      protected UserLogOutDtoImpl() {}
+
+      @Override
+      public final native com.google.collide.dto.Participant getParticipant() /*-{
+         return this["participant"];
+      }-*/;
+
+      public final native UserLogOutDtoImpl setParticipant(com.google.collide.dto.Participant participant) /*-{
+         this["participant"] = participant;
+         return this;
+      }-*/;
+
+      public final native boolean hasParticipant() /*-{
+         return this.hasOwnProperty("participant");
+      }-*/;
+
+   }
+
+   public static class UserLogInDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UserLogInDto {
+      protected UserLogInDtoImpl() {}
+
+      @Override
+      public final native com.google.collide.dto.ParticipantUserDetails getParticipant() /*-{
+         return this["participant"];
+      }-*/;
+
+      public final native UserLogInDtoImpl setParticipant(com.google.collide.dto.ParticipantUserDetails participant) /*-{
+         this["participant"] = participant;
+         return this;
+      }-*/;
+
+      public final native boolean hasParticipant() /*-{
+         return this.hasOwnProperty("participant");
+      }-*/;
+
+   }
+
+   public static class FileOperationNotificationImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.FileOperationNotification {
+      protected FileOperationNotificationImpl() {}
+
+      @Override
+      public final native java.lang.String getUserId() /*-{
+         return this["userId"];
+      }-*/;
+
+      public final native FileOperationNotificationImpl setUserId(java.lang.String userId) /*-{
+         this["userId"] = userId;
+         return this;
+      }-*/;
+
+      public final native boolean hasUserId() /*-{
+         return this.hasOwnProperty("userId");
+      }-*/;
+
+      @Override
+      public final native java.lang.String getFilePath() /*-{
+         return this["filePath"];
+      }-*/;
+
+      public final native FileOperationNotificationImpl setFilePath(java.lang.String filePath) /*-{
+         this["filePath"] = filePath;
+         return this;
+      }-*/;
+
+      public final native boolean hasFilePath() /*-{
+         return this.hasOwnProperty("filePath");
+      }-*/;
+
+      @Override
+      public final native java.lang.String getTarget() /*-{
+         return this["target"];
+      }-*/;
+
+      public final native FileOperationNotificationImpl setTarget(java.lang.String target) /*-{
+         this["target"] = target;
+         return this;
+      }-*/;
+
+      public final native boolean hasTarget() /*-{
+         return this.hasOwnProperty("target");
+      }-*/;
+
+      @Override
+      public final native com.google.collide.dto.FileOperationNotification.Operation getOperation() /*-{
+         return @com.google.collide.dto.FileOperationNotification.Operation::valueOf(Ljava/lang/String;)(this["operation"]);
+      }-*/;
+
+      public final native FileOperationNotificationImpl setOperation(com.google.collide.dto.FileOperationNotification.Operation operation) /*-{
+         operation = operation.@com.google.collide.dto.FileOperationNotification.Operation::toString()();
+         this["operation"] = operation;
+         return this;
+      }-*/;
+
+      public final native boolean hasOperation() /*-{
+         return this.hasOwnProperty("operation");
+      }-*/;
+
+      public static native FileOperationNotificationImpl make() /*-{
+         return {
+            _type: 130
+         };
+      }-*/;  }
+
+
+
    public static class GetOpenendFilesInWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace {
       protected GetOpenendFilesInWorkspaceImpl() {}
 

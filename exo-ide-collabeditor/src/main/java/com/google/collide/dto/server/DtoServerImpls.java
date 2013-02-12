@@ -23,6 +23,424 @@ public class DtoServerImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "bca179ae3917468565f0178049f263e405e02437";
 
+   public static class UserLogInDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UserLogInDto, JsonSerializable {
+
+      private UserLogInDtoImpl() {
+         super(131);
+      }
+
+      protected UserLogInDtoImpl(int type) {
+         super(type);
+      }
+
+      public static UserLogInDtoImpl make() {
+         return new UserLogInDtoImpl();
+      }
+
+      protected ParticipantUserDetailsImpl participant;
+      private boolean _hasParticipant;
+
+      public boolean hasParticipant() {
+         return _hasParticipant;
+      }
+
+      @Override
+      public com.google.collide.dto.ParticipantUserDetails getParticipant() {
+         return participant;
+      }
+
+      public UserLogInDtoImpl setParticipant(ParticipantUserDetailsImpl v) {
+         _hasParticipant = true;
+         participant = v;
+         return this;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof UserLogInDtoImpl)) {
+            return false;
+         }
+         UserLogInDtoImpl other = (UserLogInDtoImpl) o;
+         if (this._hasParticipant != other._hasParticipant) {
+            return false;
+         }
+         if (this._hasParticipant) {
+            if (!this.participant.equals(other.participant)) {
+               return false;
+            }
+         }
+         return true;
+      }
+
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         hash = hash * 31 + (_hasParticipant ? participant.hashCode() : 0);
+         return hash;
+      }
+
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
+
+         JsonElement participantOut = participant == null ? JsonNull.INSTANCE : participant.toJsonElement();
+         result.add("participant", participantOut);
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static UserLogInDtoImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         UserLogInDtoImpl dto = new UserLogInDtoImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         if (json.has("participant")) {
+            JsonElement participantIn = json.get("participant");
+            ParticipantUserDetailsImpl participantOut = ParticipantUserDetailsImpl.fromJsonElement(participantIn);
+            dto.setParticipant(participantOut);
+         }
+
+         return dto;
+      }
+      public static UserLogInDtoImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
+
+   public static class UserLogOutDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UserLogOutDto, JsonSerializable {
+
+      private UserLogOutDtoImpl() {
+         super(132);
+      }
+
+      protected UserLogOutDtoImpl(int type) {
+         super(type);
+      }
+
+      public static UserLogOutDtoImpl make() {
+         return new UserLogOutDtoImpl();
+      }
+
+      protected ParticipantImpl participant;
+      private boolean _hasParticipant;
+
+      public boolean hasParticipant() {
+         return _hasParticipant;
+      }
+
+      @Override
+      public com.google.collide.dto.Participant getParticipant() {
+         return participant;
+      }
+
+      public UserLogOutDtoImpl setParticipant(ParticipantImpl v) {
+         _hasParticipant = true;
+         participant = v;
+         return this;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof UserLogOutDtoImpl)) {
+            return false;
+         }
+         UserLogOutDtoImpl other = (UserLogOutDtoImpl) o;
+         if (this._hasParticipant != other._hasParticipant) {
+            return false;
+         }
+         if (this._hasParticipant) {
+            if (!this.participant.equals(other.participant)) {
+               return false;
+            }
+         }
+         return true;
+      }
+
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         hash = hash * 31 + (_hasParticipant ? participant.hashCode() : 0);
+         return hash;
+      }
+
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
+
+         JsonElement participantOut = participant == null ? JsonNull.INSTANCE : participant.toJsonElement();
+         result.add("participant", participantOut);
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static UserLogOutDtoImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         UserLogOutDtoImpl dto = new UserLogOutDtoImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         if (json.has("participant")) {
+            JsonElement participantIn = json.get("participant");
+            ParticipantImpl participantOut = ParticipantImpl.fromJsonElement(participantIn);
+            dto.setParticipant(participantOut);
+         }
+
+         return dto;
+      }
+      public static UserLogOutDtoImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
+
+   public static class FileOperationNotificationImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.FileOperationNotification, JsonSerializable {
+
+      private FileOperationNotificationImpl() {
+         super(130);
+      }
+
+      protected FileOperationNotificationImpl(int type) {
+         super(type);
+      }
+
+      public static FileOperationNotificationImpl make() {
+         return new FileOperationNotificationImpl();
+      }
+
+      protected java.lang.String userId;
+      private boolean _hasUserId;
+      protected java.lang.String filePath;
+      private boolean _hasFilePath;
+      protected java.lang.String target;
+      private boolean _hasTarget;
+      protected com.google.collide.dto.FileOperationNotification.Operation operation;
+      private boolean _hasOperation;
+
+      public boolean hasUserId() {
+         return _hasUserId;
+      }
+
+      @Override
+      public java.lang.String getUserId() {
+         return userId;
+      }
+
+      public FileOperationNotificationImpl setUserId(java.lang.String v) {
+         _hasUserId = true;
+         userId = v;
+         return this;
+      }
+
+      public boolean hasFilePath() {
+         return _hasFilePath;
+      }
+
+      @Override
+      public java.lang.String getFilePath() {
+         return filePath;
+      }
+
+      public FileOperationNotificationImpl setFilePath(java.lang.String v) {
+         _hasFilePath = true;
+         filePath = v;
+         return this;
+      }
+
+      public boolean hasTarget() {
+         return _hasTarget;
+      }
+
+      @Override
+      public java.lang.String getTarget() {
+         return target;
+      }
+
+      public FileOperationNotificationImpl setTarget(java.lang.String v) {
+         _hasTarget = true;
+         target = v;
+         return this;
+      }
+
+      public boolean hasOperation() {
+         return _hasOperation;
+      }
+
+      @Override
+      public com.google.collide.dto.FileOperationNotification.Operation getOperation() {
+         return operation;
+      }
+
+      public FileOperationNotificationImpl setOperation(com.google.collide.dto.FileOperationNotification.Operation v) {
+         _hasOperation = true;
+         operation = v;
+         return this;
+      }
+
+      @Override
+      public boolean equals(Object o) {
+         if (!super.equals(o)) {
+            return false;
+         }
+         if (!(o instanceof FileOperationNotificationImpl)) {
+            return false;
+         }
+         FileOperationNotificationImpl other = (FileOperationNotificationImpl) o;
+         if (this._hasUserId != other._hasUserId) {
+            return false;
+         }
+         if (this._hasUserId) {
+            if (!this.userId.equals(other.userId)) {
+               return false;
+            }
+         }
+         if (this._hasFilePath != other._hasFilePath) {
+            return false;
+         }
+         if (this._hasFilePath) {
+            if (!this.filePath.equals(other.filePath)) {
+               return false;
+            }
+         }
+         if (this._hasTarget != other._hasTarget) {
+            return false;
+         }
+         if (this._hasTarget) {
+            if (!this.target.equals(other.target)) {
+               return false;
+            }
+         }
+         if (this._hasOperation != other._hasOperation) {
+            return false;
+         }
+         if (this._hasOperation) {
+            if (!this.operation.equals(other.operation)) {
+               return false;
+            }
+         }
+         return true;
+      }
+
+      @Override
+      public int hashCode() {
+         int hash = super.hashCode();
+         hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
+         hash = hash * 31 + (_hasFilePath ? filePath.hashCode() : 0);
+         hash = hash * 31 + (_hasTarget ? target.hashCode() : 0);
+         hash = hash * 31 + (_hasOperation ? operation.hashCode() : 0);
+         return hash;
+      }
+
+      @Override
+      public JsonElement toJsonElement() {
+         JsonObject result = new JsonObject();
+
+         JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+         result.add("userId", userIdOut);
+
+         JsonElement filePathOut = (filePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(filePath);
+         result.add("filePath", filePathOut);
+
+         JsonElement targetOut = (target == null) ? JsonNull.INSTANCE : new JsonPrimitive(target);
+         result.add("target", targetOut);
+
+         JsonElement operationOut = (operation == null) ? JsonNull.INSTANCE : new JsonPrimitive(operation.name());
+         result.add("operation", operationOut);
+         result.add("_type", new JsonPrimitive(getType()));
+         return result;
+      }
+
+      @Override
+      public String toJson() {
+         return gson.toJson(toJsonElement());
+      }
+
+      @Override
+      public String toString() {
+         return toJson();
+      }
+
+      public static FileOperationNotificationImpl fromJsonElement(JsonElement jsonElem) {
+         if (jsonElem == null || jsonElem.isJsonNull()) {
+            return null;
+         }
+
+         FileOperationNotificationImpl dto = new FileOperationNotificationImpl();
+         JsonObject json = jsonElem.getAsJsonObject();
+
+         if (json.has("userId")) {
+            JsonElement userIdIn = json.get("userId");
+            java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+            dto.setUserId(userIdOut);
+         }
+
+         if (json.has("filePath")) {
+            JsonElement filePathIn = json.get("filePath");
+            java.lang.String filePathOut = gson.fromJson(filePathIn, java.lang.String.class);
+            dto.setFilePath(filePathOut);
+         }
+
+         if (json.has("target")) {
+            JsonElement targetIn = json.get("target");
+            java.lang.String targetOut = gson.fromJson(targetIn, java.lang.String.class);
+            dto.setTarget(targetOut);
+         }
+
+         if (json.has("operation")) {
+            JsonElement operationIn = json.get("operation");
+            com.google.collide.dto.FileOperationNotification.Operation operationOut = gson.fromJson(operationIn, com.google.collide.dto.FileOperationNotification.Operation.class);
+            dto.setOperation(operationOut);
+         }
+
+         return dto;
+      }
+      public static FileOperationNotificationImpl fromJsonString(String jsonString) {
+         if (jsonString == null) {
+            return null;
+         }
+
+         return fromJsonElement(new JsonParser().parse(jsonString));
+      }
+   }
+
+
    public static class GetOpenendFilesInWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace, JsonSerializable {
 
       private GetOpenendFilesInWorkspaceImpl() {

@@ -41,13 +41,13 @@ import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsRespo
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
 import com.google.collide.json.server.JsonArrayListAdapter;
+import com.google.collide.server.WSUtil;
 import com.google.collide.server.participants.Participants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.everrest.websockets.WSConnection;
 import org.everrest.websockets.WSConnectionContext;
-import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.commons.StringUtils;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -216,7 +216,7 @@ public class EditSessions implements Startable
          sendTo.remove(userId);
          if (!sendTo.isEmpty())
          {
-            broadcastToClients(
+            WSUtil.broadcastToClients(
                NewFileCollaboratorImpl.make().setPath(path).setParticipant(participants.getParticipant(userId)).toJson(),
                sendTo
             );
@@ -271,7 +271,7 @@ public class EditSessions implements Startable
             sendTo.remove(userId);
             if (!sendTo.isEmpty())
             {
-               broadcastToClients(
+               WSUtil.broadcastToClients(
                   FileCollaboratorGoneImpl.make().setPath(editSession.getPath())
                      .setParticipant(participants.getParticipant(userId)).toJson(),
                   sendTo
@@ -282,24 +282,6 @@ public class EditSessions implements Startable
          if (editSession.getCollaborators().isEmpty())
          {
             editSessionsByResourceId.remove(editSession.getResourceId());
-         }
-      }
-   }
-
-   private void broadcastToClients(String message, Set<String> collaborators)
-   {
-      for (String collaborator : collaborators)
-      {
-         ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
-         broadcastMessage.setChannel("collab_editor." + collaborator);
-         broadcastMessage.setBody(message);
-         try
-         {
-            WSConnectionContext.sendMessage(broadcastMessage);
-         }
-         catch (Exception e)
-         {
-            LOG.error(e.getMessage(), e);
          }
       }
    }
@@ -319,7 +301,7 @@ public class EditSessions implements Startable
             result.add(e.getKey());
             if (!sendTo.isEmpty())
             {
-               broadcastToClients(
+               WSUtil.broadcastToClients(
                   FileCollaboratorGoneImpl.make().setPath(editSession.getPath())
                      .setParticipant(participants.getParticipant(userId)).toJson(),
                   sendTo
@@ -440,7 +422,7 @@ public class EditSessions implements Startable
          sendTo.remove(authorId);
          if (!sendTo.isEmpty())
          {
-            broadcastToClients(broadcastedDocOps.toJson(), sendTo);
+            WSUtil.broadcastToClients(broadcastedDocOps.toJson(), sendTo);
          }
          return broadcastedDocOps;
       }
@@ -519,4 +501,27 @@ public class EditSessions implements Startable
       return response;
    }
 
+   public Set<String> getEditSessionCollaborators(String filePath)
+   {
+      FileEditSession editSession = findEditSessionByPath(filePath);
+      if(editSession == null)
+      {
+         throw  new IllegalStateException("Can't find edit session for file: " + filePath);
+      }
+      return editSession.getCollaborators();
+   }
+
+   private FileEditSession findEditSessionByPath(String filePath)
+   {
+      // Client required to have different 'session key' even for the same resources :( . Since mapping resourceId to
+      // editSession is more important for us we keep only this mapping and lookup session by path if need.
+      for (FileEditSession editSession : editSessionsByResourceId.values())
+      {
+         if (filePath.equals(editSession.getPath()))
+         {
+            return editSession;
+         }
+      }
+      return null;
+   }
 }

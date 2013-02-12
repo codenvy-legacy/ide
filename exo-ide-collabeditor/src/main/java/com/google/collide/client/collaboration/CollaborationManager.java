@@ -14,14 +14,12 @@
 
 package com.google.collide.client.collaboration;
 
-import com.codenvy.ide.notification.Notification;
-import com.codenvy.ide.notification.NotificationManager;
-import com.codenvy.ide.notification.NotificationManager.InitialPositionCallback;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedEvent;
 import com.google.collide.client.communication.FrontendApi.ApiCallback;
 import com.google.collide.client.communication.MessageFilter;
+import com.google.collide.client.communication.MessageFilter.MessageRecipient;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentManager.LifecycleListener;
@@ -37,6 +35,7 @@ import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.UserDetails;
+import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.client.DtoClientImpls.GetOpenendFilesInWorkspaceImpl;
 import com.google.collide.json.client.Jso;
 import com.google.collide.json.shared.JsonArray;
@@ -47,7 +46,6 @@ import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
-import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 
@@ -66,8 +64,6 @@ public class CollaborationManager
 
       void userCloseFile(String path, UserDetails user);
    }
-
-   public static final int DURATION = 3000;
 
    private final LifecycleListener lifecycleListener = new LifecycleListener()
    {
@@ -149,6 +145,15 @@ public class CollaborationManager
       }
    };
 
+   private final MessageRecipient<UserLogInDto> userLogInDtoMessageRecipient = new MessageRecipient<UserLogInDto>()
+   {
+      @Override
+      public void onMessageReceived(UserLogInDto message)
+      {
+
+      }
+   };
+
    private final AppContext appContext;
 
    private final RemoverManager removerManager = new RemoverManager();
@@ -165,8 +170,6 @@ public class CollaborationManager
    private JsonStringMap<JsonArray<ParticipantUserDetails>> openedFilesInWorkspace = JsonCollections.createMap();
 
    private final ListenerManager<ParticipantsListener> participantsListenerManager = ListenerManager.create();
-
-   private final NotificationManager notificationManager;
 
    private CollaborationManager(AppContext appContext, DocumentManager documentManager,
                                 IncomingDocOpDemultiplexer docOpRecipient)
@@ -193,20 +196,7 @@ public class CollaborationManager
             openedFilesInWorkspace.putAll(message.getOpenedFiles());
          }
       });
-      notificationManager = new NotificationManager(new InitialPositionCallback()
-      {
-         @Override
-         public int getBorderX()
-         {
-            return Window.getClientWidth() - 5;
-         }
 
-         @Override
-         public int getBorderY()
-         {
-            return 20;
-         }
-      });
    }
 
    public static CollaborationManager create(AppContext appContext, DocumentManager documentManager,
@@ -296,8 +286,6 @@ public class CollaborationManager
          openedFilesInWorkspace.put(message.getPath(),JsonCollections.<ParticipantUserDetails>createArray());
       }
       openedFilesInWorkspace.get(message.getPath()).add(message.getParticipant());
-      notificationManager.addNotification(new Notification("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> open file: " + message.getPath(),
-         DURATION));
       participantsListenerManager.dispatch(new Dispatcher<ParticipantsListener>()
       {
          @Override
@@ -340,7 +328,6 @@ public class CollaborationManager
       {
          openedFilesInWorkspace.remove(message.getPath());
       }
-      notificationManager.addNotification(new Notification("User <b>" + message.getParticipant().getUserDetails().getDisplayName() + "</b> close file: " + message.getPath(),DURATION));
       participantsListenerManager.dispatch(new Dispatcher<ParticipantsListener>()
       {
          @Override

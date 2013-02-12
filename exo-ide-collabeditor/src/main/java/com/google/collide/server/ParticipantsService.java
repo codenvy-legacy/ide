@@ -19,11 +19,15 @@
 package com.google.collide.server;
 
 import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResponseImpl;
+import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
+import com.google.collide.dto.server.DtoServerImpls.UserLogInDtoImpl;
 import com.google.collide.server.participants.LoggedInUser;
 import com.google.collide.server.participants.Participants;
+
 import org.everrest.websockets.WSConnection;
 
 import java.security.Principal;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -55,7 +59,12 @@ public class ParticipantsService
       Principal principal = securityContext.getUserPrincipal();
       LoggedInUser user = new LoggedInUser(principal != null ? principal.getName() : "anonymous",
          connection.getHttpSession().getId()); // HTTP session ID is easiest way to identify users with the same name, if they use different browsers.
+      Set<String> participantsToBroadcast = participants.getAllParticipantId();
       participants.addParticipant(user);
+      ParticipantUserDetailsImpl participant = participants.getParticipant(user.getId());
+      UserLogInDtoImpl userLogInDto = UserLogInDtoImpl.make();
+      userLogInDto.setParticipant(participant);
+      WSUtil.broadcastToClients(userLogInDto.toJson(), participantsToBroadcast);
       return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getId(), user.getId());
    }
 }

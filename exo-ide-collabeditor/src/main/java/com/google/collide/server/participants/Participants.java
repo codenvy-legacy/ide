@@ -19,12 +19,13 @@ import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResp
 import com.google.collide.dto.server.DtoServerImpls.ParticipantImpl;
 import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserDetailsImpl;
+import com.google.collide.dto.server.DtoServerImpls.UserLogOutDtoImpl;
+import com.google.collide.server.WSUtil;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -34,7 +35,9 @@ public class Participants
 {
    private static final Log LOG = ExoLogger.getLogger(Participants.class);
 
-   /** Map of per-user session IDs LoggedInUsers. */
+   /**
+    * Map of per-user session IDs LoggedInUsers.
+    */
    private final ConcurrentMap<String, LoggedInUser> loggedInUsers = new ConcurrentHashMap<String, LoggedInUser>();
 
    public GetWorkspaceParticipantsResponse getParticipants()
@@ -48,11 +51,8 @@ public class Participants
          final String username = user.getName();
          ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
          ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
-         UserDetailsImpl userDetails = UserDetailsImpl.make()
-            .setUserId(userId)
-            .setDisplayEmail(username)
-            .setDisplayName(username)
-            .setGivenName(username);
+         UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(userId).setDisplayEmail(
+            username).setDisplayName(username).setGivenName(username);
 
          participantDetails.setParticipant(participant);
          participantDetails.setUserDetails(userDetails);
@@ -63,7 +63,7 @@ public class Participants
       return resp;
    }
 
-   public Collection<String> getAllParticipantId()
+   public Set<String> getAllParticipantId()
    {
       return loggedInUsers.keySet();
    }
@@ -80,11 +80,8 @@ public class Participants
             final String username = user.getName();
             ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
             ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
-            UserDetailsImpl userDetails = UserDetailsImpl.make()
-               .setUserId(userId)
-               .setDisplayEmail(username)
-               .setDisplayName(username)
-               .setGivenName(username);
+            UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(userId).setDisplayEmail(
+               username).setDisplayName(username).setGivenName(username);
 
             participantDetails.setParticipant(participant);
             participantDetails.setUserDetails(userDetails);
@@ -102,11 +99,8 @@ public class Participants
       {
          ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
          ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
-         UserDetailsImpl userDetails = UserDetailsImpl.make()
-            .setUserId(userId)
-            .setDisplayEmail(user.getName())
-            .setDisplayName(user.getName())
-            .setGivenName(user.getName());
+         UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(userId).setDisplayEmail(
+            user.getName()).setDisplayName(user.getName()).setGivenName(user.getName());
          participantDetails.setParticipant(participant);
          participantDetails.setUserDetails(userDetails);
          return participantDetails;
@@ -117,7 +111,21 @@ public class Participants
    public boolean removeParticipant(String userId)
    {
       LOG.debug("Remove participant: {} ", userId);
-      return loggedInUsers.remove(userId) != null;
+      if (loggedInUsers.containsKey(userId))
+      {
+         ParticipantUserDetailsImpl participant = getParticipant(userId);
+         loggedInUsers.remove(userId);
+         Set<String> allParticipantId = getAllParticipantId();
+         UserLogOutDtoImpl userLogOutDto = UserLogOutDtoImpl.make();
+         userLogOutDto.setParticipant((ParticipantImpl)participant.getParticipant());
+         WSUtil.broadcastToClients(userLogOutDto.toJson(), allParticipantId);
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+      //      return loggedInUsers.remove(userId) != null;
    }
 
    public void addParticipant(LoggedInUser user)

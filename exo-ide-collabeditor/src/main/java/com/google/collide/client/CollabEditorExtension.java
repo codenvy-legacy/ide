@@ -18,10 +18,14 @@
  */
 package com.google.collide.client;
 
+import com.codenvy.ide.notification.NotificationManager;
+import com.codenvy.ide.notification.NotificationManager.InitialPositionCallback;
+import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
+import com.google.collide.client.collaboration.NotificationController;
 import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
 import com.google.collide.client.communication.VertxBus;
 import com.google.collide.client.communication.VertxBusWebsoketImpl;
@@ -34,6 +38,7 @@ import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import elemental.dom.Node;
 
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -59,6 +64,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 
    private CollaborationManager collaborationManager;
 
+   private NotificationManager notificationManager;
+
    public static CollabEditorExtension get()
    {
       return instance;
@@ -78,6 +85,20 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       documentManager = DocumentManager.create(context);
 
       new ParticipantsPresenter(context.getResources());
+      notificationManager = new NotificationManager(new InitialPositionCallback()
+      {
+         @Override
+         public int getBorderX()
+         {
+            return Window.getClientWidth() - 5;
+         }
+
+         @Override
+         public int getBorderY()
+         {
+            return 20;
+         }
+      });
    }
 
    public AppContext getContext()
@@ -123,6 +144,8 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
 //                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
                   IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
                   collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient);
+                  new NotificationController(notificationManager, collaborationManager, context.getMessageFilter());
+                  new UsersModel(context.getFrontendApi(), context.getMessageFilter());
 
                   DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
                   bus.close();

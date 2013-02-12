@@ -16,29 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.google.collide.server;
+package com.google.collide.dto;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import com.google.collide.dtogen.shared.RoutingType;
+import com.google.collide.dtogen.shared.ServerToClientDto;
 
-import javax.ws.rs.core.Application;
-
-public class CollaborationEditorApplication extends Application
+/**
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id:
+ *
+ */
+@RoutingType(type = RoutingTypes.USERLOGIN)
+public interface UserLogInDto extends ServerToClientDto
 {
-   @Override
-   public Set<Object> getSingletons()
-   {
-      return Collections.emptySet();
-   }
-
-   @Override
-   public Set<Class<?>> getClasses()
-   {
-      Set<Class<?>> classes = new HashSet<Class<?>>(2);
-      classes.add(ParticipantsService.class);
-      classes.add(EditSessionsService.class);
-      classes.add(CommunicationService.class);
-      return classes;
-   }
+  ParticipantUserDetails getParticipant();
 }

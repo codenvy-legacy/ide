@@ -21,35 +21,20 @@ import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.ClientToServerDocOp;
 import com.google.collide.dto.CloseEditor;
-import com.google.collide.dto.CodeErrors;
-import com.google.collide.dto.CodeErrorsRequest;
-import com.google.collide.dto.CodeGraphRequest;
-import com.google.collide.dto.CodeGraphResponse;
-import com.google.collide.dto.EmptyMessage;
-import com.google.collide.dto.GetDirectory;
-import com.google.collide.dto.GetDirectoryResponse;
+import com.google.collide.dto.FileOperationNotification;
 import com.google.collide.dto.GetEditSessionCollaborators;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetFileContents;
 import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.GetOpenendFilesInWorkspace;
 import com.google.collide.dto.GetOpenendFilesInWorkspaceResponse;
-import com.google.collide.dto.GetWorkspaceMetaData;
-import com.google.collide.dto.GetWorkspaceMetaDataResponse;
 import com.google.collide.dto.GetWorkspaceParticipants;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
-import com.google.collide.dto.KeepAlive;
-import com.google.collide.dto.LogFatalRecord;
-import com.google.collide.dto.LogFatalRecordResponse;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.RoutingTypes;
-import com.google.collide.dto.Search;
-import com.google.collide.dto.SearchResponse;
 import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.ServerToClientDocOps;
-import com.google.collide.dto.UpdateWorkspaceRunTargets;
-import com.google.collide.dto.WorkspaceTreeUpdate;
 import com.google.collide.dto.client.DtoClientImpls.ServerErrorImpl;
 import com.google.collide.dto.shared.JsonFieldConstants;
 import com.google.collide.dtogen.client.RoutableDtoClientImpl;
@@ -184,25 +169,30 @@ public class FrontendApi {
    public final RequestResponseApi<GetEditSessionCollaborators, GetEditSessionCollaboratorsResponse> GET_FILE_COLLABORATORS =
       makeApi("ide/collab_editor/documents/collaborators");
 
-  /**
-   * Get a subdirectory. Just the subtree rooted at that path. No associated meta data.
-   */
-  public final RequestResponseApi<GetDirectory, GetDirectoryResponse> GET_DIRECTORY =
-      makeApi("tree/get");
+//  /**
+//   * Get a subdirectory. Just the subtree rooted at that path. No associated meta data.
+//   */
+//  public final RequestResponseApi<GetDirectory, GetDirectoryResponse> GET_DIRECTORY =
+//      makeApi("tree/get");
+//
+//  /** Sends an ADD_FILE, ADD_DIR, COPY, MOVE, or DELETE tree mutation. */
+//  public final RequestResponseApi<WorkspaceTreeUpdate, EmptyMessage>
+//      MUTATE_WORKSPACE_TREE = makeApi("tree/mutate");
 
-  /** Sends an ADD_FILE, ADD_DIR, COPY, MOVE, or DELETE tree mutation. */
-  public final RequestResponseApi<WorkspaceTreeUpdate, EmptyMessage>
-      MUTATE_WORKSPACE_TREE = makeApi("tree/mutate");
-
-  /**
-   * Send a keep-alive for the client in a workspace.
-   */
-  public final SendApi<KeepAlive> KEEP_ALIVE = makeApi("participants/keepAlive");
+//  /**
+//   * Send a keep-alive for the client in a workspace.
+//   */
+//  public final SendApi<KeepAlive> KEEP_ALIVE = makeApi("participants/keepAlive");
 
    /**
-   * Send a keep-alive for the client in a workspace.
+   * Send a message that user closed file.
    */
   public final SendApi<CloseEditor> CLOSE_EDITOR = makeApi("ide/collab_editor/documents/close");
+
+   /**
+    * Send a message that user closed file.
+    */
+   public final SendApi<FileOperationNotification> FILE_OPERATION_NOTIFY = makeApi("ide/collab_editor/communication/notify/fileoperation");
 
    public final RequestResponseApi<GetOpenendFilesInWorkspace, GetOpenendFilesInWorkspaceResponse> GET_ALL_FILES =
       makeApi("ide/collab_editor/documents/all");
@@ -211,37 +201,37 @@ public class FrontendApi {
    * Gets the list of workspace participants.
    */
   public final RequestResponseApi<GetWorkspaceParticipants, GetWorkspaceParticipantsResponse>
-      GET_WORKSPACE_PARTICIPANTS = makeApi("participants/getParticipants");
+      GET_WORKSPACE_PARTICIPANTS = makeApi("ide/collab_editor/participants/list");
 
-  /** Requests that we get updated information about a workspace's run targets. */
-  public final SendApi<UpdateWorkspaceRunTargets> UPDATE_WORKSPACE_RUN_TARGETS =
-      makeApi("workspace/updateRunTarget");
-  
-  /** Requests workspace state like the last opened files and run targets. */
-  public final RequestResponseApi<GetWorkspaceMetaData, GetWorkspaceMetaDataResponse> 
-      GET_WORKSPACE_META_DATA = makeApi("workspace/getMetaData");
+//  /** Requests that we get updated information about a workspace's run targets. */
+//  public final SendApi<UpdateWorkspaceRunTargets> UPDATE_WORKSPACE_RUN_TARGETS =
+//      makeApi("workspace/updateRunTarget");
+//
+//  /** Requests workspace state like the last opened files and run targets. */
+//  public final RequestResponseApi<GetWorkspaceMetaData, GetWorkspaceMetaDataResponse>
+//      GET_WORKSPACE_META_DATA = makeApi("workspace/getMetaData");
 
-  /**
-   * Retrieves code errors for a file.
-   */
-  public final RequestResponseApi<CodeErrorsRequest, CodeErrors> GET_CODE_ERRORS =
-      makeApi("todo/implementMe");
+//  /**
+//   * Retrieves code errors for a file.
+//   */
+//  public final RequestResponseApi<CodeErrorsRequest, CodeErrors> GET_CODE_ERRORS =
+//      makeApi("todo/implementMe");
+//
+//  /**
+//   * Retrieves code parsing results.
+//   */
+//  public final RequestResponseApi<CodeGraphRequest, CodeGraphResponse> GET_CODE_GRAPH =
+//      makeApi("todo/implementMe");
+//  /**
+//   * Log an exception to the server and potentially receive an unobfuscated response.
+//   */
+//  public final RequestResponseApi<LogFatalRecord, LogFatalRecordResponse> LOG_REMOTE =
+//      makeApi("todo/implementMe");
 
-  /**
-   * Retrieves code parsing results.
-   */
-  public final RequestResponseApi<CodeGraphRequest, CodeGraphResponse> GET_CODE_GRAPH =
-      makeApi("todo/implementMe");
-  /**
-   * Log an exception to the server and potentially receive an unobfuscated response.
-   */
-  public final RequestResponseApi<LogFatalRecord, LogFatalRecordResponse> LOG_REMOTE =
-      makeApi("todo/implementMe");
-
-  // TODO: this may want to move to browser channel instead, for
-  // search-as-you-type streaming. No sense to it yet until we have a real
-  // backend, though.
-  public final RequestResponseApi<Search, SearchResponse> SEARCH = makeApi("todo/implementMe");
+//  // TODO: this may want to move to browser channel instead, for
+//  // search-as-you-type streaming. No sense to it yet until we have a real
+//  // backend, though.
+//  public final RequestResponseApi<Search, SearchResponse> SEARCH = makeApi("todo/implementMe");
 
   // /////////////////////////////
   // END AVAILABLE FRONTEND APIS

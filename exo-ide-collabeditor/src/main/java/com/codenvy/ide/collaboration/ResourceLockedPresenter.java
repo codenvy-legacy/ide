@@ -19,10 +19,14 @@
 package com.codenvy.ide.collaboration;
 
 import com.codenvy.ide.collaboration.ResourceLockedView.ActionDelegate;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
+import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.UserDetails;
+import com.google.collide.dto.client.DtoClientImpls.FileOperationNotificationImpl;
 import com.google.collide.json.shared.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
@@ -115,7 +119,12 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
    @Override
    public void onNotify()
    {
-
+      FileOperationNotificationImpl notification = FileOperationNotificationImpl.make();
+      notification.setFilePath(path);
+      notification.setOperation(Operation.DELETE);
+      notification.setTarget(path);
+      notification.setUserId(BootstrapSession.getBootstrapSession().getUserId());
+      CollabEditorExtension.get().getContext().getFrontendApi().FILE_OPERATION_NOTIFY.send(notification);
    }
 
    /**
