@@ -50,9 +50,6 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    }
 
    @UiField
-   Anchor tutorialLink;
-
-   @UiField
    Button invitationsLink;
    
    @UiField
@@ -70,9 +67,6 @@ public class StartPageView extends ViewImpl implements StartPagePresenter.Displa
    @UiField
    Anchor supportLink;
 
-   @UiField
-   Anchor surveyLink;
-   
    @UiField
    Image logo;
 
