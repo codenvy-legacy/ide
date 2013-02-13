@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,36 +16,26 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.extension.cloudfoundry.server;
+package org.exoplatform.ide.commons;
 
 /**
- * Debug mode for starting application under debugging.
- *
- * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
- * @version $Id: $
+ * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  */
-public class DebugMode
+@SuppressWarnings("serial")
+public class ParsingResponseException extends Exception
 {
-   public static final String DEFAULT_MODE = "run";
-
-   private String mode = DEFAULT_MODE;
-
-   public DebugMode(String mode)
+   public ParsingResponseException(String message, Throwable cause)
    {
-      this.mode = mode;
+      super(message, cause);
    }
 
-   public DebugMode()
+   public ParsingResponseException(String message)
    {
+      super(message);
    }
 
-   public String getMode()
+   public ParsingResponseException(Throwable cause)
    {
-      return mode;
-   }
-
-   public void setMode(String mode)
-   {
-      this.mode = mode;
+      super(cause);
    }
 }
