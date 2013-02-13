@@ -51,11 +51,15 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-java</artifactId>
-         <version>1.2.0-M12</version>
+         <version>1.2.0-M16-SNAPSHOT</version>
          <exclusions>
             <exclusion>
                <groupId>javassist</groupId>
                <artifactId>javassist</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>ch.qos.logback</groupId>
+               <artifactId>logback-core</artifactId>
             </exclusion>
          </exclusions>
          <scope>runtime</scope>
@@ -88,11 +92,6 @@
       <dependency>
          <groupId>com.googlecode.gwt-test-utils</groupId>
          <artifactId>gwt-test-utils</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.slf4j</groupId>
-         <artifactId>slf4j-log4j12</artifactId>
          <scope>test</scope>
       </dependency>
       <dependency>

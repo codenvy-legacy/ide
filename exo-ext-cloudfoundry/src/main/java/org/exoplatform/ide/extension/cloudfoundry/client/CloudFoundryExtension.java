@@ -22,6 +22,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.ui.paas.PaaSAgent;
 import org.exoplatform.ide.extension.Extension;
@@ -29,6 +30,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowApplication
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowProjectPropertiesCommand;
+import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 
 /**
@@ -58,10 +60,16 @@ public class CloudFoundryExtension
    @Inject
    public CloudFoundryExtension(PaaSAgent paasAgent, MainMenuPresenter menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
-      ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand)
+      ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand,
+      EventBus eventBus)
    {
       // TODO Auto-generated constructor stub
       //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, wizardPage, preferencePage);
+
+      // TODO
+      //      String restContext = "/IDE/rest/private";
+      String restContext = "/rest/private";
+      new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus);
 
       menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
       menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);

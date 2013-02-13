@@ -25,7 +25,7 @@
       <org.exoplatform.kernel.version>2.3.8-CR01</org.exoplatform.kernel.version>
       <org.exoplatform.core.version>2.4.8-CR01</org.exoplatform.core.version>
       <org.exoplatform.ws.version>2.2.8-CR01</org.exoplatform.ws.version>
-      <org.exoplatform.vfs.version>1.2.0-M12</org.exoplatform.vfs.version>
+      <org.exoplatform.vfs.version>1.2.0-M16-SNAPSHOT</org.exoplatform.vfs.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
       <!-- Third parties -->
@@ -49,7 +49,7 @@
       <gwt.test.skip>true</gwt.test.skip>
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
-      <everrest.version>1.0.6</everrest.version>
+      <everrest.version>1.0.10</everrest.version>
       <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
       <version.release.plugin>2.2.1</version.release.plugin>
       <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
@@ -159,6 +159,11 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ide-vfs</artifactId>
+            <version>${org.exoplatform.vfs.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-vfs-jcr</artifactId>
             <version>${org.exoplatform.vfs.version}</version>
          </dependency>
@@ -237,11 +242,11 @@
             <artifactId>slf4j-log4j12</artifactId>
             <version>${org.slf4j.version}</version>
          </dependency>
-    <dependency>
-      <groupId>com.google.gwt.inject</groupId>
-      <artifactId>gin</artifactId>
-      <version>1.5.0</version>
-    </dependency>
+    	 <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+	    <version>1.5.0</version>
+    	 </dependency>
          <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
@@ -282,17 +287,17 @@
             <artifactId>junit</artifactId>
             <version>4.7</version>
          </dependency>
-    <dependency>
-      <!-- needs extra dependencies: objenesis & hamcrest -->
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-      <version>1.9.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.googlecode.gwt-test-utils</groupId>
-      <artifactId>gwt-test-utils</artifactId>
-      <version>0.39</version>
-    </dependency>
+         <dependency>
+            <!-- needs extra dependencies: objenesis & hamcrest -->
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>1.9.0</version>
+         </dependency>
+         <dependency>
+            <groupId>com.googlecode.gwt-test-utils</groupId>
+            <artifactId>gwt-test-utils</artifactId>
+            <version>0.39</version>
+         </dependency>
          <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>

@@ -19,19 +19,28 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.commons.exception.ServerException;
+import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.shared.SystemInfo;
 import org.exoplatform.ide.output.event.OutputEvent;
 import org.exoplatform.ide.output.event.OutputMessage.Type;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
+import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.rest.HTTPStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -68,6 +77,8 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
+
+      eventBus.addHandler(LoginEvent.TYPE, this);
    }
 
    /**
@@ -106,7 +117,8 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                   {
                      loggedIn.onLoggedIn();
                   }
-
+                  //TODO
+                  Window.alert(lb.loginSuccess());
                   view.close();
                }
 
@@ -135,12 +147,16 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                      // otherwise will be called method from superclass.
                   }
                   eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  //TODO
+                  Window.alert(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
          eventBus.fireEvent(new ExceptionThrownEvent(e));
+         //TODO
+         Window.alert(e.getMessage());
       }
    }
 
@@ -199,6 +215,7 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
             server = "http://" + server;
          }
       }
+      // TODO create new view?
    }
 
    /**
@@ -206,6 +223,108 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
     */
    public void showDialog()
    {
+      fillViewFields();
+
       view.showDialog();
+   }
+
+   private void fillViewFields()
+   {
+      // TODO
+      view.enableLoginButton(false);
+      view.focusInEmailField();
+      getSystemInformation();
+   }
+
+   /**
+    * Get Cloud Foundry system information to fill the login field, if user is logged in.
+    */
+   protected void getSystemInformation()
+   {
+      try
+      {
+         AutoBean<SystemInfo> systemInfo = CloudFoundryExtension.AUTO_BEAN_FACTORY.systemInfo();
+         AutoBeanUnmarshaller<SystemInfo> unmarshaller = new AutoBeanUnmarshaller<SystemInfo>(systemInfo);
+         CloudFoundryClientService.getInstance().getSystemInfo(server,
+            new AsyncRequestCallback<SystemInfo>(unmarshaller)
+            {
+               @Override
+               protected void onSuccess(SystemInfo result)
+               {
+                  view.setEmail(result.getUser());
+                  getServers();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  if (exception instanceof UnmarshallerException)
+                  {
+                     // TODO
+                     //                     Dialogs.getInstance().showError(exception.getMessage());
+                     Window.alert(exception.getMessage());
+                  }
+                  else
+                  {
+                     getServers();
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
+   }
+
+   private void getServers()
+   {
+      try
+      {
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
+            {
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  if (result.isEmpty())
+                  {
+                     view.setServerValues(new String[]{CloudFoundryExtension.DEFAULT_SERVER});
+                     if (server == null || server.isEmpty())
+                     {
+                        view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                     }
+                     else
+                     {
+                        view.setServer(server);
+                     }
+                  }
+                  else
+                  {
+                     String[] targets = new String[result.size()];
+                     targets = result.toArray(targets);
+                     view.setServerValues(targets);
+                     if (server == null || server.isEmpty())
+                     {
+                        view.setServer(result.get(0));
+                     }
+                     else
+                     {
+                        view.setServer(server);
+                     }
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 }

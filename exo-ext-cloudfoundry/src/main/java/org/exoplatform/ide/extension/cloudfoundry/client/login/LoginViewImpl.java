@@ -34,8 +34,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import java.util.List;
-
 /**
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  *
@@ -180,13 +178,20 @@ public class LoginViewImpl extends DialogBox implements LoginView
     * {@inheritDoc}
     */
    @Override
-   public void setServerValues(List<String> servers)
+   public void setServerValues(String[] servers)
    {
+      //      server.clear();
+      //
+      //      for (int i = 0; i < servers.size(); i++)
+      //      {
+      //         server.addItem(servers.get(i));
+      //      }
+
       server.clear();
 
-      for (int i = 0; i < servers.size(); i++)
+      for (int i = 0; i < servers.length; i++)
       {
-         server.addItem(servers.get(i));
+         server.addItem(servers[i]);
       }
    }
 

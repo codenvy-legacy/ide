@@ -20,9 +20,6 @@
 
 package org.exoplatform.ide.rest;
 
-import org.exoplatform.ide.commons.exception.JobNotFoundException;
-import org.exoplatform.ide.commons.exception.ServerException;
-
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestBuilder.Method;
@@ -32,6 +29,9 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window.Location;
+
+import org.exoplatform.ide.commons.exception.JobNotFoundException;
+import org.exoplatform.ide.commons.exception.ServerException;
 
 /**
  * Created by The eXo Platform SAS .
