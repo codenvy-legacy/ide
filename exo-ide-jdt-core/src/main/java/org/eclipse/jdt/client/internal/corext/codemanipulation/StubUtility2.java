@@ -23,6 +23,7 @@ import org.eclipse.jdt.client.core.dom.IMethodBinding;
 import org.eclipse.jdt.client.core.dom.IPackageBinding;
 import org.eclipse.jdt.client.core.dom.ITypeBinding;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
+import org.eclipse.jdt.client.core.dom.Javadoc;
 import org.eclipse.jdt.client.core.dom.MethodDeclaration;
 import org.eclipse.jdt.client.core.dom.MethodInvocation;
 import org.eclipse.jdt.client.core.dom.Modifier;
@@ -56,7 +57,7 @@ import java.util.Map;
 
 /**
  * Utilities for code generation based on AST rewrite.
- * 
+ *
  * @since 3.1
  */
 public final class StubUtility2
@@ -91,7 +92,8 @@ public final class StubUtility2
          TypeParameter newTypeParam = ast.newTypeParameter();
          newTypeParam.setName(ast.newSimpleName(curr.getName()));
          ITypeBinding[] typeBounds = curr.getTypeBounds();
-         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
+         {//$NON-NLS-1$
             List<Type> newTypeBounds = newTypeParam.typeBounds();
             for (int k = 0; k < typeBounds.length; k++)
             {
@@ -120,7 +122,7 @@ public final class StubUtility2
       {
          SuperConstructorInvocation invocation = ast.newSuperConstructorInvocation();
          SingleVariableDeclaration varDecl = null;
-         for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext();)
+         for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
          {
             varDecl = iterator.next();
             invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
@@ -142,8 +144,8 @@ public final class StubUtility2
       }
       else
       {
-         ReturnStatement statementNode =
-            (ReturnStatement)rewrite.createStringPlaceholder(bodyStatement, ASTNode.RETURN_STATEMENT);
+         ReturnStatement statementNode = (ReturnStatement)rewrite.createStringPlaceholder(bodyStatement,
+            ASTNode.RETURN_STATEMENT);
          body.statements().add(statementNode);
       }
 
@@ -182,7 +184,8 @@ public final class StubUtility2
             TypeParameter newTypeParam = ast.newTypeParameter();
             newTypeParam.setName(ast.newSimpleName(curr.getName()));
             ITypeBinding[] typeBounds = curr.getTypeBounds();
-            if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+            if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
+            {//$NON-NLS-1$
                List<Type> newTypeBounds = newTypeParam.typeBounds();
                for (int k = 0; k < typeBounds.length; k++)
                {
@@ -212,7 +215,7 @@ public final class StubUtility2
       {
          SuperConstructorInvocation invocation = ast.newSuperConstructorInvocation();
          SingleVariableDeclaration varDecl = null;
-         for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext();)
+         for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
          {
             varDecl = iterator.next();
             invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
@@ -221,8 +224,10 @@ public final class StubUtility2
       }
 
       List<String> prohibited = new ArrayList<String>();
-      for (final Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext();)
+      for (final Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
+      {
          prohibited.add(iterator.next().getName().getIdentifier());
+      }
       String param = null;
       List<String> list = new ArrayList<String>(prohibited);
       String[] excluded = null;
@@ -255,7 +260,9 @@ public final class StubUtility2
             expression = access;
          }
          else
+         {
             expression = ast.newSimpleName(fieldName);
+         }
          Assignment assignment = ast.newAssignment();
          assignment.setLeftHandSide(expression);
          assignment.setRightHandSide(ast.newSimpleName(paramName));
@@ -265,14 +272,25 @@ public final class StubUtility2
 
       if (settings != null && settings.createComments)
       {
-         //TODO
-         //         String string =
-         //            CodeGeneration.getMethodComment(unit, typeBinding.getName(), decl, superConstructor, delimiter);
-         //         if (string != null)
-         //         {
-         //            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
-         //            decl.setJavadoc(javadoc);
-         //         }
+         String declaringClassQualifiedName = superConstructor.getDeclaringClass().getQualifiedName();
+         String linkToMethodName = superConstructor.getName();
+         String[] parameterTypesQualifiedNames = StubUtility.getParameterTypeNamesForSeeTag(superConstructor);
+
+         String string = null;
+         try
+         {
+            string = StubUtility.getMethodComment(typeBinding.getName(), decl, superConstructor.isDeprecated(),
+               linkToMethodName, declaringClassQualifiedName, parameterTypesQualifiedNames, false, delimiter);
+         }
+         catch (CoreException e)
+         {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+         }
+         if (string != null)
+         {
+            Javadoc javadoc = (Javadoc)rewrite.createStringPlaceholder(string, ASTNode.JAVADOC);
+            decl.setJavadoc(javadoc);
+         }
       }
       return decl;
    }
@@ -288,9 +306,8 @@ public final class StubUtility2
       AST ast = rewrite.getAST();
 
       MethodDeclaration decl = ast.newMethodDeclaration();
-      decl.modifiers().addAll(
-         ASTNodeFactory.newModifiers(ast, delegate.getModifiers() & ~Modifier.SYNCHRONIZED & ~Modifier.ABSTRACT
-            & ~Modifier.NATIVE));
+      decl.modifiers().addAll(ASTNodeFactory.newModifiers(ast,
+         delegate.getModifiers() & ~Modifier.SYNCHRONIZED & ~Modifier.ABSTRACT & ~Modifier.NATIVE));
 
       decl.setName(ast.newSimpleName(delegate.getName()));
       decl.setConstructor(false);
@@ -303,7 +320,8 @@ public final class StubUtility2
          TypeParameter newTypeParam = ast.newTypeParameter();
          newTypeParam.setName(ast.newSimpleName(curr.getName()));
          ITypeBinding[] typeBounds = curr.getTypeBounds();
-         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
+         {//$NON-NLS-1$
             List<Type> newTypeBounds = newTypeParam.typeBounds();
             for (int k = 0; k < typeBounds.length; k++)
             {
@@ -322,19 +340,25 @@ public final class StubUtility2
       {
          SingleVariableDeclaration varDecl = ast.newSingleVariableDeclaration();
          if (params[i].isWildcardType() && !params[i].isUpperbound())
+         {
             varDecl.setType(imports.addImport(params[i].getBound(), ast, context));
+         }
          else
          {
             if (delegate.isVarargs() && params[i].isArray() && i == params.length - 1)
             {
                StringBuffer buffer = new StringBuffer(imports.addImport(params[i].getElementType(), context));
                for (int dim = 1; dim < params[i].getDimensions(); dim++)
+               {
                   buffer.append("[]"); //$NON-NLS-1$
+               }
                varDecl.setType(ASTNodeFactory.newType(ast, buffer.toString()));
                varDecl.setVarargs(true);
             }
             else
+            {
                varDecl.setType(imports.addImport(params[i], ast, context));
+            }
          }
          varDecl.setName(ast.newSimpleName(paramNames[i]));
          parameters.add(varDecl);
@@ -358,7 +382,9 @@ public final class StubUtility2
       invocation.setName(ast.newSimpleName(delegate.getName()));
       List<Expression> arguments = invocation.arguments();
       for (int i = 0; i < params.length; i++)
+      {
          arguments.add(ast.newSimpleName(paramNames[i]));
+      }
       if (settings.useKeywordThis)
       {
          FieldAccess access = ast.newFieldAccess();
@@ -367,8 +393,11 @@ public final class StubUtility2
          invocation.setExpression(access);
       }
       else
+      {
          invocation.setExpression(ast.newSimpleName(delegatingField.getName()));
-      if (delegate.getReturnType().isPrimitive() && delegate.getReturnType().getName().equals("void")) {//$NON-NLS-1$
+      }
+      if (delegate.getReturnType().isPrimitive() && delegate.getReturnType().getName().equals("void"))
+      {//$NON-NLS-1$
          statement = ast.newExpressionStatement(invocation);
       }
       else
@@ -390,7 +419,9 @@ public final class StubUtility2
       if (packageBinding != null)
       {
          if (packageBinding.getName().length() > 0 && qualifiedName.startsWith(packageBinding.getName()))
+         {
             qualifiedName = qualifiedName.substring(packageBinding.getName().length());
+         }
       }
 
       if (settings.createComments)
@@ -442,7 +473,8 @@ public final class StubUtility2
          TypeParameter newTypeParam = ast.newTypeParameter();
          newTypeParam.setName(ast.newSimpleName(curr.getName()));
          ITypeBinding[] typeBounds = curr.getTypeBounds();
-         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName())) {//$NON-NLS-1$
+         if (typeBounds.length != 1 || !"java.lang.Object".equals(typeBounds[0].getQualifiedName()))
+         {//$NON-NLS-1$
             List<Type> newTypeBounds = newTypeParam.typeBounds();
             for (int k = 0; k < typeBounds.length; k++)
             {
@@ -482,8 +514,8 @@ public final class StubUtility2
          ITypeBinding declaringType = binding.getDeclaringClass();
          if (Modifier.isAbstract(binding.getModifiers()) || declaringType.isAnnotation() || declaringType.isInterface())
          {
-            Expression expression =
-               ASTNodeFactory.newDefaultExpression(ast, decl.getReturnType2(), decl.getExtraDimensions());
+            Expression expression = ASTNodeFactory.newDefaultExpression(ast, decl.getReturnType2(),
+               decl.getExtraDimensions());
             if (expression != null)
             {
                ReturnStatement returnStatement = ast.newReturnStatement();
@@ -496,18 +528,18 @@ public final class StubUtility2
             SuperMethodInvocation invocation = ast.newSuperMethodInvocation();
             invocation.setName(ast.newSimpleName(binding.getName()));
             SingleVariableDeclaration varDecl = null;
-            for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext();)
+            for (Iterator<SingleVariableDeclaration> iterator = parameters.iterator(); iterator.hasNext(); )
             {
                varDecl = iterator.next();
                invocation.arguments().add(ast.newSimpleName(varDecl.getName().getIdentifier()));
             }
             Expression expression = invocation;
             Type returnType = decl.getReturnType2();
-            if (returnType instanceof PrimitiveType
-               && ((PrimitiveType)returnType).getPrimitiveTypeCode().equals(PrimitiveType.VOID))
+            if (returnType instanceof PrimitiveType && ((PrimitiveType)returnType).getPrimitiveTypeCode().equals(
+               PrimitiveType.VOID))
             {
-               bodyStatement =
-                  ASTNodes.asFormattedString(ast.newExpressionStatement(expression), 0, delimiter, options);
+               bodyStatement = ASTNodes.asFormattedString(ast.newExpressionStatement(expression), 0, delimiter,
+                  options);
             }
             else
             {
@@ -517,13 +549,13 @@ public final class StubUtility2
             }
          }
 
-         String placeHolder =
-            StubUtility.getMethodBodyContent(false, type, binding.getName(), bodyStatement, delimiter);
+         String placeHolder = StubUtility.getMethodBodyContent(false, type, binding.getName(), bodyStatement,
+            delimiter);
          //            CodeGeneration.getMethodBodyContent(unit, type, binding.getName(), false, bodyStatement, delimiter);
          if (placeHolder != null)
          {
-            ReturnStatement todoNode =
-               (ReturnStatement)rewrite.createStringPlaceholder(placeHolder, ASTNode.RETURN_STATEMENT);
+            ReturnStatement todoNode = (ReturnStatement)rewrite.createStringPlaceholder(placeHolder,
+               ASTNode.RETURN_STATEMENT);
             body.statements().add(todoNode);
          }
       }
@@ -559,10 +591,14 @@ public final class StubUtility2
          {
             ITypeBinding type = params[i].getElementType();
             if (!is50OrHigher)
+            {
                type = type.getErasure();
+            }
             StringBuffer buffer = new StringBuffer(imports.addImport(type, context));
             for (int dim = 1; dim < params[i].getDimensions(); dim++)
+            {
                buffer.append("[]"); //$NON-NLS-1$
+            }
             var.setType(ASTNodeFactory.newType(ast, buffer.toString()));
             var.setVarargs(true);
          }
@@ -570,7 +606,9 @@ public final class StubUtility2
          {
             ITypeBinding type = params[i];
             if (!is50OrHigher)
+            {
                type = type.getErasure();
+            }
             var.setType(imports.addImport(type, ast, context));
          }
          var.setName(ast.newSimpleName(paramNames[i]));
@@ -598,7 +636,9 @@ public final class StubUtility2
       {
          IMethodBinding curr = allMethods.get(i);
          if (Bindings.areOverriddenMethods(curr, method) || Bindings.isSubsignature(curr, method))
+         {
             return curr;
+         }
       }
       return null;
    }
@@ -616,14 +656,18 @@ public final class StubUtility2
             if (impl == null || !Bindings.isVisibleInHierarchy(impl, currPack))
             {
                if (impl != null)
+               {
                   allMethods.remove(impl);
+               }
                toImplement.add(curr);
                allMethods.add(curr);
             }
          }
          ITypeBinding[] superInterfaces = typeBinding.getInterfaces();
          for (int i = 0; i < superInterfaces.length; i++)
+         {
             findUnimplementedInterfaceMethods(superInterfaces[i], visited, allMethods, currPack, toImplement);
+         }
       }
    }
 
@@ -704,21 +748,27 @@ public final class StubUtility2
       for (int index = 0; index < typeMethods.length; index++)
       {
          final int modifiers = typeMethods[index].getModifiers();
-         if (!typeMethods[index].isConstructor() && !Modifier.isStatic(modifiers)
-            && (isInterface || Modifier.isPublic(modifiers)))
+         if (!typeMethods[index].isConstructor() && !Modifier.isStatic(modifiers) && (isInterface || Modifier.isPublic(
+            modifiers)))
          {
             IMethodBinding result = Bindings.findOverriddenMethodInHierarchy(hierarchy, typeMethods[index]);
             if (result != null && Flags.isFinal(result.getModifiers()))
+            {
                continue;
+            }
             ITypeBinding[] parameterBindings = typeMethods[index].getParameterTypes();
             boolean upper = false;
             for (int offset = 0; offset < parameterBindings.length; offset++)
             {
                if (parameterBindings[offset].isWildcardType() && parameterBindings[offset].isUpperbound())
+               {
                   upper = true;
+               }
             }
             if (!upper)
+            {
                allMethods.add(typeMethods[index]);
+            }
          }
       }
       return allMethods.toArray(new IMethodBinding[allMethods.size()]);
@@ -743,7 +793,9 @@ public final class StubUtility2
       {
          final int modifiers = typeMethods[index].getModifiers();
          if (!typeMethods[index].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
+         {
             allMethods.add(typeMethods[index]);
+         }
       }
       ITypeBinding clazz = typeBinding.getSuperclass();
       while (clazz != null)
@@ -755,7 +807,9 @@ public final class StubUtility2
             if (!methods[offset].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
             {
                if (findOverridingMethod(methods[offset], allMethods) == null)
+               {
                   allMethods.add(methods[offset]);
+               }
             }
          }
          clazz = clazz.getSuperclass();
@@ -771,9 +825,13 @@ public final class StubUtility2
          clazz = clazz.getSuperclass();
       }
       if (typeBinding.isInterface())
+      {
          getOverridableMethods(ast, ast.resolveWellKnownType("java.lang.Object"), allMethods); //$NON-NLS-1$
+      }
       if (!isSubType)
+      {
          allMethods.removeAll(Arrays.asList(typeMethods));
+      }
       int modifiers = 0;
       if (!typeBinding.isInterface())
       {
@@ -782,7 +840,9 @@ public final class StubUtility2
             IMethodBinding method = allMethods.get(index);
             modifiers = method.getModifiers();
             if (Modifier.isFinal(modifiers))
+            {
                allMethods.remove(index);
+            }
          }
       }
       return allMethods.toArray(new IMethodBinding[allMethods.size()]);
@@ -797,7 +857,9 @@ public final class StubUtility2
          if (!methods[offset].isConstructor() && !Modifier.isStatic(modifiers) && !Modifier.isPrivate(modifiers))
          {
             if (findOverridingMethod(methods[offset], allMethods) == null && !Modifier.isStatic(modifiers))
+            {
                allMethods.add(methods[offset]);
+            }
          }
       }
       ITypeBinding[] superInterfaces = superBinding.getInterfaces();
@@ -857,8 +919,8 @@ public final class StubUtility2
       {
          IMethodBinding curr = allMethods.get(i);
          int modifiers = curr.getModifiers();
-         if ((Modifier.isAbstract(modifiers) || curr.getDeclaringClass().isInterface())
-            && (implementAbstractsOfInput || typeBinding != curr.getDeclaringClass()))
+         if ((Modifier.isAbstract(
+            modifiers) || curr.getDeclaringClass().isInterface()) && (implementAbstractsOfInput || typeBinding != curr.getDeclaringClass()))
          {
             // implement all abstract methods
             toImplement.add(curr);
@@ -888,7 +950,9 @@ public final class StubUtility2
       List<IMethodBinding> existingConstructors = null;
       ITypeBinding superType = binding.getSuperclass();
       if (superType == null)
+      {
          return new IMethodBinding[0];
+      }
       if (accountExisting)
       {
          IMethodBinding[] methods = binding.getDeclaredMethods();
@@ -897,11 +961,15 @@ public final class StubUtility2
          {
             IMethodBinding method = methods[index];
             if (method.isConstructor() && !method.isDefaultConstructor())
+            {
                existingConstructors.add(method);
+            }
          }
       }
       if (existingConstructors != null)
+      {
          constructorMethods.addAll(existingConstructors);
+      }
       IMethodBinding[] methods = binding.getDeclaredMethods();
       IMethodBinding[] superMethods = superType.getDeclaredMethods();
       for (int index = 0; index < superMethods.length; index++)
@@ -909,24 +977,33 @@ public final class StubUtility2
          IMethodBinding method = superMethods[index];
          if (method.isConstructor())
          {
-            if (Bindings.isVisibleInHierarchy(method, binding.getPackage())
-               && (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(methods, method)))
+            if (Bindings.isVisibleInHierarchy(method,
+               binding.getPackage()) && (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(methods,
+               method)))
+            {
                constructorMethods.add(method);
+            }
          }
       }
       if (existingConstructors != null)
+      {
          constructorMethods.removeAll(existingConstructors);
+      }
       if (constructorMethods.isEmpty())
       {
          superType = binding;
          while (superType.getSuperclass() != null)
+         {
             superType = superType.getSuperclass();
+         }
          IMethodBinding method = Bindings.findMethodInType(superType, "Object", new ITypeBinding[0]); //$NON-NLS-1$
          if (method != null)
          {
-            if ((proposeDefault || !accountExisting || existingConstructors == null || existingConstructors.isEmpty())
-               && (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(methods, method)))
+            if ((proposeDefault || !accountExisting || existingConstructors == null || existingConstructors.isEmpty()) && (!accountExisting || !Bindings.containsSignatureEquivalentConstructor(
+               methods, method)))
+            {
                constructorMethods.add(method);
+            }
          }
       }
       return constructorMethods.toArray(new IMethodBinding[constructorMethods.size()]);
@@ -934,34 +1011,34 @@ public final class StubUtility2
 
    /**
     * Evaluates the insertion position of a new node.
-    * 
+    *
     * @param listRewrite The list rewriter to which the new node will be added
-    * @param sibling The Java element before which the new element should be added.
+    * @param sibling     The Java element before which the new element should be added.
     * @return the AST node of the list to insert before or null to insert as last.
     * @throws JavaModelException thrown if accessing the Java element failed
     */
 
    public static ASTNode getNodeToInsertBefore(ListRewrite listRewrite, int insertPos)
    {
-//      if (sibling instanceof IMember)
-//      {
-//         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
-//         if (sourceRange == null)
-//         {
-//            return null;
-//         }
-//         int insertPos = sourceRange.getOffset();
+      //      if (sibling instanceof IMember)
+      //      {
+      //         ISourceRange sourceRange = ((IMember)sibling).getSourceRange();
+      //         if (sourceRange == null)
+      //         {
+      //            return null;
+      //         }
+      //         int insertPos = sourceRange.getOffset();
 
-         List<? extends ASTNode> members = listRewrite.getOriginalList();
-         for (int i = 0; i < members.size(); i++)
+      List<? extends ASTNode> members = listRewrite.getOriginalList();
+      for (int i = 0; i < members.size(); i++)
+      {
+         ASTNode curr = members.get(i);
+         if (curr.getStartPosition() >= insertPos)
          {
-            ASTNode curr = members.get(i);
-            if (curr.getStartPosition() >= insertPos)
-            {
-               return curr;
-            }
+            return curr;
          }
-//      }
+      }
+      //      }
       return null;
    }
 
