@@ -9,7 +9,7 @@
    </parent>
    <artifactId>exo-ide-extension-java</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension :: Java</name>
+   <name>Codenvy IDE :: Extension :: Java</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

@@ -11,7 +11,7 @@
 
 	<artifactId>exo-ide-server</artifactId>
 	<packaging>jar</packaging>
-	<name>eXo IDE :: Server</name>
+	<name>Codenvy IDE :: Server</name>
 
 	<dependencies>
 		<dependency>

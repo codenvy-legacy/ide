@@ -19,7 +19,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor</name>
+   <name>Codenvy IDE :: Editor</name>
 
    <dependencies>
 

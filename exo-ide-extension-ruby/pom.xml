@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-ruby</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension :: Ruby</name>
+   <name>Codenvy IDE :: Extension :: Ruby</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.jcr</groupId>

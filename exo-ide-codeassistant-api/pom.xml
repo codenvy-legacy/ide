@@ -9,7 +9,7 @@
 	</parent>
 	<artifactId>exo-ide-codeassistant-api</artifactId>
 	<packaging>jar</packaging>
-	<name>eXo IDE :: Code Assitant API</name>
+	<name>Codenvy IDE :: Code Assitant API</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.gwt</groupId>

@@ -10,7 +10,7 @@
    </parent>
    <artifactId>exo-ide-shell</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Shell</name>
+   <name>Codenvy IDE :: Shell</name>
 
    <properties>
       <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>

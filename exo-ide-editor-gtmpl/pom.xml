@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-gtmpl</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: Groovy Tempalte</name>
+   <name>Codenvy IDE :: Editor :: Groovy Tempalte</name>
    <dependencies>
 
       <dependency>

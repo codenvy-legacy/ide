@@ -8,7 +8,7 @@
    </parent>
 
    <artifactId>exo-ide-codeassistant-storage</artifactId>
-   <name>eXo IDE :: Codeassitant Storage</name>
+   <name>Codenvy IDE :: Codeassitant Storage</name>
    <packaging>war</packaging>
 
    <dependencies>

@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-javascript</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: JavaScript</name>
+   <name>Codenvy IDE :: Editor :: JavaScript</name>
    <dependencies>
 
       <dependency>
