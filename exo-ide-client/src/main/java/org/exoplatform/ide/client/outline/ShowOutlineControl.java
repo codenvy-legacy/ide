@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.outline;
 
+import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
@@ -91,6 +92,16 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       }
 
       boolean visible = event.getEditor().isCapable(EditorCapability.OUTLINE);
+
+      String mimeType = event.getFile().getMimeType();
+      //TODO add possibility to configure editor capability's 
+      if (MimeType.TEXT_HTML.equals(mimeType) || MimeType.TEXT_CSS.equals(mimeType)
+         || MimeType.TEXT_JAVASCRIPT.equals(mimeType) || MimeType.APPLICATION_JAVASCRIPT.equals(mimeType)
+         || MimeType.APPLICATION_X_JAVASCRIPT.equals(mimeType))
+      {
+         visible = false;
+      }
+
       setVisible(visible);
       if (visible)
       {
