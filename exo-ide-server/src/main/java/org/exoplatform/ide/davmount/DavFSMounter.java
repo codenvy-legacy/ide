@@ -126,8 +126,18 @@ public class DavFSMounter
 
             if (waitForResponse)
             {
-               LOG.info(new String(ByteStreams.toByteArray(p1.getInputStream())));
-               LOG.info(new String(ByteStreams.toByteArray(p1.getErrorStream())));
+               String inpt = new String(ByteStreams.toByteArray(p1.getInputStream()));
+               String errors = new String(ByteStreams.toByteArray(p1.getErrorStream()));
+               if (!inpt.trim().isEmpty())
+               {
+                  LOG.info(inpt);
+               }
+
+               if (!errors.trim().isEmpty())
+               {
+                  LOG.info(errors);
+               }
+
                p1.waitFor();
                return p1.exitValue() == 0;
             }

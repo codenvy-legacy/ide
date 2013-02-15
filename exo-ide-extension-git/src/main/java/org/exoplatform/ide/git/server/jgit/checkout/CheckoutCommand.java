@@ -41,12 +41,12 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exoplatform.ide.git.server.jgit.jgit_copy;
+package org.exoplatform.ide.git.server.jgit.checkout;
 
-import org.eclipse.jgit.JGitText;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.GitCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
@@ -59,6 +59,7 @@ import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.CheckoutConflictException;
+import org.eclipse.jgit.internal.JGitText;
 import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
@@ -87,7 +88,7 @@ import java.util.List;
  *      href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html"
  *      >Git documentation about Checkout</a>
  */
-public class CheckoutCommand_Copy extends GitCommand<Ref> {
+public class CheckoutCommand extends GitCommand<Ref> {
    private String name;
 
    private boolean force = false;
@@ -100,14 +101,14 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
 
    private RevCommit startCommit;
 
-   private CheckoutResult_Copy status;
+   private CheckoutResult status;
 
    private List<String> paths;
 
    /**
     * @param repo
     */
-   public CheckoutCommand_Copy(Repository repo) {
+   public CheckoutCommand(Repository repo) {
       super(repo);
       this.paths = new LinkedList<String>();
    }
@@ -130,7 +131,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
       try {
          if (!paths.isEmpty()) {
             checkoutPaths();
-            status = CheckoutResult_Copy.OK_RESULT;
+            status = CheckoutResult.OK_RESULT;
             setCallable(false);
             return null;
          }
@@ -156,7 +157,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
          RevWalk revWalk = new RevWalk(repo);
          AnyObjectId headId = headRef.getObjectId();
          RevCommit headCommit = headId == null ? null : revWalk
-               .parseCommit(headId);
+.parseCommit(headId);
          RevCommit newCommit = revWalk.parseCommit(branch);
          RevTree headTree = headCommit == null ? null : headCommit.getTree();
          DirCacheCheckout dco = new DirCacheCheckout(repo, headTree,
@@ -165,7 +166,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
          try {
             dco.checkout();
          } catch (CheckoutConflictException e) {
-            status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.CONFLICTS, dco
+            status = new CheckoutResult(CheckoutResult.Status.CONFLICTS, dco
                   .getConflicts());
             throw e;
          }
@@ -205,17 +206,21 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
                   .get().checkoutUnexpectedResult, updateResult.name()));
 
          if (!dco.getToBeDeleted().isEmpty()) {
-            status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.NONDELETED, dco
+            status = new CheckoutResult(CheckoutResult.Status.NONDELETED, dco
                   .getToBeDeleted());
          }
          else
-            status = CheckoutResult_Copy.OK_RESULT;
+            status = CheckoutResult.OK_RESULT;
          return ref;
       } catch (IOException ioe) {
          throw new JGitInternalException(ioe.getMessage(), ioe);
+      }
+      catch (GitAPIException e)
+      {
+         throw new JGitInternalException(e.getMessage(), e);
       } finally {
          if (status == null)
-            status = CheckoutResult_Copy.ERROR_RESULT;
+            status = CheckoutResult.ERROR_RESULT;
       }
    }
 
@@ -230,7 +235,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     *            Path to update in the working tree and index.
     * @return {@code this}
     */
-   public CheckoutCommand_Copy addPath(String path) {
+   public CheckoutCommand addPath(String path) {
       checkCallable();
       this.paths.add(path);
       return this;
@@ -243,7 +248,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     * @throws java.io.IOException
     * @throws org.eclipse.jgit.api.errors.RefNotFoundException
     */
-   protected CheckoutCommand_Copy checkoutPaths() throws IOException,
+   protected CheckoutCommand checkoutPaths() throws IOException,
          RefNotFoundException {
       RevWalk revWalk = new RevWalk(repo);
       DirCache dc = repo.lockDirCache();
@@ -324,7 +329,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     *            the name of the new branch
     * @return this instance
     */
-   public CheckoutCommand_Copy setName(String name) {
+   public CheckoutCommand setName(String name) {
       checkCallable();
       this.name = name;
       return this;
@@ -336,7 +341,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     *            checkout and set to the specified start point
     * @return this instance
     */
-   public CheckoutCommand_Copy setCreateBranch(boolean createBranch) {
+   public CheckoutCommand setCreateBranch(boolean createBranch) {
       checkCallable();
       this.createBranch = createBranch;
       return this;
@@ -350,7 +355,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     *            not be changed
     * @return this instance
     */
-   public CheckoutCommand_Copy setForce(boolean force) {
+   public CheckoutCommand setForce(boolean force) {
       checkCallable();
       this.force = force;
       return this;
@@ -362,7 +367,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     *            the current HEAD will be used
     * @return this instance
     */
-   public CheckoutCommand_Copy setStartPoint(String startPoint) {
+   public CheckoutCommand setStartPoint(String startPoint) {
       checkCallable();
       this.startPoint = startPoint;
       this.startCommit = null;
@@ -375,7 +380,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     *            the current HEAD will be used
     * @return this instance
     */
-   public CheckoutCommand_Copy setStartPoint(RevCommit startCommit) {
+   public CheckoutCommand setStartPoint(RevCommit startCommit) {
       checkCallable();
       this.startCommit = startCommit;
       this.startPoint = null;
@@ -388,7 +393,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
     *            <code>null</code>
     * @return this instance
     */
-   public CheckoutCommand_Copy setUpstreamMode(
+   public CheckoutCommand setUpstreamMode(
          CreateBranchCommand.SetupUpstreamMode mode) {
       checkCallable();
       this.upstreamMode = mode;
@@ -398,9 +403,9 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
    /**
     * @return the result
     */
-   public CheckoutResult_Copy getResult() {
+   public CheckoutResult getResult() {
       if (status == null)
-         return CheckoutResult_Copy.NOT_TRIED_RESULT;
+         return CheckoutResult.NOT_TRIED_RESULT;
       return status;
    }
 }
