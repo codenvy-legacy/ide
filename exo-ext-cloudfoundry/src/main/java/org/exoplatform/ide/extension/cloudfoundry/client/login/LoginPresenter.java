@@ -19,13 +19,12 @@
 package org.exoplatform.ide.extension.cloudfoundry.client.login;
 
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.api.ui.console.Console;
 import org.exoplatform.ide.commons.exception.ServerException;
 import org.exoplatform.ide.commons.exception.UnmarshallerException;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -50,8 +49,9 @@ import java.util.List;
 @Singleton
 public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
 {
-
    private LoginView view;
+
+   private Console console;
 
    /**
     * The last server, that user logged in.
@@ -67,16 +67,17 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
    private EventBus eventBus;
 
    @Inject
-   public LoginPresenter(EventBus eventBus)
+   public LoginPresenter(EventBus eventBus, Console console)
    {
-      this(new LoginViewImpl(), eventBus);
+      this(new LoginViewImpl(), eventBus, console);
    }
 
-   protected LoginPresenter(LoginView view, EventBus eventBus)
+   protected LoginPresenter(LoginView view, EventBus eventBus, Console console)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
+      this.console = console;
 
       eventBus.addHandler(LoginEvent.TYPE, this);
    }
@@ -117,8 +118,9 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                   {
                      loggedIn.onLoggedIn();
                   }
-                  //TODO
-                  Window.alert(lb.loginSuccess());
+
+                  console.print(lb.loginSuccess());
+
                   view.close();
                }
 
@@ -146,17 +148,17 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                      }
                      // otherwise will be called method from superclass.
                   }
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  //TODO
-                  Window.alert(exception.getMessage());
+                  //                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  //                  //TODO
+                  console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
          //TODO
-         Window.alert(e.getMessage());
+         console.print(e.getMessage());
       }
    }
 
@@ -262,7 +264,7 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                   {
                      // TODO
                      //                     Dialogs.getInstance().showError(exception.getMessage());
-                     Window.alert(exception.getMessage());
+                     console.print(exception.getMessage());
                   }
                   else
                   {
@@ -273,7 +275,9 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         // TODO
+         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
       }
    }
 
@@ -318,13 +322,17 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  // TODO
+                  //                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         // TODO
+         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
       }
    }
 }

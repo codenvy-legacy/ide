@@ -21,5 +21,6 @@
    <source path="toolbar" />
    <source path="perspective" />
    <source path="openproject" />
+   <source path="console" />
    <source path="" />
 </module>

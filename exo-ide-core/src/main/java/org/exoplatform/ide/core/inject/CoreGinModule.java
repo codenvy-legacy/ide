@@ -26,6 +26,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.console.Console;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
 import org.exoplatform.ide.api.ui.menu.MainMenuAgent;
 import org.exoplatform.ide.api.ui.paas.PaaSAgent;
@@ -56,6 +57,9 @@ import org.exoplatform.ide.part.PartStackPresenter.PartStackEventHandler;
 import org.exoplatform.ide.part.PartStackUIResources;
 import org.exoplatform.ide.part.PartStackView;
 import org.exoplatform.ide.part.PartStackViewImpl;
+import org.exoplatform.ide.part.console.ConsolePartPresenter;
+import org.exoplatform.ide.part.console.ConsolePartView;
+import org.exoplatform.ide.part.console.ConsolePartViewImpl;
 import org.exoplatform.ide.part.projectexplorer.ProjectExplorerView;
 import org.exoplatform.ide.part.projectexplorer.ProjectExplorerViewImpl;
 import org.exoplatform.ide.perspective.WorkspacePresenter;
@@ -152,6 +156,9 @@ public class CoreGinModule extends AbstractGinModule
       bind(KeyBindingAgent.class).to(KeyBindingManager.class).in(Singleton.class);
 
       bind(ProjectExplorerView.class).to(ProjectExplorerViewImpl.class).in(Singleton.class);
+
+      bind(Console.class).to(ConsolePartPresenter.class).in(Singleton.class);
+      bind(ConsolePartView.class).to(ConsolePartViewImpl.class).in(Singleton.class);
    }
 
    @Provides

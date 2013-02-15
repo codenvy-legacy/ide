@@ -18,10 +18,10 @@ package org.exoplatform.ide.part.console;
 
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.Label;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.exoplatform.ide.api.ui.console.Console;
 import org.exoplatform.ide.part.AbstractPartPresenter;
 
 /**
@@ -30,16 +30,20 @@ import org.exoplatform.ide.part.AbstractPartPresenter;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a>
  */
 @Singleton
-public class ConsolePartPresenter extends AbstractPartPresenter
+public class ConsolePartPresenter extends AbstractPartPresenter implements ConsolePartView.ActionDelegate, Console
 {
    private static final String TITLE = "Console";
+
+   private ConsolePartView view;
 
    /**
     * Construct empty Part
     */
    @Inject
-   public ConsolePartPresenter()
+   public ConsolePartPresenter(ConsolePartView view)
    {
+      this.view = view;
+      this.view.setDelegate(this);
    }
 
    /**
@@ -75,8 +79,15 @@ public class ConsolePartPresenter extends AbstractPartPresenter
    @Override
    public void go(AcceptsOneWidget container)
    {
-      Label label = new Label();
-      label.setText("To be implemented");
-      container.setWidget(label);
+      container.setWidget(view);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void print(String message)
+   {
+      view.print(message);
    }
 }
