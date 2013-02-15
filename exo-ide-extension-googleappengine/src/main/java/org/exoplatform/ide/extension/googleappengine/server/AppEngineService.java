@@ -323,12 +323,10 @@ public class AppEngineService
                .TEXT_PLAIN).build();
          }
       }
-      URL uri = new URL(uriInfo.getBaseUri().getScheme(), uriInfo.getBaseUri().getHost(),
-         uriInfo.getBaseUri().getPort(), "/IDE/images/logo/exo_logo.png");
-      return Response.ok("<html><body style=\"font-family: Verdana, Bitstream Vera Sans, " +
+      return Response.ok("<html><body onLoad=\"javascript:window.close();\" style=\"font-family: Verdana, Bitstream Vera Sans, " +
          "sans-serif; font-size: 13px; font-weight: bold;\">" + "<div align=\"center\" style=\"margin: 100 auto; " +
          "border: dashed 1px #CACACA; width: 450px;\">" + "<p>Your application has been created.<br>Close this tab " +
-         "and use the Deploy button in Cloud IDE.</p>" + "<img src=\"" + uri.toString() + "\"></div></body></html>")
+         "and use the Deploy button in Cloud IDE.</p>" + "</div></body></html>")
          .type(MediaType.TEXT_HTML).build();
    }
 

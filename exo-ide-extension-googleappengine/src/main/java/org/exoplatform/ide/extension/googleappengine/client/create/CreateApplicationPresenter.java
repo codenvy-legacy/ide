@@ -44,7 +44,7 @@ import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 2:27:42 PM anya $
- * 
+ *
  */
 public class CreateApplicationPresenter extends GoogleAppEnginePresenter implements CreateApplicationHandler,
    ViewClosedHandler
@@ -67,18 +67,16 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
       HasClickHandlers getCreateButton();
 
       /**
-       * 
+       *
        */
       void enableDeployButton(boolean enable);
 
       /**
-       * 
+       *
        */
       void enableCreateButton(boolean enable);
 
       void setUserInstructions(String instructions);
-
-      void setCreateLink(String href);
    }
 
    private Display display;
@@ -142,15 +140,6 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
          IDE.getInstance().openView(display.asView());
       }
       currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
-      String projectId = currentProject.getId();
-      String vfsId = currentVfs.getId();
-      UrlBuilder builder = new UrlBuilder();
-      String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
-         .setHost(Window.Location.getHost())//
-         .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
-
-      String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
-      display.setCreateLink(url);
 
       isUserLogged();
    }
@@ -194,7 +183,23 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
       display.enableDeployButton(true);
       display.enableCreateButton(false);
       display.setUserInstructions(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationInstruction());
+
+      String projectId = currentProject.getId();
+      String vfsId = currentVfs.getId();
+      UrlBuilder builder = new UrlBuilder();
+      String redirectUrl = builder.setProtocol(Window.Location.getProtocol())//
+         .setHost(Window.Location.getHost())//
+         .setPath(restContext + "/ide/appengine/change-appid/" + vfsId + "/" + projectId).buildString();
+
+      String url = GOOGLE_APP_ENGINE_URL + "?redirect_url=" + redirectUrl;
+
+      clickToCreate(url);
    }
+
+   private static native void clickToCreate(String url)
+   /*-{
+      $wnd.open(url, "_blank");
+   }-*/;
 
    private void isUserLogged()
    {

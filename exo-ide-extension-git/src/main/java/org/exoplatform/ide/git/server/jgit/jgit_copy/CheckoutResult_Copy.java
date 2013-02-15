@@ -40,7 +40,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exoplatform.ide.git.server.jgit.checkout;
+package org.exoplatform.ide.git.server.jgit.jgit_copy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,25 +49,25 @@ import java.util.List;
  * Encapsulates the result of a {@link org.eclipse.jgit.api.CheckoutCommand}
  *
  */
-public class CheckoutResult
+public class CheckoutResult_Copy
 {
 
    /**
     * The {@link Status#OK} result;
     */
-   public static final CheckoutResult OK_RESULT = new CheckoutResult(
+   public static final CheckoutResult_Copy OK_RESULT = new CheckoutResult_Copy(
          Status.OK, null);
 
    /**
     * The {@link Status#ERROR} result;
     */
-   public static final CheckoutResult ERROR_RESULT = new CheckoutResult(
+   public static final CheckoutResult_Copy ERROR_RESULT = new CheckoutResult_Copy(
          Status.ERROR, null);
 
    /**
     * The {@link Status#NOT_TRIED} result;
     */
-   public static final CheckoutResult NOT_TRIED_RESULT = new CheckoutResult(
+   public static final CheckoutResult_Copy NOT_TRIED_RESULT = new CheckoutResult_Copy(
          Status.NOT_TRIED, null);
 
    /**
@@ -102,7 +102,7 @@ public class CheckoutResult
 
    private final List<String> undeletedList;
 
-   CheckoutResult(Status status, List<String> fileList) {
+   CheckoutResult_Copy(Status status, List<String> fileList) {
       myStatus = status;
       if (status == Status.CONFLICTS)
          this.conflictList = fileList;

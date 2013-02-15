@@ -40,7 +40,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.exoplatform.ide.git.server.jgit.checkout;
+package org.exoplatform.ide.git.server.jgit.jgit_copy;
 
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
@@ -82,7 +82,7 @@ import java.util.Map;
 /**
  * This class handles checking out one or two trees merging with the index.
  */
-public class DirCacheCheckout
+public class DirCacheCheckout_Copy
 {
    private Repository repo;
 
@@ -129,7 +129,7 @@ public class DirCacheCheckout
     *         files should be deleted but the deletion in the filesystem failed
     *         (e.g. because a file was locked). To have a consistent state of
     *         the working tree these files have to be deleted by the callers of
-    *         {@link DirCacheCheckout}.
+    *         {@link DirCacheCheckout_Copy}.
     */
    public List<String> getToBeDeleted() {
       return toBeDeleted;
@@ -158,7 +158,7 @@ public class DirCacheCheckout
     *            an iterator over the repositories Working Tree
     * @throws java.io.IOException
     */
-   public DirCacheCheckout(Repository repo, ObjectId headCommitTree, DirCache dc,
+   public DirCacheCheckout_Copy(Repository repo, ObjectId headCommitTree, DirCache dc,
                                 ObjectId mergeCommitTree, WorkingTreeIterator workingTree)
          throws IOException {
       this.repo = repo;
@@ -183,7 +183,7 @@ public class DirCacheCheckout
     *            the id of the tree we want to fast-forward to
     * @throws java.io.IOException
     */
-   public DirCacheCheckout(Repository repo, ObjectId headCommitTree,
+   public DirCacheCheckout_Copy(Repository repo, ObjectId headCommitTree,
                                 DirCache dc, ObjectId mergeCommitTree) throws IOException {
       this(repo, headCommitTree, dc, mergeCommitTree, new FileTreeIterator(repo));
    }
@@ -202,7 +202,7 @@ public class DirCacheCheckout
     *            an iterator over the repositories Working Tree
     * @throws java.io.IOException
     */
-   public DirCacheCheckout(Repository repo, DirCache dc,
+   public DirCacheCheckout_Copy(Repository repo, DirCache dc,
                                 ObjectId mergeCommitTree, WorkingTreeIterator workingTree)
          throws IOException {
       this(repo, null, dc, mergeCommitTree, workingTree);
@@ -221,7 +221,7 @@ public class DirCacheCheckout
     *            the id of the tree of the
     * @throws java.io.IOException
     */
-   public DirCacheCheckout(Repository repo, DirCache dc,
+   public DirCacheCheckout_Copy(Repository repo, DirCache dc,
                                 ObjectId mergeCommitTree) throws IOException {
       this(repo, null, dc, mergeCommitTree, new FileTreeIterator(repo));
    }
