@@ -37,10 +37,10 @@
 	<g:DockLayoutPanel unit="PX" width="380px" height="180px">
 		<g:south size="26.0">
 			<g:FlowPanel>
-				<g:Button addStyleNames="{style.alignBtn}" text="Cancel"
-					ui:field="btnCancel" />
-				<g:Button addStyleNames="{style.alignBtn}" text="Log In"
-					ui:field="btnLogIn" />
+				<g:Button addStyleNames="{style.alignBtn}" ui:field="btnCancel"
+					width="90px" height="26px" />
+				<g:Button addStyleNames="{style.alignBtn}" ui:field="btnLogIn"
+					width="90px" height="26px" />
 			</g:FlowPanel>
 		</g:south>
 		<g:north size="26.0">
@@ -50,7 +50,7 @@
 					<g:Label text="{locale.loginViewTargetField}" styleName="{style.label}" />
 				</g:west>
 				<g:center>
-					<g:ListBox width="277px" ui:field="server" />
+					<g:ListBox ui:field="server"/>
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>

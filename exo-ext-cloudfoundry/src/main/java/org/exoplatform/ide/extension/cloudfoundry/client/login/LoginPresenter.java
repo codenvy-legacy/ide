@@ -67,11 +67,6 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
    private EventBus eventBus;
 
    @Inject
-   public LoginPresenter(EventBus eventBus, Console console)
-   {
-      this(new LoginViewImpl(), eventBus, console);
-   }
-
    protected LoginPresenter(LoginView view, EventBus eventBus, Console console)
    {
       this.view = view;
@@ -217,7 +212,6 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
             server = "http://" + server;
          }
       }
-      // TODO create new view?
    }
 
    /**
@@ -232,9 +226,10 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
 
    private void fillViewFields()
    {
-      // TODO
       view.enableLoginButton(false);
       view.focusInEmailField();
+      view.setPassword("");
+
       getSystemInformation();
    }
 

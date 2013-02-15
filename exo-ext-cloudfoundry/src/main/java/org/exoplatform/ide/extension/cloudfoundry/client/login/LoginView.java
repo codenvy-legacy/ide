@@ -42,6 +42,8 @@ public interface LoginView extends View<LoginView.ActionDelegate>
 
    public String getPassword();
 
+   public void setPassword(String password);
+
    public String getServer();
 
    public void setServer(String server);

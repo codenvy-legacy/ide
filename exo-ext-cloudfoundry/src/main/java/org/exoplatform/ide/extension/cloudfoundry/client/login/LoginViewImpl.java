@@ -26,6 +26,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.PasswordTextBox;
@@ -34,18 +35,17 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryResources;
+
 /**
+ * 
+ * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 @Singleton
 public class LoginViewImpl extends DialogBox implements LoginView
 {
-
    private static LoginViewImplUiBinder uiBinder = GWT.create(LoginViewImplUiBinder.class);
-
-   @UiField
-   ListBox server;
 
    @UiField
    TextBox email;
@@ -61,6 +61,7 @@ public class LoginViewImpl extends DialogBox implements LoginView
 
    @UiField
    Label errorText;
+   @UiField ListBox server;
 
    private ActionDelegate delegate;
 
@@ -69,12 +70,15 @@ public class LoginViewImpl extends DialogBox implements LoginView
    }
 
    @Inject
-   public LoginViewImpl()
+   protected LoginViewImpl(CloudFoundryResources resources)
    {
       Widget widget = uiBinder.createAndBindUi(this);
 
       this.setText("Login to CloudFoundry");
       this.setWidget(widget);
+
+      btnLogIn.setHTML(new Image(resources.okButton()).toString() + " Log In");
+      btnCancel.setHTML(new Image(resources.cancelButton()).toString() + " Cancel");
    }
 
    /**
@@ -111,6 +115,15 @@ public class LoginViewImpl extends DialogBox implements LoginView
    public String getPassword()
    {
       return password.getText();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setPassword(String password)
+   {
+      this.password.setText(password);
    }
 
    /**
