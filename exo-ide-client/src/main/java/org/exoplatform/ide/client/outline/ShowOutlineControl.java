@@ -34,6 +34,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.client.api.EditorCapability;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: $
@@ -53,6 +56,8 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
    public static final String PROMPT_HIDE = IDE.IDE_LOCALIZATION_CONSTANT.outlinePromptHideControl();
 
    private boolean outlineViewOpened = false;
+
+   private List<String> ignoredMimeTypes = new ArrayList<String>();
 
    /**
     * 
@@ -77,6 +82,12 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ViewOpenedEvent.TYPE, this);
+
+      ignoredMimeTypes.add(MimeType.TEXT_HTML);
+      ignoredMimeTypes.add(MimeType.TEXT_CSS);
+      ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
+      ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
+      ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
    }
 
    /**
@@ -93,11 +104,8 @@ public class ShowOutlineControl extends SimpleControl implements IDEControl, Edi
 
       boolean visible = event.getEditor().isCapable(EditorCapability.OUTLINE);
 
-      String mimeType = event.getFile().getMimeType();
-      //TODO add possibility to configure editor capability's 
-      if (MimeType.TEXT_HTML.equals(mimeType) || MimeType.TEXT_CSS.equals(mimeType)
-         || MimeType.TEXT_JAVASCRIPT.equals(mimeType) || MimeType.APPLICATION_JAVASCRIPT.equals(mimeType)
-         || MimeType.APPLICATION_X_JAVASCRIPT.equals(mimeType))
+      // TODO add possibility to configure editor's capabilities 
+      if (ignoredMimeTypes.contains(event.getFile().getMimeType()))
       {
          visible = false;
       }
