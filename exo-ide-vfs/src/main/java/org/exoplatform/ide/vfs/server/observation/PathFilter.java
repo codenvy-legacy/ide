@@ -39,7 +39,8 @@ public final class PathFilter extends ChangeEventFilter
    @Override
    public boolean matched(ChangeEvent event)
    {
-      String path = event.getItemPath();
-      return path != null && pattern.matcher(path).matches();
+      final String path = event.getItemPath();
+      final String oldPath = event.getOldItemPath();
+      return path != null && pattern.matcher(path).matches() || oldPath != null && pattern.matcher(oldPath).matches();
    }
 }

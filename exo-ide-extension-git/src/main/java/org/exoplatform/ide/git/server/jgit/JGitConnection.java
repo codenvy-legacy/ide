@@ -19,6 +19,7 @@
 package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.AddCommand;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.FetchCommand;
@@ -60,7 +61,6 @@ import org.eclipse.jgit.errors.UnmergedPathException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
-import org.eclipse.jgit.lib.NullProgressMonitor;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
@@ -79,7 +79,6 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.RemoteRefUpdate.Status;
-import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.treewalk.EmptyTreeIterator;
 import org.eclipse.jgit.treewalk.FileTreeIterator;
@@ -353,6 +352,7 @@ public class JGitConnection implements GitConnection
    /** @see org.exoplatform.ide.git.server.GitConnection#clone(org.exoplatform.ide.git.shared.CloneRequest) */
    public GitConnection clone(CloneRequest request) throws URISyntaxException, GitException
    {
+      //final long start = System.currentTimeMillis();
       try
       {
          File workDir = repository.getWorkTree();
@@ -360,116 +360,25 @@ public class JGitConnection implements GitConnection
          {
             throw new GitException("Can't create working folder " + workDir + ". ");
          }
-         repository.create();
-
-         StoredConfig config = repository.getConfig();
-         String remoteName = request.getRemoteName();
-         if (remoteName == null)
-         {
-            remoteName = Constants.DEFAULT_REMOTE_NAME;
-         }
-
-         RemoteConfig remoteConfig = new RemoteConfig(config, remoteName);
-         remoteConfig.addURI(new URIish(request.getRemoteUri()));
-
-         RefSpec fetchRefSpec =
-            new RefSpec(Constants.R_HEADS + "*" + ":" + Constants.R_REMOTES + remoteName + "/*").setForceUpdate(true);
-
+         CloneCommand cloneCommand = Git.cloneRepository().setDirectory(workDir).setURI(request.getRemoteUri());
          String[] branchesToFetch = request.getBranchesToFetch();
-         if (branchesToFetch != null)
+         if (branchesToFetch != null && branchesToFetch.length > 0)
          {
-            for (int i = 0; i < branchesToFetch.length; i++)
-            {
-               if (fetchRefSpec.matchSource(branchesToFetch[i]))
-               {
-                  remoteConfig.addFetchRefSpec(new RefSpec(branchesToFetch[i]));
-               }
-            }
-         }
-         else
-         {
-            remoteConfig.addFetchRefSpec(fetchRefSpec);
+            cloneCommand.setBranch(branchesToFetch[0]);
+            cloneCommand.setBranchesToClone(Arrays.asList(branchesToFetch));
          }
 
-         remoteConfig.update(config);
-
-         final String branchName = "master";
-         final String branchRef = "refs/heads/master";
-
-         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_REMOTE,
-            remoteName);
-         config.setString(ConfigConstants.CONFIG_BRANCH_SECTION, branchName, ConfigConstants.CONFIG_KEY_MERGE,
-            branchRef);
-
+         cloneCommand.call();
          GitUser gitUser = getUser();
          if (gitUser != null)
          {
+            StoredConfig config = repository.getConfig();
             config.setString("user", null, "name", gitUser.getName());
             config.setString("user", null, "email", gitUser.getEmail());
+            config.save();
          }
-
-         config.save();
-
-         // Fetch data from remote repository.
-         Transport transport = Transport.open(repository, remoteConfig);
-
-         int timeout = request.getTimeout();
-         if (timeout > 0)
-         {
-            transport.setTimeout(timeout);
-         }
-
-         FetchResult fetchResult;
-         try
-         {
-            fetchResult = transport.fetch(NullProgressMonitor.INSTANCE, null);
-         }
-         finally
-         {
-            transport.close();
-         }
-
-         // Merge command is not work here. Looks like JGit bug. It fails with NPE that should not happen.
-         // But 'merge' command from C git (original) works as well on repository create and fetched with JGit.
-         Ref headRef = fetchResult.getAdvertisedRef(branchRef);
-         if (headRef == null || headRef.getObjectId() == null)
-         {
-            return this;
-         }
-
-         RevWalk revWalk = new RevWalk(repository);
-         RevCommit commit;
-         try
-         {
-            commit = revWalk.parseCommit(headRef.getObjectId());
-         }
-         finally
-         {
-            revWalk.release();
-         }
-
-         boolean detached = !headRef.getName().startsWith(Constants.R_HEADS);
-         RefUpdate updateRef = repository.updateRef(Constants.HEAD, detached);
-         updateRef.setNewObjectId(commit.getId());
-         updateRef.forceUpdate();
-
-         DirCache dirCache = null;
-         try
-         {
-            dirCache = repository.lockDirCache();
-            //            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
-            DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
-            dirCacheCheckout.setFailOnConflict(true);
-            dirCacheCheckout.checkout();
-         }
-         finally
-         {
-            if (dirCache != null)
-            {
-               dirCache.unlock();
-            }
-         }
-
+         //final long end = System.currentTimeMillis();
+         //System.err.printf("%n         git clone time %ds%n", (end - start) / 1000);
          return this;
       }
       catch (TransportException e)

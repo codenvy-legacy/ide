@@ -23,7 +23,8 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemProvider;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
-import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.net.URI;
 import java.util.Collection;
@@ -38,19 +39,24 @@ import java.util.concurrent.ConcurrentMap;
  */
 public class LocalFileSystemProvider implements VirtualFileSystemProvider
 {
+   private static final Log LOG = ExoLogger.getLogger(LocalFileSystemProvider.class);
+
    private final String id;
+   private final LocalFSMountStrategy mountStrategy;
    private final ConcurrentMap<java.io.File, MountPoint> mounts;
-   private final java.io.File mountRoot;
 
    /**
     * @param id
     *    virtual file system identifier
+    * @param mountStrategy
+    *    LocalFSMountStrategy
+    * @see LocalFileSystemProvider
     */
-   public LocalFileSystemProvider(String id, java.io.File mountRoot)
+   public LocalFileSystemProvider(String id, LocalFSMountStrategy mountStrategy)
    {
       this.id = id;
+      this.mountStrategy = mountStrategy;
       this.mounts = new ConcurrentHashMap<java.io.File, MountPoint>();
-      this.mountRoot = mountRoot;
    }
 
    /**
@@ -61,24 +67,30 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
    public VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
       throws VirtualFileSystemException
    {
-      // TODO : this is temporary solution. Waiting when cloud infrastructure will provide something better for us.
-      String wsName = (String)ConversationState.getCurrent().getAttribute("currentTenant");
-      if (wsName == null)
+      final java.io.File workspaceMountPoint;
+      try
       {
-         wsName = "default";
+         workspaceMountPoint = mountStrategy.getMountPath();
       }
-      // -----
-      final java.io.File wsRoot = new java.io.File(mountRoot, wsName + java.io.File.separatorChar + id);
-      if (!(wsRoot.exists() || wsRoot.mkdirs()))
+      catch (VirtualFileSystemException e)
       {
+         LOG.error(e.getMessage(), e);
          // critical error cannot continue
          throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", id));
       }
-      MountPoint mount = mounts.get(wsRoot);
+
+      final java.io.File vfsIoRoot = new java.io.File(workspaceMountPoint, id);
+      if (!(vfsIoRoot.exists() || vfsIoRoot.mkdirs()))
+      {
+         LOG.error("Unable create directory {}", vfsIoRoot);
+         // critical error cannot continue
+         throw new VirtualFileSystemException(String.format("Virtual filesystem '%s' is not available. ", id));
+      }
+      MountPoint mount = mounts.get(vfsIoRoot);
       if (mount == null)
       {
-         MountPoint newMount = new MountPoint(wsRoot);
-         mount = mounts.putIfAbsent(wsRoot, newMount);
+         MountPoint newMount = new MountPoint(vfsIoRoot);
+         mount = mounts.putIfAbsent(vfsIoRoot, newMount);
          if (mount == null)
          {
             mount = newMount;
@@ -115,7 +127,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
     * @return <code>true</code> if specified local file system path successfully unmounted and <code>false</code> if
     *         specified path was not mounted
     */
-   public boolean unmount(java.io.File ioFile) throws VirtualFileSystemException
+   public boolean umount(java.io.File ioFile) throws VirtualFileSystemException
    {
       final MountPoint mount = mounts.remove(ioFile);
       if (mount != null)

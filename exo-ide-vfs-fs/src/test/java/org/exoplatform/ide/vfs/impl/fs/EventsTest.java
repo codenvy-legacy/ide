@@ -198,6 +198,22 @@ public class EventsTest extends LocalFileSystemTest
       assertEquals("text/plain", event.getMimeType());
    }
 
+   public void testUpdateAcl() throws Exception
+   {
+      String requestPath = SERVICE_URI + "acl/" + fileId;
+      Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
+      headers.put("Content-Type", Arrays.asList("application/json"));
+      String acl = "[{\"principal\":\"admin\",\"permissions\":[\"all\"]}," +
+         "{\"principal\":\"john\",\"permissions\":[\"read\", \"write\"]}]";
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, acl.getBytes(), null);
+      assertEquals("Error: " + response.getEntity(), 204, response.getStatus());
+
+      assertEquals(1, listener.events.size());
+      ChangeEvent event = listener.events.get(0);
+      assertEquals(ChangeType.ACL_UPDATED, event.getType());
+      assertEquals(filePath, event.getItemPath());
+   }
+
    public void testDelete() throws Exception
    {
       String requestPath = SERVICE_URI + "delete/" + fileId;
@@ -245,7 +261,8 @@ public class EventsTest extends LocalFileSystemTest
       writeProperties(folderPath, properties);
 
       // Now create new root directory for virtual file system.
-      java.io.File testFsIoRoot2 = new java.io.File(root, "my-ws2" + java.io.File.separatorChar + VFS_ID);
+      java.io.File testFsIoRoot2 =
+         new java.io.File(ConversationStateLocalFSMountStrategy.calculateDirPath(root, "my-ws2"), VFS_ID);
       java.io.File testRoot2 = new java.io.File(testFsIoRoot2, testRootPath);
       assertTrue(testRoot2.mkdirs());
       // copy all items to new virtual filesystem
@@ -311,5 +328,7 @@ public class EventsTest extends LocalFileSystemTest
       // test removing
       assertTrue(eventListenerList.removeEventListener(filter1, listener1));
       assertTrue(eventListenerList.removeEventListener(filter2, listener2));
+
+      assertTrue(provider.umount(testFsIoRoot2));
    }
 }

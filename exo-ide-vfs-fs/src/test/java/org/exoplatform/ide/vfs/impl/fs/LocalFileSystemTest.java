@@ -100,7 +100,7 @@ public abstract class LocalFileSystemTest extends TestCase
       URLHandlerFactorySetup.setup(virtualFileSystemRegistry, eventListenerList);
    }
 
-   protected static final String ROOT_ID = "$root$"; // copy from LocalFileSystem
+   protected static final String ROOT_ID = "root"; // copy from LocalFileSystem
 
    protected static final FileFilter SERVICE_DIR_FILTER = new FileFilter()
    {
@@ -108,7 +108,7 @@ public abstract class LocalFileSystemTest extends TestCase
       public boolean accept(java.io.File pathname)
       {
          String name = pathname.getName();
-         return !(MountPoint.SERVICE_DIR.equals(name) || "..".equals(name) || ".".equals(name));
+         return !(MountPoint.SERVICE_DIR.equals(name));
       }
    };
 
@@ -135,17 +135,17 @@ public abstract class LocalFileSystemTest extends TestCase
       super.setUp();
 
       System.setProperty("org.exoplatform.mimetypes", "conf/mimetypes.properties");
-      // root directory for virtual file systems
+      // root directory for ALL virtual file systems
       root = createRootDirectory();
-      // backend for test virtual filesystem
-      testFsIoRoot = new java.io.File(root, WORKSPACE + java.io.File.separatorChar + VFS_ID);
-      // directory for test
+
       final String testName = getName();
       // path to test directory
       testRootPath = '/' + testName;
+      // backend for test virtual filesystem
+      testFsIoRoot = new java.io.File(ConversationStateLocalFSMountStrategy.calculateDirPath(root, WORKSPACE), VFS_ID);
       assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-      provider = new LocalFileSystemProvider(VFS_ID, root);
+      provider = new LocalFileSystemProvider(VFS_ID, new ConversationStateLocalFSMountStrategy(root));
       provider.mount(testFsIoRoot);
       mountPoint = provider.getMounts().iterator().next();
       virtualFileSystemRegistry.registerProvider(VFS_ID, provider);
@@ -187,7 +187,7 @@ public abstract class LocalFileSystemTest extends TestCase
    protected void tearDown() throws Exception
    {
       mountPoint.getFileLockFactory().checkClean();
-      assertTrue("Unable unmount local filesystem. ", provider.unmount(testFsIoRoot));
+      assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
       virtualFileSystemRegistry.unregisterProvider(VFS_ID);
       if (!FileUtils.deleteRecursive(root))
       {

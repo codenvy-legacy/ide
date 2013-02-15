@@ -23,7 +23,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.server.util.MediaTypes;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -120,7 +119,8 @@ public class VirtualFile implements Comparable<VirtualFile>
    public long getCreationDate() throws VirtualFileSystemException
    {
       // Creation date is not accessible over JDK API. May be done when switch to JDK7.
-      return getLastModificationDate();
+      // But even after switch to JDK7 creation date may not be available from underlying file system.
+      return -1;
    }
 
    public long getLastModificationDate() throws VirtualFileSystemException
@@ -202,9 +202,10 @@ public class VirtualFile implements Comparable<VirtualFile>
       return mountPoint.lock(this);
    }
 
-   public void unlock(String lockToken) throws VirtualFileSystemException
+   public VirtualFile unlock(String lockToken) throws VirtualFileSystemException
    {
       mountPoint.unlock(this, lockToken);
+      return this;
    }
 
    public boolean isLocked() throws VirtualFileSystemException

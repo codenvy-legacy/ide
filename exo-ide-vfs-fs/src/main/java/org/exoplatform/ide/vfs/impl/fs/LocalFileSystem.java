@@ -90,7 +90,7 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.*;
 public class LocalFileSystem implements VirtualFileSystem
 {
    private static final Log LOG = ExoLogger.getLogger(LocalFileSystem.class);
-   private static final String ROOT_ID = "$root$";
+   private static final String ROOT_ID = "root";
    private static final String FAKE_VERSION_ID = "0";
 
    final String vfsId;

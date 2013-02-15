@@ -31,7 +31,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 import static org.exoplatform.ide.commons.ContainerUtils.readValuesParam;
 
 /**
@@ -45,26 +44,22 @@ public final class LocalFileSystemInitializer implements Startable
    private final VirtualFileSystemRegistry registry;
    private final Set<String> vfsIds;
    private final EventListenerList listeners;
-   private final java.io.File mountRoot;
+   private final LocalFSMountStrategy mountStrategy;
 
    public LocalFileSystemInitializer(InitParams initParams,
                                      VirtualFileSystemRegistry registry,
-                                     EventListenerList listeners)
+                                     EventListenerList listeners,
+                                     LocalFSMountStrategy mountStrategy)
    {
-      this(
-         readValuesParam(initParams, "id"),
-         registry,
-         listeners,
-         new java.io.File(readValueParam(initParams, "mount-root", System.getProperty("org.exoplatform.ide.server.fs-root-path")))
-      );
+      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy);
    }
 
    public LocalFileSystemInitializer(Collection<String> vfsIds,
                                      VirtualFileSystemRegistry registry,
                                      EventListenerList listeners,
-                                     java.io.File mountRoot)
+                                     LocalFSMountStrategy mountStrategy)
    {
-      this.mountRoot = mountRoot;
+      this.mountStrategy = mountStrategy;
       this.vfsIds = new HashSet<String>(vfsIds);
       this.registry = registry;
       this.listeners = listeners;
@@ -78,7 +73,7 @@ public final class LocalFileSystemInitializer implements Startable
       {
          try
          {
-            registry.registerProvider(id, new LocalFileSystemProvider(id, mountRoot));
+            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy));
          }
          catch (VirtualFileSystemException e)
          {

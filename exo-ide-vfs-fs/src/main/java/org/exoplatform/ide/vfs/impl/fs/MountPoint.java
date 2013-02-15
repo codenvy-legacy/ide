@@ -117,10 +117,36 @@ public class MountPoint
       @Override
       public boolean accept(java.io.File dir, String name)
       {
-         return !(SERVICE_DIR.equals(name) || "..".equals(name) || ".".equals(name));
+         return !(SERVICE_DIR.equals(name));
       }
    };
 
+   private static class OrFileNameFilter implements java.io.FilenameFilter
+   {
+      private final java.io.FilenameFilter[] filters;
+
+      private OrFileNameFilter(java.io.FilenameFilter... filters)
+      {
+         this.filters = filters;
+      }
+
+      @Override
+      public boolean accept(java.io.File dir, String name)
+      {
+         for (java.io.FilenameFilter filter : filters)
+         {
+            if (!filter.accept(dir, name))
+            {
+               return false;
+            }
+         }
+
+         return true;
+      }
+   }
+
+   private static final java.io.FilenameFilter SERVICE_GIT_DIR_FILTER =
+      new OrFileNameFilter(SERVICE_DIR_FILTER, FileUtils.GIT_FILTER);
 
    // Add in cache if file is not locked to avoid multiple checking the same files.
    private static final String NO_LOCK = "no_lock";
@@ -361,7 +387,7 @@ public class MountPoint
       try
       {
          final String userId = getCurrentUserId();
-         final List<VirtualFile> children = doGetChildren(virtualFile);
+         final List<VirtualFile> children = doGetChildren(virtualFile, SERVICE_GIT_DIR_FILTER);
          for (VirtualFile child : children)
          {
             // Check permission directly for current file only.
@@ -388,9 +414,9 @@ public class MountPoint
    }
 
 
-   private List<VirtualFile> doGetChildren(VirtualFile virtualFile) throws VirtualFileSystemException
+   private List<VirtualFile> doGetChildren(VirtualFile virtualFile, java.io.FilenameFilter filter) throws VirtualFileSystemException
    {
-      final String[] names = virtualFile.getIoFile().list(SERVICE_DIR_FILTER);
+      final String[] names = virtualFile.getIoFile().list(filter);
       if (names == null)
       {
          // Something wrong. According to java docs may be null only if i/o error occurs.
@@ -426,10 +452,10 @@ public class MountPoint
                String.format("Unable create new file in '%s'. Operation not permitted. ", parent.getPath()));
          }
          final Path newPath = parent.getInternalPath().newPath(name);
-         final VirtualFile newVirtualFile = new VirtualFile(new java.io.File(ioRoot, newPath.toIoPath()), newPath, this);
+         final java.io.File newIoFile = new java.io.File(ioRoot, newPath.toIoPath());
          try
          {
-            if (!newVirtualFile.getIoFile().createNewFile()) // atomic
+            if (!newIoFile.createNewFile()) // atomic
             {
                throw new ItemAlreadyExistException(String.format("Item '%s' already exists. ", newPath));
             }
@@ -440,6 +466,8 @@ public class MountPoint
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
             throw new VirtualFileSystemException(msg);
          }
+
+         final VirtualFile newVirtualFile = new VirtualFile(new java.io.File(ioRoot, newPath.toIoPath()), newPath, this);
          // Update content if any.
          if (content != null)
          {
@@ -477,18 +505,18 @@ public class MountPoint
          // Some folder in hierarchy may already exists but at least one folder must be created.
          // If no one folder created then ItemAlreadyExistException is thrown.
          // Method returns first created folder.
-         VirtualFile created = null;
-         VirtualFile current = parent;
+         Path currentPath = parent.getInternalPath();
+         Path createdPath = null;
          for (String element : Path.fromString(name).elements())
          {
-            final Path newPath = current.getInternalPath().newPath(element);
-            current = new VirtualFile(new java.io.File(ioRoot, newPath.toIoPath()), newPath, this);
-            if (current.getIoFile().mkdir() && created == null)
+            currentPath = currentPath.newPath(element);
+            if (new java.io.File(ioRoot, currentPath.toIoPath()).mkdir() && createdPath == null)
             {
-               created = current;
+               createdPath = currentPath;
             }
          }
-         if (created == null)
+
+         if (createdPath == null)
          {
             // Folder or folder hierarchy already exists.
             throw new ItemAlreadyExistException(
@@ -497,7 +525,7 @@ public class MountPoint
 
          // Return first created folder, e.g. assume we need create: folder1/folder2/folder3 in specified folder.
          // If folder1 already exists then return folder2 as first created in hierarchy.
-         return created;
+         return new VirtualFile(new java.io.File(ioRoot, createdPath.toIoPath()), createdPath, this);
       }
       finally
       {
@@ -644,6 +672,10 @@ public class MountPoint
          if (newMediaType != null)
          {
             setProperty(renamed, "vfs:mimeType", newMediaType);
+            if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis()))
+            {
+               LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
+            }
          }
 
          return renamed;
@@ -735,15 +767,16 @@ public class MountPoint
          fileLockFactory.getLock(virtualFile.getInternalPath(), false).acquire(LOCK_FILE_TIMEOUT);
       try
       {
-         java.io.File ioFile = virtualFile.getIoFile();
+         final java.io.File ioFile = virtualFile.getIoFile();
          FileInputStream fIn = null;
          try
          {
-            if (ioFile.length() <= MAX_BUFFER_SIZE)
+            final long fLength = ioFile.length();
+            if (fLength <= MAX_BUFFER_SIZE)
             {
                // If file small enough save its content in memory.
                fIn = new FileInputStream(ioFile);
-               final byte[] buff = new byte[(int)ioFile.length()];
+               final byte[] buff = new byte[(int)fLength];
                int offset = 0;
                int len = buff.length;
                int r;
@@ -756,12 +789,11 @@ public class MountPoint
                   virtualFile.getMediaType(), buff.length, new Date(ioFile.lastModified()));
             }
 
-            // TODO : improve to avoid copy of file
             // Otherwise copy this file to be able release the file lock before leave this method.
             final java.io.File f = java.io.File.createTempFile("spool_file", null);
             FileUtils.nioCopy(ioFile, f, null);
             return new ContentStream(virtualFile.getName(), new DeleteOnCloseFileInputStream(f),
-               virtualFile.getMediaType(), ioFile.length(), new Date(ioFile.lastModified()));
+               virtualFile.getMediaType(), fLength, new Date(ioFile.lastModified()));
          }
          catch (IOException e)
          {
@@ -877,7 +909,7 @@ public class MountPoint
          q.add(virtualFile);
          while (!q.isEmpty())
          {
-            for (VirtualFile child : doGetChildren(q.pop()))
+            for (VirtualFile child : doGetChildren(q.pop(), SERVICE_GIT_DIR_FILTER))
             {
                // Check permission directly for current file only.
                // Not use method 'hasPermission' here to avoid useless
@@ -1001,7 +1033,7 @@ public class MountPoint
             final byte[] buff = new byte[COPY_BUFFER_SIZE];
             while (!q.isEmpty())
             {
-               for (VirtualFile current : doGetChildren(q.pop()))
+               for (VirtualFile current : doGetChildren(q.pop(), SERVICE_GIT_DIR_FILTER))
                {
                   // Check permission directly for current file only.
                   // Not use method 'hasPermission' here to avoid useless
@@ -1031,6 +1063,7 @@ public class MountPoint
                      {
                         closeQuietly(in);
                      }
+                     zipOut.closeEntry();
                   }
                   else if (current.isFolder())
                   {
@@ -1043,8 +1076,8 @@ public class MountPoint
                         jw.flush();
                      }
                      q.add(current);
+                     zipOut.closeEntry();
                   }
-                  zipOut.closeEntry();
                }
             }
             closeQuietly(zipOut);
@@ -1261,8 +1294,10 @@ public class MountPoint
          DataOutputStream dos = null;
          try
          {
-            dos = new DataOutputStream(
-               new BufferedOutputStream(new FileOutputStream(getLockFile(virtualFile.getInternalPath()))));
+            java.io.File lockLockFile = getLockFile(virtualFile.getInternalPath());
+            lockLockFile.getParentFile().mkdirs(); // Ignore result of 'mkdirs' here. If we are failed to create
+            // directory we will get FileNotFoundException at the next line when try to create FileOutputStream.
+            dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(lockLockFile)));
             lockTokenSerializer.write(dos, lockToken);
          }
          catch (IOException e)
@@ -1382,8 +1417,8 @@ public class MountPoint
       java.io.File locksDir = path.isRoot()
          ? new java.io.File(ioRoot, LOCKS_DIR)
          : new java.io.File(ioRoot, path.getParent().newPath(LOCKS_DIR).toIoPath());
-      boolean result = locksDir.mkdirs();
-      assert result || locksDir.exists();
+      //boolean result = locksDir.mkdirs();
+      //assert result || locksDir.exists();
       return new java.io.File(locksDir, path.getName() + LOCK_FILE_SUFFIX);
    }
 
@@ -1450,6 +1485,8 @@ public class MountPoint
             }
             else
             {
+               aclFile.getParentFile().mkdirs(); // Ignore result of 'mkdirs' here. If we are failed to create directory
+               // we will get FileNotFoundException at the next line when try to create FileOutputStream.
                dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(aclFile)));
                aclSerializer.write(dos, copy);
             }
@@ -1467,6 +1504,11 @@ public class MountPoint
 
          // 4. update cache
          aclCache[index].put(virtualFile.getInternalPath(), copy);
+         // 5. update last modification time
+         if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis()))
+         {
+            LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
+         }
       }
       finally
       {
@@ -1498,8 +1540,8 @@ public class MountPoint
       java.io.File aclDir = path.isRoot()
          ? new java.io.File(ioRoot, ACL_DIR)
          : new java.io.File(ioRoot, path.getParent().newPath(ACL_DIR).toIoPath());
-      boolean result = aclDir.mkdirs();
-      assert result || aclDir.exists();
+      //boolean result = aclDir.mkdirs();
+      //assert result || aclDir.exists();
       return new java.io.File(aclDir, path.getName() + ACL_FILE_SUFFIX);
    }
 
@@ -1573,6 +1615,11 @@ public class MountPoint
          saveFileMetadata(virtualFile, metadata);
          // 4. update cache
          metadataCache[index].put(virtualFile.getInternalPath(), metadata);
+         // 5. update last modification time
+         if (!virtualFile.getIoFile().setLastModified(System.currentTimeMillis()))
+         {
+            LOG.warn("Unable to set timestamp to '{}'. ", virtualFile.getIoFile());
+         }
       }
       finally
       {
@@ -1624,7 +1671,7 @@ public class MountPoint
       try
       {
          final String[] value = metadataCache[index].get(virtualFile.getInternalPath()).get(name);
-         String[] copyValue = new String[value.length];
+         final String[] copyValue = new String[value.length];
          System.arraycopy(value, 0, copyValue, 0, value.length);
          return copyValue;
       }
@@ -1694,6 +1741,8 @@ public class MountPoint
          }
          else
          {
+            metadataFile.getParentFile().mkdirs(); // Ignore result of 'mkdirs' here. If we are failed to create
+            // directory we will get FileNotFoundException at the next line when try to create FileOutputStream.
             dos = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(metadataFile)));
             metadataSerializer.write(dos, properties);
          }
@@ -1716,8 +1765,8 @@ public class MountPoint
       java.io.File metadataDir = path.isRoot()
          ? new java.io.File(ioRoot, PROPS_DIR)
          : new java.io.File(ioRoot, path.getParent().newPath(PROPS_DIR).toIoPath());
-      boolean result = metadataDir.mkdirs();
-      assert result || metadataDir.exists();
+      //boolean result = metadataDir.mkdirs();
+      //assert result || metadataDir.exists();
       return new java.io.File(metadataDir, path.getName() + PROPERTIES_FILE_SUFFIX);
    }
 
