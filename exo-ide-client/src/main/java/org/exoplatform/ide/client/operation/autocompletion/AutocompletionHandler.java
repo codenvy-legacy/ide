@@ -41,7 +41,7 @@ public class AutocompletionHandler implements AutocompleteCalledHandler, EditorA
 
    public AutocompletionHandler()
    {
-      IDE.getInstance().addControl(new OpenAutocompleteControl());
+//      IDE.getInstance().addControl(new OpenAutocompleteControl());
 
       IDE.addHandler(AutocompleteCalledEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);

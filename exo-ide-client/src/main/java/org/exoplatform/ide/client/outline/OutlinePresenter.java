@@ -18,7 +18,13 @@
  */
 package org.exoplatform.ide.client.outline;
 
-import java.util.List;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.view.client.SelectionChangeEvent;
+import com.google.gwt.view.client.SingleSelectionModel;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
@@ -37,12 +43,12 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.model.SettingsService;
-import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
 import org.exoplatform.ide.editor.api.codeassitant.TokenType;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityEvent;
@@ -50,13 +56,8 @@ import org.exoplatform.ide.editor.client.api.event.EditorCursorActivityHandler;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.view.client.SelectionChangeEvent;
-import com.google.gwt.view.client.SingleSelectionModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for Outline Panel.
@@ -114,6 +115,8 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
 
    private Editor activeEditor;
 
+   private List<String> ignoredMimeTypes = new ArrayList<String>();
+
    /**
     * Outline selection must be processed or not.
     */
@@ -167,6 +170,13 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
       IDE.addHandler(EditorCursorActivityEvent.TYPE, this);
 
       IDE.getInstance().addControl(new ShowOutlineControl(), Docking.TOOLBAR);
+
+      ignoredMimeTypes.add(MimeType.APPLICATION_JAVA);
+      ignoredMimeTypes.add(MimeType.TEXT_HTML);
+      ignoredMimeTypes.add(MimeType.TEXT_CSS);
+      ignoredMimeTypes.add(MimeType.TEXT_JAVASCRIPT);
+      ignoredMimeTypes.add(MimeType.APPLICATION_JAVASCRIPT);
+      ignoredMimeTypes.add(MimeType.APPLICATION_X_JAVASCRIPT);
    }
 
    @Override
@@ -373,8 +383,9 @@ public class OutlinePresenter implements EditorActiveFileChangedHandler, EditorC
          return;
       }
       
-      // TODO temporary solution to close Outline for Java files:
-      if (activeFile != null && MimeType.APPLICATION_JAVA.equals(activeFile.getMimeType()))
+      // TODO temporary solution to close Outline for Java files
+      // TODO add possibility to configure editor's capabilities
+      if (activeFile != null && ignoredMimeTypes.contains(activeFile.getMimeType()))
       {
          if (display != null)
          {

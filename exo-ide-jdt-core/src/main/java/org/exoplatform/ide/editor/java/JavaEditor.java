@@ -18,17 +18,18 @@
  */
 package org.exoplatform.ide.editor.java;
 
-import com.google.collide.client.editor.Editor.DocumentListener;
-
 import com.google.collide.client.CollabEditor;
 import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.editor.Editor.DocumentListener;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.Position;
 
+import org.eclipse.jdt.client.JavaContentAssistProcessor;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
 import org.exoplatform.ide.editor.java.hover.JavaTypeHover;
 import org.exoplatform.ide.editor.shared.text.Document;
+import org.exoplatform.ide.editor.shared.text.IDocument;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -47,6 +48,7 @@ public class JavaEditor extends CollabEditor
    {
       super(mimeType);
       editorBundle.getAutocompleter().addLanguageSpecificAutocompleter(new JavaAutocompleter());
+      editorBundle.getAutocompleter().addContentAssitProcessor(IDocument.DEFAULT_CONTENT_TYPE, new JavaContentAssistProcessor());
       editor.getDocumentListenerRegistrar().add(new DocumentListener()
       {
          @Override

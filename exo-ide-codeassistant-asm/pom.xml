@@ -19,7 +19,7 @@
    </parent>
    <artifactId>exo-ide-codeassistant-asm</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Code Assistant Asm</name>
+   <name>Codenvy IDE :: Code Assistant Asm</name>
 
    <dependencies>
       <dependency>

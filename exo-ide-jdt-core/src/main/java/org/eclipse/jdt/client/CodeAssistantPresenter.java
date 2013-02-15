@@ -18,8 +18,11 @@
  */
 package org.eclipse.jdt.client;
 
+import com.google.collide.client.CollabEditor;
+import com.google.collide.client.CollabEditorExtension;
+import com.google.collide.client.code.autocomplete.AutocompleteBox;
+import com.google.collide.client.code.autocomplete.integration.AutocompleteUiController;
 import com.google.collide.client.util.logging.Log;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.RunAsyncCallback;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -33,7 +36,6 @@ import org.eclipse.jdt.client.codeassistant.JavaContentAssistInvocationContext;
 import org.eclipse.jdt.client.codeassistant.LazyGenericTypeProposal;
 import org.eclipse.jdt.client.codeassistant.TemplateCompletionProposalComputer;
 import org.eclipse.jdt.client.codeassistant.api.IJavaCompletionProposal;
-import org.eclipse.jdt.client.codeassistant.ui.CodeAssitantForm;
 import org.eclipse.jdt.client.codeassistant.ui.ProposalSelectedHandler;
 import org.eclipse.jdt.client.compiler.batch.CompilationUnit;
 import org.eclipse.jdt.client.core.CompletionProposal;
@@ -55,9 +57,9 @@ import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChanged
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorHotKeyPressedHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
@@ -305,11 +307,13 @@ public class CodeAssistantPresenter implements RunCodeAssistantHandler, EditorAc
     */
    private void codecomplete()
    {
-      int posX = currentEditor.getCursorOffsetLeft() + 2;
-      int posY = currentEditor.getCursorOffsetTop() + 15;
+//      int posX = currentEditor.getCursorOffsetLeft() + 2;
+//      int posY = currentEditor.getCursorOffsetTop() + 15;
       keyHandler = IDE.addHandler(EditorHotKeyPressedEvent.TYPE, this);
-      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
+      AutocompleteBox popup = new AutocompleteUiController(((CollabEditor)currentEditor).getEditor(), CollabEditorExtension.get().getContext().getResources());
 
+      popup.positionAndShow(createProposals(false));
+//      display = new CodeAssitantForm(posX, posY, createProposals(false), this);
    }
 
    private Comparator<IJavaCompletionProposal> comparator = new Comparator<IJavaCompletionProposal>()

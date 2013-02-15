@@ -58,6 +58,8 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.clone.CloneRepositoryCompleteEvent;
 import org.exoplatform.ide.git.client.clone.GitURLParser;
 import org.exoplatform.ide.git.client.github.GitHubClientService;
+import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshaller;
+import org.exoplatform.ide.git.client.marshaller.RepoInfoUnmarshallerWS;
 import org.exoplatform.ide.git.client.marshaller.StringUnmarshaller;
 import org.exoplatform.ide.git.shared.GitHubRepository;
 import org.exoplatform.ide.git.shared.RepoInfo;
@@ -390,7 +392,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
       try
       {
          GitClientService.getInstance().cloneRepositoryWS(vfs.getId(), folder, remoteUri, null,
-            new RequestCallback<RepoInfo>()
+            new RequestCallback<RepoInfo>(new RepoInfoUnmarshallerWS(new RepoInfo()))
             {
                @Override
                protected void onSuccess(RepoInfo result)
@@ -417,7 +419,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
       try
       {
          GitClientService.getInstance().cloneRepository(vfs.getId(), folder, remoteUri, null,
-            new AsyncRequestCallback<RepoInfo>()
+            new AsyncRequestCallback<RepoInfo>(new RepoInfoUnmarshaller(new RepoInfo()))
             {
                @Override
                protected void onSuccess(RepoInfo result)

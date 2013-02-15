@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-vfs-jcr</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Virtual File System :: JCR</name>
+   <name>Codenvy IDE :: Virtual File System :: JCR</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>

@@ -11,7 +11,7 @@
 	<groupId>org.exoplatform.ide</groupId>
 	<artifactId>exo-ide-framework-client</artifactId>
 	<packaging>jar</packaging>
-	<name>eXo IDE :: Framework :: Client</name>
+	<name>Codenvy IDE :: Framework :: Client</name>
 
 	<dependencies>
 

@@ -46,9 +46,14 @@ public class CssProposal implements CompletionProposal
    private static final String PROPERTY_SEPARATOR = ": ";
 
    /**
-    * Proposal text label.
+    * Proposal's text label.
     */
    private String proposal;
+
+   /**
+    * Proposal's text label with escaped characters '<' and '>'.
+    */
+   private String escapedLabel;
 
    /**
     * CSS type of autocompletion.
@@ -175,7 +180,11 @@ public class CssProposal implements CompletionProposal
    @Override
    public String getDisplayString()
    {
-      return proposal;
+      if (escapedLabel == null)
+      {
+         escapedLabel = proposal.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+      }
+      return escapedLabel;
    }
 
    /**

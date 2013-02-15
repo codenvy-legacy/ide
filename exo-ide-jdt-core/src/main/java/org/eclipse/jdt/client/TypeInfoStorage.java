@@ -19,7 +19,7 @@
 package org.eclipse.jdt.client;
 
 import com.google.collide.json.shared.JsonStringSet;
-
+import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -176,6 +176,9 @@ public class TypeInfoStorage
    
    public JsonStringSet getPackages(String projectId)
    {
-      return packages.get(projectId);
+      JsonStringSet stringSet = packages.get(projectId);
+      if(stringSet == null)
+         return JsonCollections.createStringSet();
+      return stringSet;
    }
 }

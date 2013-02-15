@@ -85,6 +85,8 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
 
       HasClickHandlers getSelectSettersButton();
 
+      HasClickHandlers getAllowFinalSettersBox();
+
       GetterSetterTreeModel getTreeModel();
 
       int getSortOrder();
@@ -96,6 +98,8 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
       TakesValue<Boolean> getFinal();
 
       TakesValue<Boolean> getSynchronized();
+
+      TakesValue<Boolean> getAllowSettersFinal();
 
       HasValue<Boolean> getPublic();
 
@@ -224,8 +228,6 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
    /**
     * @param type the type
     * @return map IVariableBinding -> GetterSetterEntry[]
-    * @throws JavaModelException if the type does not exist or if an exception occurs while
-    *             accessing its corresponding resource
     */
    private Map<IVariableBinding, GetterSetterEntry[]> createGetterSetterMapping(ITypeBinding type)
    {
@@ -337,6 +339,16 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
                   }
                }
             }
+         }
+      });
+
+      display.getAllowFinalSettersBox().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            display.getTreeModel().setAllowFinalSetters(display.getAllowSettersFinal().getValue());
+
          }
       });
 
@@ -588,6 +600,12 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
    public Map<IVariableBinding, GetterSetterEntry[]> getFields()
    {
       return map;
+   }
+
+   @Override
+   public boolean allowSetterForFinalFields()
+   {
+      return false;//display.getAllowSettersFinal().getValue();
    }
 
    /**

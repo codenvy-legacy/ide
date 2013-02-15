@@ -18,25 +18,40 @@
  */
 package org.exoplatform.ide.editor.codemirror;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
+import com.google.gwt.dom.client.BodyElement;
+import com.google.gwt.dom.client.FrameElement;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
+import com.google.gwt.event.dom.client.LoadEvent;
+import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
+import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.AbsolutePanel;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Frame;
+import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.rebind.rpc.ProblemReport.Problem;
 
-import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver;
 import org.exoplatform.gwtframework.commons.util.BrowserResolver.Browser;
 import org.exoplatform.ide.editor.api.CodeLine;
-import org.exoplatform.ide.editor.client.api.Editor;
-import org.exoplatform.ide.editor.client.api.EditorCapability;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedEvent;
 import org.exoplatform.ide.editor.api.EditorTokenListPreparedHandler;
-import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.api.codeassitant.CanInsertImportStatement;
-import org.exoplatform.ide.editor.api.codeassitant.RunCodeAssistantEvent;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
 import org.exoplatform.ide.editor.api.codeassitant.TokenBeenImpl;
+import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
+import org.exoplatform.ide.editor.client.api.SelectionRange;
 import org.exoplatform.ide.editor.client.api.event.EditorContentChangedEvent;
 import org.exoplatform.ide.editor.client.api.event.EditorContentChangedHandler;
 import org.exoplatform.ide.editor.client.api.event.EditorContextMenuEvent;
@@ -64,28 +79,11 @@ import org.exoplatform.ide.editor.shared.text.DocumentEvent;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IDocumentListener;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.Scheduler.ScheduledCommand;
-import com.google.gwt.dom.client.BodyElement;
-import com.google.gwt.dom.client.FrameElement;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.Style.BorderStyle;
-import com.google.gwt.dom.client.Style.Position;
-import com.google.gwt.dom.client.Style.Unit;
-import com.google.gwt.event.dom.client.LoadEvent;
-import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Element;
-import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.AbsolutePanel;
-import com.google.gwt.user.client.ui.DockLayoutPanel;
-import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Frame;
-import com.google.gwt.user.client.ui.TextArea;
-import com.google.gwt.user.rebind.rpc.ProblemReport.Problem;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:dmitry.ndp@gmail.com">Dmytro Nochevnov</a>
@@ -568,6 +566,11 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private boolean handleKeyPressing(boolean isCtrl, boolean isAlt, boolean isShift, int keyCode)
    {
+      if((isCtrl || (BrowserResolver.isMacOs() && isAlt)) && keyCode == ' ')
+      {
+         onAutocomplete();
+         return true;
+      }
       EditorHotKeyPressedEvent event = new EditorHotKeyPressedEvent(isCtrl, isAlt, isShift, keyCode);
       fireEvent(event);
       return event.isHotKeyHandled();
@@ -628,11 +631,6 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
 
    private void callAutocompleteHandler(String lineContent, JavaScriptObject currentNode)
    {
-      if (mimeType.equals(MimeType.APPLICATION_JAVA))
-      {
-         fireEvent(new RunCodeAssistantEvent());
-         return;
-      }
 
       int cursorRow = cursorPositionRow;
 

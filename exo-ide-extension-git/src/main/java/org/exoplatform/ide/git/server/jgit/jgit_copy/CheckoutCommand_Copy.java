@@ -43,10 +43,10 @@
  */
 package org.exoplatform.ide.git.server.jgit.jgit_copy;
 
-import org.eclipse.jgit.JGitText;
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.GitCommand;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
@@ -59,6 +59,7 @@ import org.eclipse.jgit.dircache.DirCacheEntry;
 import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.CheckoutConflictException;
+import org.eclipse.jgit.internal.JGitText;
 import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
@@ -156,7 +157,7 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
          RevWalk revWalk = new RevWalk(repo);
          AnyObjectId headId = headRef.getObjectId();
          RevCommit headCommit = headId == null ? null : revWalk
-               .parseCommit(headId);
+.parseCommit(headId);
          RevCommit newCommit = revWalk.parseCommit(branch);
          RevTree headTree = headCommit == null ? null : headCommit.getTree();
          DirCacheCheckout dco = new DirCacheCheckout(repo, headTree,
@@ -213,6 +214,10 @@ public class CheckoutCommand_Copy extends GitCommand<Ref> {
          return ref;
       } catch (IOException ioe) {
          throw new JGitInternalException(ioe.getMessage(), ioe);
+      }
+      catch (GitAPIException e)
+      {
+         throw new JGitInternalException(e.getMessage(), e);
       } finally {
          if (status == null)
             status = CheckoutResult_Copy.ERROR_RESULT;

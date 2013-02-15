@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-testframework</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Test Framework</name>
+   <name>Codenvy IDE :: Test Framework</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.gwt</groupId>

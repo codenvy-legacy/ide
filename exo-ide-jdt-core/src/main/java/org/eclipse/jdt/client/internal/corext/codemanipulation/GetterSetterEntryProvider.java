@@ -30,4 +30,6 @@ import java.util.Map;
 public interface GetterSetterEntryProvider
 {
    Map<IVariableBinding, GetterSetterEntry[]> getFields();
+
+   boolean allowSetterForFinalFields();
 }

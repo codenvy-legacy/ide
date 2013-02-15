@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-yaml</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: YAML</name>
+   <name>Codenvy IDE :: Editor :: YAML</name>
    <dependencies>
  
       <dependency>

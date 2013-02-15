@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-dev-mode</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: DevMode</name>
+   <name>Codenvy IDE :: DevMode</name>
 
    <dependencies>
 
