@@ -102,16 +102,16 @@ public class CloneTest extends BaseTest
             new GitUser("andrey", "andrey@mail.com"));
       CloneRequest request = new CloneRequest(repository.getWorkTree().getAbsolutePath(), //
          null /* .git directory already set. Not need to pass it in this implementation. */);
-      request.setBranchesToFetch(new String[]{"refs/heads/featured"});
+      request.setBranchesToFetch(new String[]{"refs/heads/featured:refs/remotes/origin/featured"});
       client.clone(request);
 
       Repository clone = client.getRepository();
       Git cloneGit = new Git(clone);
-      List<Ref> brlist = cloneGit.branchList().call();
+      List<Ref> brlist = cloneGit.branchList().setListMode(ListMode.REMOTE).call();
       List<String> brnames = new ArrayList<String>(brlist.size());
       for (Ref ref : brlist)
          brnames.add(ref.getName());
       assertEquals(1, brnames.size());
-      assertEquals("refs/heads/featured", brnames.get(0));
+      assertEquals("refs/remotes/origin/featured", brnames.get(0));
    }
 }
