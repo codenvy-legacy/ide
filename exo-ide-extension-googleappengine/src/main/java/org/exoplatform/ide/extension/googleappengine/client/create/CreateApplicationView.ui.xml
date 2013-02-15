@@ -45,11 +45,6 @@
          height: 64px;
          width: 83%;
       }
-
-      .image-position-fix {
-         margin-bottom: -3px;
-         margin-top: 3px;
-      }
    </ui:style>
 
    <f:Border margin="15" borderColor="transparent">
@@ -64,8 +59,8 @@
       </f:layer>
       <f:layer height="22px" bottom="0">
          <g:FlowPanel styleName="{style.right}">
-            <f:LinkButton ui:field="createButton" target="_blank" styleName="{style.image-position-fix}"
-                          addStyleNames="{style.left-float}"/>
+            <f:ImageButton ui:field="createButton" width="90" height="22"
+                           addStyleNames="{style.left-float}"></f:ImageButton>
             <g:FlowPanel width="5px" height="22px" styleName="{style.left-float}"></g:FlowPanel>
             <f:ImageButton ui:field="deployButton" enabled="false" width="90" height="22" text="{locale.deployButton}"
                            imageName="yes"
