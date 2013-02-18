@@ -162,7 +162,6 @@ public class BinaryTypeImpl implements IBinaryType
             if(!anonymousClass.test(name))
             {
               nested.add(binaryNestedType);
-              System.out.println(binaryNestedType.getName());
             }
          }
          return nested.toArray(new IBinaryNestedType[nested.size()]);
