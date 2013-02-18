@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.env;
 
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.regexp.shared.RegExp;
 
 import org.eclipse.jdt.client.core.Signature;
 import org.eclipse.jdt.client.core.compiler.CharOperation;
@@ -38,6 +39,8 @@ import java.util.List;
  */
 public class BinaryTypeImpl implements IBinaryType
 {
+
+   public static final RegExp anonymousClass = RegExp.compile("\\$[0-9]");
 
    private JSONObject jsObj;
 
@@ -150,13 +153,18 @@ public class BinaryTypeImpl implements IBinaryType
       if(jsObj.get("nestedTypes").isArray() != null)
       {
          JSONArray array = jsObj.get("nestedTypes").isArray();
-         IBinaryNestedType[] nested = new IBinaryNestedType[array.size()];
+         ArrayList<IBinaryNestedType> nested = new ArrayList<IBinaryNestedType>(array.size());
          char[] parentType = getName();
          for(int i = 0; i< array.size(); i++)
          {
-            nested[i] = new BinaryNestedTypeImpl(parentType, array.get(i).isObject());
+            BinaryNestedTypeImpl binaryNestedType = new BinaryNestedTypeImpl(parentType, array.get(i).isObject());
+            String name = new String(binaryNestedType.getName());
+            if(!anonymousClass.test(name))
+            {
+              nested.add(binaryNestedType);
+            }
          }
-         return nested;
+         return nested.toArray(new IBinaryNestedType[nested.size()]);
       }
       return null;
    }

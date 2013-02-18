@@ -19,9 +19,13 @@
 package org.exoplatform.ide.extension.openshift.server;
 
 import com.openshift.client.IApplication;
+import com.openshift.client.ICartridge;
+import com.openshift.client.IDomain;
 import com.openshift.client.IOpenShiftConnection;
+import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.OpenShiftException;
+import com.openshift.internal.client.Cartridge;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
@@ -77,11 +81,9 @@ import javax.ws.rs.core.MediaType;
  */
 public class Express
 {
-   private static final String EXPRESS_API = "https://openshift.redhat.com/broker";
    private static final Pattern GIT_URL_PATTERN = Pattern
       .compile("ssh://(\\w+)@(\\w+)-(\\w+)\\.rhcloud\\.com/~/git/(\\w+)\\.git/");
 
-   private final boolean debug = false;
    private final VirtualFileSystemRegistry vfsRegistry;
 
    private final SshKeyProvider keyProvider;
@@ -117,42 +119,23 @@ public class Express
       }
    }
 
-   public void login(String rhlogin, String password) throws ExpressException, IOException,
+   public void login(String rhlogin, String password) throws ExpressException,
       ParsingResponseException, VirtualFileSystemException
    {
-      String data = new JsonRequestBuilder()
-         .addProperty("rhlogin", rhlogin)
-         .addProperty("debug", Boolean.toString(debug))
-         .build();
-      URL url = new URL(EXPRESS_API + "/userinfo");
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
+      IUser user;
       try
       {
-         http.setDoOutput(true);
-         http.setRequestMethod("POST");
-
-         writeFormData(http, data, password);
-
-         int status = http.getResponseCode();
-         if (status != 200)
-         {
-            ExpressException expressException = fault(http);
-            int exitCode = expressException.getExitCode();
-            // 99:  User does not exist. 
-            // Happens if user did not create domain yet. 
-            if (!(status == 404 && exitCode == 99))
-            {
-               throw expressException;
-            }
-         }
-         /* If credentials valid save it. */
-         RHCloudCredentials rhCloudCredentials = new RHCloudCredentials(rhlogin, password);
-         writeCredentials(rhCloudCredentials);
+         IOpenShiftConnection connection = new OpenShiftConnectionFactory()
+            .getConnection("show-domain-info", rhlogin, password, OPENSHIFT_URL);
+         user = connection.getUser();
       }
-      finally
+      catch (OpenShiftException e)
       {
-         http.disconnect();
+         throw new ExpressException(500, "Authentication required", MediaType.TEXT_PLAIN);
       }
+
+      RHCloudCredentials rhCloudCredentials = new RHCloudCredentials(user.getRhlogin(), user.getPassword());
+      writeCredentials(rhCloudCredentials);
    }
 
    public void logout() throws IOException, VirtualFileSystemException
@@ -163,15 +146,11 @@ public class Express
    public void createDomain(String namespace, boolean alter) throws ExpressException, IOException,
       ParsingResponseException, VirtualFileSystemException
    {
-      RHCloudCredentials rhCloudCredentials = readCredentials();
-      if (rhCloudCredentials == null)
-      {
-         throw new ExpressException(200, "Authentication required.\n", "text/plain");
-      }
-      createDomain(rhCloudCredentials, namespace, alter);
+      IOpenShiftConnection connection = getOpenShiftConnection();
+      createDomain(connection, namespace, alter);
    }
 
-   private void createDomain(RHCloudCredentials rhCloudCredentials, String namespace, boolean alter)
+   private void createDomain(IOpenShiftConnection connection, String namespace, boolean alter)
       throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
    {
       final String host = "rhcloud.com";
@@ -194,153 +173,81 @@ public class Express
          }
       }
 
-      String data = new JsonRequestBuilder()
-         .addProperty("namespace", namespace)
-         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
-         .addProperty("debug", Boolean.toString(debug))
-         .addProperty("alter", Boolean.toString(alter))
-         .addProperty("ssh", readSshKeyBody(publicKey))
-         .addProperty("key_type", readSshKeyType(publicKey))
-         .build();
+      OpenShiftSSHKey sshKey = new OpenShiftSSHKey(publicKey);
+      if (connection.getUser().getSSHKeyByName("default") != null)
+      {
+         connection.getUser().getSSHKeyByName("default").setKeyType(sshKey.getKeyType(), sshKey.getPublicKey());
+      }
+      else
+      {
+         connection.getUser().putSSHKey("default", sshKey);
+      }
 
-      URL url = new URL(EXPRESS_API + "/domain");
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
       try
       {
-         http.setDoOutput(true);
-         http.setRequestMethod("POST");
-
-         writeFormData(http, data, rhCloudCredentials.getPassword());
-
-         int status = http.getResponseCode();
-         if (status != 200)
+         if (!connection.getUser().hasDomain(namespace))
          {
-            ExpressException ex = fault(http);
-            if (ex.getExitCode() == 118)
-            {
-               //means that ssh key not found
-               uploadSshKeyIfNotExist(rhCloudCredentials, publicKey);
-               createDomain(rhCloudCredentials, namespace, alter);
-            }
-            else
-            {
-               throw ex;
-            }
+            connection.getUser().createDomain(namespace);
          }
       }
-      finally
+      catch (OpenShiftException e)
       {
-         http.disconnect();
+         throw new ExpressException(500, "Domain creating failed", MediaType.TEXT_PLAIN);
       }
-   }
 
-   public void uploadSshKeyIfNotExist(RHCloudCredentials rhCloudCredentials, SshKey publicKey)
-      throws VirtualFileSystemException, IOException, ExpressException, ParsingResponseException
-   {
-      String data = new JsonRequestBuilder()
-         .addProperty("key_name", "default")
-         .addProperty("ssh", readSshKeyBody(publicKey))
-         .addProperty("key_type", readSshKeyType(publicKey))
-         .addProperty("action", "add-key")
-         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
-         .build();
-
-      URL url = new URL(EXPRESS_API + "/ssh_keys");
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
-      http.setRequestProperty("password", rhCloudCredentials.getPassword());
-      try
-      {
-         http.setDoOutput(true);
-         http.setRequestMethod("POST");
-
-         writeFormData(http, data, rhCloudCredentials.getPassword());
-
-         int status = http.getResponseCode();
-         if (status != 200)
-         {
-            throw fault(http);
-         }
-      }
-      finally
-      {
-         http.disconnect();
-      }
    }
 
    public AppInfo createApplication(String app, String type, File workDir) throws ExpressException, IOException,
       ParsingResponseException, VirtualFileSystemException
    {
-      RHCloudCredentials rhCloudCredentials = readCredentials();
-      if (rhCloudCredentials == null)
-      {
-         throw new ExpressException(200, "Authentication required.\n", "text/plain");
-      }
-      return createApplication(rhCloudCredentials, app, type, workDir);
+      IOpenShiftConnection connection = getOpenShiftConnection();
+      return createApplication(connection, app, type, workDir);
    }
 
-   private AppInfo createApplication(RHCloudCredentials rhCloudCredentials, String app, String type, File workDir)
-      throws ExpressException, IOException, ParsingResponseException
+   private AppInfo createApplication(IOpenShiftConnection connection, String app, String type, File workDir)
+      throws ExpressException, IOException, ParsingResponseException, VirtualFileSystemException
    {
-      validateAppType(type, rhCloudCredentials);
-      String data = new JsonRequestBuilder()
-         .addProperty("action", "configure")
-         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
-         .addProperty("debug", Boolean.toString(debug))
-         .addProperty("app_name", app)
-         .addProperty("cartridge", type)
-         .build();
+      validateAppType(type, connection);
 
-      URL url = new URL(EXPRESS_API + "/cartridge");
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
-      try
+      IApplication application = connection.getUser().getDefaultDomain().createApplication(app, Cartridge.valueOf(type));
+
+      String gitUrl = application.getGitUrl();
+
+      if (workDir != null)
       {
-         http.setDoOutput(true);
-         http.setRequestMethod("POST");
-
-         writeFormData(http, data, rhCloudCredentials.getPassword());
-
-         int status = http.getResponseCode();
-         if (status != 200)
+         GitConnection git = null;
+         try
          {
-            throw fault(http);
+            git = GitConnectionFactory.getInstance().getConnection(workDir, null);
+            git.init(new InitRequest());
+            git.remoteAdd(new RemoteAddRequest("express", gitUrl));
          }
-
-         AppInfo appInfo = applicationInfo(rhCloudCredentials, app);
-         String gitUrl = appInfo.getGitUrl();
-
-         if (workDir != null)
+         catch (GitException gite)
          {
-            GitConnection git = null;
-            try
+            throw new RuntimeException(gite.getMessage(), gite);
+         }
+         finally
+         {
+            if (git != null)
             {
-               git = GitConnectionFactory.getInstance().getConnection(workDir, null);
-               git.init(new InitRequest());
-               git.remoteAdd(new RemoteAddRequest("express", gitUrl));
-            }
-            catch (GitException gite)
-            {
-               throw new RuntimeException(gite.getMessage(), gite);
-            }
-            finally
-            {
-               if (git != null)
-               {
-                  git.close();
-               }
+               git.close();
             }
          }
-         return appInfo;
       }
-      finally
-      {
-         http.disconnect();
-      }
+
+      return new AppInfoImpl(
+         application.getName(),
+         application.getCartridge().getName(),
+         application.getGitUrl(),
+         application.getApplicationUrl(),
+         application.getCreationTime().getTime()
+      );
    }
 
-   private void validateAppType(String type, RHCloudCredentials rhCloudCredentials) throws ParsingResponseException,
-      IOException, ExpressException
+   private void validateAppType(String type, IOpenShiftConnection connection) throws ParsingResponseException,
+      IOException, ExpressException, VirtualFileSystemException
    {
-      Set<String> supportedTypes = frameworks(rhCloudCredentials);
+      Set<String> supportedTypes = frameworks(connection);
       if (!supportedTypes.contains(type))
       {
          StringBuilder msg = new StringBuilder();
@@ -368,18 +275,13 @@ public class Express
       {
          app = detectAppName(workDir);
       }
-      RHCloudCredentials rhCloudCredentials = readCredentials();
-      if (rhCloudCredentials == null)
-      {
-         throw new ExpressException(200, "Authentication required.\n", "text/plain");
-      }
-      return applicationInfo(rhCloudCredentials, app);
+      return applicationInfo(getOpenShiftConnection(), app);
    }
 
-   private AppInfo applicationInfo(RHCloudCredentials rhCloudCredentials, String app) throws ExpressException,
-      IOException, ParsingResponseException
+   private AppInfo applicationInfo(IOpenShiftConnection connection, String app) throws ExpressException,
+      IOException, ParsingResponseException, VirtualFileSystemException
    {
-      List<AppInfo> apps = userInfo(rhCloudCredentials, true).getApps();
+      List<AppInfo> apps = userInfo(connection, true).getApps();
       if (apps != null && apps.size() > 0)
       {
          for (AppInfo a : apps)
@@ -400,45 +302,20 @@ public class Express
       {
          app = detectAppName(workDir);
       }
-      RHCloudCredentials rhCloudCredentials = readCredentials();
-      if (rhCloudCredentials == null)
-      {
-         throw new ExpressException(200, "Authentication required.\n", "text/plain");
-      }
-      destroyApplication(rhCloudCredentials, app);
+      IOpenShiftConnection connection = getOpenShiftConnection();
+      destroyApplication(connection, app);
    }
 
-   private void destroyApplication(RHCloudCredentials rhCloudCredentials, String app) throws ExpressException,
-      IOException, ParsingResponseException
+   private void destroyApplication(IOpenShiftConnection connection, String app) throws ExpressException,
+      IOException, ParsingResponseException, VirtualFileSystemException
    {
-      AppInfo target = applicationInfo(rhCloudCredentials, app);
-
-      String data = new JsonRequestBuilder()
-         .addProperty("action", "deconfigure")
-         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
-         .addProperty("debug", Boolean.toString(debug))
-         .addProperty("app_name", app)
-         .addProperty("cartridge", target.getType())
-         .build();
-
-      URL url = new URL(EXPRESS_API + "/cartridge");
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
       try
       {
-         http.setDoOutput(true);
-         http.setRequestMethod("POST");
-
-         writeFormData(http, data, rhCloudCredentials.getPassword());
-
-         int status = http.getResponseCode();
-         if (status != 200)
-         {
-            throw fault(http);
-         }
+         connection.getUser().getDefaultDomain().getApplicationByName(app).destroy();
       }
-      finally
+      catch (OpenShiftException e)
       {
-         http.disconnect();
+         throw new ExpressException(500, "Appliaction destroy failed", MediaType.TEXT_PLAIN);
       }
    }
 
@@ -450,102 +327,59 @@ public class Express
       {
          throw new ExpressException(200, "Authentication required.\n", "text/plain");
       }
-      return frameworks(rhCloudCredentials);
+      IOpenShiftConnection connection = getOpenShiftConnection();
+      return frameworks(connection);
    }
 
-   private Set<String> frameworks(RHCloudCredentials rhCloudCredentials) throws ExpressException, IOException,
+   private Set<String> frameworks(IOpenShiftConnection connection) throws ExpressException, IOException,
       ParsingResponseException
    {
-      String data = new JsonRequestBuilder()
-         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
-         .addProperty("cart_type", "standalone")
-         .addProperty("debug", Boolean.toString(debug))
-         .build();
-      URL url = new URL(EXPRESS_API + "/cartlist");
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
-      try
+      Set<String> frameworks = new HashSet<String>();
+      for (ICartridge cartridge : connection.getStandaloneCartridges())
       {
-         http.setDoOutput(true);
-         http.setRequestMethod("POST");
-
-         writeFormData(http, data, rhCloudCredentials.getPassword());
-
-         int status = http.getResponseCode();
-         if (status != 200)
-         {
-            throw fault(http);
-         }
-
-         InputStream in = null;
-         try
-         {
-            return new FrameworkListReader().readObject(in = http.getInputStream());
-         }
-         finally
-         {
-            if (in != null)
-            {
-               in.close();
-            }
-         }
+         frameworks.add(cartridge.getName());
       }
-      finally
-      {
-         http.disconnect();
-      }
+      return frameworks;
    }
 
    public RHUserInfo userInfo(boolean appsInfo) throws ExpressException, IOException, ParsingResponseException,
       VirtualFileSystemException
    {
-      RHCloudCredentials rhCloudCredentials = readCredentials();
-      if (rhCloudCredentials == null)
-      {
-         throw new ExpressException(200, "Authentication required.\n", "text/plain");
-      }
-      return userInfo(rhCloudCredentials, appsInfo);
+      IOpenShiftConnection connection = getOpenShiftConnection();
+      return userInfo(connection, appsInfo);
    }
 
-   private RHUserInfo userInfo(RHCloudCredentials rhCloudCredentials, boolean appsInfo) throws ExpressException,
-      IOException, ParsingResponseException
+   private RHUserInfo userInfo(IOpenShiftConnection connection, boolean appsInfo) throws ExpressException,
+      IOException, ParsingResponseException, VirtualFileSystemException
    {
-      String data = new JsonRequestBuilder()
-         .addProperty("rhlogin", rhCloudCredentials.getRhlogin())
-         .addProperty("debug", Boolean.toString(debug))
-         .build();
+      IUser user = connection.getUser();
+      IDomain domain = null;
 
-      URL url = new URL(EXPRESS_API + "/userinfo");
-      HttpURLConnection http = (HttpURLConnection)url.openConnection();
-      try
+      if (user.hasDomain())
       {
-         http.setDoOutput(true);
-         http.setRequestMethod("POST");
-
-         writeFormData(http, data, rhCloudCredentials.getPassword());
-
-         int status = http.getResponseCode();
-         if (status != 200)
-         {
-            throw fault(http);
-         }
-
-         InputStream in = null;
-         try
-         {
-            return new UserInfoReader(appsInfo).readObject(in = http.getInputStream());
-         }
-         finally
-         {
-            if (in != null)
-            {
-               in.close();
-            }
-         }
+         domain = user.getDefaultDomain();
       }
-      finally
+
+      RHUserInfo userInfo =
+         new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : "Doesn't exist");
+      if (appsInfo && domain != null)
       {
-         http.disconnect();
+         List<AppInfo> appInfoList = new ArrayList<AppInfo>();
+         for (IApplication application : domain.getApplications())
+         {
+            appInfoList.add(
+               new AppInfoImpl(
+                  application.getName(),
+                  application.getCartridge().getName(),
+                  application.getGitUrl(),
+                  application.getApplicationUrl(),
+                  application.getCreationTime().getTime()
+               )
+            );
+         }
+         userInfo.setApps(appInfoList);
       }
+      return userInfo;
    }
 
    private RHCloudCredentials readCredentials() throws VirtualFileSystemException, IOException
@@ -678,6 +512,7 @@ public class Express
       return app;
    }
 
+   @Deprecated
    private static ExpressException fault(HttpURLConnection http) throws IOException, ParsingResponseException
    {
       InputStream in = null;
@@ -694,28 +529,7 @@ public class Express
       }
    }
 
-   private static String readSshKeyBody(SshKey sshKey)
-   {
-      byte[] b = sshKey.getBytes();
-      StringBuilder sb = new StringBuilder();
-      for (int i = 8 /* Skip "ssh-rsa " */; b[i] != ' ' && b[i] != '\n' && i < b.length; i++)
-      {
-         sb.append((char)b[i]);
-      }
-      return sb.toString();
-   }
-
-   private static String readSshKeyType(SshKey sshKey)
-   {
-      byte[] b = sshKey.getBytes();
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; b[i] != ' ' && i < b.length; i++)
-      {
-         sb.append((char)b[i]);
-      }
-      return sb.toString();
-   }
-
+   @Deprecated
    private void writeFormData(HttpURLConnection http, String json, String password) throws IOException
    {
       http.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
@@ -754,13 +568,25 @@ public class Express
       RHCloudCredentials credentials = readCredentials();
       try
       {
-         return new OpenShiftConnectionFactory()
+         if (credentials == null)
+         {
+            throw new ExpressException(401, "Authentication required", MediaType.TEXT_PLAIN);
+         }
+
+         IOpenShiftConnection connection = new OpenShiftConnectionFactory()
             .getConnection("show-domain-info", credentials.getRhlogin(), credentials.getPassword(), OPENSHIFT_URL);
+
+         if (connection.getUser() != null)
+         {
+            return connection;
+         }
       }
       catch (OpenShiftException e)
       {
-         throw new ExpressException(500, e.getMessage(), MediaType.TEXT_PLAIN);
+         throw new ExpressException(401, "Authentication required", MediaType.TEXT_PLAIN);
       }
+
+      throw new ExpressException(500, "Get connection error", MediaType.TEXT_PLAIN);
    }
 
    public void stopApplication(String appName) throws ExpressException, VirtualFileSystemException, IOException
@@ -900,6 +726,7 @@ public class Express
             }
             catch (IOException e)
             {
+               //ignored
             }
          }
       }

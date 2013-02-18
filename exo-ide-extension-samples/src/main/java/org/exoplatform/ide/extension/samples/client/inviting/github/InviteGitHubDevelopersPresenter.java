@@ -73,7 +73,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
    VfsChangedHandler
 {
 
-   public static final String COLLABORATORS_FAILED = "Codenvy IDE failed to get the list of collaborators.";
+   public static final String COLLABORATORS_FAILED = "Codenvy failed to get the list of collaborators.";
 
    public interface Display extends IsView
    {
@@ -390,11 +390,11 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
          IDE.getInstance().closeView(display.asView().getId());
          if (invitations == 1)
          {
-            Dialogs.getInstance().showInfo("IDE", "One invitation was sent successfully.");
+            Dialogs.getInstance().showInfo("Codenvy", "One invitation was sent successfully.");
          }
          else
          {
-            Dialogs.getInstance().showInfo("IDE", "" + invitations + " invitations were sent successfully.");
+            Dialogs.getInstance().showInfo("Codenvy", "" + invitations + " invitations were sent successfully.");
          }
          return;
       }

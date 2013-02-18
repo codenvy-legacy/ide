@@ -41,9 +41,9 @@ public class CodemanipulationModule extends AbstractGinModule
       bind(AddGetterSetterPresenter.Display.class).to(AddGetterSetterView.class);
       bind(new TypeLiteral<MultiSelectionModel<Object>>()
       {
-      }).in(Singleton.class);
+      });
       bind(GetterSetterTreeModel.class);
-      bind(GenerateNewConstructorUsingFieldsPresenter.Display.class).to(GenerateNewConstructorUsingFieldsView.class).in(Singleton.class);
+      bind(GenerateNewConstructorUsingFieldsPresenter.Display.class).to(GenerateNewConstructorUsingFieldsView.class);
    }
 
    @Provides

@@ -547,7 +547,13 @@ public class CompletionProposalCollector extends CompletionRequestor
    {
       if (isIgnored(proposal.getKind()))
          return true;
-      //       char[] declaringType = getDeclaringType(proposal);
+      char[] declaringType = getDeclaringType(proposal);
+      if(declaringType != null)
+      {
+         String type = new String(declaringType);
+         if(type.contains("new ") && type.contains("(){}"))
+            return true;
+      }
       // TODO
       // return declaringType != null; //&& TypeFilter.isFiltered(declaringType);
       return false;
