@@ -7,7 +7,7 @@
 		<version>1.2.0-M17-SNAPSHOT</version>
 	</parent>
 	<artifactId>exo-ide-extension-java-runtime</artifactId>
-	<name>eXo IDE :: Extension :: Java :: Runtime</name>
+	<name>Codenvy IDE :: Extension :: Java :: Runtime</name>
 
 	<dependencies>
 		<!-- Client side dependencies -->

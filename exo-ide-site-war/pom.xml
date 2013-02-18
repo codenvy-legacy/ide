@@ -10,7 +10,7 @@
 	<groupId>org.exoplatform.ide</groupId>
 	<artifactId>exo-ide-site-war</artifactId>
 	<packaging>war</packaging>
-	<name>eXo IDE :: Site Web Application</name>
+	<name>Codenvy IDE :: Site Web Application</name>
 	
 	<dependencies>
 		<dependency>

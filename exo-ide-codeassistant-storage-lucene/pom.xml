@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-codeassistant-storage-lucene</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Code Assitant Lucene Storage</name>
+   <name>Codenvy IDE :: Code Assitant Lucene Storage</name>
 
    <dependencies>
       <dependency>

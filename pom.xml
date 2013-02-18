@@ -12,7 +12,7 @@
    <artifactId>exo-ide-parent</artifactId>
    <version>1.2.0-M17-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>eXo IDE :: Parent</name>
+   <name>Codenvy IDE :: Parent</name>
    <scm>
       <connection>scm:git:git@github.com:codenvy/ide.git</connection>
       <developerConnection>scm:git:git@github.com:codenvy/ide.git</developerConnection>

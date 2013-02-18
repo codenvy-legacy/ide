@@ -14,7 +14,7 @@
 
    <artifactId>exo-ide-packaging-codeassistant-server</artifactId>
    <packaging>pom</packaging>
-   <name>eXo IDE :: Assemblies Tomcat :: CodeAssitant Server</name>
+   <name>Codenvy IDE :: Assemblies Tomcat :: CodeAssitant Server</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
