@@ -7,7 +7,7 @@
       <version>1.2.0-M17-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-extension-python-runtime</artifactId>
-   <name>eXo IDE :: Extension :: Python :: Runtime</name>
+   <name>Codenvy IDE :: Extension :: Python :: Runtime</name>
 
    <dependencies>
       <dependency>

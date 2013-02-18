@@ -7,7 +7,7 @@
       <version>1.2.0-M17-SNAPSHOT</version>
    </parent>
    <artifactId>exo-ide-extension-groovy</artifactId>
-   <name>eXo IDE :: Extension :: Groovy</name>
+   <name>Codenvy IDE :: Extension :: Groovy</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>

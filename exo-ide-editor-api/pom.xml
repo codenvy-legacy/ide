@@ -22,7 +22,7 @@
 	<groupId>org.exoplatform.ide</groupId>
 	<artifactId>exo-ide-editor-api</artifactId>
 	<packaging>jar</packaging>
-	<name>eXo IDE :: Editor :: API</name>
+	<name>Codenvy IDE :: Editor :: API</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.google.gwt</groupId>

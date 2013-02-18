@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>exo-ide-extension-aws</artifactId>
 	<version>1.2.0-M17-SNAPSHOT</version>
-	<name>eXo IDE :: Extension :: Amazon Web Services</name>
+	<name>Codenvy IDE :: Extension :: Amazon Web Services</name>
 
    <dependencies>
 

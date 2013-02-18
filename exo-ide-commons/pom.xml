@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-commons</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Commons</name>
+   <name>Codenvy IDE :: Commons</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>

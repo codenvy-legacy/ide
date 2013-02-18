@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-editor-java</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: Java</name>
+   <name>Codenvy IDE :: Editor :: Java</name>
    <dependencies>
 
 		<dependency>

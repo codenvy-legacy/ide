@@ -18,14 +18,14 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.shared.document.LineFinder;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
 import com.google.collide.client.code.popup.EditorPopupController.PopupRenderer;
 import com.google.collide.client.code.popup.EditorPopupController.Remover;
+import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer.ContextMenuListener;
+import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.client.editor.FocusManager.FocusListener;
 import com.google.collide.client.editor.gutter.NotificationManager;
 import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
@@ -38,9 +38,12 @@ import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.Line;
+import com.google.collide.shared.document.LineFinder;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
+import com.google.collide.shared.util.StringUtils;
+import com.google.collide.shared.util.TextUtils;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Element;
@@ -278,7 +281,35 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    @Override
    public void formatSource()
    {
-      throw new UnsupportedOperationException();
+      LineFinder lineFinder = editor.getDocument().getLineFinder();
+      DocumentParser parser = getEditorBundle().getParser();
+      EditorDocumentMutator editorDocumentMutator = editor.getEditorDocumentMutator();
+      LineInfo findLine = lineFinder.findLine(0);
+      Line line = null;
+      do
+      {
+         line = findLine.line();
+         int indentation = parser.getIndentation(line);
+         if (indentation < 0)
+         {
+            continue;
+         }
+         int oldIndentation = TextUtils.countWhitespacesAtTheBeginningOfLine(line.getText());
+         if (indentation == oldIndentation)
+         {
+            continue;
+         }
+         if (indentation < oldIndentation)
+         {
+            editorDocumentMutator.deleteText(line, 0, oldIndentation - indentation);
+         }
+         else
+         {
+            String addend = StringUtils.getSpaces(indentation - oldIndentation);
+            editorDocumentMutator.insertText(line, 0, addend);
+         }
+      }
+      while (findLine.moveToNext());
    }
 
    /**
@@ -467,8 +498,8 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    public void selectRange(int startLine, int startChar, int endLine, int endChar)
    {
       LineFinder lineFinder = editor.getDocument().getLineFinder();
-      LineInfo baseLineInfo = lineFinder.findLine(startLine-1);
-      LineInfo cursorLineInfo = lineFinder.findLine(endLine-1);
+      LineInfo baseLineInfo = lineFinder.findLine(startLine - 1);
+      LineInfo cursorLineInfo = lineFinder.findLine(endLine - 1);
       int baseColumn = startChar;
       int cursorColumn = endChar;
       editor.getSelection().setSelection(baseLineInfo, baseColumn, cursorLineInfo, cursorColumn);
@@ -746,7 +777,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                   @Override
                   public void execute()
                   {
-                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();                     
+                     int matches = editor.getSearchModel().getMatchManager().getTotalMatches();
                      searchCompleteCallback.onSearchComplete(matches > 0);
                   }
                });
@@ -772,7 +803,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
                {
                   searchCompleteCallback.onSearchComplete(false);
                }
-               
+
                if (editor.getSelection().hasSelection())
                {
                   searchCompleteCallback.onSearchComplete(true);

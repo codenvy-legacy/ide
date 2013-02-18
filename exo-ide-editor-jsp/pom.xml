@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-jsp</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: JSP</name>
+   <name>Codenvy IDE :: Editor :: JSP</name>
    <dependencies>
 
       <dependency>

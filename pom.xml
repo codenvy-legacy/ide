@@ -12,7 +12,7 @@
    <artifactId>exo-ide-parent</artifactId>
    <version>1.2.0-M17-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>eXo IDE :: Parent</name>
+   <name>Codenvy IDE :: Parent</name>
    <scm>
       <connection>scm:git:git@github.com:codenvy/ide.git</connection>
       <developerConnection>scm:git:git@github.com:codenvy/ide.git</developerConnection>
@@ -48,7 +48,7 @@
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>7.0.32</tomcat.version>
       <gwt.test.skip>true</gwt.test.skip>
-      <jgit.version>1.2.0.201112221803-r</jgit.version>
+      <jgit.version>2.2.0.201212191850-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
       <everrest.version>1.0.10</everrest.version>
       <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
