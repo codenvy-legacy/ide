@@ -22,6 +22,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -46,10 +47,11 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
       setTitle(TITLE);
       setPrompt(TITLE);
       setEvent(new EditorAddBlockCommentEvent());
-      setVisible(false);
+      setVisible(true);
       setEnabled(true);
       setHotKey("Ctrl+Shift+/");
       setImages(IDEImageBundle.INSTANCE.addBlockComment(), IDEImageBundle.INSTANCE.addBlockCommentDisabled());
+      setGroupName(GroupNames.EDIT);
    }
 
    /**
@@ -66,6 +68,11 @@ public class AddBlockCommentControl extends SimpleControl implements IDEControl,
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      //TODO
+      if (event.getFile() == null || event.getEditor() == null)
+      {
+         setVisible(false);
+         setEnabled(false);
+         return;
+      }
    }
 }
