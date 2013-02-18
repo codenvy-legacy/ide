@@ -484,7 +484,7 @@ public class AddGetterSetterPresenter implements AddGetterSetterHandler, ViewClo
                list.add(entry.getField());
                getterSet = true;
             }
-            if ((!entry.isGetter()) && (getterSet == true))
+            if ((!entry.isGetter()) && getterSet)
             {
                list.remove(entry.getField());
                getterSet = false;
