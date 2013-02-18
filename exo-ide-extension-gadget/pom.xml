@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-gadget</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Extension :: Gadget</name>
+   <name>Codenvy IDE :: Extension :: Gadget</name>
    <dependencies>
        <dependency>
          <groupId>org.apache.shindig</groupId>

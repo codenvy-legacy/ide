@@ -8,7 +8,7 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-samples</artifactId>
-   <name>eXo IDE :: Extension :: Samples</name>
+   <name>Codenvy IDE :: Extension :: Samples</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

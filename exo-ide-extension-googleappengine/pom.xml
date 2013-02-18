@@ -8,7 +8,7 @@
    </parent>
    <artifactId>exo-ide-extension-googleappengine</artifactId>
    <version>1.2.0-M17-SNAPSHOT</version>
-   <name>eXo IDE :: Extension :: GoogleAppengine</name>
+   <name>Codenvy IDE :: Extension :: GoogleAppengine</name>
 
    <dependencies>
 

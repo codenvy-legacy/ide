@@ -277,9 +277,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   protected void onFailure(Throwable exception)
                   {
                      stillWork = false;
-                     updateDependencyStatusHandler.requestError(projectId, exception);
-//                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
-                     exception.printStackTrace();
+                     updateDependencyStatusHandler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
                   }
                });
          }
@@ -319,9 +317,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   protected void onFailure(Throwable exception)
                   {
                      stillWork = false;
-                     updateDependencyStatusHandler.requestError(projectId, exception);
-//                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
-                     exception.printStackTrace();
+                     updateDependencyStatusHandler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
                   }
                });
          }

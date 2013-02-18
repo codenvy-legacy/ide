@@ -8,7 +8,7 @@
    </parent>
 
    <artifactId>exo-ide-jrebel-remote</artifactId>
-   <name>eXo IDE :: JREBEL-REMOTE</name>
+   <name>Codenvy IDE :: JREBEL-REMOTE</name>
    <packaging>war</packaging>
 
    <dependencies>

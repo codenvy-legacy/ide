@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-html</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: HTML</name>
+   <name>Codenvy IDE :: Editor :: HTML</name>
    <dependencies>
 
       <dependency>

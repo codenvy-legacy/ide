@@ -8,7 +8,7 @@
 		<version>1.2.0-M17-SNAPSHOT</version>
 	</parent>
 	<artifactId>exo-ide-client</artifactId>
-	<name>eXo IDE :: Client</name>
+	<name>Codenvy IDE :: Client</name>
 
 	<dependencies>
 

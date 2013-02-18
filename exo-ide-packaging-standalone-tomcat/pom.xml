@@ -14,7 +14,7 @@
 
    <artifactId>exo-ide-packaging-standalone-tomcat</artifactId>
    <packaging>pom</packaging>
-   <name>eXo IDE :: Assemblies Tomcat</name>
+   <name>Codenvy IDE :: Assemblies Tomcat</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>

@@ -8,8 +8,8 @@
 	</parent>
 	<groupId>org.exoplatform.ide</groupId>
 	<artifactId>exo-ide-dev-resources</artifactId>
-	<name>eXo IDE :: Dev Resources</name>
-	<description>Development Resources for eXo IDE</description>
+	<name>Codenvy IDE :: Dev Resources</name>
+	<description>Development Resources for Codenvy IDE</description>
 	<build>
 		<plugins>
 			<plugin>

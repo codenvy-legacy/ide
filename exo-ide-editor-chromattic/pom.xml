@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-chromattic</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: Chromattic</name>
+   <name>Codenvy IDE :: Editor :: Chromattic</name>
    <dependencies>
 
       <dependency>

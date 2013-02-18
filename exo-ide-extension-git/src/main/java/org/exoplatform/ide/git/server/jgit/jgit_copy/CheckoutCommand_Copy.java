@@ -41,7 +41,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.exoplatform.ide.git.server.jgit.checkout;
+package org.exoplatform.ide.git.server.jgit.jgit_copy;
 
 import org.eclipse.jgit.api.CreateBranchCommand;
 import org.eclipse.jgit.api.Git;
@@ -88,7 +88,7 @@ import java.util.List;
  *      href="http://www.kernel.org/pub/software/scm/git/docs/git-checkout.html"
  *      >Git documentation about Checkout</a>
  */
-public class CheckoutCommand extends GitCommand<Ref> {
+public class CheckoutCommand_Copy extends GitCommand<Ref> {
    private String name;
 
    private boolean force = false;
@@ -101,14 +101,14 @@ public class CheckoutCommand extends GitCommand<Ref> {
 
    private RevCommit startCommit;
 
-   private CheckoutResult status;
+   private CheckoutResult_Copy status;
 
    private List<String> paths;
 
    /**
     * @param repo
     */
-   public CheckoutCommand(Repository repo) {
+   public CheckoutCommand_Copy(Repository repo) {
       super(repo);
       this.paths = new LinkedList<String>();
    }
@@ -131,7 +131,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
       try {
          if (!paths.isEmpty()) {
             checkoutPaths();
-            status = CheckoutResult.OK_RESULT;
+            status = CheckoutResult_Copy.OK_RESULT;
             setCallable(false);
             return null;
          }
@@ -166,7 +166,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
          try {
             dco.checkout();
          } catch (CheckoutConflictException e) {
-            status = new CheckoutResult(CheckoutResult.Status.CONFLICTS, dco
+            status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.CONFLICTS, dco
                   .getConflicts());
             throw e;
          }
@@ -206,11 +206,11 @@ public class CheckoutCommand extends GitCommand<Ref> {
                   .get().checkoutUnexpectedResult, updateResult.name()));
 
          if (!dco.getToBeDeleted().isEmpty()) {
-            status = new CheckoutResult(CheckoutResult.Status.NONDELETED, dco
+            status = new CheckoutResult_Copy(CheckoutResult_Copy.Status.NONDELETED, dco
                   .getToBeDeleted());
          }
          else
-            status = CheckoutResult.OK_RESULT;
+            status = CheckoutResult_Copy.OK_RESULT;
          return ref;
       } catch (IOException ioe) {
          throw new JGitInternalException(ioe.getMessage(), ioe);
@@ -220,7 +220,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
          throw new JGitInternalException(e.getMessage(), e);
       } finally {
          if (status == null)
-            status = CheckoutResult.ERROR_RESULT;
+            status = CheckoutResult_Copy.ERROR_RESULT;
       }
    }
 
@@ -235,7 +235,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     *            Path to update in the working tree and index.
     * @return {@code this}
     */
-   public CheckoutCommand addPath(String path) {
+   public CheckoutCommand_Copy addPath(String path) {
       checkCallable();
       this.paths.add(path);
       return this;
@@ -248,7 +248,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     * @throws java.io.IOException
     * @throws org.eclipse.jgit.api.errors.RefNotFoundException
     */
-   protected CheckoutCommand checkoutPaths() throws IOException,
+   protected CheckoutCommand_Copy checkoutPaths() throws IOException,
          RefNotFoundException {
       RevWalk revWalk = new RevWalk(repo);
       DirCache dc = repo.lockDirCache();
@@ -329,7 +329,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     *            the name of the new branch
     * @return this instance
     */
-   public CheckoutCommand setName(String name) {
+   public CheckoutCommand_Copy setName(String name) {
       checkCallable();
       this.name = name;
       return this;
@@ -341,7 +341,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     *            checkout and set to the specified start point
     * @return this instance
     */
-   public CheckoutCommand setCreateBranch(boolean createBranch) {
+   public CheckoutCommand_Copy setCreateBranch(boolean createBranch) {
       checkCallable();
       this.createBranch = createBranch;
       return this;
@@ -355,7 +355,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     *            not be changed
     * @return this instance
     */
-   public CheckoutCommand setForce(boolean force) {
+   public CheckoutCommand_Copy setForce(boolean force) {
       checkCallable();
       this.force = force;
       return this;
@@ -367,7 +367,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     *            the current HEAD will be used
     * @return this instance
     */
-   public CheckoutCommand setStartPoint(String startPoint) {
+   public CheckoutCommand_Copy setStartPoint(String startPoint) {
       checkCallable();
       this.startPoint = startPoint;
       this.startCommit = null;
@@ -380,7 +380,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     *            the current HEAD will be used
     * @return this instance
     */
-   public CheckoutCommand setStartPoint(RevCommit startCommit) {
+   public CheckoutCommand_Copy setStartPoint(RevCommit startCommit) {
       checkCallable();
       this.startCommit = startCommit;
       this.startPoint = null;
@@ -393,7 +393,7 @@ public class CheckoutCommand extends GitCommand<Ref> {
     *            <code>null</code>
     * @return this instance
     */
-   public CheckoutCommand setUpstreamMode(
+   public CheckoutCommand_Copy setUpstreamMode(
          CreateBranchCommand.SetupUpstreamMode mode) {
       checkCallable();
       this.upstreamMode = mode;
@@ -403,9 +403,9 @@ public class CheckoutCommand extends GitCommand<Ref> {
    /**
     * @return the result
     */
-   public CheckoutResult getResult() {
+   public CheckoutResult_Copy getResult() {
       if (status == null)
-         return CheckoutResult.NOT_TRIED_RESULT;
+         return CheckoutResult_Copy.NOT_TRIED_RESULT;
       return status;
    }
 }

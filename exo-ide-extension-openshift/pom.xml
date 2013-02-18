@@ -10,7 +10,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-openshift</artifactId>
    <version>1.2.0-M17-SNAPSHOT</version>
-   <name>eXo IDE :: Extension :: OpenShift</name>
+   <name>Codenvy IDE :: Extension :: OpenShift</name>
    <dependencies>
 
       <dependency>

@@ -81,7 +81,10 @@ public class CodeFormatterManager implements AddCodeFormatterHandler, EditorForm
    public void onFormatFile(EditorFormatTextEvent event)
    {
       if (editor == null)
+      {
          return;
+      }
+
       if (formatters.containsKey(activeFile.getMimeType()))
       {
          IDocument document = editor.getDocument();
@@ -100,7 +103,9 @@ public class CodeFormatterManager implements AddCodeFormatterHandler, EditorForm
          }
       }
       else
+      {
          editor.formatSource();
+      }
    }
 
    /**

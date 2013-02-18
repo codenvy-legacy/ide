@@ -8,7 +8,7 @@
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-extension-cloudbees</artifactId>
-   <name>eXo IDE :: Extension :: CloudBees</name>
+   <name>Codenvy IDE :: Extension :: CloudBees</name>
    <dependencies>
    
       <dependency>
