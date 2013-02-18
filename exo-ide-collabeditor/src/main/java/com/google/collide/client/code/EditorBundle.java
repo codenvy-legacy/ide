@@ -333,7 +333,7 @@ public class EditorBundle implements Content {
   /**
    * @return the autocompleter
    */
-  public AutocompleterFacade getAutocompleter(){
+  public AutocompleterFacade getAutocompleter() {
     return autocompleter;
   }
   
@@ -345,7 +345,16 @@ public class EditorBundle implements Content {
     return editorPopupController;
   }
   
-  public ErrorListener getErrorListener(){
+  public ErrorListener getErrorListener() {
      return editorErrorListener;
+  }
+
+  /**
+   * Get parser for a document that delegates to CodeMirror.
+   * 
+   * @return parser for a document
+   */
+  public DocumentParser getParser() {
+     return parser;
   }
 }
