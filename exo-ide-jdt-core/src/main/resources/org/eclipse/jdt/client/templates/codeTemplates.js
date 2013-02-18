@@ -28,7 +28,7 @@
         "enabled": true,
         "id": "org.eclipse.jdt.ui.text.codetemplates.constructorcomment",
         "name": "constructorcomment",
-        "text": "/**\b * ${tags}\n */"
+        "text": "/**\n   * ${tags}\n   */"
       },
       {
         "autoinsert": true,

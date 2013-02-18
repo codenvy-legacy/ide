@@ -18,24 +18,25 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.user.client.TakesValue;
-
 import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.HasCell;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiFactory;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellList;
+import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.user.client.ui.CheckBox;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
 import com.google.gwt.view.client.HasData;
@@ -53,8 +54,6 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gwt.user.client.ui.CheckBox;
-import com.google.gwt.user.client.ui.RadioButton;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -210,15 +209,36 @@ public class GenerateNewConstructorUsingFieldsView extends ViewImpl implements D
       return cancelButton;
    }
 
+
    /**
-    * @see org.eclipse.jdt.client.internal.corext.codemanipulation.GenerateNewConstructorUsingFieldsPresenter.Display#setConstructors(org.eclipse.jdt.client.core.dom.IVariableBinding[])
+    * {@inheritDoc}
     */
    @Override
    public void setConstructors(IMethodBinding[] constructors)
    {
       BindingLabelProvider provider = new BindingLabelProvider(JavaElementLabels.ALL_DEFAULT, 0);
       for (IMethodBinding b : constructors)
+      {
          superConstructorBox.addItem(provider.getText(b));
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public HasChangeHandlers getConstructorChangeHandlers()
+   {
+      return superConstructorBox;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setOmitSuperEnabled(boolean enabled)
+   {
+      omitCallSuperBox.setEnabled(enabled);
    }
 
    /**

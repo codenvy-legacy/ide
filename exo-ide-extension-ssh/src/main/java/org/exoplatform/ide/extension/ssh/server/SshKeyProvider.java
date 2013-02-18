@@ -59,7 +59,7 @@ import javax.ws.rs.core.MediaType;
  * <p>
  * Example of configuration SshKeyProvider as components of ExoContainer:
  * </p>
- * 
+ *
  * <pre>
  * &lt;component&gt;
  *    &lt;type&gt;org.exoplatform.ide.extension.ssh.server.SshKeyProvider&lt;/type&gt;
@@ -75,7 +75,7 @@ import javax.ws.rs.core.MediaType;
  *    &lt;/init-params&gt;
  * &lt;/component&gt;
  * </pre>
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
  */
@@ -116,7 +116,7 @@ public class SshKeyProvider
 
    /**
     * Add prepared private key.
-    * 
+    *
     * @param host host name
     * @param key private key as byte array
     * @throws VirtualFileSystemException
@@ -140,7 +140,7 @@ public class SshKeyProvider
 
    /**
     * Get SSH private key for <code>host</code>.
-    * 
+    *
     * @param host host name
     * @return private key
     * @throws IOException if any i/o error occurs
@@ -157,7 +157,7 @@ public class SshKeyProvider
    /**
     * Get SSH public key for <code>host</code>. Obtained key should be copied to remote host. Typically this method
     * should be used after generated key-pair with method {@link #genKeyPair(String, String, String)}.
-    * 
+    *
     * @param host host name
     * @return public key
     * @throws IOException if any i/o error occurs
@@ -193,7 +193,7 @@ public class SshKeyProvider
          List<Item> allKeys = vfs.getChildren(sshKeys.getId(), -1, 0, "file", PropertyFilter.NONE_FILTER).getItems();
          if (allKeys.size() > 0)
          {
-            for (Iterator<Item> i = allKeys.iterator(); i.hasNext() && keyItem == null;)
+            for (Iterator<Item> i = allKeys.iterator(); i.hasNext() && keyItem == null; )
             {
                Item next = i.next();
                if (keyName.endsWith(next.getName()))
@@ -228,7 +228,7 @@ public class SshKeyProvider
 
    /**
     * Generate SSH key files.
-    * 
+    *
     * @param host host name
     * @param comment comment to add in public key
     * @param passphrase optional pass-phrase to protect private key
@@ -251,7 +251,7 @@ public class SshKeyProvider
 
       VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
       Folder sshKeys = getKeysParent(vfs);
-      
+
       final String privateKeyName = host + ".key";
       final String publicKeyName = host + ".pub";
 
@@ -281,8 +281,20 @@ public class SshKeyProvider
       keyPair.writePublicKey(buff, //
          comment != null //
             ? comment //
-            : (ConversationState.getCurrent().getIdentity().getUserId() + "@ide.exoplatform.local"));
+            : getCommentEmail());
       writeKey(vfs, sshKeys, publicKeyName, buff.toByteArray());
+   }
+
+   private String getCommentEmail()
+   {
+      String userId = ConversationState.getCurrent().getIdentity().getUserId();
+
+      if (userId.contains("@"))
+      {
+         return userId;
+      }
+
+      return userId + "@ide.codenvy.local";
    }
 
    private void writeKey(VirtualFileSystem vfs, Folder sshKeys, String keyName, byte[] key)
@@ -298,7 +310,7 @@ public class SshKeyProvider
 
    /**
     * Remove both private and public (if any) keys.
-    * 
+    *
     * @param host host name
     * @throws VirtualFileSystemException
     */
@@ -322,7 +334,7 @@ public class SshKeyProvider
 
    /**
     * Get list of hosts for which keys are available.
-    * 
+    *
     * @return list of hosts. Even there is no keys for any host empty set returned never <code>null</code>
     * @throws VirtualFileSystemException
     */
@@ -334,7 +346,7 @@ public class SshKeyProvider
       if (allKeys.size() > 0)
       {
          Set<String> hosts = new HashSet<String>(allKeys.size());
-         for (Iterator<Item> i = allKeys.iterator(); i.hasNext();)
+         for (Iterator<Item> i = allKeys.iterator(); i.hasNext(); )
          {
             String name = i.next().getName();
             Matcher m = KEY_PATTERN.matcher(name);

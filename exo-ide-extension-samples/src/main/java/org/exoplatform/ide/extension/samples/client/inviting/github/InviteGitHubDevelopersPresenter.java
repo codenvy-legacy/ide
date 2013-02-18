@@ -66,14 +66,14 @@ import java.util.List;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
- * 
+ *
  */
 public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteHandler, ViewClosedHandler,
    InviteGitHubCollaboratorsHandler, GitHubUserSelectionChangedHandler, ProjectOpenedHandler, ProjectClosedHandler,
    VfsChangedHandler
 {
-   
-   public static final String COLLABORATORS_FAILED = "Exo IDE failed to get the list of collaborators.";
+
+   public static final String COLLABORATORS_FAILED = "Codenvy IDE failed to get the list of collaborators.";
 
    public interface Display extends IsView
    {
@@ -160,7 +160,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
                      return;
                   }
 
-                  loadGitHubCollaborators(repo[0], repo[1]);
+                  loadGitHubCollaborators(repo[0], repo[1], true);
                }
 
                @Override
@@ -181,7 +181,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
 
    /**
     * Search "origin" repository
-    * 
+    *
     * @param remotes
     * @return
     */
@@ -210,14 +210,14 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
    public void onCloneRepositoryComplete(CloneRepositoryCompleteEvent event)
    {
       //loadStaticGitHubCollaborators();
-      loadGitHubCollaborators(event.getUser(), event.getRepositoryName());
+      loadGitHubCollaborators(event.getUser(), event.getRepositoryName(), false);
    }
 
    /**
     * Load list of GitHub collaborators from prepared JSON file.
     * This method uses only for testing.
     */
-   private void lazyLoadCollaboratorList()
+   private void lazyLoadCollaboratorList(final boolean showIfEmpty)
    {
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
@@ -231,7 +231,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
                @Override
                protected void onSuccess(Collaborators result)
                {
-                  collaboratorsReceived(result);
+                  collaboratorsReceived(result, showIfEmpty);
                }
 
                @Override
@@ -249,7 +249,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       }
    }
 
-   private void loadGitHubCollaborators(String user, String repository)
+   private void loadGitHubCollaborators(String user, String repository, final boolean showIfEmpty)
    {
       AutoBean<Collaborators> autoBean = GitExtension.AUTO_BEAN_FACTORY.collaborators();
       AutoBeanUnmarshaller<Collaborators> unmarshaller = new AutoBeanUnmarshaller<Collaborators>(autoBean);
@@ -262,7 +262,7 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
                @Override
                protected void onSuccess(Collaborators result)
                {
-                  collaboratorsReceived(result);
+                  collaboratorsReceived(result, showIfEmpty);
                }
 
                @Override
@@ -280,9 +280,9 @@ public class InviteGitHubDevelopersPresenter implements CloneRepositoryCompleteH
       }
    }
 
-   private void collaboratorsReceived(Collaborators result)
+   private void collaboratorsReceived(Collaborators result, boolean showIfEmpty)
    {
-      if (display != null)
+      if (display != null || (!showIfEmpty && result.getCollaborators().size() == 0))
       {
          return;
       }

@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor-python</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: Editor :: Python</name>
+   <name>Codenvy IDE :: Editor :: Python</name>
    <dependencies>
  
       <dependency>

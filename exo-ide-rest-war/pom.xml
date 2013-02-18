@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-rest-war</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: REST Web Application</name>
+   <name>Codenvy IDE :: REST Web Application</name>
    <dependencies>
       <!--dependency>
          <groupId>org.exoplatform.ws</groupId>

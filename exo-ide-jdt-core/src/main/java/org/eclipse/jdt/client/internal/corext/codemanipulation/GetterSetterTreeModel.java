@@ -23,9 +23,13 @@ import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.CompositeCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.HasCell;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
+import com.google.gwt.view.client.AsyncDataProvider;
 import com.google.gwt.view.client.DefaultSelectionEventManager;
+import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -37,7 +41,6 @@ import org.eclipse.jdt.client.codeassistant.CompletionProposalLabelProvider;
 import org.eclipse.jdt.client.core.dom.IVariableBinding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -47,23 +50,9 @@ import java.util.Set;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
 public class GetterSetterTreeModel implements TreeViewModel
 {
-
-   public class GSEntryCell extends CompositeCell<GetterSetterEntry>
-   {
-
-      /**
-       * @param hasCells
-       */
-      public GSEntryCell(List<HasCell<GetterSetterEntry, ?>> hasCells)
-      {
-         super(hasCells);
-      }
-
-   }
 
    private final class FieldCell extends CompositeCell<Object>
    {
@@ -93,10 +82,14 @@ public class GetterSetterTreeModel implements TreeViewModel
             sb.appendHtmlConstant(AbstractImagePrototype.create(
                CompletionProposalLabelProvider.createFieldImageDescriptor(entry.getField().getModifiers())).getHTML());
             if (entry.isGetter())
+            {
                sb.appendEscaped(GetterSetterUtil.getGetterName(entry.getField(), null) + "()"); //$NON-NLS-1$
+            }
             else
-               sb.appendEscaped(GetterSetterUtil.getSetterName(entry.getField(), null) + '('
-                  + entry.getField().getType().getName() + ')');
+            {
+               sb.appendEscaped(GetterSetterUtil.getSetterName(entry.getField(),
+                  null) + '(' + entry.getField().getType().getName() + ')');
+            }
          }
          sb.appendHtmlConstant("</span>");
       }
@@ -115,22 +108,63 @@ public class GetterSetterTreeModel implements TreeViewModel
       }
    }
 
+   private final class RefreshDataProvider extends AsyncDataProvider<Object>
+   {
+
+      private List<Object> objectList;
+
+      private HasData<Object> display;
+
+      public RefreshDataProvider(List<Object> objectList)
+      {
+
+         this.objectList = objectList;
+      }
+
+      public void refresh()
+      {
+         updateRowCount(0, true);
+         updateRowData(0, Collections.EMPTY_LIST);
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               updateRowCount(objectList.size(), true);
+               updateRowData(0, objectList);
+            }
+         });
+      }
+
+      @Override
+      protected void onRangeChanged(HasData<Object> display)
+      {
+         this.display = display;
+         updateRowCount(objectList.size(), true);
+         updateRowData(0, objectList);
+      }
+   }
+
    private final MultiSelectionModel<Object> selectionModel;
+
+   private boolean allowFinal;
 
    private List<HasCell<Object, ?>> fieldsCells;
 
-   private final DefaultSelectionEventManager<Object> selectionManager = DefaultSelectionEventManager
-      .createCheckboxManager();
+   private final DefaultSelectionEventManager<Object> selectionManager = DefaultSelectionEventManager.createCheckboxManager();
 
    private Map<IVariableBinding, GetterSetterEntry[]> fields;
 
+   private RefreshDataProvider rootDataProvider;
+
    /**
-    * 
+    *
     */
    @Inject
    public GetterSetterTreeModel(GetterSetterEntryProvider provider, final MultiSelectionModel<Object> selectionModel)
    {
       fields = provider.getFields();
+      allowFinal = provider.allowSetterForFinalFields();
       this.selectionModel = selectionModel;
       selectionModel.addSelectionChangeHandler(new Handler()
       {
@@ -148,8 +182,10 @@ public class GetterSetterTreeModel implements TreeViewModel
                   boolean selected = set.contains(o);
 
                   GetterSetterEntry[] entries = fields.get(o);
-                  if(entries == null)
+                  if (entries == null)
+                  {
                      return;
+                  }
                   for (GetterSetterEntry e : entries)
                   {
                      selectionModel.setSelected(e, selected);
@@ -176,7 +212,9 @@ public class GetterSetterTreeModel implements TreeViewModel
             for (Object o : in)
             {
                if (!out.contains(o))
+               {
                   return o;
+               }
             }
             return null;
          }
@@ -214,14 +252,23 @@ public class GetterSetterTreeModel implements TreeViewModel
       if (value == null)
       {
          Set<IVariableBinding> set = fields.keySet();
-         return new DefaultNodeInfo<Object>(new ListDataProvider<Object>(new ArrayList<Object>(set)), new FieldCell(
-            fieldsCells), selectionModel, selectionManager, null);
+         rootDataProvider = new RefreshDataProvider(new ArrayList<Object>(set));
+         return new DefaultNodeInfo<Object>(rootDataProvider, new FieldCell(fieldsCells), selectionModel,
+            selectionManager, null);
       }
       if (value instanceof IVariableBinding)
       {
          GetterSetterEntry[] entry = fields.get(value);
-         return new DefaultNodeInfo<Object>(new ListDataProvider<Object>(new ArrayList<Object>(Arrays.asList(entry))),
-            new FieldCell(fieldsCells), selectionModel, selectionManager, null);
+         ArrayList<Object> entries = new ArrayList<Object>();
+         for (GetterSetterEntry en : entry)
+         {
+            if (en.isGetter() || (en.isFinal() && allowFinal) || !en.isFinal())
+            {
+               entries.add(en);
+            }
+         }
+         return new DefaultNodeInfo<Object>(new ListDataProvider<Object>(entries), new FieldCell(fieldsCells),
+            selectionModel, selectionManager, null);
       }
       return null;
    }
@@ -233,7 +280,9 @@ public class GetterSetterTreeModel implements TreeViewModel
    public boolean isLeaf(Object value)
    {
       if (value == null)
+      {
          return false;
+      }
       return !(value instanceof IVariableBinding);
    }
 
@@ -245,4 +294,9 @@ public class GetterSetterTreeModel implements TreeViewModel
       return selectionModel;
    }
 
+   public void setAllowFinalSetters(Boolean value)
+   {
+      allowFinal = value;
+      rootDataProvider.refresh();
+   }
 }

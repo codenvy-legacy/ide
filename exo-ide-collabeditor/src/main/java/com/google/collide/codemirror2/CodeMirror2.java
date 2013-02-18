@@ -48,7 +48,7 @@ public class CodeMirror2 {
     parser.setType(type);
 
     // TODO: testing no smart indentation to see how it feels
-    parser.setPreventSmartIndent(type != SyntaxType.PY);
+    parser.setPreventSmartIndent(type != SyntaxType.PY && type != SyntaxType.CSS && type != SyntaxType.JS && type != SyntaxType.HTML);
     return parser;
   }
 

@@ -61,7 +61,7 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    ImageButton cancelButton;
 
    @UiField
-   LinkButton createButton;
+   ImageButton createButton;
 
    @UiField
    Label instructionLabel;
@@ -72,8 +72,9 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
       add(uiBinder.createAndBindUi(this));
       deployButton.setButtonId(DEPLOY_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
-
-      createButton.setHTML(getCreateButtonImage(true).toString() + GoogleAppEngineExtension.GAE_LOCALIZATION.createButton());
+      createButton.setImage(new Image(GAEClientBundle.INSTANCE.googleAppEngine()));
+      createButton.setDisabledImage(new Image(GAEClientBundle.INSTANCE.googleAppEngineDisabled()));
+      createButton.setText(GoogleAppEngineExtension.GAE_LOCALIZATION.createButton());
    }
 
    /**
@@ -109,7 +110,6 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    @Override
    public void enableCreateButton(boolean enable)
    {
-      createButton.setHTML(getCreateButtonImage(enable).toString() + GoogleAppEngineExtension.GAE_LOCALIZATION.createButton());
       createButton.setEnabled(enable);
    }
 
@@ -117,24 +117,5 @@ public class CreateApplicationView extends ViewImpl implements CreateApplication
    public void setUserInstructions(String instructions)
    {
       instructionLabel.setValue(instructions);
-   }
-
-   /**
-    * @see org.exoplatform.ide.extension.googleappengine.client.create.CreateApplicationPresenter.Display#setCreateLink(java.lang.String)
-    */
-   @Override
-   public void setCreateLink(String href)
-   {
-      createButton.setHref(href);
-   }
-
-   private Image getCreateButtonImage(boolean enabled)
-   {
-      Image image =
-         (enabled) ? new Image(GAEClientBundle.INSTANCE.googleAppEngine()) : new Image(
-            GAEClientBundle.INSTANCE.googleAppEngineDisabled());
-      DOM.setStyleAttribute(image.getElement(), "marginTop", "4px");
-      DOM.setStyleAttribute(image.getElement(), "marginRight", "4px");
-      return image;
    }
 }

@@ -18,14 +18,15 @@
  */
 package org.eclipse.jdt.client.internal.corext.codemanipulation;
 
-import com.google.gwt.user.client.ui.HasValue;
-
-import com.google.gwt.user.client.TakesValue;
-
+import com.google.gwt.event.dom.client.ChangeEvent;
+import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.HasChangeHandlers;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.user.client.TakesValue;
+import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.view.client.HasData;
 import com.google.gwt.view.client.ListDataProvider;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -106,6 +107,10 @@ public class GenerateNewConstructorUsingFieldsPresenter implements GenerateNewCo
       int getConstructorIndex();
 
       void setConstructors(IMethodBinding[] constructors);
+
+      HasChangeHandlers getConstructorChangeHandlers();
+
+      void setOmitSuperEnabled(boolean enabled);
    }
 
    private Display display;
@@ -298,6 +303,21 @@ public class GenerateNewConstructorUsingFieldsPresenter implements GenerateNewCo
          }
       });
 
+      display.getConstructorChangeHandlers().addChangeHandler(new ChangeHandler()
+      {
+         @Override
+         public void onChange(ChangeEvent event)
+         {
+            int constructorIndex = display.getConstructorIndex();
+            boolean enabled = constructors[constructorIndex].getParameterTypes().length == 0;
+            display.setOmitSuperEnabled(enabled);
+            if(!enabled)
+            {
+               display.getOmitSuper().setValue(Boolean.FALSE);
+            }
+
+         }
+      });
       provider.addDataDisplay(display.getDataDisplay());
       selectAll();
       display.setConstructors(constructors);

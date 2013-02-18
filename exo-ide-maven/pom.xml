@@ -8,7 +8,7 @@
    </parent>
 
    <artifactId>exo-ide-maven</artifactId>
-   <name>eXo IDE :: MAVEN</name>
+   <name>Codenvy IDE :: MAVEN</name>
    <packaging>war</packaging>
 
    <dependencies>

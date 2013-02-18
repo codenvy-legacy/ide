@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-packaging-gadget-war</artifactId>
    <packaging>war</packaging>
-   <name>eXo IDE :: Packaging :: Gadget</name>
+   <name>Codenvy IDE :: Packaging :: Gadget</name>
    
    <dependencies>
    

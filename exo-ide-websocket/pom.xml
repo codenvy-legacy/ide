@@ -9,7 +9,7 @@
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-websocket</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE :: WebSocket to REST</name>
+   <name>Codenvy IDE :: WebSocket to REST</name>
    <dependencies>
       <dependency>
          <groupId>org.exoplatform.kernel</groupId>
