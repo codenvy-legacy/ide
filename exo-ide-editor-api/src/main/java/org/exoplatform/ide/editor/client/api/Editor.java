@@ -31,31 +31,31 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.IsWidget;
 
 /**
- * This is abstract Editor for eXo IDE<br>
+ * This is abstract Editor for Codenvy<br>
  * Editor - a visual component designed to display and edit content file.<br>
  * Furthermore the editor may support additional features (capabilities), such as:
- * 
+ *
  * <li>Syntax coloring ; <li>Validation Code (according to the syntax file to be edited); <li>CodeAssistant (autocomlation,
  * viewing documentation to the code, etc.); <li>Deliver a set of content dependent tokens for alternative interviews (for example
  * CodeOutline);
- * 
+ *
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: Editor Feb 9, 2011 4:24:07 PM evgen $
- * 
+ *
  */
 public interface Editor extends IsWidget
 {
-   
+
    /**
     * Get mime type.
-    * 
+    *
     * @return mime type associated with this editor
     */
    String getMimeType();
 
    /**
     * Get name of editor.
-    * 
+    *
     * @return
     */
    String getName();
@@ -64,7 +64,7 @@ public interface Editor extends IsWidget
     * @return unique identifier which can be used to found out editor instance in the DOM
     */
    String getId();
-   
+
    /**
     * @return content of editor
     */
@@ -72,21 +72,21 @@ public interface Editor extends IsWidget
 
    /**
     * replace current content of editor by text parameter
-    * 
+    *
     * @param text - new editor content
     */
    void setText(String text);
 
-   
+
    /**
     * @return content of editor
     */
    IDocument getDocument();
 
-   
+
    /**
     * Check that editor support feature
-    * 
+    *
     * @param capability
     * @return true if editor capable do.
     */
@@ -99,7 +99,7 @@ public interface Editor extends IsWidget
 
    /**
     * Displays line numbers if showLineNumbers = true, or hides otherwise
-    * 
+    *
     * @param showLineNumbers
     */
    void showLineNumbers(boolean showLineNumbers);
@@ -112,7 +112,7 @@ public interface Editor extends IsWidget
    /**
     * Moves cursor to specified position (row, column). If there are now such row or column in the specified row in the text, then cursor
     * will be stayed as it.
-    * 
+    *
     * @param row
     * @param column
     */
@@ -126,16 +126,16 @@ public interface Editor extends IsWidget
 
    /**
     * Asynchronous search query in editor.
-    * 
+    *
     * @param query query to search
     * @param caseSensitive is case sensitive
     * @param searchCompleteCallback search complete callback
     */
    void search(String query, boolean caseSensitive, SearchCompleteCallback searchCompleteCallback);
-   
+
    /**
     * Replace match with a new value
-    * 
+    *
     * @param replacement new value
     */
    void replaceMatch(String replacement);
@@ -167,21 +167,21 @@ public interface Editor extends IsWidget
 
    /**
     * Switches editor to read-only mode.
-    * 
+    *
     * @param readOnly
     */
    void setReadOnly(boolean readOnly);
 
    /**
     * Get cursor row
-    * 
+    *
     * @return number of row with cursor
     */
    int getCursorRow();
 
    /**
     * Get cursor column
-    * 
+    *
     * @return number of column with cursor
     */
    int getCursorColumn();
@@ -194,16 +194,16 @@ public interface Editor extends IsWidget
 
    /**
     * Get text of specified line
-    * 
+    *
     * @param line line number. <b>Must be larger 0 and less the file line count</b>
     * @return String content of line
     * @deprecated
     */
    String getLineText(int line);
-   
+
    /**
     * Sets new text at specified line
-    * 
+    *
     * @param line line number
     * @param text new text
     * @deprecated
@@ -212,7 +212,7 @@ public interface Editor extends IsWidget
 
    /**
     * Returns the number of lines in document
-    * 
+    *
     * @return number of lines in document
     * @deprecated Use {@link IDocument#getNumberOfLines()}
     */
@@ -220,14 +220,14 @@ public interface Editor extends IsWidget
 
    /**
     * Get the range of the selection.
-    * 
+    *
     * @return {@link SelectionRange} range of the selection
     */
    SelectionRange getSelectionRange();
 
    /**
     * Selects specified range
-    * 
+    *
     * @param startLine start line
     * @param startChar start character
     * @param endLine end line
@@ -262,7 +262,7 @@ public interface Editor extends IsWidget
 
    /**
     * Get absolute position of 
-    * 
+    *
     * @return
     */
    int getCursorOffsetLeft();
@@ -277,31 +277,31 @@ public interface Editor extends IsWidget
     * @return
     */
    HandlerRegistration addContentChangedHandler(EditorContentChangedHandler handler);
-   
+
    /**
     * @param handler
     * @return
     */
    HandlerRegistration addContextMenuHandler(EditorContextMenuHandler handler);
-   
+
    /**
     * @param handler
     * @return
     */
    HandlerRegistration addCursorActivityHandler(EditorCursorActivityHandler handler);
-   
+
    /**
     * @param handler
     * @return
     */
    HandlerRegistration addFocusReceivedHandler(EditorFocusReceivedHandler handler);
-   
+
    /**
     * @param handler
     * @return
     */
    HandlerRegistration addHotKeyPressedHandler(EditorHotKeyPressedHandler handler);
-   
+
    /**
     * @param handler
     * @return

@@ -1,6 +1,6 @@
 Introduction
 
-The document describes step by step instructions for assembling the project eXo IDE (version 1.2.x).
+The document describes step by step instructions for assembling the project Codenvy IDE (version 1.2.x).
 Requirements
     Linux (tested on SuSE(11.x and higher), Fedora(11 and 15) and Ubuntu)
     JDK 1.6 or higher
@@ -9,16 +9,16 @@ Requirements
     DavFs (http://linux.die.net/man/8/mount.davfs)
     
     
-For the source eXo IDE to the folder ide execute the command
+For the source Codenvy IDE to the folder ide execute the command
 
-git clone git@github.com:exodev/ide.git    
+git clone git@github.com:codenvy/ide.git
 
-Compilation eXo IDE:
+Compilation Codenvy IDE:
  - In folder ide execute command:
 
    mvn clean install
 
-For launch eXo IDE:
+For launch Codenvy IDE:
 go to
   exo-ide-packaging-standalone-tomcat/target/tomcat-ide/bin
 

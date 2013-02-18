@@ -18,10 +18,8 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.collide.json.shared.JsonStringSet.IterationCallback;
-
 import com.google.collide.json.shared.JsonStringSet;
-
+import com.google.collide.json.shared.JsonStringSet.IterationCallback;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -427,8 +425,9 @@ public class NameEnvironment implements INameEnvironment
          {
 
             requestor
-               .acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(), info.getName()
-                  .substring(info.getName().lastIndexOf(".") + 1).toCharArray(), null, info.getModifiers(), null);
+               .acceptType(info.getName().substring(0, info.getName().lastIndexOf(".")).toCharArray(),
+                  info.getName().substring(info.getName().lastIndexOf(".") + 1).toCharArray(), null,
+                  info.getModifiers(), null);
          }
          TypeInfoStorage.get().setShortTypesInfo(typesJson);
       }
@@ -506,7 +505,6 @@ public class NameEnvironment implements INameEnvironment
 
       public JSONArray typesInfo;
 
-      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
       @Override
       public void unmarshal(Response response) throws UnmarshallerException
       {
@@ -516,7 +514,6 @@ public class NameEnvironment implements INameEnvironment
          }
       }
 
-      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
       @Override
       public TypesInfoList getPayload()
       {
@@ -530,7 +527,6 @@ public class NameEnvironment implements INameEnvironment
 
       private JSONObject typeInfo;
 
-      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#unmarshal(com.google.gwt.http.client.Response) */
       @Override
       public void unmarshal(Response response) throws UnmarshallerException
       {
@@ -540,7 +536,6 @@ public class NameEnvironment implements INameEnvironment
          }
       }
 
-      /** @see org.exoplatform.gwtframework.commons.rest.copy.Unmarshallable#getPayload() */
       @Override
       public TypeInfo getPayload()
       {

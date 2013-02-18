@@ -75,9 +75,9 @@ public abstract class OAuthAuthenticator
     *    authentication. If URL contains query parameters they will be copy to 'state' parameter and returned to
     *    callback method.
     * @param userId
-    *    user identifier. This parameter should be not <code>null</code> if user already authenticated in eXo IDE site
+    *    user identifier. This parameter should be not <code>null</code> if user already authenticated in Codenvy site
     *    but need to get OAuth access token to be able use some third party services. This parameter always
-    *    <code>null</code> if third party OAuth provider used for authenticate user in eXo IDE.
+    *    <code>null</code> if third party OAuth provider used for authenticate user in Codenvy.
     * @param scopes
     *    specify exactly what type of access needed
     * @return URL for authentication

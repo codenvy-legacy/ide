@@ -279,7 +279,7 @@ public class S3 extends AWSClient
    }
 
    /**
-    * Upload specified eXo IDE project to Amazon S3 storage. Project is zipped before uploading to S3.
+    * Upload specified Codenvy project to Amazon S3 storage. Project is zipped before uploading to S3.
     * If project with the same key already exist it may be rewritten with new content.
     *
     * @param s3Bucket
@@ -287,9 +287,9 @@ public class S3 extends AWSClient
     * @param s3Key
     *    key, where project should be stored
     * @param vfs
-    *    instance of Virtual File system which used by eXo IDE
+    *    instance of Virtual File system which used by Codenvy
     * @param projectId
-    *    id of project in eXo IDE virtual file system
+    *    id of project in Codenvy virtual file system
     * @return S3 object description
     * @throws AWSException
     *    if any error occurs when make request to Amazon API
@@ -720,18 +720,26 @@ public class S3 extends AWSClient
       {
          currentAcl = s3Client.getBucketAcl(new GetBucketAclRequest(s3Bucket));
          if (s3AccessControlsToAdd != null)
+         {
             currentAcl.getGrants().addAll(createGrants(s3AccessControlsToAdd));
+         }
          if (s3AccessControlsToDelete != null)
+         {
             currentAcl.getGrants().removeAll(createGrants(s3AccessControlsToDelete));
+         }
          s3Client.setBucketAcl(new SetBucketAclRequest(s3Bucket, currentAcl));
       }
       else
       {
          currentAcl = s3Client.getObjectAcl(s3Bucket, s3Key, versionId);
          if (s3AccessControlsToAdd != null)
+         {
             currentAcl.getGrants().addAll(createGrants(s3AccessControlsToAdd));
+         }
          if (s3AccessControlsToDelete != null)
+         {
             currentAcl.getGrants().removeAll(createGrants(s3AccessControlsToDelete));
+         }
          s3Client.setObjectAcl(s3Bucket, s3Key, versionId, currentAcl);
       }
    }
