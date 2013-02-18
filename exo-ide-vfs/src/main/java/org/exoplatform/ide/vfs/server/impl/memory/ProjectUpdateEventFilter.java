@@ -37,20 +37,19 @@ class ProjectUpdateEventFilter extends ChangeEventFilter
    private final String projectId;
    private final ChangeEventFilter delegate;
 
-   public ProjectUpdateEventFilter(String vfsId, MemoryFolder project)
+   static ProjectUpdateEventFilter newFilter(String vfsId, MemoryFolder project)
    {
-      this.vfsId = vfsId;
-      this.projectId = project.getId();
-      this.delegate = ChangeEventFilter.createAndFilter(
+      ChangeEventFilter filter = ChangeEventFilter.createAndFilter(
          new VfsIDFilter(vfsId),
-         new PathFilter(project.getPath() + "/.*"),
-         ChangeEventFilter.createOrFilter(
+         new PathFilter(project.getPath() + "/.*"), // events for all project items
+         ChangeEventFilter.createOrFilter( // created, updated, deleted, renamed or moved
             new TypeFilter(ChangeEvent.ChangeType.CREATED),
             new TypeFilter(ChangeEvent.ChangeType.CONTENT_UPDATED),
             new TypeFilter(ChangeEvent.ChangeType.DELETED),
             new TypeFilter(ChangeEvent.ChangeType.RENAMED),
             new TypeFilter(ChangeEvent.ChangeType.MOVED)
          ));
+      return new ProjectUpdateEventFilter(filter, vfsId, project.getId());
    }
 
    @Override
@@ -99,5 +98,12 @@ class ProjectUpdateEventFilter extends ChangeEventFilter
       hash = 31 * hash + (vfsId != null ? vfsId.hashCode() : 0);
       hash = 31 * hash + projectId.hashCode();
       return hash;
+   }
+
+   private ProjectUpdateEventFilter(ChangeEventFilter delegate, String vfsId, String projectId)
+   {
+      this.delegate = delegate;
+      this.vfsId = vfsId;
+      this.projectId = projectId;
    }
 }

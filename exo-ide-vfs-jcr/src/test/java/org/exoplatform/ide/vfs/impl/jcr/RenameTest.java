@@ -200,26 +200,4 @@ public class RenameTest extends JcrFileSystemTest
       String expectedPath = renameTestNode.getPath() + "/" + "_FOLDER_NEW_NAME_";
       assertTrue(session.itemExists(expectedPath));
    }
-
-   //   public void testRenameFolderUpdateMimeType() throws Exception
-   //   {
-   //      String path = new StringBuilder() //
-   //         .append(SERVICE_URI) //
-   //         .append("rename") //
-   //         .append(folderPath) //
-   //         .append("?") //
-   //         .append("newname=") //
-   //         .append("_FOLDER_NEW_NAME_") //
-   //         .append("&") //
-   //         .append("mediaType=") //
-   //         .append("text/directory%2BFOO") // text/directory+FOO
-   //         .toString();
-   //      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
-   //      assertEquals(200, response.getStatus());
-   //      String expectedPath = renameTestNode.getPath() + "/" + "_FOLDER_NEW_NAME_";
-   //      assertTrue(session.itemExists(expectedPath));
-   //      Node folder = (Node)session.getItem(expectedPath);
-   //      assertTrue(folder.isNodeType("vfs:folder"));
-   //      assertEquals("text/directory+FOO", folder.getProperty("vfs:mimeType").getString());
-   //   }
 }
