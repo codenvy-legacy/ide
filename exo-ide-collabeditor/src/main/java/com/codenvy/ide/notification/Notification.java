@@ -39,7 +39,7 @@ public class Notification extends Composite
 
    private NotificationType type;
 
-   public Notification(final String message, final int duration, NotificationType type)
+   public Notification(final String message, NotificationType type, final int duration)
    {
       this(new HTML(message, true), duration, type);
 

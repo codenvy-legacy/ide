@@ -18,8 +18,6 @@
  */
 package com.google.collide.client;
 
-import com.google.collide.shared.document.LineFinder;
-
 import com.google.collide.client.code.EditableContentArea;
 import com.google.collide.client.code.EditorBundle;
 import com.google.collide.client.code.errorrenderer.EditorErrorListener;
@@ -737,10 +735,6 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    {
       return contentAssistant;
    }
-
-   private String searchQuery;
-
-   private boolean caseSensitive;
 
    /**
     * @see org.exoplatform.ide.editor.client.api.Editor#search(java.lang.String, boolean, org.exoplatform.ide.editor.client.api.event.SearchCompleteCallback)
