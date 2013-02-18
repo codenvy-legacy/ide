@@ -999,6 +999,7 @@ public class CodeMirror extends AbsolutePanel implements Editor, Markable, IDocu
          case FORMAT_SOURCE:
          case SET_CURSOR_POSITION:
          case SHOW_LINE_NUMBERS :
+         case COMMENT_SOURCE :
             return true;
 
          default :

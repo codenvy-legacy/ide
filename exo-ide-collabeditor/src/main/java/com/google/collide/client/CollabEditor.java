@@ -268,6 +268,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
          case DELETE_LINES :
          case FORMAT_SOURCE :
          case SET_CURSOR_POSITION :
+         case COMMENT_SOURCE :
             return true;
 
          default :
