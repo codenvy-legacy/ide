@@ -25,13 +25,13 @@ import junit.framework.TestCase;
 /**
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 27, 2011 12:28:59 PM anya $
- * 
+ *
  */
 public class GwtUnmarshallerTestSuite extends TestCase
 {
    public static Test suite()
    {
-      GWTTestSuite suite = new GWTTestSuite("eXo IDE Git Unmarshaller GWT Tests");
+      GWTTestSuite suite = new GWTTestSuite("Codenvy Git Unmarshaller GWT Tests");
       suite.addTestSuite(BranchesUnmarshallerGwtTest.class);
       suite.addTestSuite(LogUnmarshallerGwtTest.class);
       suite.addTestSuite(RemoteListUnmarshallerGwtTest.class);
