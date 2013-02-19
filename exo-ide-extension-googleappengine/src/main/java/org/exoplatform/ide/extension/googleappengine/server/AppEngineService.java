@@ -326,7 +326,7 @@ public class AppEngineService
       return Response.ok("<html><body onLoad=\"javascript:window.close();\" style=\"font-family: Verdana, Bitstream Vera Sans, " +
          "sans-serif; font-size: 13px; font-weight: bold;\">" + "<div align=\"center\" style=\"margin: 100 auto; " +
          "border: dashed 1px #CACACA; width: 450px;\">" + "<p>Your application has been created.<br>Close this tab " +
-         "and use the Deploy button in Cloud IDE.</p>" + "</div></body></html>")
+         "and use the Deploy button in Codenvy.</p>" + "</div></body></html>")
          .type(MediaType.TEXT_HTML).build();
    }
 

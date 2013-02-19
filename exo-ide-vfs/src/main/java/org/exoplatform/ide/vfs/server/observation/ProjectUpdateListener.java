@@ -16,11 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.impl.jcr;
+package org.exoplatform.ide.vfs.server.observation;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
-import org.exoplatform.ide.vfs.server.observation.EventListener;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
@@ -31,11 +29,11 @@ import java.util.List;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-class ProjectUpdateListener implements EventListener
+public class ProjectUpdateListener implements EventListener
 {
-   private String projectId;
+   private final String projectId;
 
-   ProjectUpdateListener(String projectId)
+   public ProjectUpdateListener(String projectId)
    {
       this.projectId = projectId;
    }

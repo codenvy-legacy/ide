@@ -60,7 +60,7 @@ import java.util.List;
  * Created by The eXo Platform SAS.
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
-*/
+ */
 public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 {
 
@@ -139,7 +139,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
       breakpointsContainer.setWidth("100%");
       breakpointsContainer.getElement().setId(IDE_DEBUGGER_BREAKPOINTS_PANEL_ID);
 
-      buildVariablesTreePanel(Collections.<Variable> emptyList());
+      buildVariablesTreePanel(Collections.<Variable>emptyList());
       breakPointsPanel.addTab("breakpointstabid", new Image(DebuggerClientBundle.INSTANCE.breakPointsIcon()),
          DebuggerExtension.LOCALIZATION_CONSTANT.breakPoints(), breakpointsContainer, false);
       breakPointsPanel.setWidth("100%");
@@ -147,6 +147,8 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
 
       vmName.setText(debuggerInfo.getVmName() + " " + debuggerInfo.getVmVersion(), Direction.RTL);
       vmName.setDirectionEstimator(true);
+
+      removeAllBreakpointsButton.setEnabled(false);
    }
 
    private void buildVariablesTreePanel(List<Variable> variables)
@@ -199,6 +201,7 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    @Override
    public void setBreakPoints(List<BreakPoint> breakPoints)
    {
+      removeAllBreakpointsButton.setEnabled(breakPoints.size() != 0);
       breakpointsContainer.setRowData(breakPoints);
    }
 
@@ -307,7 +310,9 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    public void showExpirationDialog(final BooleanValueReceivedHandler handler)
    {
       if (expDialog == null)
+      {
          buildExperationDialog(handler);
+      }
       expDialog.showCentered();
    }
 
@@ -354,7 +359,8 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
          }
       });
 
-      ImageButton noButton = new ImageButton("No");;
+      ImageButton noButton = new ImageButton("No");
+      ;
       buttonsLayout.add(noButton);
       noButton.addClickHandler(new ClickHandler()
       {
@@ -373,7 +379,9 @@ public class DebuggerView extends ViewImpl implements DebuggerPresenter.Display
    public void closeExpirationDialog()
    {
       if (expDialog != null)
+      {
          expDialog.hide();
+      }
    }
 
 }

@@ -49,6 +49,8 @@ public interface GroupNames
    static final String CUT_COPY = "Edit/CutCopy";
    
    static final String EDIT = "Edit/Edit";
+
+   static final String COMMENT = "Edit/Comment";
    
    static final String PAAS = "PaaS";
 

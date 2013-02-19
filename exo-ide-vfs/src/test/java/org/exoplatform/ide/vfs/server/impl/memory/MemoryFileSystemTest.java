@@ -83,6 +83,7 @@ public abstract class MemoryFileSystemTest extends TestCase
    protected final String BASE_URI = "http://localhost/service";
    protected final String SERVICE_URI = BASE_URI + "/ide/vfs/memory/";
    protected final String DEFAULT_CONTENT = "__TEST__";
+   protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
    protected Log log = ExoLogger.getExoLogger(getClass());
    protected String TEST_ROOT_NAME = "TESTROOT";

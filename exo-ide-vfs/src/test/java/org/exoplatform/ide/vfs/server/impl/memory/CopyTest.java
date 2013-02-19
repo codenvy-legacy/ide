@@ -152,11 +152,13 @@ public class CopyTest extends MemoryFileSystemTest
    {
       String path = SERVICE_URI + "copy/" + projectForCopy.getId() + '?' +
          "parentId=" + copyTestDestinationProject.getId();
+      final String originPath = projectForCopy.getPath();
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
-      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
-      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
-         response.getHttpHeaders().getFirst("x-exit-code"));
+      assertEquals("Unexpected status " + response.getStatus(), 200, response.getStatus());
+      String expectedPath = copyTestDestinationProject.getPath() + '/' + projectForCopy.getName();
+      assertNotNull("Source project is missed. ", memoryContext.getItemByPath(originPath));
+      assertNotNull("Not found project in destination location. ", memoryContext.getItemByPath(expectedPath));
    }
 }

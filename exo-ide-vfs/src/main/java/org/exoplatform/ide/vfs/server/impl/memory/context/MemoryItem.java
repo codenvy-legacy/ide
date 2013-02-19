@@ -21,7 +21,6 @@ package org.exoplatform.ide.vfs.server.impl.memory.context;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
 import org.exoplatform.ide.vfs.shared.AccessControlEntryImpl;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -43,7 +42,6 @@ import java.util.Set;
  */
 public abstract class MemoryItem
 {
-   private final ItemType type;
    private final String id;
    private final Map<String, Set<String>> permissionsMap;
    private final Map<String, List<String>> properties;
@@ -53,9 +51,8 @@ public abstract class MemoryItem
    String name;
    long lastModificationDate;
 
-   MemoryItem(ItemType type, String id, String name)
+   MemoryItem(String id, String name)
    {
-      this.type = type;
       this.id = id;
       this.name = name;
       this.permissionsMap = new HashMap<String, Set<String>>();
@@ -75,10 +72,11 @@ public abstract class MemoryItem
       this.parent = parent;
    }
 
-   public final ItemType getType()
-   {
-      return type;
-   }
+   public abstract boolean isFile();
+
+   public abstract boolean isFolder();
+
+   public abstract boolean isProject();
 
    public final String getId()
    {
@@ -177,7 +175,10 @@ public abstract class MemoryItem
             permissions = new HashSet<String>();
             update.put(principal, permissions);
          }
-         permissions.addAll(ace.getPermissions());
+         if (!(ace.getPermissions() == null || ace.getPermissions().isEmpty()))
+         {
+            permissions.addAll(ace.getPermissions());
+         }
       }
 
       if (override && update.isEmpty())
@@ -253,7 +254,7 @@ public abstract class MemoryItem
             }
             else
             {
-               properties.put(name, null);
+               properties.remove(name);
             }
          }
       }

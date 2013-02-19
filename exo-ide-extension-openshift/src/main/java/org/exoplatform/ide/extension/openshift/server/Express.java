@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.openshift.server;
 
 import com.openshift.client.IApplication;
 import com.openshift.client.ICartridge;
+import com.openshift.client.IDomain;
 import com.openshift.client.IOpenShiftConnection;
 import com.openshift.client.IUser;
 import com.openshift.client.OpenShiftConnectionFactory;
@@ -352,12 +353,19 @@ public class Express
       IOException, ParsingResponseException, VirtualFileSystemException
    {
       IUser user = connection.getUser();
+      IDomain domain = null;
+
+      if (user.hasDomain())
+      {
+         domain = user.getDefaultDomain();
+      }
+
       RHUserInfo userInfo =
-         new RHUserInfoImpl(user.getDefaultDomain().getSuffix(), null, user.getRhlogin(), user.getDefaultDomain().getId());
-      if (appsInfo)
+         new RHUserInfoImpl("rhcloud.com", null, user.getRhlogin(), (domain != null) ? domain.getId() : "Doesn't exist");
+      if (appsInfo && domain != null)
       {
          List<AppInfo> appInfoList = new ArrayList<AppInfo>();
-         for (IApplication application : connection.getUser().getDefaultDomain().getApplications())
+         for (IApplication application : domain.getApplications())
          {
             appInfoList.add(
                new AppInfoImpl(

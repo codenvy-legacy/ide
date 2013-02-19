@@ -25,6 +25,7 @@ import org.exoplatform.ide.client.editor.EditorView;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuEvent;
 import org.exoplatform.ide.client.framework.contextmenu.ShowContextMenuHandler;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
@@ -59,6 +60,7 @@ public class RedoTypingControl extends SimpleControl implements IDEControl, Edit
       setPrompt(TITLE);
       setImages(IDEImageBundle.INSTANCE.redo(), IDEImageBundle.INSTANCE.redoDisabled());
       setEvent(new EditorRedoTypingEvent());
+      setGroupName(GroupNames.EDIT);
    }
 
    /**
