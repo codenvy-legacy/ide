@@ -54,7 +54,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 15, 2012 5:13:13 PM anya $
- * 
+ *
  */
 public class GoogleAppEngineExtension extends Extension implements InitializeServicesHandler
 {
@@ -116,6 +116,6 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
 
       return ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
          || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
-         || (targets != null && targets.contains(ID));
+         || (targets != null && targets.contains(ID) && project.getPropertyValue("gae-application") != null);
    }
 }
