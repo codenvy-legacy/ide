@@ -46,7 +46,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * Preparing source directory with setting properties on folder to indicate them as eXo IDE project based on sources.
+ * Preparing source directory with setting properties on folder to indicate them as Codenvy project based on sources.
  * For example if we find pom.xml than we sett type of folder as Java project, if ruby - Ruby project, etc.
  * If we can't determine with what sources we works it throws exception with message and client ask user to set
  * custom project type for source folder.
@@ -64,7 +64,7 @@ public class ProjectPrepare
    }
 
    /**
-    * Convert specified folder in file system to eXo IDE project
+    * Convert specified folder in file system to Codenvy project
     *
     * @param sourcePath - absolute project path where sources are stored
     * @throws ProjectPrepareException
