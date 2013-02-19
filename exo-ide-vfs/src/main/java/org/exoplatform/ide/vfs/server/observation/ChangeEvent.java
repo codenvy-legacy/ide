@@ -59,12 +59,23 @@ public class ChangeEvent
    private final VirtualFileSystem vfs;
    private final String itemId;
    private final String itemPath;
+   private final String oldItemPath;
    private final String mimeType;
    private final ChangeType type;
 
    public ChangeEvent(VirtualFileSystem vfs,
                       String itemId,
                       String itemPath,
+                      String mimeType,
+                      ChangeType type)
+   {
+      this(vfs, itemId, itemPath, null, mimeType, type);
+   }
+
+   public ChangeEvent(VirtualFileSystem vfs,
+                      String itemId,
+                      String itemPath,
+                      String oldItemPath,
                       String mimeType,
                       ChangeType type)
    {
@@ -87,6 +98,7 @@ public class ChangeEvent
       this.vfs = vfs;
       this.itemId = itemId;
       this.itemPath = itemPath;
+      this.oldItemPath = oldItemPath;
       this.mimeType = mimeType;
       this.type = type;
    }
@@ -104,6 +116,11 @@ public class ChangeEvent
    public String getItemPath()
    {
       return itemPath;
+   }
+
+   public String getOldItemPath()
+   {
+      return oldItemPath;
    }
 
    public String getMimeType()
@@ -131,6 +148,7 @@ public class ChangeEvent
          "vfs='" + vfsID + '\''+
          ", itemId='" + itemId + '\'' +
          ", itemPath='" + itemPath + '\'' +
+         ", oldItemPath='" + oldItemPath + '\'' +
          ", type=" + type +
          '}';
    }

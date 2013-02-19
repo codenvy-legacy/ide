@@ -261,8 +261,12 @@ public class CreateTest extends MemoryFileSystemTest
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, null, null);
       log.info(response.getEntity());
-      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
-      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
-         response.getHttpHeaders().getFirst("x-exit-code"));
+      assertEquals("Unexpected status " + response.getStatus(), 200, response.getStatus());
+      String expectedPath = parentProject.getPath() + "/childProject";
+      MemoryFolder project = (MemoryFolder)memoryContext.getItemByPath(expectedPath);
+      assertNotNull("File was not created in expected location. ", project);
+      List<String> values = project.getProperties(PropertyFilter.valueOf("vfs:projectType")).get(0).getValue();
+      assertEquals("java", values.get(0));
+      assertEquals("text/vnd.ideproject+directory", project.getMediaType());
    }
 }

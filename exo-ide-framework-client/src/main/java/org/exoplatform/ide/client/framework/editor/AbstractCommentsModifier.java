@@ -145,27 +145,52 @@ public abstract class AbstractCommentsModifier implements CommentsModifier
    public TextEdit toggleSingleLineComment(SelectionRange selectionRange, IDocument document)
    {
       MultiTextEdit textEdit = new MultiTextEdit();
-      boolean removeComment = isRemoveOperation(selectionRange, document);
+      boolean removeComment = isRemoveCommentOperation(selectionRange, document);
+      boolean processLineAsBlock = getSingleLineComment() == null;
 
       for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++)
       {
          try
          {
+            int lineLength = document.getLineLength(i - 1);
             int lineStartOffset = document.getLineOffset(i - 1);
-            int lineEndOffset = lineStartOffset + document.getLineLength(i - 1);
-            if (removeComment)
+            int lineEndOffset = lineStartOffset + lineLength;
+
+            if (processLineAsBlock)
             {
-               FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
-               IRegion region =
-                  findReplaceDocument.find(lineStartOffset, getSingleLineComment(), true, false, false, false);
-               if (region != null && region.getOffset() < lineEndOffset)
+               int endSymbol = lineLength;
+               String lineText = document.get(lineStartOffset, endSymbol);
+               if (lineText.endsWith(document.getLineDelimiter(i)))
                {
-                  textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
+                  endSymbol--;
+               }
+               SelectionRange lineSelectionRange = new SelectionRange(i, 0, i, endSymbol);
+
+               if (removeComment)
+               {
+                  textEdit.addChild(removeBlockComment(lineSelectionRange, document));
+               }
+               else
+               {
+                  textEdit.addChild(addBlockComment(lineSelectionRange, document));
                }
             }
             else
             {
-               textEdit.addChild(new InsertEdit(lineStartOffset, getSingleLineComment()));
+               if (removeComment)
+               {
+                  FindReplaceDocumentAdapter findReplaceDocument = new FindReplaceDocumentAdapter(document);
+                  IRegion region =
+                     findReplaceDocument.find(lineStartOffset, getSingleLineComment(), true, false, false, false);
+                  if (region != null && region.getOffset() < lineEndOffset)
+                  {
+                     textEdit.addChild(new DeleteEdit(region.getOffset(), region.getLength()));
+                  }
+               }
+               else
+               {
+                  textEdit.addChild(new InsertEdit(lineStartOffset, getSingleLineComment()));
+               }
             }
          }
          catch (BadLocationException e)
@@ -176,15 +201,18 @@ public abstract class AbstractCommentsModifier implements CommentsModifier
       return textEdit;
    }
 
-   private boolean isRemoveOperation(SelectionRange selectionRange, IDocument document)
+   private boolean isRemoveCommentOperation(SelectionRange selectionRange, IDocument document)
    {
+      String singleLineComment = getSingleLineComment();
+      singleLineComment = singleLineComment == null ? getOpenBlockComment() : singleLineComment;
+
       for (int i = selectionRange.getStartLine(); i <= selectionRange.getEndLine(); i++)
       {
          int line = i - 1;
          try
          {
             String lineContent = document.get(document.getLineOffset(line), document.getLineLength(line));
-            if (!lineContent.trim().startsWith(getSingleLineComment()))
+            if (!lineContent.trim().startsWith(singleLineComment))
             {
                return false;
             }
@@ -211,5 +239,12 @@ public abstract class AbstractCommentsModifier implements CommentsModifier
     */
    public abstract String getCloseBlockComment();
 
+   /**
+    * Returns mark of the single line comment or <code>null</code>
+    * if no mark for the appropriate content type.
+    * 
+    * @return {@link String} mark of the single line comment or
+    *          <code>null</code> if no mark for the appropriate content type
+    */
    public abstract String getSingleLineComment();
 }

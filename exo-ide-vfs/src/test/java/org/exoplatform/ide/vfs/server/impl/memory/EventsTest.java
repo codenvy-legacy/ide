@@ -26,6 +26,7 @@ import org.exoplatform.ide.vfs.server.impl.memory.context.MemoryFolder;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.EventListener;
+import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
@@ -249,7 +250,7 @@ public class EventsTest extends MemoryFileSystemTest
       testEventsFolder.addChild(project);
       memoryContext.putItem(project);
 
-      eventListenerList.addEventListener(new ProjectUpdateEventFilter("memory", project),
+      eventListenerList.addEventListener(ProjectUpdateEventFilter.newFilter("memory", project),
          new ProjectUpdateListener(project.getId()));
 
       int configuredListeners = eventListenerList.size();
@@ -268,7 +269,7 @@ public class EventsTest extends MemoryFileSystemTest
       testEventsFolder.addChild(project);
       memoryContext.putItem(project);
 
-      eventListenerList.addEventListener(new ProjectUpdateEventFilter("memory", project),
+      eventListenerList.addEventListener(ProjectUpdateEventFilter.newFilter("memory", project),
          new ProjectUpdateListener(project.getId()));
 
       String name = "testProjectUpdateListenerFolder";

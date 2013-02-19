@@ -21,7 +21,6 @@ package org.exoplatform.ide.vfs.impl.jcr;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.exoplatform.ide.vfs.shared.File;
-import org.exoplatform.ide.vfs.shared.FileImpl;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.services.jcr.core.ExtendedNode;
 import org.exoplatform.services.jcr.core.ExtendedSession;
@@ -207,7 +206,7 @@ public class VersionsTest extends JcrFileSystemTest
       Iterator<Object> iteratorAll = all.iterator();
       iteratorAll.next();
       iteratorAll.remove();
-      checkPage(path, "GET", FileImpl.class.getMethod("getVersionId"), all);
+      checkPage(path, "GET", File.class.getMethod("getVersionId"), all);
    }
 
    public void testGetVersionsPagingMaxItems() throws Exception
@@ -241,6 +240,6 @@ public class VersionsTest extends JcrFileSystemTest
          .append("2") //
          .toString();
 
-      checkPage(path, "GET", FileImpl.class.getMethod("getVersionId"), all);
+      checkPage(path, "GET", File.class.getMethod("getVersionId"), all);
    }
 }
