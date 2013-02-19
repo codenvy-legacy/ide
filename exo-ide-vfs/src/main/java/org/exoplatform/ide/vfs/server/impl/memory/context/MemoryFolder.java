@@ -23,7 +23,6 @@ import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
@@ -50,8 +49,20 @@ public class MemoryFolder extends MemoryItem
 
    MemoryFolder(String id, String name)
    {
-      super(ItemType.FOLDER, id, name);
+      super(id, name);
       children = new LinkedHashMap<String, MemoryItem>();
+   }
+
+   @Override
+   public final boolean isFile()
+   {
+      return false;
+   }
+
+   @Override
+   public final boolean isFolder()
+   {
+      return true;
    }
 
    public List<MemoryItem> getChildren()
@@ -128,6 +139,7 @@ public class MemoryFolder extends MemoryItem
       return copy;
    }
 
+   @Override
    public boolean isProject()
    {
       List<Property> properties;
@@ -161,7 +173,6 @@ public class MemoryFolder extends MemoryItem
          "id='" + getId() + '\'' +
          ", path=" + getPath() +
          ", name='" + getName() + '\'' +
-         ", type=" + getType() +
          ", isProject=" + isProject() +
          '}';
    }

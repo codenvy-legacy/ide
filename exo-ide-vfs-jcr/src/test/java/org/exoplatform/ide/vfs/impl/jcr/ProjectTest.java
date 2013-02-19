@@ -24,11 +24,11 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.ChangeEventFilter;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.Project;
-import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.services.jcr.RepositoryService;
 import org.exoplatform.services.jcr.core.CredentialsImpl;
 import org.exoplatform.services.jcr.core.ExtendedNode;
@@ -130,7 +130,7 @@ public class ProjectTest extends JcrFileSystemTest
       String projectName = "testCopyProjectToProject";
       Node project = testRoot.addNode(projectName, "nt:folder");
       project.addMixin("vfs:project");
-      Node projectData = destProject.getNode(".project");
+      Node projectData = project.getNode(".project");
       projectData.setProperty("vfs:projectType", "java");
       projectData.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
 
@@ -145,9 +145,11 @@ public class ProjectTest extends JcrFileSystemTest
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
-      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
-      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
-         response.getHttpHeaders().getFirst("x-exit-code"));
+      assertEquals("Unexpected status " + response.getStatus(), 200, response.getStatus());
+      String expectedPath = destProject.getPath() + '/' + projectName;
+      project = (Node)session.getItem(expectedPath);
+      assertEquals("java", project.getProperty(".project/vfs:projectType").getString());
+      assertEquals("text/vnd.ideproject+directory", project.getProperty(".project/vfs:mimeType").getString());
    }
 
    public void testMoveProjectToProject() throws Exception
@@ -161,7 +163,7 @@ public class ProjectTest extends JcrFileSystemTest
       String projectName = "testMoveProjectToProject";
       Node project = testRoot.addNode(projectName, "nt:folder");
       project.addMixin("vfs:project");
-      Node projectData = destProject.getNode(".project");
+      Node projectData = project.getNode(".project");
       projectData.setProperty("vfs:projectType", "java");
       projectData.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
 
@@ -176,9 +178,11 @@ public class ProjectTest extends JcrFileSystemTest
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
-      assertEquals("Unexpected status " + response.getStatus(), 400, response.getStatus());
-      assertEquals("Unexpected exit code " + response.getHttpHeaders().getFirst("x-exit-code"), "100",
-         response.getHttpHeaders().getFirst("x-exit-code"));
+      assertEquals("Unexpected status " + response.getStatus(), 200, response.getStatus());
+      String expectedPath = destProject.getPath() + '/' + projectName;
+      project = (Node)session.getItem(expectedPath);
+      assertEquals("java", project.getProperty(".project/vfs:projectType").getString());
+      assertEquals("text/vnd.ideproject+directory", project.getProperty(".project/vfs:mimeType").getString());
    }
 
    public void testGetProjectItem() throws Exception
@@ -202,7 +206,7 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
       assertEquals("application/json", response.getContentType().toString());
 
-      ProjectImpl project = (ProjectImpl)response.getEntity();
+      Project project = (Project)response.getEntity();
       validateLinks(project);
       assertEquals("testGetProjectItem_PROJECT1", project.getName());
       assertEquals(Project.PROJECT_MIME_TYPE, project.getMimeType());
@@ -249,7 +253,7 @@ public class ProjectTest extends JcrFileSystemTest
          validateLinks(i);
          if (Project.PROJECT_MIME_TYPE.equals(i.getMimeType()))
          {
-            assertTrue(i instanceof ProjectImpl);
+            assertTrue(i instanceof Project);
             assertNotNull(((Project)i).getProjectType());
             list.add(i);
          }
@@ -310,7 +314,7 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       Folder project = (Folder)response.getEntity();
       assertEquals("text/vnd.ideproject+directory", project.getMimeType());
-      assertTrue("Folder must be converted to Project. ", project instanceof ProjectImpl);
+      assertTrue("Folder must be converted to Project. ", project instanceof Project);
    }
 
    public void testConvertProjectToFolder() throws Exception
@@ -343,7 +347,7 @@ public class ProjectTest extends JcrFileSystemTest
       assertEquals(200, response.getStatus());
       Folder folder = (Folder)response.getEntity();
       assertEquals("text/directory", folder.getMimeType());
-      assertFalse("Project must be converted to Folder. ", folder instanceof ProjectImpl);
+      assertFalse("Project must be converted to Folder. ", folder instanceof Project);
    }
 
    public void testProjectUpdateEventsRepositoryIsolation() throws Exception

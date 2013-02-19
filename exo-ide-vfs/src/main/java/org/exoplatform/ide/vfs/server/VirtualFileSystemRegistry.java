@@ -66,7 +66,7 @@ public class VirtualFileSystemRegistry
       return Collections.unmodifiableCollection(providers.values());
    }
 
-   private static String id(String vfsId)
+   private String id(String vfsId)
    {
       return vfsId == null ? "default" : vfsId;
    }

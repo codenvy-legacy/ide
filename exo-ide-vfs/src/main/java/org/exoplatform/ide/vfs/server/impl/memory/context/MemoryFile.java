@@ -22,7 +22,6 @@ import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
 import java.io.ByteArrayInputStream;
@@ -62,7 +61,7 @@ public class MemoryFile extends MemoryItem
 
    MemoryFile(String id, String name, String mediaType, byte[] bytes)
    {
-      super(ItemType.FILE, id, name);
+      super(id, name);
       setMediaType(mediaType);
       this.bytes = bytes;
       this.contentLastModificationDate = System.currentTimeMillis();
@@ -135,6 +134,24 @@ public class MemoryFile extends MemoryItem
    }
 
    @Override
+   public final boolean isFile()
+   {
+      return true;
+   }
+
+   @Override
+   public final boolean isFolder()
+   {
+      return false;
+   }
+
+   @Override
+   public final boolean isProject()
+   {
+      return false;
+   }
+
+   @Override
    public MemoryItem copy(MemoryFolder parent) throws VirtualFileSystemException
    {
       byte[] bytes = this.bytes;
@@ -163,7 +180,6 @@ public class MemoryFile extends MemoryItem
          "id='" + getId() + '\'' +
          ", path=" + getPath() +
          ", name='" + getName() + '\'' +
-         ", type=" + getType() +
          ", isLocked='" + isLocked() + '\'' +
          '}';
    }

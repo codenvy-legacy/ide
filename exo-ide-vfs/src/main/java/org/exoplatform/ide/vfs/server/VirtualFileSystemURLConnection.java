@@ -83,7 +83,7 @@ public final class VirtualFileSystemURLConnection extends URLConnection
    public void connect() throws IOException
    {
       final URI theUri = URI.create(getURL().toString());
-      String path = theUri.getPath();
+      final String path = theUri.getPath();
       final String vfsId =
          (path == null || "/".equals(path)) ? null : (path.startsWith("/")) ? path.substring(1) : path;
       try

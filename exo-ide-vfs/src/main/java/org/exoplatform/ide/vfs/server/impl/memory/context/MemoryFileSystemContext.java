@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.server.impl.memory.context;
 
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,11 +51,7 @@ public final class MemoryFileSystemContext
 
    public void putItem(MemoryItem item) throws VirtualFileSystemException
    {
-      if (ItemType.FILE == item.getType())
-      {
-         entries.put(item.getId(), item);
-      }
-      else
+      if (item.isFolder())
       {
          final Map<String, MemoryItem> flatten = new HashMap<String, MemoryItem>();
          item.accept(new MemoryItemVisitor()
@@ -64,11 +59,7 @@ public final class MemoryFileSystemContext
             @Override
             public void visit(MemoryItem i) throws VirtualFileSystemException
             {
-               if (i.getType() == ItemType.FILE)
-               {
-                  flatten.put(i.getId(), i);
-               }
-               else
+               if (i.isFolder())
                {
                   for (MemoryItem ii : ((MemoryFolder)i).getChildren())
                   {
@@ -76,9 +67,17 @@ public final class MemoryFileSystemContext
                   }
                   flatten.put(i.getId(), i);
                }
+               else
+               {
+                  flatten.put(i.getId(), i);
+               }
             }
          });
          entries.putAll(flatten);
+      }
+      else
+      {
+         entries.put(item.getId(), item);
       }
    }
 
@@ -106,7 +105,7 @@ public final class MemoryFileSystemContext
       for (int i = 0, length = split.length; item != null && i < length; i++)
       {
          String name = split[i];
-         if (ItemType.FOLDER == item.getType() || ItemType.PROJECT == item.getType())
+         if (item.isFolder())
          {
             item = ((MemoryFolder)item).getChild(name);
          }

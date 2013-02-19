@@ -22,10 +22,12 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.annotation.RolesAllowed;
+import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorRemoveBlockCommentEvent;
+import org.exoplatform.ide.editor.client.api.EditorCapability;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -46,10 +48,9 @@ public class RemoveBlockCommentControl extends SimpleControl implements IDEContr
       setTitle(TITLE);
       setPrompt(TITLE);
       setEvent(new EditorRemoveBlockCommentEvent());
-      setVisible(false);
-      setEnabled(true);
       setHotKey("Ctrl+Shift+\\");
       setImages(IDEImageBundle.INSTANCE.removeBlockComment(), IDEImageBundle.INSTANCE.removeBlockCommentDisabled());
+      setGroupName(GroupNames.COMMENT);
    }
 
    /**
@@ -66,6 +67,8 @@ public class RemoveBlockCommentControl extends SimpleControl implements IDEContr
     */
    public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
    {
-      // TODO
+      boolean isEnabled = event.getFile() != null && event.getEditor() != null && event.getEditor().isCapable(EditorCapability.COMMENT_SOURCE);
+      setVisible(isEnabled);
+      setEnabled(isEnabled);
    }
 }

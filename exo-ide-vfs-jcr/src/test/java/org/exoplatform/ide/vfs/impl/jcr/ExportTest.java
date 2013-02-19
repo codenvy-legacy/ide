@@ -156,7 +156,7 @@ public class ExportTest extends JcrFileSystemTest
       {
          String name = zipEntry.getName();
          zip.closeEntry();
-         assertNotNull("Not found " + name + " entry in zip. ", expectedZipItems.remove(name));
+         assertTrue("Not found " + name + " entry in zip. ", expectedZipItems.remove(name));
       }
       assertTrue(expectedZipItems.isEmpty());
    }

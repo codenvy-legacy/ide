@@ -52,7 +52,7 @@ public class IdeInviteService
 {
    private static final Log LOG = ExoLogger.getLogger(IdeInviteService.class);
 
-   private final String sender = "Cloud-IDE <noreply@cloud-ide.com>";
+   private final String sender = "Codenvy <noreply@cloud-ide.com>";
 
    private final InviteService inviteService;
 

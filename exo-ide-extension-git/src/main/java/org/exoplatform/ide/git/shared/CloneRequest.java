@@ -34,9 +34,7 @@ public class CloneRequest extends GitRequest
    /**
     * List of refspec to fetch in cloned repository.
     * <p>
-    * Expected form is "refs/heads/featured:refs/remotes/origin/featured".
-    * Branch 'featured' from remote repository will be cloned to
-    * 'remotes/origin/featured'.
+    * Expected form is "refs/heads/featured".
     */
    private String[] branchesToFetch;
 

@@ -50,17 +50,17 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
       if (vfs == null)
       {
          throw new LocalPathResolveException(
-            "Can't resolve path on the Local File System : Virtual file system not initialized. ");
+            "Cannot resolve path on the local filesystem. Virtual filesystem is not initialized. ");
       }
       if (id == null || id.length() == 0)
       {
          throw new LocalPathResolveException(
-            "Can't resolve path on the Local File System. Item path may not be null or empty. ");
+            "Cannot resolve path on the local filesystem. Item id may not be null or empty. ");
       }
       String fsRootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
       if (fsRootPath == null)
       {
-         throw new LocalPathResolveException("Can't resolve path on the Local File System. Root path may not be null. ");
+         throw new LocalPathResolveException("Cannot resolve path on the local filesystem. Root path may not be null. ");
       }
       ManageableRepository repository;
       try
@@ -69,15 +69,15 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
       }
       catch (RepositoryException e)
       {
-         throw new LocalPathResolveException("Can't resolve path on the Local File System. " + e.getMessage(), e);
+         throw new LocalPathResolveException("Cannot resolve path on the local filesystem. " + e.getMessage(), e);
       }
       String repositoryName = repository.getConfiguration().getName();
       if (!fsRootPath.endsWith("/"))
       {
-         fsRootPath += "/"; // unix like path only!
+         fsRootPath += '/'; // unix like path only!
       }
-      Item item = null;
-      String vfsId = null;
+      Item item;
+      String vfsId;
       try
       {
          vfsId = vfs.getInfo().getId();
@@ -85,11 +85,11 @@ public class LocalPathResolverJcrImpl implements LocalPathResolver
       }
       catch (VirtualFileSystemException e)
       {
-         throw new LocalPathResolveException("Can't resolve path on the Local File System", e);
+         throw new LocalPathResolveException("Cannot resolve path on the local filesystem", e);
       }
       return fsRootPath //
          + repositoryName //
-         + "/" //
+         + '/' //
          + vfsId //
          + item.getPath();
    }
