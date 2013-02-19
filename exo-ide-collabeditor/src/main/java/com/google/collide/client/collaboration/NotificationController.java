@@ -42,6 +42,7 @@ import elemental.html.AnchorElement;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
+import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -82,6 +83,8 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
 
    private ProjectModel project;
 
+   private String path;
+
    public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
       MessageFilter messageFilter, UsersModel usersModel, HandlerManager eventBus, Css css)
    {
@@ -121,26 +124,34 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
          @Override
          public void handleEvent(Event event)
          {
-            openFile(path);
+            if (project == null)
+            {
+               openProject(path);
+            }
+            else
+            {
+               NotificationController.this.path = null;
+               openFile(path);
+            }
          }
       }, false);
       return anchorElement;
    }
 
-   private void openFile(String path)
+   private void openProject(final String path)
    {
+      this.path = path;
+      String projectName = getProjectName(path);
       try
       {
-         VirtualFileSystem.getInstance().getItemByPath(path, new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+         VirtualFileSystem.getInstance().getItemByPath("/" + projectName, new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
          {
             @Override
             protected void onSuccess(ItemWrapper result)
             {
-               if(result.getItem() != null && result.getItem() instanceof FileModel)
+               if (result.getItem() != null && result.getItem() instanceof ProjectModel)
                {
-                  FileModel file = (FileModel)result.getItem();
-                  file.setProject(project);
-                  eventBus.fireEvent(new OpenFileEvent(file));
+                  eventBus.fireEvent(new OpenProjectEvent((ProjectModel)result.getItem()));
                }
             }
 
@@ -150,6 +161,37 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
                Log.error(AsyncRequestCallback.class, exception);
             }
          });
+      }
+      catch (RequestException e)
+      {
+         Log.error(AsyncRequestCallback.class, e);
+      }
+   }
+
+   private void openFile(String path)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(path,
+            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+            {
+               @Override
+               protected void onSuccess(ItemWrapper result)
+               {
+                  if (result.getItem() != null && result.getItem() instanceof FileModel)
+                  {
+                     FileModel file = (FileModel)result.getItem();
+                     file.setProject(project);
+                     eventBus.fireEvent(new OpenFileEvent(file));
+                  }
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  Log.error(AsyncRequestCallback.class, exception);
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -180,13 +222,19 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
          return true;
       }
 
-      path = path.substring(1);
-      path = path.substring(0, path.indexOf('/'));
+      path = getProjectName(path);
       if (path.equals(project.getName()))
       {
          return true;
       }
       return false;
+   }
+
+   private String getProjectName(String path)
+   {
+      path = path.substring(1);
+      path = path.substring(0, path.indexOf('/'));
+      return path;
    }
 
    private void showFileOperationNotification(FileOperationNotification notification)
@@ -235,5 +283,9 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       project = event.getProject();
+      if(path != null)
+      {
+         openFile(path);
+      }
    }
 }
