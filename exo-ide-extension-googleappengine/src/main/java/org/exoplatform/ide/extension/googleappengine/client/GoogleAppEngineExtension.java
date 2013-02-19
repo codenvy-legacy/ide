@@ -116,6 +116,6 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
 
       return ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
          || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
-         || (targets != null && targets.contains(ID));
+         || (targets != null && targets.contains(ID) && project.getPropertyValue("gae-application") != null);
    }
 }
