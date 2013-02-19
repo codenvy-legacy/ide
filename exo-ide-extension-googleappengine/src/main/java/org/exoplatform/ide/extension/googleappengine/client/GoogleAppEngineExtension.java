@@ -64,7 +64,7 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
 
    public static final GAELocalization GAE_LOCALIZATION = GWT.create(GAELocalization.class);
 
-   private static final String ID = "GAE";
+   public static final String ID = "GAE";
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()
@@ -116,6 +116,6 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
 
       return ProjectResolver.APP_ENGINE_JAVA.equals(project.getProjectType())
          || ProjectResolver.APP_ENGINE_PYTHON.equals(project.getProjectType())
-         || (targets != null && targets.contains(ID) && project.getPropertyValue("gae-application") != null);
+         || (targets != null && targets.contains(ID));
    }
 }
