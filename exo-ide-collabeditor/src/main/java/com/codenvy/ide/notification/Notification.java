@@ -41,11 +41,11 @@ public class Notification extends Composite
 
    public Notification(final String message, NotificationType type, final int duration)
    {
-      this(new HTML(message, true), duration, type);
+      this(new HTML(message, true), type, duration);
 
    }
 
-   public Notification(final Widget widget, final int duration, NotificationType type)
+   public Notification(final Widget widget, NotificationType type, final int duration)
    {
       this.duration = duration;
       super.initWidget(widget);

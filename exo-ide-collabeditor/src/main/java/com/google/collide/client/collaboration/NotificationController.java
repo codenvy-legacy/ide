@@ -23,18 +23,33 @@ import com.codenvy.ide.notification.Notification.NotificationType;
 import com.codenvy.ide.notification.NotificationManager;
 import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
+import com.google.collide.client.common.BaseResources.Css;
 import com.google.collide.client.communication.MessageFilter;
 import com.google.collide.client.communication.MessageFilter.MessageRecipient;
+import com.google.collide.client.util.Elements;
+import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.FileOperationNotification;
 import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.UserDetails;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.ui.HTML;
+import elemental.events.Event;
+import elemental.events.EventListener;
+import elemental.html.AnchorElement;
 
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -61,12 +76,18 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
 
    private UsersModel usersModel;
 
+   private HandlerManager eventBus;
+
+   private Css css;
+
    private ProjectModel project;
 
    public NotificationController(NotificationManager manager, CollaborationManager collaborationManager,
-      MessageFilter messageFilter, UsersModel usersModel, HandlerManager eventBus)
+      MessageFilter messageFilter, UsersModel usersModel, HandlerManager eventBus, Css css)
    {
       this.usersModel = usersModel;
+      this.eventBus = eventBus;
+      this.css = css;
       collaborationManager.getParticipantsListenerManager().add(this);
       this.manager = manager;
       messageFilter.registerMessageRecipient(RoutingTypes.FILEOPERATIONNOTIFICATION,
@@ -79,13 +100,60 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
     * {@inheritDoc}
     */
    @Override
-   public void userOpenFile(String path, UserDetails user)
+   public void userOpenFile(final String path, UserDetails user)
    {
       if (isShow(path))
       {
-         manager.addNotification(
-            new Notification("User <b>" + user.getDisplayName() + "</b> open file: " + path, NotificationType.INFO,
-               DURATION));
+         HTML html = new HTML("User <b>" + user.getDisplayName() + "</b> open file: ");
+         AnchorElement anchorElement = getAnchorElement(path);
+         html.getElement().appendChild((Node)anchorElement);
+         manager.addNotification(new Notification(html, NotificationType.INFO, DURATION));
+      }
+   }
+
+   private AnchorElement getAnchorElement(final String path)
+   {
+      AnchorElement anchorElement = Elements.createAnchorElement(css.anchor());
+      anchorElement.setHref("javascript:;");
+      anchorElement.setTextContent(path);
+      anchorElement.addEventListener(Event.CLICK, new EventListener()
+      {
+         @Override
+         public void handleEvent(Event event)
+         {
+            openFile(path);
+         }
+      }, false);
+      return anchorElement;
+   }
+
+   private void openFile(String path)
+   {
+      try
+      {
+         VirtualFileSystem.getInstance().getItemByPath(path, new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               if(result.getItem() != null && result.getItem() instanceof FileModel)
+               {
+                  FileModel file = (FileModel)result.getItem();
+                  file.setProject(project);
+                  eventBus.fireEvent(new OpenFileEvent(file));
+               }
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               Log.error(AsyncRequestCallback.class, exception);
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         Log.error(AsyncRequestCallback.class, e);
       }
    }
 
@@ -94,13 +162,14 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
     * {@inheritDoc}
     */
    @Override
-   public void userCloseFile(String path, UserDetails user)
+   public void userCloseFile(final String path, UserDetails user)
    {
       if (isShow(path))
       {
-         manager.addNotification(
-            new Notification("User <b>" + user.getDisplayName() + "</b> close file: " + path, NotificationType.INFO,
-               DURATION));
+         HTML html = new HTML("User <b>" + user.getDisplayName() + "</b> close file: ");
+         AnchorElement anchorElement = getAnchorElement(path);
+         html.getElement().appendChild((Node)anchorElement);
+         manager.addNotification(new Notification(html, NotificationType.INFO, DURATION));
       }
    }
 

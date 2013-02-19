@@ -28,7 +28,7 @@
 @def completedBackgroundColor #f9edbe;
 /* Background color for an item selected with the keyboard */
 @def keyboardSelectionBackgroundColor #E0E0E0;
-@def anchorColor #1155CC;
+@def anchorColor #EFEFEF;
 
 /* Sizes */
 @def dividerThickness 1px;
