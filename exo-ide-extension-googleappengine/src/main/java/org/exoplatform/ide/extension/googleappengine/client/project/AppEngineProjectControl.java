@@ -30,11 +30,12 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:15:05 PM anya $
- * 
+ *
  */
 public class AppEngineProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
    ProjectClosedHandler, ActiveProjectChangedHandler
@@ -82,8 +83,7 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      boolean isAppEngine =
-         event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject());
+      boolean isAppEngine = isDeployed(event.getProject());
       setVisible(isAppEngine);
       setEnabled(isAppEngine);
    }
@@ -91,10 +91,15 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    @Override
    public void onActiveProjectChanged(ActiveProjectChangedEvent event)
    {
-      boolean isAppEngine =
-         event.getProject() != null && GoogleAppEngineExtension.isAppEngineProject(event.getProject());
+      boolean isAppEngine = isDeployed(event.getProject());
       setVisible(isAppEngine);
       setEnabled(isAppEngine);
    }
 
+   private boolean isDeployed(ProjectModel project)
+   {
+      return project != null
+         && GoogleAppEngineExtension.isAppEngineProject(project)
+         && project.getPropertyValues(ProjectModel.PROJECT_MIME_TYPE).contains(GoogleAppEngineExtension.ID);
+   }
 }
