@@ -23,13 +23,14 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.ServerToClientDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.Reorderer;
 import com.google.collide.shared.util.Reorderer.ItemSink;
 import com.google.collide.shared.util.Reorderer.TimeoutCallback;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Helper to receive messages from the transport and pass it onto the local

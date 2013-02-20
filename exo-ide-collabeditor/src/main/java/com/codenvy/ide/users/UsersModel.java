@@ -32,8 +32,9 @@ import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.UserLogOutDto;
 import com.google.collide.dto.client.DtoClientImpls.GetWorkspaceParticipantsImpl;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

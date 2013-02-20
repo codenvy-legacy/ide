@@ -26,12 +26,13 @@ import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.ServerError;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.client.DtoClientImpls;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.client.JsoStringMap;
-import com.google.collide.json.client.JsoStringSet;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringSet;
 import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.client.JsoStringMap;
+import org.exoplatform.ide.json.client.JsoStringSet;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 
 /**
  * Model for the participants in the current workspace.

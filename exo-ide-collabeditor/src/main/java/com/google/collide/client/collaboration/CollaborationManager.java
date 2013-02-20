@@ -37,10 +37,6 @@ import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.client.DtoClientImpls.GetOpenendFilesInWorkspaceImpl;
-import com.google.collide.json.client.Jso;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonIntegerMap;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
@@ -48,6 +44,10 @@ import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.json.client.Jso;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * A manager for real-time collaboration.

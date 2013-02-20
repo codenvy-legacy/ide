@@ -19,7 +19,6 @@
 package com.google.collide.client.communication;
 
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Timer;
@@ -35,6 +34,7 @@ import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

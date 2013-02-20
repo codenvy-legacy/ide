@@ -28,7 +28,6 @@ import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.JsIntegerMap;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.util.ListenerRegistrar.Remover;
@@ -39,6 +38,7 @@ import elemental.html.Element;
 
 import org.exoplatform.ide.editor.java.Breakpoint.Type;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

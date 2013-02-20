@@ -16,13 +16,12 @@ package com.google.collide.client.editor;
 
 import com.google.collide.client.editor.Buffer.ScrollListener;
 import com.google.collide.client.util.BrowserUtils;
-import com.google.collide.json.client.Jso;
-
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseWheelEvent;
 import elemental.html.Element;
 
+import org.exoplatform.ide.json.client.Jso;
 import org.waveprotocol.wave.client.common.util.UserAgent;
 
 /*

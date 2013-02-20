@@ -26,7 +26,6 @@ import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.util.BasicIncrementalScheduler;
 import com.google.collide.client.util.IncrementalScheduler;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
@@ -42,6 +41,8 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.Timer;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /*
  * TODO : Make this language specific and utilize code

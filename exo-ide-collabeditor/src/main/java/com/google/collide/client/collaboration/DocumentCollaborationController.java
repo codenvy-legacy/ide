@@ -18,7 +18,6 @@ import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.code.ParticipantModel;
 import com.google.collide.client.collaboration.FileConcurrencyController.CollaboratorDocOpSink;
-import com.google.collide.client.communication.FrontendApi;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
@@ -26,19 +25,20 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.client.ClientDocOpFactory;
 import com.google.collide.dto.client.DtoClientImpls;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.document.Document;
-import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.Document.TextListener;
+import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.ot.Composer;
+import com.google.collide.shared.ot.Composer.ComposeException;
 import com.google.collide.shared.ot.DocOpApplier;
 import com.google.collide.shared.ot.DocOpBuilder;
 import com.google.collide.shared.ot.DocOpUtils;
-import com.google.collide.shared.ot.Composer.ComposeException;
 import com.google.collide.shared.util.ErrorCallback;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
+
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Controller that adds real-time collaboration at the document level.

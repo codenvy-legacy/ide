@@ -35,7 +35,6 @@ import com.google.collide.client.editor.selection.SelectionModel.CursorListener;
 import com.google.collide.client.hover.HoverPresenter;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.Line;
@@ -78,6 +77,7 @@ import org.exoplatform.ide.editor.client.marking.ProblemClickHandler;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -114,7 +114,7 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
    private final class TextListenerImpl implements TextListener
    {
       /**
-       * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, com.google.collide.json.shared.JsonArray)
+       * @see com.google.collide.shared.document.Document.TextListener#onTextChange(com.google.collide.shared.document.Document, org.exoplatform.ide.json.shared.JsonArray)
        */
       @Override
       public void onTextChange(Document document, JsonArray<TextChange> textChanges)

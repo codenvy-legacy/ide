@@ -18,7 +18,8 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
 import com.google.collide.dto.DocOpComponent.Insert;
 import com.google.collide.dto.shared.DocOpFactory;
-import com.google.collide.json.shared.JsonArray;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Inverts document operations such that A composed with the inverse of A is an

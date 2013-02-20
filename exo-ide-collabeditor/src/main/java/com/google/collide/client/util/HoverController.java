@@ -14,10 +14,8 @@
 
 package com.google.collide.client.util;
 
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.user.client.Timer;
-
 import elemental.dom.Node;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -25,6 +23,8 @@ import elemental.events.EventRemover;
 import elemental.events.EventTarget;
 import elemental.events.MouseEvent;
 import elemental.html.Element;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Controller to manage a group of elements that are hovered and unhovered

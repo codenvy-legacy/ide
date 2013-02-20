@@ -14,8 +14,9 @@
 
 package com.google.collide.shared.util;
 
-import com.google.collide.json.shared.JsonIntegerMap;
 import com.google.collide.shared.util.Timer.Factory;
+
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
 
 /**
  * A utility class that accepts out-of-order versioned items and delivers them to an

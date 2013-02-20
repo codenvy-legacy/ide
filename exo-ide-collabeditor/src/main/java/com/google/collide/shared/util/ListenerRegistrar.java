@@ -14,7 +14,7 @@
 
 package com.google.collide.shared.util;
 
-import com.google.collide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A manager to register or unregister listeners.

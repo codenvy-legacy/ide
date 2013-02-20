@@ -14,9 +14,10 @@
 
 package com.google.collide.client.communication;
 
-import com.google.collide.dtogen.shared.ServerToClientDto;
-import com.google.collide.json.shared.JsonIntegerMap;
 import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
 
 /**
  * Class responsible for routing JsonMessages based on the message type that get

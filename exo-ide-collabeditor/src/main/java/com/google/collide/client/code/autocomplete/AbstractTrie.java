@@ -14,9 +14,10 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Trie-based implementation of the prefix index.

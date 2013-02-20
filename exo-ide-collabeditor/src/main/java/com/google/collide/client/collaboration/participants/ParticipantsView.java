@@ -25,8 +25,6 @@ import com.google.collide.client.collaboration.participants.ParticipantsPresente
 import com.google.collide.client.ui.list.SimpleList;
 import com.google.collide.client.ui.list.SimpleList.View;
 import com.google.collide.client.util.Elements;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.shared.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -40,6 +38,8 @@ import elemental.html.TableElement;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 import java.util.List;
 

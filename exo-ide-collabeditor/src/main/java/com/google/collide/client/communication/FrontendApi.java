@@ -37,14 +37,15 @@ import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.ServerToClientDocOps;
 import com.google.collide.dto.client.DtoClientImpls.ServerErrorImpl;
 import com.google.collide.dto.shared.JsonFieldConstants;
-import com.google.collide.dtogen.client.RoutableDtoClientImpl;
-import com.google.collide.dtogen.shared.ClientToServerDto;
-import com.google.collide.dtogen.shared.RoutableDto;
-import com.google.collide.dtogen.shared.ServerToClientDto;
-import com.google.collide.json.client.Jso;
-import com.google.collide.json.shared.JsonStringMap;
-import com.google.collide.json.shared.JsonStringMap.IterationCallback;
 import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
+import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
+import org.exoplatform.ide.dtogen.shared.RoutableDto;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.json.client.Jso;
+import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 /**
  * The EventBus APIs for the Collide server.

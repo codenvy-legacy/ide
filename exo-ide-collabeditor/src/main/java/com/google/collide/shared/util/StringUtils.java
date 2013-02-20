@@ -14,8 +14,8 @@
 
 package com.google.collide.shared.util;
 
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonIntegerMap;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
 
 import javax.annotation.Nonnull;
 

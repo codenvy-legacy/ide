@@ -15,15 +15,15 @@
 package com.google.collide.client.code;
 
 import com.google.collide.client.util.Elements;
-import com.google.collide.json.client.JsoStringMap;
-import com.google.collide.json.shared.JsonStringMap.IterationCallback;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-
 import elemental.html.DivElement;
 import elemental.html.SpanElement;
+
+import org.exoplatform.ide.json.client.JsoStringMap;
+import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 /**
  * Presenter for the participant list in the navigation bar.

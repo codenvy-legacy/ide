@@ -23,17 +23,17 @@ import com.google.collide.client.editor.selection.CursorView;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.client.DtoClientImpls.DocumentSelectionImpl;
 import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
-import com.google.collide.json.shared.JsonStringMap;
-import com.google.collide.json.shared.JsonStringMap.IterationCallback;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
-import com.google.collide.shared.document.anchor.AnchorType;
 import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
+import com.google.collide.shared.document.anchor.AnchorType;
 import com.google.collide.shared.util.JsonCollections;
-
 import elemental.util.Timer;
+
+import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 import javax.annotation.Nullable;
 

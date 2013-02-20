@@ -1,7 +1,32 @@
 // GENERATED SOURCE. DO NOT EDIT.
 package com.google.collide.dto.server;
 
-import com.google.collide.dtogen.server.JsonSerializable;
+import com.google.collide.dto.CodeBlock;
+import com.google.collide.dto.CodeError;
+import com.google.collide.dto.CodeReference;
+import com.google.collide.dto.ConflictChunk;
+import com.google.collide.dto.DiffChunkResponse;
+import com.google.collide.dto.DirInfo;
+import com.google.collide.dto.DocOpComponent;
+import com.google.collide.dto.FileInfo;
+import com.google.collide.dto.ImportAssociation;
+import com.google.collide.dto.InheritanceAssociation;
+import com.google.collide.dto.LogMetric;
+import com.google.collide.dto.Mutation;
+import com.google.collide.dto.NodeConflictDto;
+import com.google.collide.dto.NodeMutationDto;
+import com.google.collide.dto.ParticipantUserDetails;
+import com.google.collide.dto.ProjectInfo;
+import com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice;
+import com.google.collide.dto.Revision;
+import com.google.collide.dto.SearchResult;
+import com.google.collide.dto.ServerToClientDocOp;
+import com.google.collide.dto.Snippet;
+import com.google.collide.dto.StackTraceElementDto;
+import com.google.collide.dto.TypeAssociation;
+import com.google.collide.dto.UserDetails;
+import com.google.collide.dto.UserDetailsWithRole;
+import com.google.collide.dto.WorkspaceInfo;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -10,6 +35,12 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+
+import org.exoplatform.ide.dtogen.server.JsonSerializable;
+import org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl;
+import org.exoplatform.ide.json.server.JsonArrayListAdapter;
+import org.exoplatform.ide.json.server.JsonStringMapAdapter;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 import java.util.Map;
 
@@ -23,7 +54,7 @@ public class DtoServerImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "bca179ae3917468565f0178049f263e405e02437";
 
-   public static class UserLogInDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UserLogInDto, JsonSerializable {
+   public static class UserLogInDtoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.UserLogInDto, JsonSerializable {
 
       private UserLogInDtoImpl() {
          super(131);
@@ -127,7 +158,7 @@ public class DtoServerImpls {
       }
    }
 
-   public static class UserLogOutDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UserLogOutDto, JsonSerializable {
+   public static class UserLogOutDtoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.UserLogOutDto, JsonSerializable {
 
       private UserLogOutDtoImpl() {
          super(132);
@@ -231,7 +262,7 @@ public class DtoServerImpls {
       }
    }
 
-   public static class FileOperationNotificationImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.FileOperationNotification, JsonSerializable {
+   public static class FileOperationNotificationImpl extends RoutableDtoServerImpl implements com.google.collide.dto.FileOperationNotification, JsonSerializable {
 
       private FileOperationNotificationImpl() {
          super(130);
@@ -441,7 +472,7 @@ public class DtoServerImpls {
    }
 
 
-   public static class GetOpenendFilesInWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace, JsonSerializable {
+   public static class GetOpenendFilesInWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace, JsonSerializable {
 
       private GetOpenendFilesInWorkspaceImpl() {
          super(128);
@@ -515,7 +546,7 @@ public class DtoServerImpls {
 
    }
 
-   public static class GetOpenendFilesInWorkspaceResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetOpenendFilesInWorkspaceResponse, JsonSerializable {
+   public static class GetOpenendFilesInWorkspaceResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetOpenendFilesInWorkspaceResponse, JsonSerializable {
 
       private GetOpenendFilesInWorkspaceResponseImpl() {
          super(129);
@@ -537,9 +568,9 @@ public class DtoServerImpls {
       }
 
       @Override
-      public com.google.collide.json.shared.JsonStringMap<com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> getOpenedFiles() {
+      public JsonStringMap<org.exoplatform.ide.json.shared.JsonArray<ParticipantUserDetails>> getOpenedFiles() {
          ensureOpenedFiles();
-         return (com.google.collide.json.shared.JsonStringMap) new com.google.collide.json.server.JsonStringMapAdapter(openedFiles);
+         return (JsonStringMap) new JsonStringMapAdapter(openedFiles);
       }
 
       public GetOpenendFilesInWorkspaceResponseImpl setOpenedFiles(java.util.Map<String, java.util.ArrayList<ParticipantUserDetailsImpl>> v) {
@@ -664,7 +695,7 @@ public class DtoServerImpls {
       }
    }
 
-  public static class AddMembersResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.AddMembersResponse, JsonSerializable {
+  public static class AddMembersResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.AddMembersResponse, JsonSerializable {
 
     private AddMembersResponseImpl() {
       super(1);
@@ -688,9 +719,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getNewMembers() {
+    public org.exoplatform.ide.json.shared.JsonArray<UserDetailsWithRole> getNewMembers() {
       ensureNewMembers();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(newMembers);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(newMembers);
     }
 
     public AddMembersResponseImpl setNewMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -720,9 +751,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getInvalidEmails() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getInvalidEmails() {
       ensureInvalidEmails();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(invalidEmails);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(invalidEmails);
     }
 
     public AddMembersResponseImpl setInvalidEmails(java.util.List<java.lang.String> v) {
@@ -874,7 +905,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class AddProjectMembersImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.AddProjectMembers, JsonSerializable {
+  public static class AddProjectMembersImpl extends RoutableDtoServerImpl implements com.google.collide.dto.AddProjectMembers, JsonSerializable {
 
     private AddProjectMembersImpl() {
       super(2);
@@ -1053,7 +1084,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class AddWorkspaceMembersImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.AddWorkspaceMembers, JsonSerializable {
+  public static class AddWorkspaceMembersImpl extends RoutableDtoServerImpl implements com.google.collide.dto.AddWorkspaceMembers, JsonSerializable {
 
     private AddWorkspaceMembersImpl() {
       super(3);
@@ -1267,7 +1298,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class BeginUploadSessionImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.BeginUploadSession, JsonSerializable {
+  public static class BeginUploadSessionImpl extends RoutableDtoServerImpl implements com.google.collide.dto.BeginUploadSession, JsonSerializable {
 
     private BeginUploadSessionImpl() {
       super(4);
@@ -1325,9 +1356,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getWorkspacePathsToReplace() {
       ensureWorkspacePathsToReplace();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(workspacePathsToReplace);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(workspacePathsToReplace);
     }
 
     public BeginUploadSessionImpl setWorkspacePathsToReplace(java.util.List<java.lang.String> v) {
@@ -1357,9 +1388,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToUnzip() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getWorkspacePathsToUnzip() {
       ensureWorkspacePathsToUnzip();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(workspacePathsToUnzip);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(workspacePathsToUnzip);
     }
 
     public BeginUploadSessionImpl setWorkspacePathsToUnzip(java.util.List<java.lang.String> v) {
@@ -1389,9 +1420,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getWorkspaceDirsToCreate() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getWorkspaceDirsToCreate() {
       ensureWorkspaceDirsToCreate();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(workspaceDirsToCreate);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(workspaceDirsToCreate);
     }
 
     public BeginUploadSessionImpl setWorkspaceDirsToCreate(java.util.List<java.lang.String> v) {
@@ -1644,7 +1675,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ChangeRoleInfoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ChangeRoleInfo, JsonSerializable {
+  public static class ChangeRoleInfoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ChangeRoleInfo, JsonSerializable {
 
     private ChangeRoleInfoImpl() {
       super(5);
@@ -1858,7 +1889,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ClientToServerDocOpImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ClientToServerDocOp, JsonSerializable {
+  public static class ClientToServerDocOpImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ClientToServerDocOp, JsonSerializable {
 
     private ClientToServerDocOpImpl() {
       super(6);
@@ -1886,9 +1917,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getDocOps2() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getDocOps2() {
       ensureDocOps2();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(docOps2);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(docOps2);
     }
 
     public ClientToServerDocOpImpl setDocOps2(java.util.List<java.lang.String> v) {
@@ -2173,7 +2204,7 @@ public class DtoServerImpls {
 
   }
 
-   public static class CloseEditorImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CloseEditor, JsonSerializable {
+   public static class CloseEditorImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CloseEditor, JsonSerializable {
 
       private CloseEditorImpl() {
          super(126);
@@ -2317,7 +2348,7 @@ public class DtoServerImpls {
 
    }
 
-  public static class CodeBlockImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeBlock, JsonSerializable {
+  public static class CodeBlockImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CodeBlock, JsonSerializable {
 
     private CodeBlockImpl() {
       super(7);
@@ -2458,9 +2489,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> getChildren() {
+    public org.exoplatform.ide.json.shared.JsonArray<CodeBlock> getChildren() {
       ensureChildren();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(children);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(children);
     }
 
     public CodeBlockImpl setChildren(java.util.List<CodeBlockImpl> v) {
@@ -2707,7 +2738,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CodeBlockAssociationImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeBlockAssociation, JsonSerializable {
+  public static class CodeBlockAssociationImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CodeBlockAssociation, JsonSerializable {
 
     private CodeBlockAssociationImpl() {
       super(8);
@@ -3134,7 +3165,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CodeErrorsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeErrors, JsonSerializable {
+  public static class CodeErrorsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CodeErrors, JsonSerializable {
 
     private CodeErrorsImpl() {
       super(9);
@@ -3173,9 +3204,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.CodeError> getCodeErrors() {
+    public org.exoplatform.ide.json.shared.JsonArray<CodeError> getCodeErrors() {
       ensureCodeErrors();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(codeErrors);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(codeErrors);
     }
 
     public CodeErrorsImpl setCodeErrors(java.util.List<CodeErrorImpl> v) {
@@ -3313,7 +3344,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CodeErrorsRequestImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeErrorsRequest, JsonSerializable {
+  public static class CodeErrorsRequestImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CodeErrorsRequest, JsonSerializable {
 
     private CodeErrorsRequestImpl() {
       super(10);
@@ -3479,9 +3510,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> getCodeBlockMap() {
+    public JsonStringMap<CodeBlock> getCodeBlockMap() {
       ensureCodeBlockMap();
-      return (com.google.collide.json.shared.JsonStringMap) new com.google.collide.json.server.JsonStringMapAdapter(codeBlockMap);
+      return (JsonStringMap) new JsonStringMapAdapter(codeBlockMap);
     }
 
     public CodeGraphImpl setCodeBlockMap(java.util.Map<String, CodeBlockImpl> v) {
@@ -3526,9 +3557,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation> getInheritanceAssociations() {
+    public org.exoplatform.ide.json.shared.JsonArray<InheritanceAssociation> getInheritanceAssociations() {
       ensureInheritanceAssociations();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(inheritanceAssociations);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(inheritanceAssociations);
     }
 
     public CodeGraphImpl setInheritanceAssociations(java.util.List<InheritanceAssociationImpl> v) {
@@ -3558,9 +3589,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> getTypeAssociations() {
+    public org.exoplatform.ide.json.shared.JsonArray<TypeAssociation> getTypeAssociations() {
       ensureTypeAssociations();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(typeAssociations);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(typeAssociations);
     }
 
     public CodeGraphImpl setTypeAssociations(java.util.List<TypeAssociationImpl> v) {
@@ -3590,9 +3621,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> getImportAssociations() {
+    public org.exoplatform.ide.json.shared.JsonArray<ImportAssociation> getImportAssociations() {
       ensureImportAssociations();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(importAssociations);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(importAssociations);
     }
 
     public CodeGraphImpl setImportAssociations(java.util.List<ImportAssociationImpl> v) {
@@ -4134,7 +4165,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CodeGraphRequestImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeGraphRequest, JsonSerializable {
+  public static class CodeGraphRequestImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CodeGraphRequest, JsonSerializable {
 
     private CodeGraphRequestImpl() {
       super(11);
@@ -4313,7 +4344,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CodeGraphResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeGraphResponse, JsonSerializable {
+  public static class CodeGraphResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CodeGraphResponse, JsonSerializable {
 
     private CodeGraphResponseImpl() {
       super(12);
@@ -4636,7 +4667,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CodeReferenceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CodeReference, JsonSerializable {
+  public static class CodeReferenceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CodeReference, JsonSerializable {
 
     private CodeReferenceImpl() {
       super(13);
@@ -4972,9 +5003,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.CodeReference> getReferences() {
+    public org.exoplatform.ide.json.shared.JsonArray<CodeReference> getReferences() {
       ensureReferences();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(references);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(references);
     }
 
     public CodeReferencesImpl setReferences(java.util.List<CodeReferenceImpl> v) {
@@ -5366,7 +5397,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ConflictChunkResolvedImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ConflictChunkResolved, JsonSerializable {
+  public static class ConflictChunkResolvedImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ConflictChunkResolved, JsonSerializable {
 
     private ConflictChunkResolvedImpl() {
       super(14);
@@ -5584,7 +5615,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CreateAppEngineAppStatusImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CreateAppEngineAppStatus, JsonSerializable {
+  public static class CreateAppEngineAppStatusImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CreateAppEngineAppStatus, JsonSerializable {
 
     private CreateAppEngineAppStatusImpl() {
       super(15);
@@ -5697,7 +5728,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CreateProjectImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CreateProject, JsonSerializable {
+  public static class CreateProjectImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CreateProject, JsonSerializable {
 
     private CreateProjectImpl() {
       super(16);
@@ -5841,7 +5872,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CreateProjectResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CreateProjectResponse, JsonSerializable {
+  public static class CreateProjectResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CreateProjectResponse, JsonSerializable {
 
     private CreateProjectResponseImpl() {
       super(17);
@@ -5954,7 +5985,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CreateWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CreateWorkspace, JsonSerializable {
+  public static class CreateWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CreateWorkspace, JsonSerializable {
 
     private CreateWorkspaceImpl() {
       super(18);
@@ -6168,7 +6199,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CreateWorkspaceResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CreateWorkspaceResponse, JsonSerializable {
+  public static class CreateWorkspaceResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CreateWorkspaceResponse, JsonSerializable {
 
     private CreateWorkspaceResponseImpl() {
       super(19);
@@ -6281,7 +6312,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class CubePingImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.CubePing, JsonSerializable {
+  public static class CubePingImpl extends RoutableDtoServerImpl implements com.google.collide.dto.CubePing, JsonSerializable {
 
     private CubePingImpl() {
       super(20);
@@ -6617,7 +6648,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class DeployWorkspaceStatusImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.DeployWorkspaceStatus, JsonSerializable {
+  public static class DeployWorkspaceStatusImpl extends RoutableDtoServerImpl implements com.google.collide.dto.DeployWorkspaceStatus, JsonSerializable {
 
     private DeployWorkspaceStatusImpl() {
       super(22);
@@ -6971,7 +7002,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class DiffStatsDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.DiffStatsDto, JsonSerializable {
+  public static class DiffStatsDtoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.DiffStatsDto, JsonSerializable {
 
     private DiffStatsDtoImpl() {
       super(23);
@@ -7207,9 +7238,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.DirInfo> getSubDirectories() {
+    public org.exoplatform.ide.json.shared.JsonArray<DirInfo> getSubDirectories() {
       ensureSubDirectories();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(subDirectories);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(subDirectories);
     }
 
     public DirInfoImpl setSubDirectories(java.util.List<DirInfoImpl> v) {
@@ -7239,9 +7270,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.FileInfo> getFiles() {
+    public org.exoplatform.ide.json.shared.JsonArray<FileInfo> getFiles() {
       ensureFiles();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(files);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(files);
     }
 
     public DirInfoImpl setFiles(java.util.List<FileInfoImpl> v) {
@@ -7466,9 +7497,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> getComponents() {
+    public org.exoplatform.ide.json.shared.JsonArray<DocOpComponent> getComponents() {
       ensureComponents();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(components);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(components);
     }
 
     public DocOpImpl setComponents(java.util.List<DocOpComponentImpl> v) {
@@ -8303,7 +8334,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class EmptyMessageImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.EmptyMessage, JsonSerializable {
+  public static class EmptyMessageImpl extends RoutableDtoServerImpl implements com.google.collide.dto.EmptyMessage, JsonSerializable {
 
     private EmptyMessageImpl() {
       super(24);
@@ -8381,7 +8412,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class EndUploadSessionImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.EndUploadSession, JsonSerializable {
+  public static class EndUploadSessionImpl extends RoutableDtoServerImpl implements com.google.collide.dto.EndUploadSession, JsonSerializable {
 
     private EndUploadSessionImpl() {
       super(26);
@@ -8541,9 +8572,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getDisplayFailedWorkspacePaths() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getDisplayFailedWorkspacePaths() {
       ensureDisplayFailedWorkspacePaths();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(displayFailedWorkspacePaths);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(displayFailedWorkspacePaths);
     }
 
     public UnzipFailureImpl setDisplayFailedWorkspacePaths(java.util.List<java.lang.String> v) {
@@ -8692,7 +8723,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class EndUploadSessionFinishedImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.EndUploadSessionFinished, JsonSerializable {
+  public static class EndUploadSessionFinishedImpl extends RoutableDtoServerImpl implements com.google.collide.dto.EndUploadSessionFinished, JsonSerializable {
 
     private EndUploadSessionFinishedImpl() {
       super(120);
@@ -8735,9 +8766,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getFailedFileWorkspacePaths() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getFailedFileWorkspacePaths() {
       ensureFailedFileWorkspacePaths();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(failedFileWorkspacePaths);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(failedFileWorkspacePaths);
     }
 
     public EndUploadSessionFinishedImpl setFailedFileWorkspacePaths(java.util.List<java.lang.String> v) {
@@ -8767,9 +8798,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getFailedDirWorkspacePaths() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getFailedDirWorkspacePaths() {
       ensureFailedDirWorkspacePaths();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(failedDirWorkspacePaths);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(failedDirWorkspacePaths);
     }
 
     public EndUploadSessionFinishedImpl setFailedDirWorkspacePaths(java.util.List<java.lang.String> v) {
@@ -8799,9 +8830,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure> getUnzipFailures() {
+    public org.exoplatform.ide.json.shared.JsonArray<UnzipFailure> getUnzipFailures() {
       ensureUnzipFailures();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(unzipFailures);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(unzipFailures);
     }
 
     public EndUploadSessionFinishedImpl setUnzipFailures(java.util.List<UnzipFailureImpl> v) {
@@ -9003,7 +9034,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class EnterWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.EnterWorkspace, JsonSerializable {
+  public static class EnterWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.EnterWorkspace, JsonSerializable {
 
     private EnterWorkspaceImpl() {
       super(27);
@@ -9147,7 +9178,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class EnterWorkspaceResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.EnterWorkspaceResponse, JsonSerializable {
+  public static class EnterWorkspaceResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.EnterWorkspaceResponse, JsonSerializable {
 
     private EnterWorkspaceResponseImpl() {
       super(28);
@@ -9262,9 +9293,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
+    public org.exoplatform.ide.json.shared.JsonArray<ParticipantUserDetails> getParticipants() {
       ensureParticipants();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(participants);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(participants);
     }
 
     public EnterWorkspaceResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
@@ -9606,7 +9637,7 @@ public class DtoServerImpls {
 
   }
 
-   public static class FileCollaboratorGoneImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.FileCollaboratorGone, JsonSerializable {
+   public static class FileCollaboratorGoneImpl extends RoutableDtoServerImpl implements com.google.collide.dto.FileCollaboratorGone, JsonSerializable {
 
       private FileCollaboratorGoneImpl() {
          super(127);
@@ -9889,9 +9920,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> getConflicts() {
+    public org.exoplatform.ide.json.shared.JsonArray<ConflictChunk> getConflicts() {
       ensureConflicts();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(conflicts);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(conflicts);
     }
 
     public FileContentsImpl setConflicts(java.util.List<ConflictChunkImpl> v) {
@@ -9921,9 +9952,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getSelections() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getSelections() {
       ensureSelections();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(selections);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(selections);
     }
 
     public FileContentsImpl setSelections(java.util.List<java.lang.String> v) {
@@ -10328,7 +10359,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class FilePositionImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.FilePosition, JsonSerializable {
+  public static class FilePositionImpl extends RoutableDtoServerImpl implements com.google.collide.dto.FilePosition, JsonSerializable {
 
     private FilePositionImpl() {
       super(29);
@@ -10475,7 +10506,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetAppEngineClusterTypeImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetAppEngineClusterType, JsonSerializable {
+  public static class GetAppEngineClusterTypeImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetAppEngineClusterType, JsonSerializable {
 
     private GetAppEngineClusterTypeImpl() {
       super(30);
@@ -10584,7 +10615,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetDeployInformationImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetDeployInformation, JsonSerializable {
+  public static class GetDeployInformationImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetDeployInformation, JsonSerializable {
 
     private GetDeployInformationImpl() {
       super(31);
@@ -10899,7 +10930,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetDeployInformationResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetDeployInformationResponse, JsonSerializable {
+  public static class GetDeployInformationResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetDeployInformationResponse, JsonSerializable {
 
     private GetDeployInformationResponseImpl() {
       super(32);
@@ -10921,9 +10952,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse.DeployInformation> getDeployInformation() {
+    public org.exoplatform.ide.json.shared.JsonArray<DeployInformation> getDeployInformation() {
       ensureDeployInformation();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(deployInformation);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(deployInformation);
     }
 
     public GetDeployInformationResponseImpl setDeployInformation(java.util.List<DeployInformationImpl> v) {
@@ -11043,7 +11074,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetDirectoryImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetDirectory, JsonSerializable {
+  public static class GetDirectoryImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetDirectory, JsonSerializable {
 
     private GetDirectoryImpl() {
       super(33);
@@ -11222,7 +11253,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetDirectoryResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetDirectoryResponse, JsonSerializable {
+  public static class GetDirectoryResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetDirectoryResponse, JsonSerializable {
 
     private GetDirectoryResponseImpl() {
       super(34);
@@ -11405,7 +11436,7 @@ public class DtoServerImpls {
 
   }
 
-   public static class GetEditSessionCollaboratorsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionCollaborators, JsonSerializable {
+   public static class GetEditSessionCollaboratorsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionCollaborators, JsonSerializable {
 
       private GetEditSessionCollaboratorsImpl() {
          super(123);
@@ -11514,7 +11545,7 @@ public class DtoServerImpls {
 
    }
 
-  public static class GetEditSessionCollaboratorsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionCollaboratorsResponse, JsonSerializable {
+  public static class GetEditSessionCollaboratorsResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetEditSessionCollaboratorsResponse, JsonSerializable {
 
     private GetEditSessionCollaboratorsResponseImpl() {
       super(124);
@@ -11536,9 +11567,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
+    public org.exoplatform.ide.json.shared.JsonArray<ParticipantUserDetails> getParticipants() {
       ensureParticipants();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(participants);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(participants);
     }
 
     public GetEditSessionCollaboratorsResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
@@ -11659,7 +11690,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetFileContentsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileContents, JsonSerializable {
+  public static class GetFileContentsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetFileContents, JsonSerializable {
 
     private GetFileContentsImpl() {
       super(35);
@@ -11829,7 +11860,7 @@ public class DtoServerImpls {
    }
 }
 
-  public static class GetFileContentsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileContentsResponse, JsonSerializable {
+  public static class GetFileContentsResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetFileContentsResponse, JsonSerializable {
 
     private GetFileContentsResponseImpl() {
       super(36);
@@ -11977,7 +12008,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetFileDiffImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileDiff, JsonSerializable {
+  public static class GetFileDiffImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetFileDiff, JsonSerializable {
 
     private GetFileDiffImpl() {
       super(37);
@@ -12296,7 +12327,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetFileDiffResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileDiffResponse, JsonSerializable {
+  public static class GetFileDiffResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetFileDiffResponse, JsonSerializable {
 
     private GetFileDiffResponseImpl() {
       super(38);
@@ -12339,9 +12370,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> getDiffChunks() {
+    public org.exoplatform.ide.json.shared.JsonArray<DiffChunkResponse> getDiffChunks() {
       ensureDiffChunks();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(diffChunks);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(diffChunks);
     }
 
     public GetFileDiffResponseImpl setDiffChunks(java.util.List<DiffChunkResponseImpl> v) {
@@ -12545,7 +12576,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetFileRevisionsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileRevisions, JsonSerializable {
+  public static class GetFileRevisionsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetFileRevisions, JsonSerializable {
 
     private GetFileRevisionsImpl() {
       super(39);
@@ -12969,7 +13000,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetFileRevisionsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetFileRevisionsResponse, JsonSerializable {
+  public static class GetFileRevisionsResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetFileRevisionsResponse, JsonSerializable {
 
     private GetFileRevisionsResponseImpl() {
       super(40);
@@ -13025,9 +13056,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.Revision> getRevisions() {
+    public org.exoplatform.ide.json.shared.JsonArray<Revision> getRevisions() {
       ensureRevisions();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(revisions);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(revisions);
     }
 
     public GetFileRevisionsResponseImpl setRevisions(java.util.List<RevisionImpl> v) {
@@ -13183,7 +13214,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetOwningProjectImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetOwningProject, JsonSerializable {
+  public static class GetOwningProjectImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetOwningProject, JsonSerializable {
 
     private GetOwningProjectImpl() {
       super(43);
@@ -13292,7 +13323,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetOwningProjectResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetOwningProjectResponse, JsonSerializable {
+  public static class GetOwningProjectResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetOwningProjectResponse, JsonSerializable {
 
     private GetOwningProjectResponseImpl() {
       super(44);
@@ -13475,7 +13506,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetProjectByIdImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetProjectById, JsonSerializable {
+  public static class GetProjectByIdImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetProjectById, JsonSerializable {
 
     private GetProjectByIdImpl() {
       super(45);
@@ -13724,7 +13755,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetProjectByIdResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetProjectByIdResponse, JsonSerializable {
+  public static class GetProjectByIdResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetProjectByIdResponse, JsonSerializable {
 
     private GetProjectByIdResponseImpl() {
       super(46);
@@ -13780,9 +13811,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> getWorkspaces() {
+    public org.exoplatform.ide.json.shared.JsonArray<WorkspaceInfo> getWorkspaces() {
       ensureWorkspaces();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(workspaces);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(workspaces);
     }
 
     public GetProjectByIdResponseImpl setWorkspaces(java.util.List<WorkspaceInfoImpl> v) {
@@ -13938,7 +13969,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetProjectMembersImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetProjectMembers, JsonSerializable {
+  public static class GetProjectMembersImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetProjectMembers, JsonSerializable {
 
     private GetProjectMembersImpl() {
       super(47);
@@ -14047,7 +14078,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetProjectMembersResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetProjectMembersResponse, JsonSerializable {
+  public static class GetProjectMembersResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetProjectMembersResponse, JsonSerializable {
 
     private GetProjectMembersResponseImpl() {
       super(48);
@@ -14071,9 +14102,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() {
+    public org.exoplatform.ide.json.shared.JsonArray<UserDetailsWithRole> getMembers() {
       ensureMembers();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(members);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(members);
     }
 
     public GetProjectMembersResponseImpl setMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -14103,9 +14134,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getPendingMembers() {
+    public org.exoplatform.ide.json.shared.JsonArray<UserDetailsWithRole> getPendingMembers() {
       ensurePendingMembers();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(pendingMembers);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(pendingMembers);
     }
 
     public GetProjectMembersResponseImpl setPendingMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -14257,7 +14288,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetProjectsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetProjectsResponse, JsonSerializable {
+  public static class GetProjectsResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetProjectsResponse, JsonSerializable {
 
     private GetProjectsResponseImpl() {
       super(49);
@@ -14315,9 +14346,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getHiddenProjectIds() {
       ensureHiddenProjectIds();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(hiddenProjectIds);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(hiddenProjectIds);
     }
 
     public GetProjectsResponseImpl setHiddenProjectIds(java.util.List<java.lang.String> v) {
@@ -14347,9 +14378,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() {
+    public org.exoplatform.ide.json.shared.JsonArray<ProjectInfo> getProjects() {
       ensureProjects();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(projects);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(projects);
     }
 
     public GetProjectsResponseImpl setProjects(java.util.List<ProjectInfoImpl> v) {
@@ -14537,7 +14568,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetStagingServerInfoResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetStagingServerInfoResponse, JsonSerializable {
+  public static class GetStagingServerInfoResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetStagingServerInfoResponse, JsonSerializable {
 
     private GetStagingServerInfoResponseImpl() {
       super(50);
@@ -14755,7 +14786,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetSyncStateImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetSyncState, JsonSerializable {
+  public static class GetSyncStateImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetSyncState, JsonSerializable {
 
     private GetSyncStateImpl() {
       super(51);
@@ -14864,7 +14895,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetSyncStateResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetSyncStateResponse, JsonSerializable {
+  public static class GetSyncStateResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetSyncStateResponse, JsonSerializable {
 
     private GetSyncStateResponseImpl() {
       super(52);
@@ -14977,7 +15008,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetTemplatesImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetTemplates, JsonSerializable {
+  public static class GetTemplatesImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetTemplates, JsonSerializable {
 
     private GetTemplatesImpl() {
       super(53);
@@ -15086,7 +15117,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetTemplatesResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetTemplatesResponse, JsonSerializable {
+  public static class GetTemplatesResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetTemplatesResponse, JsonSerializable {
 
     private GetTemplatesResponseImpl() {
       super(54);
@@ -15108,9 +15139,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonStringMap<java.lang.String> getTemplates() {
+    public JsonStringMap<String> getTemplates() {
       ensureTemplates();
-      return (com.google.collide.json.shared.JsonStringMap) new com.google.collide.json.server.JsonStringMapAdapter(templates);
+      return (JsonStringMap) new JsonStringMapAdapter(templates);
     }
 
     public GetTemplatesResponseImpl setTemplates(java.util.Map<String, java.lang.String> v) {
@@ -15314,7 +15345,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetUserAppEngineAppIdsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetUserAppEngineAppIdsResponse, JsonSerializable {
+  public static class GetUserAppEngineAppIdsResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetUserAppEngineAppIdsResponse, JsonSerializable {
 
     private GetUserAppEngineAppIdsResponseImpl() {
       super(56);
@@ -15336,9 +15367,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getAppIds() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getAppIds() {
       ensureAppIds();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(appIds);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(appIds);
     }
 
     public GetUserAppEngineAppIdsResponseImpl setAppIds(java.util.List<java.lang.String> v) {
@@ -15458,7 +15489,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspace, JsonSerializable {
+  public static class GetWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspace, JsonSerializable {
 
     private GetWorkspaceImpl() {
       super(63);
@@ -15602,7 +15633,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceChangeSummaryImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceChangeSummary, JsonSerializable {
+  public static class GetWorkspaceChangeSummaryImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceChangeSummary, JsonSerializable {
 
     private GetWorkspaceChangeSummaryImpl() {
       super(57);
@@ -15746,7 +15777,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceChangeSummaryResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceChangeSummaryResponse, JsonSerializable {
+  public static class GetWorkspaceChangeSummaryResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceChangeSummaryResponse, JsonSerializable {
 
     private GetWorkspaceChangeSummaryResponseImpl() {
       super(58);
@@ -15772,9 +15803,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> getNodeMutations() {
+    public org.exoplatform.ide.json.shared.JsonArray<NodeMutationDto> getNodeMutations() {
       ensureNodeMutations();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(nodeMutations);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(nodeMutations);
     }
 
     public GetWorkspaceChangeSummaryResponseImpl setNodeMutations(java.util.List<NodeMutationDtoImpl> v) {
@@ -15960,7 +15991,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceMembersImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMembers, JsonSerializable {
+  public static class GetWorkspaceMembersImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMembers, JsonSerializable {
 
     private GetWorkspaceMembersImpl() {
       super(59);
@@ -16104,7 +16135,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceMembersResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMembersResponse, JsonSerializable {
+  public static class GetWorkspaceMembersResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMembersResponse, JsonSerializable {
 
     private GetWorkspaceMembersResponseImpl() {
       super(60);
@@ -16126,9 +16157,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() {
+    public org.exoplatform.ide.json.shared.JsonArray<UserDetailsWithRole> getMembers() {
       ensureMembers();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(members);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(members);
     }
 
     public GetWorkspaceMembersResponseImpl setMembers(java.util.List<UserDetailsWithRoleImpl> v) {
@@ -16248,7 +16279,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceMetaDataImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMetaData, JsonSerializable {
+  public static class GetWorkspaceMetaDataImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMetaData, JsonSerializable {
 
     private GetWorkspaceMetaDataImpl() {
       super(122);
@@ -16322,7 +16353,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceMetaDataResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMetaDataResponse, JsonSerializable {
+  public static class GetWorkspaceMetaDataResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceMetaDataResponse, JsonSerializable {
 
     private GetWorkspaceMetaDataResponseImpl() {
       super(115);
@@ -16378,9 +16409,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getLastOpenFiles() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getLastOpenFiles() {
       ensureLastOpenFiles();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(lastOpenFiles);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(lastOpenFiles);
     }
 
     public GetWorkspaceMetaDataResponseImpl setLastOpenFiles(java.util.List<java.lang.String> v) {
@@ -16536,7 +16567,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceParticipantsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceParticipants, JsonSerializable {
+  public static class GetWorkspaceParticipantsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceParticipants, JsonSerializable {
 
     private GetWorkspaceParticipantsImpl() {
       super(61);
@@ -16571,9 +16602,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getParticipantIds() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getParticipantIds() {
       ensureParticipantIds();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(participantIds);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(participantIds);
     }
 
     public GetWorkspaceParticipantsImpl setParticipantIds(java.util.List<java.lang.String> v) {
@@ -16711,7 +16742,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceParticipantsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceParticipantsResponse, JsonSerializable {
+  public static class GetWorkspaceParticipantsResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceParticipantsResponse, JsonSerializable {
 
     private GetWorkspaceParticipantsResponseImpl() {
       super(62);
@@ -16733,9 +16764,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() {
+    public org.exoplatform.ide.json.shared.JsonArray<ParticipantUserDetails> getParticipants() {
       ensureParticipants();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(participants);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(participants);
     }
 
     public GetWorkspaceParticipantsResponseImpl setParticipants(java.util.List<ParticipantUserDetailsImpl> v) {
@@ -16855,7 +16886,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class GetWorkspaceResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceResponse, JsonSerializable {
+  public static class GetWorkspaceResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.GetWorkspaceResponse, JsonSerializable {
 
     private GetWorkspaceResponseImpl() {
       super(64);
@@ -17343,7 +17374,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class InvalidationMessageImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.InvalidationMessage, JsonSerializable {
+  public static class InvalidationMessageImpl extends RoutableDtoServerImpl implements com.google.collide.dto.InvalidationMessage, JsonSerializable {
 
     private InvalidationMessageImpl() {
       super(25);
@@ -17526,7 +17557,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class KeepAliveImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.KeepAlive, JsonSerializable {
+  public static class KeepAliveImpl extends RoutableDtoServerImpl implements com.google.collide.dto.KeepAlive, JsonSerializable {
 
     private KeepAliveImpl() {
       super(67);
@@ -17635,7 +17666,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class LeaveWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.LeaveWorkspace, JsonSerializable {
+  public static class LeaveWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.LeaveWorkspace, JsonSerializable {
 
     private LeaveWorkspaceImpl() {
       super(69);
@@ -17744,7 +17775,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class LoadTemplateImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.LoadTemplate, JsonSerializable {
+  public static class LoadTemplateImpl extends RoutableDtoServerImpl implements com.google.collide.dto.LoadTemplate, JsonSerializable {
 
     private LoadTemplateImpl() {
       super(70);
@@ -17923,7 +17954,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class LoadTemplateResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.LoadTemplateResponse, JsonSerializable {
+  public static class LoadTemplateResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.LoadTemplateResponse, JsonSerializable {
 
     private LoadTemplateResponseImpl() {
       super(71);
@@ -18036,7 +18067,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class LogFatalRecordImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.LogFatalRecord, JsonSerializable {
+  public static class LogFatalRecordImpl extends RoutableDtoServerImpl implements com.google.collide.dto.LogFatalRecord, JsonSerializable {
 
     private LogFatalRecordImpl() {
       super(72);
@@ -18107,9 +18138,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getRecentHistory() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getRecentHistory() {
       ensureRecentHistory();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(recentHistory);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(recentHistory);
     }
 
     public LogFatalRecordImpl setRecentHistory(java.util.List<java.lang.String> v) {
@@ -18316,7 +18347,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class LogFatalRecordResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.LogFatalRecordResponse, JsonSerializable {
+  public static class LogFatalRecordResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.LogFatalRecordResponse, JsonSerializable {
 
     private LogFatalRecordResponseImpl() {
       super(73);
@@ -18499,7 +18530,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class LogMetricImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.LogMetric, JsonSerializable {
+  public static class LogMetricImpl extends RoutableDtoServerImpl implements com.google.collide.dto.LogMetric, JsonSerializable {
 
     private LogMetricImpl() {
       super(74);
@@ -18713,7 +18744,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class LogMetricsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.LogMetrics, JsonSerializable {
+  public static class LogMetricsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.LogMetrics, JsonSerializable {
 
     private LogMetricsImpl() {
       super(75);
@@ -18731,9 +18762,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.LogMetric> getMetrics() {
+    public org.exoplatform.ide.json.shared.JsonArray<LogMetric> getMetrics() {
       ensureMetrics();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(metrics);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(metrics);
     }
 
     public LogMetricsImpl setMetrics(java.util.List<LogMetricImpl> v) {
@@ -18853,7 +18884,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class MembershipChangedPayloadImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.MembershipChangedPayload, JsonSerializable {
+  public static class MembershipChangedPayloadImpl extends RoutableDtoServerImpl implements com.google.collide.dto.MembershipChangedPayload, JsonSerializable {
 
     private MembershipChangedPayloadImpl() {
       super(76);
@@ -19584,7 +19615,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class NodeConflictDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.NodeConflictDto, JsonSerializable {
+  public static class NodeConflictDtoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.NodeConflictDto, JsonSerializable {
 
     private NodeConflictDtoImpl() {
       super(77);
@@ -19697,9 +19728,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice> getValidResolutions() {
+    public org.exoplatform.ide.json.shared.JsonArray<ConflictResolutionChoice> getValidResolutions() {
       ensureValidResolutions();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(validResolutions);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(validResolutions);
     }
 
     public NodeConflictDtoImpl setValidResolutions(java.util.List<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice> v) {
@@ -19744,9 +19775,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getGroupedConflicts() {
+    public org.exoplatform.ide.json.shared.JsonArray<NodeConflictDto> getGroupedConflicts() {
       ensureGroupedConflicts();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(groupedConflicts);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(groupedConflicts);
     }
 
     public NodeConflictDtoImpl setGroupedConflicts(java.util.List<NodeConflictDtoImpl> v) {
@@ -19776,9 +19807,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath> getParentPaths() {
+    public org.exoplatform.ide.json.shared.JsonArray<ConflictedPath> getParentPaths() {
       ensureParentPaths();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(parentPaths);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(parentPaths);
     }
 
     public NodeConflictDtoImpl setParentPaths(java.util.List<ConflictedPathImpl> v) {
@@ -20236,7 +20267,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class NodeMutationDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.NodeMutationDto, JsonSerializable {
+  public static class NodeMutationDtoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.NodeMutationDto, JsonSerializable {
 
     private NodeMutationDtoImpl() {
       super(78);
@@ -21123,9 +21154,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetails> getMembers() {
+    public org.exoplatform.ide.json.shared.JsonArray<UserDetails> getMembers() {
       ensureMembers();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(members);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(members);
     }
 
     public ProjectMembersInfoImpl setMembers(java.util.List<UserDetailsImpl> v) {
@@ -21274,7 +21305,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class RecoverFromDroppedTangoInvalidationImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidation, JsonSerializable {
+  public static class RecoverFromDroppedTangoInvalidationImpl extends RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidation, JsonSerializable {
 
     private RecoverFromDroppedTangoInvalidationImpl() {
       super(80);
@@ -21589,7 +21620,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class RecoverFromDroppedTangoInvalidationResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse, JsonSerializable {
+  public static class RecoverFromDroppedTangoInvalidationResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse, JsonSerializable {
 
     private RecoverFromDroppedTangoInvalidationResponseImpl() {
       super(81);
@@ -21613,9 +21644,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse.RecoveredPayload> getPayloads() {
+    public org.exoplatform.ide.json.shared.JsonArray<RecoveredPayload> getPayloads() {
       ensurePayloads();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(payloads);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(payloads);
     }
 
     public RecoverFromDroppedTangoInvalidationResponseImpl setPayloads(java.util.List<RecoveredPayloadImpl> v) {
@@ -21768,7 +21799,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class RecoverFromMissedDocOpsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromMissedDocOps, JsonSerializable {
+  public static class RecoverFromMissedDocOpsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromMissedDocOps, JsonSerializable {
 
     private RecoverFromMissedDocOpsImpl() {
       super(82);
@@ -21794,9 +21825,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getDocOps2() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getDocOps2() {
       ensureDocOps2();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(docOps2);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(docOps2);
     }
 
     public RecoverFromMissedDocOpsImpl setDocOps2(java.util.List<java.lang.String> v) {
@@ -22048,7 +22079,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class RecoverFromMissedDocOpsResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromMissedDocOpsResponse, JsonSerializable {
+  public static class RecoverFromMissedDocOpsResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.RecoverFromMissedDocOpsResponse, JsonSerializable {
 
     private RecoverFromMissedDocOpsResponseImpl() {
       super(83);
@@ -22087,9 +22118,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() {
+    public org.exoplatform.ide.json.shared.JsonArray<ServerToClientDocOp> getDocOps() {
       ensureDocOps();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(docOps);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(docOps);
     }
 
     public RecoverFromMissedDocOpsResponseImpl setDocOps(java.util.List<ServerToClientDocOpImpl> v) {
@@ -22227,7 +22258,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class RefreshWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.RefreshWorkspace, JsonSerializable {
+  public static class RefreshWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.RefreshWorkspace, JsonSerializable {
 
     private RefreshWorkspaceImpl() {
       super(84);
@@ -22375,7 +22406,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class RequestProjectMembershipImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.RequestProjectMembership, JsonSerializable {
+  public static class RequestProjectMembershipImpl extends RoutableDtoServerImpl implements com.google.collide.dto.RequestProjectMembership, JsonSerializable {
 
     private RequestProjectMembershipImpl() {
       super(85);
@@ -22484,7 +22515,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ResolveConflictChunkImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ResolveConflictChunk, JsonSerializable {
+  public static class ResolveConflictChunkImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ResolveConflictChunk, JsonSerializable {
 
     private ResolveConflictChunkImpl() {
       super(86);
@@ -22733,7 +22764,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ResolveTreeConflictImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ResolveTreeConflict, JsonSerializable {
+  public static class ResolveTreeConflictImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ResolveTreeConflict, JsonSerializable {
 
     private ResolveTreeConflictImpl() {
       super(87);
@@ -22947,7 +22978,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ResolveTreeConflictResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ResolveTreeConflictResponse, JsonSerializable {
+  public static class ResolveTreeConflictResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ResolveTreeConflictResponse, JsonSerializable {
 
     private ResolveTreeConflictResponseImpl() {
       super(88);
@@ -23060,7 +23091,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class RetryAlreadyTransferredUploadImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.RetryAlreadyTransferredUpload, JsonSerializable {
+  public static class RetryAlreadyTransferredUploadImpl extends RoutableDtoServerImpl implements com.google.collide.dto.RetryAlreadyTransferredUpload, JsonSerializable {
 
     private RetryAlreadyTransferredUploadImpl() {
       super(121);
@@ -23114,9 +23145,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getFileWorkspacePaths() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getFileWorkspacePaths() {
       ensureFileWorkspacePaths();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(fileWorkspacePaths);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(fileWorkspacePaths);
     }
 
     public RetryAlreadyTransferredUploadImpl setFileWorkspacePaths(java.util.List<java.lang.String> v) {
@@ -23146,9 +23177,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<java.lang.String> getUnzipWorkspacePaths() {
+    public org.exoplatform.ide.json.shared.JsonArray<String> getUnzipWorkspacePaths() {
       ensureUnzipWorkspacePaths();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(unzipWorkspacePaths);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(unzipWorkspacePaths);
     }
 
     public RetryAlreadyTransferredUploadImpl setUnzipWorkspacePaths(java.util.List<java.lang.String> v) {
@@ -23818,7 +23849,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SearchImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.Search, JsonSerializable {
+  public static class SearchImpl extends RoutableDtoServerImpl implements com.google.collide.dto.Search, JsonSerializable {
 
     private SearchImpl() {
       super(89);
@@ -23997,7 +24028,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SearchResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SearchResponse, JsonSerializable {
+  public static class SearchResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SearchResponse, JsonSerializable {
 
     private SearchResponseImpl() {
       super(90);
@@ -24070,9 +24101,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.SearchResult> getResults() {
+    public org.exoplatform.ide.json.shared.JsonArray<SearchResult> getResults() {
       ensureResults();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(results);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(results);
     }
 
     public SearchResponseImpl setResults(java.util.List<SearchResultImpl> v) {
@@ -24294,9 +24325,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.Snippet> getSnippets() {
+    public org.exoplatform.ide.json.shared.JsonArray<Snippet> getSnippets() {
       ensureSnippets();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(snippets);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(snippets);
     }
 
     public SearchResultImpl setSnippets(java.util.List<SnippetImpl> v) {
@@ -24448,7 +24479,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ServerErrorImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ServerError, JsonSerializable {
+  public static class ServerErrorImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ServerError, JsonSerializable {
 
     private ServerErrorImpl() {
       super(91);
@@ -24596,7 +24627,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ServerToClientDocOpImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ServerToClientDocOp, JsonSerializable {
+  public static class ServerToClientDocOpImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ServerToClientDocOp, JsonSerializable {
 
     private ServerToClientDocOpImpl() {
       super(92);
@@ -24919,7 +24950,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ServerToClientDocOpsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ServerToClientDocOps, JsonSerializable {
+  public static class ServerToClientDocOpsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ServerToClientDocOps, JsonSerializable {
 
     private ServerToClientDocOpsImpl() {
       super(93);
@@ -24941,9 +24972,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() {
+    public org.exoplatform.ide.json.shared.JsonArray<ServerToClientDocOp> getDocOps() {
       ensureDocOps();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(docOps);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(docOps);
     }
 
     public ServerToClientDocOpsImpl setDocOps(java.util.List<ServerToClientDocOpImpl> v) {
@@ -25064,7 +25095,7 @@ public class DtoServerImpls {
   }
 
   public static class NewFileCollaboratorImpl
-     extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.NewFileCollaborator, JsonSerializable {
+     extends RoutableDtoServerImpl implements com.google.collide.dto.NewFileCollaborator, JsonSerializable {
 
     private NewFileCollaboratorImpl() {
       super(125);
@@ -25213,7 +25244,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetActiveProjectImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetActiveProject, JsonSerializable {
+  public static class SetActiveProjectImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetActiveProject, JsonSerializable {
 
     private SetActiveProjectImpl() {
       super(94);
@@ -25322,7 +25353,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetProjectHiddenImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetProjectHidden, JsonSerializable {
+  public static class SetProjectHiddenImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetProjectHidden, JsonSerializable {
 
     private SetProjectHiddenImpl() {
       super(95);
@@ -25466,7 +25497,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetProjectRoleImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetProjectRole, JsonSerializable {
+  public static class SetProjectRoleImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetProjectRole, JsonSerializable {
 
     private SetProjectRoleImpl() {
       super(96);
@@ -25645,7 +25676,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetRoleResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetRoleResponse, JsonSerializable {
+  public static class SetRoleResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetRoleResponse, JsonSerializable {
 
     private SetRoleResponseImpl() {
       super(97);
@@ -25758,7 +25789,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetStagingServerAppIdImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetStagingServerAppId, JsonSerializable {
+  public static class SetStagingServerAppIdImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetStagingServerAppId, JsonSerializable {
 
     private SetStagingServerAppIdImpl() {
       super(98);
@@ -25867,7 +25898,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetWorkspaceArchiveStateImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetWorkspaceArchiveState, JsonSerializable {
+  public static class SetWorkspaceArchiveStateImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetWorkspaceArchiveState, JsonSerializable {
 
     private SetWorkspaceArchiveStateImpl() {
       super(99);
@@ -26046,7 +26077,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetWorkspaceArchiveStateResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetWorkspaceArchiveStateResponse, JsonSerializable {
+  public static class SetWorkspaceArchiveStateResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetWorkspaceArchiveStateResponse, JsonSerializable {
 
     private SetWorkspaceArchiveStateResponseImpl() {
       super(100);
@@ -26194,7 +26225,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SetWorkspaceRoleImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SetWorkspaceRole, JsonSerializable {
+  public static class SetWorkspaceRoleImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SetWorkspaceRole, JsonSerializable {
 
     private SetWorkspaceRoleImpl() {
       super(101);
@@ -26544,7 +26575,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class StackTraceElementDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.StackTraceElementDto, JsonSerializable {
+  public static class StackTraceElementDtoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.StackTraceElementDto, JsonSerializable {
 
     private StackTraceElementDtoImpl() {
       super(103);
@@ -26758,7 +26789,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SubmitImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.Submit, JsonSerializable {
+  public static class SubmitImpl extends RoutableDtoServerImpl implements com.google.collide.dto.Submit, JsonSerializable {
 
     private SubmitImpl() {
       super(104);
@@ -27007,7 +27038,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SubmitResponseImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SubmitResponse, JsonSerializable {
+  public static class SubmitResponseImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SubmitResponse, JsonSerializable {
 
     private SubmitResponseImpl() {
       super(105);
@@ -27155,7 +27186,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SubmittedWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.SubmittedWorkspace, JsonSerializable {
+  public static class SubmittedWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.SubmittedWorkspace, JsonSerializable {
 
     private SubmittedWorkspaceImpl() {
       super(106);
@@ -27233,7 +27264,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class SyncImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.Sync, JsonSerializable {
+  public static class SyncImpl extends RoutableDtoServerImpl implements com.google.collide.dto.Sync, JsonSerializable {
 
     private SyncImpl() {
       super(107);
@@ -27393,9 +27424,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getConflicts() {
+    public org.exoplatform.ide.json.shared.JsonArray<NodeConflictDto> getConflicts() {
       ensureConflicts();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(conflicts);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(conflicts);
     }
 
     public SyncConflictsImpl setConflicts(java.util.List<NodeConflictDtoImpl> v) {
@@ -27544,7 +27575,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class ThrowableDtoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.ThrowableDto, JsonSerializable {
+  public static class ThrowableDtoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.ThrowableDto, JsonSerializable {
 
     private ThrowableDtoImpl() {
       super(108);
@@ -27602,9 +27633,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> getStackTrace() {
+    public org.exoplatform.ide.json.shared.JsonArray<StackTraceElementDto> getStackTrace() {
       ensureStackTrace();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(stackTrace);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(stackTrace);
     }
 
     public ThrowableDtoImpl setStackTrace(java.util.List<StackTraceElementDtoImpl> v) {
@@ -28086,7 +28117,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class UndoLastSyncImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UndoLastSync, JsonSerializable {
+  public static class UndoLastSyncImpl extends RoutableDtoServerImpl implements com.google.collide.dto.UndoLastSync, JsonSerializable {
 
     private UndoLastSyncImpl() {
       super(110);
@@ -28230,7 +28261,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class UpdateProjectImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UpdateProject, JsonSerializable {
+  public static class UpdateProjectImpl extends RoutableDtoServerImpl implements com.google.collide.dto.UpdateProject, JsonSerializable {
 
     private UpdateProjectImpl() {
       super(111);
@@ -28409,7 +28440,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class UpdateUserWorkspaceMetadataImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UpdateUserWorkspaceMetadata, JsonSerializable {
+  public static class UpdateUserWorkspaceMetadataImpl extends RoutableDtoServerImpl implements com.google.collide.dto.UpdateUserWorkspaceMetadata, JsonSerializable {
 
     private UpdateUserWorkspaceMetadataImpl() {
       super(112);
@@ -28553,7 +28584,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class UpdateWorkspaceImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UpdateWorkspace, JsonSerializable {
+  public static class UpdateWorkspaceImpl extends RoutableDtoServerImpl implements com.google.collide.dto.UpdateWorkspace, JsonSerializable {
 
     private UpdateWorkspaceImpl() {
       super(113);
@@ -28732,7 +28763,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class UpdateWorkspaceRunTargetsImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.UpdateWorkspaceRunTargets, JsonSerializable {
+  public static class UpdateWorkspaceRunTargetsImpl extends RoutableDtoServerImpl implements com.google.collide.dto.UpdateWorkspaceRunTargets, JsonSerializable {
 
     private UpdateWorkspaceRunTargetsImpl() {
       super(114);
@@ -29380,7 +29411,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class WorkspaceInfoImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.WorkspaceInfo, JsonSerializable {
+  public static class WorkspaceInfoImpl extends RoutableDtoServerImpl implements com.google.collide.dto.WorkspaceInfo, JsonSerializable {
 
     private WorkspaceInfoImpl() {
       super(116);
@@ -29983,7 +30014,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class WorkspaceTreeUpdateImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.WorkspaceTreeUpdate, JsonSerializable {
+  public static class WorkspaceTreeUpdateImpl extends RoutableDtoServerImpl implements com.google.collide.dto.WorkspaceTreeUpdate, JsonSerializable {
 
     private WorkspaceTreeUpdateImpl() {
       super(117);
@@ -30003,9 +30034,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() {
+    public org.exoplatform.ide.json.shared.JsonArray<Mutation> getMutations() {
       ensureMutations();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(mutations);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(mutations);
     }
 
     public WorkspaceTreeUpdateImpl setMutations(java.util.List<MutationImpl> v) {
@@ -30158,7 +30189,7 @@ public class DtoServerImpls {
 
   }
 
-  public static class WorkspaceTreeUpdateBroadcastImpl extends com.google.collide.dtogen.server.RoutableDtoServerImpl implements com.google.collide.dto.WorkspaceTreeUpdateBroadcast, JsonSerializable {
+  public static class WorkspaceTreeUpdateBroadcastImpl extends RoutableDtoServerImpl implements com.google.collide.dto.WorkspaceTreeUpdateBroadcast, JsonSerializable {
 
     private WorkspaceTreeUpdateBroadcastImpl() {
       super(118);
@@ -30182,9 +30213,9 @@ public class DtoServerImpls {
     }
 
     @Override
-    public com.google.collide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() {
+    public org.exoplatform.ide.json.shared.JsonArray<Mutation> getMutations() {
       ensureMutations();
-      return (com.google.collide.json.shared.JsonArray) new com.google.collide.json.server.JsonArrayListAdapter(mutations);
+      return (org.exoplatform.ide.json.shared.JsonArray) new JsonArrayListAdapter(mutations);
     }
 
     public WorkspaceTreeUpdateBroadcastImpl setMutations(java.util.List<MutationImpl> v) {

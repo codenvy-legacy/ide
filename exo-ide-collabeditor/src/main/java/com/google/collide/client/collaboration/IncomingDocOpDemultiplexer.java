@@ -18,12 +18,12 @@ import com.google.collide.client.communication.MessageFilter;
 import com.google.collide.client.communication.MessageFilter.MessageRecipient;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.RoutingTypes;
-import com.google.collide.dto.ServerToClientDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpsImpl;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Receives {@link com.google.collide.dto.ServerToClientDocOp} from the {@link com.google.collide.client.communication.MessageFilter} and

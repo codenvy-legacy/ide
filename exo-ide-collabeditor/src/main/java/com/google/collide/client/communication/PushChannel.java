@@ -21,14 +21,14 @@ import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.dtogen.client.RoutableDtoClientImpl;
-import com.google.collide.dtogen.shared.ServerToClientDto;
-import com.google.collide.json.client.Jso;
 import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.json.client.Jso;
 
 import java.util.ArrayList;
 import java.util.List;

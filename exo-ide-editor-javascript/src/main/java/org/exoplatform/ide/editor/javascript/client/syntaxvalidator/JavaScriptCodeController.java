@@ -19,9 +19,9 @@
 package org.exoplatform.ide.editor.javascript.client.syntaxvalidator;
 
 import com.google.collide.client.util.ScheduledCommandExecutor;
-import com.google.collide.json.client.JsoArray;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.user.client.Timer;
+
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.commons.util.Log;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
@@ -36,6 +36,7 @@ import org.exoplatform.ide.editor.client.marking.Markable;
 import org.exoplatform.ide.editor.client.marking.Marker;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IRegion;
+import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 
 import java.util.ArrayList;

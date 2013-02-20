@@ -14,8 +14,7 @@
 
 package com.google.collide.shared.util;
 
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Lightweight manager for listeners that's designed to reduce boilerplate in

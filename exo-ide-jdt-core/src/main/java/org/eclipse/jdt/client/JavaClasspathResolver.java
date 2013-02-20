@@ -18,7 +18,6 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.collide.json.shared.JsonStringSet;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.http.client.RequestBuilder;
@@ -56,9 +55,10 @@ import org.exoplatform.ide.client.framework.util.StringUnmarshaller;
 import org.exoplatform.ide.client.framework.util.Utils;
 import org.exoplatform.ide.client.framework.websocket.WebSocket;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 

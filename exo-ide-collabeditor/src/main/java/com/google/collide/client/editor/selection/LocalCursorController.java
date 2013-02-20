@@ -17,12 +17,13 @@ package com.google.collide.client.editor.selection;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.client.editor.FocusManager;
 import com.google.collide.client.editor.Editor.ReadOnlyListener;
-import com.google.collide.json.shared.JsonArray;
+import com.google.collide.client.editor.FocusManager;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A controller responsible for keeping the local user's cursor renderer

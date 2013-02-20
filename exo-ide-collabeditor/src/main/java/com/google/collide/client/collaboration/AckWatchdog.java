@@ -22,10 +22,11 @@ import com.google.collide.client.status.StatusMessage.MessageType;
 import com.google.collide.client.util.WindowUnloadingController;
 import com.google.collide.client.util.WindowUnloadingController.Message;
 import com.google.collide.dto.DocOp;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.ot.DocOpUtils;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.user.client.Timer;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 import java.util.List;
 

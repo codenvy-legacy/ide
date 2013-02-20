@@ -14,8 +14,9 @@
 
 package com.google.collide.client.code.autocomplete;
 
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A node in a trie that can be used for efficient autocompletion lookup.

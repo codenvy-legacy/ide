@@ -14,11 +14,9 @@
 
 package com.google.collide.client.util;
 
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.StringUtils;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-
 import elemental.client.Browser;
 import elemental.dom.Text;
 import elemental.html.AnchorElement;
@@ -46,6 +44,8 @@ import elemental.html.UListElement;
 import elemental.html.Window;
 import elemental.js.html.JsElement;
 import elemental.ranges.Range;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Simple utility class for shortening frequent calls to Elemental libraries.

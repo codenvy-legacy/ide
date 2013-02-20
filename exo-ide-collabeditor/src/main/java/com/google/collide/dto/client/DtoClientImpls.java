@@ -2,6 +2,40 @@
 package com.google.collide.dto.client;
 
 
+import com.google.collide.dto.CodeBlock;
+import com.google.collide.dto.CodeError;
+import com.google.collide.dto.CodeReference;
+import com.google.collide.dto.ConflictChunk;
+import com.google.collide.dto.DiffChunkResponse;
+import com.google.collide.dto.DirInfo;
+import com.google.collide.dto.DocOpComponent;
+import com.google.collide.dto.FileInfo;
+import com.google.collide.dto.ImportAssociation;
+import com.google.collide.dto.InheritanceAssociation;
+import com.google.collide.dto.LogMetric;
+import com.google.collide.dto.Mutation;
+import com.google.collide.dto.NodeConflictDto;
+import com.google.collide.dto.NodeMutationDto;
+import com.google.collide.dto.ParticipantUserDetails;
+import com.google.collide.dto.ProjectInfo;
+import com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice;
+import com.google.collide.dto.Revision;
+import com.google.collide.dto.SearchResult;
+import com.google.collide.dto.ServerToClientDocOp;
+import com.google.collide.dto.Snippet;
+import com.google.collide.dto.StackTraceElementDto;
+import com.google.collide.dto.TypeAssociation;
+import com.google.collide.dto.UserDetails;
+import com.google.collide.dto.UserDetailsWithRole;
+import com.google.collide.dto.WorkspaceInfo;
+
+import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
+import org.exoplatform.ide.json.client.Jso;
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.client.JsoStringMap;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonStringMap;
+
 @SuppressWarnings({"unchecked", "cast"})
 public class DtoClientImpls {
 
@@ -9,7 +43,7 @@ public class DtoClientImpls {
 
   public static final String CLIENT_SERVER_PROTOCOL_HASH = "bca179ae3917468565f0178049f263e405e02437";
 
-   public static class UserLogOutDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UserLogOutDto {
+   public static class UserLogOutDtoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.UserLogOutDto {
       protected UserLogOutDtoImpl() {}
 
       @Override
@@ -28,7 +62,7 @@ public class DtoClientImpls {
 
    }
 
-   public static class UserLogInDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UserLogInDto {
+   public static class UserLogInDtoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.UserLogInDto {
       protected UserLogInDtoImpl() {}
 
       @Override
@@ -47,7 +81,7 @@ public class DtoClientImpls {
 
    }
 
-   public static class FileOperationNotificationImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.FileOperationNotification {
+   public static class FileOperationNotificationImpl extends RoutableDtoClientImpl implements com.google.collide.dto.FileOperationNotification {
       protected FileOperationNotificationImpl() {}
 
       @Override
@@ -115,7 +149,7 @@ public class DtoClientImpls {
 
 
 
-   public static class GetOpenendFilesInWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace {
+   public static class GetOpenendFilesInWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspace {
       protected GetOpenendFilesInWorkspaceImpl() {}
 
       public static native GetOpenendFilesInWorkspaceImpl make() /*-{
@@ -125,15 +159,15 @@ public class DtoClientImpls {
       }-*/;  }
 
 
-   public static class GetOpenendFilesInWorkspaceResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspaceResponse {
+   public static class GetOpenendFilesInWorkspaceResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspaceResponse {
       protected GetOpenendFilesInWorkspaceResponseImpl() {}
 
       @Override
-      public final native com.google.collide.json.shared.JsonStringMap<com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> getOpenedFiles() /*-{
+      public final native JsonStringMap<JsonArray<ParticipantUserDetails>> getOpenedFiles() /*-{
          return this["openedFiles"];
       }-*/;
 
-      public final native GetOpenendFilesInWorkspaceResponseImpl setOpenedFiles(com.google.collide.json.client.JsoStringMap<com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> openedFiles) /*-{
+      public final native GetOpenendFilesInWorkspaceResponseImpl setOpenedFiles(JsoStringMap<JsonArray<ParticipantUserDetails>> openedFiles) /*-{
          this["openedFiles"] = openedFiles;
          return this;
       }-*/;
@@ -145,15 +179,15 @@ public class DtoClientImpls {
    }
 
 
-   public static class AddMembersResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.AddMembersResponse {
+   public static class AddMembersResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.AddMembersResponse {
     protected AddMembersResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getNewMembers() /*-{
+    public final native JsonArray<UserDetailsWithRole> getNewMembers() /*-{
       return this["newMembers"];
     }-*/;
 
-    public final native AddMembersResponseImpl setNewMembers(com.google.collide.json.client.JsoArray<com.google.collide.dto.UserDetailsWithRole> newMembers) /*-{
+    public final native AddMembersResponseImpl setNewMembers(JsoArray<UserDetailsWithRole> newMembers) /*-{
       this["newMembers"] = newMembers;
       return this;
     }-*/;
@@ -163,11 +197,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getInvalidEmails() /*-{
+    public final native JsonArray<String> getInvalidEmails() /*-{
       return this["invalidEmails"];
     }-*/;
 
-    public final native AddMembersResponseImpl setInvalidEmails(com.google.collide.json.client.JsoArray<java.lang.String> invalidEmails) /*-{
+    public final native AddMembersResponseImpl setInvalidEmails(JsoArray<String> invalidEmails) /*-{
       this["invalidEmails"] = invalidEmails;
       return this;
     }-*/;
@@ -189,7 +223,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class AddProjectMembersImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.AddProjectMembers {
+  public static class AddProjectMembersImpl extends RoutableDtoClientImpl implements com.google.collide.dto.AddProjectMembers {
     protected AddProjectMembersImpl() {}
 
     @Override
@@ -241,7 +275,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class AddWorkspaceMembersImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.AddWorkspaceMembers {
+  public static class AddWorkspaceMembersImpl extends RoutableDtoClientImpl implements com.google.collide.dto.AddWorkspaceMembers {
     protected AddWorkspaceMembersImpl() {}
 
     @Override
@@ -307,7 +341,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class BeginUploadSessionImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.BeginUploadSession {
+  public static class BeginUploadSessionImpl extends RoutableDtoClientImpl implements com.google.collide.dto.BeginUploadSession {
     protected BeginUploadSessionImpl() {}
 
     @Override
@@ -339,11 +373,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() /*-{
+    public final native JsonArray<String> getWorkspacePathsToReplace() /*-{
       return this["workspacePathsToReplace"];
     }-*/;
 
-    public final native BeginUploadSessionImpl setWorkspacePathsToReplace(com.google.collide.json.client.JsoArray<java.lang.String> workspacePathsToReplace) /*-{
+    public final native BeginUploadSessionImpl setWorkspacePathsToReplace(JsoArray<String> workspacePathsToReplace) /*-{
       this["workspacePathsToReplace"] = workspacePathsToReplace;
       return this;
     }-*/;
@@ -353,11 +387,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToUnzip() /*-{
+    public final native JsonArray<String> getWorkspacePathsToUnzip() /*-{
       return this["workspacePathsToUnzip"];
     }-*/;
 
-    public final native BeginUploadSessionImpl setWorkspacePathsToUnzip(com.google.collide.json.client.JsoArray<java.lang.String> workspacePathsToUnzip) /*-{
+    public final native BeginUploadSessionImpl setWorkspacePathsToUnzip(JsoArray<String> workspacePathsToUnzip) /*-{
       this["workspacePathsToUnzip"] = workspacePathsToUnzip;
       return this;
     }-*/;
@@ -367,11 +401,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getWorkspaceDirsToCreate() /*-{
+    public final native JsonArray<String> getWorkspaceDirsToCreate() /*-{
       return this["workspaceDirsToCreate"];
     }-*/;
 
-    public final native BeginUploadSessionImpl setWorkspaceDirsToCreate(com.google.collide.json.client.JsoArray<java.lang.String> workspaceDirsToCreate) /*-{
+    public final native BeginUploadSessionImpl setWorkspaceDirsToCreate(JsoArray<String> workspaceDirsToCreate) /*-{
       this["workspaceDirsToCreate"] = workspaceDirsToCreate;
       return this;
     }-*/;
@@ -401,7 +435,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ChangeRoleInfoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ChangeRoleInfo {
+  public static class ChangeRoleInfoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ChangeRoleInfo {
     protected ChangeRoleInfoImpl() {}
 
     @Override
@@ -468,15 +502,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ClientToServerDocOpImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ClientToServerDocOp {
+  public static class ClientToServerDocOpImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ClientToServerDocOp {
     protected ClientToServerDocOpImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
+    public final native JsonArray<String> getDocOps2() /*-{
       return this["docOps2"];
     }-*/;
 
-    public final native ClientToServerDocOpImpl setDocOps2(com.google.collide.json.client.JsoArray<java.lang.String> docOps2) /*-{
+    public final native ClientToServerDocOpImpl setDocOps2(JsoArray<String> docOps2) /*-{
       this["docOps2"] = docOps2;
       return this;
     }-*/;
@@ -561,7 +595,7 @@ public class DtoClientImpls {
       };
     }-*/;  }
 
-   public static class CloseEditorImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CloseEditor {
+   public static class CloseEditorImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CloseEditor {
       protected CloseEditorImpl() {}
 
       @Override
@@ -598,7 +632,7 @@ public class DtoClientImpls {
       };
     }-*/;  }
 
-  public static class CodeBlockImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeBlock {
+  public static class CodeBlockImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CodeBlock {
     protected CodeBlockImpl() {}
 
     @Override
@@ -700,14 +734,14 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.CodeBlock> getChildren() /*-{
+    public final native JsonArray<CodeBlock> getChildren() /*-{
       if (!this.hasOwnProperty(7)) {
         this[7] = [];
       }
       return this[7];
     }-*/;
 
-    public final native CodeBlockImpl setChildren(com.google.collide.json.client.JsoArray<com.google.collide.dto.CodeBlock> children) /*-{
+    public final native CodeBlockImpl setChildren(JsoArray<CodeBlock> children) /*-{
       this[7] = children;
       return this;
     }-*/;
@@ -727,7 +761,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeBlockAssociationImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeBlockAssociation {
+  public static class CodeBlockAssociationImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CodeBlockAssociation {
     protected CodeBlockAssociationImpl() {}
 
     @Override
@@ -811,7 +845,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeErrorImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.CodeError {
+  public static class CodeErrorImpl extends Jso implements com.google.collide.dto.CodeError {
     protected CodeErrorImpl() {}
 
     @Override
@@ -872,7 +906,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeErrorsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeErrors {
+  public static class CodeErrorsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CodeErrors {
     protected CodeErrorsImpl() {}
 
     @Override
@@ -890,11 +924,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.CodeError> getCodeErrors() /*-{
+    public final native JsonArray<CodeError> getCodeErrors() /*-{
       return this["codeErrors"];
     }-*/;
 
-    public final native CodeErrorsImpl setCodeErrors(com.google.collide.json.client.JsoArray<com.google.collide.dto.CodeError> codeErrors) /*-{
+    public final native CodeErrorsImpl setCodeErrors(JsoArray<CodeError> codeErrors) /*-{
       this["codeErrors"] = codeErrors;
       return this;
     }-*/;
@@ -916,7 +950,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeErrorsRequestImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeErrorsRequest {
+  public static class CodeErrorsRequestImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CodeErrorsRequest {
     protected CodeErrorsRequestImpl() {}
 
     @Override
@@ -954,7 +988,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeGraphImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.CodeGraph {
+  public static class CodeGraphImpl extends Jso implements com.google.collide.dto.CodeGraph {
     protected CodeGraphImpl() {}
 
     @Override
@@ -972,11 +1006,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.InheritanceAssociation> getInheritanceAssociations() /*-{
+    public final native JsonArray<InheritanceAssociation> getInheritanceAssociations() /*-{
       return this["inheritanceAssociations"];
     }-*/;
 
-    public final native CodeGraphImpl setInheritanceAssociations(com.google.collide.json.client.JsoArray<com.google.collide.dto.InheritanceAssociation> inheritanceAssociations) /*-{
+    public final native CodeGraphImpl setInheritanceAssociations(JsoArray<InheritanceAssociation> inheritanceAssociations) /*-{
       this["inheritanceAssociations"] = inheritanceAssociations;
       return this;
     }-*/;
@@ -986,11 +1020,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.TypeAssociation> getTypeAssociations() /*-{
+    public final native JsonArray<TypeAssociation> getTypeAssociations() /*-{
       return this["typeAssociations"];
     }-*/;
 
-    public final native CodeGraphImpl setTypeAssociations(com.google.collide.json.client.JsoArray<com.google.collide.dto.TypeAssociation> typeAssociations) /*-{
+    public final native CodeGraphImpl setTypeAssociations(JsoArray<TypeAssociation> typeAssociations) /*-{
       this["typeAssociations"] = typeAssociations;
       return this;
     }-*/;
@@ -1000,11 +1034,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonStringMap<com.google.collide.dto.CodeBlock> getCodeBlockMap() /*-{
+    public final native JsonStringMap<CodeBlock> getCodeBlockMap() /*-{
       return this["codeBlockMap"];
     }-*/;
 
-    public final native CodeGraphImpl setCodeBlockMap(com.google.collide.json.client.JsoStringMap<com.google.collide.dto.CodeBlock> codeBlockMap) /*-{
+    public final native CodeGraphImpl setCodeBlockMap(JsoStringMap<CodeBlock> codeBlockMap) /*-{
       this["codeBlockMap"] = codeBlockMap;
       return this;
     }-*/;
@@ -1014,11 +1048,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ImportAssociation> getImportAssociations() /*-{
+    public final native JsonArray<ImportAssociation> getImportAssociations() /*-{
       return this["importAssociations"];
     }-*/;
 
-    public final native CodeGraphImpl setImportAssociations(com.google.collide.json.client.JsoArray<com.google.collide.dto.ImportAssociation> importAssociations) /*-{
+    public final native CodeGraphImpl setImportAssociations(JsoArray<ImportAssociation> importAssociations) /*-{
       this["importAssociations"] = importAssociations;
       return this;
     }-*/;
@@ -1034,7 +1068,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeGraphFreshnessImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.CodeGraphFreshness {
+  public static class CodeGraphFreshnessImpl extends Jso implements com.google.collide.dto.CodeGraphFreshness {
     protected CodeGraphFreshnessImpl() {}
 
     @Override
@@ -1142,7 +1176,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeGraphRequestImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeGraphRequest {
+  public static class CodeGraphRequestImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CodeGraphRequest {
     protected CodeGraphRequestImpl() {}
 
     @Override
@@ -1194,7 +1228,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeGraphResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeGraphResponse {
+  public static class CodeGraphResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CodeGraphResponse {
     protected CodeGraphResponseImpl() {}
 
     @Override
@@ -1308,7 +1342,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeReferenceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CodeReference {
+  public static class CodeReferenceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CodeReference {
     protected CodeReferenceImpl() {}
 
     @Override
@@ -1421,15 +1455,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CodeReferencesImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.CodeReferences {
+  public static class CodeReferencesImpl extends Jso implements com.google.collide.dto.CodeReferences {
     protected CodeReferencesImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.CodeReference> getReferences() /*-{
+    public final native JsonArray<CodeReference> getReferences() /*-{
       return this["references"];
     }-*/;
 
-    public final native CodeReferencesImpl setReferences(com.google.collide.json.client.JsoArray<com.google.collide.dto.CodeReference> references) /*-{
+    public final native CodeReferencesImpl setReferences(JsoArray<CodeReference> references) /*-{
       this["references"] = references;
       return this;
     }-*/;
@@ -1445,7 +1479,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ConflictChunkImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.ConflictChunk {
+  public static class ConflictChunkImpl extends Jso implements com.google.collide.dto.ConflictChunk {
     protected ConflictChunkImpl() {}
 
     @Override
@@ -1539,7 +1573,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ConflictChunkResolvedImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ConflictChunkResolved {
+  public static class ConflictChunkResolvedImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ConflictChunkResolved {
     protected ConflictChunkResolvedImpl() {}
 
     @Override
@@ -1611,7 +1645,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CreateAppEngineAppStatusImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CreateAppEngineAppStatus {
+  public static class CreateAppEngineAppStatusImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CreateAppEngineAppStatus {
     protected CreateAppEngineAppStatusImpl() {}
 
     @Override
@@ -1642,7 +1676,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CreateProjectImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CreateProject {
+  public static class CreateProjectImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CreateProject {
     protected CreateProjectImpl() {}
 
     @Override
@@ -1680,7 +1714,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CreateProjectResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CreateProjectResponse {
+  public static class CreateProjectResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CreateProjectResponse {
     protected CreateProjectResponseImpl() {}
 
     @Override
@@ -1710,7 +1744,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CreateWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CreateWorkspace {
+  public static class CreateWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CreateWorkspace {
     protected CreateWorkspaceImpl() {}
 
     @Override
@@ -1776,7 +1810,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CreateWorkspaceResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CreateWorkspaceResponse {
+  public static class CreateWorkspaceResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CreateWorkspaceResponse {
     protected CreateWorkspaceResponseImpl() {}
 
     @Override
@@ -1806,7 +1840,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class CubePingImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.CubePing {
+  public static class CubePingImpl extends RoutableDtoClientImpl implements com.google.collide.dto.CubePing {
     protected CubePingImpl() {}
 
     @Override
@@ -1902,7 +1936,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DeployWorkspaceStatusImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.DeployWorkspaceStatus {
+  public static class DeployWorkspaceStatusImpl extends RoutableDtoClientImpl implements com.google.collide.dto.DeployWorkspaceStatus {
     protected DeployWorkspaceStatusImpl() {}
 
     @Override
@@ -1960,7 +1994,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DiffChunkResponseImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.DiffChunkResponse {
+  public static class DiffChunkResponseImpl extends Jso implements com.google.collide.dto.DiffChunkResponse {
     protected DiffChunkResponseImpl() {}
 
     @Override
@@ -2013,7 +2047,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DiffStatsDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.DiffStatsDto {
+  public static class DiffStatsDtoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.DiffStatsDto {
     protected DiffStatsDtoImpl() {}
 
     @Override
@@ -2089,11 +2123,11 @@ public class DtoClientImpls {
     protected DirInfoImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.DirInfo> getSubDirectories() /*-{
+    public final native JsonArray<DirInfo> getSubDirectories() /*-{
       return this["subDirectories"];
     }-*/;
 
-    public final native DirInfoImpl setSubDirectories(com.google.collide.json.client.JsoArray<com.google.collide.dto.DirInfo> subDirectories) /*-{
+    public final native DirInfoImpl setSubDirectories(JsoArray<DirInfo> subDirectories) /*-{
       this["subDirectories"] = subDirectories;
       return this;
     }-*/;
@@ -2103,11 +2137,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.FileInfo> getFiles() /*-{
+    public final native JsonArray<FileInfo> getFiles() /*-{
       return this["files"];
     }-*/;
 
-    public final native DirInfoImpl setFiles(com.google.collide.json.client.JsoArray<com.google.collide.dto.FileInfo> files) /*-{
+    public final native DirInfoImpl setFiles(JsoArray<FileInfo> files) /*-{
       this["files"] = files;
       return this;
     }-*/;
@@ -2137,15 +2171,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DocOpImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.DocOp {
+  public static class DocOpImpl extends Jso implements com.google.collide.dto.DocOp {
     protected DocOpImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.DocOpComponent> getComponents() /*-{
+    public final native JsonArray<DocOpComponent> getComponents() /*-{
       return this["components"];
     }-*/;
 
-    public final native DocOpImpl setComponents(com.google.collide.json.client.JsoArray<com.google.collide.dto.DocOpComponent> components) /*-{
+    public final native DocOpImpl setComponents(JsoArray<DocOpComponent> components) /*-{
       this["components"] = components;
       return this;
     }-*/;
@@ -2271,7 +2305,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DocOpComponentImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.DocOpComponent {
+  public static class DocOpComponentImpl extends Jso implements com.google.collide.dto.DocOpComponent {
     protected DocOpComponentImpl() {}
 
     @Override
@@ -2295,7 +2329,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DocumentSelectionImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.DocumentSelection {
+  public static class DocumentSelectionImpl extends Jso implements com.google.collide.dto.DocumentSelection {
     protected DocumentSelectionImpl() {}
 
     @Override
@@ -2347,7 +2381,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class EmptyMessageImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.EmptyMessage {
+  public static class EmptyMessageImpl extends RoutableDtoClientImpl implements com.google.collide.dto.EmptyMessage {
     protected EmptyMessageImpl() {}
 
     public static native EmptyMessageImpl make() /*-{
@@ -2357,7 +2391,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class EndUploadSessionImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.EndUploadSession {
+  public static class EndUploadSessionImpl extends RoutableDtoClientImpl implements com.google.collide.dto.EndUploadSession {
     protected EndUploadSessionImpl() {}
 
     @Override
@@ -2395,15 +2429,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UnzipFailureImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.EndUploadSessionFinished.UnzipFailure {
+  public static class UnzipFailureImpl extends Jso implements com.google.collide.dto.EndUploadSessionFinished.UnzipFailure {
     protected UnzipFailureImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getDisplayFailedWorkspacePaths() /*-{
+    public final native JsonArray<String> getDisplayFailedWorkspacePaths() /*-{
       return this["displayFailedWorkspacePaths"];
     }-*/;
 
-    public final native UnzipFailureImpl setDisplayFailedWorkspacePaths(com.google.collide.json.client.JsoArray<java.lang.String> displayFailedWorkspacePaths) /*-{
+    public final native UnzipFailureImpl setDisplayFailedWorkspacePaths(JsoArray<String> displayFailedWorkspacePaths) /*-{
       this["displayFailedWorkspacePaths"] = displayFailedWorkspacePaths;
       return this;
     }-*/;
@@ -2433,7 +2467,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class EndUploadSessionFinishedImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.EndUploadSessionFinished {
+  public static class EndUploadSessionFinishedImpl extends RoutableDtoClientImpl implements com.google.collide.dto.EndUploadSessionFinished {
     protected EndUploadSessionFinishedImpl() {}
 
     @Override
@@ -2451,11 +2485,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getFailedFileWorkspacePaths() /*-{
+    public final native JsonArray<String> getFailedFileWorkspacePaths() /*-{
       return this["failedFileWorkspacePaths"];
     }-*/;
 
-    public final native EndUploadSessionFinishedImpl setFailedFileWorkspacePaths(com.google.collide.json.client.JsoArray<java.lang.String> failedFileWorkspacePaths) /*-{
+    public final native EndUploadSessionFinishedImpl setFailedFileWorkspacePaths(JsoArray<String> failedFileWorkspacePaths) /*-{
       this["failedFileWorkspacePaths"] = failedFileWorkspacePaths;
       return this;
     }-*/;
@@ -2465,11 +2499,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getFailedDirWorkspacePaths() /*-{
+    public final native JsonArray<String> getFailedDirWorkspacePaths() /*-{
       return this["failedDirWorkspacePaths"];
     }-*/;
 
-    public final native EndUploadSessionFinishedImpl setFailedDirWorkspacePaths(com.google.collide.json.client.JsoArray<java.lang.String> failedDirWorkspacePaths) /*-{
+    public final native EndUploadSessionFinishedImpl setFailedDirWorkspacePaths(JsoArray<String> failedDirWorkspacePaths) /*-{
       this["failedDirWorkspacePaths"] = failedDirWorkspacePaths;
       return this;
     }-*/;
@@ -2479,11 +2513,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure> getUnzipFailures() /*-{
+    public final native JsonArray<UnzipFailure> getUnzipFailures() /*-{
       return this["unzipFailures"];
     }-*/;
 
-    public final native EndUploadSessionFinishedImpl setUnzipFailures(com.google.collide.json.client.JsoArray<com.google.collide.dto.EndUploadSessionFinished.UnzipFailure> unzipFailures) /*-{
+    public final native EndUploadSessionFinishedImpl setUnzipFailures(JsoArray<UnzipFailure> unzipFailures) /*-{
       this["unzipFailures"] = unzipFailures;
       return this;
     }-*/;
@@ -2505,7 +2539,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class EnterWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.EnterWorkspace {
+  public static class EnterWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.EnterWorkspace {
     protected EnterWorkspaceImpl() {}
 
     @Override
@@ -2543,7 +2577,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class EnterWorkspaceResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.EnterWorkspaceResponse {
+  public static class EnterWorkspaceResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.EnterWorkspaceResponse {
     protected EnterWorkspaceResponseImpl() {}
 
     @Override
@@ -2618,11 +2652,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
+    public final native JsonArray<ParticipantUserDetails> getParticipants() /*-{
       return this["participants"];
     }-*/;
 
-    public final native EnterWorkspaceResponseImpl setParticipants(com.google.collide.json.client.JsoArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+    public final native EnterWorkspaceResponseImpl setParticipants(JsoArray<ParticipantUserDetails> participants) /*-{
       this["participants"] = participants;
       return this;
     }-*/;
@@ -2699,7 +2733,7 @@ public class DtoClientImpls {
       };
     }-*/;  }
 
-   public static class FileCollaboratorGoneImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.FileCollaboratorGone {
+   public static class FileCollaboratorGoneImpl extends RoutableDtoClientImpl implements com.google.collide.dto.FileCollaboratorGone {
       protected FileCollaboratorGoneImpl() {}
 
       @Override
@@ -2742,7 +2776,7 @@ public class DtoClientImpls {
       };
     }-*/;  }
 
-  public static class FileContentsImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.FileContents {
+  public static class FileContentsImpl extends Jso implements com.google.collide.dto.FileContents {
     protected FileContentsImpl() {}
 
     @Override
@@ -2845,11 +2879,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ConflictChunk> getConflicts() /*-{
+    public final native JsonArray<ConflictChunk> getConflicts() /*-{
       return this["conflicts"];
     }-*/;
 
-    public final native FileContentsImpl setConflicts(com.google.collide.json.client.JsoArray<com.google.collide.dto.ConflictChunk> conflicts) /*-{
+    public final native FileContentsImpl setConflicts(JsoArray<ConflictChunk> conflicts) /*-{
       this["conflicts"] = conflicts;
       return this;
     }-*/;
@@ -2859,11 +2893,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getSelections() /*-{
+    public final native JsonArray<String> getSelections() /*-{
       return this["selections"];
     }-*/;
 
-    public final native FileContentsImpl setSelections(com.google.collide.json.client.JsoArray<java.lang.String> selections) /*-{
+    public final native FileContentsImpl setSelections(JsoArray<String> selections) /*-{
       this["selections"] = selections;
       return this;
     }-*/;
@@ -2903,7 +2937,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class FilePositionImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.FilePosition {
+  public static class FilePositionImpl extends RoutableDtoClientImpl implements com.google.collide.dto.FilePosition {
     protected FilePositionImpl() {}
 
     @Override
@@ -2939,7 +2973,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetAppEngineClusterTypeImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetAppEngineClusterType {
+  public static class GetAppEngineClusterTypeImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetAppEngineClusterType {
     protected GetAppEngineClusterTypeImpl() {}
 
     @Override
@@ -2964,7 +2998,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetDeployInformationImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetDeployInformation {
+  public static class GetDeployInformationImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetDeployInformation {
     protected GetDeployInformationImpl() {}
 
     @Override
@@ -3002,7 +3036,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class DeployInformationImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.GetDeployInformationResponse.DeployInformation {
+  public static class DeployInformationImpl extends Jso implements com.google.collide.dto.GetDeployInformationResponse.DeployInformation {
     protected DeployInformationImpl() {}
 
     @Override
@@ -3054,15 +3088,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetDeployInformationResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetDeployInformationResponse {
+  public static class GetDeployInformationResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetDeployInformationResponse {
     protected GetDeployInformationResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.GetDeployInformationResponse.DeployInformation> getDeployInformation() /*-{
+    public final native JsonArray<DeployInformation> getDeployInformation() /*-{
       return this["deployInformation"];
     }-*/;
 
-    public final native GetDeployInformationResponseImpl setDeployInformation(com.google.collide.json.client.JsoArray<com.google.collide.dto.GetDeployInformationResponse.DeployInformation> deployInformation) /*-{
+    public final native GetDeployInformationResponseImpl setDeployInformation(JsoArray<DeployInformation> deployInformation) /*-{
       this["deployInformation"] = deployInformation;
       return this;
     }-*/;
@@ -3084,7 +3118,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetDirectoryImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetDirectory {
+  public static class GetDirectoryImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetDirectory {
     protected GetDirectoryImpl() {}
 
     @Override
@@ -3136,7 +3170,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetDirectoryResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetDirectoryResponse {
+  public static class GetDirectoryResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetDirectoryResponse {
     protected GetDirectoryResponseImpl() {}
 
     @Override
@@ -3194,7 +3228,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-   public static class GetEditSessionCollaboratorsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionCollaborators {
+   public static class GetEditSessionCollaboratorsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionCollaborators {
       protected GetEditSessionCollaboratorsImpl() {}
 
       @Override
@@ -3218,16 +3252,16 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetEditSessionCollaboratorsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionCollaboratorsResponse
+  public static class GetEditSessionCollaboratorsResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetEditSessionCollaboratorsResponse
   {
     protected GetEditSessionCollaboratorsResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
+    public final native JsonArray<ParticipantUserDetails> getParticipants() /*-{
       return this["participants"];
     }-*/;
 
-    public final native GetEditSessionCollaboratorsResponseImpl setParticipants(com.google.collide.json.client.JsoArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+    public final native GetEditSessionCollaboratorsResponseImpl setParticipants(JsoArray<ParticipantUserDetails> participants) /*-{
       this["participants"] = participants;
       return this;
     }-*/;
@@ -3250,7 +3284,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-   public static class GetFileContentsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileContents {
+   public static class GetFileContentsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetFileContents {
       protected GetFileContentsImpl() {}
 
       @Override
@@ -3302,7 +3336,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetFileContentsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileContentsResponse {
+  public static class GetFileContentsResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetFileContentsResponse {
     protected GetFileContentsResponseImpl() {}
 
     @Override
@@ -3346,7 +3380,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetFileDiffImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileDiff {
+  public static class GetFileDiffImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetFileDiff {
     protected GetFileDiffImpl() {}
 
     @Override
@@ -3455,7 +3489,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetFileDiffResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileDiffResponse {
+  public static class GetFileDiffResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetFileDiffResponse {
     protected GetFileDiffResponseImpl() {}
 
     @Override
@@ -3473,11 +3507,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> getDiffChunks() /*-{
+    public final native JsonArray<DiffChunkResponse> getDiffChunks() /*-{
       return this["diffChunks"];
     }-*/;
 
-    public final native GetFileDiffResponseImpl setDiffChunks(com.google.collide.json.client.JsoArray<com.google.collide.dto.DiffChunkResponse> diffChunks) /*-{
+    public final native GetFileDiffResponseImpl setDiffChunks(JsoArray<DiffChunkResponse> diffChunks) /*-{
       this["diffChunks"] = diffChunks;
       return this;
     }-*/;
@@ -3527,7 +3561,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetFileRevisionsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileRevisions {
+  public static class GetFileRevisionsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetFileRevisions {
     protected GetFileRevisionsImpl() {}
 
     @Override
@@ -3677,7 +3711,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetFileRevisionsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileRevisionsResponse {
+  public static class GetFileRevisionsResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetFileRevisionsResponse {
     protected GetFileRevisionsResponseImpl() {}
 
     @Override
@@ -3709,11 +3743,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.Revision> getRevisions() /*-{
+    public final native JsonArray<Revision> getRevisions() /*-{
       return this["revisions"];
     }-*/;
 
-    public final native GetFileRevisionsResponseImpl setRevisions(com.google.collide.json.client.JsoArray<com.google.collide.dto.Revision> revisions) /*-{
+    public final native GetFileRevisionsResponseImpl setRevisions(JsoArray<Revision> revisions) /*-{
       this["revisions"] = revisions;
       return this;
     }-*/;
@@ -3735,7 +3769,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetOwningProjectImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOwningProject {
+  public static class GetOwningProjectImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetOwningProject {
     protected GetOwningProjectImpl() {}
 
     @Override
@@ -3759,7 +3793,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetOwningProjectResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOwningProjectResponse {
+  public static class GetOwningProjectResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetOwningProjectResponse {
     protected GetOwningProjectResponseImpl() {}
 
     @Override
@@ -3817,7 +3851,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetProjectByIdImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetProjectById {
+  public static class GetProjectByIdImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetProjectById {
     protected GetProjectByIdImpl() {}
 
     @Override
@@ -3898,7 +3932,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetProjectByIdResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetProjectByIdResponse {
+  public static class GetProjectByIdResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetProjectByIdResponse {
     protected GetProjectByIdResponseImpl() {}
 
     @Override
@@ -3930,11 +3964,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> getWorkspaces() /*-{
+    public final native JsonArray<WorkspaceInfo> getWorkspaces() /*-{
       return this["workspaces"];
     }-*/;
 
-    public final native GetProjectByIdResponseImpl setWorkspaces(com.google.collide.json.client.JsoArray<com.google.collide.dto.WorkspaceInfo> workspaces) /*-{
+    public final native GetProjectByIdResponseImpl setWorkspaces(JsoArray<WorkspaceInfo> workspaces) /*-{
       this["workspaces"] = workspaces;
       return this;
     }-*/;
@@ -3956,7 +3990,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetProjectMembersImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetProjectMembers {
+  public static class GetProjectMembersImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetProjectMembers {
     protected GetProjectMembersImpl() {}
 
     @Override
@@ -3980,15 +4014,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetProjectMembersResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetProjectMembersResponse {
+  public static class GetProjectMembersResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetProjectMembersResponse {
     protected GetProjectMembersResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() /*-{
+    public final native JsonArray<UserDetailsWithRole> getMembers() /*-{
       return this["members"];
     }-*/;
 
-    public final native GetProjectMembersResponseImpl setMembers(com.google.collide.json.client.JsoArray<com.google.collide.dto.UserDetailsWithRole> members) /*-{
+    public final native GetProjectMembersResponseImpl setMembers(JsoArray<UserDetailsWithRole> members) /*-{
       this["members"] = members;
       return this;
     }-*/;
@@ -3998,11 +4032,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getPendingMembers() /*-{
+    public final native JsonArray<UserDetailsWithRole> getPendingMembers() /*-{
       return this["pendingMembers"];
     }-*/;
 
-    public final native GetProjectMembersResponseImpl setPendingMembers(com.google.collide.json.client.JsoArray<com.google.collide.dto.UserDetailsWithRole> pendingMembers) /*-{
+    public final native GetProjectMembersResponseImpl setPendingMembers(JsoArray<UserDetailsWithRole> pendingMembers) /*-{
       this["pendingMembers"] = pendingMembers;
       return this;
     }-*/;
@@ -4024,15 +4058,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetProjectsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetProjectsResponse {
+  public static class GetProjectsResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetProjectsResponse {
     protected GetProjectsResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ProjectInfo> getProjects() /*-{
+    public final native JsonArray<ProjectInfo> getProjects() /*-{
       return this["projects"];
     }-*/;
 
-    public final native GetProjectsResponseImpl setProjects(com.google.collide.json.client.JsoArray<com.google.collide.dto.ProjectInfo> projects) /*-{
+    public final native GetProjectsResponseImpl setProjects(JsoArray<ProjectInfo> projects) /*-{
       this["projects"] = projects;
       return this;
     }-*/;
@@ -4042,11 +4076,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() /*-{
+    public final native JsonArray<String> getHiddenProjectIds() /*-{
       return this["hiddenProjectIds"];
     }-*/;
 
-    public final native GetProjectsResponseImpl setHiddenProjectIds(com.google.collide.json.client.JsoArray<java.lang.String> hiddenProjectIds) /*-{
+    public final native GetProjectsResponseImpl setHiddenProjectIds(JsoArray<String> hiddenProjectIds) /*-{
       this["hiddenProjectIds"] = hiddenProjectIds;
       return this;
     }-*/;
@@ -4096,7 +4130,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetStagingServerInfoResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetStagingServerInfoResponse {
+  public static class GetStagingServerInfoResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetStagingServerInfoResponse {
     protected GetStagingServerInfoResponseImpl() {}
 
     @Override
@@ -4168,7 +4202,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetSyncStateImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetSyncState {
+  public static class GetSyncStateImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetSyncState {
     protected GetSyncStateImpl() {}
 
     @Override
@@ -4192,7 +4226,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetSyncStateResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetSyncStateResponse {
+  public static class GetSyncStateResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetSyncStateResponse {
     protected GetSyncStateResponseImpl() {}
 
     @Override
@@ -4223,7 +4257,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetTemplatesImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetTemplates {
+  public static class GetTemplatesImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetTemplates {
     protected GetTemplatesImpl() {}
 
     @Override
@@ -4247,15 +4281,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetTemplatesResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetTemplatesResponse {
+  public static class GetTemplatesResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetTemplatesResponse {
     protected GetTemplatesResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonStringMap<java.lang.String> getTemplates() /*-{
+    public final native JsonStringMap<String> getTemplates() /*-{
       return this["templates"];
     }-*/;
 
-    public final native GetTemplatesResponseImpl setTemplates(com.google.collide.json.client.JsoStringMap<java.lang.String> templates) /*-{
+    public final native GetTemplatesResponseImpl setTemplates(JsoStringMap<String> templates) /*-{
       this["templates"] = templates;
       return this;
     }-*/;
@@ -4287,15 +4321,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetUserAppEngineAppIdsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetUserAppEngineAppIdsResponse {
+  public static class GetUserAppEngineAppIdsResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetUserAppEngineAppIdsResponse {
     protected GetUserAppEngineAppIdsResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getAppIds() /*-{
+    public final native JsonArray<String> getAppIds() /*-{
       return this["appIds"];
     }-*/;
 
-    public final native GetUserAppEngineAppIdsResponseImpl setAppIds(com.google.collide.json.client.JsoArray<java.lang.String> appIds) /*-{
+    public final native GetUserAppEngineAppIdsResponseImpl setAppIds(JsoArray<String> appIds) /*-{
       this["appIds"] = appIds;
       return this;
     }-*/;
@@ -4317,7 +4351,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspace {
+  public static class GetWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspace {
     protected GetWorkspaceImpl() {}
 
     @Override
@@ -4355,7 +4389,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceChangeSummaryImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceChangeSummary {
+  public static class GetWorkspaceChangeSummaryImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceChangeSummary {
     protected GetWorkspaceChangeSummaryImpl() {}
 
     @Override
@@ -4393,15 +4427,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceChangeSummaryResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceChangeSummaryResponse {
+  public static class GetWorkspaceChangeSummaryResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceChangeSummaryResponse {
     protected GetWorkspaceChangeSummaryResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeMutationDto> getNodeMutations() /*-{
+    public final native JsonArray<NodeMutationDto> getNodeMutations() /*-{
       return this["nodeMutations"];
     }-*/;
 
-    public final native GetWorkspaceChangeSummaryResponseImpl setNodeMutations(com.google.collide.json.client.JsoArray<com.google.collide.dto.NodeMutationDto> nodeMutations) /*-{
+    public final native GetWorkspaceChangeSummaryResponseImpl setNodeMutations(JsoArray<NodeMutationDto> nodeMutations) /*-{
       this["nodeMutations"] = nodeMutations;
       return this;
     }-*/;
@@ -4451,7 +4485,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceMembersImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMembers {
+  public static class GetWorkspaceMembersImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMembers {
     protected GetWorkspaceMembersImpl() {}
 
     @Override
@@ -4489,15 +4523,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceMembersResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMembersResponse {
+  public static class GetWorkspaceMembersResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMembersResponse {
     protected GetWorkspaceMembersResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetailsWithRole> getMembers() /*-{
+    public final native JsonArray<UserDetailsWithRole> getMembers() /*-{
       return this["members"];
     }-*/;
 
-    public final native GetWorkspaceMembersResponseImpl setMembers(com.google.collide.json.client.JsoArray<com.google.collide.dto.UserDetailsWithRole> members) /*-{
+    public final native GetWorkspaceMembersResponseImpl setMembers(JsoArray<UserDetailsWithRole> members) /*-{
       this["members"] = members;
       return this;
     }-*/;
@@ -4519,7 +4553,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceMetaDataImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMetaData {
+  public static class GetWorkspaceMetaDataImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMetaData {
     protected GetWorkspaceMetaDataImpl() {}
 
     public static native GetWorkspaceMetaDataImpl make() /*-{
@@ -4529,7 +4563,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceMetaDataResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMetaDataResponse {
+  public static class GetWorkspaceMetaDataResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceMetaDataResponse {
     protected GetWorkspaceMetaDataResponseImpl() {}
 
     @Override
@@ -4561,11 +4595,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getLastOpenFiles() /*-{
+    public final native JsonArray<String> getLastOpenFiles() /*-{
       return this["lastOpenFiles"];
     }-*/;
 
-    public final native GetWorkspaceMetaDataResponseImpl setLastOpenFiles(com.google.collide.json.client.JsoArray<java.lang.String> lastOpenFiles) /*-{
+    public final native GetWorkspaceMetaDataResponseImpl setLastOpenFiles(JsoArray<String> lastOpenFiles) /*-{
       this["lastOpenFiles"] = lastOpenFiles;
       return this;
     }-*/;
@@ -4581,7 +4615,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceParticipantsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceParticipants {
+  public static class GetWorkspaceParticipantsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceParticipants {
     protected GetWorkspaceParticipantsImpl() {}
 
     @Override
@@ -4599,11 +4633,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getParticipantIds() /*-{
+    public final native JsonArray<String> getParticipantIds() /*-{
       return this["participantIds"];
     }-*/;
 
-    public final native GetWorkspaceParticipantsImpl setParticipantIds(com.google.collide.json.client.JsoArray<java.lang.String> participantIds) /*-{
+    public final native GetWorkspaceParticipantsImpl setParticipantIds(JsoArray<String> participantIds) /*-{
       this["participantIds"] = participantIds;
       return this;
     }-*/;
@@ -4619,15 +4653,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceParticipantsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceParticipantsResponse {
+  public static class GetWorkspaceParticipantsResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceParticipantsResponse {
     protected GetWorkspaceParticipantsResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
+    public final native JsonArray<ParticipantUserDetails> getParticipants() /*-{
       return this["participants"];
     }-*/;
 
-    public final native GetWorkspaceParticipantsResponseImpl setParticipants(com.google.collide.json.client.JsoArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+    public final native GetWorkspaceParticipantsResponseImpl setParticipants(JsoArray<ParticipantUserDetails> participants) /*-{
       this["participants"] = participants;
       return this;
     }-*/;
@@ -4649,7 +4683,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetWorkspaceResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceResponse {
+  public static class GetWorkspaceResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.GetWorkspaceResponse {
     protected GetWorkspaceResponseImpl() {}
 
     @Override
@@ -4737,7 +4771,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class InvalidationMessageImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.InvalidationMessage {
+  public static class InvalidationMessageImpl extends RoutableDtoClientImpl implements com.google.collide.dto.InvalidationMessage {
     protected InvalidationMessageImpl() {}
 
     @Override
@@ -4795,7 +4829,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class KeepAliveImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.KeepAlive {
+  public static class KeepAliveImpl extends RoutableDtoClientImpl implements com.google.collide.dto.KeepAlive {
     protected KeepAliveImpl() {}
 
     @Override
@@ -4819,7 +4853,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class LeaveWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.LeaveWorkspace {
+  public static class LeaveWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.LeaveWorkspace {
     protected LeaveWorkspaceImpl() {}
 
     @Override
@@ -4843,7 +4877,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class LoadTemplateImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.LoadTemplate {
+  public static class LoadTemplateImpl extends RoutableDtoClientImpl implements com.google.collide.dto.LoadTemplate {
     protected LoadTemplateImpl() {}
 
     @Override
@@ -4895,7 +4929,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class LoadTemplateResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.LoadTemplateResponse {
+  public static class LoadTemplateResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.LoadTemplateResponse {
     protected LoadTemplateResponseImpl() {}
 
     @Override
@@ -4925,7 +4959,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class LogFatalRecordImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.LogFatalRecord {
+  public static class LogFatalRecordImpl extends RoutableDtoClientImpl implements com.google.collide.dto.LogFatalRecord {
     protected LogFatalRecordImpl() {}
 
     @Override
@@ -4971,11 +5005,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getRecentHistory() /*-{
+    public final native JsonArray<String> getRecentHistory() /*-{
       return this["recentHistory"];
     }-*/;
 
-    public final native LogFatalRecordImpl setRecentHistory(com.google.collide.json.client.JsoArray<java.lang.String> recentHistory) /*-{
+    public final native LogFatalRecordImpl setRecentHistory(JsoArray<String> recentHistory) /*-{
       this["recentHistory"] = recentHistory;
       return this;
     }-*/;
@@ -5005,7 +5039,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class LogFatalRecordResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.LogFatalRecordResponse {
+  public static class LogFatalRecordResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.LogFatalRecordResponse {
     protected LogFatalRecordResponseImpl() {}
 
     @Override
@@ -5063,7 +5097,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class LogMetricImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.LogMetric {
+  public static class LogMetricImpl extends RoutableDtoClientImpl implements com.google.collide.dto.LogMetric {
     protected LogMetricImpl() {}
 
     @Override
@@ -5129,15 +5163,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class LogMetricsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.LogMetrics {
+  public static class LogMetricsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.LogMetrics {
     protected LogMetricsImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.LogMetric> getMetrics() /*-{
+    public final native JsonArray<LogMetric> getMetrics() /*-{
       return this["metrics"];
     }-*/;
 
-    public final native LogMetricsImpl setMetrics(com.google.collide.json.client.JsoArray<com.google.collide.dto.LogMetric> metrics) /*-{
+    public final native LogMetricsImpl setMetrics(JsoArray<LogMetric> metrics) /*-{
       this["metrics"] = metrics;
       return this;
     }-*/;
@@ -5153,7 +5187,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class MembershipChangedPayloadImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.MembershipChangedPayload {
+  public static class MembershipChangedPayloadImpl extends RoutableDtoClientImpl implements com.google.collide.dto.MembershipChangedPayload {
     protected MembershipChangedPayloadImpl() {}
 
     @Override
@@ -5198,7 +5232,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class MutationImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.Mutation {
+  public static class MutationImpl extends Jso implements com.google.collide.dto.Mutation {
     protected MutationImpl() {}
 
     @Override
@@ -5265,7 +5299,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ConflictHandleImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.NodeConflictDto.ConflictHandle {
+  public static class ConflictHandleImpl extends Jso implements com.google.collide.dto.NodeConflictDto.ConflictHandle {
     protected ConflictHandleImpl() {}
 
     @Override
@@ -5303,7 +5337,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ConflictedPathImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.NodeConflictDto.ConflictedPath {
+  public static class ConflictedPathImpl extends Jso implements com.google.collide.dto.NodeConflictDto.ConflictedPath {
     protected ConflictedPathImpl() {}
 
     @Override
@@ -5383,7 +5417,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class NodeConflictDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.NodeConflictDto {
+  public static class NodeConflictDtoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.NodeConflictDto {
     protected NodeConflictDtoImpl() {}
 
     @Override
@@ -5457,7 +5491,7 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice> getValidResolutions() /*-{
+    public final native JsonArray<ConflictResolutionChoice> getValidResolutions() /*-{
       _tmp = [];
       this["validResolutions"].forEach(function(in1, tmp0) {
         out1 = @com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice::valueOf(Ljava/lang/String;)(in1);
@@ -5466,7 +5500,7 @@ public class DtoClientImpls {
       return _tmp;
     }-*/;
 
-    public final native NodeConflictDtoImpl setValidResolutions(com.google.collide.json.client.JsoArray<com.google.collide.dto.ResolveTreeConflict.ConflictResolutionChoice> validResolutions) /*-{
+    public final native NodeConflictDtoImpl setValidResolutions(JsoArray<ConflictResolutionChoice> validResolutions) /*-{
       _tmp = validResolutions;
       tmp0 = [];
       _tmp.forEach(function(in1) {
@@ -5498,11 +5532,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getGroupedConflicts() /*-{
+    public final native JsonArray<NodeConflictDto> getGroupedConflicts() /*-{
       return this["groupedConflicts"];
     }-*/;
 
-    public final native NodeConflictDtoImpl setGroupedConflicts(com.google.collide.json.client.JsoArray<com.google.collide.dto.NodeConflictDto> groupedConflicts) /*-{
+    public final native NodeConflictDtoImpl setGroupedConflicts(JsoArray<NodeConflictDto> groupedConflicts) /*-{
       this["groupedConflicts"] = groupedConflicts;
       return this;
     }-*/;
@@ -5512,11 +5546,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto.ConflictedPath> getParentPaths() /*-{
+    public final native JsonArray<ConflictedPath> getParentPaths() /*-{
       return this["parentPaths"];
     }-*/;
 
-    public final native NodeConflictDtoImpl setParentPaths(com.google.collide.json.client.JsoArray<com.google.collide.dto.NodeConflictDto.ConflictedPath> parentPaths) /*-{
+    public final native NodeConflictDtoImpl setParentPaths(JsoArray<ConflictedPath> parentPaths) /*-{
       this["parentPaths"] = parentPaths;
       return this;
     }-*/;
@@ -5570,7 +5604,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class NodeMutationDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.NodeMutationDto {
+  public static class NodeMutationDtoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.NodeMutationDto {
     protected NodeMutationDtoImpl() {}
 
     @Override
@@ -5685,7 +5719,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ParticipantImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.Participant {
+  public static class ParticipantImpl extends Jso implements com.google.collide.dto.Participant {
     protected ParticipantImpl() {}
 
     @Override
@@ -5723,7 +5757,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ParticipantUserDetailsImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.ParticipantUserDetails {
+  public static class ParticipantUserDetailsImpl extends Jso implements com.google.collide.dto.ParticipantUserDetails {
     protected ParticipantUserDetailsImpl() {}
 
     @Override
@@ -5761,7 +5795,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ProjectInfoImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.ProjectInfo {
+  public static class ProjectInfoImpl extends Jso implements com.google.collide.dto.ProjectInfo {
     protected ProjectInfoImpl() {}
 
     @Override
@@ -5856,15 +5890,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ProjectMembersInfoImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.ProjectMembersInfo {
+  public static class ProjectMembersInfoImpl extends Jso implements com.google.collide.dto.ProjectMembersInfo {
     protected ProjectMembersInfoImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.UserDetails> getMembers() /*-{
+    public final native JsonArray<UserDetails> getMembers() /*-{
       return this["members"];
     }-*/;
 
-    public final native ProjectMembersInfoImpl setMembers(com.google.collide.json.client.JsoArray<com.google.collide.dto.UserDetails> members) /*-{
+    public final native ProjectMembersInfoImpl setMembers(JsoArray<UserDetails> members) /*-{
       this["members"] = members;
       return this;
     }-*/;
@@ -5894,7 +5928,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RecoverFromDroppedTangoInvalidationImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidation {
+  public static class RecoverFromDroppedTangoInvalidationImpl extends RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidation {
     protected RecoverFromDroppedTangoInvalidationImpl() {}
 
     @Override
@@ -5946,7 +5980,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RecoveredPayloadImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse.RecoveredPayload {
+  public static class RecoveredPayloadImpl extends Jso implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse.RecoveredPayload {
     protected RecoveredPayloadImpl() {}
 
     @Override
@@ -5984,15 +6018,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RecoverFromDroppedTangoInvalidationResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse {
+  public static class RecoverFromDroppedTangoInvalidationResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse {
     protected RecoverFromDroppedTangoInvalidationResponseImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse.RecoveredPayload> getPayloads() /*-{
+    public final native JsonArray<RecoveredPayload> getPayloads() /*-{
       return this["payloads"];
     }-*/;
 
-    public final native RecoverFromDroppedTangoInvalidationResponseImpl setPayloads(com.google.collide.json.client.JsoArray<com.google.collide.dto.RecoverFromDroppedTangoInvalidationResponse.RecoveredPayload> payloads) /*-{
+    public final native RecoverFromDroppedTangoInvalidationResponseImpl setPayloads(JsoArray<RecoveredPayload> payloads) /*-{
       this["payloads"] = payloads;
       return this;
     }-*/;
@@ -6028,15 +6062,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RecoverFromMissedDocOpsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromMissedDocOps {
+  public static class RecoverFromMissedDocOpsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromMissedDocOps {
     protected RecoverFromMissedDocOpsImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
+    public final native JsonArray<String> getDocOps2() /*-{
       return this["docOps2"];
     }-*/;
 
-    public final native RecoverFromMissedDocOpsImpl setDocOps2(com.google.collide.json.client.JsoArray<java.lang.String> docOps2) /*-{
+    public final native RecoverFromMissedDocOpsImpl setDocOps2(JsoArray<String> docOps2) /*-{
       this["docOps2"] = docOps2;
       return this;
     }-*/;
@@ -6108,7 +6142,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RecoverFromMissedDocOpsResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromMissedDocOpsResponse {
+  public static class RecoverFromMissedDocOpsResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.RecoverFromMissedDocOpsResponse {
     protected RecoverFromMissedDocOpsResponseImpl() {}
 
     @Override
@@ -6126,11 +6160,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() /*-{
+    public final native JsonArray<ServerToClientDocOp> getDocOps() /*-{
       return this["docOps"];
     }-*/;
 
-    public final native RecoverFromMissedDocOpsResponseImpl setDocOps(com.google.collide.json.client.JsoArray<com.google.collide.dto.ServerToClientDocOp> docOps) /*-{
+    public final native RecoverFromMissedDocOpsResponseImpl setDocOps(JsoArray<ServerToClientDocOp> docOps) /*-{
       this["docOps"] = docOps;
       return this;
     }-*/;
@@ -6152,7 +6186,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RefreshWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.RefreshWorkspace {
+  public static class RefreshWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.RefreshWorkspace {
     protected RefreshWorkspaceImpl() {}
 
     @Override
@@ -6196,7 +6230,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RequestProjectMembershipImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.RequestProjectMembership {
+  public static class RequestProjectMembershipImpl extends RoutableDtoClientImpl implements com.google.collide.dto.RequestProjectMembership {
     protected RequestProjectMembershipImpl() {}
 
     @Override
@@ -6220,7 +6254,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ResolveConflictChunkImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ResolveConflictChunk {
+  public static class ResolveConflictChunkImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ResolveConflictChunk {
     protected ResolveConflictChunkImpl() {}
 
     @Override
@@ -6300,7 +6334,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ResolveTreeConflictImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ResolveTreeConflict {
+  public static class ResolveTreeConflictImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ResolveTreeConflict {
     protected ResolveTreeConflictImpl() {}
 
     @Override
@@ -6367,7 +6401,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ResolveTreeConflictResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ResolveTreeConflictResponse {
+  public static class ResolveTreeConflictResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ResolveTreeConflictResponse {
     protected ResolveTreeConflictResponseImpl() {}
 
     @Override
@@ -6397,7 +6431,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RetryAlreadyTransferredUploadImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.RetryAlreadyTransferredUpload {
+  public static class RetryAlreadyTransferredUploadImpl extends RoutableDtoClientImpl implements com.google.collide.dto.RetryAlreadyTransferredUpload {
     protected RetryAlreadyTransferredUploadImpl() {}
 
     @Override
@@ -6429,11 +6463,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getFileWorkspacePaths() /*-{
+    public final native JsonArray<String> getFileWorkspacePaths() /*-{
       return this["fileWorkspacePaths"];
     }-*/;
 
-    public final native RetryAlreadyTransferredUploadImpl setFileWorkspacePaths(com.google.collide.json.client.JsoArray<java.lang.String> fileWorkspacePaths) /*-{
+    public final native RetryAlreadyTransferredUploadImpl setFileWorkspacePaths(JsoArray<String> fileWorkspacePaths) /*-{
       this["fileWorkspacePaths"] = fileWorkspacePaths;
       return this;
     }-*/;
@@ -6443,11 +6477,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<java.lang.String> getUnzipWorkspacePaths() /*-{
+    public final native JsonArray<String> getUnzipWorkspacePaths() /*-{
       return this["unzipWorkspacePaths"];
     }-*/;
 
-    public final native RetryAlreadyTransferredUploadImpl setUnzipWorkspacePaths(com.google.collide.json.client.JsoArray<java.lang.String> unzipWorkspacePaths) /*-{
+    public final native RetryAlreadyTransferredUploadImpl setUnzipWorkspacePaths(JsoArray<String> unzipWorkspacePaths) /*-{
       this["unzipWorkspacePaths"] = unzipWorkspacePaths;
       return this;
     }-*/;
@@ -6463,7 +6497,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RevisionImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.Revision {
+  public static class RevisionImpl extends Jso implements com.google.collide.dto.Revision {
     protected RevisionImpl() {}
 
     @Override
@@ -6572,7 +6606,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class RunTargetImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.RunTarget {
+  public static class RunTargetImpl extends Jso implements com.google.collide.dto.RunTarget {
     protected RunTargetImpl() {}
 
     @Override
@@ -6625,7 +6659,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SearchImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.Search {
+  public static class SearchImpl extends RoutableDtoClientImpl implements com.google.collide.dto.Search {
     protected SearchImpl() {}
 
     @Override
@@ -6677,7 +6711,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SearchResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SearchResponse {
+  public static class SearchResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SearchResponse {
     protected SearchResponseImpl() {}
 
     @Override
@@ -6723,11 +6757,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.SearchResult> getResults() /*-{
+    public final native JsonArray<SearchResult> getResults() /*-{
       return this["results"];
     }-*/;
 
-    public final native SearchResponseImpl setResults(com.google.collide.json.client.JsoArray<com.google.collide.dto.SearchResult> results) /*-{
+    public final native SearchResponseImpl setResults(JsoArray<SearchResult> results) /*-{
       this["results"] = results;
       return this;
     }-*/;
@@ -6749,7 +6783,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SearchResultImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.SearchResult {
+  public static class SearchResultImpl extends Jso implements com.google.collide.dto.SearchResult {
     protected SearchResultImpl() {}
 
     @Override
@@ -6781,11 +6815,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.Snippet> getSnippets() /*-{
+    public final native JsonArray<Snippet> getSnippets() /*-{
       return this["snippets"];
     }-*/;
 
-    public final native SearchResultImpl setSnippets(com.google.collide.json.client.JsoArray<com.google.collide.dto.Snippet> snippets) /*-{
+    public final native SearchResultImpl setSnippets(JsoArray<Snippet> snippets) /*-{
       this["snippets"] = snippets;
       return this;
     }-*/;
@@ -6801,7 +6835,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ServerErrorImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ServerError {
+  public static class ServerErrorImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ServerError {
     protected ServerErrorImpl() {}
 
     @Override
@@ -6846,7 +6880,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ServerToClientDocOpImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ServerToClientDocOp {
+  public static class ServerToClientDocOpImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ServerToClientDocOp {
     protected ServerToClientDocOpImpl() {}
 
     @Override
@@ -6960,15 +6994,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ServerToClientDocOpsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ServerToClientDocOps {
+  public static class ServerToClientDocOpsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ServerToClientDocOps {
     protected ServerToClientDocOpsImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.ServerToClientDocOp> getDocOps() /*-{
+    public final native JsonArray<ServerToClientDocOp> getDocOps() /*-{
       return this["docOps"];
     }-*/;
 
-    public final native ServerToClientDocOpsImpl setDocOps(com.google.collide.json.client.JsoArray<com.google.collide.dto.ServerToClientDocOp> docOps) /*-{
+    public final native ServerToClientDocOpsImpl setDocOps(JsoArray<ServerToClientDocOp> docOps) /*-{
       this["docOps"] = docOps;
       return this;
     }-*/;
@@ -6991,7 +7025,7 @@ public class DtoClientImpls {
 
 
   public static class NewFileCollaboratorImpl
-     extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.NewFileCollaborator
+     extends RoutableDtoClientImpl implements com.google.collide.dto.NewFileCollaborator
   {
     protected NewFileCollaboratorImpl() {}
 
@@ -7037,7 +7071,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetActiveProjectImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetActiveProject {
+  public static class SetActiveProjectImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetActiveProject {
     protected SetActiveProjectImpl() {}
 
     @Override
@@ -7061,7 +7095,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetProjectHiddenImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetProjectHidden {
+  public static class SetProjectHiddenImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetProjectHidden {
     protected SetProjectHiddenImpl() {}
 
     @Override
@@ -7099,7 +7133,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetProjectRoleImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetProjectRole {
+  public static class SetProjectRoleImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetProjectRole {
     protected SetProjectRoleImpl() {}
 
     @Override
@@ -7151,7 +7185,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetRoleResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetRoleResponse {
+  public static class SetRoleResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetRoleResponse {
     protected SetRoleResponseImpl() {}
 
     @Override
@@ -7181,7 +7215,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetStagingServerAppIdImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetStagingServerAppId {
+  public static class SetStagingServerAppIdImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetStagingServerAppId {
     protected SetStagingServerAppIdImpl() {}
 
     @Override
@@ -7205,7 +7239,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetWorkspaceArchiveStateImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetWorkspaceArchiveState {
+  public static class SetWorkspaceArchiveStateImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetWorkspaceArchiveState {
     protected SetWorkspaceArchiveStateImpl() {}
 
     @Override
@@ -7257,7 +7291,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetWorkspaceArchiveStateResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetWorkspaceArchiveStateResponse {
+  public static class SetWorkspaceArchiveStateResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetWorkspaceArchiveStateResponse {
     protected SetWorkspaceArchiveStateResponseImpl() {}
 
     @Override
@@ -7301,7 +7335,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SetWorkspaceRoleImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SetWorkspaceRole {
+  public static class SetWorkspaceRoleImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SetWorkspaceRole {
     protected SetWorkspaceRoleImpl() {}
 
     @Override
@@ -7367,7 +7401,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SnippetImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.Snippet {
+  public static class SnippetImpl extends Jso implements com.google.collide.dto.Snippet {
     protected SnippetImpl() {}
 
     @Override
@@ -7405,7 +7439,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class StackTraceElementDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.StackTraceElementDto {
+  public static class StackTraceElementDtoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.StackTraceElementDto {
     protected StackTraceElementDtoImpl() {}
 
     @Override
@@ -7471,7 +7505,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SubmitImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.Submit {
+  public static class SubmitImpl extends RoutableDtoClientImpl implements com.google.collide.dto.Submit {
     protected SubmitImpl() {}
 
     @Override
@@ -7551,7 +7585,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SubmitResponseImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SubmitResponse {
+  public static class SubmitResponseImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SubmitResponse {
     protected SubmitResponseImpl() {}
 
     @Override
@@ -7595,7 +7629,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SubmittedWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.SubmittedWorkspace {
+  public static class SubmittedWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.SubmittedWorkspace {
     protected SubmittedWorkspaceImpl() {}
 
   }
@@ -7611,7 +7645,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SyncImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.Sync {
+  public static class SyncImpl extends RoutableDtoClientImpl implements com.google.collide.dto.Sync {
     protected SyncImpl() {}
 
     @Override
@@ -7649,15 +7683,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class SyncConflictsImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.SyncConflicts {
+  public static class SyncConflictsImpl extends Jso implements com.google.collide.dto.SyncConflicts {
     protected SyncConflictsImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.NodeConflictDto> getConflicts() /*-{
+    public final native JsonArray<NodeConflictDto> getConflicts() /*-{
       return this["conflicts"];
     }-*/;
 
-    public final native SyncConflictsImpl setConflicts(com.google.collide.json.client.JsoArray<com.google.collide.dto.NodeConflictDto> conflicts) /*-{
+    public final native SyncConflictsImpl setConflicts(JsoArray<NodeConflictDto> conflicts) /*-{
       this["conflicts"] = conflicts;
       return this;
     }-*/;
@@ -7687,7 +7721,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ThrowableDtoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.ThrowableDto {
+  public static class ThrowableDtoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ThrowableDto {
     protected ThrowableDtoImpl() {}
 
     @Override
@@ -7719,11 +7753,11 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.StackTraceElementDto> getStackTrace() /*-{
+    public final native JsonArray<StackTraceElementDto> getStackTrace() /*-{
       return this["stackTrace"];
     }-*/;
 
-    public final native ThrowableDtoImpl setStackTrace(com.google.collide.json.client.JsoArray<com.google.collide.dto.StackTraceElementDto> stackTrace) /*-{
+    public final native ThrowableDtoImpl setStackTrace(JsoArray<StackTraceElementDto> stackTrace) /*-{
       this["stackTrace"] = stackTrace;
       return this;
     }-*/;
@@ -7753,7 +7787,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class TreeNodeInfoImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.TreeNodeInfo {
+  public static class TreeNodeInfoImpl extends Jso implements com.google.collide.dto.TreeNodeInfo {
     protected TreeNodeInfoImpl() {}
 
     @Override
@@ -7819,7 +7853,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UndoLastSyncImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UndoLastSync {
+  public static class UndoLastSyncImpl extends RoutableDtoClientImpl implements com.google.collide.dto.UndoLastSync {
     protected UndoLastSyncImpl() {}
 
     @Override
@@ -7857,7 +7891,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UpdateProjectImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UpdateProject {
+  public static class UpdateProjectImpl extends RoutableDtoClientImpl implements com.google.collide.dto.UpdateProject {
     protected UpdateProjectImpl() {}
 
     @Override
@@ -7909,7 +7943,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UpdateUserWorkspaceMetadataImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UpdateUserWorkspaceMetadata {
+  public static class UpdateUserWorkspaceMetadataImpl extends RoutableDtoClientImpl implements com.google.collide.dto.UpdateUserWorkspaceMetadata {
     protected UpdateUserWorkspaceMetadataImpl() {}
 
     @Override
@@ -7947,7 +7981,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UpdateWorkspaceImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UpdateWorkspace {
+  public static class UpdateWorkspaceImpl extends RoutableDtoClientImpl implements com.google.collide.dto.UpdateWorkspace {
     protected UpdateWorkspaceImpl() {}
 
     @Override
@@ -7999,7 +8033,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UpdateWorkspaceRunTargetsImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.UpdateWorkspaceRunTargets {
+  public static class UpdateWorkspaceRunTargetsImpl extends RoutableDtoClientImpl implements com.google.collide.dto.UpdateWorkspaceRunTargets {
     protected UpdateWorkspaceRunTargetsImpl() {}
 
     @Override
@@ -8051,7 +8085,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class UserDetailsImpl extends com.google.collide.json.client.Jso implements com.google.collide.dto.UserDetails {
+  public static class UserDetailsImpl extends Jso implements com.google.collide.dto.UserDetails {
     protected UserDetailsImpl() {}
 
     @Override
@@ -8184,7 +8218,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class WorkspaceInfoImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.WorkspaceInfo {
+  public static class WorkspaceInfoImpl extends RoutableDtoClientImpl implements com.google.collide.dto.WorkspaceInfo {
     protected WorkspaceInfoImpl() {}
 
     @Override
@@ -8408,15 +8442,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class WorkspaceTreeUpdateImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.WorkspaceTreeUpdate {
+  public static class WorkspaceTreeUpdateImpl extends RoutableDtoClientImpl implements com.google.collide.dto.WorkspaceTreeUpdate {
     protected WorkspaceTreeUpdateImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() /*-{
+    public final native JsonArray<Mutation> getMutations() /*-{
       return this["mutations"];
     }-*/;
 
-    public final native WorkspaceTreeUpdateImpl setMutations(com.google.collide.json.client.JsoArray<com.google.collide.dto.Mutation> mutations) /*-{
+    public final native WorkspaceTreeUpdateImpl setMutations(JsoArray<Mutation> mutations) /*-{
       this["mutations"] = mutations;
       return this;
     }-*/;
@@ -8446,15 +8480,15 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class WorkspaceTreeUpdateBroadcastImpl extends com.google.collide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.WorkspaceTreeUpdateBroadcast {
+  public static class WorkspaceTreeUpdateBroadcastImpl extends RoutableDtoClientImpl implements com.google.collide.dto.WorkspaceTreeUpdateBroadcast {
     protected WorkspaceTreeUpdateBroadcastImpl() {}
 
     @Override
-    public final native com.google.collide.json.shared.JsonArray<com.google.collide.dto.Mutation> getMutations() /*-{
+    public final native JsonArray<Mutation> getMutations() /*-{
       return this["mutations"];
     }-*/;
 
-    public final native WorkspaceTreeUpdateBroadcastImpl setMutations(com.google.collide.json.client.JsoArray<com.google.collide.dto.Mutation> mutations) /*-{
+    public final native WorkspaceTreeUpdateBroadcastImpl setMutations(JsoArray<Mutation> mutations) /*-{
       this["mutations"] = mutations;
       return this;
     }-*/;

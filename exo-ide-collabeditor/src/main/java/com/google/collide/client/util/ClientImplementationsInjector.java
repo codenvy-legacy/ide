@@ -15,18 +15,19 @@
 package com.google.collide.client.util;
 
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.client.Jso;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.client.JsoStringMap;
-import com.google.collide.json.client.JsoStringSet;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonIntegerMap;
-import com.google.collide.json.shared.JsonStringMap;
-import com.google.collide.json.shared.JsonStringSet;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.SharedLogUtils;
 import com.google.collide.shared.util.StringUtils;
 import com.google.gwt.core.client.GWT;
+
+import org.exoplatform.ide.json.client.Jso;
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.client.JsoStringMap;
+import org.exoplatform.ide.json.client.JsoStringSet;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
+import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 
 /**
  * Injects delegates for optimized client implementations.

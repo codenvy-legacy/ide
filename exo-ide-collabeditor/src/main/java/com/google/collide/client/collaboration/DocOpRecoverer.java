@@ -26,11 +26,11 @@ import com.google.collide.dto.ServerToClientDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.RecoverFromMissedDocOpsImpl;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.ErrorCallback;
-
 import elemental.util.Timer;
+
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A class that performs the XHR to recover missed doc ops and funnels the results into the right

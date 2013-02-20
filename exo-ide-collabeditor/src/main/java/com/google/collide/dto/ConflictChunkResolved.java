@@ -15,8 +15,9 @@
 package com.google.collide.dto;
 
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
-import com.google.collide.dtogen.shared.RoutingType;
-import com.google.collide.dtogen.shared.ServerToClientDto;
+
+import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 /**
  * Message sent to clients to indicate a change in the resolution status of a

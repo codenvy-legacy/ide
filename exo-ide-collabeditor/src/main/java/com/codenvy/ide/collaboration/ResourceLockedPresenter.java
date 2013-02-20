@@ -27,7 +27,6 @@ import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.client.DtoClientImpls.FileOperationNotificationImpl;
-import com.google.collide.json.shared.JsonArray;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.LocalizableResource.DefaultLocale;
 import com.google.gwt.i18n.client.Messages;
@@ -36,6 +35,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

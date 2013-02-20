@@ -21,14 +21,14 @@ import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.JsIntegerMap;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.gwt.resources.client.ClientBundle;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A renderer for the line numbers in the left gutter.

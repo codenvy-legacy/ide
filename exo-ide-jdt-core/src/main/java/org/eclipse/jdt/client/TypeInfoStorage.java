@@ -18,7 +18,6 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.collide.json.shared.JsonStringSet;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
@@ -32,6 +31,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.codeassistant.jvm.shared.TypeInfo;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;

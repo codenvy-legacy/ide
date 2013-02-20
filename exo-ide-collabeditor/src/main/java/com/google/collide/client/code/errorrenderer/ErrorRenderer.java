@@ -19,12 +19,13 @@ import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.CodeError;
 import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineNumberAndColumn;
 import com.google.collide.shared.ot.PositionMigrator;
 import com.google.collide.shared.util.SortedList;
+
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Renders code errors in the editor.

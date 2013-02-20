@@ -27,11 +27,9 @@ import com.google.collide.client.util.AnimationController;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.HoverController.HoverListener;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-
 import elemental.dom.Node;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -40,6 +38,8 @@ import elemental.events.EventTarget;
 import elemental.events.MouseEvent;
 import elemental.html.Element;
 import elemental.util.Timer;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Represents a single tooltip instance attached to any element, activated by

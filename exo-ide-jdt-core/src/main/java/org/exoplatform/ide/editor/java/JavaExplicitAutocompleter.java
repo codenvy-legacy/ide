@@ -22,12 +22,12 @@ import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.codemirror2.TokenType;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.util.StringUtils;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.regexp.shared.RegExp;
 
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
 
 import javax.annotation.Nonnull;

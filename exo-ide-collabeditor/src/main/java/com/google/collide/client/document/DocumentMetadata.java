@@ -17,8 +17,9 @@ package com.google.collide.client.document;
 import com.google.collide.client.util.PathUtil;
 import com.google.collide.dto.ConflictChunk;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Utility methods for retrieving metadata associated with a document.

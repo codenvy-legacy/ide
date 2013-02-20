@@ -20,13 +20,14 @@ import com.google.collide.dto.DocOpComponent.Delete;
 import com.google.collide.dto.DocOpComponent.Insert;
 import com.google.collide.dto.DocOpComponent.Retain;
 import com.google.collide.dto.DocOpComponent.RetainLine;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 
 /**

@@ -38,7 +38,6 @@ import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.dom.FontDimensionsCalculator;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.collide.shared.document.Document;
@@ -55,6 +54,7 @@ import com.google.gwt.resources.client.ImageResource;
 import elemental.events.Event;
 import elemental.html.Element;
 
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**

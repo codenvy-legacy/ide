@@ -14,9 +14,9 @@
 
 package com.google.collide.client.util.collections;
 
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.client.JsoStringMap;
-import com.google.collide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.client.JsoStringMap;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
  * Implementation with "__proto__" key workaround.

@@ -31,8 +31,6 @@ import com.google.collide.client.ui.popup.Popup;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.dom.DomUtils;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.common.base.Preconditions;
 import com.google.gwt.event.dom.client.KeyCodes;
@@ -51,6 +49,8 @@ import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 /**

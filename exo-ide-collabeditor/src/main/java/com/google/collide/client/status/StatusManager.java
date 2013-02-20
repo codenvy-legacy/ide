@@ -16,7 +16,8 @@ package com.google.collide.client.status;
 
 import com.google.collide.client.status.StatusMessage.MessageType;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.client.JsoArray;
+
+import org.exoplatform.ide.json.client.JsoArray;
 
 
 /**

@@ -18,12 +18,13 @@ import com.google.collide.client.collaboration.FileConcurrencyController.DocOpLi
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentMetadata;
 import com.google.collide.dto.DocOp;
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonIntegerMap;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
 
 import java.util.List;
 

@@ -14,7 +14,6 @@
 
 package com.google.collide.shared.document;
 
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.TextChange.Type;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
@@ -22,6 +21,8 @@ import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Mutator for the document that provides high-level document mutation API. The

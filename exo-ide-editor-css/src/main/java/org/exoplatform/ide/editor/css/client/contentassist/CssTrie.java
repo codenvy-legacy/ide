@@ -16,9 +16,10 @@ package org.exoplatform.ide.editor.css.client.contentassist;
 
 import com.google.collide.client.code.autocomplete.AbstractTrie;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Holder of all possible CSS attributes.

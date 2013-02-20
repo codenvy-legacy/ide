@@ -20,7 +20,6 @@ import com.google.collide.client.testing.DebugId;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.client.JsoArray;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.gwt.core.client.Scheduler;
@@ -28,7 +27,6 @@ import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.css.CSSStyleDeclaration.Display;
 import elemental.css.CSSStyleDeclaration.Visibility;
@@ -38,6 +36,8 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.PreElement;
 import elemental.html.SpanElement;
+
+import org.exoplatform.ide.json.client.JsoArray;
 
 /**
  * The StatusPresenter handles status events and renders them into the UI. This

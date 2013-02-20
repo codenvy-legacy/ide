@@ -19,7 +19,6 @@ import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.util.ScheduledCommandExecutor;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -32,6 +31,7 @@ import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
+import org.exoplatform.ide.json.shared.JsonStringMap;
 import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
 import org.waveprotocol.wave.client.common.util.UserAgent;
 

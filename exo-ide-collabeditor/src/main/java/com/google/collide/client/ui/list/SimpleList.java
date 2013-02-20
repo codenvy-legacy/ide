@@ -14,28 +14,25 @@
 
 package com.google.collide.client.ui.list;
 
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.user.client.ui.HTML;
-
-import com.google.gwt.user.client.ui.Widget;
-
-import com.google.gwt.user.client.ui.IsWidget;
-
 import com.google.collide.client.ui.ElementView;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.dom.DomUtils;
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.mvp.UiComponent;
 import com.google.collide.shared.util.JsonCollections;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
-
+import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.IsWidget;
+import com.google.gwt.user.client.ui.Widget;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.html.Element;
 import elemental.js.html.JsElement;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 // TODO: Where possible, port more lists that we have hand-rolled in
 // other parts of the UI to use this widget.

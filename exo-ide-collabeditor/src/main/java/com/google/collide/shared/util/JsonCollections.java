@@ -14,22 +14,18 @@
 
 package com.google.collide.shared.util;
 
-import com.google.gwt.core.shared.GWT;  // TODO
-
-import com.google.collide.json.server.JsonIntegerMapAdapter;
-
-import com.google.collide.json.server.JsonStringSetAdapter;
-
-import com.google.collide.json.server.JsonStringMapAdapter;
-
-import com.google.collide.json.server.JsonArrayListAdapter;
-
-import com.google.collide.json.shared.JsonArray;
-import com.google.collide.json.shared.JsonIntegerMap;
-import com.google.collide.json.shared.JsonStringMap;
-import com.google.collide.json.shared.JsonStringSet;
 import com.google.common.base.Equivalence;
 import com.google.common.base.Objects;
+import com.google.gwt.core.shared.GWT;
+
+import org.exoplatform.ide.json.server.JsonArrayListAdapter;
+import org.exoplatform.ide.json.server.JsonIntegerMapAdapter;
+import org.exoplatform.ide.json.server.JsonStringMapAdapter;
+import org.exoplatform.ide.json.server.JsonStringSetAdapter;
+import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
+import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;

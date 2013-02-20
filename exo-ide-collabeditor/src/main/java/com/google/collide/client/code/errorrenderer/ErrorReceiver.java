@@ -15,7 +15,8 @@
 package com.google.collide.client.code.errorrenderer;
 
 import com.google.collide.dto.CodeError;
-import com.google.collide.json.shared.JsonArray;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * A receiver which handles notifying the editor of code errors.

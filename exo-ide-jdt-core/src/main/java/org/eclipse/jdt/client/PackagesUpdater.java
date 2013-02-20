@@ -18,7 +18,6 @@
  */
 package org.eclipse.jdt.client;
 
-import com.google.collide.json.shared.JsonStringSet;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
@@ -43,11 +42,10 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.json.shared.JsonStringSet;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemType;
 
 import java.util.ArrayList;
 import java.util.List;

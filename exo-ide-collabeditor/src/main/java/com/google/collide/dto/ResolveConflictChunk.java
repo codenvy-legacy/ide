@@ -15,8 +15,9 @@
 package com.google.collide.dto;
 
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
-import com.google.collide.dtogen.shared.ClientToServerDto;
-import com.google.collide.dtogen.shared.RoutingType;
+
+import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
 
 /**
  * Message sent by the client to resolve (or un-resolve) a conflict chunk.

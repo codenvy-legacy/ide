@@ -21,22 +21,23 @@ import com.google.collide.codemirror2.Parser;
 import com.google.collide.codemirror2.State;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.codemirror2.Token;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.TaggableLine;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.anchor.Anchor;
+import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
-import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.ListenerRegistrar.Remover;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

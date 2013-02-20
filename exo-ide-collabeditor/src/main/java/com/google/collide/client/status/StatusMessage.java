@@ -15,12 +15,13 @@
 package com.google.collide.client.status;
 
 import com.google.collide.client.util.Elements;
-import com.google.collide.json.client.JsoArray;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import elemental.client.Browser;
 import elemental.html.AnchorElement;
 import elemental.html.SpanElement;
+
+import org.exoplatform.ide.json.client.JsoArray;
 
 /**
  * This is the base of all message types.

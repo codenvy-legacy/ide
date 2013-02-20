@@ -14,8 +14,9 @@
 
 package com.google.collide.shared.util;
 
-import com.google.collide.json.shared.JsonArray;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * List that is sorted based on the given {@link Comparator}.

@@ -14,10 +14,11 @@
 
 package com.google.collide.client.util;
 
-import com.google.collide.json.client.JsoArray;
-import com.google.collide.json.shared.JsonIntegerMap;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayNumber;
+
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonIntegerMap;
 
 /**
  * Creates a lightweight map with integer keys based on a JavaScript object.
@@ -116,7 +117,7 @@ public class JsIntegerMap<T> extends JavaScriptObject implements JsonIntegerMap<
     for (var key in this) {
       if (this.hasOwnProperty(key)) {
         cb.
-        @com.google.collide.json.shared.JsonIntegerMap.IterationCallback::onIteration(ILjava/lang/Object;)
+        @org.exoplatform.ide.json.shared.JsonIntegerMap.IterationCallback::onIteration(ILjava/lang/Object;)
         (parseInt(key),this[key]);
       }
     }

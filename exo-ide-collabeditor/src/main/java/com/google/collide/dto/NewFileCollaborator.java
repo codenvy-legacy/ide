@@ -18,8 +18,8 @@
  */
 package com.google.collide.dto;
 
-import com.google.collide.dtogen.shared.RoutingType;
-import com.google.collide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 @RoutingType(type = RoutingTypes.NEWFILECOLLABORATOR)
 public interface NewFileCollaborator extends ServerToClientDto
