@@ -190,6 +190,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                      .append("</a>");
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationSuccess(
                      project.getName(), link.toString()), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent());
                }
             });
       }
