@@ -972,7 +972,8 @@ public class JGitConnection implements GitConnection
             {
                if (!remoteRefUpdate.getStatus().equals(Status.OK))
                {
-                  throw new GitException(pushResult.getMessages());
+                  String message = "Failed to push some refs to ‘" + request.getRemote() + "’(rejected)";
+                  throw new GitException(message);
                }
             }
          }
