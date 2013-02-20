@@ -948,10 +948,10 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
    @Override
    public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
    {
-      if (display != null && openedProject != null)
-      {
-         Window.alert("ON SHOW HIDDEN FILES");
-      }
+//      if (display != null && openedProject != null)
+//      {
+//         Window.alert("ON SHOW HIDDEN FILES");
+//      }
    }
 
    /**

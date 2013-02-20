@@ -651,6 +651,11 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          {
             continue;
          }
+         
+         if (DirectoryFilter.get().matchWithPattern(item.getName()))
+         {
+            continue;
+         }
 
          PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(item);
          projectItem.addItem(treeItem);

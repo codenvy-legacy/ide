@@ -99,16 +99,12 @@ public class JavaProject extends IDEProject
    public JavaProject(ProjectModel project)
    {
       super(project);
-      
-      System.out.println("Created Java Project " + project.getPath());
    }
 
    private List<SourceDirectory> sourceDirectories = new ArrayList<SourceDirectory>();
 
    private List<ClasspathFolder> classpathFolders = new ArrayList<ClasspathFolder>();
    
-//   private List<Item> projectItems = new ArrayList<Item>();
-
    public List<SourceDirectory> getSourceDirectories()
    {
       return sourceDirectories;
@@ -118,11 +114,6 @@ public class JavaProject extends IDEProject
    {
       return classpathFolders;
    }
-
-//   public List<Item> getProjectItems()
-//   {
-//      return projectItems;
-//   }
 
    @Override
    public void refresh(FolderModel folder, final AsyncCallback<Folder> callback)
@@ -138,12 +129,10 @@ public class JavaProject extends IDEProject
          @Override
          public void onSuccess(final Folder resultFolder)
          {
-            new ProjectDump().dumpProjectTree(JavaProject.this);
+            //new ProjectDump().dumpProjectTree(JavaProject.this);
             
             UpdateManager updateManager = new UpdateManager();
             update(updateManager);
-            //updatePomXml(updateManager);
-            //updateProjectStructure(updateManager);
             
             updateManager.update(new AsyncCallback<Boolean>()
             {
@@ -170,8 +159,6 @@ public class JavaProject extends IDEProject
          @Override
          public void execute()
          {            
-            System.out.println("> update " + JavaProject.this.getPath() + "/pom.xml");               
-
             if (pom == null)
             {
                try
@@ -219,9 +206,6 @@ public class JavaProject extends IDEProject
          @Override
          public void execute()
          {
-            System.out.println("> update project " + getPath());
-//            new ProjectDump().dumpProjectTree(JavaProject.this);
-
             updateModules(updateManager);
             updateSourceDirectories();
             updateProjectReferences();
@@ -231,31 +215,8 @@ public class JavaProject extends IDEProject
       });
    }
    
-//   private void clearNotExistedModules()
-//   {
-//      /*
-//       * Create map of updated project items
-//       */
-//      HashMap<String, Item> itemMap = new HashMap<String, Item>();
-//      for (Item item : getChildren().getItems())
-//      {
-//         itemMap.put(item.getId(), item);
-//      }
-//      
-//      /*
-//       * Remove not existed modules from project items
-//       */
-//      List<ProjectModel> modules = new ArrayList<ProjectModel>(); 
-//      modules.addAll(getModules());
-//      for (ProjectModel module : modules)
-//      {
-//         
-//      }
-//   }
-   
    private void updateModules(final UpdateManager updateManager)
    {
-      //clearNotExistedModules();
       getModules().clear();
       
       for (Item item : getChildren().getItems())

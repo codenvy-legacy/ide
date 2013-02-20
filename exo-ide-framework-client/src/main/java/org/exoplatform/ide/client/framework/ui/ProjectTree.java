@@ -391,7 +391,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void updateFileState(FileModel file)
    {
-      System.out.println("ProjectItemTree.updateFileState()");
+//      System.out.println("ProjectItemTree.updateFileState()");
       
       //   TreeItem fileNode = getNodeById(file.getId());
       //   if (fileNode == null)
@@ -413,7 +413,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void setLockTokens(Map<String, String> lockTokens)
    {
-      System.out.println("ProjectItemTree.setLockTokens()");
+//      System.out.println("ProjectItemTree.setLockTokens()");
       
       //   this.locktokens = lockTokens;
    } 
@@ -426,7 +426,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
    {
-      System.out.println("ProjectItemTree.addItemsIcons()");
+//      System.out.println("ProjectItemTree.addItemsIcons()");
       
       //   for (Item item : itemsIcons.keySet())
       //   {
@@ -453,7 +453,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
    {
-      System.out.println("ProjectItemTree.removeItemIcons()");
+//      System.out.println("ProjectItemTree.removeItemIcons()");
       
       //   for (Item item : itemsIcons.keySet())
       //   {
@@ -466,7 +466,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    
    public void setUpdateValue(boolean updateValue)
    {
-      System.out.println("ProjectItemTree.setUpdateValue()");
+//      System.out.println("ProjectItemTree.setUpdateValue()");
       
       //    this.updateValue = updateValue;
    }
@@ -477,7 +477,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void changeFolderIcon(Folder folder, boolean isOpens)
    {
-      System.out.println("ProjectItemTree.changeFolderIcon()");
+//      System.out.println("ProjectItemTree.changeFolderIcon()");
       
       //   TreeItem node = getNodeById(folder.getId());
       //   if (node == null)

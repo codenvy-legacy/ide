@@ -544,7 +544,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       if (display != null)
       {
-         System.out.println("tree refreshed. item to select >> " + itemToSelect);
+         //System.out.println("tree refreshed. item to select >> " + itemToSelect);
          display.getBrowserTree().setValue(event.getFolder());
          if (event.getItemToSelect() != null)
          {

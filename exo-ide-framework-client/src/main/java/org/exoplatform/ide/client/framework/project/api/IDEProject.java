@@ -27,8 +27,6 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.ProjectImpl;
 
 import java.util.List;
 
@@ -160,14 +158,6 @@ public class IDEProject extends ProjectModel
       }
 
       ItemContext itemContext = (ItemContext)item;
-//
-//      System.out.println("item context parent  > " + itemContext.getParent());
-//      System.out.println("item context project > " + itemContext.getProject());
-//
-//      if (itemContext.getProject() == null || !itemContext.getProject().getId().equals(getId()))
-//      {
-//         throw new Exception("Item is out of the project's scope. Project : " + getName() + ", item path is : " + item.getPath());
-//      }
 
       if (itemContext.getParent() == null || !itemContext.getParent().getPath().startsWith(getPath()))
       {
@@ -210,29 +200,5 @@ public class IDEProject extends ProjectModel
          callback.onFailure(e);
       }
    }
-
-   //   private void dump(Item item, String prefix)
-   //   {
-   //      if (item instanceof ProjectModel)
-   //      {
-   //         System.out.println(prefix + "# " + item.getName());
-   //         for (Item i : ((ProjectModel)item).getChildren().getItems())
-   //         {
-   //            dump(i, prefix + "    ");
-   //         }
-   //      }
-   //      else if (item instanceof FolderModel)
-   //      {
-   //         System.out.println(prefix + "> " + item.getName());
-   //         for (Item i : ((FolderModel)item).getChildren().getItems())
-   //         {
-   //            dump(i, prefix + "    ");
-   //         }
-   //      }
-   //      else if (item instanceof FileModel)
-   //      {
-   //         System.out.println(prefix + "  " + item.getName());
-   //      }
-   //   }
 
 }
