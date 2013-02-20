@@ -26,13 +26,14 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.ItemTree;
+import org.exoplatform.ide.client.framework.ui.ProjectTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -71,7 +72,8 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    }
 
    @UiField
-   ItemTree treeGrid;
+   //ItemTree treeGrid;
+   ProjectTree treeGrid;
 
    @UiField
    HTMLPanel projectNotOpenedPanel;
@@ -89,6 +91,21 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       setCanShowContextMenu(true);
+   }
+   
+   @Override
+   public void activate()
+   {
+      super.activate();
+      
+      if (treeGrid.isVisible())
+      {
+         treeGrid.getElement().focus();
+      }
+      else
+      {
+         projectsListGrid.getElement().focus();
+      }
    }
 
    /**
@@ -113,9 +130,9 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
     * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#selectItem(java.lang.String)
     */
    @Override
-   public boolean selectItem(String path)
+   public boolean selectItem(String id)
    {
-      return treeGrid.selectItem(path);
+      return treeGrid.selectItem(id);
    }
 
    /**
@@ -258,5 +275,23 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    {
       treeGrid.changeFolderIcon(folder, isOpens);
    }
+
+   @Override
+   public void navigateToItem(Item item)
+   {
+      treeGrid.navigateToItem(item);
+   }
+
+//   @Override
+//   public void setProject(ProjectModel project)
+//   {
+//      treeGrid.setProject(project);
+//   }
+//
+//   @Override
+//   public void openFolder(Folder folder)
+//   {
+//      treeGrid.openFolder(folder);
+//   }
 
 }

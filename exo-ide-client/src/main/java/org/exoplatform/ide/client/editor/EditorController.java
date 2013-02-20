@@ -387,7 +387,11 @@ public class EditorController implements EditorContentChangedHandler, EditorActi
          return;
       }
 
-      editorViewList.get(activeFile.getId()).activate();
+      View view = editorViewList.get(activeFile.getId());
+      if (view != null)
+      {
+         view.activate();         
+      }
    }
 
    /**

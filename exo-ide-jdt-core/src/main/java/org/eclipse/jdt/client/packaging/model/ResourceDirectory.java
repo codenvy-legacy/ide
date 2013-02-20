@@ -23,74 +23,57 @@ import java.util.List;
 
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class ProjectItem
+public class ResourceDirectory
 {
 
-   List<ResourceDirectoryItem> resourceDirectories = new ArrayList<ResourceDirectoryItem>();
+   private String name;
+   
+   private FolderModel folder;
 
-   List<DependencyListItem> dependencies = new ArrayList<DependencyListItem>();
+   private List<Package> packages = new ArrayList<Package>();
 
-   List<FolderModel> folders = new ArrayList<FolderModel>();
+   private List<FileModel> files = new ArrayList<FileModel>();
 
-   List<FileModel> files = new ArrayList<FileModel>();
-
-   private ProjectModel project;
-
-   public ProjectItem(ProjectModel project)
+   public ResourceDirectory(String name, FolderModel folder)
    {
-      this.project = project;
+      this.name = name;
+      this.folder = folder;
    }
 
-   public ProjectModel getProject()
+   public String getName()
    {
-      return project;
+      return name;
    }
 
-   public List<ResourceDirectoryItem> getResourceDirectories()
+   public void setName(String name)
    {
-      return resourceDirectories;
+      this.name = name;
    }
 
-   public void setResourceDirectories(List<ResourceDirectoryItem> resourceDirectories)
+   public FolderModel getFolder()
    {
-      this.resourceDirectories = resourceDirectories;
+      return folder;
    }
 
-   public List<DependencyListItem> getDependencies()
+   public void setFolder(FolderModel folder)
    {
-      return dependencies;
+      this.folder = folder;
    }
 
-   public void setDependencies(List<DependencyListItem> dependencies)
+   public List<Package> getPackages()
    {
-      this.dependencies = dependencies;
-   }
-
-   public List<FolderModel> getFolders()
-   {
-      return folders;
-   }
-
-   public void setFolders(List<FolderModel> folders)
-   {
-      this.folders = folders;
+      return packages;
    }
 
    public List<FileModel> getFiles()
    {
       return files;
-   }
-
-   public void setFiles(List<FileModel> files)
-   {
-      this.files = files;
    }
 
 }

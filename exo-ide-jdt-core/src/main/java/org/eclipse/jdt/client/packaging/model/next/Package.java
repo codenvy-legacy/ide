@@ -16,31 +16,44 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model;
+package org.eclipse.jdt.client.packaging.model.next;
+
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class DependencyItem
+public class Package extends FolderModel
 {
 
-   private String name;
+   private String packageName;
 
-   public DependencyItem(String name)
+   private List<FileModel> files = new ArrayList<FileModel>();
+
+   public Package(FolderModel folder, String packageName)
    {
-      this.name = name;
+      super(folder);
+      this.packageName = packageName;
+
+      getChildren().getItems().addAll(folder.getChildren().getItems());
+      setParent(folder.getParent());
+      setProject(folder.getProject());
    }
 
-   public String getName()
+   public String getPackageName()
    {
-      return name;
+      return packageName;
    }
 
-   public void setName(String name)
+   public List<FileModel> getFiles()
    {
-      this.name = name;
+      return files;
    }
 
 }

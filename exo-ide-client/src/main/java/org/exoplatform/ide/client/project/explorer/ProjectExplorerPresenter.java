@@ -35,13 +35,10 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.json.client.JSONParser;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanCodex;
-import com.google.web.bindery.autobean.shared.AutoBeanUtils;
+import com.google.gwt.user.client.Window;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
@@ -58,12 +55,10 @@ import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
-import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.GoToItemHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
@@ -72,17 +67,17 @@ import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconE
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
-import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
-import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectProperties;
-import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
+import org.exoplatform.ide.client.framework.project.api.TreeRefreshedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -113,7 +108,6 @@ import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
 import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.File;
@@ -123,8 +117,6 @@ import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
-import org.exoplatform.ide.vfs.shared.Property;
-import org.exoplatform.ide.vfs.shared.PropertyImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -142,12 +134,19 @@ import java.util.Map;
  *
  */
 
-public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectItemHandler,
+public class ProjectExplorerPresenter implements SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
-   ItemsSelectedHandler, ViewActivatedHandler, OpenProjectHandler, VfsChangedHandler, CloseProjectHandler,
-   AllFilesClosedHandler, GoToItemHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler, ItemDeletedHandler
+   ItemsSelectedHandler, ViewActivatedHandler, VfsChangedHandler,
+//   AllFilesClosedHandler, 
+   GoToItemHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler, ItemDeletedHandler,
+   
+   ProjectOpenedHandler,
+   ProjectClosedHandler,
+   TreeRefreshedHandler
+   
+//   , OpenProjectHandler
 {
 
    private static final String DEFAULT_TITLE = "Project Explorer";
@@ -166,7 +165,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
    private HashMap<String, ProjectModel> map = new HashMap<String, ProjectModel>();
 
-   private List<Folder> foldersToRefresh = new ArrayList<Folder>();
+   //private List<Folder> foldersToRefresh = new ArrayList<Folder>();
 
    private List<Item> selectedItems = new ArrayList<Item>();
 
@@ -195,16 +194,15 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
-      IDE.addHandler(RefreshBrowserEvent.TYPE, this);
+      //IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemLockedEvent.TYPE, this);
       IDE.addHandler(ItemUnlockedEvent.TYPE, this);
       IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
-      IDE.addHandler(OpenProjectEvent.TYPE, this);
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(CloseProjectEvent.TYPE, this);
+      //IDE.addHandler(CloseProjectEvent.TYPE, this);
 
       IDE.addHandler(SelectItemEvent.TYPE, this);
       IDE.addHandler(GoToItemEvent.TYPE, this);
@@ -214,6 +212,11 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
       IDE.addHandler(ItemDeletedEvent.TYPE, this);
+
+      //IDE.addHandler(OpenProjectEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(TreeRefreshedEvent.TYPE, this);
    }
 
    private void ensureProjectExplorerDisplayCreated()
@@ -234,13 +237,27 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          public void onOpen(OpenEvent<Item> event)
          {
-            onFolderOpened((Folder)event.getTarget());
+            Folder folder = (Folder)event.getTarget();
+            
+            ItemList<Item> children = null;
+            if (folder instanceof ProjectModel)
+            {
+               children = ((ProjectModel)folder).getChildren();
+            }
+            else if (folder instanceof FolderModel)
+            {
+               children = ((FolderModel)folder).getChildren();
+            }
+            
+            if (children != null && !children.getItems().isEmpty())
+            {
+               display.getBrowserTree().setValue(folder);
+            }
          }
       });
 
       display.getBrowserTree().addCloseHandler(new CloseHandler<Item>()
       {
-
          public void onClose(CloseEvent<Item> event)
          {
             onCloseFolder((Folder)event.getTarget());
@@ -251,7 +268,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          public void onSelection(SelectionEvent<Item> event)
          {
-            onItemSelected();
+            treeItemSelected();
          }
       });
 
@@ -287,10 +304,10 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       {
          public void onDoubleClick(DoubleClickEvent event)
          {
-            List<ProjectModel> projectsList = display.getSelectedProjects();
-            if (projectsList.size() == 1)
+            List<ProjectModel> selectedProjects = display.getSelectedProjects();
+            if (selectedProjects.size() == 1)
             {
-               IDE.fireEvent(new OpenProjectEvent(projectsList.get(0)));
+               IDE.fireEvent(new OpenProjectEvent(selectedProjects.get(0)));
             }
          }
       });
@@ -317,7 +334,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
     * Handling item selected event from browser
     *
     */
-   protected void onItemSelected()
+   protected void treeItemSelected()
    {
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
@@ -354,213 +371,215 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
    }
 
-   /**
-    * Handling of folder opened event from browser
-    *
-    * @param openedFolder
-    */
-   protected void onFolderOpened(Folder openedFolder)
-   {
-      // Commented to fix bug with selection of new folder
-      // itemToSelect = null;
-      ItemList<Item> children =
-         (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren()
-            : ((FolderModel)openedFolder).getChildren();
-      if (!children.getItems().isEmpty())
-      {
-         return;
-      }
+//   /**
+//    * Handling of folder opened event from browser
+//    *
+//    * @param openedFolder
+//    */
+//   protected void onFolderOpened(Folder openedFolder)
+//   {
+//      // Commented to fix bug with selection of new folder
+//      // itemToSelect = null;
+//      ItemList<Item> children =
+//         (openedFolder instanceof ProjectModel) ? ((ProjectModel)openedFolder).getChildren()
+//            : ((FolderModel)openedFolder).getChildren();
+//      if (!children.getItems().isEmpty())
+//      {
+//         return;
+//      }
+//
+//      foldersToRefresh.clear();
+//      foldersToRefresh.add(openedFolder);
+//      display.setUpdateTreeValue(false);
+//      refreshNextFolder();
+//   }
 
-      foldersToRefresh.clear();
-      foldersToRefresh.add(openedFolder);
-      display.setUpdateTreeValue(false);
-      refreshNextFolder();
-   }
+//   public void onRefreshBrowser(RefreshBrowserEvent event)
+//   {
+//      if (display == null)
+//      {
+//         return;
+//      }
+//
+//      if (!display.asView().isActive() && !display.asView().getId().equals(lastNavigatorId))
+//      {
+//         return;
+//      }
+//
+//      Window.alert("REFRESH BROWSER");
+//      
+//      if (event.getItemToSelect() != null)
+//      {
+//         itemToSelect = event.getItemToSelect().getId();
+//      }
+//      else
+//      {
+//         List<Item> selectedItems = display.getSelectedItems();
+//         if (selectedItems.size() > 0)
+//         {
+//            itemToSelect = selectedItems.get(0).getId();
+//         }
+//         else
+//         {
+//            itemToSelect = null;
+//         }
+//      }
+//
+//      foldersToRefresh = event.getFolders();
+//
+//      if (foldersToRefresh == null || foldersToRefresh.size() == 0)
+//      {
+//         foldersToRefresh = new ArrayList<Folder>();
+//
+//         if (selectedItems.size() > 0)
+//         {
+//            Item item = selectedItems.get(0);
+//            if (item instanceof FileModel)
+//            {
+//               foldersToRefresh.add(((FileModel)item).getParent());
+//            }
+//            else if (item instanceof Folder)
+//            {
+//               foldersToRefresh.add((Folder)item);
+//            }
+//         }
+//      }
+//
+//      display.setUpdateTreeValue(false);
+//      refreshNextFolder();
+//   }
 
-   public void onRefreshBrowser(RefreshBrowserEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
+//   /**
+//    * Refresh folder's properties.
+//    *
+//    * @param folder
+//    */
+//   private void refreshFolderProperties(final Folder folder)
+//   {
+//      try
+//      {
+//         VirtualFileSystem.getInstance().getItemById(folder.getId(),
+//            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
+//            {
+//
+//               @Override
+//               protected void onSuccess(ItemWrapper result)
+//               {
+//                  folder.getProperties().clear();
+//                  folder.getProperties().addAll(result.getItem().getProperties());
+//               }
+//
+//               protected void onFailure(Throwable exception)
+//               {
+//               }
+//            });
+//      }
+//      catch (RequestException e)
+//      {
+//      }
+//   }
 
-      if (!display.asView().isActive() && !display.asView().getId().equals(lastNavigatorId))
-      {
-         return;
-      }
+//   private void refreshNextFolder()
+//   {
+//      if (foldersToRefresh.size() == 0)
+//      {
+//         if (itemToSelect != null)
+//         {
+//            display.selectItem(itemToSelect);
+//            itemToSelect = null;
+//         }
+//
+//         return;
+//      }
+//
+//      final Folder folder = foldersToRefresh.get(0);
+//      // remove folder hear to open sever folder simultaneously
+//      foldersToRefresh.remove(folder);
+//      refreshFolderProperties(folder);
+//      try
+//      {
+//         display.changeFolderIcon(folder, true);
+//         VirtualFileSystem.getInstance().getChildren(folder,
+//            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
+//            {
+//               @Override
+//               protected void onFailure(Throwable exception)
+//               {
+//                  itemToSelect = null;
+//                  foldersToRefresh.clear();
+//                  IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
+//               }
+//
+//               @Override
+//               protected void onSuccess(List<Item> result)
+//               {
+//                  folderContentReceived(folder, result);
+//               }
+//            });
+//      }
+//      catch (RequestException e)
+//      {
+//         IDE.fireEvent(new ExceptionThrownEvent(e));
+//      }
+//   }
 
-      if (event.getItemToSelect() != null)
-      {
-         itemToSelect = event.getItemToSelect().getId();
-      }
-      else
-      {
-         List<Item> selectedItems = display.getSelectedItems();
-         if (selectedItems.size() > 0)
-         {
-            itemToSelect = selectedItems.get(0).getId();
-         }
-         else
-         {
-            itemToSelect = null;
-         }
-      }
+//   private void folderContentReceived(Folder folder, List<Item> result)
+//   {
+//      // loader.hide();
+//      for (Item i : result)
+//      {
+//         if (i instanceof ItemContext)
+//         {
+//            ItemContext context = (ItemContext)i;
+//            context.setParent(new FolderModel(folder));
+//            context.setProject(map.get(i.getId()) != null ? map.get(i.getId()) : openedProject);
+//         }
+//      }
+//
+//      if (folder instanceof FolderModel)
+//      {
+//         ((FolderModel)folder).getChildren().getItems().clear();
+//         ((FolderModel)folder).getChildren().getItems().addAll(result);
+//      }
+//      else if (folder instanceof ProjectModel)
+//      {
+//         ((ProjectModel)folder).getChildren().getItems().clear();
+//         ((ProjectModel)folder).getChildren().getItems().addAll(result);
+//      }
+//
+//      // TODO if will be some value - display system items or not, then add check here:
+//      List<Item> children =
+//         (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
+//            .getChildren().getItems();
+//      // removeSystemItems(children);
+//      Collections.sort(children, comparator);
+//
+//      display.getBrowserTree().setValue(folder);
+//      IDE.fireEvent(new FolderRefreshedEvent(folder));
+//      display.changeFolderIcon(folder, false);
+//      // display.asView().setViewVisible();
+//
+//      refreshNextFolder();
+//   }
 
-      foldersToRefresh = event.getFolders();
-
-      if (foldersToRefresh == null || foldersToRefresh.size() == 0)
-      {
-         foldersToRefresh = new ArrayList<Folder>();
-
-         if (selectedItems.size() > 0)
-         {
-            Item item = selectedItems.get(0);
-            if (item instanceof FileModel)
-            {
-               foldersToRefresh.add(((FileModel)item).getParent());
-            }
-            else if (item instanceof Folder)
-            {
-               foldersToRefresh.add((Folder)item);
-            }
-         }
-      }
-
-      display.setUpdateTreeValue(false);
-      refreshNextFolder();
-   }
-
-   /**
-    * Refresh folder's properties.
-    *
-    * @param folder
-    */
-   private void refreshFolderProperties(final Folder folder)
-   {
-      try
-      {
-         VirtualFileSystem.getInstance().getItemById(folder.getId(),
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-            {
-
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  folder.getProperties().clear();
-                  folder.getProperties().addAll(result.getItem().getProperties());
-               }
-
-               protected void onFailure(Throwable exception)
-               {
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-      }
-   }
-
-   private void refreshNextFolder()
-   {
-      if (foldersToRefresh.size() == 0)
-      {
-         if (itemToSelect != null)
-         {
-            display.selectItem(itemToSelect);
-            itemToSelect = null;
-         }
-
-         return;
-      }
-
-      final Folder folder = foldersToRefresh.get(0);
-      // remove folder hear to open sever folder simultaneously
-      foldersToRefresh.remove(folder);
-      refreshFolderProperties(folder);
-      try
-      {
-         display.changeFolderIcon(folder, true);
-         VirtualFileSystem.getInstance().getChildren(folder,
-            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-            {
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  itemToSelect = null;
-                  foldersToRefresh.clear();
-                  IDE.fireEvent(new ExceptionThrownEvent(exception, RECEIVE_CHILDREN_ERROR_MSG));
-               }
-
-               @Override
-               protected void onSuccess(List<Item> result)
-               {
-                  folderContentReceived(folder, result);
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   private void folderContentReceived(Folder folder, List<Item> result)
-   {
-      // loader.hide();
-      for (Item i : result)
-      {
-         if (i instanceof ItemContext)
-         {
-            ItemContext context = (ItemContext)i;
-            context.setParent(new FolderModel(folder));
-            context.setProject(map.get(i.getId()) != null ? map.get(i.getId()) : openedProject);
-         }
-      }
-
-      if (folder instanceof FolderModel)
-      {
-         ((FolderModel)folder).getChildren().getItems().clear();
-         ((FolderModel)folder).getChildren().getItems().addAll(result);
-      }
-      else if (folder instanceof ProjectModel)
-      {
-         ((ProjectModel)folder).getChildren().getItems().clear();
-         ((ProjectModel)folder).getChildren().getItems().addAll(result);
-      }
-
-      // TODO if will be some value - display system items or not, then add check here:
-      List<Item> children =
-         (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren().getItems() : ((FolderModel)folder)
-            .getChildren().getItems();
-      // removeSystemItems(children);
-      Collections.sort(children, comparator);
-
-      display.getBrowserTree().setValue(folder);
-      IDE.fireEvent(new FolderRefreshedEvent(folder));
-      display.changeFolderIcon(folder, false);
-      // display.asView().setViewVisible();
-
-      refreshNextFolder();
-   }
-
-   /**
-    * Comparator for comparing items in received directory.
-    */
-   private Comparator<Item> comparator = new Comparator<Item>()
-   {
-      public int compare(Item item1, Item item2)
-      {
-         if (item1 instanceof Folder && item2 instanceof FileModel)
-         {
-            return -1;
-         }
-         else if (item1 instanceof File && item2 instanceof Folder)
-         {
-            return 1;
-         }
-         return item1.getName().compareTo(item2.getName());
-      }
-   };
+//   /**
+//    * Comparator for comparing items in received directory.
+//    */
+//   private Comparator<Item> comparator = new Comparator<Item>()
+//   {
+//      public int compare(Item item1, Item item2)
+//      {
+//         if (item1 instanceof Folder && item2 instanceof FileModel)
+//         {
+//            return -1;
+//         }
+//         else if (item1 instanceof File && item2 instanceof Folder)
+//         {
+//            return 1;
+//         }
+//         return item1.getName().compareTo(item2.getName());
+//      }
+//   };
 
    /**
     * Select chosen item in browser.
@@ -578,7 +597,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    public void onItemUnlocked(ItemUnlockedEvent event)
    {
       Item item = event.getItem();
-      onRefreshBrowser(new RefreshBrowserEvent());
+//      onRefreshBrowser(new RefreshBrowserEvent());
       if (item instanceof FileModel)
       {
          FileModel file = (FileModel)item;
@@ -591,7 +610,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    public void onItemLocked(ItemLockedEvent event)
    {
       Item item = event.getItem();
-      onRefreshBrowser(new RefreshBrowserEvent());
+      //onRefreshBrowser(new RefreshBrowserEvent());
       if (item instanceof FileModel)
       {
          FileModel file = (FileModel)item;
@@ -675,7 +694,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    {
       if (event.getView() instanceof ProjectExplorerDisplay && event.getView().isViewVisible())
       {
-         onItemSelected();
+         treeItemSelected();
       }
    }
 
@@ -752,157 +771,11 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
       if (event.getView() instanceof ProjectExplorerDisplay)
       {
-         onItemSelected();
+         treeItemSelected();
       }
    }
 
-   private void loadProject()
-   {
-      display.setProjectExplorerTreeVisible(true);
-      IDE.fireEvent(new ProjectSelectedEvent(null));
-      display.getBrowserTree().setValue(null);
-      display.getBrowserTree().setValue(openedProject);
-      display.asView().setTitle(openedProject.getName());
-      display.selectItem(openedProject.getId());
-      selectedItems = display.getSelectedItems();
-
-      display.setLinkWithEditorButtonEnabled(true);
-      display.setLinkWithEditorButtonSelected(linkingWithEditor);
-
-      foldersToRefresh.clear();
-      foldersToRefresh.add(openedProject);
-      if (openedProject.getProjectType().equals(ProjectType.MultiModule.value()))
-      {
-         try
-         {
-            AutoBean<ItemNode> autoBean = org.exoplatform.ide.client.IDE.AUTO_BEAN_FACTORY.itemNode();
-            AutoBeanUnmarshaller<ItemNode> unmarshaller = new AutoBeanUnmarshaller<ItemNode>(autoBean);
-            VirtualFileSystem.getInstance().getProjectTree(openedProject.getId(),
-               new AsyncRequestCallback<ItemNode>(unmarshaller)
-               {
-                  @Override
-                  protected void onSuccess(ItemNode result)
-                  {
-                     parseProjectTree(openedProject, result);
-                     IDE.fireEvent(new ProjectOpenedEvent(openedProject));
-                     refreshNextFolder();
-                  }
-
-                  @Override
-                  protected void onFailure(Throwable exception)
-                  {
-                     IDE.fireEvent(new ExceptionThrownEvent(exception,
-                        "Service is not deployed.<br>Parent folder not found."));
-                  }
-               });
-         }
-         catch (RequestException e)
-         {
-            IDE.fireEvent(new ExceptionThrownEvent(e));
-         }
-      }
-      else
-      {
-         IDE.fireEvent(new ProjectOpenedEvent(openedProject));
-         refreshNextFolder();
-      }
-   }
-
-   private void updateTargets()
-   {
-      for (Property property : openedProject.getProperties())
-      {
-         if (property.getName().equals(ProjectProperties.TARGET.value()))
-         {
-            loadProject();
-            return;
-         }
-      }
-
-      List<String> supportedPaaS = new ArrayList<String>();
-      for (PaaS paas : IDE.getInstance().getPaaSes())
-      {
-         if (paas.getSupportedProjectTypes().contains(ProjectType.fromValue(openedProject.getProjectType())))
-         {
-            supportedPaaS.add(paas.getId());
-         }
-      }
-
-      if (supportedPaaS.size() == 0)
-      {
-         loadProject();
-         return;
-      }
-
-      openedProject.getProperties().add(new PropertyImpl(ProjectProperties.TARGET.value(), supportedPaaS));
-
-      try
-      {
-         VirtualFileSystem.getInstance().updateItem(openedProject, null,
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper()))
-            {
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  openedProject = (ProjectModel)result.getItem();
-                  loadProject();
-               }
-
-               @Override
-               protected void onFailure(Throwable e)
-               {
-                  IDE.fireEvent(new ExceptionThrownEvent(e));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
-   }
-
-   @Override
-   public void onOpenProject(OpenProjectEvent event)
-   {
-      boolean viewWasOpened = display != null;
-
-      ensureProjectExplorerDisplayCreated();
-
-      if (viewWasOpened && openedProject != null)
-      {
-         if (openedProject.getId().equals(event.getProject().getId())
-            && openedProject.getName().equals(event.getProject().getName()))
-         {
-            return;
-         }
-      }
-
-      openedProject = new ProjectModel(event.getProject());
-      updateTargets();
-   }
-
-   @Override
-   public void onShowProjectExplorer(ShowProjectExplorerEvent event)
-   {
-      if (display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-         return;
-      }
-
-      ensureProjectExplorerDisplayCreated();
-
-      if (openedProject == null)
-      {
-         display.setProjectExplorerTreeVisible(false);
-         refreshProjectsList();
-      }
-      else
-      {
-         updateTargets();
-      }
-   }
-
+   
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
@@ -919,219 +792,33 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
 
       display.asView().setTitle(DEFAULT_TITLE);
    }
-
-   @Override
-   public void onCloseProject(CloseProjectEvent event)
-   {
-      if (openedProject == null)
-      {
-         return;
-      }
-
-      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            IDE.fireEvent(new CloseAllFilesEvent());
-         }
-      });
-   }
-
-   @Override
-   public void onAllFilesClosed(AllFilesClosedEvent event)
-   {
-      IDE.removeHandler(AllFilesClosedEvent.TYPE, this);
-
-      if (openedProject == null)
-      {
-         return;
-      }
-
-      final ProjectClosedEvent projectClosedEvent = new ProjectClosedEvent(openedProject);
-      openedProject = null;
-      if (display != null)
-      {
-         display.getBrowserTree().setValue(null);
-         display.asView().setTitle(DEFAULT_TITLE);
-         display.setProjectExplorerTreeVisible(false);
-         refreshProjectsList();
-         display.setLinkWithEditorButtonEnabled(false);
-      }
-
-      selectedItems.clear();
-      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
-
-      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-      {
-         @Override
-         public void execute()
-         {
-            IDE.fireEvent(projectClosedEvent);
-         }
-      });
-   }
-
+   
+   
+   
+   
+   
+   
+   
+   
    @Override
    public void onGoToFolder(GoToItemEvent event)
    {
-      if (event.getFileToOpen() == null)
-      {
-         goToFolder();
-      }
-      else
-      {
-         goToFolder(event.getFileToOpen(), event.getCursorPosition(), event.isNeedOpen());
-      }
+      goToFolder();
    }
-
-   private void goToFolder(FileModel fileModel, CursorPosition cursorPosition, boolean b)
-   {
-      openFileAfterGotoItem = b;
-      openFileCursorPosition = cursorPosition;
-      selectedItems.clear();
-      selectedItems.add(fileModel);
-//      openFileAfterGotoItem = 
-      itemsToBeOpened.clear();
-      itemsToBeOpened.add(openedProject.getPath());
-
-      String[] parts = fileModel.getPath().split("/");
-      String work = "";
-
-      for (int i = 0; i < parts.length; i++)
-      {
-         String part = parts[i];
-         if ("".equals(part))
-         {
-            continue;
-         }
-
-         work += "/" + part;
-         itemsToBeOpened.add(work);
-      }
-
-      foldersToRefresh.clear();
-      cyclicallyCheckItemsToBeRefreshed();
-   }
-
+   
    private void goToFolder()
    {
-      if (display == null || openedProject == null || editorActiveFile == null)
+      if (editorActiveFile == null)
       {
          return;
       }
-
-      if (!editorActiveFile.getPath().startsWith(openedProject.getPath()))
-      {
-         return;
-      }
-
-      if (display.selectItem(editorActiveFile.getId()))
-      {
-         return;
-      }
-
-      // If we do not find item in tree then try to find item in VFS.
-      String expandPath = editorActiveFile.getPath().substring(openedProject.getPath().length());
-      itemsToBeOpened.clear();
-      itemsToBeOpened.add(openedProject.getPath());
-
-      String[] parts = expandPath.split("/");
-      String work = openedProject.getPath();
-
-      for (int i = 0; i < parts.length; i++)
-      {
-         String part = parts[i];
-         if ("".equals(part))
-         {
-            continue;
-         }
-
-         work += "/" + part;
-         itemsToBeOpened.add(work);
-      }
-
-      foldersToRefresh.clear();
-      cyclicallyCheckItemsToBeRefreshed();
-   }
-
-   private void cyclicallyCheckItemsToBeRefreshed()
-   {
-      if (itemsToBeOpened.size() == 0)
-      {
-         if (foldersToRefresh.size() > 0 || itemToSelect != null)
-         {
-            display.setUpdateTreeValue(true);
-            refreshNextFolder();
-         }
-
-         return;
-      }
-
-      String path = itemsToBeOpened.get(0);
-      itemsToBeOpened.remove(0);
-
-      try
-      {
-         VirtualFileSystem.getInstance().getItemByPath(path,
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(new FileModel())))
-            {
-               @Override
-               protected void onSuccess(ItemWrapper result)
-               {
-                  //itemsToBeOpened.remove(0);
-
-                  if (result.getItem() instanceof ProjectModel)
-                  {
-                     foldersToRefresh.add((ProjectModel)result.getItem());
-                  }
-                  else if (result.getItem() instanceof FolderModel)
-                  {
-                     foldersToRefresh.add((FolderModel)result.getItem());
-                  }
-                  else if (result.getItem() instanceof FileModel)
-                  {
-                     FileModel file = (FileModel)result.getItem();
-                     if (file instanceof ItemContext && openedProject != null)
-                     {
-                        ((ItemContext)file).setProject(openedProject);
-                     }
-
-                     itemToSelect = result.getItem().getId();
-                     if (itemsToBeOpened.isEmpty() && openFileAfterGotoItem)
-                     {
-                        IDE.fireEvent(new OpenFileEvent(file, openFileCursorPosition));
-                        openFileCursorPosition = null;
-                     }
-                  }
-
-                  Scheduler.get().scheduleDeferred(new ScheduledCommand()
-                  {
-                     @Override
-                     public void execute()
-                     {
-                        cyclicallyCheckItemsToBeRefreshed();
-                     }
-                  });
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  itemsToBeOpened.clear();
-                  foldersToRefresh.clear();
-                  itemToSelect = null;
-
-                  IDE.fireEvent(new ExceptionThrownEvent(exception));
-               }
-            });
-
-      }
-      catch (Exception e)
-      {
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
+      
+       if (display.selectItem(editorActiveFile.getId()))
+       {
+          return;
+       }
+            
+      display.navigateToItem(editorActiveFile);
    }
 
    /*
@@ -1146,7 +833,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    /**
     * Opened files.
     */
-   private Map<String, FileModel> openedFiles;
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
    /**
     * Link with Editor button click handler.
@@ -1212,6 +899,8 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
          if (!file.getId().equals(editorActiveFile.getId()))
          {
             IDE.fireEvent(new EditorChangeActiveFileEvent(file));
+            display.asView().activate();
+
          }
       }
    }
@@ -1261,9 +950,7 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
    {
       if (display != null && openedProject != null)
       {
-         foldersToRefresh.clear();
-         foldersToRefresh.add(openedProject);
-         refreshNextFolder();
+         Window.alert("ON SHOW HIDDEN FILES");
       }
    }
 
@@ -1341,32 +1028,122 @@ public class ProjectExplorerPresenter implements RefreshBrowserHandler, SelectIt
       }
    }
 
+
    /**
-    * @param result
+    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
     */
-   private void parseProjectTree(ProjectModel model, ItemNode result)
+   @Override
+   public void onProjectOpened(final ProjectOpenedEvent projectOpenedEvent)
    {
-      ProjectModel currentProject = model;
-      List<ItemNode> children = result.getChildren();
-      for (ItemNode itemNode : children)
+      openedProject = projectOpenedEvent.getProject();
+      ensureProjectExplorerDisplayCreated();
+      
+      if (ProjectUpdater.isNeedUpdateProject(openedProject))
       {
-         if (itemNode.getItem().getItemType().equals(ItemType.PROJECT))
+         ProjectUpdater.updateProject(projectOpenedEvent.getProject(), new ProjectUpdater.ProjectUpdatedHandler()
          {
-            //TODO need fix it ASAP
-            String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(itemNode.getItem())).getPayload();
-            ProjectModel model2 = new ProjectModel(JSONParser.parseStrict(data).isObject());
-            openedProject.getModules().add(model2);
-            parseProjectTree(model2, itemNode);
-         }
-         else
-         {
-            map.put(itemNode.getItem().getId(), currentProject);
-            if (itemNode.getItem().getItemType().equals(ItemType.FOLDER))
+            @Override
+            public void onProjectUpdated()
             {
-               parseProjectTree(currentProject, itemNode);
+               showProjectTree();
             }
-         }
+         });
+      }
+      else
+      {
+         showProjectTree();
       }
    }
+   
+   
+   /**
+    * @see org.exoplatform.ide.client.project.explorer.ShowProjectExplorerHandler#onShowProjectExplorer(org.exoplatform.ide.client.project.explorer.ShowProjectExplorerEvent)
+    */
+   @Override
+   public void onShowProjectExplorer(ShowProjectExplorerEvent event)
+   {
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+         return;
+      }
 
+      ensureProjectExplorerDisplayCreated();
+
+      if (openedProject == null)
+      {
+         display.setProjectExplorerTreeVisible(false);
+         refreshProjectsList();
+         return;
+      }
+      
+      if (ProjectUpdater.isNeedUpdateProject(openedProject))
+      {
+         ProjectUpdater.updateProject(openedProject, new ProjectUpdater.ProjectUpdatedHandler()
+         {
+            @Override
+            public void onProjectUpdated()
+            {
+               showProjectTree();
+            }
+         });
+      }
+      else
+      {
+         showProjectTree();
+      }
+   }
+   
+   
+   
+   private void showProjectTree()
+   {
+      display.asView().setTitle(openedProject.getName());
+      
+      display.setProjectExplorerTreeVisible(true);
+      display.getBrowserTree().setValue(null);
+      display.getBrowserTree().setValue(openedProject);
+      
+      display.selectItem(openedProject.getId());
+      selectedItems = display.getSelectedItems();      
+      
+      display.setLinkWithEditorButtonEnabled(true);
+      display.setLinkWithEditorButtonSelected(linkingWithEditor);
+   }
+
+
+   @Override
+   public void onTreeRefreshed(TreeRefreshedEvent event)
+   {
+      if (display == null)
+      {
+         return;
+      }
+      
+      display.getBrowserTree().setValue(event.getFolder());
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      openedProject = null;
+
+      if (display == null)
+      {
+         return;
+      }
+
+      display.getBrowserTree().setValue(null);
+      display.asView().setTitle(DEFAULT_TITLE);
+      display.setProjectExplorerTreeVisible(false);
+      refreshProjectsList();
+      display.setLinkWithEditorButtonEnabled(false);
+
+      selectedItems.clear();
+      IDE.fireEvent(new ItemsSelectedEvent(selectedItems, display.asView()));
+   }
+   
 }

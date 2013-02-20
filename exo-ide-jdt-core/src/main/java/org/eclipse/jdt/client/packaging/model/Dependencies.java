@@ -16,23 +16,46 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.eclipse.jdt.client.packaging.model;
 
-package org.exoplatform.ide.client.framework.project;
-
-import com.google.gwt.event.shared.EventHandler;
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: CurrentProjectHandler.java Nov 7, 2012 vetal $
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
  * 
- * @deprecated
- *
  */
-public interface ActiveProjectChangedHandler extends EventHandler
+public class Dependencies
 {
 
-   void onActiveProjectChanged(ActiveProjectChangedEvent event);
+   private String name;
+
+   private List<Dependency> dependencies = new ArrayList<Dependency>();
+
+   public Dependencies(String name)
+   {
+      this.name = name;
+   }
+
+   public String getName()
+   {
+      return name;
+   }
+
+   public void setName(String name)
+   {
+      this.name = name;
+   }
+
+   public List<Dependency> getDependencies()
+   {
+      return dependencies;
+   }
+
+   public void setDependencies(List<Dependency> dependencies)
+   {
+      this.dependencies = dependencies;
+   }
 
 }

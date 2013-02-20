@@ -18,15 +18,6 @@
  */
 package org.eclipse.jdt.client.packaging;
 
-import java.util.List;
-
-import org.eclipse.jdt.client.JdtClientBundle;
-import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
-import org.exoplatform.gwtframework.ui.client.component.IconButton;
-import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
-import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,6 +25,17 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
+import org.eclipse.jdt.client.JdtClientBundle;
+import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
+import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
+import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -86,7 +88,7 @@ public class PackageExplorerView extends ViewImpl implements PackageExplorerDisp
     * @see org.eclipse.jdt.client.packaging.PackageExplorerPresenter.Display#getBrowserTree()
     */
    @Override
-   public TreeGridItem<Object> getBrowserTree()
+   public TreeGridItem<Item> getBrowserTree()
    {
       return treeGrid;
    }
@@ -135,5 +137,23 @@ public class PackageExplorerView extends ViewImpl implements PackageExplorerDisp
    {
       linkWithEditorButton.setSelected(selected);
    }
+
+   @Override
+   public boolean selectItem(Item item)
+   {
+      return treeGrid.selectItem(item);
+   }
+
+//   @Override
+//   public void setProject(ProjectModel project)
+//   {
+//      treeGrid.setProject(project);
+//   }
+//
+//   @Override
+//   public void treeUpdated(String path)
+//   {
+//      treeGrid.treeUpdated(path);
+//   }
 
 }
