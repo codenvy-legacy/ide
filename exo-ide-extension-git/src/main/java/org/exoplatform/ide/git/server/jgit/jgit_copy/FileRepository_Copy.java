@@ -16,14 +16,14 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.server.jgit.checkout;
+package org.exoplatform.ide.git.server.jgit.jgit_copy;
 
 import static org.eclipse.jgit.lib.Constants.LOGS;
 import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REFS;
 import static org.eclipse.jgit.lib.Constants.R_TAGS;
 
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.JGitText;
 import org.eclipse.jgit.lib.BaseRepositoryBuilder;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
@@ -42,16 +42,16 @@ import java.text.MessageFormat;
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public final class FileRepositoryCE extends FileRepository
+public final class FileRepository_Copy extends FileRepository
 {
    final BaseRepositoryBuilder options;
 
-   public FileRepositoryCE(File gitDir) throws IOException
+   public FileRepository_Copy(File gitDir) throws IOException
    {
       this(new FileRepositoryBuilder().setGitDir(gitDir).setup());
    }
 
-   public FileRepositoryCE(BaseRepositoryBuilder options) throws IOException
+   public FileRepository_Copy(BaseRepositoryBuilder options) throws IOException
    {
       super(options);
       this.options = options;
