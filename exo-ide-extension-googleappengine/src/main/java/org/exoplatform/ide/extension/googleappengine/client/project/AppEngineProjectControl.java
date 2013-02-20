@@ -100,6 +100,6 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    {
       return project != null
          && GoogleAppEngineExtension.isAppEngineProject(project)
-         && project.getPropertyValues(ProjectModel.PROJECT_MIME_TYPE).contains(GoogleAppEngineExtension.ID);
+         && project.getPropertyValue("gae-application") != null;
    }
 }
