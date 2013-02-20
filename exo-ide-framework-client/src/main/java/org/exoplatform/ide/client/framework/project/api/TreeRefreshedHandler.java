@@ -16,23 +16,18 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-
-package org.exoplatform.ide.client.framework.project;
+package org.exoplatform.ide.client.framework.project.api;
 
 import com.google.gwt.event.shared.EventHandler;
 
-
-
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: CurrentProjectHandler.java Nov 7, 2012 vetal $
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
  * 
- * @deprecated
- *
  */
-public interface ActiveProjectChangedHandler extends EventHandler
+public interface TreeRefreshedHandler extends EventHandler
 {
-
-   void onActiveProjectChanged(ActiveProjectChangedEvent event);
+   
+   void onTreeRefreshed(TreeRefreshedEvent event);
 
 }

@@ -16,23 +16,22 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
+package org.eclipse.jdt.client.packaging.model.next;
 
-package org.exoplatform.ide.client.framework.project;
-
-import com.google.gwt.event.shared.EventHandler;
-
-
+import org.exoplatform.ide.vfs.shared.ItemImpl;
 
 /**
- * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
- * @version $Id: CurrentProjectHandler.java Nov 7, 2012 vetal $
+ * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
+ * @version $
  * 
- * @deprecated
- *
  */
-public interface ActiveProjectChangedHandler extends EventHandler
+public class Classpath extends ItemImpl
 {
-
-   void onActiveProjectChanged(ActiveProjectChangedEvent event);
-
+   
+   public Classpath(String name)
+   {
+      super(null);
+      setName(name);
+   }
+   
 }

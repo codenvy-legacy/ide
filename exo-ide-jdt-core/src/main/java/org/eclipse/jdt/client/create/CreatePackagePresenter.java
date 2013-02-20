@@ -18,36 +18,6 @@
  */
 package org.eclipse.jdt.client.create;
 
-import org.eclipse.jdt.client.core.JavaConventions;
-import org.eclipse.jdt.client.core.JavaCore;
-import org.eclipse.jdt.client.event.CreatePackageEvent;
-import org.eclipse.jdt.client.event.CreatePackageHandler;
-import org.eclipse.jdt.client.event.PackageCreatedEvent;
-import org.eclipse.jdt.client.packaging.ProjectTreeParser;
-import org.eclipse.jdt.client.packaging.ProjectTreeUnmarshaller;
-import org.eclipse.jdt.client.packaging.model.ProjectItem;
-import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
-import org.eclipse.jdt.client.runtime.IStatus;
-import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
-import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
-import org.exoplatform.ide.client.framework.application.IDELoader;
-import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
-import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.client.framework.ui.api.IsView;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.vfs.client.VirtualFileSystem;
-import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Item;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -58,18 +28,40 @@ import com.google.gwt.event.dom.client.KeyPressEvent;
 import com.google.gwt.event.dom.client.KeyPressHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasText;
 import com.google.gwt.user.client.ui.HasValue;
+
+import org.eclipse.jdt.client.core.JavaConventions;
+import org.eclipse.jdt.client.core.JavaCore;
+import org.eclipse.jdt.client.event.CreatePackageEvent;
+import org.eclipse.jdt.client.event.CreatePackageHandler;
+import org.eclipse.jdt.client.event.PackageCreatedEvent;
+import org.eclipse.jdt.client.packaging.model.next.JavaProject;
+import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
+import org.eclipse.jdt.client.runtime.IStatus;
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
+import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
+import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:
  *
  */
-public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedHandler, CreatePackageHandler,
-   ProjectOpenedHandler, ProjectClosedHandler
+public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedHandler, CreatePackageHandler
 {
 
    interface Display extends IsView
@@ -90,32 +82,22 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
       void setOkButtonEnabled(boolean enabled);
    }
 
-   private HandlerManager eventBus;
-
    private VirtualFileSystem vfs;
 
    private Display display;
 
    private Item selectedItem;
 
-   private ProjectModel currentProject;
-
-   private ProjectItem currentProjectItem;
-
    /**
     * @param eventBus
     * @param vfs
     */
-   public CreatePackagePresenter(HandlerManager eventBus, VirtualFileSystem vfs)
+   public CreatePackagePresenter(VirtualFileSystem vfs)
    {
-      super();
-      this.eventBus = eventBus;
       this.vfs = vfs;
-      eventBus.addHandler(ViewClosedEvent.TYPE, this);
-      eventBus.addHandler(ItemsSelectedEvent.TYPE, this);
-      eventBus.addHandler(CreatePackageEvent.TYPE, this);
-      eventBus.addHandler(ProjectOpenedEvent.TYPE, this);
-      eventBus.addHandler(ProjectClosedEvent.TYPE, this);
+      IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(CreatePackageEvent.TYPE, this);
    }
 
    /**
@@ -124,13 +106,13 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().isEmpty())
+      if (event.getSelectedItems().size() == 1)
       {
-         selectedItem = null;
+         selectedItem = event.getSelectedItems().get(0);
       }
       else
       {
-         selectedItem = event.getSelectedItems().get(0);
+         selectedItem = null;
       }
    }
 
@@ -152,23 +134,20 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
    @Override
    public void onCreatePackage(CreatePackageEvent event)
    {
-      if (selectedItem == null)
+      if (selectedItem == null || display != null)
       {
          return;
       }
-
-      if (display == null)
-      {
-         display = GWT.create(Display.class);
-      }
-
-      readProjectTreeAndBindDisplay("Reading project structure...");
+      
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
    }
 
    /**
     *
     */
-   private void bind()
+   private void bindDisplay()
    {
       display.getCancelButton().addClickHandler(new ClickHandler()
       {
@@ -211,55 +190,9 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
          }
       });
 
-      display.setOkButtonEnabled(false);
-
       showSelectedPackageName();
       display.focusInPackageNameField();
-   }
-
-   private void readProjectTreeAndBindDisplay(final String loaderMessage)
-   {
-      IDELoader.show(loaderMessage);
-
-      try
-      {
-         ProjectTreeUnmarshaller unmarshaller = new ProjectTreeUnmarshaller(currentProject);
-         AsyncRequestCallback<ProjectModel> callback = new AsyncRequestCallback<ProjectModel>(unmarshaller)
-         {
-            @Override
-            protected void onSuccess(ProjectModel result)
-            {
-               IDELoader.hide();
-
-               ProjectTreeParser treeParser = new ProjectTreeParser(currentProject, new ProjectItem(currentProject));
-               treeParser.parseProjectStructure(new ProjectTreeParser.ParsingCompleteListener()
-               {
-                  @Override
-                  public void onParseComplete(ProjectItem resultItem)
-                  {
-                     currentProjectItem = resultItem;
-                     IDE.getInstance().openView(display.asView());
-                     bind();
-                  }
-               });
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDELoader.hide();
-               IDE.fireEvent(new ExceptionThrownEvent("Error loading project structure"));
-               exception.printStackTrace();
-            }
-         };
-
-         VirtualFileSystem.getInstance().getProjectTree(currentProject, callback);
-      }
-      catch (Exception e)
-      {
-         IDELoader.hide();
-         IDE.fireEvent(new ExceptionThrownEvent(e));
-      }
+      display.setOkButtonEnabled(false);
    }
 
    private void showSelectedPackageName()
@@ -269,30 +202,36 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
          return;
       }
 
-      FolderModel resourceDirectoryFolder = null;
-
-      for (ResourceDirectoryItem resourceDirectory : currentProjectItem.getResourceDirectories())
-      {
-         if (selectedItem.getPath().startsWith(resourceDirectory.getFolder().getPath()))
-         {
-            resourceDirectoryFolder = resourceDirectory.getFolder();
-            break;
-         }
-      }
-
-      if (resourceDirectoryFolder == null)
+      ProjectModel project = ((ItemContext)selectedItem).getProject();
+      if (!(project instanceof JavaProject))
       {
          return;
       }
-
-      String packageName = selectedItem.getPath().substring(resourceDirectoryFolder.getPath().length());
+      
+      JavaProject javaProject = (JavaProject)project;
+      SourceDirectory sourceDirectory = null;
+      for (SourceDirectory sd : javaProject.getSourceDirectories())
+      {
+         if (selectedItem.getPath().startsWith(sd.getPath()))
+         {
+            sourceDirectory = sd;
+            break;
+         }
+      }
+      
+      if (sourceDirectory == null)
+      {
+         return;
+      }
+      
+      String packageName = selectedItem.getPath().substring(sourceDirectory.getPath().length());
       packageName = packageName.replaceAll("/", "\\.");
       if (packageName.startsWith("."))
       {
          packageName = packageName.substring(1);
       }
 
-      display.getPackageNameField().setValue(packageName);
+      display.getPackageNameField().setValue(packageName);      
    }
 
    /**
@@ -333,31 +272,28 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
       {
          return;
       }
-
-      FolderModel rdf = null;
-
-      String selectedItemPath = selectedItem.getPath();
-
-      for (ResourceDirectoryItem resourceDirectory : currentProjectItem.getResourceDirectories())
+      
+      JavaProject javaProject = (JavaProject)((ItemContext)selectedItem).getProject();
+      SourceDirectory sourceDirectory = null;
+      for (SourceDirectory sd : javaProject.getSourceDirectories())
       {
-         if (selectedItemPath.startsWith(resourceDirectory.getFolder().getPath()))
+         if (selectedItem.getPath().startsWith(sd.getPath()))
          {
-            rdf = resourceDirectory.getFolder();
+            sourceDirectory = sd;
             break;
          }
       }
-
-      if (rdf == null)
+      
+      if (sourceDirectory == null)
       {
          return;
       }
-
+      
       String p = display.getPackageNameField().getValue();
       p = p.replaceAll("\\.", "/");
 
-      final FolderModel resourceDirectoryFolder = rdf;
+      final FolderModel resourceDirectoryFolder = sourceDirectory;
       final String packageName = p;
-
       final FolderModel newFolder = new FolderModel(packageName, resourceDirectoryFolder);
 
       try
@@ -368,32 +304,21 @@ public class CreatePackagePresenter implements ViewClosedHandler, ItemsSelectedH
             protected void onSuccess(FolderModel result)
             {
                IDE.getInstance().closeView(display.asView().getId());
-               eventBus.fireEvent(new RefreshBrowserEvent(resourceDirectoryFolder, newFolder));
-               eventBus.fireEvent(new PackageCreatedEvent(packageName, resourceDirectoryFolder));
+               IDE.fireEvent(new RefreshBrowserEvent(resourceDirectoryFolder, newFolder));
+               IDE.fireEvent(new PackageCreatedEvent(packageName, resourceDirectoryFolder));
             }
 
             @Override
             protected void onFailure(Throwable exception)
             {
-               eventBus.fireEvent(new ExceptionThrownEvent(exception));
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
             }
          });
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         IDE.fireEvent(new ExceptionThrownEvent(e));
       }
    }
 
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      this.currentProject = event.getProject();
-   }
-
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      currentProjectItem = null;
-   }
 }

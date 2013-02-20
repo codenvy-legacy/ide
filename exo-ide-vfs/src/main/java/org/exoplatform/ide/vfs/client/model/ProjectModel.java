@@ -19,11 +19,11 @@
 package org.exoplatform.ide.vfs.client.model;
 
 import com.google.gwt.json.client.JSONObject;
+
 import org.exoplatform.ide.vfs.client.JSONDeserializer;
-import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemList;
-import org.exoplatform.ide.vfs.shared.ItemListImpl;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.ProjectImpl;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -31,34 +31,53 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version $Id:$
  */
-public class ProjectModel extends ProjectImpl implements ItemContext
+//public class ProjectModel extends ProjectImpl implements ItemContext
+public class ProjectModel extends FolderModel implements Project
 {
-   private ItemList<Item> children = new ItemListImpl<Item>();
    
+//   private ItemList<Item> children = new ItemListImpl<Item>();
+//   
+//   private FolderModel parent;
+//
+//   private boolean persisted;
+   
+   protected String projectType;
+
    private List<ProjectModel> modules = new ArrayList<ProjectModel>();
 
-   private FolderModel parent;
-
-   private boolean persisted;
-
    @SuppressWarnings("rawtypes")
-   public ProjectModel(String name, FolderModel parent, String type, List<Property> properties)
+   public ProjectModel(String name, FolderModel parent, String projectType, List<Property> properties)
    {
-      super(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), properties,
-         new HashMap<String, Link>(), type);
+      this(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(),
+         properties, new HashMap<String, Link>(), projectType);
       this.parent = parent;
-      this.persisted = false;
+      
+//      super(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), properties,
+//         new HashMap<String, Link>(), type);
+//      this.parent = parent;      
+//      this.persisted = false;
    }
 
-   public ProjectModel(ProjectImpl project)
+   public ProjectModel(ProjectModel project)
    {
-      super(project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
+      this(project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
          .getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
    }
+   
+
+   @SuppressWarnings("rawtypes")
+   public ProjectModel(String id, String name, String mimeType, String path, String parentId, long creationDate,
+                      List<Property> properties, Map<String, Link> links, String projectType)
+   {
+      super(id, name, ItemType.PROJECT, mimeType, path, parentId, creationDate, properties, links);
+      this.projectType = projectType;
+   }
+   
 
    public ProjectModel()
    {
@@ -74,13 +93,15 @@ public class ProjectModel extends ProjectImpl implements ItemContext
    @SuppressWarnings({"unchecked", "rawtypes"})
    public void init(JSONObject itemObject)
    {
+      super.init(itemObject);
+      
       id = itemObject.get("id").isString().stringValue();
       name = itemObject.get("name").isString().stringValue();
       mimeType = itemObject.get("mimeType").isString().stringValue();
       path = itemObject.get("path").isString().stringValue();
       parentId = itemObject.get("parentId").isString().stringValue();
       try {
-      creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+         creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
       } catch (Exception e) {
          e.printStackTrace();
       }
@@ -90,52 +111,65 @@ public class ProjectModel extends ProjectImpl implements ItemContext
          (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
       this.persisted = true;
    }
-
+   
    @Override
-   public ProjectModel getProject()
+   public String getProjectType()
    {
-      return this;
-   }
-
-   @Override
-   public void setProject(ProjectModel proj)
-   {
+      return projectType;
    }
 
    @Override
-   public FolderModel getParent()
+   public void setProjectType(String projectType)
    {
-      return parent;
+      this.projectType = projectType;
    }
+    
 
-   @Override
-   public void setParent(FolderModel parent)
-   {
-      this.parent = parent;
-
-   }
-
-   @Override
-   public boolean isPersisted()
-   {
-      return persisted;
-   }
-
-   /**
-    * @return the children
-    */
-   public ItemList<Item> getChildren()
-   {
-      return children;
-   }
-
-   /**
-    * @param children the children to set
-    */
-   public void setChildren(ItemList<Item> children)
-   {
-      this.children = children;
-   }
+//   @Override
+//   public ProjectModel getProject()
+//   {
+//      return this;
+//   }
+//
+//   @Override
+//   public void setProject(ProjectModel proj)
+//   {
+//   }
+//
+//   @Override
+//   public FolderModel getParent()
+//   {
+//      return parent;
+//   }
+//
+//   @Override
+//   public void setParent(FolderModel parent)
+//   {
+//      this.parent = parent;
+//
+//   }
+//
+//   @Override
+//   public boolean isPersisted()
+//   {
+//      return persisted;
+//   }
+//
+//   /**
+//    * @return the children
+//    */
+//   public ItemList<Item> getChildren()
+//   {
+//      return children;
+//   }
+//
+//   /**
+//    * @param children the children to set
+//    */
+//   public void setChildren(ItemList<Item> children)
+//   {
+//      this.children = children;
+//   }
    
    public List<ProjectModel> getModules()
    {
@@ -147,3 +181,119 @@ public class ProjectModel extends ProjectImpl implements ItemContext
       this.modules = modules;
    }
 }
+
+
+//public class ProjectModel extends ProjectImpl implements ItemContext
+//{
+//   
+//   private ItemList<Item> children = new ItemListImpl<Item>();
+//   
+//   private List<ProjectModel> modules = new ArrayList<ProjectModel>();
+//
+//   private FolderModel parent;
+//
+//   private boolean persisted;
+//
+//   @SuppressWarnings("rawtypes")
+//   public ProjectModel(String name, FolderModel parent, String type, List<Property> properties)
+//   {
+//      super(null, name, PROJECT_MIME_TYPE, parent.createPath(name), parent.getId(), new Date().getTime(), properties,
+//         new HashMap<String, Link>(), type);
+//      this.parent = parent;
+//      this.persisted = false;
+//   }
+//
+//   public ProjectModel(ProjectImpl project)
+//   {
+//      super(project.getId(), project.getName(), PROJECT_MIME_TYPE, project.getPath(), project.getParentId(), project
+//         .getCreationDate(), project.getProperties(), project.getLinks(), project.getProjectType());
+//   }
+//
+//   public ProjectModel()
+//   {
+//      super();
+//   }
+//
+//   public ProjectModel(JSONObject itemObject)
+//   {
+//      super();
+//      init(itemObject);
+//   }
+//
+//   @SuppressWarnings({"unchecked", "rawtypes"})
+//   public void init(JSONObject itemObject)
+//   {
+//      id = itemObject.get("id").isString().stringValue();
+//      name = itemObject.get("name").isString().stringValue();
+//      mimeType = itemObject.get("mimeType").isString().stringValue();
+//      path = itemObject.get("path").isString().stringValue();
+//      parentId = itemObject.get("parentId").isString().stringValue();
+//      try {
+//         creationDate = (long)itemObject.get("creationDate").isNumber().doubleValue();
+//      } catch (Exception e) {
+//         e.printStackTrace();
+//      }
+//      properties = (List)JSONDeserializer.STRING_PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+//      links = JSONDeserializer.LINK_DESERIALIZER.toMap(itemObject.get("links"));
+//      projectType =
+//         (itemObject.get("projectType") != null) ? itemObject.get("projectType").isString().stringValue() : null;
+//      this.persisted = true;
+//   }
+//
+//   @Override
+//   public ProjectModel getProject()
+//   {
+//      return this;
+//   }
+//
+//   @Override
+//   public void setProject(ProjectModel proj)
+//   {
+//   }
+//
+//   @Override
+//   public FolderModel getParent()
+//   {
+//      return parent;
+//   }
+//
+//   @Override
+//   public void setParent(FolderModel parent)
+//   {
+//      this.parent = parent;
+//
+//   }
+//
+//   @Override
+//   public boolean isPersisted()
+//   {
+//      return persisted;
+//   }
+//
+//   /**
+//    * @return the children
+//    */
+//   public ItemList<Item> getChildren()
+//   {
+//      return children;
+//   }
+//
+//   /**
+//    * @param children the children to set
+//    */
+//   public void setChildren(ItemList<Item> children)
+//   {
+//      this.children = children;
+//   }
+//   
+//   public List<ProjectModel> getModules()
+//   {
+//      return modules;
+//   }
+//   
+//   public void setModules(List<ProjectModel> modules)
+//   {
+//      this.modules = modules;
+//   }
+//}
+

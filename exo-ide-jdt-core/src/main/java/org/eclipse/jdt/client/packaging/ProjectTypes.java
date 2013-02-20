@@ -18,11 +18,12 @@
  */
 package org.eclipse.jdt.client.packaging;
 
-import java.util.ArrayList;
-
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -44,6 +45,7 @@ public class ProjectTypes
       projects.add(ProjectType.WAR.value());
       projects.add(ProjectType.JSP.value());
       projects.add(ProjectType.AWS.value());
+      projects.add(ProjectType.MultiModule.value());
    }
 
    public static boolean contains(ProjectModel project)
@@ -54,6 +56,13 @@ public class ProjectTypes
       }
       
       return projects.contains(project.getProjectType());
+   }
+   
+   public static List<String> getList()
+   {
+      ArrayList<String> list = new ArrayList<String>();
+      list.addAll(projects);
+      return list;
    }
 
 }
