@@ -12,6 +12,17 @@
    <name>Codenvy IDE :: DevMode</name>
 
    <dependencies>
+   
+      <dependency>
+          <groupId>com.google.gwt</groupId>
+          <artifactId>gwt-user</artifactId>
+          <exclusions>
+             <exclusion>
+                <groupId>xstream</groupId>
+                <artifactId>xstream</artifactId>
+             </exclusion>
+         </exclusions>
+     </dependency>
 
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
