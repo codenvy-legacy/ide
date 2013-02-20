@@ -202,6 +202,7 @@ public class GitService
    public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
+      long start = System.currentTimeMillis();
       LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir() + "' started");
       GitConnection gitConnection = getGitConnection();
       try
@@ -211,8 +212,10 @@ public class GitService
       }
       finally
       {
+         long end = System.currentTimeMillis();
          LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir()
-            + "' finished");
+            + "' finished. Process took " + (end - start) / 1000 + " seconds (" + (end - start) / 1000 / 60
+            + " minutes)");
          gitConnection.close();
       }
    }
