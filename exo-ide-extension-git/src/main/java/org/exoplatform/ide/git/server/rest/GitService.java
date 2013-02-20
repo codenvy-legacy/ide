@@ -63,6 +63,8 @@ import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import java.net.URISyntaxException;
@@ -88,6 +90,8 @@ import javax.ws.rs.core.UriInfo;
 @Path("ide/git")
 public class GitService
 {
+   private static final Log LOG = ExoLogger.getLogger(GitService.class);
+
    @Inject
    private LocalPathResolver localPathResolver;
 
@@ -198,6 +202,7 @@ public class GitService
    public RepoInfo clone(final CloneRequest request) throws URISyntaxException, GitException, LocalPathResolveException,
       VirtualFileSystemException
    {
+      LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir() + "' started");
       GitConnection gitConnection = getGitConnection();
       try
       {
@@ -206,6 +211,8 @@ public class GitService
       }
       finally
       {
+         LOG.info("Repository clone from '" + request.getRemoteUri() + "' to '" + request.getWorkingDir()
+            + "' finished");
          gitConnection.close();
       }
    }
