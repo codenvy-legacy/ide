@@ -163,14 +163,15 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       final ArrayList<ProjectModel> mvnModules = new ArrayList<ProjectModel>();
       if (project.getProjectType().equals(ProjectType.MultiModule.value()))
       {
-         List<ProjectModel> children = project.getModules();
-         for (ProjectModel item : children)
-         {
-            if (projectResolver.isProjectSupported(item.getProjectType()))
-            {
-               mvnModules.add(item);
-            }
-         }
+//         List<ProjectModel> children = project.getModules();
+//         for (ProjectModel item : children)
+//         {
+//            if (projectResolver.isProjectSupported(item.getProjectType()))
+//            {
+//               mvnModules.add(item);
+//            }
+//         }
+         return;
       }
       else if (projectResolver.isProjectSupported(project.getProjectType()))
       {
