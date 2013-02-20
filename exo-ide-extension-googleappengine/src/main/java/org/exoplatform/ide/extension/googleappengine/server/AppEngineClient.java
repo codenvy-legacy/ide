@@ -249,6 +249,7 @@ public class AppEngineClient
       }
       finally
       {
+         writeProjectProperty(vfs, projectId, "gae-application", admin.getApplication().getAppId());
          admin.getApplication().cleanStagingDirectory();
       }
    }
