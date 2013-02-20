@@ -19,6 +19,12 @@
 			<artifactId>gwt-log</artifactId>
 			<version>3.0.4</version>
 		</dependency>
+		
+		<dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
+      </dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -150,6 +156,10 @@
                <artifactId>eclipse-jdt-core</artifactId>
             </exclusion>
 
+            <exclusion>
+            	<artifactId>exo.ws.rest.ext</artifactId>
+            	<groupId>org.exoplatform.ws</groupId>
+            </exclusion>
 			</exclusions>
 		</dependency>
 
