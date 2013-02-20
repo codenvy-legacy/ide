@@ -94,8 +94,8 @@ import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
 import org.exoplatform.ide.git.server.LogPage;
 import org.exoplatform.ide.git.server.StatusPage;
-import org.exoplatform.ide.git.server.jgit.jgit_copy.CheckoutCommand_Copy;
-import org.exoplatform.ide.git.server.jgit.jgit_copy.DirCacheCheckout_Copy;
+import org.exoplatform.ide.git.server.jgit.checkout.CheckoutCommand;
+import org.exoplatform.ide.git.server.jgit.checkout.DirCacheCheckout;
 import org.exoplatform.ide.git.shared.AddRequest;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.BranchCheckoutRequest;
@@ -198,8 +198,8 @@ public class JGitConnection implements GitConnection
    @Override
    public void branchCheckout(BranchCheckoutRequest request) throws GitException
    {
-      //CheckoutCommand_Copy checkoutCommand = new Git(repository).checkout().setName(request.getName());
-      CheckoutCommand_Copy checkoutCommand = new CheckoutCommand_Copy(repository).setName(request.getName());
+      //CheckoutCommand checkoutCommand = new Git(repository).checkout().setName(request.getName());
+      CheckoutCommand checkoutCommand = new CheckoutCommand(repository).setName(request.getName());
       String startPoint = request.getStartPoint();
       if (startPoint != null)
       {
@@ -476,8 +476,8 @@ public class JGitConnection implements GitConnection
          try
          {
             dirCache = repository.lockDirCache();
-            //            DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
-            DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
+            //            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
+            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
          }
@@ -1027,7 +1027,7 @@ public class JGitConnection implements GitConnection
             {
                if (!remoteRefUpdate.getStatus().equals(Status.OK))
                {
-                  String message = "Failed to push some refs to '" + request.getRemote() + "'(rejected)";
+                  String message = "Failed to push some refs to ‘" + request.getRemote() + "’(rejected)";
                   throw new GitException(message);
                }
             }
@@ -1407,9 +1407,9 @@ public class JGitConnection implements GitConnection
          }
          else if (resetType == ResetType.HARD)
          {
-            //DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
-            DirCacheCheckout_Copy dirCacheCheckout =
-               new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
+            //DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, revCommit.getTree());
+            DirCacheCheckout dirCacheCheckout =
+               new DirCacheCheckout(repository, dirCache, revCommit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
          }
