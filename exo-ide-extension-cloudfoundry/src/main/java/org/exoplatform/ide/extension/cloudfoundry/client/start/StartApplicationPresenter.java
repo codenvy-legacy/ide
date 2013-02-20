@@ -23,6 +23,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -42,10 +43,10 @@ import java.util.List;
 
 /**
  * Presenter for start and stop application commands.
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: StartApplicationPresenter.java Jul 12, 2011 3:58:22 PM vereshchaka $
- * 
+ *
  */
 public class StartApplicationPresenter extends GitPresenter implements StartApplicationHandler, StopApplicationHandler,
    RestartApplicationHandler
@@ -69,9 +70,13 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    public void onStopApplication(StopApplicationEvent event)
    {
       if (event.getApplicationName() == null)
+      {
          checkIsStopped();
+      }
       else
+      {
          stopApplication(event.getApplicationName());
+      }
    }
 
    /**
@@ -129,9 +134,13 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
    public void onStartApplication(StartApplicationEvent event)
    {
       if (event.getApplicationName() == null && makeSelectionCheck())
+      {
          checkIsStarted();
+      }
       else
+      {
          startApplication(event.getApplicationName());
+      }
    }
 
    private void checkIsStarted()
@@ -219,9 +228,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void startApplication(String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
 
       try
       {
@@ -231,7 +238,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().startApplication(vfs.getId(), projectId, name, null,
+         CloudFoundryClientService.getInstance().startApplication(vfs.getId(), project.getId(),
+            (name != null) ? name : project.getName(), null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null)
             {
                @Override
@@ -250,10 +258,10 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                         msg +=
                            "<br>"
                               + CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
-                                 getAppUrisAsString(result));
+                              getAppUrisAsString(result));
                      }
                      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), project.getId()));
                   }
                   else
                   {
@@ -262,6 +270,14 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
                   }
 
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String msg =
+                     CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(project.getName());
+                  Dialogs.getInstance().showError(msg);
                }
             });
       }
