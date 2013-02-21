@@ -21,8 +21,20 @@ package org.exoplatform.ide.extension.cloudfoundry.client.inject;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsView;
+import org.exoplatform.ide.extension.cloudfoundry.client.apps.ApplicationsViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationView;
+import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationView;
+import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationViewImpl;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginView;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceView;
+import org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesView;
+import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesViewImpl;
 
 /**
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
@@ -36,5 +48,11 @@ public class CloudFoundryGinModule extends AbstractGinModule
    protected void configure()
    {
       bind(LoginView.class).to(LoginViewImpl.class).in(Singleton.class);
+      bind(ApplicationsView.class).to(ApplicationsViewImpl.class).in(Singleton.class);
+      bind(CreateApplicationView.class).to(CreateApplicationViewImpl.class).in(Singleton.class);
+      bind(CloudFoundryProjectView.class).to(CloudFoundryProjectViewImpl.class).in(Singleton.class);
+      bind(DeleteApplicationView.class).to(DeleteApplicationViewImpl.class).in(Singleton.class);
+      bind(ManageServicesView.class).to(ManageServicesViewImpl.class).in(Singleton.class);
+      bind(CreateServiceView.class).to(CreateServiceViewImpl.class).in(Singleton.class);
    }
 }

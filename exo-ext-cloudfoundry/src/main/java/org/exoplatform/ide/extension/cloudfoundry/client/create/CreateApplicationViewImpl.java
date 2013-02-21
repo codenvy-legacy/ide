@@ -86,7 +86,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
 
    @UiField
    SimpleCheckBox startAfterCreation;
-   
+
    @UiField
    CheckBox autodetectType;
 
@@ -110,12 +110,12 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
       this.setText("Create Application");
       this.setWidget(widget);
 
-      server.setName(SERVER_FIELD_ID);
-      type.setName(TYPE_FIELD_ID);
-      name.setName(NAME_FIELD_ID);
-      url.setName(URL_FIELD_ID);
-      instances.setName(INSTANCES_FIELD_ID);
-      memory.setName(MEMORY_FIELD_ID);
+      //      server.setName(SERVER_FIELD_ID);
+      //      type.setName(TYPE_FIELD_ID);
+      //      name.setName(NAME_FIELD_ID);
+      //      url.setName(URL_FIELD_ID);
+      //      instances.setName(INSTANCES_FIELD_ID);
+      //      memory.setName(MEMORY_FIELD_ID);
       //      btnCreate.setButtonId(CREATE_BUTTON_ID);
       //      btnCancel.setButtonId(CANCEL_BUTTON_ID);
    }
@@ -262,7 +262,7 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
       {
          String item = this.server.getItemText(i);
          isItemFound = item.equals(server);
-         
+
          i++;
       }
 
@@ -451,18 +451,24 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
    @UiHandler("autodetectType")
    void onAutodetectTypeClick(ClickEvent event)
    {
-      delegate.autoDetectTypeChanged(autodetectType.getValue());
+      delegate.onAutoDetectTypeChanged();
    }
 
    @UiHandler("customUrl")
    void onCustomUrlClick(ClickEvent event)
    {
-      delegate.customUrlChanged(customUrl.getValue());
+      delegate.onCustomUrlChanged();
    }
 
    @UiHandler("name")
    void onNameKeyUp(KeyUpEvent event)
    {
-      delegate.applicationNameChanged();
+      delegate.onApplicationNameChanged();
+   }
+
+   @UiHandler("type")
+   void onTypeChange(ChangeEvent event)
+   {
+      delegate.onTypeChanged();
    }
 }

@@ -56,20 +56,17 @@
 		.middle {
 			margin-top: 3px;
 		}
+		
+		.withoutPadding {
+			padding: 0px;
+		}
 	</ui:style>
 	<g:DockLayoutPanel unit="PX" width="500px" height="330px">
 		<g:south size="26.0">
 			<g:FlowPanel>
-				<g:Button text="{locale.closeButton}" styleName="{style.right}"
-					ui:field="btnClose" />
+				<g:Button addStyleNames="{style.right}" ui:field="btnClose" />
 			</g:FlowPanel>
 		</g:south>
-		<!--<g:north size="30.0"> <g:FlowPanel width="100%" height="100%" > <g:Label 
-			text="{locale.manageProjectApplication}" addStyleNames="{style.labelH} {style.middle}" 
-			width="80px" /> <g:TextBox width="370px" height="22px" addStyleNames="{style.textinput} 
-			{style.left} {style.space}" /> <g:Button width="22px" height="22px" text="" 
-			styleName="{style.left}" title="{locale.manageProjectProperties}"><img src="{resource.propertiesButton.getURL}"></img></g:Button> 
-			</g:FlowPanel> </g:north> -->
 		<g:north size="30.0">
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%">
 				<g:west size="80.0">
@@ -78,9 +75,8 @@
 				</g:west>
 				<g:east size="30.0">
 					<g:Button width="22px" height="22px" text=""
-						addStyleNames="{style.space}" title="{locale.manageProjectProperties}"
+						addStyleNames="{style.space} {style.withoutPadding}" title="{locale.manageProjectProperties}"
 						ui:field="btnInfo">
-						<img src="{resource.propertiesButton.getURL}"></img>
 					</g:Button>
 				</g:east>
 				<g:center>
@@ -89,20 +85,15 @@
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>
-		<!--<g:north size="30.0"> <g:FlowPanel width="100%" height="100%"> <g:Label 
-			text="{locale.manageProjectUrls}" addStyleNames="{style.labelH} {style.middle}" 
-			width="80px" /> <g:Anchor href="" text="" addStyleNames="{style.left} {style.link} 
-			{style.space}" target="_blank" width="370px" height="22px" /> <g:Button width="22px" 
-			height="22px" text="..." styleName="{style.left}" title="more" /> </g:FlowPanel> 
-			</g:north> -->
 		<g:north size="30.0">
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%">
 				<g:west size="80.0">
 					<g:Label text="{locale.manageProjectUrls}" addStyleNames="{style.labelH} {style.middle}" />
 				</g:west>
 				<g:east size="30.0">
-					<g:Button width="22px" height="22px" text="..." styleName="{style.left}"
-						title="more" ui:field="btnEditUrl" />
+					<g:Button width="22px" height="22px" text="..."
+						styleName="{style.left} {style.withoutPadding}" title="more"
+						ui:field="btnEditUrl" />
 				</g:east>
 				<g:center>
 					<g:Anchor href="" text=""
@@ -111,20 +102,15 @@
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>
-		<!--<g:north size="30.0"> <g:FlowPanel width="100%" height="100%"> <g:Label 
-			text="{locale.manageProjectMemory}" addStyleNames="{style.labelH} {style.middle}" 
-			width="80px" /> <g:TextBox addStyleNames="{style.textinput} {style.left} 
-			{style.space}" height="22px" width="370px" /> <g:Button width="22px" height="22px" 
-			styleName="{style.left}" title="{locale.manageProjectEditMemory}" /> </g:FlowPanel> 
-			</g:north> -->
 		<g:north size="30.0">
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%">
 				<g:west size="80.0">
 					<g:Label text="{locale.manageProjectMemory}" addStyleNames="{style.labelH} {style.middle}" />
 				</g:west>
 				<g:east size="30.0">
-					<g:Button width="22px" height="22px" styleName="{style.left}"
-						title="{locale.manageProjectEditMemory}" ui:field="btnEditMemory" />
+					<g:Button width="22px" height="22px"
+						styleName="{style.left} {style.withoutPadding}" title="{locale.manageProjectEditMemory}"
+						ui:field="btnEditMemory" />
 				</g:east>
 				<g:center>
 					<g:TextBox addStyleNames="{style.textinput} {style.left} {style.space}"
@@ -139,8 +125,9 @@
 						addStyleNames="{style.labelH} {style.middle}" />
 				</g:west>
 				<g:east size="30.0">
-					<g:Button width="22px" height="22px" styleName="{style.left}"
-						title="{locale.manageProjectEditInstances}" ui:field="btnEditInstances" />
+					<g:Button width="22px" height="22px"
+						styleName="{style.left} {style.withoutPadding}" title="{locale.manageProjectEditInstances}"
+						ui:field="btnEditInstances" />
 				</g:east>
 				<g:center>
 					<g:TextBox addStyleNames="{style.textinput} {style.left} {style.space}"
@@ -178,13 +165,13 @@
 						<g:Label addStyleNames="{style.left} {style.space} {style.middle}"
 							width="70px" ui:field="status" />
 						<g:Button width="22px" height="22px" text=""
-							title="{locale.manageProjectStart}" styleName="{style.left} {style.space}"
+							title="{locale.manageProjectStart}" styleName="{style.left} {style.space} {style.withoutPadding}"
 							ui:field="btnStart" />
 						<g:Button width="22px" height="22px" text=""
-							title="{locale.manageProjectStop}" styleName="{style.left} {style.space}"
+							title="{locale.manageProjectStop}" styleName="{style.left} {style.space} {style.withoutPadding}"
 							ui:field="btnStop" />
 						<g:Button width="22px" height="22px" text=""
-							title="{locale.manageProjectRestart}" styleName="{style.left}"
+							title="{locale.manageProjectRestart}" styleName="{style.left} {style.withoutPadding}"
 							ui:field="btnRestart" />
 					</g:FlowPanel>
 				</g:center>
@@ -210,10 +197,5 @@
 				</g:center>
 			</g:DockLayoutPanel>
 		</g:north>
-		<!--<g:north size="30.0"> <g:FlowPanel width="100%" height="100%" /> </g:north> 
-			<g:north size="30.0"> <g:FlowPanel width="100%" height="100%" /> </g:north> 
-			<g:north size="30.0"> <g:FlowPanel width="100%" height="100%" /> </g:north> 
-			<g:north size="30.0"> <g:FlowPanel width="100%" height="100%" /> </g:north> 
-			<g:north size="30.0"> <g:FlowPanel width="100%" height="100%" /> </g:north> -->
 	</g:DockLayoutPanel>
 </ui:UiBinder> 

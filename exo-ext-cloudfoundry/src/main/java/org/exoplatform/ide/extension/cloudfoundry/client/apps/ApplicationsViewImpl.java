@@ -35,11 +35,14 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryResources;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 import java.util.List;
@@ -140,7 +143,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
    private ActionDelegate delegate;
 
    @Inject
-   public ApplicationsViewImpl()
+   protected ApplicationsViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant)
    {
       createAppsTable();
 
@@ -148,6 +151,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
 
       this.setText("Applications");
       this.setWidget(widget);
+      
+      btnShow.setHTML(new Image(resources.okButton()) + " " + constant.showButton());
+      btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
    }
 
    private void createAppsTable()
@@ -302,6 +308,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
       appsTable.setColumnWidth(restartColumn, "60px");
       appsTable.addColumn(deleteColumn, "Delete");
       appsTable.setColumnWidth(deleteColumn, "60px");
+
+      // don't show loading indicator
+      appsTable.setLoadingIndicator(null);
    }
 
    /**

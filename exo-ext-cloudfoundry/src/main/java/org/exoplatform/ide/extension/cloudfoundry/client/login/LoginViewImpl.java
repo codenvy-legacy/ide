@@ -77,8 +77,8 @@ public class LoginViewImpl extends DialogBox implements LoginView
       this.setText("Login to CloudFoundry");
       this.setWidget(widget);
 
-      btnLogIn.setHTML(new Image(resources.okButton()).toString() + " Log In");
-      btnCancel.setHTML(new Image(resources.cancelButton()).toString() + " Cancel");
+      btnLogIn.setHTML(new Image(resources.okButton()) + " Log In");
+      btnCancel.setHTML(new Image(resources.cancelButton()) + " Cancel");
    }
 
    /**

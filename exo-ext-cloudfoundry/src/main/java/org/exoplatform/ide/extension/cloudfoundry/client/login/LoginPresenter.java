@@ -212,6 +212,8 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
             server = "http://" + server;
          }
       }
+
+      showDialog();
    }
 
    /**
@@ -229,6 +231,7 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
       view.enableLoginButton(false);
       view.focusInEmailField();
       view.setPassword("");
+      view.setError("");
 
       getSystemInformation();
    }

@@ -23,12 +23,19 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 
-import org.exoplatform.ide.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.ide.api.ui.console.Console;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientService;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
+import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
 
@@ -41,7 +48,7 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
+public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, ApplicationInfoChangedHandler
 // implements ViewClosedHandler, ShowApplicationsHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
 {
    private ApplicationsView view;
@@ -52,17 +59,16 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
 
    private EventBus eventBus;
 
-   @Inject
-   public ApplicationsPresenter(EventBus eventBus)
-   {
-      this(new ApplicationsViewImpl(), eventBus);
-   }
+   private Console console;
 
-   protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus)
+   @Inject
+   protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, Console console,
+      StartApplicationPresenter startAppPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
+      this.console = console;
    }
 
    /**
@@ -80,8 +86,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    @Override
    public void doShow()
    {
-      currentServer = view.getServer();
-      getApplicationList();
+      checkLogginedToServer();
    }
 
    private void getApplicationList()
@@ -117,7 +122,9 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         // TODO
+         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
       }
    }
 
@@ -138,13 +145,17 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  // TODO
+                  //                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         // TODO
+         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
       }
    }
 
@@ -153,6 +164,56 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
     */
    public void showDialog()
    {
+      checkLogginedToServer();
+   }
+
+   private void checkLogginedToServer()
+   {
+      try
+      {
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
+            {
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  if (result.isEmpty())
+                  {
+                     servers = new ArrayList<String>();
+                     servers.add(CloudFoundryExtension.DEFAULT_SERVER);
+                  }
+                  else
+                  {
+                     servers = result;
+                  }
+                  // open view
+                  openView();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  // TODO
+                  //                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  console.print(exception.getMessage());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         // TODO
+         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
+      }
+   }
+
+   private void openView()
+   {
+      view.setServers(servers);
+      // fill the list of applications
+      currentServer = servers.get(0);
+      getApplicationList();
+
       view.showDialog();
    }
 
@@ -164,6 +225,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
+      eventBus.fireEvent(new StartApplicationEvent(app.getName()));
    }
 
    /**
@@ -174,6 +236,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
+      eventBus.fireEvent(new StopApplicationEvent(app.getName()));
    }
 
    /**
@@ -184,6 +247,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
+      eventBus.fireEvent(new RestartApplicationEvent(app.getName()));
    }
 
    /**
@@ -194,5 +258,15 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));
+      //      eventBus.fireEvent(new DeleteApplicationEvent(app.getName(), currentServer));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
+   {
+      getApplicationList();
    }
 }

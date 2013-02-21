@@ -62,6 +62,10 @@ public interface CloudFoundryProjectView extends View<CloudFoundryProjectView.Ac
 
    public void setApplicationModel(String model);
 
+   public String getApplicationUrl();
+
+   public void setApplicationUrl(String url);
+
    public String getApplicationStack();
 
    public void setApplicationStack(String stack);

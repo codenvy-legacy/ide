@@ -25,6 +25,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.ui.console.Console;
 import org.exoplatform.ide.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.ide.core.event.RefreshBrowserEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
@@ -34,11 +35,13 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizatio
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.output.event.OutputEvent;
 import org.exoplatform.ide.output.event.OutputMessage;
 import org.exoplatform.ide.resources.model.Project;
+import org.exoplatform.ide.rest.AsyncRequestCallback;
 import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.websocket.WebSocketException;
 import org.exoplatform.ide.websocket.rest.AutoBeanUnmarshallerWS;
@@ -108,32 +111,21 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private EventBus eventBus;
 
-   @Inject
-   public CreateApplicationPresenter(ResourceProvider resourceProvider, EventBus eventBus)
-   {
-      // TODO...
-      this(resourceProvider, new CreateApplicationViewImpl(), eventBus);
-   }
+   private Console console;
 
-   protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view, EventBus eventBus)
+   @Inject
+   protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view,
+      EventBus eventBus, Console console)
    {
       this.frameworks = new ArrayList<Framework>();
 
       this.resourceProvider = resourceProvider;
       this.view = view;
       this.view.setDelegate(this);
+      this.console = console;
       this.eventBus = eventBus;
 
-      // set the state of fields
-      this.view.enableTypeField(false);
-      this.view.enableUrlField(false);
-      this.view.enableMemoryField(false);
-      this.view.focusInNameField();
-
-      // set default values to fields
-      this.view.setTypeValues(new ArrayList<String>());
-      this.view.setInstances("1");
-      this.view.setAutodetectType(true);
+      this.eventBus.addHandler(CreateApplicationEvent.TYPE, this);
    }
 
    @Override
@@ -336,6 +328,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                @Override
                protected void onFailure(Throwable exception)
                {
+                  // TODO
                   eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
                   super.onFailure(exception);
                }
@@ -351,7 +344,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * Create application on CloudFoundry by sending request over HTTP.
     * 
     * @param appData data to create new application
-    * @param project {@link ProjectModel}
+    * @param project {@link Project}
     * @param loggedInHandler handler that should be called after success login
     */
    private void createApplicationREST(final AppData appData, final Project project, LoggedInHandler loggedInHandler)
@@ -387,21 +380,25 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                @Override
                protected void onFailure(Throwable exception)
                {
-                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  // TODO
+                  //                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+                  console.print(lb.applicationCreationFailed());
                   super.onFailure(exception);
                }
             });
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+         // TODO
+         //         eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+         console.print(lb.applicationCreationFailed());
       }
    }
 
    /**
     * Performs action when application successfully created.
     * 
-    * @param app @link CloudFoundryApplication} which is created
+    * @param app {@link CloudFoundryApplication} which is created
     */
    private void onAppCreatedSuccess(CloudFoundryApplication app)
    {
@@ -464,8 +461,10 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void autoDetectTypeChanged(boolean value)
+   public void onAutoDetectTypeChanged()
    {
+      boolean value = view.isAutodetectType();
+
       view.enableTypeField(!value);
       view.enableMemoryField(!value);
 
@@ -541,8 +540,10 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void customUrlChanged(boolean value)
+   public void onCustomUrlChanged()
    {
+      boolean value = view.isCustomUrl();
+
       view.enableUrlField(value);
 
       if (value)
@@ -579,7 +580,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     * {@inheritDoc}
     */
    @Override
-   public void applicationNameChanged()
+   public void onApplicationNameChanged()
    {
       // if url set automatically, than try to create url using server and name
       if (!view.isCustomUrl())
@@ -607,7 +608,70 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
     */
    public void showDialog()
    {
+      // set the state of fields
+      this.view.enableTypeField(false);
+      this.view.enableUrlField(false);
+      this.view.enableMemoryField(false);
+      this.view.focusInNameField();
+
+      // set default values to fields
+      this.view.setTypeValues(new ArrayList<String>());
+      this.view.setInstances("1");
+      this.view.setAutodetectType(true);
+
+      view.focusInNameField();
+      getServers();
+      view.setStartAfterCreation(true);
+
       view.showDialog();
+   }
+
+   /**
+    * Get the list of server and put them to select field.
+    */
+   private void getServers()
+   {
+      try
+      {
+         CloudFoundryClientService.getInstance().getTargets(
+            new AsyncRequestCallback<List<String>>(new TargetsUnmarshaller(new ArrayList<String>()))
+            {
+               @Override
+               protected void onSuccess(List<String> result)
+               {
+                  if (result.isEmpty())
+                  {
+                     List<String> list = new ArrayList<String>();
+                     list.add(CloudFoundryExtension.DEFAULT_SERVER);
+                     view.setServerValues(list);
+                     view.setServer(CloudFoundryExtension.DEFAULT_SERVER);
+                  }
+                  else
+                  {
+                     view.setServerValues(result);
+                     view.setServer(result.get(0));
+                     getFrameworks(result.get(0));
+                  }
+                  //                  view.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
+                  view.setName(resourceProvider.getActiveProject().getName());
+                  updateUrlField();
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  // TODO
+                  //                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  console.print(exception.getMessage());
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         // TODO
+         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
+      }
    }
 
    /**
@@ -639,5 +703,18 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //         IDE.fireEvent(new ExceptionThrownEvent(msg));
       //         return;
       //      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onTypeChanged()
+   {
+      Framework framework = findFrameworkByName(view.getType());
+      if (framework != null)
+      {
+         view.setMemory(String.valueOf(framework.getMemory()));
+      }
    }
 }

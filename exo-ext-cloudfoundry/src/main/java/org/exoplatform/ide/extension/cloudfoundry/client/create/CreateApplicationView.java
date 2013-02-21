@@ -35,11 +35,13 @@ public interface CreateApplicationView extends View<CreateApplicationView.Action
 
       public void doCancel();
 
-      public void autoDetectTypeChanged(boolean value);
+      public void onAutoDetectTypeChanged();
 
-      public void customUrlChanged(boolean value);
+      public void onCustomUrlChanged();
 
-      public void applicationNameChanged();
+      public void onApplicationNameChanged();
+
+      public void onTypeChanged();
 
       public void serverChanged();
    }

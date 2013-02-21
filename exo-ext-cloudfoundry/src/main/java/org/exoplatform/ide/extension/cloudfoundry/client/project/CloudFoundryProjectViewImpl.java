@@ -26,11 +26,15 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryResources;
 
 /**
  * 
@@ -106,12 +110,20 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
    private CloudFoundryProjectView.ActionDelegate delegate;
 
    @Inject
-   public CloudFoundryProjectViewImpl()
+   public CloudFoundryProjectViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constants)
    {
       Widget widget = uiBinder.createAndBindUi(this);
 
       this.setText("CloudFoundry Project");
       this.setWidget(widget);
+
+      btnInfo.setHTML(new Image(resources.propertiesButton()).toString());
+      btnEditMemory.setHTML(new Image(resources.editButton()).toString());
+      btnEditInstances.setHTML(new Image(resources.editButton()).toString());
+      btnStart.setHTML(new Image(resources.startApp()).toString());
+      btnStop.setHTML(new Image(resources.stopApp()).toString());
+      btnRestart.setHTML(new Image(resources.restartApp()).toString());
+      btnClose.setHTML(new Image(resources.cancelButton()) + " " + constants.closeButton());
    }
 
    /**
@@ -256,6 +268,24 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
    public void setRestartButtonEnabled(boolean enabled)
    {
       btnRestart.setEnabled(enabled);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String getApplicationUrl()
+   {
+      return url.getText();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setApplicationUrl(String url)
+   {
+      this.url.setText(url);
    }
 
    /**

@@ -15,19 +15,20 @@
 			float: right;
 		}
 	</ui:style>
-	<g:DockLayoutPanel unit="PX" width="830px" height="260px">
+	<g:DockLayoutPanel unit="PX" width="930px" height="260px">
 		<g:south size="30.0">
 			<g:FlowPanel>
 				<g:Label text="{locale.appsServerLabel}" width="63px"
 					styleName="{style.floatLeft}" />
-				<g:ListBox styleName="{style.floatLeft}" width="410px" ui:field="server" />
-				<g:Button styleName="{style.floatLeft}" text="{locale.showButton}" ui:field="btnShow" />
-				<g:Button styleName="{style.floatRight}" text="{locale.closeButton}" ui:field="btnClose"/>
+				<g:ListBox styleName="{style.floatLeft}" width="410px"
+					ui:field="server" />
+				<g:Button addStyleNames="{style.floatLeft}" ui:field="btnShow" />
+				<g:Button addStyleNames="{style.floatRight}" ui:field="btnClose" />
 			</g:FlowPanel>
 		</g:south>
 		<g:center>
 			<g:SimplePanel>
-				<p1:CellTable width="100%" height="100%" ui:field="appsTable" focus="false"/>
+				<p1:CellTable width="100%" ui:field="appsTable" focus="false" />
 			</g:SimplePanel>
 		</g:center>
 	</g:DockLayoutPanel>
