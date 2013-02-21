@@ -34,10 +34,18 @@ public interface NewProjectPageView extends View<NewProjectPageView.ActionDelega
    {
       /**
        * Performs any actions appropriate in response to the user 
-       * having pressed the button with id
+       * having selected project type
        * 
        * @param id button's id
        */
-      void onButtonPressed(int id);
+      void onProjectTypeSelected(int id);
+
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having selected paas
+       * 
+       * @param id button's id
+       */
+      void onPaaSSelected(int id);
    }
 }

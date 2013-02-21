@@ -23,7 +23,6 @@ import com.google.gwt.resources.client.ImageResource;
 import org.exoplatform.ide.extension.SDK;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.preferences.PreferencesPagePresenter;
-import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
  * Provides register new PaaS.
@@ -40,10 +39,9 @@ public interface PaaSAgent
     * @param title
     * @param image
     * @param providesTemplate
-    * @param supportedProjectTypes
-    * @param wizardPage
+    * @param requiredTypes
     * @param preferencePage
     */
    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> supportedProjectTypes, WizardPagePresenter wizardPage, PreferencesPagePresenter preferencePage);
+      JsonArray<String> requiredTypes, PreferencesPagePresenter preferencePage);
 }

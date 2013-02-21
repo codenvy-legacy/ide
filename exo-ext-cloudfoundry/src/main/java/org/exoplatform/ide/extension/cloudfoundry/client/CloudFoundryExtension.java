@@ -30,6 +30,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowApplication
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowProjectPropertiesCommand;
+import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.loader.EmptyLoader;
 import org.exoplatform.ide.menu.MainMenuPresenter;
 
@@ -55,19 +57,21 @@ public class CloudFoundryExtension
     */
    public static final String DEFAULT_SERVER = "http://api.cloudfoundry.com";
 
-   private static final String ID = "CloudFoundry";
+   public static final String ID = "CloudFoundry";
 
    @Inject
-   public CloudFoundryExtension(PaaSAgent paasAgent, MainMenuPresenter menu,
+   public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuPresenter menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
       ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand,
       EventBus eventBus)
    {
       // TODO Auto-generated constructor stub
-      //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, wizardPage, preferencePage);
-
-      // TODO
-      //      String restContext = "/IDE/rest/private";
+      //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, preferencePage);
+      //Arrays.asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS, ProjectType.SPRING, ProjectType.WAR)
+      // TODO change hard code types
+      JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
+      paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, null);
+     
       String restContext = "/rest/private";
       new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus);
 

@@ -27,6 +27,7 @@ import com.google.inject.Provider;
 
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.paas.PaaSAgentImpl;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
@@ -77,7 +78,7 @@ public class TestNewProjectPagePresenter
 
       when(wizardAgent.getNewProjectWizards()).thenReturn(wizards);
 
-      presenter = new NewProjectPagePresenter(wizardAgent, null, view);
+      presenter = new NewProjectPagePresenter(wizardAgent, null, view, mock(PaaSAgentImpl.class));
       presenter.setUpdateDelegate(mock(WizardUpdateDelegate.class));
    }
 
@@ -96,7 +97,7 @@ public class TestNewProjectPagePresenter
       setUp();
 
       //selected registered technology
-      presenter.onButtonPressed(0);
+      presenter.onProjectTypeSelected(0);
       
       assertEquals(presenter.flipToNext(), newPage);
    }

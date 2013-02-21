@@ -50,18 +50,18 @@ public class PaaS
    private boolean providesTemplate;
 
    /**
-    * List of project types, supported by the PaaS (can be deployed).
+    * List of project types, required by the PaaS (can be deployed).
     */
-   private JsonArray<String> supportedProjectTypes;
+   private JsonArray<String> requiredProjectTypes;
 
    public PaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> supportedProjectTypes)
+      JsonArray<String> requiredProjectTypes)
    {
       this.id = id;
       this.title = title;
       this.image = image;
       this.providesTemplate = providesTemplate;
-      this.supportedProjectTypes = supportedProjectTypes;
+      this.requiredProjectTypes = requiredProjectTypes;
    }
 
    /**
@@ -97,10 +97,10 @@ public class PaaS
    }
 
    /**
-    * @return the supportedProjectTypes
+    * @return the requiredProjectTypes
     */
-   public JsonArray<String> getSupportedProjectTypes()
+   public JsonArray<String> getRequiredProjectTypes()
    {
-      return supportedProjectTypes;
+      return requiredProjectTypes;
    }
 }

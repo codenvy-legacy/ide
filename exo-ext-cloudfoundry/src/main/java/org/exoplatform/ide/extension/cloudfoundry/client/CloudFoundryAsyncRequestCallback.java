@@ -115,6 +115,8 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
             return;
          }
       }
+      // TODO
       eventBus.fireEvent(new ExceptionThrownEvent(exception));
+      // console
    }
 }

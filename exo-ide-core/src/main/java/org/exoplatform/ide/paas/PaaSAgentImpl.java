@@ -28,7 +28,6 @@ import org.exoplatform.ide.api.ui.wizard.WizardAgent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.preferences.PreferencesPagePresenter;
-import org.exoplatform.ide.wizard.WizardPagePresenter;
 
 /**
  * The implementation of {@link PaaSAgent}.
@@ -64,9 +63,9 @@ public class PaaSAgentImpl implements PaaSAgent
     */
    @Override
    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> supportedProjectTypes, WizardPagePresenter wizardPage, PreferencesPagePresenter preferencePage)
+      JsonArray<String> requiredTypes, PreferencesPagePresenter preferencePage)
    {
-      PaaS paas = new PaaS(id, title, image, providesTemplate, supportedProjectTypes);
+      PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes);
       registeredPaaS.add(paas);
 
       // TODO preference page and wizard page

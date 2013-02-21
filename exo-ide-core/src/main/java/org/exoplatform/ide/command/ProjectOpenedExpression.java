@@ -18,9 +18,8 @@
  */
 package org.exoplatform.ide.command;
 
-import com.google.inject.Singleton;
-
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import org.exoplatform.ide.core.expressions.AbstractExpression;
 import org.exoplatform.ide.core.expressions.ExpressionManager;
@@ -47,5 +46,4 @@ public final class ProjectOpenedExpression extends AbstractExpression implements
       value = project != null;
       return value;
    }
-
 }

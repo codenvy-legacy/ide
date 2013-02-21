@@ -21,6 +21,7 @@ package org.exoplatform.ide.wizard.newproject;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -33,6 +34,8 @@ import com.google.gwt.user.client.ui.ToggleButton;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.paas.PaaS;
 
 /**
  * NewProjectPageViewImpl is the view of new project page wizard.
@@ -47,9 +50,18 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
    @UiField(provided = true)
    Grid technologies;
 
+   @UiField(provided = true)
+   Grid paases;
+
    private ActionDelegate delegate;
 
-   private ToggleButton selectedButton;
+   private ToggleButton selectedProjectType;
+
+   private ToggleButton selectedPaaS;
+
+   private JsonArray<ToggleButton> paasButton = JsonCollections.createArray();
+
+   private JsonArray<PaaS> availablePaaS;
 
    interface NewProjectViewImplUiBinder extends UiBinder<Widget, NewProjectPageViewImpl>
    {
@@ -60,9 +72,11 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
     * 
     * @param wizardDatas aggregate information about available wizards
     */
-   public NewProjectPageViewImpl(JsonArray<NewProjectWizardData> wizardDatas)
+   public NewProjectPageViewImpl(JsonArray<NewProjectWizardData> wizardDatas, JsonArray<PaaS> paases)
    {
       createTechnologiesTable(wizardDatas);
+      createPaasTable(paases);
+      availablePaaS = paases;
 
       initWidget(uiBinder.createAndBindUi(this));
    }
@@ -81,7 +95,7 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
       //create button for each available wizard
       for (int i = 0; i < wizardDatas.size(); i++)
       {
-         NewProjectWizardData wizardData = wizardDatas.get(i);
+         final NewProjectWizardData wizardData = wizardDatas.get(i);
 
          Image icon = wizardData.getIcon();
          final ToggleButton btn;
@@ -102,19 +116,49 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
             {
                //if user click on other button (the button isn't selected) then new button changes to selected.
                //otherwise the button must be selected.
-               if (selectedButton != btn)
+               if (selectedProjectType != btn)
                {
-                  if (selectedButton != null)
+                  if (selectedProjectType != null)
                   {
-                     selectedButton.setDown(false);
+                     selectedProjectType.setDown(false);
                   }
-                  selectedButton = btn;
+                  selectedProjectType = btn;
 
-                  delegate.onButtonPressed(id);
+                  // TODO need improvement if it is possible
+                  JsonArray<String> natures = wizardData.getNatures();
+                  for (int i = 0; i < availablePaaS.size(); i++)
+                  {
+                     PaaS paas = availablePaaS.get(i);
+                     JsonArray<String> paases = paas.getRequiredProjectTypes();
+                     ToggleButton button = paasButton.get(i);
+                     button.setEnabled(false);
+                     button.setDown(false);
+
+                     // TODO constant
+                     if (!paas.getId().equals("None"))
+                     {
+                        for (int j = 0; j < natures.size(); j++)
+                        {
+                           String nature = natures.get(j);
+                           if (paases.contains(nature))
+                           {
+                              button.setEnabled(true);
+                           }
+                        }
+                     }
+                     else
+                     {
+                        button.setEnabled(true);
+                     }
+                  }
+
+                  selectedPaaS = null;
+
+                  delegate.onProjectTypeSelected(id);
                }
                else
                {
-                  selectedButton.setDown(true);
+                  selectedProjectType.setDown(true);
                }
             }
          });
@@ -124,6 +168,63 @@ public class NewProjectPageViewImpl extends Composite implements NewProjectPageV
          Label title = new Label(wizardData.getTitle());
          technologies.setWidget(1, i, title);
          formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
+      }
+   }
+
+   private void createPaasTable(JsonArray<PaaS> paases)
+   {
+      this.paases = new Grid(2, paases.size());
+      HTMLTable.CellFormatter formatter = this.paases.getCellFormatter();
+
+      //create button for each paas
+      for (int i = 0; i < paases.size(); i++)
+      {
+         PaaS paas = paases.get(i);
+
+         ImageResource icon = paas.getImage();
+         final ToggleButton btn;
+         if (icon != null)
+         {
+            btn = new ToggleButton(new Image(icon));
+         }
+         else
+         {
+            btn = new ToggleButton();
+         }
+         btn.setSize("48px", "48px");
+         btn.setEnabled(false);
+
+         final int id = i;
+         btn.addClickHandler(new ClickHandler()
+         {
+            public void onClick(ClickEvent event)
+            {
+               //if user click on other button (the button isn't selected) then new button changes to selected.
+               //otherwise the button must be selected.
+               if (selectedPaaS != btn)
+               {
+                  if (selectedPaaS != null)
+                  {
+                     selectedPaaS.setDown(false);
+                  }
+                  selectedPaaS = btn;
+
+                  delegate.onPaaSSelected(id);
+               }
+               else
+               {
+                  selectedPaaS.setDown(true);
+               }
+            }
+         });
+         this.paases.setWidget(0, i, btn);
+         formatter.setHorizontalAlignment(0, i, HasHorizontalAlignment.ALIGN_CENTER);
+
+         Label title = new Label(paas.getTitle());
+         this.paases.setWidget(1, i, title);
+         formatter.setHorizontalAlignment(1, i, HasHorizontalAlignment.ALIGN_CENTER);
+
+         paasButton.add(btn);
       }
    }
 

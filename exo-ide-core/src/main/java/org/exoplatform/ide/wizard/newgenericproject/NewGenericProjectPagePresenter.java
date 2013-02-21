@@ -43,11 +43,13 @@ import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPageView.Ac
  */
 public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
 {
-   private NewGenericProjectPageView view;
+   // TODO changed for New war project, change it if it is not needed for New war project wizard page
+   protected NewGenericProjectPageView view;
 
    private WizardPagePresenter next;
 
-   private ResourceProvider resourceProvider;
+   // TODO
+   protected ResourceProvider resourceProvider;
 
    private boolean hasIncorrectSymbol;
 

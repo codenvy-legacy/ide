@@ -25,6 +25,7 @@ import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.ui.keybinding.KeyBindingAgent;
+import org.exoplatform.ide.api.ui.paas.PaaSAgent;
 import org.exoplatform.ide.api.ui.toolbar.ToolbarAgent;
 import org.exoplatform.ide.command.OpenProjectCommand;
 import org.exoplatform.ide.command.SaveAllCommand;
@@ -44,6 +45,7 @@ import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.newfile.NewTextFilePagePresenter;
 import org.exoplatform.ide.wizard.newfolder.NewFolderPagePresenter;
 import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
+import org.exoplatform.ide.wizard.warproject.NewWarProjectPagePresenter;
 
 /**
  * Initializer for standard component i.e. some basic menu commands (Save, Save As etc)
@@ -65,10 +67,14 @@ public class StandardComponentInitializer
       Provider<NewFolderPagePresenter> newFolderProvider, Provider<NewTextFilePagePresenter> newTextFileProvider,
       Resources resources, KeyBindingAgent keyBinding, ShowPreferenceCommand showPreferencesCommand,
       OpenProjectCommand openProjectCommand, ToolbarAgent toolbar, ExpressionManager expressionManager,
-      EventBus eventBus, ShowOpenPerspectiveDialog openPerspectiveCommand)
+      EventBus eventBus, ShowOpenPerspectiveDialog openPerspectiveCommand, PaaSAgent paasAgent,
+      Provider<NewWarProjectPagePresenter> warProjectProvider)
    {
       wizard.registerNewProjectWizard("Generic Project", "Create generic project", "", resources.genericProjectIcon(),
          genericProjectProvider, JsonCollections.<String> createArray());
+      wizard.registerNewProjectWizard("Java Web Application (WAR)", "Create web application", "War",
+         resources.genericProjectIcon(), warProjectProvider, JsonCollections.<String> createArray("java", "War"));
+
       // TODO change icon
       wizard.registerNewResourceWizard("General", "Folder", resources.folder(), newFolderProvider);
       wizard.registerNewResourceWizard("General", "Text file", resources.file(), newTextFileProvider);
@@ -104,5 +110,8 @@ public class StandardComponentInitializer
       toolbar.addToggleItem("Test/Checked item", command);
       toolbar.addDropDownItem("Test/New", resources.file(), "Test item");
       toolbar.addToggleItem("Test/New/Checked item", command);
+      
+      paasAgent
+         .registerPaaS("None", "None", null, false, JsonCollections.<String> createArray("", "java", "War"), null);
    }
 }

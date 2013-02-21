@@ -25,6 +25,7 @@ import com.google.inject.Singleton;
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.menu.ExtendedCommand;
+import org.exoplatform.ide.paas.PaaSAgentImpl;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPresenter;
 import org.exoplatform.ide.wizard.newproject.NewProjectPagePresenter;
@@ -41,6 +42,8 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand
 
    private final Resources resources;
 
+   private final PaaSAgentImpl paasAgent;
+
    /**
     * Create command
     * 
@@ -48,10 +51,11 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand
     * @param resources
     */
    @Inject
-   public ShowNewProjectWizardCommand(WizardAgentImpl wizardAgent, Resources resources)
+   public ShowNewProjectWizardCommand(WizardAgentImpl wizardAgent, Resources resources, PaaSAgentImpl paasAgent)
    {
       this.wizardAgent = wizardAgent;
       this.resources = resources;
+      this.paasAgent = paasAgent;
    }
 
    /**
@@ -59,7 +63,7 @@ public class ShowNewProjectWizardCommand implements ExtendedCommand
     */
    public void execute()
    {
-      NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources);
+      NewProjectPagePresenter firstPage = new NewProjectPagePresenter(wizardAgent, resources, paasAgent);
       WizardPresenter wizardDialog = new WizardPresenter(firstPage, "Create project");
       wizardDialog.showWizard();
    }

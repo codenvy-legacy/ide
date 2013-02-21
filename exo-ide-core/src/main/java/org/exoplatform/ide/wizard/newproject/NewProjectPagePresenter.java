@@ -22,6 +22,8 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.paas.PaaS;
+import org.exoplatform.ide.paas.PaaSAgentImpl;
 import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
@@ -39,15 +41,22 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
 
    private JsonArray<NewProjectWizardData> wizards;
 
+   private PaaS selectedPaaS;
+
+   private JsonArray<PaaS> paases;
+
    /**
     * Create presenter
     * 
     * @param wizardAgent
     * @param resources
+    * @param paasAgent
     */
-   public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources)
+   public NewProjectPagePresenter(WizardAgentImpl wizardAgent, NewProjectWizardResource resources,
+      PaaSAgentImpl paasAgent)
    {
-      this(wizardAgent, resources.newProjectIcon(), new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards()));
+      this(wizardAgent, resources.newProjectIcon(), new NewProjectPageViewImpl(wizardAgent.getNewProjectWizards(),
+         paasAgent.getPaaSes()), paasAgent);
    }
 
    /**
@@ -59,12 +68,14 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     * @param image
     * @param view
     */
-   protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, ImageResource image, NewProjectPageView view)
+   protected NewProjectPagePresenter(WizardAgentImpl wizardAgent, ImageResource image, NewProjectPageView view,
+      PaaSAgentImpl paasAgent)
    {
       super("Select a wizard", image);
       this.view = view;
       view.setDelegate(this);
       this.wizards = wizardAgent.getNewProjectWizards();
+      this.paases = paasAgent.getPaaSes();
    }
 
    /**
@@ -98,7 +109,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     */
    public boolean isCompleted()
    {
-      return next != null;
+      return next != null && selectedPaaS != null;
    }
 
    /**
@@ -106,7 +117,16 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
     */
    public String getNotice()
    {
-      return isCompleted() ? null : "Please, choose technology";
+      if (next ==null)
+      {
+         return "Please, choose technology";
+      }
+      else if (selectedPaaS == null)
+      {
+         return "Please, choose PaaS";
+      }
+      
+      return null;
    }
 
    /**
@@ -120,9 +140,21 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    /**
     * {@inheritDoc}
     */
-   public void onButtonPressed(int id)
+   @Override
+   public void onProjectTypeSelected(int id)
    {
       next = wizards.get(id).getWizardPage();
+      selectedPaaS = null;
+      delegate.updateControls();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onPaaSSelected(int id)
+   {
+      selectedPaaS = paases.get(id);
       delegate.updateControls();
    }
 }
