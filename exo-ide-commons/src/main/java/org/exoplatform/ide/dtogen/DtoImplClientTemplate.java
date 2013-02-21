@@ -69,9 +69,9 @@ public class DtoImplClientTemplate extends DtoImpl
       }
       else
       {
-         builder.append("\n  }\n");
+//         builder.append("\n  }\n");
          // emit testing mock, with factory, as a separate subclass
-         emitMockPreamble(dtoInterface, builder);
+//         emitMockPreamble(dtoInterface, builder);
          emitFactoryMethod(builder);
       }
 

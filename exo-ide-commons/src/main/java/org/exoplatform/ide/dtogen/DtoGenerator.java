@@ -131,7 +131,7 @@ public class DtoGenerator
 
          // Load the classes that we found above.
          URL[] urls = {interfaceJar.toURI().toURL()};
-         URLClassLoader loader = new URLClassLoader(urls);
+         URLClassLoader loader = new URLClassLoader(urls,Thread.currentThread().getContextClassLoader());
 
          // We sort alphabetically to ensure deterministic order of routing types.
          Collections.sort(classFilePaths);

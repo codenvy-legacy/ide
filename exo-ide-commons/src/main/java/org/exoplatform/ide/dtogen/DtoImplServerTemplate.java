@@ -77,8 +77,8 @@ public class DtoImplServerTemplate extends DtoImpl
       builder.append("  }\n");
 
       // Emit a testing mock
-      emitMockPreamble(dtoInterface, builder);
-      builder.append("  }\n");
+//      emitMockPreamble(dtoInterface, builder);
+//      builder.append("  }\n");
 
       return builder.toString();
    }

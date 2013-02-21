@@ -206,6 +206,24 @@ public class DtoTemplate
 
    private void emitPreamble(StringBuilder builder)
    {
+      builder.append("/*\n");
+      builder.append(" * Copyright (C) 2013 eXo Platform SAS.\n");
+      builder.append(" *\n");
+      builder.append(" * This is free software; you can redistribute it and/or modify it\n");
+      builder.append(" * under the terms of the GNU Lesser General Public License as\n");
+      builder.append(" * published by the Free Software Foundation; either version 2.1 of\n");
+      builder.append(" * the License, or (at your option) any later version.\n");
+      builder.append(" *\n");
+      builder.append(" * This software is distributed in the hope that it will be useful,\n");
+      builder.append(" * but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
+      builder.append(" * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU\n");
+      builder.append(" * Lesser General Public License for more details.\n");
+      builder.append(" *\n");
+      builder.append(" * You should have received a copy of the GNU Lesser General Public\n");
+      builder.append(" * License along with this software; if not, write to the Free\n");
+      builder.append(" * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA\n");
+      builder.append(" * 02110-1301 USA, or see the FSF site: http://www.fsf.org.\n");
+      builder.append(" */\n\n\n");
       builder.append("// GENERATED SOURCE. DO NOT EDIT.\npackage ");
       builder.append(packageName);
       builder.append(";\n\n");
