@@ -339,22 +339,22 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
          return;
       }
 
-      this.buffer.getScrollListenerRegistrar().add(new ScrollListener()
-      {
-
-         @Override
-         public void onScroll(Buffer buffer, int scrollTop)
-         {
-            if (scrollTop < 20)
-            {
-               getElement().removeClassName(getView().css.scrolled());
-            }
-            else
-            {
-               getElement().addClassName(getView().css.scrolled());
-            }
-         }
-      });
+      //      this.buffer.getScrollListenerRegistrar().add(new ScrollListener()
+      //      {
+      //
+      //         @Override
+      //         public void onScroll(Buffer buffer, int scrollTop)
+      //         {
+      //            if (scrollTop < 20)
+      //            {
+      //               getElement().removeClassName(getView().css.scrolled());
+      //            }
+      //            else
+      //            {
+      //               getElement().addClassName(getView().css.scrolled());
+      //            }
+      //         }
+      //      });
    }
 
    /**
@@ -406,6 +406,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       return editorDocumentMutator.getBeforeTextListenerRegistrar();
    }
 
+   @Override
    public Buffer getBuffer()
    {
       return buffer;
@@ -540,7 +541,9 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
          Renderer.create(textStore, viewport, buffer, getLeftGutter(), selection, focusManager, this, resources,
             renderTimeExecutor);
       if (editorUndoManager != null)
+      {
          editorUndoManager.connect(this);
+      }
 
       // Delayed core editor component initialization
       viewport.initialize();
@@ -617,6 +620,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       editorActivityManager.teardown();
    }
 
+   @Override
    public void setReadOnly(final boolean isReadOnly)
    {
 
@@ -637,6 +641,7 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
       });
    }
 
+   @Override
    public boolean isReadOnly()
    {
       return isReadOnly;
@@ -751,7 +756,9 @@ public class TextEditorViewImpl extends UiComponent<TextEditorViewImpl.View> imp
    private void createSyntaxHighligter(Parser parser)
    {
       if (parser == null)
+      {
          return;
+      }
       DocumentParser documentParser = DocumentParser.create(textStore, parser, userActivityManager);
       syntaxHighlighter =
          SyntaxHighlighter.create(textStore, renderer, viewport, selectionManager.getSelectionModel(), documentParser,

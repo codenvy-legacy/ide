@@ -28,8 +28,7 @@ import org.exoplatform.ide.extension.DependencyDescription;
 import org.exoplatform.ide.extension.ExtensionDescription;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonStringMap.IterationCallback;
-import org.exoplatform.ide.part.PartPresenter;
-import org.exoplatform.ide.part.PropertyListener;
+import org.exoplatform.ide.part.AbstractPartPresenter;
 
 /**
  * For demo purposes. Displays the list of registered extensions and their dependensies.
@@ -37,7 +36,7 @@ import org.exoplatform.ide.part.PropertyListener;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-public class ExtensionsPage implements PartPresenter
+public class ExtensionsPage extends AbstractPartPresenter
 {
 
    private final ExtensionManager manager;
@@ -104,23 +103,6 @@ public class ExtensionsPage implements PartPresenter
    * {@inheritDoc}
    */
    @Override
-   public void onOpen()
-   {
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public boolean onClose()
-   {
-      return false;
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
    public String getTitle()
    {
       return "Extensions";
@@ -143,21 +125,4 @@ public class ExtensionsPage implements PartPresenter
    {
       return "This view displays the list of extensions";
    }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void addPropertyListener(PropertyListener listener)
-   {
-   }
-
-   /**
-   * {@inheritDoc}
-   */
-   @Override
-   public void removePropertyListener(PropertyListener listener)
-   {
-   }
-
 }

@@ -192,7 +192,12 @@
             <artifactId>exo-ext-cloudfoundry</artifactId>
             <version>${project.version}</version>
          </dependency>
-                                                                                           
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ext-tasks</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
 	<!-- OTHER -->
 
          <!--dependency>
@@ -462,9 +467,10 @@
       <module>exo-ide-core</module>
       <module>exo-ext-demo</module>
       <module>exo-ext-css</module>
+      <module>exo-ext-tasks</module>
       <module>exo-ide-java</module>
-      <module>exo-ide-client</module>
       <module>exo-ext-gae</module>
       <module>exo-ext-cloudfoundry</module>
+      <module>exo-ide-client</module>
    </modules>
 </project>

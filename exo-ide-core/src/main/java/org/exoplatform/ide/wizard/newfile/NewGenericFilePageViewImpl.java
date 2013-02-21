@@ -27,7 +27,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 
-
 /**
  * NewGenericFilePageViewImpl is the view of NewGenericFile wizard.
  * 
@@ -37,7 +36,8 @@ public class NewGenericFilePageViewImpl extends Composite implements NewGenericF
 {
    private static NewGenericFilePageViewImplUiBinder uiBinder = GWT.create(NewGenericFilePageViewImplUiBinder.class);
 
-   @UiField TextBox fileName;
+   @UiField
+   TextBox fileName;
 
    private ActionDelegate delegate;
 
@@ -56,6 +56,7 @@ public class NewGenericFilePageViewImpl extends Composite implements NewGenericF
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getFileName()
    {
       return fileName.getText();
@@ -64,6 +65,7 @@ public class NewGenericFilePageViewImpl extends Composite implements NewGenericF
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setDelegate(ActionDelegate delegate)
    {
       this.delegate = delegate;
@@ -72,6 +74,15 @@ public class NewGenericFilePageViewImpl extends Composite implements NewGenericF
    @UiHandler("fileName")
    void onFileNameKeyUp(KeyUpEvent event)
    {
-      delegate.checkEnteredInformation();
+      delegate.onValueChanged();
+   }
+
+   /**
+   * {@inheritDoc}
+   */
+   @Override
+   public void setFileName(String fileName)
+   {
+      this.fileName.setText(fileName);
    }
 }

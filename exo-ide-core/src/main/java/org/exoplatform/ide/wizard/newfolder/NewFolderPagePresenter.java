@@ -25,6 +25,7 @@ import com.google.inject.Inject;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.resources.model.Folder;
 import org.exoplatform.ide.resources.model.Project;
@@ -57,10 +58,27 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
     * @param resourceProvider
     */
    @Inject
-   public NewFolderPagePresenter(Resources resources, ResourceProvider resourceProvider)
+   public NewFolderPagePresenter(Resources resources, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
       // TODO change icon?
       this("Create a new folder resource", resources.folder(), new NewFolderPageViewImpl(), resourceProvider);
+      if (selectionAgent.getSelection()!=null)
+      {
+         if (selectionAgent.getSelection().getFirstElement() instanceof Resource)
+         {
+            Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
+            String path = "";
+            if (resource.isFile())
+            {
+               path = resource.getParent().getRealtivePath()+"/";
+            }
+            else
+            {
+               path = resource.getRealtivePath()+"/";
+            }
+            view.setFolderName(path);
+         }
+      }
    }
 
    /**
@@ -85,6 +103,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean canFinish()
    {
       return true;
@@ -93,6 +112,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCompleted()
    {
       return !view.getFolderName().isEmpty() && isFolderNameValid && !hasSameFolder;
@@ -101,6 +121,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getNotice()
    {
       if (view.getFolderName().isEmpty())
@@ -122,14 +143,17 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public void doFinish()
    {
       project.createFolder(project, view.getFolderName(), new AsyncCallback<Folder>()
       {
+         @Override
          public void onSuccess(Folder result)
          {
          }
 
+         @Override
          public void onFailure(Throwable caught)
          {
             Log.error(NewFolderPagePresenter.class, caught);
@@ -140,6 +164,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public void checkEnteredInformation()
    {
       String newFolderName = view.getFolderName();
@@ -163,6 +188,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);
@@ -171,6 +197,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public WizardPagePresenter flipToNext()
    {
       return null;
@@ -179,6 +206,7 @@ public class NewFolderPagePresenter extends AbstractWizardPagePresenter implemen
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean hasNext()
    {
       return false;

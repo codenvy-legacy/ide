@@ -35,6 +35,13 @@ public interface NewGenericFileView extends View<NewGenericFileView.ActionDelega
    String getFileName();
 
    /**
+    * Sets file name.
+    * 
+    * @param fileName
+    */
+   void setFileName(String fileName);
+
+   /**
     * Needs for delegate some function into NewGenericFile view.
     */
    public interface ActionDelegate
@@ -42,6 +49,6 @@ public interface NewGenericFileView extends View<NewGenericFileView.ActionDelega
       /**
        * Checks entered information(file name and etc).
        */
-      void checkEnteredInformation();
+      void onValueChanged();
    }
 }

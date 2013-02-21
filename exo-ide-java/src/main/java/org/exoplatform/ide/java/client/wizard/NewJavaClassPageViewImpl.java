@@ -131,4 +131,14 @@ public class NewJavaClassPageViewImpl extends Composite implements NewJavaClassP
       types.setEnabled(false);
       typeName.setEnabled(false);
    }
+
+   /**{@inheritDoc}*/
+   @Override
+   public void selectParent(int index)
+   {
+      if (parents.getItemCount() > index)
+      {
+         parents.setItemSelected(index, true);
+      }
+   }
 }

@@ -22,6 +22,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Resource;
@@ -62,7 +63,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
     * @param resourceProvider
     */
    public AbstractNewFilePagePresenter(String caption, ImageResource image, NewGenericFileView view,
-      String fileExtension, ResourceProvider resourceProvider)
+      String fileExtension, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
       super(caption, image);
 
@@ -70,11 +71,31 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
       view.setDelegate(this);
       this.fileExtension = fileExtension;
       this.project = resourceProvider.getActiveProject();
+      
+      if (selectionAgent.getSelection()!=null)
+      {
+         if (selectionAgent.getSelection().getFirstElement() instanceof Resource)
+         {
+            Resource resource = (Resource)selectionAgent.getSelection().getFirstElement();
+            String path = "";
+            if (resource.isFile())
+            {
+               path = resource.getParent().getRealtivePath()+"/";
+            }
+            else
+            {
+               path = resource.getRealtivePath()+"/";
+            }
+            view.setFileName(path);
+         }
+      }
+      
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean isCompleted()
    {
       return !view.getFileName().isEmpty() && isFileNameValid && isExtensionValid && !hasSameFile;
@@ -83,6 +104,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
    /**
     * {@inheritDoc}
     */
+   @Override
    public WizardPagePresenter flipToNext()
    {
       return null;
@@ -91,6 +113,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean canFinish()
    {
       return true;
@@ -99,6 +122,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
    /**
     * {@inheritDoc}
     */
+   @Override
    public boolean hasNext()
    {
       return false;
@@ -107,6 +131,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
    /**
     * {@inheritDoc}
     */
+   @Override
    public String getNotice()
    {
       if (view.getFileName().isEmpty())
@@ -132,6 +157,7 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
    /**
     * {@inheritDoc}
     */
+   @Override
    public void go(AcceptsOneWidget container)
    {
       container.setWidget(view);
@@ -140,7 +166,8 @@ public abstract class AbstractNewFilePagePresenter extends AbstractWizardPagePre
    /**
     * {@inheritDoc}
     */
-   public void checkEnteredInformation()
+   @Override
+   public void onValueChanged()
    {
       isExtensionValid = true;
       hasExtension = false;

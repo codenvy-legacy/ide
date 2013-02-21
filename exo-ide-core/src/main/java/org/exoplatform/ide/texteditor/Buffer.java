@@ -203,6 +203,7 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
 
       private final EventListener mouseMoveListener = new EventListener()
       {
+         @SuppressWarnings("deprecation")
          @Override
          public void handleEvent(Event event)
          {
@@ -262,16 +263,16 @@ public class Buffer extends UiComponent<Buffer.View> implements LineListener, Li
          textLayerElement = Elements.createDivElement(css.textLayer());
 
          scrollableElement = createScrollableElement();
-         if (false)
-         {
-            /*
-             * TODO: Re-enable post-v1 when we have a settings page to configure the
-             * placement of this marker
-             */
-            // Note: columnMarkerElement is lying under the textLayerElement,
-            //       so spacers are not shadowed.
-            scrollableElement.appendChild(columnMarkerElement);
-         }
+//         if (false)
+//         {
+//            /*
+//             * TODO: Re-enable post-v1 when we have a settings page to configure the
+//             * placement of this marker
+//             */
+//            // Note: columnMarkerElement is lying under the textLayerElement,
+//            //       so spacers are not shadowed.
+//            scrollableElement.appendChild(columnMarkerElement);
+//         }
          scrollableElement.appendChild(textLayerElement);
 
          scrollbarElement = createScrollbarElement();

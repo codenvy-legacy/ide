@@ -103,4 +103,16 @@ public class NewPackagePageViewImpl extends Composite implements NewPackagePageV
       delegate.checkPackageName();
    }
 
+    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void selectParent(int index)
+   {
+      if (parents.getItemCount() > index)
+      {
+         parents.setItemSelected(index, true);
+      }
+   }
+
 }

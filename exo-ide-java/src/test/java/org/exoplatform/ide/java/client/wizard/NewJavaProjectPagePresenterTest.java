@@ -18,20 +18,21 @@
  */
 package org.exoplatform.ide.java.client.wizard;
 
+import static org.fest.assertions.Assertions.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
+
 import org.exoplatform.ide.java.client.JavaClientBundle;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.resources.model.Project;
+import org.exoplatform.ide.resources.model.Property;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-
-import static org.fest.assertions.Assertions.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -46,7 +47,7 @@ public class NewJavaProjectPagePresenterTest extends WizardsBaseTest
    private NewJavaProjectPagePresenter presenter;
 
    @Before
-   @SuppressWarnings({"unchecked"})
+   @SuppressWarnings({"unchecked", "rawtypes"})
    public void setUp() throws Exception
    {
       ArgumentCaptor<AsyncCallback> callbackArgumentCaptor = ArgumentCaptor.forClass(AsyncCallback.class);
@@ -79,6 +80,6 @@ public class NewJavaProjectPagePresenterTest extends WizardsBaseTest
    {
       presenter.checkProjectInput();
       presenter.doFinish();
-      verify(resourceProvider).createProject(eq("project"), (JsonArray)any(), (AsyncCallback)any());
+      verify(resourceProvider).createProject(eq("project"), (JsonArray<Property>)any(), (AsyncCallback<Project>)any());
    }
 }

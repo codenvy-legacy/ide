@@ -24,6 +24,7 @@ import com.google.inject.Inject;
 
 import org.exoplatform.ide.Resources;
 import org.exoplatform.ide.api.resources.ResourceProvider;
+import org.exoplatform.ide.api.selection.SelectionAgent;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.rest.MimeType;
 import org.exoplatform.ide.util.loging.Log;
@@ -45,9 +46,9 @@ public class NewCSSFilePagePresenter extends AbstractNewFilePagePresenter
     * @param resourceProvider
     */
    @Inject
-   public NewCSSFilePagePresenter(Resources resources, ResourceProvider resourceProvider)
+   public NewCSSFilePagePresenter(Resources resources, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
-      this(resources.newResourceIcon(), new NewGenericFilePageViewImpl(), resourceProvider);
+      this(resources.newResourceIcon(), new NewGenericFilePageViewImpl(), resourceProvider, selectionAgent);
    }
 
    /**
@@ -59,24 +60,27 @@ public class NewCSSFilePagePresenter extends AbstractNewFilePagePresenter
     * @param view
     * @param resourceProvider
     */
-   protected NewCSSFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider)
+   protected NewCSSFilePagePresenter(ImageResource image, NewGenericFileView view, ResourceProvider resourceProvider, SelectionAgent selectionAgent)
    {
-      super("Create a new CSS file", image, view, "css", resourceProvider);
+      super("Create a new CSS file", image, view, "css", resourceProvider, selectionAgent);
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public void doFinish()
    {
       String fileName = view.getFileName() + (hasExtension() ? "" : '.' + getFileExtension());
 
       project.createFile(project, fileName, "@CHARSET \"UTF-8\";", MimeType.TEXT_CSS, new AsyncCallback<File>()
       {
+         @Override
          public void onSuccess(File result)
          {
          }
 
+         @Override
          public void onFailure(Throwable caught)
          {
             // TODO : Handle error to be able to display message to the User

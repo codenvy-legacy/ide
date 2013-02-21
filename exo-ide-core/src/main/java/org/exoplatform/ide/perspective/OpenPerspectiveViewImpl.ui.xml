@@ -3,7 +3,7 @@
 	xmlns:g="urn:import:com.google.gwt.user.client.ui">
 	<ui:style>
 		.alignBtn {
-			float: right;
+			float: right;	
 		}
 	</ui:style>
 	<g:DockLayoutPanel unit="PX" width="300px" height="300px">

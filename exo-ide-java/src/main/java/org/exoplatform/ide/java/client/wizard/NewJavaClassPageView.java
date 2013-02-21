@@ -71,6 +71,13 @@ public interface NewJavaClassPageView extends View<NewJavaClassPageView.ActionDe
    void setParents(JsonArray<String> parentNames);
 
    /**
+    * Select parent by index
+    * 
+    * @param index of the parent in the list
+    */
+   void selectParent(int index);
+
+   /**
     * Disable all ui components.
     */
    void disableAllUi();

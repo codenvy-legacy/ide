@@ -80,6 +80,10 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ext-tasks</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ext-css</artifactId>
       </dependency>
       <dependency>

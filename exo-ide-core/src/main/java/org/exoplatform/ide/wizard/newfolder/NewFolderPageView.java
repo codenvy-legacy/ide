@@ -33,6 +33,13 @@ public interface NewFolderPageView extends View<NewFolderPageView.ActionDelegate
     * @return
     */
    String getFolderName();
+   
+   /**
+    * Set Folder name
+    * 
+    * @param name
+    */
+   void setFolderName(String name);
 
    /**
     * Needs for delegate some function into NewFolder view.

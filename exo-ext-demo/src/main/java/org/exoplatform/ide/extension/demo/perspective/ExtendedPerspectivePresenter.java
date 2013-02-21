@@ -50,7 +50,7 @@ public class ExtendedPerspectivePresenter extends PerspectivePresenter implement
       super(view, editorPartStackPresenter, partStackProvider);
       // handle Extended View Actions
       view.setDelegate(this);
-      
+
       // Open required Parts
       openPart(projectExplorerPart, PartStackType.NAVIGATION);
       openPart(outlinePart, PartStackType.TOOLING);
@@ -65,6 +65,7 @@ public class ExtendedPerspectivePresenter extends PerspectivePresenter implement
    {
       // handle actition for custom Perspective controls
       Window
-         .alert("Perspective API allows 3rd Party developers to create a custom Perspectives with additional controls, form or any other branded UI");
+         .alert("Perspective API allows 3rd Party developers to create a custom Perspectives with additional controls, "
+            + "form or any other branded UI");
    }
 }

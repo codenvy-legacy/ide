@@ -25,7 +25,8 @@ import org.exoplatform.ide.extension.ExtensionRegistry;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.css.CssExtension;
 import org.exoplatform.ide.extension.demo.DemoExtension;
-import org.exoplatform.ide.extension.gae.GAEExtension;
+   import org.exoplatform.ide.extension.gae.GAEExtension;
+import org.exoplatform.ide.extension.tasks.TasksExtension;
 import org.exoplatform.ide.java.client.JavaExtension;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
@@ -51,7 +52,7 @@ public class ExtensionManager
     */
    @Inject
    public ExtensionManager(final ExtensionRegistry extensionRegistry, final Provider<DemoExtension> demoExt,
-      final Provider<CssExtension> cssExt, final Provider<JavaExtension> javaExt, final Provider<GAEExtension> gaeExt,
+      final Provider<CssExtension> cssExt, final Provider<JavaExtension> javaExt,  final Provider<TasksExtension> tasksExt, final Provider<GAEExtension> gaeExt,
       Provider<CloudFoundryExtension> cloudFoundryExt)
    {
       this.extensions = JsonCollections.createArray();
@@ -61,6 +62,7 @@ public class ExtensionManager
       this.extensions.add(javaExt);
       this.extensions.add(gaeExt);
       this.extensions.add(cloudFoundryExt);
+      this.extensions.add(tasksExt);
    }
 
    /**

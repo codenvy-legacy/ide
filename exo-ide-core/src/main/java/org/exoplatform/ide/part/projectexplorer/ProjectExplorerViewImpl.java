@@ -81,7 +81,7 @@ public class ProjectExplorerViewImpl implements ProjectExplorerView
          @Override
          public void onNodeAction(TreeNodeElement<Resource> node)
          {
-            delegate.onNodeAction(node.getData());
+            delegate.onResourceAction(node.getData());
          }
 
          @Override

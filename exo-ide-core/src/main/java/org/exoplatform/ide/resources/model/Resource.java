@@ -105,6 +105,23 @@ public abstract class Resource
       }
    }
 
+   /**
+    * Returns Project-relative path of the {@link Resource}
+    * 
+    * @return the path of the {@link Resource} in relation to {@link Project}
+    */
+   public String getRealtivePath()
+   {
+      if (parent != null && !(parent instanceof Project))
+      {
+         return parent.getRealtivePath() + "/" + name;
+      }
+      else
+      {
+         return name;
+      }
+   }
+
    /** @return creation date */
    public long getCreationDate()
    {

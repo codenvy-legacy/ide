@@ -74,7 +74,7 @@ public class PartStackPresenter implements Presenter, PartStackView.ActionDelega
       @Override
       public void propertyChanged(PartPresenter source, int propId)
       {
-         if (PartPresenter.PROP_TITLE == propId)
+         if (PartPresenter.TITLE_PROPERTY == propId)
          {
             updatePartTab(source);
          }

@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.part;
 
+import org.exoplatform.ide.selection.Selection;
 import org.exoplatform.ide.util.ListenerManager;
 import org.exoplatform.ide.util.ListenerManager.Dispatcher;
 
@@ -29,8 +30,11 @@ import org.exoplatform.ide.util.ListenerManager.Dispatcher;
  */
 public abstract class AbstractPartPresenter implements PartPresenter
 {
-   
+
    private ListenerManager<PropertyListener> manager;
+
+   private Selection<?> selection;
+
    /**
     * 
     */
@@ -38,6 +42,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    {
       manager = ListenerManager.create();
    }
+
    /**
    * @see org.exoplatform.ide.part.PartPresenter#onClose()
    */
@@ -46,7 +51,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    {
       return false;
    }
-   
+
    /**
     * @see org.exoplatform.ide.part.PartPresenter#onOpen()
     */
@@ -54,7 +59,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    public void onOpen()
    {
    }
-   
+
    /**
     * @see org.exoplatform.ide.part.PartPresenter#addPropertyListener(org.exoplatform.ide.part.PropertyListener)
     */
@@ -63,7 +68,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    {
       manager.add(listener);
    }
-   
+
    /**
     * @see org.exoplatform.ide.part.PartPresenter#removePropertyListener(org.exoplatform.ide.part.PropertyListener)
     */
@@ -72,7 +77,7 @@ public abstract class AbstractPartPresenter implements PartPresenter
    {
       manager.remove(listener);
    }
-   
+
    /**
     * Fires a property changed event.
     *
@@ -89,5 +94,25 @@ public abstract class AbstractPartPresenter implements PartPresenter
             listener.propertyChanged(AbstractPartPresenter.this, propId);
          }
       });
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Selection<?> getSelection()
+   {
+      return this.selection;
+   }
+
+   /**
+    * Sets the Selection of the Part. It later can be accessible using {@link AbstractPartPresenter#getSelection()}
+    * 
+    * @param selection instance of Selection
+    */
+   public void setSelection(Selection<?> selection)
+   {
+      this.selection = selection;
+      firePropertyChange(SELECTION_PROPERTY);
    }
 }
