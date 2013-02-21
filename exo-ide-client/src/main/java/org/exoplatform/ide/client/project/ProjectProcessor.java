@@ -43,8 +43,6 @@ import org.exoplatform.ide.client.framework.project.api.ProjectBuilder;
 import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
-import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -68,8 +66,6 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
    {
       IDE.addHandler(OpenProjectEvent.TYPE, this);
       IDE.addHandler(CloseProjectEvent.TYPE, this);
-      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
-
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
@@ -121,7 +117,6 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
    @Override
    public void onRefreshBrowser(RefreshBrowserEvent event)
    {
-      //foldersToBeRefreshed = event.getFolders();
       foldersToBeRefreshed.clear();
       for (Folder f : event.getFolders())
       {
@@ -228,15 +223,13 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
       });
 
    }
-
+   
    @Override
    public void onCloseProject(CloseProjectEvent event)
    {
-      if (openedProject == null)
-      {
-         return;
-      }
-
+      IDE.removeHandler(AllFilesClosedEvent.TYPE, this);
+      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
+      
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
@@ -250,21 +243,18 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
    @Override
    public void onAllFilesClosed(AllFilesClosedEvent event)
    {
-      if (openedProject == null)
-      {
-         return;
-      }
-
-      final IDEProject closedProject = openedProject;
-      openedProject = null;
-      Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand()
+      IDE.removeHandler(AllFilesClosedEvent.TYPE, this);
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
          public void execute()
          {
+            final IDEProject closedProject = openedProject;
+            openedProject = null;
             IDE.fireEvent(new ProjectClosedEvent(closedProject));
          }
-      });
+      });      
    }
 
 }
