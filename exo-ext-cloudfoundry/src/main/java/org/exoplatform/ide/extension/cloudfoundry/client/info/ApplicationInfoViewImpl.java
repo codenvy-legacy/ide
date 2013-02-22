@@ -28,10 +28,14 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryResources;
 
 import java.util.List;
 
@@ -88,20 +92,18 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
    private ApplicationInfoView.ActionDelegate delegate;
 
    @Inject
-   public ApplicationInfoViewImpl()
+   protected ApplicationInfoViewImpl(CloudFoundryLocalizationConstant constants, CloudFoundryResources resources)
    {
-      Widget widget = uiBinder.createAndBindUi(this);
-
       createCellTable(urisTable, "URIs");
       createCellTable(servicesTable, "Services");
       createCellTable(environmentsTable, "Environments");
 
+      Widget widget = uiBinder.createAndBindUi(this);
+
       this.setText("Application Info");
       this.setWidget(widget);
 
-      //      setApplicationEnvironments(JsonCollections.<String> createArray());
-      //      setApplicationServices(JsonCollections.<String> createArray());
-      //      setApplicationUris(JsonCollections.<String> createArray());
+      btnOk.setHTML(new Image(resources.okButton()) + " " + constants.okButton());
    }
 
    private void createCellTable(CellTable<String> table, String header)
@@ -117,6 +119,9 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
       table.addColumn(column, header);
       table.setColumnWidth(column, "100%");
+
+      // don't show loading indicator
+      table.setLoadingIndicator(null);
    }
 
    /**
