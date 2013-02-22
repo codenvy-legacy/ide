@@ -233,7 +233,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
                }
 
                @Override
@@ -242,7 +242,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                   handleError(exception);
                   if (remote != null && remote.startsWith("https://"))
                   {
-                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.OUTPUT));
+                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
                   }
                }
             });
@@ -266,7 +266,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pushSuccess(remote), Type.GIT));
                }
 
                @Override
@@ -275,7 +275,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
                   handleError(exception);
                   if (remote != null && remote.startsWith("https://"))
                   {
-                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.OUTPUT));
+                     IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.useSshProtocol(), Type.GIT));
                   }
                }
             });
@@ -301,7 +301,7 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    private void handleError(Throwable t)
    {
       String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pushFail();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
    /**

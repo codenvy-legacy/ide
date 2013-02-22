@@ -229,7 +229,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.GIT));
                }
 
                @Override
@@ -259,7 +259,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.fetchSuccess(remoteUrl), Type.GIT));
                }
 
                @Override
@@ -295,7 +295,7 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
    private void handleError(Throwable t, String remoteUrl)
    {
       String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.fetchFail(remoteUrl);
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
    /**

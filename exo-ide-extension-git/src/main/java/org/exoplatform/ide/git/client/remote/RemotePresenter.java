@@ -264,7 +264,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
             {
                String errorMessage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteAddFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
             }
          });
       }
@@ -272,7 +272,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
       {
          String errorMessage =
             (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.remoteAddFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 
@@ -326,7 +326,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
             {
                String errorMessage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteDeleteFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
             }
          });
       }
@@ -334,7 +334,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
       {
          String errorMessage =
             (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.remoteDeleteFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 

@@ -175,14 +175,14 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                {
                   String errorMassage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.statusFailed();
-         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
       }
    }
 
@@ -210,7 +210,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                protected void onSuccess(String result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.GIT));
                   IDE.fireEvent(new RefreshBrowserEvent());
                }
 
@@ -220,14 +220,14 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                   String errorMassage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
                         .resetFilesFailed();
-                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
-         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
       }
    }
 }

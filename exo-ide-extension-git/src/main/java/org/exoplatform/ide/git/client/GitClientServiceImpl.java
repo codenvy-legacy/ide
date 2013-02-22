@@ -29,9 +29,9 @@ import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
 import org.exoplatform.ide.git.client.add.AddRequestHandler;
 import org.exoplatform.ide.git.client.clone.CloneRequestStatusHandler;
 import org.exoplatform.ide.git.client.commit.CommitRequestHandler;
@@ -338,7 +338,7 @@ public class GitClientServiceImpl extends GitClientService
 
       AsyncRequest.build(RequestBuilder.POST, url + "?" + params, true).data(marshaller.marshal())
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON)
-         .requestStatusHandler(new CommitRequestHandler(project.getName())).send(callback);
+         .requestStatusHandler(new CommitRequestHandler(project.getName(), message)).send(callback);
    }
 
    /**
@@ -354,7 +354,7 @@ public class GitClientServiceImpl extends GitClientService
       CommitRequestMarshaller marshaller = new CommitRequestMarshaller(commitRequest);
 
       String params = "?vfsid=" + vfsId + "&projectid=" + project.getId();
-      callback.setStatusHandler(new CommitRequestHandler(project.getName()));
+      callback.setStatusHandler(new CommitRequestHandler(project.getName(), message));
 
       RequestMessage requestMessage =
          RequestMessageBuilder.build(RequestBuilder.POST, COMMIT + params).data(marshaller.marshal())

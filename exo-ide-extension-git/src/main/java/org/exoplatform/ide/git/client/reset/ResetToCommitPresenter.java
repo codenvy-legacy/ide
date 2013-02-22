@@ -198,14 +198,14 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
                {
                   String errorMessage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 
@@ -228,7 +228,7 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetSuccessfully(), Type.GIT));
                   IDE.getInstance().closeView(display.asView().getId());
                }
 
@@ -237,14 +237,14 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
                {
                   String errorMessage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.resetFail();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFail();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 }

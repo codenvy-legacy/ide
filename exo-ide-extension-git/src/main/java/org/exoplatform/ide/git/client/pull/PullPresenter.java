@@ -268,7 +268,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
                   IDE.fireEvent(new RefreshBrowserEvent());
                }
 
@@ -299,7 +299,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
                   IDE.fireEvent(new RefreshBrowserEvent());
                }
 
@@ -336,7 +336,7 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
    private void handleError(Throwable t, String remoteUrl)
    {
       String errorMessage = (t.getMessage() != null) ? t.getMessage() : GitExtension.MESSAGES.pullFail(remoteUrl);
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
 }

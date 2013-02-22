@@ -571,7 +571,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       String errorMessage =
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
    private void showBuildMessage(String message)

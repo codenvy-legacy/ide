@@ -45,7 +45,7 @@ public class JobChangeEvent extends GwtEvent<JobChangeHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<JobChangeHandler> getAssociatedType()
+   public Type<JobChangeHandler> getAssociatedType()
    {
       return TYPE;
    }

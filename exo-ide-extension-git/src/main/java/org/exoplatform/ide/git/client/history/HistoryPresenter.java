@@ -326,7 +326,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
                   nothingToDisplay(null);
                   String errorMessage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.logFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                }
             });
       }
@@ -334,7 +334,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       {
          nothingToDisplay(null);
          String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.logFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 
@@ -414,7 +414,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
                   nothingToDisplay(revision);
                   String errorMessage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                }
             });
       }
@@ -422,7 +422,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       {
          nothingToDisplay(revision);
          String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.diffFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 
@@ -460,7 +460,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
                      nothingToDisplay(revision);
                      String errorMessage =
                         (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.diffFailed();
-                     IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                     IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                   }
                });
          }
@@ -468,7 +468,7 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
          {
             nothingToDisplay(revision);
             String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.diffFailed();
-            IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+            IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
          }
       }
       else

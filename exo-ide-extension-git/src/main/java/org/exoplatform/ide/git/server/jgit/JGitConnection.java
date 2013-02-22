@@ -68,6 +68,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.RefUpdate.Result;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.RepositoryState;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
@@ -140,6 +141,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -872,6 +874,10 @@ public class JGitConnection implements GitConnection
    {
       try
       {
+         if (repository.getRepositoryState().equals(RepositoryState.MERGING))
+         {
+            throw new GitException("Pull request cannot be performed because repository state is 'MERGING'");
+         }
          String fullBranch = repository.getFullBranch();
          if (!fullBranch.startsWith(Constants.R_HEADS))
          {
@@ -937,8 +943,19 @@ public class JGitConnection implements GitConnection
          {
             throw new GitException("Cannot get ref for remote branch " + remoteBranch + ". ");
          }
+         org.eclipse.jgit.api.MergeResult res = new Git(repository).merge().include(remoteBranchRef).call();
 
-         new Git(repository).merge().include(remoteBranchRef).call();
+         if (res.getConflicts() != null)
+         {
+            StringBuilder message = new StringBuilder("Merge conflict appeared in files:</br>");
+            Map<String, int[][]> allConflicts = res.getConflicts();
+            for (String path : allConflicts.keySet())
+            {
+               message.append(path + "</br>");
+            }
+            message.append("Automatic merge failed; fix conflicts and then commit the result.");
+            throw new GitException(message.toString());
+         }
       }
       catch (WrongRepositoryStateException e)
       {
@@ -963,7 +980,14 @@ public class JGitConnection implements GitConnection
       }
       catch (CheckoutConflictException e)
       {
-         throw new GitException(e.getMessage(), e);
+         StringBuilder message =
+            new StringBuilder("error: Your local changes to the following files would be overwritten by merge:</br>");
+         for (String path : e.getConflictingPaths())
+         {
+            message.append(path + "</br>");
+         }
+         message.append("Please, commit your changes before you can merge. Aborting.");
+         throw new GitException(message.toString());
       }
       catch (ConcurrentRefUpdateException e)
       {

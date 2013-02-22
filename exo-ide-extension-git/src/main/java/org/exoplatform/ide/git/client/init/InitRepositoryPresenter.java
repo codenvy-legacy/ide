@@ -145,7 +145,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
             @Override
             protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.GIT));
                IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
             }
 
@@ -176,7 +176,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.GIT));
                   IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
                }
 
@@ -198,7 +198,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
    {
       String errorMessage =
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
 }

@@ -175,14 +175,14 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
                {
                   String errorMassage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.statusFailed();
-         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
       }
    }
 
@@ -219,14 +219,14 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
                   String errorMassage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
                         .removeFilesFailed();
-                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.removeFilesFailed();
-         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
       }
    }
 

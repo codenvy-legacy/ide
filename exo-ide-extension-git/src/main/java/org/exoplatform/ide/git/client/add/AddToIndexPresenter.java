@@ -251,7 +251,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    {
       String errorMessage =
          (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
 }

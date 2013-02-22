@@ -249,7 +249,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
                @Override
                protected void onSuccess(MergeResult result)
                {
-                  IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.GIT));
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new RefreshBrowserEvent());
                }
