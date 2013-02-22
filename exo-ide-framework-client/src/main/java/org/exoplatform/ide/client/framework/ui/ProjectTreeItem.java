@@ -42,23 +42,35 @@ import org.exoplatform.ide.vfs.shared.Item;
 public class ProjectTreeItem extends TreeItem
 {
    
+   private Item item;
+   
+   private String prefixId;
+   
    public ProjectTreeItem(Item item, String prefixId)
+   {
+      this.item = item;
+      this.prefixId = prefixId;
+      setUserObject(item);
+      render();      
+   }
+   
+   public void render()
    {
       ImageResource icon = getItemIcon(item);
       String title = getTitle(item);
       Widget widget = createItemWidget(icon, title);
       setWidget(widget);
-      setUserObject(item);
       
-//      TreeItem node = new TreeItem();
-//      node.setUserObject(item);
-
-      if (item instanceof FolderModel || item instanceof ProjectModel)
+      if (item instanceof FolderModel)
       {
-         addItem("");
+         boolean opened = getState();
+         if (!((FolderModel)item).getChildren().getItems().isEmpty() && !opened)
+         {
+            addItem("");            
+         }
       }
 
-      getElement().setId(prefixId + Utils.md5(item.getPath()));
+      getElement().setId(prefixId + Utils.md5(item.getPath()));      
    }
    
    /**
@@ -131,7 +143,5 @@ public class ProjectTreeItem extends TreeItem
 //
 //      return title;
    }
-
-   
 
 }

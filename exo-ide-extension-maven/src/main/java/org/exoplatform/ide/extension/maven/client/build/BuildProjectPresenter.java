@@ -193,7 +193,17 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       project = event.getProject();
       if (project == null && makeSelectionCheck())
       {
-         project = ((ItemContext)selectedItems.get(0)).getProject();
+         Item item = selectedItems.get(0);
+         if (item instanceof ProjectModel)
+         {
+            project = (ProjectModel)item;
+         }
+         else
+         {
+            project = ((ItemContext)item).getProject();
+         }
+         
+         //project = ((ItemContext)selectedItems.get(0)).getProject();
       }
 
       statusHandler = new BuildRequestStatusHandler(project.getPath().substring(1));
@@ -786,13 +796,27 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          return false;
       }
 
-      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
+      Item item = selectedItems.get(0);
+      
+      if (item instanceof ProjectModel)
       {
-         Dialogs.getInstance().showInfo("Project is not selected.");
-         return false;
+         return true;
       }
-
-      return true;
+      
+      if (((ItemContext)item).getProject() != null)
+      {
+         return true;
+      }
+      
+      Dialogs.getInstance().showInfo("Project is not selected.");
+//      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
+//      {
+//         Dialogs.getInstance().showInfo("Project is not selected.");
+//         return false;
+//      }
+//
+//      return true;
+      return false;
    }
 
    /**

@@ -37,7 +37,6 @@ import org.exoplatform.ide.extension.appfog.client.project.ApplicationInfoChange
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -50,6 +49,7 @@ import java.util.List;
  */
 public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMemoryHandler, UpdateInstancesHandler
 {
+   
    private int memory;
 
    private String instances;
@@ -90,7 +90,9 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void getOldMemoryValue()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          AutoBean<AppfogApplication> appfogApplication =
@@ -160,7 +162,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void updateMemory(final int memory)
    {
-      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel projectModel = getSelectedProject();
 
       final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
@@ -209,7 +212,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void getOldInstancesValue()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
 
       try
       {
@@ -288,11 +292,14 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     */
    private void updateInstances(final String instancesExpression)
    {
-      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel projectModel = getSelectedProject();
 
       final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = projectModel.getProperty("appfog-application").getValue().get(0);
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = projectModel.getId();
 
       String encodedExp = URL.encodePathSegment(instancesExpression);
 

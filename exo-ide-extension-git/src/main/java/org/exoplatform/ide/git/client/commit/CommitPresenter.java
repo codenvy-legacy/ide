@@ -44,7 +44,6 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshaller;
 import org.exoplatform.ide.git.client.marshaller.RevisionUnmarshallerWS;
 import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.Date;
@@ -58,6 +57,7 @@ import java.util.Date;
  */
 public class CommitPresenter extends GitPresenter implements CommitHandler
 {
+   
    public interface Display extends IsView
    {
       /**
@@ -176,7 +176,8 @@ public class CommitPresenter extends GitPresenter implements CommitHandler
     */
    private void doCommit()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      //ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
       String message = display.getMessage().getValue();
       boolean all = display.getAllField().getValue();
 

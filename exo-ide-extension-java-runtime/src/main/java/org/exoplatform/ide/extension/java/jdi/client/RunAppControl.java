@@ -22,12 +22,8 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedEvent;
@@ -35,9 +31,13 @@ import org.exoplatform.ide.extension.java.jdi.client.events.AppStartedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedEvent;
 import org.exoplatform.ide.extension.java.jdi.client.events.AppStoppedHandler;
 import org.exoplatform.ide.extension.java.jdi.client.events.RunAppEvent;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
-public class RunAppControl extends SimpleControl implements IDEControl, ProjectClosedHandler, ProjectOpenedHandler,
-   AppStartedHandler, AppStoppedHandler
+public class RunAppControl extends SimpleControl implements IDEControl, 
+//ProjectClosedHandler, ProjectOpenedHandler,
+   AppStartedHandler, AppStoppedHandler, ItemsSelectedHandler
 {
    public static final String ID = DebuggerExtension.LOCALIZATION_CONSTANT.runAppControlId();
 
@@ -64,31 +64,30 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
       setVisible(false);
       setEnabled(false);
 
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(AppStartedEvent.TYPE, this);
       IDE.addHandler(AppStoppedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setVisible(false);
-      setEnabled(false);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      String projectType = event.getProject().getProjectType();
-      updateStatus(projectType);
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+//    */
+//   @Override
+//   public void onProjectClosed(ProjectClosedEvent event)
+//   {
+//      setVisible(false);
+//      setEnabled(false);
+//   }
+//
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+//    */
+//   @Override
+//   public void onProjectOpened(ProjectOpenedEvent event)
+//   {
+////      String projectType = event.getProject().getProjectType();
+////      updateStatus(projectType);
+//   }
 
    /**
     * @param projectType
@@ -117,4 +116,24 @@ public class RunAppControl extends SimpleControl implements IDEControl, ProjectC
    {
       setEnabled(false);
    }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+         setVisible(false);
+      }
+      else
+      {
+         setVisible(true);
+         Item selectedItem = event.getSelectedItems().get(0);
+         
+         ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem 
+            : ((ItemContext)selectedItem).getProject();
+         updateStatus(project.getProjectType());
+      }
+   }
+   
 }

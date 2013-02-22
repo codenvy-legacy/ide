@@ -35,7 +35,6 @@ import org.exoplatform.ide.extension.appfog.client.project.ApplicationInfoChange
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -143,7 +142,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void checkIsStarted()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -183,7 +183,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void checkIsStopped()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -226,7 +227,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void startApplication(String name)
    {
-      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel projectModel = getSelectedProject();
 
       final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
@@ -301,7 +303,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void stopApplication(final String name)
    {
-      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel projectModel = getSelectedProject();
 
       final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;
@@ -371,7 +374,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void restartApplication(String name)
    {
-      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel projectModel = getSelectedProject();
 
       final String server = projectModel.getProperty("appfog-target").getValue().get(0);
       final String appName = (name == null) ? projectModel.getProperty("appfog-application").getValue().get(0) : name;

@@ -36,7 +36,6 @@ import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for Init Repository view.
@@ -47,6 +46,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
  */
 public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements ShowProjectGitReadOnlyUrlHandler
 {
+   
    public interface Display extends IsView
    {
       /**
@@ -95,7 +95,8 @@ public class ShowProjectGitReadOnlyUrlPresenter extends GitPresenter implements 
       Display d = GWT.create(Display.class);
       IDE.getInstance().openView((View)d);
       bindDisplay(d);
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
       try
       {
          GitClientService.getInstance().getGitReadOnlyUrl(

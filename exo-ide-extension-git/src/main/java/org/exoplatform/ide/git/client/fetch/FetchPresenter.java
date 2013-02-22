@@ -39,7 +39,6 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
@@ -54,6 +53,7 @@ import java.util.List;
  */
 public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -206,8 +206,9 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
    {
       if (makeSelectionCheck())
       {
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         getRemotes(projectId);
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//         getRemotes(projectId);
+         getRemotes(getSelectedProject().getId());
       }
    }
 
@@ -219,7 +220,9 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       final String remoteUrl = display.getRemoteName().getValue();
       String remoteName = display.getRemoteDisplayValue();
       boolean removeDeletedRefs = display.getRemoveDeletedRefs().getValue();
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -316,7 +319,10 @@ public class FetchPresenter extends HasBranchesPresenter implements FetchHandler
       }
 
       display.setRemoteValues(remoteValues);
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       getBranches(projectId, false);
       getBranches(projectId, true);
    }

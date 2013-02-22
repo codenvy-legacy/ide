@@ -241,8 +241,9 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
 
          display.enableCheckoutButton(false);
          display.enableDeleteButton(false);
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         getBranches(projectId);
+         //String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         //getBranches(projectId);
+         getBranches(getSelectedProject().getId());
       }
    }
 
@@ -270,7 +271,8 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     */
    private void doCreateBranch(String name)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      //final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
 
       try
       {
@@ -307,7 +309,8 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
    private void doCheckoutBranch()
    {
       String name = display.getSelectedBranch().getDisplayName();
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      //final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
       if (name == null)
       {
          return;
@@ -372,7 +375,8 @@ public class BranchPresenter extends GitPresenter implements ShowBranchesHandler
     */
    private void doDeleteBranch(String name)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
       try
       {
          GitClientService.getInstance().branchDelete(vfs.getId(), projectId, name, true,

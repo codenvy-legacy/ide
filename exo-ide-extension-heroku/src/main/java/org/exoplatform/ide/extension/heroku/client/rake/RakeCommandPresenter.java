@@ -41,7 +41,6 @@ import org.exoplatform.ide.extension.heroku.client.RakeCommandAsyncRequestCallba
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter of the view for executing rake command. View must be pointed in Views.gwt.xml.
@@ -53,6 +52,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
 public class RakeCommandPresenter extends GitPresenter implements RakeCommandHandler, ViewClosedHandler,
    LoggedInHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -210,7 +210,9 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
       String command = (display.getCommandField() != null) ? display.getCommandField().getValue().trim() : null;
       if (command == null)
          return;
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
       command = (command.startsWith("rake")) ? command : "rake " + command;
       isHelp = false;
       try
@@ -238,7 +240,9 @@ public class RakeCommandPresenter extends GitPresenter implements RakeCommandHan
    public void doHelp()
    {
       isHelp = true;
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          HerokuClientService.getInstance().help(null, vfs.getId(), projectId, new RakeCommandAsyncRequestCallback(this)

@@ -92,6 +92,12 @@ public class CreateModuleControl extends SimpleControl implements IDEControl, It
          project = (ProjectModel)item;
       }
       
+      if (project == null)
+      {
+         setEnabled(false);
+         return;
+      }
+      
       setEnabled(ProjectType.MultiModule.equals(ProjectType.fromValue(project.getProjectType())));
 
       /*

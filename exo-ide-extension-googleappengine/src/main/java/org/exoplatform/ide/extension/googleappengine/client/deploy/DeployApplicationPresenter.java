@@ -374,7 +374,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                         }
                         else
                         {
-                           IDE.fireEvent(new CreateApplicationEvent());
+                           IDE.fireEvent(new CreateApplicationEvent(result));
                         }
                      }
                   });

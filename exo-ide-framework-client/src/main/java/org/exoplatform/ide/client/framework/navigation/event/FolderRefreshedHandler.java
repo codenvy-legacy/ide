@@ -25,6 +25,7 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 6, 2011 4:12:09 PM anya $
+ * @deprecated
  * 
  */
 public interface FolderRefreshedHandler extends EventHandler

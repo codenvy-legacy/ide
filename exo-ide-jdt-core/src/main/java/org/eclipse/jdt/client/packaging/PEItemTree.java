@@ -28,10 +28,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.TreeItem;
 
-import org.eclipse.jdt.client.packaging.model.Dependencies;
-import org.eclipse.jdt.client.packaging.model.Project;
-import org.eclipse.jdt.client.packaging.model.ResourceDirectory;
-import org.eclipse.jdt.client.packaging.model.next.ClasspathFolder;
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.eclipse.jdt.client.packaging.model.next.Package;
 import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
@@ -42,6 +38,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +56,26 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    private String id;
 
    private String prefixId;
+   
+   /**
+    * Comparator for comparing items in received directory.
+    */
+   private Comparator<Item> comparator = new Comparator<Item>()
+   {
+      public int compare(Item item1, Item item2)
+      {
+         if (item1 instanceof FolderModel && item2 instanceof FileModel)
+         {
+            return -1;
+         }
+         else if (item1 instanceof FileModel && item2 instanceof FolderModel)
+         {
+            return 1;
+         }
+         return item1.getName().compareTo(item2.getName());
+      }
+   };
+     
 
    public PEItemTree()
    {
@@ -84,6 +102,11 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
    public Object getSelectedObject()
    {
+      if (tree.getSelectedItem() == null)
+      {
+         return null;
+      }
+      
       return tree.getSelectedItem().getUserObject();
    }
 
@@ -117,73 +140,133 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return true;
    }
    
-   private void refreshProject(JavaProject project, Item item)
+   private void refreshProject(JavaProject project, Item destinationItem)
    {
-      //System.out.println("refresh JavaProject " + project.getPath());
-      
       /*
        * Refresh java project tree node
        */
       PackageExplorerTreeItem treeItem = treeItems.get(project.getId());
       treeItem.setUserObject(project);
+      treeItem.setState(true);
       treeItem.render();
 
       /*
        * Remove nonexistent tree items.
        */
-      /*
       ArrayList<String> projectItems = new ArrayList<String>();
-      for (ClasspathFolder classpathFolder : project.getClasspathFolders())
+      
+      for (SourceDirectory sourceDirectory : project.getSourceDirectories())
       {
-         projectItems.add(classpathFolder.getId());
-      }
-      for (project.getChildren())
-      {
+         projectItems.add(sourceDirectory.getId());
       }
       
-      for (Package _package : sourceDirectory.getPackages())
+      for (Item projectItem : project.getChildren().getItems())
       {
-         sourceDirectoryItems.add(_package.getId());
-      }
-      for (FileModel file : sourceDirectory.getDefaultPackage().getFiles())
-      {
-         sourceDirectoryItems.add(file.getId());
-      }
-
-      ArrayList<TreeItem> removeItems = new ArrayList<TreeItem>();
-      for (int i = 0; i < treeItem.getChildCount(); i++)
-      {
-         TreeItem ti = treeItem.getChild(i);
-         if (!(ti instanceof PackageExplorerTreeItem))
+         if (DirectoryFilter.get().matchWithPattern(projectItem.getName()))
          {
-            removeItems.add(ti);
             continue;
          }
          
-         PackageExplorerTreeItem child = (PackageExplorerTreeItem)ti;
-         if (!sourceDirectoryItems.contains(((Item)child.getUserObject()).getId()))
+         if (projectItem instanceof FileModel)
          {
-            removeItems.add(child);
+            projectItems.add(projectItem.getId());
          }
-         else if (child.getUserObject() instanceof Package && !isNeedShowPackage((Package)child.getUserObject()))
+         else if (projectItem instanceof FolderModel)
          {
-            removeItems.add(child);
+            if (isSource(projectItem, project))
+            {
+               continue;
+            }
+            
+            projectItems.add(projectItem.getId());
          }
       }
+      
+      ArrayList<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
+      for (int i = 0; i < treeItem.getChildCount(); i++)
+      {
+         TreeItem child = treeItem.getChild(i);
+         if (!(child instanceof PackageExplorerTreeItem))
+         {
+            itemsToRemove.add(child);
+            continue;
+         }
+         
+         PackageExplorerTreeItem childItem = (PackageExplorerTreeItem)child;
+         if (!projectItems.contains( ((Item)childItem.getUserObject()).getId() ))
+         {
+            itemsToRemove.add(child);
+         }         
+      }
 
-      for (TreeItem child : removeItems)
+      for (TreeItem child : itemsToRemove)
       {
          treeItem.removeItem(child);
       }
-      */
+      
+      /*
+       * Add missing tree items.
+       */
+      int index = 0;
+      
+      for (SourceDirectory sourceDirectory : project.getSourceDirectories())
+      {
+         PackageExplorerTreeItem child = treeItem.getChildByItemId(sourceDirectory.getId());
+         if (child == null)
+         {
+            child = new PackageExplorerTreeItem(sourceDirectory);
+            treeItem.insertItem(index, child);
+            treeItems.put(sourceDirectory.getId(), child);
+         }
+         else
+         {
+            child.setUserObject(sourceDirectory);
+            child.render();
+         }
+         index++;
+      }
+      
+//      ArrayList<Item> projectChildren = new ArrayList<Item>();
+//      projectChildren.addAll(project.getChildren().getItems());
+//      Collections.sort(projectChildren, comparator);
+
+      Collections.sort(project.getChildren().getItems(), comparator);
+      
+      for (Item projectItem : project.getChildren().getItems())
+//      for (Item projectItem : projectChildren)
+      {
+         if (DirectoryFilter.get().matchWithPattern(projectItem.getName()))
+         {
+            continue;
+         }
+         
+         if (projectItem instanceof FolderModel && isSource(projectItem, project))
+         {
+            continue;
+         }
+         
+         PackageExplorerTreeItem child = treeItem.getChildByItemId(projectItem.getId());
+         if (child == null)
+         {
+            child = new PackageExplorerTreeItem(projectItem);
+            treeItem.insertItem(index, child);
+            treeItems.put(projectItem.getId(), child);
+         }
+         else
+         {
+            child.setUserObject(projectItem);
+            child.render();
+         }
+         index++;
+      }
       
       for (ProjectModel module : project.getModules())
       {
-         if (item.getPath().startsWith(module.getPath()))
+         if (destinationItem.getPath().startsWith(module.getPath()))
          {
             if (module instanceof JavaProject)
             {
-               refreshProject((JavaProject)module, item);
+               refreshProject((JavaProject)module, destinationItem);
                return;
             }
             else
@@ -196,18 +279,29 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
       for (SourceDirectory sourceDirectory : project.getSourceDirectories())
       {
-         if (item.getPath().startsWith(sourceDirectory.getPath()))
+         if (destinationItem.getPath().startsWith(sourceDirectory.getPath()))
          {
-            refreshSourceDirectory(sourceDirectory, item);
+            refreshSourceDirectory(sourceDirectory, destinationItem);
             return;
          }
       }
 
-      for (Item child : project.getChildren().getItems())
+      for (Item item : project.getChildren().getItems())
       {
-         if (child instanceof FolderModel)
+         if (!(item instanceof FolderModel))
          {
-            refreshFolder((FolderModel)child, item);
+            continue;
+         }
+         
+         FolderModel folder = (FolderModel)item;
+         if (isSource(folder, project))
+         {
+            continue;
+         }
+         
+         if (destinationItem.getPath().startsWith(folder.getPath()))
+         {
+            refreshFolder((FolderModel)item, project, destinationItem);
             return;
          }
       }
@@ -215,8 +309,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
    private void refreshSourceDirectory(SourceDirectory sourceDirectory, Item item)
    {
-      //System.out.println("refresh SourceDirectory " + sourceDirectory.getPath());
-      
       /*
        * Refresh source directory tree node
        */
@@ -296,6 +388,9 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          }
       }
       
+      // TODO
+      Collections.sort(defaultPackage.getFiles(), comparator);
+      
       for (FileModel file : defaultPackage.getFiles())
       {
          PackageExplorerTreeItem child = treeItem.getChildByItemId(file.getId());
@@ -325,9 +420,17 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
          if (item instanceof FileModel)
          {
-            if (_package.getPath().equals(((FileModel)item).getParent().getPath()))
+            try
             {
-               refreshPackage(_package, item);
+               if (_package.getPath().equals(((FileModel)item).getParent().getPath()))
+               {
+                  refreshPackage(_package, item);
+                  return;
+               }
+            }
+            catch (NullPointerException e)
+            {
+               e.printStackTrace();
                return;
             }
          }
@@ -339,8 +442,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    
    private void refreshPackage(org.eclipse.jdt.client.packaging.model.next.Package _package, Item item)
    {
-      //System.out.println("refresh Package " + _package.getPath());
-      
       PackageExplorerTreeItem treeItem = treeItems.get(_package.getId());
       treeItem.setUserObject(_package);
       treeItem.setState(true);
@@ -363,14 +464,117 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          }
          index++;
       }
-
-      
    }
    
-   private void refreshFolder(FolderModel folder, Item item)
+   private void refreshFolder(FolderModel folder, JavaProject project, Item destinationItem)
    {
-      //System.out.println("refresh FolderModel " + folder.getPath());
+      /*
+       * Refresh folder tree node
+       */
+      PackageExplorerTreeItem treeItem = treeItems.get(folder.getId());
+      treeItem.setUserObject(folder);
+      treeItem.setState(true);
+      treeItem.render();
 
+      /*
+       * Remove nonexistent tree items.
+       */
+      ArrayList<String> folderItems = new ArrayList<String>();
+      for (Item item : folder.getChildren().getItems())
+      {
+         if (DirectoryFilter.get().matchWithPattern(item.getName()))
+         {
+            continue;
+         }
+         
+         if (item instanceof FileModel)
+         {
+            folderItems.add(item.getId());
+         }
+         else if (item instanceof FolderModel)
+         {
+            if (isSource(item, project))
+            {
+               continue;
+            }
+            
+            folderItems.add(item.getId());
+         }         
+      }
+
+      ArrayList<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
+      for (int i = 0; i < treeItem.getChildCount(); i++)
+      {
+         TreeItem child = treeItem.getChild(i);
+         if (!(child instanceof PackageExplorerTreeItem))
+         {
+            itemsToRemove.add(child);
+            continue;
+         }
+         
+         PackageExplorerTreeItem childItem = (PackageExplorerTreeItem)child;
+         if (!folderItems.contains( ((Item)childItem.getUserObject()).getId() ))
+         {
+            itemsToRemove.add(child);
+         }         
+      }
+
+      for (TreeItem child : itemsToRemove)
+      {
+         treeItem.removeItem(child);
+      }
+      
+      /*
+       * Add missing tree items.
+       */
+      Collections.sort(folder.getChildren().getItems(), comparator);
+      
+      int index = 0;
+      for (Item folderItem : folder.getChildren().getItems())
+      {
+         if (DirectoryFilter.get().matchWithPattern(folderItem.getName()))
+         {
+            continue;
+         }
+
+         if (folderItem instanceof FolderModel && isSource(folderItem, project))
+         {
+            continue;
+         }
+         
+         PackageExplorerTreeItem child = treeItem.getChildByItemId(folderItem.getId());
+         if (child == null)
+         {
+            child = new PackageExplorerTreeItem(folderItem);
+            treeItem.insertItem(index, child);
+            treeItems.put(folderItem.getId(), child);
+         }
+         else
+         {
+            child.setUserObject(folderItem);
+            child.render();
+         }
+         index++;
+      }
+      
+      for (Item item : folder.getChildren().getItems())
+      {
+         if (!(item instanceof FolderModel))
+         {
+            continue;
+         }
+         
+         if (isSource(item, project))
+         {
+            continue;
+         }
+         
+         if (destinationItem.getPath().startsWith(item.getPath()))
+         {
+            refreshFolder((FolderModel)item, project, destinationItem);
+            return;
+         }
+      }
    }
 
    
@@ -572,38 +776,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          openProjectFolder(folder, treeItem);
       }
 
-      //      if (folder instanceof JavaProject)
-      //      {
-      //         openJavaProject((JavaProject)folder, treeItem);
-      //      }
-      //      else if (folder instanceof SourceDirectory)
-      //      {
-      //         openSourceDirectory((SourceDirectory)folder, treeItem);
-      //      }
-      //      else if (folder instanceof org.eclipse.jdt.client.packaging.model.next.Package)
-      //      {
-      //         openPackage((org.eclipse.jdt.client.packaging.model.next.Package)folder, treeItem);
-      //      }
-      //      else if (folder instanceof FolderModel)
-      //      {
-      //         if (treeItem.getUserObject() instanceof JavaProject)
-      //         {
-      //            openJavaProject((JavaProject)treeItem.getUserObject(), treeItem);
-      //         }
-      //         else if (treeItem.getUserObject() instanceof SourceDirectory)
-      //         {
-      //            openSourceDirectory((SourceDirectory)treeItem.getUserObject(), treeItem);
-      //         }
-      //         else if (treeItem.getUserObject() instanceof org.eclipse.jdt.client.packaging.model.next.Package)
-      //         {
-      //            openPackage((org.eclipse.jdt.client.packaging.model.next.Package)treeItem.getUserObject(), treeItem);
-      //         }
-      //         else
-      //         {            
-      //            openProjectFolder(folder, treeItem);
-      //         }
-      //      }
-      //      
       treeItem.setState(true, false);
    }
 
@@ -640,6 +812,9 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 //      }
 
       // other files and folders
+      
+      Collections.sort(javaProject.getChildren().getItems(), comparator);
+      
       for (Item item : javaProject.getChildren().getItems())
       {
          if (item instanceof JavaProject)
@@ -689,10 +864,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
    private void openSourceDirectory(SourceDirectory sourceDirectory, PackageExplorerTreeItem sourceDirectoryTreeItem)
    {
-      //    if (projectItem.getChildCount() == 1 && !(projectItem.getChild(0) instanceof PackageExplorerTreeItem))
-      //    {
-      //       projectItem.removeItems();
-      //    }
       sourceDirectoryTreeItem.removeItems();
 
       org.eclipse.jdt.client.packaging.model.next.Package defaultPackage = null;
@@ -722,6 +893,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
       if (defaultPackage != null)
       {
+         Collections.sort(defaultPackage.getFiles(), comparator);
          for (FileModel file : defaultPackage.getFiles())
          {
             PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(file);
@@ -756,11 +928,11 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return true;
    }
 
-   private void openPackage(org.eclipse.jdt.client.packaging.model.next.Package pack,
-      PackageExplorerTreeItem packageTreeItem)
+   private void openPackage(org.eclipse.jdt.client.packaging.model.next.Package pack, PackageExplorerTreeItem packageTreeItem)
    {
       packageTreeItem.removeItems();
 
+      Collections.sort(pack.getFiles(), comparator);
       for (FileModel file : pack.getFiles())
       {
          PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(file);
@@ -773,6 +945,8 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    {
       folderTreeItem.removeItems();
 
+      Collections.sort(folder.getChildren().getItems(), comparator);
+      
       for (Item item : folder.getChildren().getItems())
       {
          if (isSource(item, folder.getProject()))
@@ -805,105 +979,6 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       }
 
       return false;
-   }
-
-   private void closeFolder()
-   {
-   }
-
-   //   private TreeItem openTreeNode(Object value, boolean open, boolean clearChildren)
-   //   {
-   //      TreeItem treeItem = null;
-   //      if (value instanceof Project)
-   //      {
-   //         treeItem = addProjectItems((Project)value, clearChildren);
-   //      }
-   //      else if (value instanceof ResourceDirectory)
-   //      {
-   //         treeItem = addResourceDirectoryItems((ResourceDirectory)value, clearChildren);
-   //      }
-   //      else if (value instanceof Dependencies)
-   //      {
-   //         treeItem = addDependencyListItems((Dependencies)value, clearChildren);
-   //      }
-   //      else if (value instanceof Package)
-   //      {
-   //         treeItem = addPackageItems((Package)value, clearChildren);
-   //      }
-   //      else if (value instanceof FolderModel)
-   //      {
-   //         treeItem = addFolderItems((FolderModel)value, clearChildren);
-   //      }
-   //
-   //      if (treeItem != null && open)
-   //      {
-   //         treeItem.setState(true);
-   //      }
-   //
-   //      return treeItem;
-   //   }
-
-   private boolean childExist(TreeItem treeItem, Object childUserObject)
-   {
-      for (int i = 0; i < treeItem.getChildCount(); i++)
-      {
-         TreeItem childItem = treeItem.getChild(i);
-
-         if (childUserObject instanceof String && childItem.getUserObject() instanceof String
-            && childUserObject.equals(childItem.getUserObject()))
-         {
-            return true;
-         }
-
-         if (childItem.getUserObject() == childUserObject)
-         {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   private TreeItem getFolderTreeItem(String path)
-   {
-      String[] parts = path.split("/");
-      TreeItem treeItem = null;
-
-      for (int index = 0; index < parts.length; index++)
-      {
-         if (index == 0)
-         {
-            TreeItem item = tree.getItem(0);
-            if (item.getUserObject() instanceof Project
-               && ((Project)item.getUserObject()).getProject().getName().equals(parts[index]))
-            {
-               treeItem = item;
-               continue;
-            }
-
-            return null;
-         }
-
-         boolean founded = false;
-         for (int i = 0; i < treeItem.getChildCount(); i++)
-         {
-            TreeItem item = treeItem.getChild(i);
-            if (item.getUserObject() instanceof FolderModel
-               && ((FolderModel)item.getUserObject()).getName().equals(parts[index]))
-            {
-               treeItem = item;
-               founded = true;
-               break;
-            }
-         }
-
-         if (!founded)
-         {
-            return null;
-         }
-      }
-
-      return treeItem;
    }
 
    public void setTreeGridId(String id)

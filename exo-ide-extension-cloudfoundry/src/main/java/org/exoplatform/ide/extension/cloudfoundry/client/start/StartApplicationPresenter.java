@@ -36,7 +36,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfo
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -145,7 +144,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void checkIsStarted()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -185,7 +185,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void checkIsStopped()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -228,7 +229,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void startApplication(String name)
    {
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = getSelectedProject();
 
       try
       {
@@ -308,10 +310,12 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void stopApplication(final String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+//      final String projectId =
+//         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
+//            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
+      final String projectId = getSelectedProject() != null ? getSelectedProject().getId() : null;
+      
       try
       {
          CloudFoundryClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null,
@@ -376,9 +380,11 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void restartApplication(String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+//      final String projectId =
+//         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
+//            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+
+      final String projectId = getSelectedProject() != null ? getSelectedProject().getId() : null;
 
       try
       {

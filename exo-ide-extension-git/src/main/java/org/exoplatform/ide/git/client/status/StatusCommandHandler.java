@@ -21,6 +21,7 @@ package org.exoplatform.ide.git.client.status;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -75,7 +76,8 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    {
       if (makeSelectionCheck())
       {
-         getStatusText(((ItemContext)selectedItems.get(0)).getProject(), selectedItems.get(0));
+//         getStatusText(((ItemContext)selectedItems.get(0)).getProject(), selectedItems.get(0));
+         getStatusText(getSelectedProject(), selectedItem);
       }
    }
 

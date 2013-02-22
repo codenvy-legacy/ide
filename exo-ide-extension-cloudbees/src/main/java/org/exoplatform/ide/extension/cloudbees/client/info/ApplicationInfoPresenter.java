@@ -103,8 +103,9 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
       }
       else if (makeSelectionCheck())
       {
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         showApplicationInfo(projectId);
+         //String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         //showApplicationInfo(projectId);
+         showApplicationInfo(getSelectedProject().getId());
       }
    }
 
@@ -168,15 +169,6 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
          valueList.add(it.next());
       }
       display.getApplicationInfoGrid().setValue(valueList);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
    }
 
    /**

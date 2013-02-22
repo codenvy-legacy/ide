@@ -182,12 +182,18 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
          return;
       }
       
-      if (selectedItem == null
-         || (isWorkspaceSelected(selectedItem.getId()) || !isProjectSelected((ItemContext)selectedItem)))
+      if (selectedProject == null)
       {
          setVisible(false);
          return;
       }
+      
+//      if (selectedItem == null
+//         || (isWorkspaceSelected(selectedItem.getId()) || !isProjectSelected((ItemContext)selectedItem)))
+//      {
+//         setVisible(false);
+//         return;
+//      }
 
       setVisible(true);
 

@@ -99,8 +99,8 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    private boolean isDeployed(ProjectModel project)
    {
       return project != null
-         && GoogleAppEngineExtension.isAppEngineProject(project)
-         && project.getPropertyValue("gae-application") != null;
+         && GoogleAppEngineExtension.isAppEngineProject(project);
+//         && project.getPropertyValue("gae-application") != null;
    }
 
 }

@@ -40,7 +40,6 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
@@ -55,6 +54,7 @@ import java.util.List;
  */
 public class PullPresenter extends HasBranchesPresenter implements PullHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -192,8 +192,9 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
    {
       if (makeSelectionCheck())
       {
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         getRemotes(projectId);
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//         getRemotes(projectId);
+         getRemotes(getSelectedProject().getId());
       }
    }
 
@@ -207,7 +208,9 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
       IDE.getInstance().openView(d.asView());
       bindDisplay(d);
 
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       LinkedHashMap<String, String> remoteValues = new LinkedHashMap<String, String>();
       for (Remote remote : remotes)
       {
@@ -257,7 +260,8 @@ public class PullPresenter extends HasBranchesPresenter implements PullHandler
    {
       String remoteName = display.getRemoteDisplayValue();
       final String remoteUrl = display.getRemoteName().getValue();
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
       IDE.getInstance().closeView(display.asView().getId());
 
       try

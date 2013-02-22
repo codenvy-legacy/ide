@@ -233,28 +233,28 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
 
    public void bindDisplay()
    {
-      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
-      {
-         public void onOpen(OpenEvent<Item> event)
-         {
-            Folder folder = (Folder)event.getTarget();
-            
-            ItemList<Item> children = null;
-            if (folder instanceof ProjectModel)
-            {
-               children = ((ProjectModel)folder).getChildren();
-            }
-            else if (folder instanceof FolderModel)
-            {
-               children = ((FolderModel)folder).getChildren();
-            }
-            
-            if (children != null && !children.getItems().isEmpty())
-            {
-               display.getBrowserTree().setValue(folder);
-            }
-         }
-      });
+//      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
+//      {
+//         public void onOpen(OpenEvent<Item> event)
+//         {
+//            Folder folder = (Folder)event.getTarget();
+//            
+//            ItemList<Item> children = null;
+//            if (folder instanceof ProjectModel)
+//            {
+//               children = ((ProjectModel)folder).getChildren();
+//            }
+//            else if (folder instanceof FolderModel)
+//            {
+//               children = ((FolderModel)folder).getChildren();
+//            }
+//            
+//            if (children != null && !children.getItems().isEmpty())
+//            {
+//               display.getBrowserTree().setValue(folder);
+//            }
+//         }
+//      });
 
       display.getBrowserTree().addCloseHandler(new CloseHandler<Item>()
       {

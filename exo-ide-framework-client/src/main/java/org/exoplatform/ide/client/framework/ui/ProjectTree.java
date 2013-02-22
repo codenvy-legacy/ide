@@ -18,6 +18,14 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
+import com.google.gwt.event.logical.shared.OpenEvent;
+
+import com.google.gwt.event.logical.shared.OpenHandler;
+
+import com.google.gwt.user.client.Timer;
+
+import com.google.gwt.user.client.Timer;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
@@ -51,7 +59,7 @@ import java.util.Map;
  * @version $Id: IdeTree Mar 14, 2011 4:00:06 PM evgen $
  * 
  */
-public class ProjectTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item>
+public class ProjectTree extends org.exoplatform.gwtframework.ui.client.component.Tree<Item> implements OpenHandler<Item>
 {
    
    private CellTree.Resources RESOURCES = GWT.create(CellTree.Resources.class);
@@ -68,6 +76,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    {
       sinkEvents(Event.ONCONTEXTMENU);
       addCloseHandler(CLOSE_HANDLER);
+      addOpenHandler(this);
    }
 
    /**
@@ -80,7 +89,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       this.prefixId = prefixId;
 
       sinkEvents(Event.ONCONTEXTMENU);
-      addCloseHandler(CLOSE_HANDLER);      
+      addCloseHandler(CLOSE_HANDLER);
+      addOpenHandler(this);
    }
    
    public String getId()
@@ -94,7 +104,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       getElement().setId(id);
    }
 
-   public void setTreeGridId(String id)
+   public void setTreeGridId(final String id)
    {
       this.id = id;
       getElement().setId(id);
@@ -144,13 +154,13 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
          return;
       }
       
+      if (project == null && !(value instanceof ProjectModel))
+      {
+         return;
+      }
+      
       if (project == null)
       {
-         if (!(value instanceof ProjectModel))
-         {
-            return;
-         }
-         
          project = (ProjectModel)value;
          ProjectTreeItem item = new ProjectTreeItem(value, prefixId);
          tree.addItem(item);
@@ -162,17 +172,25 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
          return;
       }
       
-      ItemList<Item> children = (value instanceof ProjectModel) ? ((ProjectModel)value).getChildren() : ((FolderModel)value).getChildren();
-      if (children == null)
+      if (!(value instanceof FolderModel))
       {
          return;
       }
       
-      Collections.sort(children.getItems(), comparator);
-      List<Item> filteredItems = DirectoryFilter.get().filter(children.getItems());
-      
+      ItemList<Item> children = ((FolderModel)value).getChildren();
+      if (children.getItems().isEmpty())
+      {
+         return;
+      }
+
       ProjectTreeItem parentTreeItem = treeItems.get(value.getId());
+      parentTreeItem.setState(true, false);
       removeChildren(parentTreeItem);
+      parentTreeItem.setUserObject(value);
+      parentTreeItem.render();
+      
+      Collections.sort(children.getItems(), comparator);
+      List<Item> filteredItems = DirectoryFilter.get().filter(children.getItems());      
       
       //parentTreeItem.setState(false, false);
       for (Item item : filteredItems)
@@ -181,12 +199,19 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
          parentTreeItem.addItem(treeItem);
          treeItems.put(item.getId(), treeItem);
       }
-      parentTreeItem.setState(true, false);
+      //parentTreeItem.setState(true, false);
       
       if (tree.getSelectedItem() != null)
       {
          moveHighlight(tree.getSelectedItem());
       }      
+   }
+      
+   @Override
+   public void onOpen(OpenEvent<Item> event)
+   {
+      Folder folder = (Folder)event.getTarget();
+      setValue(folder);
    }
    
    
@@ -195,18 +220,21 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       for (int i = 0; i < treeItem.getChildCount(); i++)
       {
          TreeItem child = treeItem.getChild(i);
-         if (child.getText() == null || child.getText().isEmpty())
+         if (!(child instanceof ProjectTreeItem))
          {
             continue;
          }
          
-         String childId = ((Item)treeItem.getUserObject()).getId();
-         treeItems.remove(childId);
+         if (child.getUserObject() instanceof FolderModel)
+         {
+            removeChildren(child);
+         }
          
-         removeChildren(child);
+         String childId = ((Item)child.getUserObject()).getId();
+         treeItems.remove(childId);         
       }
       
-      treeItem.removeItems();      
+      treeItem.removeItems();
    }
    
    
@@ -493,5 +521,6 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       //   else
       //      treeIcon.setIcon(getItemIcon(folder));
    }
+
    
 }

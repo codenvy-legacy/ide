@@ -117,6 +117,10 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       {
          if (event.getFile().getProject() != null)
          {
+            if (event.getFile().getProject().getProjectType().equals(ProjectType.MultiModule.value()))
+               return;
+            if (event.getFile().getProject().getProject() != null )
+               return; //Check multi module project
             resolveDependencies(event.getFile().getProject());
          }
          else

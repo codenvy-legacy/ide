@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -30,6 +32,7 @@ import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
@@ -187,8 +190,16 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
                itemToBeSelectedAfterRefreshing = getItemToSelect(itemToBeSelectedAfterRefreshing);
             }
 
-            Folder folder = refreshedFolders.remove(0);
+            final Folder folder = refreshedFolders.remove(0);
             IDE.fireEvent(new TreeRefreshedEvent(folder, itemToBeSelectedAfterRefreshing));
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+            {
+               @Override
+               public void execute()
+               {
+                  IDE.fireEvent(new FolderRefreshedEvent(folder));
+               }
+            });
          }
 
          return;
@@ -218,7 +229,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          public void onFailure(Throwable caught)
          {
             IDELoader.hide();
-            IDE.fireEvent(new ExceptionThrownEvent(caught));
+            //IDE.fireEvent(new ExceptionThrownEvent(caught));
          }
       });
 
@@ -228,16 +239,35 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
    public void onCloseProject(CloseProjectEvent event)
    {
       IDE.removeHandler(AllFilesClosedEvent.TYPE, this);
-      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
       
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
          @Override
          public void execute()
          {
-            IDE.fireEvent(new CloseAllFilesEvent());
+            IDE.addHandler(AllFilesClosedEvent.TYPE, ProjectProcessor.this);
+            
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+            {
+               @Override
+               public void execute()
+               {
+                  IDE.fireEvent(new CloseAllFilesEvent());
+               }
+            });
          }
       });
+      
+//      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
+//      
+//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//      {
+//         @Override
+//         public void execute()
+//         {
+//            IDE.fireEvent(new CloseAllFilesEvent());
+//         }
+//      });
    }
 
    @Override

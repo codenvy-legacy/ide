@@ -41,7 +41,6 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -151,7 +150,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
    private void getApplicationInfo()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          AutoBean<AppfogApplication> appfogApplication =
@@ -190,16 +191,27 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    {
       boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
       String projectId = null;
-      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+      
+//      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+//      {
+//         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//         if (project != null && project.getPropertyValue("appfog-application") != null
+//            && appName.equals((String)project.getPropertyValue("appfog-application")))
+//         {
+//            projectId = project.getId();
+//         }
+//      }
+
+      if (selectedItem != null)
       {
-         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         ProjectModel project = getSelectedProject();
          if (project != null && project.getPropertyValue("appfog-application") != null
             && appName.equals((String)project.getPropertyValue("appfog-application")))
          {
             projectId = project.getId();
          }
       }
-
+      
       try
       {
          AppfogClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, serverName,

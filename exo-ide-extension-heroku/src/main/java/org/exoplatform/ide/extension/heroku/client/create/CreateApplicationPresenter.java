@@ -42,7 +42,6 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -109,7 +108,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
 
    private Display display;
 
-   private ProjectModel project;
+//   private ProjectModel project;
 
    private String applicationName;
 
@@ -134,7 +133,7 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
          {
             applicationName = display.getApplicationNameField().getValue();
             remoteName = display.getRemoteNameField().getValue();
-            project = ((ItemContext)selectedItems.get(0)).getProject();
+//            project = ((ItemContext)selectedItems.get(0)).getProject();
             IDE.getInstance().closeView(display.asView().getId());
             doCreateApplication();
          }
@@ -159,7 +158,9 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    {
       if (makeSelectionCheck())
       {
-         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+//         String workdir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         ProjectModel project = getSelectedProject();
+         String workdir = project.getPath();
          if (display == null)
          {
             display = GWT.create(Display.class);
@@ -193,6 +194,8 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    {
       try
       {
+         final ProjectModel project = getSelectedProject();
+         
          HerokuClientService.getInstance().createApplicationWS(applicationName, vfs.getId(), project.getId(),
             remoteName, new HerokuRESTfulRequestCallback(this)
             {
@@ -223,6 +226,8 @@ public class CreateApplicationPresenter extends GitPresenter implements ViewClos
    {
       try
       {
+         final ProjectModel project = getSelectedProject();
+         
          HerokuClientService.getInstance().createApplication(applicationName, vfs.getId(), project.getId(), remoteName,
             new HerokuAsyncRequestCallback(this)
             {

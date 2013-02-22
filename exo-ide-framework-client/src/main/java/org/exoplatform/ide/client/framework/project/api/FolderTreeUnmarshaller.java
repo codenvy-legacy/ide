@@ -73,6 +73,8 @@ public class FolderTreeUnmarshaller implements Unmarshallable<Folder>
          JSONObject object = JSONParser.parseLenient(response.getText()).isObject();
 
          JSONValue item = object.get(ITEM);
+         folder.init(item.isObject());
+         
          ItemList<Item> children = getChildren(object.get(CHILDREN));
          folder.setChildren(children);
 

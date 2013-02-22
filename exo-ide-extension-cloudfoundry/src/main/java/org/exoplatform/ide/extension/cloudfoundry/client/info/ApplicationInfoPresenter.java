@@ -112,7 +112,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
    {
       if (makeSelectionCheck())
       {
-         showApplicationInfo(((ItemContext)selectedItems.get(0)).getProject().getId());
+         //showApplicationInfo(((ItemContext)selectedItems.get(0)).getProject().getId());
+         showApplicationInfo(getSelectedProject().getId());
       }
    }
 
@@ -163,15 +164,6 @@ public class ApplicationInfoPresenter extends GitPresenter implements Applicatio
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
    }
 
    /**
