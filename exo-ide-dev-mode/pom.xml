@@ -13,6 +13,17 @@
    <name>Codenvy IDE :: DevMode</name>
 
    <dependencies>
+   
+      <dependency>
+          <groupId>com.google.gwt</groupId>
+          <artifactId>gwt-user</artifactId>
+          <exclusions>
+             <exclusion>
+                <groupId>xstream</groupId>
+                <artifactId>xstream</artifactId>
+             </exclusion>
+         </exclusions>
+     </dependency>
 
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
@@ -188,6 +199,12 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-appfog</artifactId>
+      </dependency>
+      
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
       </dependency>
 
       <dependency>

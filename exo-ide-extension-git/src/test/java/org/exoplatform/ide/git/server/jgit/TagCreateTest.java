@@ -25,8 +25,6 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagCreateRequest;
 
-import java.util.Map;
-
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: TagCreateTest.java 22811 2011-03-22 07:28:35Z andrew00x $
@@ -37,7 +35,7 @@ public class TagCreateTest extends BaseTest
    {
       Tag tag =
          getDefaultConnection().tagCreate(new TagCreateRequest("new_tag", null/*From HEAD*/, "test create tag"));
-      Map<String, Ref> tags = getDefaultRepository().getTags();
+      java.util.Map<String, Ref> tags = getDefaultRepository().getTags();
 
       Ref refTag = tags.get(tag.getName());
       assertNotNull(refTag);

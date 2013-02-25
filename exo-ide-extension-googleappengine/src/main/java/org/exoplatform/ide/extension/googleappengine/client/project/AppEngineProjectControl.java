@@ -35,7 +35,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 22, 2012 5:15:05 PM anya $
- *
+ * 
  */
 public class AppEngineProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
    ProjectClosedHandler, ActiveProjectChangedHandler
@@ -102,4 +102,5 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
          && GoogleAppEngineExtension.isAppEngineProject(project)
          && project.getPropertyValue("gae-application") != null;
    }
+
 }

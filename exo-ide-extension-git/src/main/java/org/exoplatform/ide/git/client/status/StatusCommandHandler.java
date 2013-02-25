@@ -76,7 +76,8 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    {
       if (makeSelectionCheck())
       {
-         getStatusText(((ItemContext)selectedItems.get(0)).getProject(), selectedItems.get(0));
+//         getStatusText(((ItemContext)selectedItems.get(0)).getProject(), selectedItems.get(0));
+         getStatusText(getSelectedProject(), selectedItem);
       }
    }
 

@@ -37,7 +37,7 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for Init Repository view.
@@ -125,7 +125,8 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
          Display d = GWT.create(Display.class);
          IDE.getInstance().openView((View)d);
          bindDisplay(d);
-         display.getWorkDirValue().setValue(((ItemContext)selectedItems.get(0)).getProject().getPath(), true);
+//         display.getWorkDirValue().setValue(((ItemContext)selectedItems.get(0)).getProject().getPath(), true);
+         display.getWorkDirValue().setValue(getSelectedProject().getPath(), true);
       }
    }
 
@@ -134,19 +135,21 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
     */
    private void initRepository()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-      String projectName = ((ItemContext)selectedItems.get(0)).getProject().getName();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectName = ((ItemContext)selectedItems.get(0)).getProject().getName();
+      
+      final ProjectModel project = getSelectedProject();
       boolean bare = display.getBareValue().getValue();
 
       try
       {
-         GitClientService.getInstance().initWS(vfs.getId(), projectId, projectName, bare, new RequestCallback<String>()
+         GitClientService.getInstance().initWS(vfs.getId(), project.getId(), project.getName(), bare, new RequestCallback<String>()
          {
             @Override
             protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.GIT));
-               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+               IDE.fireEvent(new RefreshBrowserEvent(project));
             }
 
             @Override
@@ -159,7 +162,7 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
       }
       catch (WebSocketException e)
       {
-         initRepositoryREST(projectId, projectName, bare);
+         initRepositoryREST(project.getId(), project.getName(), bare);
       }
    }
 
@@ -176,8 +179,9 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
                @Override
                protected void onSuccess(String result)
                {
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.GIT));
-                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
+//                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
                }
 
                @Override

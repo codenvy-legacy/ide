@@ -29,6 +29,7 @@ import org.exoplatform.ide.vfs.shared.Folder;
  *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 6, 2011 4:10:23 PM anya $
+ * @deprecated
  */
 public class FolderRefreshedEvent extends GwtEvent<FolderRefreshedHandler>
 {

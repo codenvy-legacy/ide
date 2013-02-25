@@ -11,6 +11,8 @@
    <name>Codenvy IDE :: Extension :: CloudBees</name>
    <dependencies>
    
+    
+   
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-commons</artifactId>

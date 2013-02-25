@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.client.framework.project;
 
-import java.util.List;
+import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
-import com.google.gwt.event.dom.client.HasClickHandlers;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -43,7 +45,14 @@ public interface PackageExplorerDisplay extends IsView
    /**
     * @return {@link TreeGridItem}
     */
-   TreeGridItem<Object> getBrowserTree();
+   TreeGridItem<Item> getBrowserTree();
+   
+   boolean selectItem(Item item);
+   
+//   void setProject(ProjectModel project);
+//
+//   void treeUpdated(String path);
+//   
 
    Object getSelectedObject();
 

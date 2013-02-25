@@ -51,7 +51,6 @@ import org.exoplatform.ide.extension.openshift.client.login.LoginCanceledHandler
 import org.exoplatform.ide.extension.openshift.client.marshaller.ApplicationTypesUnmarshaller;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
@@ -184,7 +183,9 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    {
       if (makeSelectionCheck())
       {
-         final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+//         final ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+         final ProjectModel projectModel = getSelectedProject();
+         
          try
          {
 
@@ -238,7 +239,11 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    {
       String applicationName = display.getApplicationNameField().getValue();
       String type = display.getTypeField().getValue();
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+      ProjectModel project = getSelectedProject();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = project.getId();
+      
       AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
       AutoBeanUnmarshallerWS<AppInfo> unmarshaller = new AutoBeanUnmarshallerWS<AppInfo>(appInfo);
       String errorMessage = OpenShiftExtension.LOCALIZATION_CONSTANT.createApplicationFail(applicationName);
@@ -328,7 +333,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    private void onCreatedSuccess(AppInfo app)
    {
       IDE.fireEvent(new OutputEvent(formApplicationCreatedMessage(app), Type.INFO));
-      IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+//      IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+      IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
    }
 
    /**

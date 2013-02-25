@@ -16,46 +16,45 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging.model;
+package org.exoplatform.ide.client.framework.project.api;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.ProjectImpl;
+
+import java.util.HashMap;
+import java.util.Map;
+
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class DependencyListItem
+public class ProjectBuilder
 {
-
-   private String name;
-
-   private List<DependencyItem> dependencies = new ArrayList<DependencyItem>();
-
-   public DependencyListItem(String name)
+   
+   public interface Builder
    {
-      this.name = name;
+      
+      IDEProject build(ProjectModel project);
+      
    }
 
-   public String getName()
+   private static Map<String, Builder> builders = new HashMap<String, ProjectBuilder.Builder>();
+   
+   public static void addBuilder(String projectType, Builder builder)
    {
-      return name;
+      builders.put(projectType, builder);
    }
-
-   public void setName(String name)
+   
+   public static IDEProject createProject(ProjectModel project)
    {
-      this.name = name;
-   }
-
-   public List<DependencyItem> getDependencies()
-   {
-      return dependencies;
-   }
-
-   public void setDependencies(List<DependencyItem> dependencies)
-   {
-      this.dependencies = dependencies;
+      if (builders.containsKey(project.getProjectType()))
+      {
+         return builders.get(project.getProjectType()).build(project);
+      }
+      
+      return new IDEProject(project);
    }
 
 }

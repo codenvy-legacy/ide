@@ -39,7 +39,6 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.remote.HasBranchesPresenter;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
@@ -54,6 +53,7 @@ import java.util.List;
  */
 public class PushToRemotePresenter extends HasBranchesPresenter implements PushToRemoteHandler
 {
+   
    public interface Display extends IsView
    {
       /**
@@ -211,8 +211,9 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    {
       if (makeSelectionCheck())
       {
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
-         getRemotes(projectId);
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//         getRemotes(projectId);
+         getRemotes(getSelectedProject().getId());
       }
    }
 
@@ -221,7 +222,9 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
     */
    private void doPush()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
+      
       final String remote = display.getRemoteValue().getValue();
       IDE.getInstance().closeView(display.asView().getId());
 
@@ -310,7 +313,9 @@ public class PushToRemotePresenter extends HasBranchesPresenter implements PushT
    @Override
    public void onRemotesReceived(List<Remote> remotes)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       display = GWT.create(Display.class);
       bindDisplay();
       IDE.getInstance().openView(display.asView());

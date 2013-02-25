@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.project.create;
 
+import com.google.gwt.user.client.Window;
+
 import com.google.gwt.json.client.JSONParser;
 
 import com.google.gwt.core.client.GWT;
@@ -88,9 +90,8 @@ import java.util.List;
  * @version $Id: Jul 24, 2012 3:38:19 PM anya $
  *
  */
-public class CreateProjectPresenter
-   implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler, ViewClosedHandler,
-   DeployResultHandler, ItemsSelectedHandler
+public class CreateProjectPresenter implements CreateProjectHandler, CreateModuleHandler, VfsChangedHandler,
+   ViewClosedHandler, DeployResultHandler, ItemsSelectedHandler
 {
    interface Display extends IsView
    {
@@ -211,7 +212,9 @@ public class CreateProjectPresenter
 
    private boolean createModule = false;
 
-   private ProjectModel parentProject;
+//   private ProjectModel parentProject;
+   
+   private Item selectedItem;
 
    private class NoneTarget extends PaaS
    {
@@ -409,7 +412,7 @@ public class CreateProjectPresenter
    @Override
    public void onCreateModule(CreateModuleEvent event)
    {
-      if (MavenModuleCreationCallback.getInstance().isPomXMLOpened(parentProject))
+      if (MavenModuleCreationCallback.getInstance().isPomXMLOpened(getParentProject()))
       {
          Dialogs.getInstance().showError("First close pom.xml.");
          return;
@@ -749,8 +752,7 @@ public class CreateProjectPresenter
          {
             values.add(paas);
          }
-      }
-      ;
+      };
       return values;
    }
 
@@ -773,9 +775,9 @@ public class CreateProjectPresenter
       {
          String parentId = vfsInfo.getRoot().getId();
 
-         if (createModule && parentProject != null)
+         if (createModule && getParentProject() != null)
          {
-            parentId = parentProject.getId();
+            parentId = getParentProject().getId();
          }
 
          String projectName = display.getNameField().getValue();
@@ -799,7 +801,7 @@ public class CreateProjectPresenter
 
                   if (createModule)
                   {
-                     MavenModuleCreationCallback.getInstance().moduleCreated(parentProject, result);
+                     MavenModuleCreationCallback.getInstance().moduleCreated(getParentProject(), result);
                   }
                   else
                   {
@@ -957,6 +959,21 @@ public class CreateProjectPresenter
       return templates;
    }
 
+   private ProjectModel getParentProject()
+   {
+      if (selectedItem == null)
+      {
+         return null;
+      }
+      
+      ProjectModel project = ((ItemContext)selectedItem).getProject();
+      if (project == null && selectedItem instanceof ProjectModel)
+      {
+         project = (ProjectModel)selectedItem;
+      }
+      return project;
+   }
+   
    /**
     * Validates project name for existence.
     *
@@ -969,35 +986,35 @@ public class CreateProjectPresenter
          Folder parent = VirtualFileSystem.getInstance().getInfo().getRoot();
          if (createModule)
          {
-            parent = parentProject;
+            parent = getParentProject();
          }
 
-         VirtualFileSystem.getInstance().getChildren(parent,
-            ItemType.PROJECT, new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-         {
-            @Override
-            protected void onSuccess(List<Item> result)
+         VirtualFileSystem.getInstance().getChildren(parent, ItemType.PROJECT,
+            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
             {
-               for (Item item : result)
+               @Override
+               protected void onSuccess(List<Item> result)
                {
-                  if (projectName.equals(item.getName()))
+                  for (Item item : result)
                   {
-                     display.getErrorLabel().setValue(
-                        org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
-                           .createProjectFromTemplateProjectExists(projectName));
-                     return;
+                     if (projectName.equals(item.getName()))
+                     {
+                        display.getErrorLabel().setValue(
+                           org.exoplatform.ide.client.IDE.TEMPLATE_CONSTANT
+                              .createProjectFromTemplateProjectExists(projectName));
+                        return;
+                     }
                   }
+                  display.getErrorLabel().setValue("");
+                  goNext();
                }
-               display.getErrorLabel().setValue("");
-               goNext();
-            }
 
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-               IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
-            }
-         });
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Searching of projects failed."));
+               }
+            });
       }
       catch (RequestException e)
       {
@@ -1127,9 +1144,18 @@ public class CreateProjectPresenter
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems() == null ||
-         event.getSelectedItems().size() != 1 ||
-         !(event.getSelectedItems().get(0) instanceof ItemContext))
+      if (event.getSelectedItems().size() == 1)
+      {
+         selectedItem = event.getSelectedItems().get(0);
+      }
+      else
+      {
+         selectedItem = null;
+      }
+      
+      /*
+      if (event.getSelectedItems() == null || event.getSelectedItems().size() != 1
+         || !(event.getSelectedItems().get(0) instanceof ItemContext))
       {
          parentProject = null;
          return;
@@ -1137,6 +1163,7 @@ public class CreateProjectPresenter
 
       ItemContext context = (ItemContext)event.getSelectedItems().get(0);
       parentProject = context.getProject();
+      */
    }
 
 }

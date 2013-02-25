@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.eclipse.jdt.client.packaging;
+package org.exoplatform.ide.client.framework.project;
 
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONArray;
@@ -25,6 +25,7 @@ import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import org.exoplatform.gwtframework.commons.exception.UnmarshallerException;
 import org.exoplatform.gwtframework.commons.rest.Unmarshallable;
+import org.exoplatform.ide.client.framework.project.api.FolderTreeUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
@@ -38,6 +39,8 @@ import org.exoplatform.ide.vfs.shared.Project;
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
+ * 
+ * @deprecated use {@link FolderTreeUnmarshaller} instead
  * 
  */
 public class ProjectTreeUnmarshaller implements Unmarshallable<ProjectModel>
@@ -72,15 +75,6 @@ public class ProjectTreeUnmarshaller implements Unmarshallable<ProjectModel>
          ItemList<Item> children = getChildren(object.get(CHILDREN));
          project.setChildren(children);
          setProjectAndParent(children, new FolderModel(project));
-
-         //         if (folder instanceof FolderModel)
-         //         {
-         //            ((FolderModel)folder).setChildren(children);
-         //         }
-         //         else if (folder instanceof ProjectModel)
-         //         {
-         //            ((ProjectModel)folder).setChildren(children);
-         //         }
       }
       catch (Exception exc)
       {
@@ -94,8 +88,6 @@ public class ProjectTreeUnmarshaller implements Unmarshallable<ProjectModel>
    {
       for (Item item : items.getItems())
       {
-//         System.out.println("traverse item > " + item.getPath());
-         
          if (item instanceof ItemContext)
          {
             ((ItemContext)item).setProject(project);

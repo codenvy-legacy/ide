@@ -34,7 +34,6 @@ import org.exoplatform.ide.extension.cloudbees.client.CloudBeesExtension;
 import org.exoplatform.ide.extension.cloudbees.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -81,7 +80,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
     */
    protected void getApplicationInfo()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
@@ -139,16 +140,28 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    protected void doDelete(final String appId, final String appTitle)
    {
       String projectId = null;
-      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+      
+//      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+//      {
+//         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//         if (project != null && project.getPropertyValue("cloudbees-application") != null
+//            && appId.equals((String)project.getPropertyValue("cloudbees-application")))
+//         {
+//            projectId = project.getId();
+//         }
+//      }
+
+      if (selectedItem != null)
       {
-         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         ProjectModel project = getSelectedProject();
          if (project != null && project.getPropertyValue("cloudbees-application") != null
             && appId.equals((String)project.getPropertyValue("cloudbees-application")))
          {
             projectId = project.getId();
          }
       }
-
+      
+      
       try
       {
          CloudBeesClientService.getInstance().deleteApplication(appId, vfs.getId(), projectId,

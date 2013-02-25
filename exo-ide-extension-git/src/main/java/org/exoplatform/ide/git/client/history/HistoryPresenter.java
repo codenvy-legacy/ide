@@ -43,7 +43,6 @@ import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.DiffRequest.DiffType;
 import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -296,7 +295,9 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
     */
    private void getCommitsLog()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          GitClientService.getInstance().log(vfs.getId(), projectId, false,
@@ -359,10 +360,15 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
    private void getDiff(Revision revision)
    {
       String[] filePatterns = null;
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-      if (!showChangesInProject && project != null && selectedItems != null && selectedItems.size() == 1)
+      
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
+      
+//      if (!showChangesInProject && project != null && selectedItems != null && selectedItems.size() == 1)
+      if (!showChangesInProject && project != null && selectedItem != null)
       {
-         String pattern = selectedItems.get(0).getPath().replaceFirst(project.getPath(), "");
+//         String pattern = selectedItems.get(0).getPath().replaceFirst(project.getPath(), "");
+         String pattern = selectedItem.getPath().replaceFirst(project.getPath(), "");
          pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
          if (pattern.length() > 0)
          {
@@ -390,7 +396,9 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
     */
    protected void doDiffWithNotCommited(String[] filePatterns, final Revision revision, final boolean isCached)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,
@@ -439,7 +447,10 @@ public class HistoryPresenter extends GitPresenter implements ShowInHistoryHandl
       if (index + 1 < revisions.size())
       {
          final Revision revisionB = revisions.get(index + 1);
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         String projectId = getSelectedProject().getId();
+         
          try
          {
             GitClientService.getInstance().diff(vfs.getId(), projectId, filePatterns, DiffType.RAW, false, 0,

@@ -18,14 +18,13 @@
  */
 package org.exoplatform.ide.extension.appfog.client.services;
 
-import com.google.web.bindery.autobean.shared.AutoBean;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -43,7 +42,6 @@ import org.exoplatform.ide.extension.appfog.shared.AppfogProvisionedService;
 import org.exoplatform.ide.extension.appfog.shared.AppfogServices;
 import org.exoplatform.ide.extension.appfog.shared.AppfogSystemService;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.LinkedHashMap;
@@ -189,7 +187,8 @@ public class CreateServicePresenter extends GitPresenter implements CreateServic
       String name = display.getNameField().getValue();
       String type = display.getSystemServicesField().getValue();
 
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = getSelectedProject();
       final String infraName = project.getProperty("appfog-infra").getValue().get(0);
 
       try

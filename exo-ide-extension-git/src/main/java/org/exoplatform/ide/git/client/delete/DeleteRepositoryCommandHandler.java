@@ -19,7 +19,6 @@
 package org.exoplatform.ide.git.client.delete;
 
 import com.google.gwt.http.client.RequestException;
-
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -64,7 +63,7 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
    {
       if (makeSelectionCheck())
       {
-         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         String workDir = ((ItemContext)selectedItem).getProject().getPath();
          askBeforeDelete(workDir);
       }
    }
@@ -95,7 +94,8 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
     */
    public void doDeleteRepository()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
       if (project == null)
          return;
       getChildren(project);
@@ -166,8 +166,9 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
             @Override
             protected void onSuccess(String result)
             {
-               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.GIT));
-               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+               IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
+//               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+               IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
             }
 
             @Override

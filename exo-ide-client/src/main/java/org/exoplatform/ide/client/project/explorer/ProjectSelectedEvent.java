@@ -28,6 +28,8 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 20, 2012 3:14:17 PM anya $
  * 
+ * @deprecated
+ * 
  */
 public class ProjectSelectedEvent extends GwtEvent<ProjectSelectedHandler>
 {

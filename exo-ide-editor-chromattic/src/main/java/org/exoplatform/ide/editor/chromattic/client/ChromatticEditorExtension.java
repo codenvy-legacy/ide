@@ -19,6 +19,7 @@
 package org.exoplatform.ide.editor.chromattic.client;
 
 import com.google.gwt.core.client.GWT;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.exception.ServerException;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -36,10 +37,12 @@ import org.exoplatform.ide.client.framework.module.FileType;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
-import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.api.codeassitant.Token;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.editor.codemirror.CodeMirror;
 import org.exoplatform.ide.editor.codemirror.CodeMirrorConfiguration;
 import org.exoplatform.ide.editor.groovy.client.GroovyCommentsModifier;
@@ -65,9 +68,10 @@ import java.util.List;
  * 
  */
 public class ChromatticEditorExtension extends Extension implements InitializeServicesHandler,
-   JavaCodeAssistantErrorHandler, ProjectOpenedHandler, EditorActiveFileChangedHandler
+   JavaCodeAssistantErrorHandler, EditorActiveFileChangedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
-   private ProjectModel currentProject;
+
+   private ProjectModel openedProject;
 
    private JavaCodeAssistant groovyCodeAssistant;
 
@@ -86,8 +90,10 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    public void initialize()
    {
       IDE.addHandler(InitializeServicesEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+      
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
 
       IDE.getInstance().addControl(
          new NewItemControl("File/New/New Data Object", "Data Object", "Create Data Object", Images.CHROMATTIC,
@@ -161,16 +167,6 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      String projectId = event.getProject().getId();
-      groovyCodeAssistant.setActiveProjectId(projectId);
-      factory.setProjectId(projectId);
-   }
 
    /**
     * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
@@ -180,9 +176,12 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
    {
       FileModel file = event.getFile();
       if (file == null)
+      {
          return;
+      }
 
-      final ProjectModel project = file.getProject() != null ? file.getProject() : currentProject;
+      final ProjectModel project = file.getProject() != null ? file.getProject() : openedProject;
+      
       if (project != null)
       {
          groovyCodeAssistant.setActiveProjectId(project.getId());
@@ -218,6 +217,22 @@ public class ChromatticEditorExtension extends Extension implements InitializeSe
                }
             });
       }
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      openedProject = null;
+   }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+
+      String projectId = openedProject.getId();
+      groovyCodeAssistant.setActiveProjectId(projectId);
+      factory.setProjectId(projectId);
    }
 
 }

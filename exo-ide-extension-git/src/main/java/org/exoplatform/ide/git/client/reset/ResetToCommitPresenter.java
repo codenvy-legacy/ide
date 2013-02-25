@@ -41,7 +41,6 @@ import org.exoplatform.ide.git.client.marshaller.LogResponse;
 import org.exoplatform.ide.git.client.marshaller.LogResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.ResetRequest.ResetType;
 import org.exoplatform.ide.git.shared.Revision;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for view for reseting head to commit. The view must be pointed in Views.gwt.xml.
@@ -52,6 +51,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
  */
 public class ResetToCommitPresenter extends GitPresenter implements ResetToCommitHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -174,7 +174,8 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
 
    private void getCommits()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
 
       try
       {
@@ -218,7 +219,10 @@ public class ResetToCommitPresenter extends GitPresenter implements ResetToCommi
       ResetType type = display.getMixMode().getValue() ? ResetType.MIXED : null;
       type = (type == null && display.getSoftMode().getValue()) ? ResetType.SOFT : type;
       type = (type == null && display.getHardMode().getValue()) ? ResetType.HARD : type;
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          GitClientService.getInstance().reset(vfs.getId(), projectId, null, revision.getId(), type,

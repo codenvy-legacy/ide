@@ -27,12 +27,6 @@ import com.google.gwt.user.client.ui.HasValue;
 
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -63,8 +57,8 @@ import java.util.List;
  * @version $Id: Dec 2, 2011 2:21:04 PM anya $
  * 
  */
-public class HerokuProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ManageHerokuProjectHandler, ViewClosedHandler, LoggedInHandler, ApplicationRenamedHandler, ApplicationDeletedHandler, ActiveProjectChangedHandler
+public class HerokuProjectPresenter extends GitPresenter implements ManageHerokuProjectHandler, ViewClosedHandler, LoggedInHandler, ApplicationRenamedHandler, ApplicationDeletedHandler
+//   ProjectOpenedHandler, ProjectClosedHandler, , ActiveProjectChangedHandler
 {
 
    interface Display extends IsView
@@ -95,22 +89,22 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
     */
    private Display display;
 
-   /**
-    * Opened project in project explorer.
-    */
-   private ProjectModel openedProject;
+//   /**
+//    * Opened project in project explorer.
+//    */
+//   private ProjectModel openedProject;
 
    public HerokuProjectPresenter()
    {
       IDE.getInstance().addControl(new HerokuControl());
 
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       IDE.addHandler(ManageHerokuProjectEvent.TYPE, this);
       IDE.addHandler(ApplicationRenamedEvent.TYPE, this);
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -211,29 +205,29 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
       getApplicationInfo();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      openedProject = null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      openedProject = event.getProject();
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      openedProject = event.getProject();
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+//    */
+//   @Override
+//   public void onProjectClosed(ProjectClosedEvent event)
+//   {
+//      openedProject = null;
+//   }
+//
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+//    */
+//   @Override
+//   public void onProjectOpened(ProjectOpenedEvent event)
+//   {
+//      openedProject = event.getProject();
+//   }
+//   
+//   @Override
+//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+//   {
+//      openedProject = event.getProject();
+//   }
 
    /**
     * Get application's information.
@@ -242,7 +236,8 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
    {
       try
       {
-         HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), openedProject.getId(), false,
+         ProjectModel project = getSelectedProject();
+         HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(), false,
             new HerokuAsyncRequestCallback(this)
             {
 
@@ -277,8 +272,10 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
    @Override
    public void onApplicationRenamed(ApplicationRenamedEvent event)
    {
-      if (event.getOldName() != null && openedProject != null
-         && event.getOldName().equals((String)openedProject.getPropertyValue("heroku-application")))
+      ProjectModel project = getSelectedProject();
+      
+      if (event.getOldName() != null && project != null
+         && event.getOldName().equals((String)project.getPropertyValue("heroku-application")))
       {
          if (display != null)
          {
@@ -317,14 +314,16 @@ public class HerokuProjectPresenter extends GitPresenter implements ProjectOpene
    @Override
    public void onApplicationDeleted(ApplicationDeletedEvent event)
    {
-      if (event.getApplicationName() != null && openedProject != null
-         && event.getApplicationName().equals((String)openedProject.getPropertyValue("heroku-application")))
+      ProjectModel project = getSelectedProject();
+      
+      if (event.getApplicationName() != null && project != null
+         && event.getApplicationName().equals((String)project.getPropertyValue("heroku-application")))
       {
          if (display != null)
          {
             IDE.getInstance().closeView(display.asView().getId());
          }
-         IDE.fireEvent(new RefreshBrowserEvent(openedProject));
+         IDE.fireEvent(new RefreshBrowserEvent(project));
       }
    }
 }

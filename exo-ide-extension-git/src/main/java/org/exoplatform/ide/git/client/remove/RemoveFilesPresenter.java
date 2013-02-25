@@ -38,7 +38,6 @@ import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.GitFile;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +54,7 @@ import java.util.List;
  */
 public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -130,7 +130,8 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
    {
       if (makeSelectionCheck())
       {
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         String projectId = getSelectedProject().getId();
          getStatus(projectId);
       }
    }
@@ -199,7 +200,9 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
             files.add(file.getPath());
          }
       }
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
       try
       {
          GitClientService.getInstance().remove(vfs.getId(), projectId, files.toArray(new String[files.size()]),

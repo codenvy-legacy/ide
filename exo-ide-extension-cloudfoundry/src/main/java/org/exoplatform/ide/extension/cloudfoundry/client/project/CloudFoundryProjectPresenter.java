@@ -33,12 +33,6 @@ import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -70,8 +64,10 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @version $Id: Dec 2, 2011 5:54:50 PM anya $
  * 
  */
-public class CloudFoundryProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler, ActiveProjectChangedHandler
+public class CloudFoundryProjectPresenter extends GitPresenter implements
+   ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
+   
+//   ProjectOpenedHandler, ProjectClosedHandler, , ActiveProjectChangedHandler
 {
    interface Display extends IsView
    {
@@ -125,10 +121,10 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
     */
    private Display display;
 
-   /**
-    * Opened project in Project Explorer.
-    */
-   private ProjectModel openedProject;
+//   /**
+//    * Opened project in Project Explorer.
+//    */
+//   private ProjectModel openedProject;
 
    private CloudFoundryApplication application;
 
@@ -136,13 +132,13 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
    {
       IDE.getInstance().addControl(new CloudFoundryControl());
 
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
       IDE.addHandler(ManageCloudFoundryProjectEvent.TYPE, this);
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -263,9 +259,10 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
 
    protected void getLogs()
    {
+      ProjectModel project = getSelectedProject();
       try
       {
-         CloudFoundryClientService.getInstance().getLogs(vfs.getId(), openedProject.getId(),
+         CloudFoundryClientService.getInstance().getLogs(vfs.getId(), project.getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
 
@@ -307,32 +304,33 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
    @Override
    public void onManageCloudFoundryProject(ManageCloudFoundryProjectEvent event)
    {
-      getApplicationInfo(openedProject);
+      //getApplicationInfo(openedProject);
+      getApplicationInfo(getSelectedProject());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      openedProject = null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      openedProject = event.getProject();
-   }
-   
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      openedProject = event.getProject();
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+//    */
+//   @Override
+//   public void onProjectClosed(ProjectClosedEvent event)
+//   {
+//      openedProject = null;
+//   }
+//
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+//    */
+//   @Override
+//   public void onProjectOpened(ProjectOpenedEvent event)
+//   {
+//      openedProject = event.getProject();
+//   }
+//   
+//   @Override
+//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+//   {
+//      openedProject = event.getProject();
+//   }
 
    /**
     * Get application properties.
@@ -385,14 +383,15 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
    @Override
    public void onApplicationDeleted(ApplicationDeletedEvent event)
    {
-      if (event.getApplicationName() != null && openedProject != null
-         && event.getApplicationName().equals((String)openedProject.getPropertyValue("cloudfoundry-application")))
+      ProjectModel project = getSelectedProject();
+      if (event.getApplicationName() != null && project != null
+         && event.getApplicationName().equals((String)project.getPropertyValue("cloudfoundry-application")))
       {
          if (display != null)
          {
             IDE.getInstance().closeView(display.asView().getId());
          }
-         IDE.fireEvent(new RefreshBrowserEvent(openedProject));
+         IDE.fireEvent(new RefreshBrowserEvent(project));
       }
    }
 
@@ -426,10 +425,11 @@ public class CloudFoundryProjectPresenter extends GitPresenter implements Projec
    @Override
    public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
    {
+      ProjectModel project = getSelectedProject();
       if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
-         && openedProject != null && openedProject.getId().equals(event.getProjectId()))
+         && project != null && project.getId().equals(event.getProjectId()))
       {
-         getApplicationInfo(openedProject);
+         getApplicationInfo(project);
       }
    }
 

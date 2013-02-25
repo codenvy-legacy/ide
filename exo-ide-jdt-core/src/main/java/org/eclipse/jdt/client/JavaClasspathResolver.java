@@ -45,6 +45,8 @@ import org.exoplatform.ide.client.framework.job.Job;
 import org.exoplatform.ide.client.framework.job.Job.JobStatus;
 import org.exoplatform.ide.client.framework.job.JobChangeEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.output.event.OutputEvent;
+import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -115,6 +117,10 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       {
          if (event.getFile().getProject() != null)
          {
+            if (event.getFile().getProject().getProjectType().equals(ProjectType.MultiModule.value()))
+               return;
+            if (event.getFile().getProject().getProject() != null )
+               return; //Check multi module project
             resolveDependencies(event.getFile().getProject());
          }
          else
@@ -161,14 +167,15 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
       final ArrayList<ProjectModel> mvnModules = new ArrayList<ProjectModel>();
       if (project.getProjectType().equals(ProjectType.MultiModule.value()))
       {
-         List<ProjectModel> children = project.getModules();
-         for (ProjectModel item : children)
-         {
-            if (projectResolver.isProjectSupported(item.getProjectType()))
-            {
-               mvnModules.add(item);
-            }
-         }
+//         List<ProjectModel> children = project.getModules();
+//         for (ProjectModel item : children)
+//         {
+//            if (projectResolver.isProjectSupported(item.getProjectType()))
+//            {
+//               mvnModules.add(item);
+//            }
+//         }
+         return;
       }
       else if (projectResolver.isProjectSupported(project.getProjectType()))
       {
@@ -277,6 +284,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   protected void onFailure(Throwable exception)
                   {
                      stillWork = false;
+                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
                      updateDependencyStatusHandler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
                   }
                });
@@ -317,6 +325,7 @@ public class JavaClasspathResolver implements CleanProjectHandler, ProjectOpened
                   protected void onFailure(Throwable exception)
                   {
                      stillWork = false;
+                     IDE.fireEvent(new OutputEvent("<pre>" + exception.getMessage() + "</pre>", Type.ERROR));
                      updateDependencyStatusHandler.requestError(projectId, new Exception("Resolving dependency failed", new Throwable(exception)));
                   }
                });

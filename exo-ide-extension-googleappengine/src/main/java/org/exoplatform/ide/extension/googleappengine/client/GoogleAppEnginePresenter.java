@@ -18,18 +18,14 @@
  */
 package org.exoplatform.ide.extension.googleappengine.client;
 
-import com.google.gwt.user.client.Window;
-
 import org.exoplatform.ide.client.framework.application.event.VfsChangedEvent;
 import org.exoplatform.ide.client.framework.application.event.VfsChangedHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 /**
@@ -37,12 +33,19 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
  * @version $Id: May 17, 2012 11:49:18 AM anya $
  * 
  */
-public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
+public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, ItemsSelectedHandler
+//, ProjectOpenedHandler, ProjectClosedHandler, ActiveProjectChangedHandler
 {
    /**
     * Current virtual file system.
     */
    protected VirtualFileSystemInfo currentVfs;
+   
+   /**
+    * Selected item in browser tree.
+    */
+   protected Item selectedItem;
+
 
    /**
     * Current project.
@@ -52,34 +55,41 @@ public abstract class GoogleAppEnginePresenter implements VfsChangedHandler, Pro
    protected GoogleAppEnginePresenter()
    {
       IDE.addHandler(VfsChangedEvent.TYPE, this);
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      currentProject = null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      currentProject = event.getProject();
+      IDE.addHandler(VfsChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
    
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
+    */
    @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+   public void onItemsSelected(ItemsSelectedEvent event)
    {
-      currentProject = event.getProject();
+      if (event.getSelectedItems().size() != 1)
+      {
+         selectedItem = null;
+         return;
+      }
+      else
+      {
+         selectedItem = event.getSelectedItems().get(0);
+      }
+      if (selectedItem instanceof ProjectModel)
+      {
+         currentProject = (ProjectModel)selectedItem;
+      }
+      else
+      {
+         currentProject = ((ItemContext)selectedItem).getProject();
+      }
    }
+   
+
+
+
 
    /**
     * @see org.exoplatform.ide.client.framework.application.event.VfsChangedHandler#onVfsChanged(org.exoplatform.ide.client.framework.application.event.VfsChangedEvent)

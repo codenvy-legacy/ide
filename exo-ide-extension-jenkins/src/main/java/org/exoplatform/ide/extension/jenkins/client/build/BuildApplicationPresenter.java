@@ -142,10 +142,11 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       project = event.getProject();
       if (project == null && makeSelectionCheck())
       {
-         project = ((ItemContext)selectedItems.get(0)).getProject();
+//         project = ((ItemContext)selectedItems.get(0)).getProject();
+         project = getSelectedProject();
       }
+      
       checkIsGitRepository(project);
-
    }
 
    private void checkIsGitRepository(final ProjectModel project)

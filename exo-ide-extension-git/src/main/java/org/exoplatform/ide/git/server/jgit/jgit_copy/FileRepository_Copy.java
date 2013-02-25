@@ -23,7 +23,7 @@ import static org.eclipse.jgit.lib.Constants.R_HEADS;
 import static org.eclipse.jgit.lib.Constants.R_REFS;
 import static org.eclipse.jgit.lib.Constants.R_TAGS;
 
-import org.eclipse.jgit.internal.JGitText;
+import org.eclipse.jgit.JGitText;
 import org.eclipse.jgit.lib.BaseRepositoryBuilder;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
@@ -87,7 +87,7 @@ public final class FileRepository_Copy extends FileRepository
       FileUtils.mkdirs(objects, true);
       FileUtils.mkdir(infoDirectory, true);
       FileUtils.mkdir(packDirectory, true);
-      
+
       FileUtils.mkdir(new File(getDirectory(), "branches"), true);
       FileUtils.mkdir(new File(getDirectory(), "hooks"), true);
       /* --------------------------------------- */

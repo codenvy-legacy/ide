@@ -33,7 +33,6 @@ import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
-import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidMergeHeadsException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
 import org.eclipse.jgit.api.errors.InvalidRemoteException;
@@ -45,7 +44,6 @@ import org.eclipse.jgit.api.errors.NoMessageException;
 import org.eclipse.jgit.api.errors.NotMergedException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
@@ -58,6 +56,7 @@ import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
 import org.eclipse.jgit.errors.NotSupportedException;
 import org.eclipse.jgit.errors.TransportException;
+import org.eclipse.jgit.errors.UnmergedPathException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.FileMode;
@@ -190,17 +189,13 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#branchCheckout(org.exoplatform.ide.git.shared.BranchCheckoutRequest) */
    @Override
    public void branchCheckout(BranchCheckoutRequest request) throws GitException
    {
-      //CheckoutCommand_Copy checkoutCommand = new Git(repository).checkout().setName(request.getName());
+      //CheckoutCommand checkoutCommand = new Git(repository).checkout().setName(request.getName());
       CheckoutCommand_Copy checkoutCommand = new CheckoutCommand_Copy(repository).setName(request.getName());
       String startPoint = request.getStartPoint();
       if (startPoint != null)
@@ -274,10 +269,6 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#branchDelete(org.exoplatform.ide.git.shared.BranchDeleteRequest) */
@@ -305,10 +296,6 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#branchList(org.exoplatform.ide.git.shared.BranchListRequest) */
@@ -334,21 +321,15 @@ public class JGitConnection implements GitConnection
             listBranchCommand.setListMode(ListMode.REMOTE);
          }
       }
+      List<Ref> refs = listBranchCommand.call();
       String current = null;
-      List<Ref> refs = null;
-
       try
       {
-         refs = listBranchCommand.call();
          Ref headRef = repository.getRef(Constants.HEAD);
          if (!(headRef == null || Constants.HEAD.equals(headRef.getLeaf().getName())))
          {
             current = headRef.getLeaf().getName();
          }
-      }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
       catch (IOException e)
       {
@@ -478,7 +459,7 @@ public class JGitConnection implements GitConnection
          try
          {
             dirCache = repository.lockDirCache();
-            //            DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
+            //            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
             DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
@@ -566,6 +547,10 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
+      catch (UnmergedPathException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
       catch (ConcurrentRefUpdateException e)
       {
          throw new GitException(e.getMessage(), e);
@@ -584,14 +569,6 @@ public class JGitConnection implements GitConnection
          throw new GitException(e.getMessage(), e);
       }
       catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (UnmergedPathsException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (GitAPIException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -657,14 +634,6 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
-      catch (org.eclipse.jgit.api.errors.TransportException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#init(org.exoplatform.ide.git.shared.InitRequest) */
@@ -722,10 +691,6 @@ public class JGitConnection implements GitConnection
                }
                throw new GitException(e.getMessage(), e);
             }
-            catch (GitAPIException e)
-            {
-               throw new GitException(e.getMessage(), e);
-            }
          }
          GitUser gitUser = getUser();
          if (gitUser != null)
@@ -775,10 +740,6 @@ public class JGitConnection implements GitConnection
          }
          throw new GitException(e.getMessage(), e);
       }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#log(org.exoplatform.ide.git.shared.LogRequest) */
@@ -802,10 +763,6 @@ public class JGitConnection implements GitConnection
          }
       }
       catch (NoHeadException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (GitAPIException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -852,10 +809,6 @@ public class JGitConnection implements GitConnection
          throw new GitException(e.getMessage(), e);
       }
       catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (GitAPIException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -1001,14 +954,6 @@ public class JGitConnection implements GitConnection
       {
          throw new GitException(e.getMessage(), e);
       }
-      catch (org.eclipse.jgit.api.errors.TransportException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#push(org.exoplatform.ide.git.shared.PushRequest) */
@@ -1051,7 +996,7 @@ public class JGitConnection implements GitConnection
             {
                if (!remoteRefUpdate.getStatus().equals(Status.OK))
                {
-                  String message = "Failed to push some refs to '" + request.getRemote() + "'(rejected)";
+                  String message = "Failed to push some refs to ‘" + request.getRemote() + "’(rejected)";
                   throw new GitException(message);
                }
             }
@@ -1069,14 +1014,6 @@ public class JGitConnection implements GitConnection
       catch (InvalidRemoteException e)
       {
          throw new IllegalArgumentException(e.getMessage());
-      }
-      catch (org.eclipse.jgit.api.errors.TransportException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
    }
 
@@ -1431,7 +1368,7 @@ public class JGitConnection implements GitConnection
          }
          else if (resetType == ResetType.HARD)
          {
-            //DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
+            //DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, revCommit.getTree());
             DirCacheCheckout_Copy dirCacheCheckout =
                new DirCacheCheckout_Copy(repository, dirCache, revCommit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
@@ -1501,10 +1438,6 @@ public class JGitConnection implements GitConnection
       catch (NoFilepatternException e)
       {
          throw new IllegalArgumentException("File pattern may not be null or empty. ");
-      }
-      catch (GitAPIException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
    }
 
@@ -1679,8 +1612,7 @@ public class JGitConnection implements GitConnection
             tagCommand.setTagger(new PersonIdent(tagger.getName(), tagger.getEmail()));
          }
 
-         Ref ref = tagCommand.call();
-         RevTag revTag = revWalk.parseTag(ref.getLeaf().getObjectId());
+         RevTag revTag = tagCommand.call();
 
          return new Tag(revTag.getTagName());
       }
@@ -1714,10 +1646,6 @@ public class JGitConnection implements GitConnection
          throw new GitException(e.getMessage(), e);
       }
       catch (IOException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (GitAPIException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -1812,4 +1740,3 @@ public class JGitConnection implements GitConnection
       return repository;
    }
 }
-

@@ -43,7 +43,6 @@ import org.exoplatform.ide.extension.appfog.client.AppfogExtension;
 import org.exoplatform.ide.extension.appfog.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.appfog.shared.AppfogApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for rename operation with application.
@@ -53,6 +52,7 @@ import org.exoplatform.ide.vfs.client.model.ItemContext;
  */
 public class RenameApplicationPresenter extends GitPresenter implements RenameApplicationHandler, ViewClosedHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -163,7 +163,8 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
 
    private void getApplicationInfo()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
 
       try
       {
@@ -215,7 +216,10 @@ public class RenameApplicationPresenter extends GitPresenter implements RenameAp
    private void renameApplication()
    {
       final String newName = display.getRenameField().getValue();
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          AppfogClientService.getInstance().renameApplication(vfs.getId(), projectId, applicationName, null,

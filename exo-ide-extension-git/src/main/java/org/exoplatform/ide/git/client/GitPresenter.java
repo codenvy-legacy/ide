@@ -25,7 +25,9 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.List;
@@ -43,9 +45,9 @@ public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHa
 {
 
    /**
-    * Selected items in browser tree.
+    * Selected item in browser tree.
     */
-   protected List<Item> selectedItems;
+   protected Item selectedItem;
 
    /**
     * Current virtual file system.
@@ -67,29 +69,57 @@ public abstract class GitPresenter implements ItemsSelectedHandler, VfsChangedHa
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      this.selectedItems = event.getSelectedItems();
+      if (event.getSelectedItems().size() != 1)
+      {
+         selectedItem = null;
+      }
+      else
+      {
+         selectedItem = event.getSelectedItems().get(0);
+      }
+   }
+   
+   protected ProjectModel getSelectedProject()
+   {
+      if (selectedItem == null)
+      {
+         return null;
+      }
+      
+      if (selectedItem instanceof ProjectModel)
+      {
+         return (ProjectModel)selectedItem;
+      }
+      else
+      {
+         return ((ItemContext)selectedItem).getProject();
+      }
    }
 
    protected boolean makeSelectionCheck()
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
+      ProjectModel project = getSelectedProject();
+      if (project == null)
       {
          Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedItemsFail());
          return false;
       }
 
-      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
-      {
-         // TODO change message:
-         Dialogs.getInstance().showInfo("Project is not selected.");
-         return false;
-      }
-
-      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
-         return false;
-      }
+//      ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem :
+//         ((ItemContext)selectedItem).getProject();
+//      
+//      if (project == null)
+//      {
+//         // TODO change message:
+//         Dialogs.getInstance().showInfo("Project is not selected.");
+//         return false;         
+//      }
+      
+//      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
+//      {
+//         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
+//         return false;
+//      }
 
       return true;
    }
