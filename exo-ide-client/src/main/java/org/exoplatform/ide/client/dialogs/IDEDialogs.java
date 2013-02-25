@@ -18,6 +18,7 @@
  */
 package org.exoplatform.ide.client.dialogs;
 
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.resources.client.ImageResource;
@@ -40,7 +41,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -124,6 +125,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
       textField.setHeight(22);
       textField.setWidth(width);
       textField.setValue(value);
+      textField.getElement().getStyle().setMarginTop(10.0, Style.Unit.PX);
       return textField;
    }
 
@@ -134,7 +136,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    protected void openAskForValueDialog(String title, String message, String defaultValue)
    {
       final TextField textField = createTextField("valueField", message, 350, defaultValue);
-      final IDEDialogsView view = new IDEDialogsView("exoAskForValueModalView", title, 400, 160, textField);
+      final IDEDialogsView view = new IDEDialogsView("codenvyAskForValueModalView", title, 400, 160, textField);
 
       ImageButton okButton = createButton("Ok", null);
       view.getButtonsLayout().add(okButton);
@@ -160,7 +162,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
          }
       });
 
-      dialogClosedHandler = new DialogClosedHandler("exoAskForValueModalView")
+      dialogClosedHandler = new DialogClosedHandler("codenvyAskForValueModalView")
       {
          @Override
          public void onViewClosed(ViewClosedEvent event)
@@ -171,7 +173,9 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
       };
 
       IDE.getInstance().openView(view);
-   };
+   }
+
+   ;
 
    @Override
    protected void openAskDialog(String title, String message)
@@ -217,7 +221,9 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
       };
 
       IDE.getInstance().openView(view);
-   };
+   }
+
+   ;
 
    @Override
    protected void openWarningDialog(String title, String message)
@@ -248,7 +254,9 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
       };
 
       IDE.getInstance().openView(view);
-   };
+   }
+
+   ;
 
    @Override
    protected void openInfoDialog(String title, String message)
@@ -279,11 +287,13 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
       };
 
       IDE.getInstance().openView(view);
-   };
+   }
+
+   ;
 
    /**
     * Create button.
-    * 
+    *
     * @param title button's title
     * @param icon button's image
     * @return {@link IButton}
@@ -292,7 +302,9 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
    {
       ImageButton button = new DialogsImageButton(title);
       if (icon != null)
+      {
          button.setImage(new Image(icon));
+      }
       return button;
    }
 
@@ -315,7 +327,7 @@ public class IDEDialogs extends Dialogs implements ViewClosedHandler
 
    /**
     * Creates layout with pointed image and text near it.
-    * 
+    *
     * @param icon image to display
     * @param text text to display
     * @return {@link HorizontalPanel}

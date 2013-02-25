@@ -30,9 +30,9 @@ import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 
 /**
- * 
+ *
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -55,8 +55,6 @@ public class IDEDialogsView extends ViewImpl
       mainLayout.setWidth("100%");
       mainLayout.setHeight("100%");
       mainLayout.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-      mainLayout.setSpacing(10);
-
       mainLayout.add(content);
 
       buttonsLayout = createButtonsLayout();
@@ -67,7 +65,7 @@ public class IDEDialogsView extends ViewImpl
 
    /**
     * Create layout for displaying buttons.
-    * 
+    *
     * @return {@link HorizontalPanel} layout for buttons
     */
    public HorizontalPanel createButtonsLayout()
