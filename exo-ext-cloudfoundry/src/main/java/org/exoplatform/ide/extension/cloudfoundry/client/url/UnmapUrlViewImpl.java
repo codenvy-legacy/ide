@@ -32,12 +32,17 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryResources;
+
+import java.util.List;
 
 /**
  * 
@@ -74,7 +79,7 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
    private UnmapUrlView.ActionDelegate delegate;
 
    @Inject
-   public UnmapUrlViewImpl()
+   protected UnmapUrlViewImpl(CloudFoundryLocalizationConstant constatns, CloudFoundryResources resources)
    {
       createUrlsTable();
 
@@ -82,6 +87,9 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
 
       this.setText("Application URLs");
       this.setWidget(widget);
+
+      btnMap.setHTML(new Image(resources.addButton()) + " " + constatns.mapButton());
+      btnClose.setHTML(new Image(resources.cancelButton()) + " " + constatns.closeButton());
    }
 
    private void createUrlsTable()
@@ -94,6 +102,15 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
             return UNMAP_BUTTON_TITLE;
          }
       };
+
+      buttonColumn.setFieldUpdater(new FieldUpdater<String, String>()
+      {
+         @Override
+         public void update(int index, String object, String value)
+         {
+            delegate.onUnMapUrlClicked(object);
+         }
+      });
 
       Column<String, SafeHtml> valueColumn = new Column<String, SafeHtml>(new SafeHtmlCell())
       {
@@ -113,20 +130,13 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
          }
       };
 
-      valueColumn.setFieldUpdater(new FieldUpdater<String, SafeHtml>()
-      {
-         @Override
-         public void update(int index, String object, SafeHtml value)
-         {
-            // TODO...
-            delegate.onUnMapUrlClicked();
-         }
-      });
-
       urlsTable.addColumn(valueColumn, URL);
       urlsTable.setColumnWidth(valueColumn, "75%");
       urlsTable.addColumn(buttonColumn, UNMAP_COLUMN_HEADER);
       urlsTable.setColumnWidth(buttonColumn, "25%");
+
+      // don't show loading indicator
+      urlsTable.setLoadingIndicator(null);
    }
 
    /**
@@ -145,6 +155,15 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
    public void setMapUrl(String url)
    {
       mapUrl.setText(url);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setRegisteredUrls(List<String> urls)
+   {
+      urlsTable.setRowData(urls);
    }
 
    /**
@@ -190,6 +209,7 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
       delegate.onCloseClicked();
    }
 
+   @UiHandler("btnMap")
    void onBtnMapClick(ClickEvent event)
    {
       delegate.onMapUrlClicked();

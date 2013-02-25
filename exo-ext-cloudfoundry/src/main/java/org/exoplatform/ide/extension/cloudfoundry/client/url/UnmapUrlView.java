@@ -20,6 +20,8 @@ package org.exoplatform.ide.extension.cloudfoundry.client.url;
 
 import org.exoplatform.ide.view.View;
 
+import java.util.List;
+
 /**
  * 
  * 
@@ -33,7 +35,7 @@ public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate>
 
       public void onMapUrlClicked();
 
-      public void onUnMapUrlClicked();
+      public void onUnMapUrlClicked(String url);
 
       public void onMapUrlChanged();
    }
@@ -41,6 +43,8 @@ public interface UnmapUrlView extends View<UnmapUrlView.ActionDelegate>
    public String getMapUrl();
 
    public void setMapUrl(String url);
+
+   public void setRegisteredUrls(List<String> urls);
 
    public void setEnableMapUrlButton(boolean enable);
 
