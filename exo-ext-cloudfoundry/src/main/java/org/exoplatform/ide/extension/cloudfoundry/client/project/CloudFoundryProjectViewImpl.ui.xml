@@ -92,7 +92,7 @@
 				</g:west>
 				<g:east size="30.0">
 					<g:Button width="22px" height="22px" text="..."
-						styleName="{style.left} {style.withoutPadding}" title="more"
+						addStyleNames="{style.left} {style.withoutPadding}" title="more"
 						ui:field="btnEditUrl" />
 				</g:east>
 				<g:center>
@@ -109,7 +109,7 @@
 				</g:west>
 				<g:east size="30.0">
 					<g:Button width="22px" height="22px"
-						styleName="{style.left} {style.withoutPadding}" title="{locale.manageProjectEditMemory}"
+						addStyleNames="{style.left} {style.withoutPadding}" title="{locale.manageProjectEditMemory}"
 						ui:field="btnEditMemory" />
 				</g:east>
 				<g:center>
@@ -165,13 +165,13 @@
 						<g:Label addStyleNames="{style.left} {style.space} {style.middle}"
 							width="70px" ui:field="status" />
 						<g:Button width="22px" height="22px" text=""
-							title="{locale.manageProjectStart}" styleName="{style.left} {style.space} {style.withoutPadding}"
+							title="{locale.manageProjectStart}" addStyleNames="{style.left} {style.space} {style.withoutPadding}"
 							ui:field="btnStart" />
 						<g:Button width="22px" height="22px" text=""
-							title="{locale.manageProjectStop}" styleName="{style.left} {style.space} {style.withoutPadding}"
+							title="{locale.manageProjectStop}" addStyleNames="{style.left} {style.space} {style.withoutPadding}"
 							ui:field="btnStop" />
 						<g:Button width="22px" height="22px" text=""
-							title="{locale.manageProjectRestart}" styleName="{style.left} {style.withoutPadding}"
+							title="{locale.manageProjectRestart}" addStyleNames="{style.left} {style.withoutPadding}"
 							ui:field="btnRestart" />
 					</g:FlowPanel>
 				</g:center>
@@ -186,13 +186,13 @@
 				<g:center>
 					<g:FlowPanel>
 						<g:Button height="22px" width="70px" text="{locale.updateButton}"
-							styleName="{style.left} {style.space}" ui:field="btnUpdate" />
+							addStyleNames="{style.left} {style.space}" ui:field="btnUpdate" />
 						<g:Button height="22px" width="70px" text="{locale.deleteButton}"
-							styleName="{style.left} {style.space}" ui:field="btnDelete" />
+							addStyleNames="{style.left} {style.space}" ui:field="btnDelete" />
 						<g:Button height="22px" width="70px" text="{locale.servicesButton}"
-							styleName="{style.left} {style.space}" ui:field="btnServices" />
+							addStyleNames="{style.left} {style.space}" ui:field="btnServices" />
 						<g:Button height="22px" width="70px" text="{locale.logsButton}"
-							styleName="{style.left}" ui:field="btnLogs" />
+							addStyleNames="{style.left}" ui:field="btnLogs" />
 					</g:FlowPanel>
 				</g:center>
 			</g:DockLayoutPanel>

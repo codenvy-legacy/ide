@@ -31,6 +31,7 @@ import org.exoplatform.ide.paas.PaaSAgentImpl;
 import org.exoplatform.ide.wizard.WizardAgentImpl;
 import org.exoplatform.ide.wizard.WizardPagePresenter;
 import org.exoplatform.ide.wizard.WizardPagePresenter.WizardUpdateDelegate;
+import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -53,7 +54,9 @@ public class TestNewProjectPagePresenter
    private NewProjectPageView view;
 
    @Mock
-   private WizardPagePresenter newPage;
+   // TODO
+   //   private WizardPagePresenter newPage;
+   private NewGenericProjectPagePresenter newPage;
 
    private NewProjectPagePresenter presenter;
 

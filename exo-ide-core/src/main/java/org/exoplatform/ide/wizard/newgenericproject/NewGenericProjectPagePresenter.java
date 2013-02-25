@@ -26,6 +26,8 @@ import com.google.inject.Inject;
 import org.exoplatform.ide.api.resources.ResourceProvider;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
+import org.exoplatform.ide.paas.HasPaaS;
+import org.exoplatform.ide.paas.PaaS;
 import org.exoplatform.ide.resources.model.File;
 import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.resources.model.Property;
@@ -41,7 +43,7 @@ import org.exoplatform.ide.wizard.newgenericproject.NewGenericProjectPageView.Ac
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
-public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate
+public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter implements ActionDelegate, HasPaaS
 {
    // TODO changed for New war project, change it if it is not needed for New war project wizard page
    protected NewGenericProjectPageView view;
@@ -58,6 +60,8 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
    private boolean hasSameProject;
 
    private JsonArray<String> projectList;
+
+   protected PaaS paas;
 
    /**
     * Create presenter
@@ -221,5 +225,23 @@ public class NewGenericProjectPagePresenter extends AbstractWizardPagePresenter 
                Log.error(NewGenericProjectPagePresenter.class, caught);
             }
          });
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public PaaS getPaaS()
+   {
+      return paas;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setPaaS(PaaS paas)
+   {
+      this.paas = paas;
    }
 }

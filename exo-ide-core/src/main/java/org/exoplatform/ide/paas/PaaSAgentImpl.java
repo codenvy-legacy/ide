@@ -63,9 +63,9 @@ public class PaaSAgentImpl implements PaaSAgent
     */
    @Override
    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredTypes, PreferencesPagePresenter preferencePage)
+      JsonArray<String> requiredTypes, HasPaaSActions paaSActions, PreferencesPagePresenter preferencePage)
    {
-      PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes);
+      PaaS paas = new PaaS(id, title, image, providesTemplate, requiredTypes, paaSActions);
       registeredPaaS.add(paas);
 
       // TODO preference page and wizard page

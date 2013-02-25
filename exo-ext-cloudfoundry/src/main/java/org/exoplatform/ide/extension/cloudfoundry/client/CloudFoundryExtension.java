@@ -30,6 +30,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowApplication
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
 import org.exoplatform.ide.extension.cloudfoundry.client.command.ShowProjectPropertiesCommand;
+import org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
 import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.json.JsonCollections;
 import org.exoplatform.ide.loader.EmptyLoader;
@@ -63,14 +64,14 @@ public class CloudFoundryExtension
    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuPresenter menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
       ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand,
-      EventBus eventBus)
+      EventBus eventBus, DeployApplicationPresenter deployAppPresenter)
    {
       // TODO Auto-generated constructor stub
       //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, preferencePage);
       //Arrays.asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS, ProjectType.SPRING, ProjectType.WAR)
       // TODO change hard code types
       JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
-      paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, null);
+      paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, deployAppPresenter, null);
      
       String restContext = "/rest/private";
       new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus);

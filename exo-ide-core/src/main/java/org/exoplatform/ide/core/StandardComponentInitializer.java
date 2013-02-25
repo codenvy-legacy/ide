@@ -110,8 +110,9 @@ public class StandardComponentInitializer
       toolbar.addToggleItem("Test/Checked item", command);
       toolbar.addDropDownItem("Test/New", resources.file(), "Test item");
       toolbar.addToggleItem("Test/New/Checked item", command);
-      
-      paasAgent
-         .registerPaaS("None", "None", null, false, JsonCollections.<String> createArray("", "java", "War"), null);
+
+      // TODO 
+      paasAgent.registerPaaS("None", "None", null, false, JsonCollections.<String> createArray("", "java", "War"),
+         null, null);
    }
 }

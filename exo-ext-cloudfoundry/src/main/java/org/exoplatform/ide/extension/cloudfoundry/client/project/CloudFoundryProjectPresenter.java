@@ -32,9 +32,12 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateInstancesEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -48,7 +51,10 @@ import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate
+public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate,
+   ApplicationInfoChangedHandler
+// ProjectOpenedHandler, ProjectClosedHandler,
+//   ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler, ActiveProjectChangedHandler
 {
    private CloudFoundryProjectView view;
 
@@ -69,8 +75,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Inject
    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view,
       ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
-      UpdatePropertiesPresenter updateProperyPresenter, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console)
+      UpdatePropertiesPresenter updateProperyPresenter, ManageServicesPresenter manageServicesPresenter,
+      EventBus eventBus, ResourceProvider resourceProvider, Console console)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -80,6 +86,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
+
+      this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
    }
 
    /**
@@ -88,9 +96,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    public void showDialog()
    {
       getApplicationInfo(resourceProvider.getActiveProject());
-
-      // TODO
-      //      view.showDialog();
    }
 
    /**
@@ -191,6 +196,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                @Override
                public void onLoggedIn()
                {
+                  // TODO
                   getApplicationInfo(project);
                }
             }, null, eventBus)
@@ -208,7 +214,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                   application = result;
                   displayApplicationProperties(result);
 
-                  showDialog();
+                  view.showDialog();
                }
             });
       }
@@ -307,7 +313,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    {
       // TODO Auto-generated method stub
       //      IDE.eventBus().fireEvent(new UpdateMemoryEvent());
-      updateProperyPresenter.showDialog("Update memory", "", view.getApplicationMemory());
+      eventBus.fireEvent(new UpdateMemoryEvent());
    }
 
    /**
@@ -329,6 +335,20 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    {
       // TODO Auto-generated method stub
       //      IDE.eventBus().fireEvent(new UpdateInstancesEvent());
-      updateProperyPresenter.showDialog("Update instances", "", view.getApplicationInstances());
+      eventBus.fireEvent(new UpdateInstancesEvent());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
+   {
+      Project openedProject = resourceProvider.getActiveProject();
+      if (event.getProjectId() != null && resourceProvider.getVfsId().equals(event.getVfsId()) && openedProject != null
+         && openedProject.getId().equals(event.getProjectId()))
+      {
+         getApplicationInfo(openedProject);
+      }
    }
 }

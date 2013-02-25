@@ -27,6 +27,10 @@ import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicatio
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationViewImpl;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationView;
 import org.exoplatform.ide.extension.cloudfoundry.client.delete.DeleteApplicationViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationView;
+import org.exoplatform.ide.extension.cloudfoundry.client.deploy.DeployApplicationViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoView;
+import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoViewImpl;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginView;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoginViewImpl;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView;
@@ -35,6 +39,10 @@ import org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceV
 import org.exoplatform.ide.extension.cloudfoundry.client.services.CreateServiceViewImpl;
 import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesView;
 import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesView;
+import org.exoplatform.ide.extension.cloudfoundry.client.update.UpdatePropertiesViewImpl;
+import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlView;
+import org.exoplatform.ide.extension.cloudfoundry.client.url.UnmapUrlViewImpl;
 
 /**
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
@@ -54,5 +62,9 @@ public class CloudFoundryGinModule extends AbstractGinModule
       bind(DeleteApplicationView.class).to(DeleteApplicationViewImpl.class).in(Singleton.class);
       bind(ManageServicesView.class).to(ManageServicesViewImpl.class).in(Singleton.class);
       bind(CreateServiceView.class).to(CreateServiceViewImpl.class).in(Singleton.class);
+      bind(DeployApplicationView.class).to(DeployApplicationViewImpl.class).in(Singleton.class);
+      bind(ApplicationInfoView.class).to(ApplicationInfoViewImpl.class).in(Singleton.class);
+      bind(UnmapUrlView.class).to(UnmapUrlViewImpl.class).in(Singleton.class);
+      bind(UpdatePropertiesView.class).to(UpdatePropertiesViewImpl.class).in(Singleton.class);
    }
 }

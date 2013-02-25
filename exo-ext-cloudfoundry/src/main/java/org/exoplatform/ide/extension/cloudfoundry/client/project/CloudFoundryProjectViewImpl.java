@@ -240,7 +240,7 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
    @Override
    public void setApplicationStatus(String status)
    {
-      this.stack.setText(status);
+      this.status.setText(status);
    }
 
    /**

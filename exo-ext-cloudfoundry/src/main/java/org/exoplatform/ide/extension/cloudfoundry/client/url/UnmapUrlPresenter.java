@@ -32,6 +32,7 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryClientServi
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
 
@@ -79,6 +80,15 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
    @Override
    public void onCloseClicked()
    {
+      if (isBindingChanged)
+      {
+         // TODO
+         //         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         String projectId = resourceProvider.getActiveProject().getId();
+         //         IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+         eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
+      }
+
       view.close();
    }
 

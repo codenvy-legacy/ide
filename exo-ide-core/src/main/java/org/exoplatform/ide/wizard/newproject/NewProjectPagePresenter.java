@@ -22,6 +22,7 @@ import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.AcceptsOneWidget;
 
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.paas.HasPaaS;
 import org.exoplatform.ide.paas.PaaS;
 import org.exoplatform.ide.paas.PaaSAgentImpl;
 import org.exoplatform.ide.wizard.AbstractWizardPagePresenter;
@@ -85,6 +86,7 @@ public class NewProjectPagePresenter extends AbstractWizardPagePresenter impleme
    {
       next.setPrevious(this);
       next.setUpdateDelegate(delegate);
+      ((HasPaaS)next).setPaaS(selectedPaaS);
       return next;
    }
 

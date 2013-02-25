@@ -54,14 +54,17 @@ public class PaaS
     */
    private JsonArray<String> requiredProjectTypes;
 
+   private HasPaaSActions paaSActions;
+
    public PaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredProjectTypes)
+      JsonArray<String> requiredProjectTypes, HasPaaSActions paaSActions)
    {
       this.id = id;
       this.title = title;
       this.image = image;
       this.providesTemplate = providesTemplate;
       this.requiredProjectTypes = requiredProjectTypes;
+      this.paaSActions = paaSActions;
    }
 
    /**
@@ -102,5 +105,13 @@ public class PaaS
    public JsonArray<String> getRequiredProjectTypes()
    {
       return requiredProjectTypes;
+   }
+
+   /**
+    * @return the paaSActions
+    */
+   public HasPaaSActions getPaaSActions()
+   {
+      return paaSActions;
    }
 }

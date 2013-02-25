@@ -22,6 +22,7 @@ import com.google.gwt.resources.client.ImageResource;
 
 import org.exoplatform.ide.extension.SDK;
 import org.exoplatform.ide.json.JsonArray;
+import org.exoplatform.ide.paas.HasPaaSActions;
 import org.exoplatform.ide.preferences.PreferencesPagePresenter;
 
 /**
@@ -40,8 +41,9 @@ public interface PaaSAgent
     * @param image
     * @param providesTemplate
     * @param requiredTypes
+    * @param paaSActions
     * @param preferencePage
     */
    public void registerPaaS(String id, String title, ImageResource image, boolean providesTemplate,
-      JsonArray<String> requiredTypes, PreferencesPagePresenter preferencePage);
+      JsonArray<String> requiredTypes, HasPaaSActions paaSActions, PreferencesPagePresenter preferencePage);
 }

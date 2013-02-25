@@ -71,92 +71,45 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
    @Override
    public void doFinish()
    {
-      // TODO Auto-generated method stub
+      // TODO
+      //      resourceProvider.createProject(view.getProjectName(), JsonCollections.<Property> createArray(new Property(
+      //         ProjectDescription.PROPERTY_PRIMARY_NATURE, "java"), new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE,
+      //         "War"), new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, "Servlet/JSP")), new AsyncCallback<Project>()
+
       resourceProvider.createProject(view.getProjectName(), JsonCollections.<Property> createArray(new Property(
-         ProjectDescription.PROPERTY_PRIMARY_NATURE, "java"), new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE,
-         "War"), new Property(ProjectDescription.PROPERTY_PRIMARY_NATURE, "Servlet/JSP")), new AsyncCallback<Project>()
-      {
-         @Override
-         public void onFailure(Throwable caught)
+         ProjectDescription.PROPERTY_PRIMARY_NATURE, "Servlet/JSP"), new Property("cloudfoundry-application",
+         "aplotnikov2"), new Property("vmc-target", "http://api.cloudfoundry.com")), new AsyncCallback<Project>()
          {
-            Log.error(NewWarProjectPagePresenter.class, caught);
-         }
-
-         @Override
-         public void onSuccess(final Project project)
-         {
-            project.createFolder(project, "src", new AsyncCallback<Folder>()
+            @Override
+            public void onFailure(Throwable caught)
             {
-               @Override
-               public void onSuccess(Folder result)
+               Log.error(NewWarProjectPagePresenter.class, caught);
+            }
+
+            @Override
+            public void onSuccess(final Project project)
+            {
+               project.createFolder(project, "src", new AsyncCallback<Folder>()
                {
-                  project.createFolder(result, "main", new AsyncCallback<Folder>()
+                  @Override
+                  public void onSuccess(Folder result)
                   {
-                     @Override
-                     public void onSuccess(Folder result)
+                     project.createFolder(result, "main", new AsyncCallback<Folder>()
                      {
-                        project
-                           .createFile(
-                              result,
-                              "pom.xml",
-                              "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-                                 + "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">"
-                                 + " <modelVersion>4.0.0</modelVersion>\n"
-                                 + "<groupId>com.codenvy.codenvy</groupId>\n<artifactId>CloudFoundryTest</artifactId>\n"
-                                 + "<packaging>war</packaging>\n<version>1.0-SNAPSHOT</version>\n"
-                                 + "<name>java-web-sample</name>\n<build>\n<finalName>java-web-sample</finalName>\n</build>\n</project>",
-                              MimeType.TEXT_XML, new AsyncCallback<File>()
-                              {
-                                 @Override
-                                 public void onSuccess(File result)
-                                 {
-                                 }
-
-                                 @Override
-                                 public void onFailure(Throwable caught)
-                                 {
-                                    Log.error(NewWarProjectPagePresenter.class, caught);
-                                 }
-                              });
-
-                        project.createFolder(result, "java", new AsyncCallback<Folder>()
+                        @Override
+                        public void onSuccess(Folder result)
                         {
-                           @Override
-                           public void onSuccess(Folder result)
-                           {
-                           }
-
-                           @Override
-                           public void onFailure(Throwable caught)
-                           {
-                              Log.error(NewWarProjectPagePresenter.class, caught);
-                           }
-                        });
-
-                        project.createFolder(result, "resources", new AsyncCallback<Folder>()
-                        {
-                           @Override
-                           public void onSuccess(Folder result)
-                           {
-                           }
-
-                           @Override
-                           public void onFailure(Throwable caught)
-                           {
-                              Log.error(NewWarProjectPagePresenter.class, caught);
-                           }
-                        });
-
-                        project.createFolder(result, "webapp", new AsyncCallback<Folder>()
-                        {
-                           @Override
-                           public void onSuccess(Folder result)
-                           {
-                              project.createFile(result, "sayhello.jsp",
-                                 "<table border=\"0\" width=\"700\">\n<tr>\n<td width=\"150\"> &nbsp; </td>\n\n<td width=\"550\">\n\n"
-                                    + "<h1>Hello, <%= request.getParameter(\"username\") %>\n"
-                                    + "</h1>\n\n</td>\n</tr>\n</table>", MimeType.APPLICATION_JSP,
-                                 new AsyncCallback<File>()
+                           project
+                              .createFile(
+                                 result,
+                                 "pom.xml",
+                                 "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+                                    + "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">"
+                                    + " <modelVersion>4.0.0</modelVersion>\n"
+                                    + "<groupId>com.codenvy.codenvy</groupId>\n<artifactId>CloudFoundryTest</artifactId>\n"
+                                    + "<packaging>war</packaging>\n<version>1.0-SNAPSHOT</version>\n"
+                                    + "<name>java-web-sample</name>\n<build>\n<finalName>java-web-sample</finalName>\n</build>\n</project>",
+                                 MimeType.TEXT_XML, new AsyncCallback<File>()
                                  {
                                     @Override
                                     public void onSuccess(File result)
@@ -170,20 +123,44 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
                                     }
                                  });
 
-                              project
-                                 .createFile(
-                                    result,
-                                    "index.jsp",
-                                    "<html>\n<head>\n<title>Hello, User</title>\n</head>\n<body bgcolor=\"#ffffff\">"
-                                       + "<table border=\"0\" width=\"700\">\n<tr>\n<td width=\"150\"> &nbsp; </td>\n"
-                                       + "<td width=\"550\">\n<h1>My name is eXo. What's yours?</h1>\n</td>\n</tr>\n"
-                                       + "<tr>\n<td width=\"150\" &nbsp; </td>\n<td width=\"550\">\n"
-                                       + "<form method=\"get\"><input type=\"text\" name=\"username\" size=\"25\">\n"
-                                       + "<br>\n<input type=\"submit\" value=\"Submit\"><input type=\"reset\" value=\"Reset\">\n"
-                                       + "</td>\n</tr>\n</form>\n</table>\n"
-                                       + "<%  if ( request.getParameter(\"username\") != null ) { %>\n"
-                                       + "<%@include file=\"sayhello.jsp\" %>\n" + "<% } %>\n" + "</body>\n</html>",
-                                    MimeType.APPLICATION_JSP, new AsyncCallback<File>()
+                           project.createFolder(result, "java", new AsyncCallback<Folder>()
+                           {
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                              }
+
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(NewWarProjectPagePresenter.class, caught);
+                              }
+                           });
+
+                           project.createFolder(result, "resources", new AsyncCallback<Folder>()
+                           {
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                              }
+
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(NewWarProjectPagePresenter.class, caught);
+                              }
+                           });
+
+                           project.createFolder(result, "webapp", new AsyncCallback<Folder>()
+                           {
+                              @Override
+                              public void onSuccess(Folder result)
+                              {
+                                 project.createFile(result, "sayhello.jsp",
+                                    "<table border=\"0\" width=\"700\">\n<tr>\n<td width=\"150\"> &nbsp; </td>\n\n<td width=\"550\">\n\n"
+                                       + "<h1>Hello, <%= request.getParameter(\"username\") %>\n"
+                                       + "</h1>\n\n</td>\n</tr>\n</table>", MimeType.APPLICATION_JSP,
+                                    new AsyncCallback<File>()
                                     {
                                        @Override
                                        public void onSuccess(File result)
@@ -197,64 +174,94 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
                                        }
                                     });
 
-                              project.createFolder(result, "WEB-INF", new AsyncCallback<Folder>()
-                              {
-                                 @Override
-                                 public void onSuccess(Folder result)
-                                 {
-                                    project
-                                       .createFile(
-                                          result,
-                                          "web.xml",
-                                          "<!DOCTYPE web-app PUBLIC\"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"\n\"http://java.sun.com/dtd/web-app_2_3.dtd\" >\n<web-app>\n"
-                                             + "<display-name>Web Application Created With eXo IDE</display-name>\n</web-app>",
-                                          MimeType.TEXT_XML, new AsyncCallback<File>()
+                                 project
+                                    .createFile(
+                                       result,
+                                       "index.jsp",
+                                       "<html>\n<head>\n<title>Hello, User</title>\n</head>\n<body bgcolor=\"#ffffff\">"
+                                          + "<table border=\"0\" width=\"700\">\n<tr>\n<td width=\"150\"> &nbsp; </td>\n"
+                                          + "<td width=\"550\">\n<h1>My name is eXo. What's yours?</h1>\n</td>\n</tr>\n"
+                                          + "<tr>\n<td width=\"150\" &nbsp; </td>\n<td width=\"550\">\n"
+                                          + "<form method=\"get\"><input type=\"text\" name=\"username\" size=\"25\">\n"
+                                          + "<br>\n<input type=\"submit\" value=\"Submit\"><input type=\"reset\" value=\"Reset\">\n"
+                                          + "</td>\n</tr>\n</form>\n</table>\n"
+                                          + "<%  if ( request.getParameter(\"username\") != null ) { %>\n"
+                                          + "<%@include file=\"sayhello.jsp\" %>\n" + "<% } %>\n" + "</body>\n</html>",
+                                       MimeType.APPLICATION_JSP, new AsyncCallback<File>()
+                                       {
+                                          @Override
+                                          public void onSuccess(File result)
                                           {
-                                             @Override
-                                             public void onSuccess(File result)
-                                             {
-                                             }
+                                          }
 
-                                             @Override
-                                             public void onFailure(Throwable caught)
-                                             {
-                                                Log.error(NewWarProjectPagePresenter.class, caught);
-                                             }
-                                          });
-                                 }
+                                          @Override
+                                          public void onFailure(Throwable caught)
+                                          {
+                                             Log.error(NewWarProjectPagePresenter.class, caught);
+                                          }
+                                       });
 
-                                 @Override
-                                 public void onFailure(Throwable caught)
+                                 project.createFolder(result, "WEB-INF", new AsyncCallback<Folder>()
                                  {
-                                    Log.error(NewWarProjectPagePresenter.class, caught);
-                                 }
-                              });
-                           }
+                                    @Override
+                                    public void onSuccess(Folder result)
+                                    {
+                                       project
+                                          .createFile(
+                                             result,
+                                             "web.xml",
+                                             "<!DOCTYPE web-app PUBLIC\"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"\n\"http://java.sun.com/dtd/web-app_2_3.dtd\" >\n<web-app>\n"
+                                                + "<display-name>Web Application Created With eXo IDE</display-name>\n</web-app>",
+                                             MimeType.TEXT_XML, new AsyncCallback<File>()
+                                             {
+                                                @Override
+                                                public void onSuccess(File result)
+                                                {
+                                                }
 
-                           @Override
-                           public void onFailure(Throwable caught)
-                           {
-                              Log.error(NewWarProjectPagePresenter.class, caught);
-                           }
-                        });
+                                                @Override
+                                                public void onFailure(Throwable caught)
+                                                {
+                                                   Log.error(NewWarProjectPagePresenter.class, caught);
+                                                }
+                                             });
+                                    }
 
-                     }
+                                    @Override
+                                    public void onFailure(Throwable caught)
+                                    {
+                                       Log.error(NewWarProjectPagePresenter.class, caught);
+                                    }
+                                 });
+                              }
 
-                     @Override
-                     public void onFailure(Throwable caught)
-                     {
-                        Log.error(NewWarProjectPagePresenter.class, caught);
-                     }
-                  });
-               }
+                              @Override
+                              public void onFailure(Throwable caught)
+                              {
+                                 Log.error(NewWarProjectPagePresenter.class, caught);
+                              }
+                           });
 
-               @Override
-               public void onFailure(Throwable caught)
-               {
-                  Log.error(NewWarProjectPagePresenter.class, caught);
-               }
-            });
-         }
-      });
+                        }
+
+                        @Override
+                        public void onFailure(Throwable caught)
+                        {
+                           Log.error(NewWarProjectPagePresenter.class, caught);
+                        }
+                     });
+
+                     // TODO
+                     //                  paas.getPaaSActions().deploy(project, deployResultHandler);
+                  }
+
+                  @Override
+                  public void onFailure(Throwable caught)
+                  {
+                     Log.error(NewWarProjectPagePresenter.class, caught);
+                  }
+               });
+            }
+         });
    }
 }

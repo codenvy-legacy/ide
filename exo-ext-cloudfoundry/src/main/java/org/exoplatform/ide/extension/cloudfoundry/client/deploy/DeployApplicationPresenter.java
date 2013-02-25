@@ -34,6 +34,9 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequ
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import org.exoplatform.ide.paas.DeployResultHandler;
+import org.exoplatform.ide.paas.HasPaaSActions;
+import org.exoplatform.ide.resources.model.Project;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
 import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.websocket.WebSocketException;
@@ -48,7 +51,7 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class DeployApplicationPresenter implements DeployApplicationView.ActionDelegate
+public class DeployApplicationPresenter implements DeployApplicationView.ActionDelegate, HasPaaSActions
 //implements ProjectBuiltHandler, HasPaaSActions, VfsChangedHandler
 {
    private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
@@ -69,6 +72,10 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    private String warUrl;
 
    private String projectName;
+
+   private Project project;
+
+   private DeployResultHandler deployResultHandler;
 
    private ResourceProvider resourcesProvider;
 
@@ -207,8 +214,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       {
          // Application will be started after creation (IDE-1618)
          boolean noStart = false;
-         CloudFoundryClientService.getInstance().create(
-            server,
+         CloudFoundryClientService.getInstance().create(server,
             name,
             null,
             url,
@@ -427,5 +433,31 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       //         //         IDE.fireEvent(new ExceptionThrownEvent(e));
       //         console.print(e.getMessage());
       //      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void deploy(Project project, DeployResultHandler deployResultHandler)
+   {
+      this.project = project;
+      this.deployResultHandler = deployResultHandler;
+      buildApplication();
+   }
+
+   private void buildApplication()
+   {
+      //      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
+      //      IDE.fireEvent(new BuildApplicationEvent(project));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean validate()
+   {
+      return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty();
    }
 }
