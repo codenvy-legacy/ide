@@ -23,6 +23,11 @@ public abstract class RoutableDtoServerImpl implements RoutableDto
 {
    private final int _type;
 
+   protected RoutableDtoServerImpl()
+   {
+      _type = RoutableDto.NON_ROUTABLE_TYPE;
+   }
+
    protected RoutableDtoServerImpl(int type)
    {
       this._type = type;

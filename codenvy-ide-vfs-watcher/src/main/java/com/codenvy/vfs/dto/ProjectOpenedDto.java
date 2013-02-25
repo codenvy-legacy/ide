@@ -28,5 +28,7 @@ import org.exoplatform.ide.dtogen.shared.RoutingType;
 @RoutingType(type = RoutingTypes.PROJECT_OPENED)
 public interface ProjectOpenedDto extends ClientToServerDto
 {
-   String projectId();
+   String projectPath();
+
+   String vfsId();
 }

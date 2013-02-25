@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,33 +16,37 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.vfs.dto;
+package com.codenvy.vfs.watcher.server;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.ws.rs.core.Application;
 
 /**
- * Routing types for all DTOs.
- * NOTE: If you add a new DTO, ONLY add to the bottom of the list.
- *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class RoutingTypes
+public class VfsWatcherApplication extends Application
 {
-   private RoutingTypes()
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Set<Object> getSingletons()
    {
+      return Collections.emptySet();
    }
 
-   public static final int PROJECT_OPENED = 1;
-
-   public static final int PROJECT_CLOSED = 2;
-
-   public static final int ITEM_DELETED = 3;
-
-   public static final int ITEM_CREATED = 4;
-
-   public static final int ITEM_MOVED = 5;
-
-   public static final int ITEM_RENAMED = 6;
-
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Set<Class<?>> getClasses()
+   {
+      Set<Class<?>> classes = new HashSet<Class<?>>();
+      classes.add(VfsWatcherService.class);
+      return classes;
+   }
 }

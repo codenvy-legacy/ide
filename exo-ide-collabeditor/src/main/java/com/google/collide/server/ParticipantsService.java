@@ -25,6 +25,7 @@ import com.google.collide.server.participants.LoggedInUser;
 import com.google.collide.server.participants.Participants;
 
 import org.everrest.websockets.WSConnection;
+import org.exoplatform.ide.commons.WSUtil;
 
 import java.security.Principal;
 import java.util.Set;

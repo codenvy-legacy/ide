@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,31 +18,17 @@
  */
 package com.codenvy.vfs.dto;
 
+import org.exoplatform.ide.dtogen.shared.RoutingType;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 
 /**
- * Routing types for all DTOs.
- * NOTE: If you add a new DTO, ONLY add to the bottom of the list.
- *
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
- *
  */
-public class RoutingTypes
+@RoutingType(type = RoutingTypes.ITEM_MOVED)
+public interface ItemMovedDto extends ServerToClientDto
 {
-   private RoutingTypes()
-   {
-   }
+   Item movedItem();
 
-   public static final int PROJECT_OPENED = 1;
-
-   public static final int PROJECT_CLOSED = 2;
-
-   public static final int ITEM_DELETED = 3;
-
-   public static final int ITEM_CREATED = 4;
-
-   public static final int ITEM_MOVED = 5;
-
-   public static final int ITEM_RENAMED = 6;
-
+   String oldPath();
 }

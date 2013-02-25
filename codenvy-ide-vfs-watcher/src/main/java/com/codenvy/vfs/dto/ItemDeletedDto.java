@@ -25,8 +25,8 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-@RoutingType(type = RoutingTypes.FILE_DELETED)
-public interface FileDeletedDto extends ServerToClientDto
+@RoutingType(type = RoutingTypes.ITEM_DELETED)
+public interface ItemDeletedDto extends ServerToClientDto
 {
 
    String getFileId();

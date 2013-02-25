@@ -22,6 +22,7 @@ import com.google.collide.dto.server.DtoServerImpls.FileOperationNotificationImp
 import com.google.collide.server.documents.EditSessions;
 import com.google.collide.server.participants.Participants;
 
+import org.exoplatform.ide.commons.WSUtil;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 

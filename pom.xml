@@ -459,13 +459,19 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-ide-vfs-watcher</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
             <version>${project.version}</version>
         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-client-framework</artifactId>
+            <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>

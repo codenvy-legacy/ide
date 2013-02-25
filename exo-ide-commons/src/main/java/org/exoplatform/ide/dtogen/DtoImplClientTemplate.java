@@ -38,7 +38,7 @@ public class DtoImplClientTemplate extends DtoImpl
       "dtogen.client") + ".RoutableDtoClientImpl";
 
 
-   private static final String JSO_TYPE = "com.google.collide.json.client.Jso";
+   private static final String JSO_TYPE = "org.exoplatform.ide.json.client.Jso";
 
    private static boolean isEnum(Class<?> type)
    {

@@ -39,6 +39,10 @@
          <version>2.1</version>
          <scope>provided</scope>
       </dependency>
+      <dependency>
+         <groupId>org.everrest</groupId>
+         <artifactId>everrest-websockets</artifactId>
+      </dependency>
    </dependencies>
    <profiles>
       <profile>
@@ -65,9 +69,24 @@
                <groupId>org.exoplatform.ide</groupId>
                <artifactId>exo-ide-commons</artifactId>
             </dependency>
+            <dependency>
+               <groupId>org.exoplatform.ide</groupId>
+               <artifactId>exo-ide-vfs</artifactId>
+            </dependency>
          </dependencies>
          <build>
             <plugins>
+               <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-compiler-plugin</artifactId>
+                  <configuration>
+                     <source>${maven.compiler.source}</source>
+                     <target>${maven.compiler.target}</target>
+                     <includes>
+                        <include>**/dto/*.java</include>
+                     </includes>
+                  </configuration>
+               </plugin>
                <plugin>
                   <groupId>org.apache.maven.plugins</groupId>
                   <artifactId>maven-jar-plugin</artifactId>
