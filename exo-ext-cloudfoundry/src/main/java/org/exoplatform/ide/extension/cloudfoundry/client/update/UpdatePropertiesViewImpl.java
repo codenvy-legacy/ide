@@ -40,7 +40,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class UpdatePropertiesViewImpl extends DialogBox implements UpdatePropertiesView
 {
-
    private static UpdatePropertiesViewImplUiBinder uiBinder = GWT.create(UpdatePropertiesViewImplUiBinder.class);
 
    @UiField
@@ -62,7 +61,7 @@ public class UpdatePropertiesViewImpl extends DialogBox implements UpdatePropert
    private UpdatePropertiesView.ActionDelegate delegate;
 
    @Inject
-   public UpdatePropertiesViewImpl()
+   protected UpdatePropertiesViewImpl()
    {
       Widget widget = uiBinder.createAndBindUi(this);
 
@@ -118,12 +117,27 @@ public class UpdatePropertiesViewImpl extends DialogBox implements UpdatePropert
     * {@inheritDoc}
     */
    @Override
-   public void showDialog(String header, String title, String propertyValue)
+   public void setMessage(String message)
    {
-      this.setText(header);
-      this.title.setText(title);
-      this.property.setText(propertyValue);
+      title.setText(message);
 
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDialogTitle(String title)
+   {
+      this.setText(title);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void showDialog()
+   {
       this.center();
       this.show();
    }
@@ -135,5 +149,14 @@ public class UpdatePropertiesViewImpl extends DialogBox implements UpdatePropert
    public void close()
    {
       this.hide();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setEnableOkButton(boolean isEnable)
+   {
+      btnOk.setEnabled(isEnable);
    }
 }

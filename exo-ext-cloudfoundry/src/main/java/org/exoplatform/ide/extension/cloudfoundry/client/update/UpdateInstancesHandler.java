@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,36 +18,22 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.client.update;
 
-import org.exoplatform.ide.view.View;
+import com.google.gwt.event.shared.EventHandler;
 
 /**
+ * Handler for {@link UpdateMemoryEvent} event.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: RestartApplicationHandler.java Jul 12, 2011 3:51:51 PM vereshchaka $
+ *
  */
-public interface UpdatePropertiesView extends View<UpdatePropertiesView.ActionDelegate>
+public interface UpdateInstancesHandler extends EventHandler
 {
-   public interface ActionDelegate
-   {
-      public void onOkClicked();
-
-      public void onCancelClicked();
-
-      public void onPropertyChanged();
-   }
-
-   public String getProperty();
-
-   public void setProperty(String property);
-   
-   public void setDialogTitle(String title);
-
-   public void setMessage(String message);
-
-   public void setEnableOkButton(boolean isEnable);
-
-   public void showDialog();
-
-   public void close();
+   /**
+    * Perform actions, when user tries to restart application.
+    * 
+    * @param event
+    */
+   void onUpdateInstances(UpdateInstancesEvent event);
 
 }
