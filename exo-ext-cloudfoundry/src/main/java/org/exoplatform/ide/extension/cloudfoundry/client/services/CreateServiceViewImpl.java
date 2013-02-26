@@ -96,7 +96,7 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
    public String getSystemServices()
    {
       int selectedIndex = servicesField.getSelectedIndex();
-      return selectedIndex != -1 ? servicesField.getItemText(selectedIndex) : "";
+      return selectedIndex != -1 ? servicesField.getValue(selectedIndex) : "";
    }
 
    /**

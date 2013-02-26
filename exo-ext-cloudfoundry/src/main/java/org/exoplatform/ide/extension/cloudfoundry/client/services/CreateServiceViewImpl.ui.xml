@@ -32,8 +32,8 @@
 	<g:DockLayoutPanel unit="PX" width="470px" height="150px">
 		<g:south size="26.0">
 			<g:FlowPanel>
-				<g:Button width="90px" height="22px" addStyleNames="{style.alignRight}" ui:field="btnCancel" />
-				<g:Button width="90px" height="22px" addStyleNames="{style.alignRight}" ui:field="btnCreate" />
+				<g:Button width="90px" height="26px" addStyleNames="{style.alignRight}" ui:field="btnCancel" />
+				<g:Button width="90px" height="26px" addStyleNames="{style.alignRight}" ui:field="btnCreate" />
 			</g:FlowPanel>
 		</g:south>
 		<g:center>

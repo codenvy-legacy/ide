@@ -41,6 +41,8 @@ public interface ManageServicesView extends View<ManageServicesView.ActionDelega
       public void onUnbindServiceClicked(String service);
 
       public void onBindServiceClicked(ProvisionedService service);
+
+      public void onSelectedService(ProvisionedService service);
    }
 
    public void enableDeleteButton(boolean enabled);

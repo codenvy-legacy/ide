@@ -64,6 +64,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     */
    private String selectedBoundedService;
 
+   private CreateServicePresenter createServicePresenter;
+
    private LoggedInHandler deleteServiceLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -105,12 +107,16 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
    private Console console;
 
    @Inject
-   protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, Console console)
+   protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, Console console,
+      CreateServicePresenter createServicePresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
+      this.createServicePresenter = createServicePresenter;
+
+      this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
    }
 
    /**
@@ -272,6 +278,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       //               }
       //            }
       //         });
+      deleteService(service);
    }
 
    private void getApplicationInfo()
@@ -361,5 +368,23 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
       view.enableDeleteButton(false);
       getApplicationInfo();
+
+      view.showDialog();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onSelectedService(ProvisionedService service)
+   {
+      selectedService = service;
+
+      updateControls();
+   }
+
+   private void updateControls()
+   {
+      view.enableDeleteButton(selectedService != null);
    }
 }

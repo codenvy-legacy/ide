@@ -32,6 +32,8 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.view.client.NoSelectionModel;
+import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -121,6 +123,9 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
       boundedServices.addColumn(nameColumn);
       boundedServices.addColumn(unbindColumn);
       boundedServices.setColumnWidth(unbindColumn, "60px");
+
+      // don't show loading indicator
+      boundedServices.setLoadingIndicator(null);
    }
 
    private void createServicesTable()
@@ -158,6 +163,23 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
       services.addColumn(nameColumn);
       services.addColumn(bindColumn);
       services.setColumnWidth(bindColumn, "60px");
+
+      // don't show loading indicator
+      services.setLoadingIndicator(null);
+
+      // adds selection model
+      final NoSelectionModel<ProvisionedService> selectionModel = new NoSelectionModel<ProvisionedService>();
+      selectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler()
+      {
+         @Override
+         public void onSelectionChange(SelectionChangeEvent event)
+         {
+            ProvisionedService service = selectionModel.getLastSelectedObject();
+            delegate.onSelectedService(service);
+         }
+      });
+
+      services.setSelectionModel(selectionModel);
    }
 
    /**

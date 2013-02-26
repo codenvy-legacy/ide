@@ -26,7 +26,7 @@
 	<g:DockLayoutPanel unit="PX" width="740px" height="300px">
 		<g:south size="26.0">
 			<g:FlowPanel width="100%" height="100%">
-				<g:Button width="90px" height="22px" addStyleNames="{style.alignRight}" ui:field="btnClose" />
+				<g:Button width="90px" height="26px" addStyleNames="{style.alignRight}" ui:field="btnClose" />
 			</g:FlowPanel>
 		</g:south>
 		<g:north size="22.0">
@@ -37,8 +37,8 @@
 		</g:north>
 		<g:east size="100.0">
 			<g:FlowPanel>
-				<g:Button width="90px" height="22px" addStyleNames="{style.space}" ui:field="btnAdd" />
-				<g:Button width="90px" height="22px" addStyleNames="{style.space}" ui:field="btnDelete" />
+				<g:Button width="90px" height="26px" addStyleNames="{style.space}" ui:field="btnAdd" />
+				<g:Button width="90px" height="26px" addStyleNames="{style.space}" ui:field="btnDelete" />
 			</g:FlowPanel>
 		</g:east>
 		<g:west size="240.0">

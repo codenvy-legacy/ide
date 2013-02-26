@@ -36,7 +36,6 @@ import org.exoplatform.ide.rest.Unmarshallable;
  * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Jul 13, 2012 2:07:24 PM anya $
- * 
  */
 public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFoundryServices>
 {
@@ -54,8 +53,7 @@ public class CloudFoundryServicesUnmarshaller implements Unmarshallable<CloudFou
 
    public CloudFoundryServicesUnmarshaller()
    {
-      // TODO
-      //      cloudfoundryServices = CloudFoundryExtension.AUTO_BEAN_FACTORY.services().as();
+      cloudfoundryServices = CloudFoundryExtension.AUTO_BEAN_FACTORY.services().as();
    }
 
    /**

@@ -32,6 +32,8 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
+import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesEvent;
+import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
@@ -52,7 +54,7 @@ import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
  */
 @Singleton
 public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate,
-   ApplicationInfoChangedHandler
+   ApplicationInfoChangedHandler, ManageServicesHandler
 // ProjectOpenedHandler, ProjectClosedHandler,
 //   ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler, ActiveProjectChangedHandler
 {
@@ -63,6 +65,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    private UnmapUrlPresenter unmapUrlPresenter;
 
    private UpdatePropertiesPresenter updateProperyPresenter;
+
+   private ManageServicesPresenter manageServicesPresenter;
 
    private EventBus eventBus;
 
@@ -86,8 +90,10 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
+      this.manageServicesPresenter = manageServicesPresenter;
 
       this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
+      this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
    }
 
    /**
@@ -170,9 +176,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    {
       // TODO
       //      IDE.fireEvent(new ManageServicesEvent(application));
-      //      eventBus.fireEvent(new ManageServicesEvent(application));
-
-      getApplicationInfo(resourceProvider.getActiveProject());
+      eventBus.fireEvent(new ManageServicesEvent(application));
    }
 
    /**
@@ -350,5 +354,14 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       {
          getApplicationInfo(openedProject);
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onManageServices(ManageServicesEvent event)
+   {
+      getApplicationInfo(resourceProvider.getActiveProject());
    }
 }

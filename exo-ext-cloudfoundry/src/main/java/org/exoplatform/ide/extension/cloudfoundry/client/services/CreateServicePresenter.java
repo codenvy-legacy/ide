@@ -71,6 +71,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
    protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, Console console)
    {
       this.view = view;
+      this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
 
@@ -112,8 +113,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
                @Override
                protected void onSuccess(ProvisionedService result)
                {
-                  view.close();
                   serviceCreatedHandler.onProvisionedServiceCreated(result);
+                  view.close();
                }
             });
       }
@@ -140,6 +141,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
    @Override
    public void onCreateService(CreateServiceEvent event)
    {
+      this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
       getServices();
 
       showDialog();
@@ -147,6 +149,9 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
 
    public void showDialog()
    {
+      // TODO
+      view.setName("");
+
       view.showDialog();
    }
 
