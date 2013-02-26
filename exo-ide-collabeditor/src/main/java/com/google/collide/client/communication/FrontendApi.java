@@ -16,7 +16,6 @@ package com.google.collide.client.communication;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.communication.MessageFilter.MessageRecipient;
-import com.google.collide.client.communication.VertxBus.ReplyHandler;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.ClientToServerDocOp;
@@ -39,6 +38,7 @@ import com.google.collide.dto.client.DtoClientImpls.ServerErrorImpl;
 import com.google.collide.dto.shared.JsonFieldConstants;
 import com.google.collide.shared.util.JsonCollections;
 
+import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutableDto;

@@ -116,11 +116,13 @@ public class RESTMessageBus extends MessageBus
          throw new NullPointerException("Failed to marshall message");
 
       RequestCallback<?> requestCallback = null;
-      if (callback != null)
+      if (callback != null && callback instanceof RequestCallback)
+      {
          requestCallback = (RequestCallback<?>)callback;
+      }
 
       String textMessage = AutoBeanCodex.encode(autoBean).getPayload();
-      send(message.getUuid(), textMessage, callback);
+      internalSend(message.getUuid(), textMessage, callback);
 
       if (requestCallback != null)
       {
@@ -130,6 +132,25 @@ public class RESTMessageBus extends MessageBus
             requestCallback.getStatusHandler().requestInProgress(message.getUuid());
          }
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void send(String address, String message) throws WebSocketException
+   {
+      send(address, message, null);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void send(String address, String message, ReplyHandler replyHandler) throws WebSocketException
+   {
+      RequestMessage requestMessage = RequestMessageBuilder.build(RequestBuilder.POST, address).header("content-type", "application/json").data(message).getRequestMessage();
+      send(requestMessage, replyHandler);
    }
 
    /**

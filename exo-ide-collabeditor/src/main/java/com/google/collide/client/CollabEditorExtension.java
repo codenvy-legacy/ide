@@ -27,8 +27,6 @@ import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
 import com.google.collide.client.collaboration.NotificationController;
 import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
-import com.google.collide.client.communication.VertxBus;
-import com.google.collide.client.communication.VertxBusWebsoketImpl;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.util.ClientImplementationsInjector;
 import com.google.collide.client.util.Elements;
@@ -43,14 +41,15 @@ import elemental.dom.Node;
 
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
-import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedEvent;
+import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  7/18/12 evgen $
  */
-public class CollabEditorExtension extends Extension implements UserInfoReceivedHandler
+public class CollabEditorExtension extends Extension implements MainSocketOpenedHandler
 {
 
    private static CollabEditorExtension instance;
@@ -80,7 +79,7 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       instance = this;
       ClientImplementationsInjector.inject();
 
-      IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
+      IDE.addHandler(MainSocketOpenedEvent.TYPE, this);
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
 
@@ -114,51 +113,6 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
    public CollaborationManager getCollaborationManager()
    {
       return collaborationManager;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onUserInfoReceived(UserInfoReceivedEvent event)
-   {
-      init();
-
-      //TODO refactor this
-      //This code use new socket connection for receiving user session id.
-      final VertxBus bus = VertxBusWebsoketImpl.create();
-      bus.setOnOpenCallback(new VertxBus.ConnectionListener()
-      {
-         @Override
-         public void onOpen()
-         {
-            bus.send("ide/collab_editor/participants/add", "{}", new VertxBus.ReplyHandler()
-            {
-               @Override
-               public void onReply(String message)
-               {
-                  JSONObject object = JSONParser.parseLenient(message).isObject();
-                  BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
-                  BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());
-                  context.initializeCollaboration();
-//                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
-                  IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
-                  collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient);
-                  UsersModel usersModel = new UsersModel(context.getFrontendApi(), context.getMessageFilter());
-                  new NotificationController(notificationManager, collaborationManager, context.getMessageFilter(),usersModel, IDE.eventBus(),context.getResources().baseCss());
-
-                  DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
-                  bus.close();
-               }
-            });
-         }
-
-         @Override
-         public void onClose()
-         {
-         }
-      });
-
    }
 
    /**
@@ -257,4 +211,28 @@ public class CollabEditorExtension extends Extension implements UserInfoReceived
       Elements.injectJs(CodeMirror2.getJs());
    }
 
+   @Override
+   public void onMainSocketOpened(MainSocketOpenedEvent event)
+   {
+      init();
+      IDE.messageBus().send("ide/collab_editor/participants/add", "{}", new ReplyHandler()
+      {
+         @Override
+         public void onReply(String message)
+         {
+            JSONObject object = JSONParser.parseLenient(message).isObject();
+            BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
+            BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());
+            context.initializeCollaboration();
+            //                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
+            IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
+            collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient);
+            UsersModel usersModel = new UsersModel(context.getFrontendApi(), context.getMessageFilter());
+            new NotificationController(notificationManager, collaborationManager, context.getMessageFilter(),usersModel, IDE.eventBus(),context.getResources().baseCss());
+
+            DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
+            //                     bus.close();
+         }
+      });
+   }
 }

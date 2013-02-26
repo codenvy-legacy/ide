@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 eXo Platform SAS.
+ * Copyright (C) 2013 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -18,10 +18,13 @@
  */
 package org.exoplatform.ide.client.framework.websocket.events;
 
+import com.google.gwt.event.shared.EventHandler;
+
 /**
- * Handler for receiving replies to messages you sent on the message bus.
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public interface ReplyHandler
+public interface MainSocketOpenedHandler extends EventHandler
 {
-   void onReply(String message);
+   void onMainSocketOpened(MainSocketOpenedEvent event);
 }

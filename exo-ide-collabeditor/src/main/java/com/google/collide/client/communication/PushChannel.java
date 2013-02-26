@@ -14,9 +14,8 @@
 
 package com.google.collide.client.communication;
 
+import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
-import com.google.collide.client.communication.VertxBus.ReplyHandler;
-import com.google.collide.client.communication.VertxBus.ReplySender;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
@@ -25,7 +24,14 @@ import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.gwt.user.client.Timer;
 
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
+import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.client.Jso;
@@ -34,158 +40,203 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A PushChannel abstraction on top of the {@link VertxBus}.
- * 
+ * A PushChannel abstraction on top of the {@link MessageBus}.
  */
-public class PushChannel {
+public class PushChannel
+{
 
-  public interface Listener {
-    void onReconnectedSuccessfully();
-  }
+   public interface Listener
+   {
+      void onReconnectedSuccessfully();
+   }
 
-  public static PushChannel create(MessageFilter messageFilter, StatusManager statusManager) {
-    // If we do not have a valid client ID... bail.
-    if (BootstrapSession.getBootstrapSession().getActiveClientId() == null) {
-      StatusMessage fatal =
-          new StatusMessage(statusManager, MessageType.FATAL, "You are not logged in!");
-      fatal.addAction(StatusMessage.RELOAD_ACTION);
-      fatal.setDismissable(false);
-      fatal.fire();
-      return null;
-    }
+   public static PushChannel create(MessageFilter messageFilter, StatusManager statusManager)
+   {
+      // If we do not have a valid client ID... bail.
+      if (BootstrapSession.getBootstrapSession().getActiveClientId() == null)
+      {
+         StatusMessage fatal = new StatusMessage(statusManager, MessageType.FATAL, "You are not logged in!");
+         fatal.addAction(StatusMessage.RELOAD_ACTION);
+         fatal.setDismissable(false);
+         fatal.fire();
+         return null;
+      }
+      MessageBus eventBus = AppContext.getMessageBus();
+      PushChannel pushChannel = new PushChannel(eventBus, messageFilter, statusManager);
+      pushChannel.init();
+      return pushChannel;
+   }
 
-    VertxBus eventBus = VertxBusWebsoketImpl.createWithPing();
-    PushChannel pushChannel = new PushChannel(eventBus, messageFilter, statusManager);
-    pushChannel.init();
-    return pushChannel;
-  }
+   private class DisconnectedTooLongTimer extends Timer
+   {
+      private static final int DELAY_MS = 60 * 1000;
 
-  private class DisconnectedTooLongTimer extends Timer {
-    private static final int DELAY_MS = 60 * 1000;
-
-    @Override
-    public void run() {
-      // reconnection effort failed.
-      StatusMessage fatal = new StatusMessage(
-          statusManager, MessageType.FATAL, "Lost communication with the server.");
-      fatal.addAction(StatusMessage.RELOAD_ACTION);
-      fatal.setDismissable(false);
-      fatal.fire();
-    }
-
-    void schedule() {
-      schedule(DELAY_MS);
-    }
-  }
-
-  private class QueuedMessage {
-    final String address;
-    final String msg;
-    final ReplyHandler replyHandler;
-
-    QueuedMessage(String address, String msg, ReplyHandler replyHandler) {
-      this.address = address;
-      this.msg = msg;
-      this.replyHandler = replyHandler;
-    }
-  }
-
-  private final ListenerManager<Listener> listenerManager = ListenerManager.create();
-
-  private final DisconnectedTooLongTimer disconnectedTooLongTimer = new DisconnectedTooLongTimer();
-
-  private final VertxBus.ConnectionListener connectionListener = new VertxBus.ConnectionListener() {
-    private boolean hasReceivedOnDisconnected;
-    private VertxBus.MessageHandler messageHandler = null;
-
-    @Override
-    public void onOpen() {
-      // Lazily initialize the messageHandler and register to handle messages.
-      if (messageHandler == null) {
-        messageHandler = new VertxBus.MessageHandler() {
-          @Override
-          public void onMessage(String message, ReplySender replySender) {
-            ServerToClientDto dto =
-                (ServerToClientDto) Jso.deserialize(message).<RoutableDtoClientImpl>cast();
-            messageFilter.dispatchMessage(dto);
-          }
-        };
-        eventBus.register(
-            "collab_editor." + BootstrapSession.getBootstrapSession().getActiveClientId(), messageHandler);
+      @Override
+      public void run()
+      {
+         // reconnection effort failed.
+         StatusMessage fatal = new StatusMessage(statusManager, MessageType.FATAL,
+            "Lost communication with the server.");
+         fatal.addAction(StatusMessage.RELOAD_ACTION);
+         fatal.setDismissable(false);
+         fatal.fire();
       }
 
-      // Notify listeners who handle reconnections.
-      if (hasReceivedOnDisconnected) {
-        disconnectedTooLongTimer.cancel();
-
-        listenerManager.dispatch(new ListenerManager.Dispatcher<Listener>() {
-            @Override
-          public void dispatch(Listener listener) {
-            listener.onReconnectedSuccessfully();
-          }
-        });
-        hasReceivedOnDisconnected = false;
+      void schedule()
+      {
+         schedule(DELAY_MS);
       }
+   }
 
-      // Drain any messages that came in while the channel was not open.
-      for (QueuedMessage msg : queuedMessages) {
-        eventBus.send(msg.address, msg.msg, msg.replyHandler);
+   private class QueuedMessage
+   {
+      final String address;
+
+      final String msg;
+
+      final ReplyHandler replyHandler;
+
+      QueuedMessage(String address, String msg, ReplyHandler replyHandler)
+      {
+         this.address = address;
+         this.msg = msg;
+         this.replyHandler = replyHandler;
       }
-      queuedMessages.clear();
-    }
+   }
 
-    @Override
-    public void onClose() {
-      hasReceivedOnDisconnected = true;
-      disconnectedTooLongTimer.schedule();
-    }
-  };
+   private final ListenerManager<Listener> listenerManager = ListenerManager.create();
 
-  private final MessageFilter messageFilter;
-  private final StatusManager statusManager;
-  private final VertxBus eventBus;
-  private final List<QueuedMessage> queuedMessages = new ArrayList<QueuedMessage>();
+   private final DisconnectedTooLongTimer disconnectedTooLongTimer = new DisconnectedTooLongTimer();
 
-  private PushChannel(VertxBus eventBus, MessageFilter messageFilter, StatusManager statusManager) {
-    this.eventBus = eventBus;
-    this.messageFilter = messageFilter;
-    this.statusManager = statusManager;
-  }
+   private final ConnectionClosedHandler closedHandler = new ConnectionClosedHandler()
+   {
+      @Override
+      public void onClose(WebSocketClosedEvent event)
+      {
+         hasReceivedOnDisconnected = true;
+         disconnectedTooLongTimer.schedule();
+      }
+   };
 
-  private void init() {
-    eventBus.setOnOpenCallback(connectionListener);
-    eventBus.setOnCloseCallback(connectionListener);
-  }
+   private final ConnectionOpenedHandler openedHandler = new ConnectionOpenedHandler()
+   {
+      @Override
+      public void onOpen()
+      {
+         // Lazily initialize the messageHandler and register to handle messages.
+         if (messageHandler == null)
+         {
+            messageHandler = new MessageHandler()
+            {
+               @Override
+               public void onMessage(String message)
+               {
+                  ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
+                  messageFilter.dispatchMessage(dto);
+               }
+            };
+            try
+            {
+               eventBus.subscribe("collab_editor." + BootstrapSession.getBootstrapSession().getActiveClientId(),
+                  messageHandler);
+            }
+            catch (WebSocketException e)
+            {
+              Log.error(PushChannel.class, e);
+            }
+         }
 
-  /**
-   * Sends a message to an address, providing an replyHandler.
-   */
-  public void send(String address, String message, ReplyHandler replyHandler) {
-    try {
-      if (eventBus.getReadyState() != VertxBus.OPEN) {
-         Log.debug(PushChannel.class,
-             "Message sent to '" + address + "' while channel was disconnected: " + message);
+         // Notify listeners who handle reconnections.
+         if (hasReceivedOnDisconnected)
+         {
+            disconnectedTooLongTimer.cancel();
+
+            listenerManager.dispatch(new ListenerManager.Dispatcher<Listener>()
+            {
+               @Override
+               public void dispatch(Listener listener)
+               {
+                  listener.onReconnectedSuccessfully();
+               }
+            });
+            hasReceivedOnDisconnected = false;
+         }
+
+         // Drain any messages that came in while the channel was not open.
+         try
+         {
+            for (QueuedMessage msg : queuedMessages)
+            {
+               eventBus.send(msg.address, msg.msg, msg.replyHandler);
+            }
+         }
+         catch (WebSocketException e)
+         {
+            Log.error(PushChannel.class, e);
+         }
+         queuedMessages.clear();
+      }
+   };
+
+   private boolean hasReceivedOnDisconnected;
+
+   private MessageHandler messageHandler = null;
+
+   private final MessageFilter messageFilter;
+
+   private final StatusManager statusManager;
+
+   private final MessageBus eventBus;
+
+   private final List<QueuedMessage> queuedMessages = new ArrayList<QueuedMessage>();
+
+   private PushChannel(MessageBus eventBus, MessageFilter messageFilter, StatusManager statusManager)
+   {
+      this.eventBus = eventBus;
+      this.messageFilter = messageFilter;
+      this.statusManager = statusManager;
+   }
+
+   private void init()
+   {
+      eventBus.setOnOpenHandler(openedHandler);
+      eventBus.setOnCloseHandler(closedHandler);
+   }
+
+   /**
+    * Sends a message to an address, providing an replyHandler.
+    */
+   public void send(String address, String message, ReplyHandler replyHandler)
+   {
+      try
+      {
+         if (eventBus.getReadyState() != ReadyState.OPEN)
+         {
+            Log.debug(PushChannel.class,
+               "Message sent to '" + address + "' while channel was disconnected: " + message);
+            queuedMessages.add(new QueuedMessage(address, message, replyHandler));
+            return;
+         }
+         eventBus.send(address, message, replyHandler);
+      }
+      catch (WebSocketException e)
+      {
+         Log.debug(PushChannel.class, "Message sent to '" + address + "' while channel was disconnected: " + message);
          queuedMessages.add(new QueuedMessage(address, message, replyHandler));
          return;
-       }
-    }
-    catch (WebSocketException e)
-    {
-      Log.debug(PushChannel.class, "Message sent to '" + address + "' while channel was disconnected: " + message);
-      queuedMessages.add(new QueuedMessage(address, message, replyHandler));
-      return;
-    }
-    eventBus.send(address, message, replyHandler);
-  }
+      }
+   }
 
-  /**
-   * Sends a message to an address.
-   */
-  public void send(String address, String message) {
-    send(address, message, null);
-  }
+   /**
+    * Sends a message to an address.
+    */
+   public void send(String address, String message)
+   {
+      send(address, message, null);
+   }
 
-  public ListenerRegistrar<Listener> getListenerRegistrar() {
-    return listenerManager;
-  }
+   public ListenerRegistrar<Listener> getListenerRegistrar()
+   {
+      return listenerManager;
+   }
 }

@@ -27,6 +27,8 @@ import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageReceivedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.MessageReceivedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
+import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
+import org.exoplatform.ide.client.framework.websocket.rest.SubscriptionHandler;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -174,6 +176,23 @@ public abstract class MessageBus implements MessageReceivedHandler
    public abstract void send(Message message, ReplyHandler callback) throws WebSocketException;
 
    /**
+    *Sends a message to an address.
+    * @param address the address of receiver
+    * @param message the message
+    * @throws WebSocketException throws if an any error has occurred while sending data
+    */
+   public abstract void send(String address, String message) throws WebSocketException;
+
+   /**
+    * Sends a message to an address, providing an replyHandler.
+    * @param address the address of receiver
+    * @param message  the message
+    * @param replyHandler the handler callback
+    * @throws WebSocketException throws if an any error has occurred while sending data
+    */
+   public abstract void send(String address, String message, ReplyHandler replyHandler) throws WebSocketException;
+
+   /**
     * Send text message.
     *
     * @param uuid a message identifier
@@ -181,7 +200,7 @@ public abstract class MessageBus implements MessageReceivedHandler
     * @param callback callback for receiving reply to message
     * @throws WebSocketException throws if an any error has occurred while sending data
     */
-   protected void send(String uuid, String message, ReplyHandler callback) throws WebSocketException
+   protected void internalSend(String uuid, String message, ReplyHandler callback) throws WebSocketException
    {
       checkWebSocketConnectionState();
 
@@ -229,7 +248,17 @@ public abstract class MessageBus implements MessageReceivedHandler
       {
          ReplyHandler callback = callbackMap.remove(message.getUuid());
          if (callback != null)
-            callback.onReply(message);
+         {
+            //TODO this is nasty, need refactor this
+            if (callback instanceof RequestCallback)
+            {
+               ((RequestCallback)callback).onReply(message);
+            }
+            else
+            {
+               callback.onReply(message.getBody());
+            }
+         }
       }
    }
 
@@ -258,7 +287,15 @@ public abstract class MessageBus implements MessageReceivedHandler
          Set<MessageHandler> subscribersSetCopy = new HashSet<MessageHandler>(subscribersSet);
          for (MessageHandler handler : subscribersSetCopy)
          {
-            handler.onMessage(message);
+            //TODO this is nasty, need refactor this
+            if(handler instanceof SubscriptionHandler)
+            {
+               ((SubscriptionHandler)handler).onMessage(message);
+            }
+            else
+            {
+               handler.onMessage(message.getBody());
+            }
          }
       }
    }

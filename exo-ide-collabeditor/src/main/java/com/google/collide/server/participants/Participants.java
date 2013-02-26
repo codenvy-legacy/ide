@@ -20,7 +20,7 @@ import com.google.collide.dto.server.DtoServerImpls.ParticipantImpl;
 import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserLogOutDtoImpl;
-import org.exoplatform.ide.commons.WSUtil;
+import com.google.collide.server.WSUtil;
 
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;

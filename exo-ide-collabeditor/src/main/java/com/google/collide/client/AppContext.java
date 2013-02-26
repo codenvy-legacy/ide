@@ -23,6 +23,10 @@ import com.google.collide.client.util.UserActivityManager;
 import com.google.collide.client.util.WindowUnloadingController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
+import com.google.gwt.user.client.Window;
+
+import org.exoplatform.ide.client.framework.websocket.MessageBus;
+import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 
 /**
  * Application context object that exposes getters for our PushChannel and our Event Bus.
@@ -70,7 +74,22 @@ public class AppContext {
 //    this.uncaughtExceptionHandler = new ExceptionHandler(messageFilter, frontendApi, statusManager);
   }
 
-//  public KeyBindings getKeyBindings() {
+   public static MessageBus getMessageBus()
+  {
+     String url;
+     boolean isSecureConnection = Window.Location.getProtocol().equals("https:");
+     if (isSecureConnection)
+     {
+        url = "wss://" + Window.Location.getHost() + "/IDE/collaboration";
+     }
+     else
+     {
+        url = "ws://" + Window.Location.getHost() + "/IDE/collaboration";
+     }
+     return new RESTMessageBus(url);
+  }
+
+   //  public KeyBindings getKeyBindings() {
 //    return keyBindings;
 //  }
 

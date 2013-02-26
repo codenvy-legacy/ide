@@ -31,6 +31,7 @@ import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
@@ -113,6 +114,7 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
             frequentlyReconnectionAttemptsCounter = 0;
             seldomReconnectionAttemptsCounter = 0;
             heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
+            IDE.eventBus().fireEvent(new MainSocketOpenedEvent());
          }
       });
 

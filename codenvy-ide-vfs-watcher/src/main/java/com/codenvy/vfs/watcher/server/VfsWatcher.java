@@ -23,7 +23,8 @@ import com.codenvy.vfs.dto.ProjectOpenedDto;
 import com.codenvy.vfs.dto.server.DtoServerImpls.ItemDeletedDtoImpl;
 import com.google.gson.internal.Pair;
 
-import org.exoplatform.ide.commons.WSUtil;
+import org.everrest.websockets.WSConnectionContext;
+import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
@@ -90,7 +91,7 @@ public class VfsWatcher
          Set<String> userIds = projectUsers.get(vfsId + projectPath);
          if (message != null && userIds != null)
          {
-            WSUtil.broadcastToClients(message, userIds);
+            broadcastToClients(message, userIds);
          }
       }
    }
@@ -158,6 +159,24 @@ public class VfsWatcher
             projectUsers.remove(clientId);
             Pair<ChangeEventFilter, EventListener> pair = vfsListeners.remove(clientId);
             listeners.removeEventListener(pair.first, pair.second);
+         }
+      }
+   }
+
+   private static void broadcastToClients(String message, Set<String> collaborators)
+   {
+      for (String collaborator : collaborators)
+      {
+         ChannelBroadcastMessage broadcastMessage = new ChannelBroadcastMessage();
+         broadcastMessage.setChannel("vfs_watcher." + collaborator);
+         broadcastMessage.setBody(message);
+         try
+         {
+            WSConnectionContext.sendMessage(broadcastMessage);
+         }
+         catch (Exception e)
+         {
+            LOG.error(e.getMessage(), e);
          }
       }
    }

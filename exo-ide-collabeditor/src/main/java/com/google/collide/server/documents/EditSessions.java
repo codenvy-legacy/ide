@@ -40,7 +40,7 @@ import com.google.collide.dto.server.DtoServerImpls.ParticipantUserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
-import org.exoplatform.ide.commons.WSUtil;
+import com.google.collide.server.WSUtil;
 import com.google.collide.server.participants.Participants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
