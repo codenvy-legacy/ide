@@ -102,6 +102,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    public void showDialog()
    {
       getApplicationInfo(resourceProvider.getActiveProject());
+
+      view.showDialog();
    }
 
    /**
@@ -217,8 +219,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                   //                  }
                   application = result;
                   displayApplicationProperties(result);
-
-                  view.showDialog();
                }
             });
       }

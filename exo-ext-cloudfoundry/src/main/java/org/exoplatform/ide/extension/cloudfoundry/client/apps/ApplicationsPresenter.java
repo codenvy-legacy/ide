@@ -69,6 +69,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
+
+      this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
    }
 
    /**
