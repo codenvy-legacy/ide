@@ -16,7 +16,7 @@ package com.google.collide.codemirror2;
 
 import static com.google.collide.codemirror2.Token.LITERAL_PERIOD;
 
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
 
 import org.exoplatform.ide.json.shared.JsonArray;

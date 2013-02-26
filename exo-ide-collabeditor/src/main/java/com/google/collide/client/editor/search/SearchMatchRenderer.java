@@ -16,7 +16,7 @@ package com.google.collide.client.editor.search;
 
 import com.google.collide.client.editor.renderer.LineRenderer;
 import com.google.collide.shared.document.Line;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;

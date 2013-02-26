@@ -15,7 +15,7 @@
 package com.google.collide.codemirror2;
 
 import com.google.collide.shared.Pair;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
 import com.google.common.annotations.VisibleForTesting;
 

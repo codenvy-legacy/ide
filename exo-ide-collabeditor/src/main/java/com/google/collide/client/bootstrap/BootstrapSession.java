@@ -19,8 +19,6 @@ import org.exoplatform.ide.client.framework.module.IDE;
 /**
  * Bootstrap information for the client.
  *
- * <p>This gets injected to the page with the initial page request.
- *
  * <p>It contains a description of the files contained in the project workspace,
  * as well as user identification information and a sessionID token that is sent
  * along with subsequent requests.

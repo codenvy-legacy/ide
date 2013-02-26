@@ -15,14 +15,13 @@
 package com.google.collide.client;
 
 import com.google.collide.client.communication.FrontendApi;
-import com.google.collide.client.communication.MessageFilter;
+import org.exoplatform.ide.communication.MessageFilter;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.util.UserActivityManager;
 
 import com.google.collide.client.util.WindowUnloadingController;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.GWT.UncaughtExceptionHandler;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.websocket.MessageBus;

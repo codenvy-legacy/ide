@@ -16,7 +16,7 @@ package com.google.collide.shared.document.anchor;
 
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.anchor.InsertionPlacementStrategy.Placement;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.SortedList;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;

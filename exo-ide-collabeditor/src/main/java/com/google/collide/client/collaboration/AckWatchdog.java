@@ -23,7 +23,7 @@ import com.google.collide.client.util.WindowUnloadingController;
 import com.google.collide.client.util.WindowUnloadingController.Message;
 import com.google.collide.dto.DocOp;
 import com.google.collide.shared.ot.DocOpUtils;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.ide.json.shared.JsonArray;

@@ -15,7 +15,6 @@
 package com.google.collide.client.communication;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
-import com.google.collide.client.communication.MessageFilter.MessageRecipient;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.ClientToServerDocOp;
@@ -31,14 +30,15 @@ import com.google.collide.dto.GetWorkspaceParticipants;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
-import com.google.collide.dto.RoutingTypes;
-import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.ServerToClientDocOps;
-import com.google.collide.dto.client.DtoClientImpls.ServerErrorImpl;
+import org.exoplatform.ide.dtogen.client.ServerErrorImpl;
 import com.google.collide.dto.shared.JsonFieldConstants;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
+import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
+import org.exoplatform.ide.communication.FrontendApi.RequestResponseApi;
+import org.exoplatform.ide.communication.FrontendApi.SendApi;
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutableDto;
@@ -55,39 +55,9 @@ import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
  */
 public class FrontendApi {
 
-  /**
-   * EventBus API that documents the message types sent to the frontend. This API is fire and
-   * forget, since it does not expect a response.
-   * 
-   * @param <REQ> The outgoing message type.
-   */
-  public static interface SendApi<REQ extends ClientToServerDto> {
-    public void send(REQ msg);
-  }
-
-  /**
-   * EventBus API that documents the message types sent to the frontend, and the message type
-   * expected to be returned as a response.
-   * 
-   * @param <REQ> The outgoing message type.
-   * @param <RESP> The incoming message type.
-   */
-  public static interface RequestResponseApi<
-      REQ extends ClientToServerDto, RESP extends ServerToClientDto> {
-    public void send(REQ msg, final ApiCallback<RESP> callback);
-  }
-
-  /**
-   * Callback interface for receiving a matched response for requests to a frontend API.
-   */
-  public interface ApiCallback<T extends ServerToClientDto> extends MessageRecipient<T> {
-    void onFail(FailureReason reason);
-  }
-
   protected class ApiImpl<REQ extends ClientToServerDto, RESP extends ServerToClientDto>
-      implements
-        RequestResponseApi<REQ, RESP>,
-        SendApi<REQ> {
+      implements RequestResponseApi<REQ, RESP>, SendApi<REQ>
+  {
     private final String address;
 
     protected ApiImpl(String address) {
@@ -111,8 +81,8 @@ public class FrontendApi {
           Jso jso = Jso.deserialize(message);
 
           Log.info(getClass(), message);
-          
-          if (RoutingTypes.SERVERERROR == jso.getIntField(RoutableDto.TYPE_FIELD)) {
+
+          if (RoutableDto.SERVER_ERROR == jso.getIntField(RoutableDto.TYPE_FIELD)) {
             ServerErrorImpl serverError = (ServerErrorImpl) jso;
             callback.onFail(serverError.getFailureReason());
             return;

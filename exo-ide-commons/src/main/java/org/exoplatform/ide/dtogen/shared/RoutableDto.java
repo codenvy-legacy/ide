@@ -19,6 +19,7 @@ package org.exoplatform.ide.dtogen.shared;
  */
 public interface RoutableDto
 {
+   public static final int SERVER_ERROR = -1;
    public static final int NON_ROUTABLE_TYPE = -2;
    public static final String TYPE_FIELD = "_type";
 

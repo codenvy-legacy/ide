@@ -37,6 +37,7 @@ import org.exoplatform.ide.vfs.server.observation.TypeFilter;
 import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -118,8 +119,7 @@ public class VfsWatcher
 
    public void openProject(String clientId, ProjectOpenedDto dto)
    {
-      // for now project id is unique, but in case fs vfs, only combination of vfsId and projectPath is unique :(
-      String key = dto.vfsId() + dto.projectPath();
+      String key = getTenantName() + dto.projectPath();
       if (!projectUsers.containsKey(key))
       {
          projectUsers.put(key, new CopyOnWriteArraySet<String>());
@@ -148,7 +148,7 @@ public class VfsWatcher
 
    public void closeProject(String clientId, ProjectClosedDto dto)
    {
-      String key = dto.vfsId() + dto.projectPath();
+      String key = getTenantName() + dto.projectPath();
       if (projectUsers.containsKey(key))
       {
          Set<String> ids = projectUsers.get(key);
@@ -161,6 +161,12 @@ public class VfsWatcher
             listeners.removeEventListener(pair.first, pair.second);
          }
       }
+   }
+
+   private String getTenantName()
+   {
+      Object tenantName = ConversationState.getCurrent().getAttribute("currentTenant");
+      return tenantName == null ? "" : tenantName.toString();
    }
 
    private static void broadcastToClients(String message, Set<String> collaborators)

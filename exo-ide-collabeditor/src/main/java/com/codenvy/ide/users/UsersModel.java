@@ -19,21 +19,21 @@
 package com.codenvy.ide.users;
 
 import com.google.collide.client.communication.FrontendApi;
-import com.google.collide.client.communication.FrontendApi.ApiCallback;
-import com.google.collide.client.communication.MessageFilter;
-import com.google.collide.client.communication.MessageFilter.MessageRecipient;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.GetWorkspaceParticipants;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
-import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.UserLogOutDto;
 import com.google.collide.dto.client.DtoClientImpls.GetWorkspaceParticipantsImpl;
-import com.google.collide.shared.util.JsonCollections;
 
+import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
+import org.exoplatform.ide.communication.MessageFilter;
+import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**

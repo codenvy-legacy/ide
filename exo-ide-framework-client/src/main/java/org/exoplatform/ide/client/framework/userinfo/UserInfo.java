@@ -76,4 +76,8 @@ public interface UserInfo
     */
    public void setRoles(List<String> roles);
 
+   public String getClientId();
+
+   public void setClientId(String clientId);
+
 }

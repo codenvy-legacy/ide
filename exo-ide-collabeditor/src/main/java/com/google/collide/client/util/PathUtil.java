@@ -14,7 +14,7 @@
 
 package com.google.collide.client.util;
 
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
 

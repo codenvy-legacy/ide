@@ -29,7 +29,7 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorType;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import elemental.util.Timer;
 
 import org.exoplatform.ide.json.shared.JsonStringMap;

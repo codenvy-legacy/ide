@@ -14,7 +14,7 @@
 
 package com.google.collide.client.editor.input;
 
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.waveprotocol.wave.client.common.util.SignalEvent;

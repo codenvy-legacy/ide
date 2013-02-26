@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.collide.dto;
-
-import org.exoplatform.ide.dtogen.shared.RoutingType;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+package org.exoplatform.ide.dtogen.shared;
 
 /**
  * Notifies the client of an error on the frontend.
  *
  */
-@RoutingType(type = RoutingTypes.SERVERERROR)
 public interface ServerError extends ServerToClientDto {
 
   /**
@@ -58,13 +54,6 @@ public interface ServerError extends ServerToClientDto {
      * The server indicated that the current user is not logged in to GAIA.
      */
     NOT_LOGGED_IN,
-
-    /**
-     * The server indicated that the supplied XSRF token is invalid or out of
-     * date. If the user is validly logged in, we deliver a new token with the
-     * response XHR.
-     */
-    INVALID_XSRF_TOKEN,
 
     /**
      * The server indicated that the request was unable to complete because the

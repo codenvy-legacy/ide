@@ -16,7 +16,7 @@ package com.google.collide.client.editor;
 
 import com.google.collide.client.common.Constants;
 import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.ListenerRegistrar.Remover;

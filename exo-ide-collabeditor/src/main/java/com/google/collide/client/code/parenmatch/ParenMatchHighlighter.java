@@ -32,7 +32,7 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.RegExpUtils;
 import com.google.common.annotations.VisibleForTesting;

@@ -115,7 +115,6 @@ public class RoutingTypes {
   public static final int RESOLVETREECONFLICTRESPONSE = 88;
   public static final int SEARCH = 89;
   public static final int SEARCHRESPONSE = 90;
-  public static final int SERVERERROR = 91;
   public static final int SERVERTOCLIENTDOCOP = 92;
   public static final int SERVERTOCLIENTDOCOPS = 93;
   public static final int SETACTIVEPROJECT = 94;
@@ -143,7 +142,6 @@ public class RoutingTypes {
   public static final int WORKSPACEINFO = 116;
   public static final int WORKSPACETREEUPDATE = 117;
   public static final int WORKSPACETREEUPDATEBROADCAST = 118;
-  public static final int INVALIDXSRFTOKENSERVERERROR = 119;
   public static final int ENDUPLOADSESSIONFINISHED = 120;
   public static final int RETRYALREADYTRANSFERREDUPLOAD = 121;
   public static final int GETWORKSPACEMETADATA = 122;

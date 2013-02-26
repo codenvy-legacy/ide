@@ -15,6 +15,7 @@
 package com.google.collide.shared.util;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * Lightweight manager for listeners that's designed to reduce boilerplate in

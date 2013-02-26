@@ -17,7 +17,7 @@ package org.exoplatform.ide.editor.html.client.contentassist;
 import com.google.collide.client.code.autocomplete.AutocompleteProposal;
 import com.google.collide.client.util.collections.SkipListStringBag;
 import com.google.collide.client.util.collections.StringMultiset;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.client.Jso;
 import org.exoplatform.ide.json.client.JsoArray;

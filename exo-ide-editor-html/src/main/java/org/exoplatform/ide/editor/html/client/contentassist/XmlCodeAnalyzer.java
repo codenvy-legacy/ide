@@ -23,7 +23,7 @@ import com.google.collide.codemirror2.CodeMirror2;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.codemirror2.TokenType;
 import com.google.collide.shared.TaggableLine;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 

@@ -24,7 +24,7 @@ import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.ServerToClientDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
 import com.google.collide.shared.Pair;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.Reorderer;
 import com.google.collide.shared.util.Reorderer.ItemSink;
 import com.google.collide.shared.util.Reorderer.TimeoutCallback;

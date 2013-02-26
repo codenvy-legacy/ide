@@ -30,6 +30,7 @@ import com.google.collide.dto.UserDetailsWithRole;
 import com.google.collide.dto.WorkspaceInfo;
 
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
+import org.exoplatform.ide.dtogen.client.ServerErrorImpl;
 import org.exoplatform.ide.json.client.Jso;
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.client.JsoStringMap;
@@ -4740,37 +4741,6 @@ public class DtoClientImpls {
       return [];
     }-*/;  }
 
-
-  public static class InvalidXsrfTokenServerErrorImpl extends ServerErrorImpl implements com.google.collide.dto.InvalidXsrfTokenServerError {
-    protected InvalidXsrfTokenServerErrorImpl() {}
-
-    @Override
-    public final native java.lang.String getNewXsrfToken() /*-{
-      return this["newXsrfToken"];
-    }-*/;
-
-    public final native InvalidXsrfTokenServerErrorImpl setNewXsrfToken(java.lang.String newXsrfToken) /*-{
-      this["newXsrfToken"] = newXsrfToken;
-      return this;
-    }-*/;
-
-    public final native boolean hasNewXsrfToken() /*-{
-      return this.hasOwnProperty("newXsrfToken");
-    }-*/;
-
-  }
-
-
-  public static class MockInvalidXsrfTokenServerErrorImpl extends InvalidXsrfTokenServerErrorImpl {
-    protected MockInvalidXsrfTokenServerErrorImpl() {}
-
-    public static native InvalidXsrfTokenServerErrorImpl make() /*-{
-      return {
-        _type: 119
-      };
-    }-*/;  }
-
-
   public static class InvalidationMessageImpl extends RoutableDtoClientImpl implements com.google.collide.dto.InvalidationMessage {
     protected InvalidationMessageImpl() {}
 
@@ -6835,42 +6805,7 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class ServerErrorImpl extends RoutableDtoClientImpl implements com.google.collide.dto.ServerError {
-    protected ServerErrorImpl() {}
-
-    @Override
-    public final native java.lang.String getDetails() /*-{
-      return this["details"];
-    }-*/;
-
-    public final native ServerErrorImpl setDetails(java.lang.String details) /*-{
-      this["details"] = details;
-      return this;
-    }-*/;
-
-    public final native boolean hasDetails() /*-{
-      return this.hasOwnProperty("details");
-    }-*/;
-
-    @Override
-    public final native com.google.collide.dto.ServerError.FailureReason getFailureReason() /*-{
-      return @com.google.collide.dto.ServerError.FailureReason::valueOf(Ljava/lang/String;)(this["failureReason"]);
-    }-*/;
-
-    public final native ServerErrorImpl setFailureReason(com.google.collide.dto.ServerError.FailureReason failureReason) /*-{
-      failureReason = failureReason.@com.google.collide.dto.ServerError.FailureReason::toString()();
-      this["failureReason"] = failureReason;
-      return this;
-    }-*/;
-
-    public final native boolean hasFailureReason() /*-{
-      return this.hasOwnProperty("failureReason");
-    }-*/;
-
-  }
-
-
-  public static class MockServerErrorImpl extends ServerErrorImpl {
+   public static class MockServerErrorImpl extends ServerErrorImpl {
     protected MockServerErrorImpl() {}
 
     public static native ServerErrorImpl make() /*-{

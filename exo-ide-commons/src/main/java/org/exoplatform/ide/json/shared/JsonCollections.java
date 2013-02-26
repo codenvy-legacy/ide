@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.collide.shared.util;
+package org.exoplatform.ide.json.shared;
 
 import com.google.common.base.Equivalence;
 import com.google.common.base.Objects;
@@ -22,10 +22,6 @@ import org.exoplatform.ide.json.server.JsonArrayListAdapter;
 import org.exoplatform.ide.json.server.JsonIntegerMapAdapter;
 import org.exoplatform.ide.json.server.JsonStringMapAdapter;
 import org.exoplatform.ide.json.server.JsonStringSetAdapter;
-import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonIntegerMap;
-import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.exoplatform.ide.json.shared.JsonStringSet;
 
 import java.util.ArrayList;
 import java.util.HashMap;

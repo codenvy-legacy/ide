@@ -19,6 +19,7 @@ import com.google.collide.shared.util.SortedList.Comparator;
 import com.google.collide.shared.util.SortedList.OneWayComparator;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 /**
  * A map with a key of (line number, column) and an arbitrary value.

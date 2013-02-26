@@ -14,19 +14,19 @@
 
 package com.google.collide.client.collaboration;
 
-import com.google.collide.client.communication.MessageFilter;
-import com.google.collide.client.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.communication.MessageFilter;
+import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpsImpl;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
- * Receives {@link com.google.collide.dto.ServerToClientDocOp} from the {@link com.google.collide.client.communication.MessageFilter} and
+ * Receives {@link com.google.collide.dto.ServerToClientDocOp} from the {@link org.exoplatform.ide.communication.MessageFilter} and
  * forwards them.
  */
 public class IncomingDocOpDemultiplexer {

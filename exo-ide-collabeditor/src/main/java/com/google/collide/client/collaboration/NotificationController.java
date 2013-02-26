@@ -24,8 +24,8 @@ import com.codenvy.ide.notification.NotificationManager;
 import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
 import com.google.collide.client.common.BaseResources.Css;
-import com.google.collide.client.communication.MessageFilter;
-import com.google.collide.client.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.communication.MessageFilter;
+import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.FileOperationNotification;
@@ -244,7 +244,7 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
       targetPaht = targetPaht.substring(targetPaht.lastIndexOf('/') + 1, targetPaht.length());
       String fileName = notification.getFilePath();
       fileName = fileName.substring(fileName.lastIndexOf('/') + 1, fileName.length());
-      manager.addNotification(new Notification("User <b>" + user.getDisplayName() + "</b> wont to " + getOperationName(
+      manager.addNotification(new Notification("User <b>" + user.getDisplayName() + "</b> wants to " + getOperationName(
          notification.getOperation()) + " <b>" + targetPaht + "</b> and ask you to close file <b>" + fileName + "</b>",
          NotificationType.MESSAGE, -1));
    }

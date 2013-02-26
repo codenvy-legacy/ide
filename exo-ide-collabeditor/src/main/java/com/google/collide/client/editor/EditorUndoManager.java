@@ -28,7 +28,7 @@ import com.google.collide.shared.ot.DocOpApplier;
 import com.google.collide.shared.ot.DocOpUtils;
 import com.google.collide.shared.ot.Inverter;
 import com.google.collide.shared.ot.Transformer;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.json.shared.JsonArray;

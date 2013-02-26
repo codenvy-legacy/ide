@@ -15,7 +15,7 @@
 package com.google.collide.client.util.dom.eventcapture;
 
 import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.JsIntegerMap;
+import org.exoplatform.ide.json.client.JsIntegerMap;
 import com.google.collide.client.util.SignalEventUtils;
 import com.google.collide.client.util.input.CharCodeWithModifiers;
 import com.google.common.base.Preconditions;

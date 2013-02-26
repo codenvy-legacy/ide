@@ -19,7 +19,7 @@ import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.HoverController;
 import com.google.collide.client.util.HoverController.UnhoverListener;
 import com.google.collide.mvp.UiComponent;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import elemental.dom.Node;
 import elemental.events.Event;
 import elemental.events.EventListener;

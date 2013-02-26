@@ -15,7 +15,7 @@
 package com.google.collide.shared.document;
 
 import com.google.collide.shared.TaggableLine;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.shared.JsonStringMap;
 

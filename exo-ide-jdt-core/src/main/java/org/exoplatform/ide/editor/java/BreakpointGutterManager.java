@@ -27,7 +27,7 @@ import com.google.collide.client.editor.ViewportModel.Listener;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.gutter.Gutter.ClickListener;
 import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.JsIntegerMap;
+import org.exoplatform.ide.json.client.JsIntegerMap;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.util.ListenerRegistrar.Remover;

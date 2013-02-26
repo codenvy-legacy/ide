@@ -48,6 +48,7 @@
    <inherits name="org.waveprotocol.wave.client.scheduler.Scheduler"/>
    <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
    <inherits name="org.exoplatform.ide.json.Json"/>
+   <inherits name="org.exoplatform.ide.communication.Communication"/>
 
    <!-- This provides deferred binding for the client windowing system.
 This can be used to make labels for "native" accelerators, etc. -->

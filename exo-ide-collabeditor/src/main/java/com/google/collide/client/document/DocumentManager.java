@@ -23,7 +23,7 @@ import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar;

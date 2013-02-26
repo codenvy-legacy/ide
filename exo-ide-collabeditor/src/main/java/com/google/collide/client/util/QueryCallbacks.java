@@ -15,8 +15,9 @@
 package com.google.collide.client.util;
 
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.dto.ServerError.FailureReason;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 
 /**
  * Class for common implementations of a {@link QueryCallback}.
@@ -28,6 +29,7 @@ public class QueryCallbacks {
    * cache is populated for speed).
    */
   public static class NoOpCallback<E> implements QueryCallback<E> {
+
     @Override
     public void onFail(FailureReason reason) {}
 

@@ -16,7 +16,7 @@ package com.google.collide.client.util.dom;
 
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Timer;

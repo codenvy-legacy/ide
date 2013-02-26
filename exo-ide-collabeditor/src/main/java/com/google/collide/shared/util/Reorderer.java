@@ -16,6 +16,7 @@ package com.google.collide.shared.util;
 
 import com.google.collide.shared.util.Timer.Factory;
 
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonIntegerMap;
 
 /**

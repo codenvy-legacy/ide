@@ -14,7 +14,7 @@
 
 package com.google.collide.client.util;
 
-import com.google.collide.dto.ServerError.FailureReason;
+import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 
 /**
  * Generic callback for any requests that return a single value.

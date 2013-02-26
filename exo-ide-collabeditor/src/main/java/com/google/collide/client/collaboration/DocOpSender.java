@@ -18,9 +18,7 @@ import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.FileConcurrencyController.DocOpListener;
 import com.google.collide.client.collaboration.cc.GenericOperationChannel.SendOpService;
 import com.google.collide.client.communication.FrontendApi;
-import com.google.collide.client.communication.FrontendApi.ApiCallback;
 import com.google.collide.dto.DocOp;
-import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.ServerToClientDocOps;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.DocOpImpl;
@@ -30,6 +28,8 @@ import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
+import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
+import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.client.Jso;
 import org.exoplatform.ide.json.client.JsoArray;
 

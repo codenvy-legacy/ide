@@ -14,7 +14,7 @@
 
 package com.google.collide.client.util;
 
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.user.client.Timer;
 import elemental.dom.Node;
 import elemental.events.Event;

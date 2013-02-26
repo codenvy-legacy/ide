@@ -19,7 +19,7 @@ import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.shared.document.Line;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.SortedList;
 import com.google.collide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;

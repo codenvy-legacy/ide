@@ -17,6 +17,7 @@ package com.google.collide.shared.util;
 import com.google.collide.dto.WorkspaceInfo;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 import java.util.Comparator;

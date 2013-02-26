@@ -32,7 +32,7 @@ import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.tooltip.Tooltip;
 import com.google.collide.client.ui.tooltip.Tooltip.TooltipRenderer;
 import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.JsIntegerMap;
+import org.exoplatform.ide.json.client.JsIntegerMap;
 import com.google.collide.dto.CodeError;
 import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls.CodeErrorImpl;

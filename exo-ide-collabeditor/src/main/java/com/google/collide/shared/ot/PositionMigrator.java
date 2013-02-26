@@ -20,7 +20,7 @@ import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.LineNumberAndColumn;
 import com.google.collide.shared.document.TextChange;
-import com.google.collide.shared.util.JsonCollections;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.json.shared.JsonArray;

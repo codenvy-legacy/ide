@@ -16,22 +16,23 @@ package com.google.collide.client.code;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.communication.FrontendApi;
-import com.google.collide.client.communication.MessageFilter;
-import com.google.collide.client.communication.MessageFilter.MessageRecipient;
 import com.google.collide.client.util.QueryCallbacks.SimpleCallback;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
-import com.google.collide.dto.ServerError;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.client.DtoClientImpls;
-import com.google.collide.shared.util.JsonCollections;
 
+import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
+import org.exoplatform.ide.communication.MessageFilter;
+import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.dtogen.shared.ServerError;
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.client.JsoStringMap;
 import org.exoplatform.ide.json.client.JsoStringSet;
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringSet;
 
 /**
@@ -227,7 +228,7 @@ public class ParticipantModel {
     };
      DtoClientImpls.GetEditSessionCollaboratorsImpl req = DtoClientImpls.GetEditSessionCollaboratorsImpl.make();
      req.setEditSessionId(fileEditSessionKey);
-     frontendApi.GET_FILE_COLLABORATORS.send(req, new FrontendApi.ApiCallback<GetEditSessionCollaboratorsResponse>()
+     frontendApi.GET_FILE_COLLABORATORS.send(req, new ApiCallback<GetEditSessionCollaboratorsResponse>()
      {
         @Override
         public void onFail(ServerError.FailureReason reason)

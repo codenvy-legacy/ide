@@ -16,7 +16,6 @@ package com.google.collide.client.document;
 
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
-import com.google.collide.client.communication.FrontendApi.ApiCallback;
 import com.google.collide.client.document.DocumentManager.GetDocumentCallback;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
@@ -25,12 +24,13 @@ import com.google.collide.client.util.logging.Log;
 import com.google.collide.dto.FileContents.ContentType;
 import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.RoutingTypes;
-import com.google.collide.dto.ServerError.FailureReason;
 import com.google.collide.dto.client.DtoClientImpls.GetFileContentsImpl;
-import com.google.collide.shared.util.JsonCollections;
 import com.google.common.base.Preconditions;
 
+import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
+import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**

@@ -15,7 +15,9 @@
 package com.google.collide.client.util;
 
 import com.google.collide.client.util.logging.Log;
-import com.google.collide.shared.util.JsonCollections;
+
+import org.exoplatform.ide.json.client.JsIntegerMap;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.collide.shared.util.SharedLogUtils;
 import com.google.collide.shared.util.StringUtils;
 import com.google.gwt.core.client.GWT;
