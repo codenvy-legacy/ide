@@ -29,10 +29,7 @@ import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.NewItemControl;
 import org.exoplatform.ide.client.navigation.control.CreateFileFromTemplateControl;
-import org.exoplatform.ide.client.navigation.control.NewItemMenuGroup;
-import org.exoplatform.ide.client.navigation.control.NewItemPopupToolbarControl;
 import org.exoplatform.ide.client.navigation.control.RefreshBrowserControl;
-import org.exoplatform.ide.client.navigation.handler.CreateFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.FileClosedHandler;
 import org.exoplatform.ide.client.navigation.handler.OpenFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.SaveAllFilesCommandHandler;
@@ -41,6 +38,9 @@ import org.exoplatform.ide.client.navigation.handler.SaveFileCommandHandler;
 import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesCommandHandler;
 import org.exoplatform.ide.client.navigation.template.CreateFileFromTemplatePresenter;
 import org.exoplatform.ide.client.navigator.NavigatorPresenter;
+import org.exoplatform.ide.client.operation.createfile.CreateFilePresenter;
+import org.exoplatform.ide.client.operation.createfile.NewItemMenuGroup;
+import org.exoplatform.ide.client.operation.createfile.NewItemPopupToolbarControl;
 import org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter;
 import org.exoplatform.ide.client.operation.cutcopy.CutCopyPasteItemsCommandHandler;
 import org.exoplatform.ide.client.operation.deleteitem.DeleteItemsPresenter;
@@ -128,7 +128,8 @@ public class NavigationModule implements InitializeServicesHandler
 
       IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR);
 
-      new CreateFileCommandHandler();
+//      new CreateFileCommandHandler();
+      new CreateFilePresenter();
       new CreateFileFromTemplatePresenter();
       new OpenFileCommandHandler();
       new FileClosedHandler();
