@@ -97,15 +97,21 @@ public class LocalFileSystem implements VirtualFileSystem
    final URI baseUri;
    final EventListenerList listeners;
    final MountPoint mountPoint;
+   final SearcherProvider searcherProvider;
 
    private VirtualFileSystemInfoImpl vfsInfo;
 
-   public LocalFileSystem(String vfsId, URI baseUri, EventListenerList listeners, MountPoint mountPoint)
+   public LocalFileSystem(String vfsId,
+                          URI baseUri,
+                          EventListenerList listeners,
+                          MountPoint mountPoint,
+                          SearcherProvider searcherProvider)
    {
       this.vfsId = vfsId;
       this.baseUri = baseUri;
       this.listeners = listeners;
       this.mountPoint = mountPoint;
+      this.searcherProvider = searcherProvider;
    }
 
    @Path("copy/{id}")
@@ -117,8 +123,8 @@ public class LocalFileSystem implements VirtualFileSystem
       final Item copy = fromVirtualFile(virtualFileCopy, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
       }
       return copy;
    }
@@ -135,8 +141,8 @@ public class LocalFileSystem implements VirtualFileSystem
       final File file = (File)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
       }
       return file;
    }
@@ -150,8 +156,8 @@ public class LocalFileSystem implements VirtualFileSystem
       final Folder folder = (Folder)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(),
-            ChangeType.CREATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
       }
       return folder;
    }
@@ -178,8 +184,8 @@ public class LocalFileSystem implements VirtualFileSystem
       final Project project = (Project)fromVirtualFile(newVirtualFile, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(),
-            ChangeType.CREATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED, mountPoint.getCurrentUserId()));
       }
       LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", name, project.getProjectType());
       return project;
@@ -204,7 +210,7 @@ public class LocalFileSystem implements VirtualFileSystem
       virtualFile.delete(lockToken);
       if (listeners != null)
       {
-         listeners.notifyListeners(new ChangeEvent(this, id, path, mediaType, ChangeType.DELETED));
+         listeners.notifyListeners(new ChangeEvent(this, id, path, mediaType, ChangeType.DELETED, mountPoint.getCurrentUserId()));
       }
       if (isProject)
       {
@@ -365,10 +371,10 @@ public class LocalFileSystem implements VirtualFileSystem
          {
             permissions.add(bp.value());
          }
-         // TODO : update capabilities when implement query.
          vfsInfo =
             new VirtualFileSystemInfoImpl(this.vfsId, false, true, VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL,
-               VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, ACLCapability.MANAGE, QueryCapability.NONE,
+               VirtualFileSystemInfo.ANY_PRINCIPAL, permissions, ACLCapability.MANAGE,
+               searcherProvider == null ? QueryCapability.NONE : QueryCapability.FULLTEXT,
                createUrlTemplates(), (Folder)fromVirtualFile(mountPoint.getRoot(), PropertyFilter.ALL_FILTER));
       }
       return vfsInfo;
@@ -524,8 +530,8 @@ public class LocalFileSystem implements VirtualFileSystem
       final Item moved = fromVirtualFile(origin.moveTo(idToVirtualFile(parentId), lockToken), PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED, mountPoint.getCurrentUserId()));
       }
       return moved;
    }
@@ -544,16 +550,20 @@ public class LocalFileSystem implements VirtualFileSystem
       }
 
       final VirtualFile origin = idToVirtualFile(id);
+      final boolean isProjectBefore = origin.isProject();
       final String oldPath = origin.getPath();
-      final Item renamed = fromVirtualFile(
-         origin.rename(newName, newMediaType == null ? null : newMediaType.toString(), lockToken),
-         PropertyFilter.ALL_FILTER);
+      final VirtualFile renamedVriVirtualFile = origin.rename(newName, newMediaType == null ? null : newMediaType.toString(), lockToken);
+      final Item renamed = fromVirtualFile(renamedVriVirtualFile, PropertyFilter.ALL_FILTER);
+      final boolean isProjectAfter = renamedVriVirtualFile.isProject();
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED, mountPoint.getCurrentUserId()));
       }
-
+      if (isProjectAfter && !isProjectBefore)
+      {
+         LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", renamed.getName(), ((Project)renamed).getProjectType());
+      }
       return renamed;
    }
 
@@ -565,7 +575,46 @@ public class LocalFileSystem implements VirtualFileSystem
                                 @DefaultValue("*") @QueryParam("propertyFilter") PropertyFilter propertyFilter //
    ) throws NotSupportedException, VirtualFileSystemException
    {
-      throw new NotSupportedException("Not supported. "); // TODO
+      if (searcherProvider != null)
+      {
+         if (skipCount < 0)
+         {
+            throw new InvalidArgumentException("'skipCount' parameter is negative. ");
+         }
+         final QueryExpression expr = new QueryExpression()
+            .setPath(query.getFirst("path"))
+            .setName(query.getFirst("name"))
+            .setMediaType(query.getFirst("mediaType"))
+            .setText(query.getFirst("text"));
+
+         final String[] result = searcherProvider.getSearcher(mountPoint).search(expr);
+         if (skipCount > 0)
+         {
+            if (skipCount > result.length)
+            {
+               throw new InvalidArgumentException("'skipCount' parameter is greater then total number of items. ");
+            }
+         }
+         final int length = maxItems > 0 ? Math.min(result.length, maxItems) : result.length;
+         final List<Item> items = new ArrayList<Item>(length);
+         for (int i = skipCount; i < length; i++)
+         {
+            String path = result[i];
+            try
+            {
+               items.add(fromVirtualFile(getVirtualFileByPath(path), propertyFilter));
+            }
+            catch (ItemNotFoundException ignored)
+            {
+            }
+         }
+
+         ItemList<Item> itemList = new ItemListImpl<Item>(items);
+         itemList.setNumItems(result.length);
+         itemList.setHasMoreItems(length < result.length);
+         return itemList;
+      }
+      throw new NotSupportedException("Not supported. ");
    }
 
    @Override
@@ -599,7 +648,7 @@ public class LocalFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(),
-            virtualFile.getMediaType(), ChangeType.ACL_UPDATED));
+            virtualFile.getMediaType(), ChangeType.ACL_UPDATED, mountPoint.getCurrentUserId()));
       }
    }
 
@@ -616,7 +665,7 @@ public class LocalFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(virtualFile), virtualFile.getPath(),
-            virtualFile.getMediaType(), ChangeType.CONTENT_UPDATED));
+            virtualFile.getMediaType(), ChangeType.CONTENT_UPDATED, mountPoint.getCurrentUserId()));
       }
    }
 
@@ -634,9 +683,9 @@ public class LocalFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(),
-            ChangeType.PROPERTIES_UPDATED));
+            ChangeType.PROPERTIES_UPDATED, mountPoint.getCurrentUserId()));
       }
-      if (!isProjectBefore && isProjectAfter)
+      if (isProjectAfter && !isProjectBefore)
       {
          LOG.info("EVENT#project-created# PROJECT#{}# TYPE#{}#", updated.getName(), ((Project)updated).getProjectType());
       }
@@ -756,7 +805,7 @@ public class LocalFileSystem implements VirtualFileSystem
             if (listeners != null)
             {
                listeners.notifyListeners(new ChangeEvent(this, virtualFileToId(file), file.getPath(),
-                  file.getMediaType(), ChangeType.CONTENT_UPDATED));
+                  file.getMediaType(), ChangeType.CONTENT_UPDATED, mountPoint.getCurrentUserId()));
             }
          }
 
@@ -851,15 +900,13 @@ public class LocalFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException(String.format("Item '%s' is not a project. ", project.getPath()));
       }
-      if (!listeners.addEventListener(
+      if (listeners.addEventListener(
          ProjectUpdateEventFilter.newFilter(this, project), new ProjectUpdateListener(projectId)))
       {
-         throw new InvalidArgumentException(
-            String.format("Project '%s' is under watching already. ", project.getPath()));
+         List<Property> properties = new ArrayList<Property>(1);
+         properties.add(new PropertyImpl("vfs:lastUpdateTime", "0"));
+         project.updateProperties(properties, null);
       }
-      List<Property> properties = new ArrayList<Property>(1);
-      properties.add(new PropertyImpl("vfs:lastUpdateTime", "0"));
-      project.updateProperties(properties, null);
    }
 
    @Path("watch/stop/{projectId}")
@@ -964,13 +1011,11 @@ public class LocalFileSystem implements VirtualFileSystem
       if (virtualFile.isProject())
       {
          final String projectType = virtualFile.getPropertyValue("vfs:projectType");
-         return new ProjectImpl(id, name, mediaType == null ? Project.PROJECT_MIME_TYPE : mediaType, path,
-            parentId, created, virtualFile.getProperties(propertyFilter),
+         return new ProjectImpl(id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
             addLinks ? createProjectLinks(id, parentId) : null, projectType == null ? "default" : projectType);
       }
 
-      return new FolderImpl(id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType, path,
-         parentId, created, virtualFile.getProperties(propertyFilter),
+      return new FolderImpl(id, name, mediaType, path, parentId, created, virtualFile.getProperties(propertyFilter),
          addLinks ? createFolderLinks(id, isRoot, parentId) : null);
    }
 
@@ -1142,5 +1187,14 @@ public class LocalFileSystem implements VirtualFileSystem
       URI uri = uriBuilder.build(vfsId);
 
       return uri.toString();
+   }
+
+   @Override
+   public String toString()
+   {
+      return "LocalFileSystem{" +
+         "vfsId='" + vfsId + '\'' +
+         ", baseUri=" + baseUri +
+         '}';
    }
 }

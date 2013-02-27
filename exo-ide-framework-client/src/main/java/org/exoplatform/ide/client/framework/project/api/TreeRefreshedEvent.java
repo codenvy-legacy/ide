@@ -37,6 +37,11 @@ public class TreeRefreshedEvent extends GwtEvent<TreeRefreshedHandler>
 
    private Item itemToSelect;
 
+   public TreeRefreshedEvent(Folder folder)
+   {
+      this.folder = folder;
+   }
+
    public TreeRefreshedEvent(Folder folder, Item itemToSelect)
    {
       this.folder = folder;

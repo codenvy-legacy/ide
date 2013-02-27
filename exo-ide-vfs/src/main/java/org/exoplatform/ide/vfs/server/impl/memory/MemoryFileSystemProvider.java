@@ -51,4 +51,9 @@ public class MemoryFileSystemProvider implements VirtualFileSystemProvider
          id,
          memoryContext);
    }
+
+   @Override
+   public void close()
+   {
+   }
 }

@@ -139,9 +139,7 @@ public class ContentTest extends LocalFileSystemTest
    {
       String requestPath = SERVICE_URI + "content/" + fileId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
-      List<String> contentType = new ArrayList<String>(1);
-      contentType.add("text/plain;charset=utf8");
-      headers.put("Content-Type", contentType);
+      headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, null);
       assertEquals(204, response.getStatus());
       assertTrue(Arrays.equals(updateContent, readFile(filePath)));
@@ -169,9 +167,7 @@ public class ContentTest extends LocalFileSystemTest
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       String requestPath = SERVICE_URI + "content/" + protectedFileId;
       Map<String, List<String>> headers = new HashMap<String, List<String>>(1);
-      List<String> contentType = new ArrayList<String>(1);
-      contentType.add("text/plain;charset=utf8");
-      headers.put("Content-Type", contentType);
+      headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, writer, null);
       // Request must fail since 'admin' has not 'write' permission (only 'read').
       assertEquals(403, response.getStatus());
@@ -182,10 +178,8 @@ public class ContentTest extends LocalFileSystemTest
 
    public void testUpdateContentLocked() throws Exception
    {
-      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
-      List <String> contentType = new ArrayList<String>();
-      contentType.add("text/plain;charset=utf8");
-      headers.put("Content-Type", contentType);
+      Map <String, List <String>> headers = new HashMap <String, List <String>> (1);
+      headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
       String requestPath = SERVICE_URI + "content/" + lockedFileId + '?' + "lockToken=" + lockToken;
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, null);
       // File is locked.
@@ -199,10 +193,8 @@ public class ContentTest extends LocalFileSystemTest
 
    public void testUpdateContentLocked_NoLockToken() throws Exception
    {
-      Map <String, List <String>> headers = new HashMap <String, List <String>> ();
-      List <String> contentType = new ArrayList<String>();
-      contentType.add("text/plain;charset=utf8");
-      headers.put("Content-Type", contentType);
+      Map <String, List <String>> headers = new HashMap <String, List <String>> (1);
+      headers.put("Content-Type", Arrays.asList("text/plain;charset=utf8"));
       String requestPath = SERVICE_URI + "content/" + lockedFileId;
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
       ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, headers, updateContent, writer, null);
