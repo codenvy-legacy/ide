@@ -158,7 +158,7 @@ public class PullApplicationSourcesHandler extends HasBranchesPresenter
     */
    private void onPullSuccess(String remoteUrl)
    {
-      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.INFO));
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.pullSuccess(remoteUrl), Type.GIT));
       IDE.fireEvent(new RefreshBrowserEvent());
 
       if (callback != null)

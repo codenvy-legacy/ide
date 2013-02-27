@@ -32,13 +32,15 @@ import org.exoplatform.ide.git.client.GitExtension;
  */
 public class CommitRequestHandler extends RequestStatusHandlerBase
 {
+   private String comment;
 
    /**
     * @param projectName
     */
-   public CommitRequestHandler(String projectName)
+   public CommitRequestHandler(String projectName, String comment)
    {
       super(projectName);
+      this.comment = comment;
    }
 
    /**
@@ -48,7 +50,7 @@ public class CommitRequestHandler extends RequestStatusHandlerBase
    public void requestInProgress(String id)
    {
       Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(GitExtension.MESSAGES.commitStarted(projectName));
+      job.setStartMessage(GitExtension.MESSAGES.commitStarted(projectName, comment));
       IDE.fireEvent(new JobChangeEvent(job));
    }
 
@@ -59,7 +61,7 @@ public class CommitRequestHandler extends RequestStatusHandlerBase
    public void requestFinished(String id)
    {
       Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(GitExtension.MESSAGES.commitFinished(projectName));
+      job.setFinishMessage(GitExtension.MESSAGES.commitFinished(projectName, comment));
       IDE.fireEvent(new JobChangeEvent(job));
    }
 

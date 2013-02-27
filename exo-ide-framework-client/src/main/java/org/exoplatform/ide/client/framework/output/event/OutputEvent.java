@@ -71,7 +71,7 @@ public class OutputEvent extends GwtEvent<OutputHandler>
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<OutputHandler> getAssociatedType()
+   public Type<OutputHandler> getAssociatedType()
    {
       return TYPE;
    }

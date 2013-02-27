@@ -39,7 +39,6 @@ import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
 import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.shared.GitFile;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +55,7 @@ import java.util.List;
  */
 public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandler
 {
+   
    interface Display extends IsView
    {
       /**
@@ -131,7 +131,8 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    {
       if (makeSelectionCheck())
       {
-         getStatus(((ItemContext)selectedItems.get(0)).getProject().getId());
+//         getStatus(((ItemContext)selectedItems.get(0)).getProject().getId());
+         getStatus(getSelectedProject().getId());
       }
    }
 
@@ -175,14 +176,14 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                {
                   String errorMassage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.statusFailed();
-         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
       }
    }
 
@@ -199,7 +200,9 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             files.add(file.getPath());
          }
       }
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
       try
       {
          GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD",
@@ -210,7 +213,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                protected void onSuccess(String result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.GIT));
                   IDE.fireEvent(new RefreshBrowserEvent());
                }
 
@@ -220,14 +223,14 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                   String errorMassage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
                         .resetFilesFailed();
-                  IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
-         IDE.fireEvent(new OutputEvent(errorMassage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
       }
    }
 }

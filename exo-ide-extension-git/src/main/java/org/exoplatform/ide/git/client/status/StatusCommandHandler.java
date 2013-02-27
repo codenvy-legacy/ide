@@ -21,6 +21,7 @@ package org.exoplatform.ide.git.client.status;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -75,7 +76,8 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    {
       if (makeSelectionCheck())
       {
-         getStatusText(((ItemContext)selectedItems.get(0)).getProject(), selectedItems.get(0));
+//         getStatusText(((ItemContext)selectedItems.get(0)).getProject(), selectedItems.get(0));
+         getStatusText(getSelectedProject(), selectedItem);
       }
    }
 
@@ -121,7 +123,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                   }
                   String status = result.getWorkTreeStatus();
                   status = status.replace("\n", "<br>");
-                  IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.INFO));
+                  IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.GIT));
                }
 
                @Override
@@ -129,14 +131,14 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                {
                   String errorMessage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.statusFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
          String errorMessage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.statusFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
       }
    }
 

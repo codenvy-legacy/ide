@@ -63,7 +63,7 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
    {
       if (makeSelectionCheck())
       {
-         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         String workDir = ((ItemContext)selectedItem).getProject().getPath();
          askBeforeDelete(workDir);
       }
    }
@@ -94,7 +94,8 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
     */
    public void doDeleteRepository()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
       if (project == null)
          return;
       getChildren(project);
@@ -166,7 +167,8 @@ public class DeleteRepositoryCommandHandler extends GitPresenter implements Dele
             protected void onSuccess(String result)
             {
                IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.deleteGitRepositorySuccess(), Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+//               IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+               IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
             }
 
             @Override

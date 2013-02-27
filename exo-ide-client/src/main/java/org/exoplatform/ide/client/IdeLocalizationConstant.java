@@ -21,11 +21,13 @@ package org.exoplatform.ide.client;
 import com.google.gwt.i18n.client.Constants;
 
 /**
- * Interface to represent the constants contained in resource bundle: 'IdeLocalizationConstant.properties'.
+ * Created by The eXo Platform SAS.
  * 
  * @author <a href="mailto:vitaly.parfonov@gmail.com">Vitaly Parfonov</a>
  * @version $Id: $
  * 
+ * 
+ *          Interface to represent the constants contained in resource bundle: 'IdeLocalizationConstant.properties'.
  */
 
 public interface IdeLocalizationConstant extends Constants
@@ -90,7 +92,7 @@ public interface IdeLocalizationConstant extends Constants
    @Key("finishButton")
    String finishButton();
 
-   /* 
+   /*
     * Create File
     */
    @DefaultStringValue("New File")
@@ -105,9 +107,7 @@ public interface IdeLocalizationConstant extends Constants
    @Key("createFileFormNameEmpty")
    String createFileFormNameEmpty();
 
-   /* 
-    * Create Folder
-    */
+   /* Create Folder */
    @DefaultStringValue("Create Folder")
    @Key("createFolderFormTitle")
    String createFolderFormTitle();
@@ -450,6 +450,7 @@ public interface IdeLocalizationConstant extends Constants
    @Key("control.projectExplorer.prompt")
    String projectExplorerControlPrompt();
 
+
    @Key("control.restServicesDiscovery")
    String restServicesDiscoveryControl();
 
@@ -629,5 +630,23 @@ public interface IdeLocalizationConstant extends Constants
 
    @Key("progress.remove.finished.button")
    String progressRemoveAllFinished();
+
+   /**************************************************************************
+    * InviteGoogleContactsView
+    *************************************************************************/
+   @Key("view.inviteGoogleContacts.inviteButton.title")
+   String inviteButton();
+
+   /**************************************************************************
+    * UnsupportedBrowserView
+    *************************************************************************/
+   @Key("view.unsupportedBrowser.warning.title")
+   String warningTitle();
+
+   @Key("view.unsupportedBrowser.proposeBrowsers.title")
+   String proposeBrowsersTitile();
+
+   @Key("view.unsupportedBrowser.continueButton.title")
+   String continueButton();
 
 }

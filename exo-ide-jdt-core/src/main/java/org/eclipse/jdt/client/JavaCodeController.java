@@ -148,6 +148,10 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
       {
          activeFile = event.getFile();
 
+         if (activeFile.getProject().getProject() != null) 
+            return; //TODO: checking is multi module project
+         
+         
          if (!resolver.isProjectSupported(activeFile.getProject().getProjectType()))
             return;
          NAME_ENVIRONMENT = new NameEnvironment(activeFile.getProject().getId());
@@ -335,6 +339,9 @@ public class JavaCodeController implements EditorFileContentChangedHandler, Edit
    {
       if (event.getFile().getMimeType().equals(MimeType.APPLICATION_JAVA))
       {
+         if (event.getFile().getProject().getProject() != null) 
+            return; //TODO: checking is multi module project
+         
          if (resolver.isProjectSupported(event.getFile().getProject().getProjectType()))
          {
             needReparse.add(event.getFile().getId());

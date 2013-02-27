@@ -27,6 +27,8 @@ import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.shared.Project;
+import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -163,7 +165,11 @@ public class BuilderClient
    {
       URL url = new URL(baseURL + "/builder/maven/build");
       String buildId = run(url, vfs.exportZip(projectId));
-      LOG.info("EVENT#project-built# PROJECT#" + projectName + "# TYPE#" + projectType + "#");
+      if (projectId != null)
+      {
+         Project proj = (Project)vfs.getItem(projectId, PropertyFilter.ALL_FILTER);
+         LOG.info("EVENT#project-built# PROJECT#" + proj.getName() + "# TYPE#" + proj.getProjectType() + "#");
+      }
       startCheckingBuildStatus(buildId);
       return buildId;
    }

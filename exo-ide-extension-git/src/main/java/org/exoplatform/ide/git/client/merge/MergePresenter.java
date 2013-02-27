@@ -45,7 +45,6 @@ import org.exoplatform.ide.git.client.marshaller.MergeUnmarshaller;
 import org.exoplatform.ide.git.client.merge.Reference.RefType;
 import org.exoplatform.ide.git.shared.Branch;
 import org.exoplatform.ide.git.shared.MergeResult;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,7 +126,8 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
    {
       if (makeSelectionCheck())
       {
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         String projectId = getSelectedProject().getId();
          if (display == null)
          {
             display = GWT.create(Display.class);
@@ -238,7 +238,9 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
       {
          return;
       }
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
 
       try
       {
@@ -249,7 +251,7 @@ public class MergePresenter extends GitPresenter implements MergeHandler, ViewCl
                @Override
                protected void onSuccess(MergeResult result)
                {
-                  IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.INFO));
+                  IDE.fireEvent(new OutputEvent(formMergeMessage(result), Type.GIT));
                   IDE.getInstance().closeView(display.asView().getId());
                   IDE.fireEvent(new RefreshBrowserEvent());
                }

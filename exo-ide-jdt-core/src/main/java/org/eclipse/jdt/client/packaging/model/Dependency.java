@@ -18,32 +18,19 @@
  */
 package org.eclipse.jdt.client.packaging.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.exoplatform.ide.vfs.client.model.FileModel;
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class ResourceDirectoryItem
+public class Dependency
 {
 
    private String name;
-   
-   private FolderModel folder;
 
-   private List<PackageItem> packages = new ArrayList<PackageItem>();
-
-   private List<FileModel> files = new ArrayList<FileModel>();
-
-   public ResourceDirectoryItem(String name, FolderModel folder)
+   public Dependency(String name)
    {
       this.name = name;
-      this.folder = folder;
    }
 
    public String getName()
@@ -54,26 +41,6 @@ public class ResourceDirectoryItem
    public void setName(String name)
    {
       this.name = name;
-   }
-
-   public FolderModel getFolder()
-   {
-      return folder;
-   }
-
-   public void setFolder(FolderModel folder)
-   {
-      this.folder = folder;
-   }
-
-   public List<PackageItem> getPackages()
-   {
-      return packages;
-   }
-
-   public List<FileModel> getFiles()
-   {
-      return files;
    }
 
 }

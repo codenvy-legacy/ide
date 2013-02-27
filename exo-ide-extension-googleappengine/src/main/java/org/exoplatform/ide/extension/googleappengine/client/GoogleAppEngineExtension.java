@@ -54,7 +54,7 @@ import java.util.List;
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 15, 2012 5:13:13 PM anya $
- * 
+ *
  */
 public class GoogleAppEngineExtension extends Extension implements InitializeServicesHandler
 {
@@ -64,7 +64,7 @@ public class GoogleAppEngineExtension extends Extension implements InitializeSer
 
    public static final GAELocalization GAE_LOCALIZATION = GWT.create(GAELocalization.class);
 
-   private static final String ID = "GAE";
+   public static final String ID = "GAE";
 
    /**
     * @see org.exoplatform.ide.client.framework.module.Extension#initialize()

@@ -29,6 +29,8 @@ import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.container.xml.ValueParam;
 import org.exoplatform.ide.commons.JsonHelper;
 import org.exoplatform.ide.commons.ParsingResponseException;
+import org.exoplatform.ide.extension.ssh.server.SshKey;
+import org.exoplatform.ide.extension.ssh.server.SshKeyProvider;
 import org.exoplatform.ide.git.shared.Collaborators;
 import org.exoplatform.ide.git.shared.Credentials;
 import org.exoplatform.ide.git.shared.GitHubCredentials;
@@ -41,12 +43,16 @@ import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.security.ConversationState;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -60,6 +66,7 @@ public class GitHub
    private Pattern pattern = Pattern.compile("_");
 
    private final GitHubAuthenticator authenticator;
+   private final SshKeyProvider sshKeyProvider;
 
    private final OAuthTokenProvider oauthTokenProvider;
 
@@ -68,19 +75,22 @@ public class GitHub
    public GitHub(InitParams initParams,
                  GitHubAuthenticator authenticator,
                  OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService)
+                 InviteService inviteService,
+                 SshKeyProvider sshKeyProvider)
    {
-      this(readValueParam(initParams, "github-user"), authenticator, oauthTokenProvider, inviteService);
+      this(readValueParam(initParams, "github-user"), authenticator, oauthTokenProvider, inviteService, sshKeyProvider);
    }
 
    public GitHub(String userName,
                  GitHubAuthenticator authenticator,
                  OAuthTokenProvider oauthTokenProvider,
-                 InviteService inviteService)
+                 InviteService inviteService,
+                 SshKeyProvider sshKeyProvider)
    {
       this.userName = userName;
       this.authenticator = authenticator;
       this.oauthTokenProvider = oauthTokenProvider;
+      this.sshKeyProvider = sshKeyProvider;
       this.inviteService = inviteService;
    }
 
@@ -289,6 +299,41 @@ public class GitHub
 
    }
 
+   public void generateGitHubSshKey() throws IOException, VirtualFileSystemException, GitHubException, ParsingResponseException
+   {
+      String oauthToken = oauthTokenProvider.getToken("github", getUserId());
+      GitHubCredentials credentials = authenticator.readCredentials();
+
+      if (credentials == null && (oauthToken == null || oauthToken.isEmpty()))
+      {
+         throw new GitHubException(401, "Authentication required.\n", "text/plain");
+      }
+
+      generateGitHubSshKey(credentials, oauthToken);
+   }
+
+   private void generateGitHubSshKey(GitHubCredentials credentials, String oauthToken)
+      throws IOException, VirtualFileSystemException, GitHubException, ParsingResponseException
+   {
+      String url = "https://api.github.com/user/keys";
+      url += (oauthToken != null) ? "?access_token=" + oauthToken : "";
+
+      sshKeyProvider.removeKeys("github.com");
+      sshKeyProvider.genKeyPair("github.com", null, null);
+      SshKey sshKey = sshKeyProvider.getPublicKey("github.com");
+
+      String keyContent = new String(sshKey.getBytes());
+
+      Map<String, String> params = new HashMap<String, String>(2);
+      params.put("title", keyContent.split("\\s")[2]);
+      params.put("key", keyContent);
+
+      String jsonRequest = JsonHelper.toJson(params);
+
+      doJsonRequest(url, "POST", credentials, 200, jsonRequest);
+
+   }
+
    /**
     * Formats the keys of JSON array objects for them to be represented as beans.
     *
@@ -376,6 +421,23 @@ public class GitHub
    private String doJsonRequest(String url, String method, GitHubCredentials credentials, int success)
       throws IOException, GitHubException
    {
+      return doJsonRequest(url, method, credentials, success, null);
+   }
+
+   /**
+    * Do json request (without authorization!)
+    *
+    * @param url the request url
+    * @param method the request method
+    * @param success expected success code of request
+    * @param postData post data represented by json string
+    * @return response
+    * @throws IOException
+    * @throws GitHubException
+    */
+   private String doJsonRequest(String url, String method, GitHubCredentials credentials, int success, String postData)
+      throws IOException, GitHubException
+   {
       HttpURLConnection http = null;
       try
       {
@@ -386,6 +448,26 @@ public class GitHub
          if (credentials != null)
          {
             authenticate(credentials, http);
+         }
+
+         if (postData != null && !postData.isEmpty())
+         {
+            http.setRequestProperty("Content-Type", "application/json");
+            http.setDoOutput(true);
+
+            BufferedWriter writer = null;
+            try
+            {
+               writer = new BufferedWriter(new OutputStreamWriter(http.getOutputStream()));
+               writer.write(postData);
+            }
+            finally
+            {
+               if (writer != null)
+               {
+                  writer.close();
+               }
+            }
          }
 
          if (http.getResponseCode() != success)

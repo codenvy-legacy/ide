@@ -350,35 +350,6 @@
    ***************************************************************************************
    -->
 
-   <!-- Cloudbees -->
-   <component>
-      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
-   </component>
-   
-   <component>
-      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
-      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
-      <init-params>
-         <value-param>
-            <name>workspace</name>
-            <value>production</value>
-         </value-param>
-         <value-param>
-            <name>user-config</name>
-            <value>/ide-home/users/</value>
-         </value-param>
-         <value-param>
-            <name>jenkins-user</name>
-            <value>support@cloud-ide.com</value>
-         </value-param>
-         <value-param>
-            <name>jenkins-password</name>
-            <value>9zpkuZ3X</value>
-         </value-param>
-      </init-params>
-   </component>
-
-   <!-- End Cloudbees -->
 
    <!-- CloudFoundry -->
 

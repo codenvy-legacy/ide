@@ -129,7 +129,7 @@ public abstract class HasBranchesPresenter extends GitPresenter
                   String errorMessage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
                         .branchesListFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                }
             });
       }

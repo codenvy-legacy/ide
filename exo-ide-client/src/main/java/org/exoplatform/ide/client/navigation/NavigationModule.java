@@ -128,6 +128,7 @@ public class NavigationModule implements InitializeServicesHandler
 
       IDE.getInstance().addControl(new NavigatorStatusControl(), Docking.STATUSBAR);
 
+//      new CreateFileCommandHandler();
       new CreateFilePresenter();
       new CreateFileFromTemplatePresenter();
       new OpenFileCommandHandler();

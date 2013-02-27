@@ -40,7 +40,6 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.LogsResponse;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for application's logs view. View must be pointed in Views.gwt.xml file.
@@ -153,9 +152,11 @@ public class LogsPresenter extends GitPresenter implements ShowLogsHandler, Logg
     */
    protected void getLogs()
    {
-      int logLines =
-         (display != null && isCorrectValue()) ? Integer.parseInt(display.getLogLinesCount().getValue()) : 0;
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      int logLines = (display != null && isCorrectValue()) ? Integer.parseInt(display.getLogLinesCount().getValue()) : 0;
+
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          HerokuClientService.getInstance().logs(null, vfs.getId(), projectId, logLines,

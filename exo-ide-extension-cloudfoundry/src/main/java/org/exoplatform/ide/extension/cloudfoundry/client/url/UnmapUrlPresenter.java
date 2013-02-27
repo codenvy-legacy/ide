@@ -34,7 +34,6 @@ import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -47,7 +46,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -60,6 +58,7 @@ import java.util.List;
  */
 public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, ViewClosedHandler
 {
+   
    interface Display extends IsView
    {
       HasValue<String> getMapUrlField();
@@ -164,7 +163,8 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
    private void mapUrl(final String url)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
 
       try
       {
@@ -223,7 +223,9 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
    private void unregisterUrl(final String url)
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          CloudFoundryClientService.getInstance().unmapUrl(vfs.getId(), projectId, null, null, url,
@@ -251,15 +253,6 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
       }
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
-
    LoggedInHandler appInfoLoggedInHandler = new LoggedInHandler()
    {
       @Override
@@ -284,7 +277,8 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
 
    private void getAppRegisteredUrls()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
 
       try
       {
@@ -321,7 +315,8 @@ public class UnmapUrlPresenter extends GitPresenter implements UnmapUrlHandler, 
          display = null;
          if (isBindingChanged)
          {
-            String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//            String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+            String projectId = getSelectedProject().getId();
             IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
          }
       }

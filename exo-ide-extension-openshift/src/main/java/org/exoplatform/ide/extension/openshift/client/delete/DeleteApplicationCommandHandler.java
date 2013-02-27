@@ -40,7 +40,6 @@ import org.exoplatform.ide.extension.openshift.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.openshift.client.login.LoginEvent;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for deleting application. Following steps are done:<br>
@@ -83,7 +82,9 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void getApplicationsInfo()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          AutoBean<AppInfo> appInfo = OpenShiftExtension.AUTO_BEAN_FACTORY.appInfo();
@@ -175,7 +176,9 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void doDeleteApplication(final String name)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
+      
       try
       {
          OpenShiftClientService.getInstance().destroyApplication(name, vfs.getId(), projectId,
@@ -188,7 +191,8 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
                   IDE.fireEvent(new OutputEvent(
                      OpenShiftExtension.LOCALIZATION_CONSTANT.deleteApplicationSuccess(name), Type.INFO));
                   IDE.fireEvent(new ApplicationDeletedEvent(vfs.getId(), projectId));
-                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+//                  IDE.fireEvent(new RefreshBrowserEvent(((ItemContext)selectedItems.get(0)).getProject()));
+                  IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
                }
 
                /**

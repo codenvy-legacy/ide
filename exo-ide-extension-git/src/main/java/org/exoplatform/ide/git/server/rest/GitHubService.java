@@ -112,4 +112,11 @@ public class GitHubService
    {
       return oauthTokenProvider.getToken("github", userId);
    }
+
+   @POST
+   @Path("ssh/generate")
+   public void updateSSHKey() throws VirtualFileSystemException, IOException, GitHubException, ParsingResponseException
+   {
+      github.generateGitHubSshKey();
+   }
 }

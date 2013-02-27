@@ -214,8 +214,8 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                {
                   String errorMessage =
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.cloneFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                        : GitExtension.MESSAGES.cloneFailed(remoteUri);
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                }
             });
       }
@@ -224,8 +224,8 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
          e.printStackTrace();
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .cloneFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               .cloneFailed(remoteUri);
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 
@@ -253,7 +253,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, remoteUri);
                }
             });
       }
@@ -266,7 +266,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
    /**
     * Get the necessary parameters values and call the clone repository method (over HTTP).
     */
-   private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder)
+   private void cloneRepositoryREST(final String remoteUri, String remoteName, final FolderModel folder)
    {
       try
       {
@@ -282,13 +282,13 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, remoteUri);
                }
             });
       }
       catch (RequestException e)
       {
-         handleError(e);
+         handleError(e, remoteUri);
       }
    }
 
@@ -299,7 +299,7 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
     */
    private void onCloneSuccess(FolderModel folder, RepoInfo repoInfo)
    {
-      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(repoInfo.getRemoteUri()), Type.GIT));
       //TODO: not good, comment temporary need found other way
       // for inviting collaborators
       // showInvitation(repoInfo.getRemoteUri());
@@ -310,11 +310,12 @@ public class CodeNowHandler implements VfsChangedHandler, StartWithInitParamsHan
       IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), properties));
    }
 
-   private void handleError(Throwable e)
+   private void handleError(Throwable e, String remoteUri)
    {
       String errorMessage =
-         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.cloneFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+            .cloneFailed(remoteUri);
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
 }

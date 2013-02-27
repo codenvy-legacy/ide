@@ -41,7 +41,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.paas.DeployResultHandler;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectCreatedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
@@ -61,9 +60,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * Presenter for deploying samples imported from GitHub.
@@ -351,7 +348,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
    /**
     * Get the necessary parameters values and call the clone repository method (over WebSocket or HTTP).
     */
-   private void cloneFolder(ProjectData repo, final FolderModel folder)
+   private void cloneFolder(final ProjectData repo, final FolderModel folder)
    {
       String remoteUri = repo.getRepositoryUrl();
       if (!remoteUri.endsWith(".git"))
@@ -374,7 +371,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, repo.getRepositoryUrl());
                }
             });
       }
@@ -387,7 +384,7 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
    /**
     * Get the necessary parameters values and call the clone repository method (over HTTP).
     */
-   private void cloneFolderREST(ProjectData repo, final FolderModel folder, String remoteUri)
+   private void cloneFolderREST(final ProjectData repo, final FolderModel folder, String remoteUri)
    {
       try
       {
@@ -403,13 +400,13 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, repo.getRepositoryUrl());
                }
             });
       }
       catch (RequestException e)
       {
-         handleError(e);
+         handleError(e, repo.getRepositoryUrl());
       }
    }
 
@@ -457,15 +454,16 @@ public class DeploySamplesPresenter implements ViewClosedHandler, ImportSampleSt
     */
    private void onRepositoryCloned()
    {
-      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(data.getRepositoryUrl()), Type.GIT));
       convertToProject(PROJECT_ROOT_FOLDER);
    }
 
-   private void handleError(Throwable t)
+   private void handleError(Throwable t, String remoteUri)
    {
       String errorMessage =
-         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES
+            .cloneFailed(remoteUri);
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
    /**

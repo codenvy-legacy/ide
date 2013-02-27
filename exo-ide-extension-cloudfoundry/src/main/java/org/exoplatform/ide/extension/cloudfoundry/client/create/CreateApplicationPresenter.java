@@ -31,10 +31,8 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -55,11 +53,9 @@ import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltEvent;
 import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
-import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemType;
@@ -306,42 +302,44 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      selectedItems = event.getSelectedItems();
-   }
-
-   /**
     * @see org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationHandler#onCreateApplication(org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent)
     */
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      if (selectedItems == null || selectedItems.size() == 0)
+//      if (selectedItems == null || selectedItems.size() == 0)
+//      {
+//         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
+//         IDE.fireEvent(new ExceptionThrownEvent(msg));
+//         return;
+//      }
+//      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
+//      {
+//         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
+//         return;
+//      }
+//
+//      if ((selectedItems.get(0) instanceof ItemContext) && ((ItemContext)selectedItems.get(0)).getProject() != null)
+//      {
+//         checkIsProject(((ItemContext)selectedItems.get(0)).getProject());
+//      }
+//      else
+//      {
+//         String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
+//         IDE.fireEvent(new ExceptionThrownEvent(msg));
+//         return;
+//      }
+      
+      ProjectModel project = getSelectedProject();
+      
+      if (project == null)
       {
          String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
          IDE.fireEvent(new ExceptionThrownEvent(msg));
          return;
       }
-      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
-      {
-         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
-         return;
-      }
-
-      if ((selectedItems.get(0) instanceof ItemContext) && ((ItemContext)selectedItems.get(0)).getProject() != null)
-      {
-         checkIsProject(((ItemContext)selectedItems.get(0)).getProject());
-      }
-      else
-      {
-         String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
-         IDE.fireEvent(new ExceptionThrownEvent(msg));
-         return;
-      }
+      
+      checkIsProject(project);
    }
 
    /**
@@ -403,7 +401,8 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
          }
       };
 
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -492,7 +491,10 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
             createApplication(appData);
          }
       };
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      
+//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = getSelectedProject();
+      
       AutoBean<CloudFoundryApplication> cloudFoundryApplication =
          CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
       AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
@@ -834,7 +836,9 @@ public class CreateApplicationPresenter extends GitPresenter implements CreateAp
                      display.getServerField().setValue(servers[0]);
                      getFrameworks(servers[0]);
                   }
-                  display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
+                  
+//                  display.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
+                  display.getNameField().setValue(getSelectedProject().getName());
                   updateUrlField();
                }
 
