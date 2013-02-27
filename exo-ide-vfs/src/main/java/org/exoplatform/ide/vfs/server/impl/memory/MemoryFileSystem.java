@@ -1426,12 +1426,11 @@ public class MemoryFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException("Item is not a project. ");
       }
-      if (!listeners.addEventListener(
+      if (listeners.addEventListener(
          ProjectUpdateEventFilter.newFilter(vfsId, (MemoryFolder)object), new ProjectUpdateListener(projectId)))
       {
-         throw new InvalidArgumentException("Project '" + object.getName() + "' is under watching already. ");
+         object.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:lastUpdateTime", "0")));
       }
-      object.updateProperties(Arrays.<Property>asList(new PropertyImpl("vfs:lastUpdateTime", "0")));
    }
 
    @Path("watch/stop/{projectId}")

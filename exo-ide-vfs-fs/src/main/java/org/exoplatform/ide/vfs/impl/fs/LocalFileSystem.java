@@ -900,15 +900,13 @@ public class LocalFileSystem implements VirtualFileSystem
       {
          throw new InvalidArgumentException(String.format("Item '%s' is not a project. ", project.getPath()));
       }
-      if (!listeners.addEventListener(
+      if (listeners.addEventListener(
          ProjectUpdateEventFilter.newFilter(this, project), new ProjectUpdateListener(projectId)))
       {
-         throw new InvalidArgumentException(
-            String.format("Project '%s' is under watching already. ", project.getPath()));
+         List<Property> properties = new ArrayList<Property>(1);
+         properties.add(new PropertyImpl("vfs:lastUpdateTime", "0"));
+         project.updateProperties(properties, null);
       }
-      List<Property> properties = new ArrayList<Property>(1);
-      properties.add(new PropertyImpl("vfs:lastUpdateTime", "0"));
-      project.updateProperties(properties, null);
    }
 
    @Path("watch/stop/{projectId}")
