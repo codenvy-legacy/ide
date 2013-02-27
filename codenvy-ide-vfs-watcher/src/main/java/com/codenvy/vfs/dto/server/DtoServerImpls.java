@@ -43,7 +43,7 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "93d2a35d048bd2fab3599159aaad30fb7c986e70";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "b05ff1873e61366aa9dcddb6eee35176ab925a1e";
 
   public static class ItemImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.vfs.dto.Item, JsonSerializable {
 
@@ -61,8 +61,6 @@ public class DtoServerImpls {
     private boolean _hasPath;
     protected java.lang.String parentId;
     private boolean _hasParentId;
-    protected long creationDate;
-    private boolean _hasCreationDate;
     protected java.lang.String mimeType;
     private boolean _hasMimeType;
     protected java.util.List<PropertyImpl> properties;
@@ -142,21 +140,6 @@ public class DtoServerImpls {
     public ItemImpl setParentId(java.lang.String v) {
       _hasParentId = true;
       parentId = v;
-      return this;
-    }
-
-    public boolean hasCreationDate() {
-      return _hasCreationDate;
-    }
-
-    @Override
-    public long getCreationDate() {
-      return creationDate;
-    }
-
-    public ItemImpl setCreationDate(long v) {
-      _hasCreationDate = true;
-      creationDate = v;
       return this;
     }
 
@@ -288,14 +271,6 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasCreationDate != other._hasCreationDate) {
-        return false;
-      }
-      if (this._hasCreationDate) {
-        if (this.creationDate != other.creationDate) {
-          return false;
-        }
-      }
       if (this._hasMimeType != other._hasMimeType) {
         return false;
       }
@@ -331,7 +306,6 @@ public class DtoServerImpls {
       hash = hash * 31 + (_hasItemType ? itemType.hashCode() : 0);
       hash = hash * 31 + (_hasPath ? path.hashCode() : 0);
       hash = hash * 31 + (_hasParentId ? parentId.hashCode() : 0);
-      hash = hash * 31 + (_hasCreationDate ? java.lang.Long.valueOf(creationDate).hashCode() : 0);
       hash = hash * 31 + (_hasMimeType ? mimeType.hashCode() : 0);
       hash = hash * 31 + (_hasProperties ? properties.hashCode() : 0);
       hash = hash * 31 + (_hasLinks ? links.hashCode() : 0);
@@ -356,9 +330,6 @@ public class DtoServerImpls {
 
       JsonElement parentIdOut = (parentId == null) ? JsonNull.INSTANCE : new JsonPrimitive(parentId);
       result.add(parentIdOut);
-
-      JsonPrimitive creationDateOut = new JsonPrimitive(creationDate);
-      result.add(creationDateOut);
 
       JsonElement mimeTypeOut = (mimeType == null) ? JsonNull.INSTANCE : new JsonPrimitive(mimeType);
       result.add(mimeTypeOut);
@@ -431,19 +402,13 @@ public class DtoServerImpls {
       }
 
       if (5 < json.size()) {
-        JsonElement creationDateIn = json.get(5);
-        long creationDateOut = creationDateIn.getAsLong();
-        dto.setCreationDate(creationDateOut);
-      }
-
-      if (6 < json.size()) {
-        JsonElement mimeTypeIn = json.get(6);
+        JsonElement mimeTypeIn = json.get(5);
         java.lang.String mimeTypeOut = gson.fromJson(mimeTypeIn, java.lang.String.class);
         dto.setMimeType(mimeTypeOut);
       }
 
-      if (7 < json.size()) {
-        JsonElement propertiesIn = json.get(7);
+      if (6 < json.size()) {
+        JsonElement propertiesIn = json.get(6);
         java.util.ArrayList<PropertyImpl> propertiesOut = null;
         if (propertiesIn != null && !propertiesIn.isJsonNull()) {
           propertiesOut = new java.util.ArrayList<PropertyImpl>();
@@ -457,8 +422,8 @@ public class DtoServerImpls {
         dto.setProperties(propertiesOut);
       }
 
-      if (8 < json.size()) {
-        JsonElement linksIn = json.get(8);
+      if (7 < json.size()) {
+        JsonElement linksIn = json.get(7);
         java.util.HashMap<String, LinkImpl> linksOut = null;
         if (linksIn != null && !linksIn.isJsonNull()) {
           linksOut = new java.util.HashMap<String, LinkImpl>();
@@ -1179,10 +1144,27 @@ public class DtoServerImpls {
       super(type);
     }
 
+    protected java.lang.String projectId;
+    private boolean _hasProjectId;
     protected java.lang.String projectPath;
     private boolean _hasProjectPath;
     protected java.lang.String vfsId;
     private boolean _hasVfsId;
+
+    public boolean hasProjectId() {
+      return _hasProjectId;
+    }
+
+    @Override
+    public java.lang.String projectId() {
+      return projectId;
+    }
+
+    public ProjectClosedDtoImpl setProjectId(java.lang.String v) {
+      _hasProjectId = true;
+      projectId = v;
+      return this;
+    }
 
     public boolean hasProjectPath() {
       return _hasProjectPath;
@@ -1223,6 +1205,14 @@ public class DtoServerImpls {
         return false;
       }
       ProjectClosedDtoImpl other = (ProjectClosedDtoImpl) o;
+      if (this._hasProjectId != other._hasProjectId) {
+        return false;
+      }
+      if (this._hasProjectId) {
+        if (!this.projectId.equals(other.projectId)) {
+          return false;
+        }
+      }
       if (this._hasProjectPath != other._hasProjectPath) {
         return false;
       }
@@ -1245,6 +1235,7 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
+      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
       hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
       return hash;
@@ -1253,6 +1244,9 @@ public class DtoServerImpls {
     @Override
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
+
+      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+      result.add("projectId", projectIdOut);
 
       JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
       result.add("projectPath", projectPathOut);
@@ -1280,6 +1274,12 @@ public class DtoServerImpls {
 
       ProjectClosedDtoImpl dto = new ProjectClosedDtoImpl();
       JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("projectId")) {
+        JsonElement projectIdIn = json.get("projectId");
+        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+        dto.setProjectId(projectIdOut);
+      }
 
       if (json.has("projectPath")) {
         JsonElement projectPathIn = json.get("projectPath");
@@ -1314,10 +1314,27 @@ public class DtoServerImpls {
       super(type);
     }
 
+    protected java.lang.String projectId;
+    private boolean _hasProjectId;
     protected java.lang.String projectPath;
     private boolean _hasProjectPath;
     protected java.lang.String vfsId;
     private boolean _hasVfsId;
+
+    public boolean hasProjectId() {
+      return _hasProjectId;
+    }
+
+    @Override
+    public java.lang.String projectId() {
+      return projectId;
+    }
+
+    public ProjectOpenedDtoImpl setProjectId(java.lang.String v) {
+      _hasProjectId = true;
+      projectId = v;
+      return this;
+    }
 
     public boolean hasProjectPath() {
       return _hasProjectPath;
@@ -1358,6 +1375,14 @@ public class DtoServerImpls {
         return false;
       }
       ProjectOpenedDtoImpl other = (ProjectOpenedDtoImpl) o;
+      if (this._hasProjectId != other._hasProjectId) {
+        return false;
+      }
+      if (this._hasProjectId) {
+        if (!this.projectId.equals(other.projectId)) {
+          return false;
+        }
+      }
       if (this._hasProjectPath != other._hasProjectPath) {
         return false;
       }
@@ -1380,6 +1405,7 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
+      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
       hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
       return hash;
@@ -1388,6 +1414,9 @@ public class DtoServerImpls {
     @Override
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
+
+      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+      result.add("projectId", projectIdOut);
 
       JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
       result.add("projectPath", projectPathOut);
@@ -1415,6 +1444,12 @@ public class DtoServerImpls {
 
       ProjectOpenedDtoImpl dto = new ProjectOpenedDtoImpl();
       JsonObject json = jsonElem.getAsJsonObject();
+
+      if (json.has("projectId")) {
+        JsonElement projectIdIn = json.get("projectId");
+        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+        dto.setProjectId(projectIdOut);
+      }
 
       if (json.has("projectPath")) {
         JsonElement projectPathIn = json.get("projectPath");

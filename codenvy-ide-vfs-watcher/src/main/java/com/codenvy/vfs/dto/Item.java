@@ -99,12 +99,8 @@ public interface Item extends ServerToClientDto, CompactJsonDto
    @SerializationIndex(5)
    String getParentId();
 
-   /** @return creation date */
-   @SerializationIndex(6)
-   long getCreationDate();
-
    /** @return media type */
-   @SerializationIndex(7)
+   @SerializationIndex(6)
    String getMimeType();
 
    /**
@@ -112,7 +108,7 @@ public interface Item extends ServerToClientDto, CompactJsonDto
     *
     * @return properties. If there is no properties then empty list returned, never <code>null</code>
     */
-   @SerializationIndex(8)
+   @SerializationIndex(7)
    JsonArray<Property> getProperties();
 
 
@@ -121,7 +117,7 @@ public interface Item extends ServerToClientDto, CompactJsonDto
     *
     * @return links map. Never <code>null</code> but empty map instead
     */
-   @SerializationIndex(9)
+   @SerializationIndex(8)
    JsonStringMap<Link> getLinks();
 
 }

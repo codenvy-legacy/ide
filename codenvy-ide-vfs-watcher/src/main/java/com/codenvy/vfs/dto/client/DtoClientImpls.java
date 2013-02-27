@@ -28,7 +28,7 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "93d2a35d048bd2fab3599159aaad30fb7c986e70";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "b05ff1873e61366aa9dcddb6eee35176ab925a1e";
 
 
   public static class ItemImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.vfs.dto.Item {
@@ -106,59 +106,45 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native long getCreationDate() /*-{
+    public final native java.lang.String getMimeType() /*-{
       return this[5];
     }-*/;
 
-    public final native ItemImpl setCreationDate(long creationDate) /*-{
-      this[5] = creationDate;
-      return this;
-    }-*/;
-
-    public final native boolean hasCreationDate() /*-{
-      return this.hasOwnProperty(5);
-    }-*/;
-
-    @Override
-    public final native java.lang.String getMimeType() /*-{
-      return this[6];
-    }-*/;
-
     public final native ItemImpl setMimeType(java.lang.String mimeType) /*-{
-      this[6] = mimeType;
+      this[5] = mimeType;
       return this;
     }-*/;
 
     public final native boolean hasMimeType() /*-{
-      return this.hasOwnProperty(6);
+      return this.hasOwnProperty(5);
     }-*/;
 
     @Override
     public final native org.exoplatform.ide.json.shared.JsonArray<com.codenvy.vfs.dto.Property> getProperties() /*-{
-      return this[7];
+      return this[6];
     }-*/;
 
     public final native ItemImpl setProperties(org.exoplatform.ide.json.shared.JsonArray<com.codenvy.vfs.dto.Property> properties) /*-{
-      this[7] = properties;
+      this[6] = properties;
       return this;
     }-*/;
 
     public final native boolean hasProperties() /*-{
-      return this.hasOwnProperty(7);
+      return this.hasOwnProperty(6);
     }-*/;
 
     @Override
     public final native org.exoplatform.ide.json.shared.JsonStringMap<com.codenvy.vfs.dto.Link> getLinks() /*-{
-      return this[8];
+      return this[7];
     }-*/;
 
     public final native ItemImpl setLinks(org.exoplatform.ide.json.shared.JsonStringMap<com.codenvy.vfs.dto.Link> links) /*-{
-      this[8] = links;
+      this[7] = links;
       return this;
     }-*/;
 
     public final native boolean hasLinks() /*-{
-      return this.hasOwnProperty(8);
+      return this.hasOwnProperty(7);
     }-*/;
 
     public static native ItemImpl make() /*-{
@@ -358,6 +344,20 @@ public class DtoClientImpls {
     protected ProjectClosedDtoImpl() {}
 
     @Override
+    public final native java.lang.String projectId() /*-{
+      return this["projectId"];
+    }-*/;
+
+    public final native ProjectClosedDtoImpl setProjectId(java.lang.String projectId) /*-{
+      this["projectId"] = projectId;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectId() /*-{
+      return this.hasOwnProperty("projectId");
+    }-*/;
+
+    @Override
     public final native java.lang.String projectPath() /*-{
       return this["projectPath"];
     }-*/;
@@ -394,6 +394,20 @@ public class DtoClientImpls {
 
   public static class ProjectOpenedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.vfs.dto.ProjectOpenedDto {
     protected ProjectOpenedDtoImpl() {}
+
+    @Override
+    public final native java.lang.String projectId() /*-{
+      return this["projectId"];
+    }-*/;
+
+    public final native ProjectOpenedDtoImpl setProjectId(java.lang.String projectId) /*-{
+      this["projectId"] = projectId;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectId() /*-{
+      return this.hasOwnProperty("projectId");
+    }-*/;
 
     @Override
     public final native java.lang.String projectPath() /*-{

@@ -30,5 +30,7 @@ public interface ProjectClosedDto extends ClientToServerDto
 {
    String projectPath();
 
+   String projectId();
+
    String vfsId();
 }

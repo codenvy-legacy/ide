@@ -29,6 +29,10 @@ import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
+import org.exoplatform.ide.communication.MessageFilter;
+import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
+import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.json.client.Jso;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -41,13 +45,16 @@ public class VfsWatcherExtension extends Extension implements MainSocketOpenedHa
 
    private HandlerRegistration handlerRegistration;
 
+   private MessageFilter messageFilter = new MessageFilter();
+
+   private VfsApi vfsApi;
+
    /**
     * {@inheritDoc}
     */
    @Override
    public void initialize()
    {
-//      IDE.eventBus().addHandler(MainSocketOpenedEvent.TYPE,this);
       IDE.eventBus().addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
@@ -76,11 +83,15 @@ public class VfsWatcherExtension extends Extension implements MainSocketOpenedHa
 
    private void subscribe()
    {
+      vfsApi = new VfsApi(IDE.messageBus());
+      new VfsWatcher(messageFilter, IDE.eventBus(), vfsApi);
       IDE.messageBus().subscribe("vfs_watcher." + userInfo.getClientId(),new MessageHandler()
       {
          @Override
          public void onMessage(String message)
          {
+            ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
+            messageFilter.dispatchMessage(dto);
          }
       });
    }
