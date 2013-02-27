@@ -256,10 +256,6 @@ public class Beanstalk extends AWSClient
 
       // Be sure project is accessible before start creation an application.
       // VirtualFileSystemException thrown if something wrong.
-      Item itm = vfs.getItem(projectId, PropertyFilter.NONE_FILTER);
-      LOG.info("EVENT#application-created# PROJECT#" + itm.getName() + "# TYPE#"
-         + itm.getPropertyValue("vfs:projectType") + "# PAAS#Amazon#");
-
       AWSElasticBeanstalk beanstalkClient = getBeanstalkClient();
       AmazonS3 s3Client = getS3Client();
       try
