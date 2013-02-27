@@ -142,7 +142,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>${gwt.maven.plugin.version}</version>
 				<configuration>
 					<module>org.exoplatform.ide.git.GitTest</module>
 					<logLevel>ERROR</logLevel>
