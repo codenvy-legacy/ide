@@ -148,6 +148,21 @@ public class VirtualFileSystem
       AsyncRequest.build(RequestBuilder.GET, folder.getLinkByRelation(Link.REL_CHILDREN).getHref() + "?" + param)
          .loader(emptyLoader).send(callback);
    }
+
+   /**
+    * Get project tree.
+    * 
+    * @param project
+    * @param callback
+    * @throws RequestException
+    */
+   public void getTree(String id, AsyncRequestCallback<Folder> callback) throws RequestException
+   {
+      String url = info.getUrlTemplates().get(Link.REL_TREE).getHref();
+      url = URL.decode(url).replace("[id]", id);
+      url += "?" + "propertyFilter=" + PropertyFilter.ALL;
+      AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(emptyLoader).send(callback);
+   }   
    
    /**
     * Get project tree.

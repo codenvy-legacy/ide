@@ -36,7 +36,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.project.ApplicationInfo
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -89,7 +88,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void getOldMemoryValue()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
       try
       {
          AutoBean<CloudFoundryApplication> cloudFoundryApplication =
@@ -163,7 +163,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void updateMemory(final int memory)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
 
       try
       {
@@ -208,7 +209,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
 
    private void getOldInstancesValue()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
 
       try
       {
@@ -291,7 +293,8 @@ public class UpdatePropertiesPresenter extends GitPresenter implements UpdateMem
     */
    private void updateInstances(final String instancesExpression)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
 
       String encodedExp = URL.encodePathSegment(instancesExpression);
 

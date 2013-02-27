@@ -29,7 +29,7 @@ import org.exoplatform.ide.vfs.client.model.FolderModel;
  * @version $
  * 
  */
-public class PackageItem
+public class Package
 {
 
    private String packageName;
@@ -40,7 +40,7 @@ public class PackageItem
 
    private List<FileModel> files = new ArrayList<FileModel>();
 
-   public PackageItem(String packageName, String resourceDirectory, FolderModel packageFolder)
+   public Package(String packageName, String resourceDirectory, FolderModel packageFolder)
    {
       this.packageName = packageName;
       this.resourceDirectory = resourceDirectory;

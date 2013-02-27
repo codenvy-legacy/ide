@@ -38,7 +38,6 @@ import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 /**
  * Presenter for updating application on CloudBees.
@@ -123,7 +122,9 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
     */
    protected void getApplicationInfo()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
@@ -160,9 +161,14 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
    private void doUpdate()
    {
       String projectId = null;
-      if (((ItemContext)selectedItems.get(0)).getProject() != null)
+
+//      if (((ItemContext)selectedItems.get(0)).getProject() != null)
+//      {
+//         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      }
+      if (getSelectedProject() != null)
       {
-         projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         projectId = getSelectedProject().getId();
       }
 
       try

@@ -18,14 +18,14 @@
  */
 package org.exoplatform.ide.client.output;
 
-import org.exoplatform.ide.client.framework.output.event.OutputMessage;
-
 import com.google.gwt.event.dom.client.MouseOutEvent;
 import com.google.gwt.event.dom.client.MouseOutHandler;
 import com.google.gwt.event.dom.client.MouseOverEvent;
 import com.google.gwt.event.dom.client.MouseOverHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.HTML;
+
+import org.exoplatform.ide.client.framework.output.event.OutputMessage;
 
 /**
  * Created by The eXo Platform SAS .
@@ -40,6 +40,8 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
    private static final String LOG_COLOR = "#000077";
 
    private static final String INFO_COLOR = "#007700";
+
+   private static final String GIT_COLOR = "#A76531";
 
    private static final String WARNING_COLOR = "#AA0077";
 
@@ -82,6 +84,10 @@ public class OutputRecord extends HTML implements MouseOutHandler, MouseOverHand
       {
          setContents("<font color=\"" + OUTPUT_COLOR + "\">[" + OutputMessage.Type.OUTPUT.name() + "] "
             + message.getMessage() + "</font>");
+      }
+      else if (message.getType() == OutputMessage.Type.GIT)
+      {
+         setContents("<font color=\"" + GIT_COLOR + "\">" + message.getMessage() + "</font>");
       }
 
       if (odd)

@@ -22,14 +22,17 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.control.IDEControl;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorMoveLineDownEvent;
+import org.exoplatform.ide.editor.ckeditor.CKEditor;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class MoveLineDownControl extends SimpleControl implements IDEControl
+public class MoveLineDownControl extends SimpleControl implements IDEControl, EditorActiveFileChangedHandler
 {
    
    public static final String ID = "Edit/Move Line Down";
@@ -49,8 +52,18 @@ public class MoveLineDownControl extends SimpleControl implements IDEControl
    @Override
    public void initialize()
    {
-      setVisible(true);
-      setEnabled(true);
+      IDE.addHandler(EditorActiveFileChangedEvent.TYPE, this);
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedHandler#onEditorActiveFileChanged(org.exoplatform.ide.client.framework.editor.event.EditorActiveFileChangedEvent)
+    */
+   @Override
+   public void onEditorActiveFileChanged(EditorActiveFileChangedEvent event)
+   {
+      boolean isEnabled = event.getFile() != null && event.getEditor() != null && !(event.getEditor() instanceof CKEditor);
+      setVisible(isEnabled);
+      setEnabled(isEnabled);
    }   
 
 }

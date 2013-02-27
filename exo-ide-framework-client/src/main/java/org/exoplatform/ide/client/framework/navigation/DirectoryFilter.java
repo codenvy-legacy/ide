@@ -60,10 +60,14 @@ public class DirectoryFilter
 
       for (Item item : items)
       {
-         if (parts == null || parts.length == 0 || !matchWithPattern(item.getName()))
+         if (!matchWithPattern(item.getName()))
          {
             result.add(item);
          }
+//         if (parts == null || parts.length == 0 || !matchWithPattern(item.getName()))
+//         {
+//            result.add(item);
+//         }
       }
 
       return result;
@@ -71,6 +75,16 @@ public class DirectoryFilter
 
    public boolean matchWithPattern(String text)
    {
+      if (parts == null)
+      {
+         return false;
+      }
+      
+      if (parts.length == 0)
+      {
+         return false;
+      }
+      
       try
       {
          for (String p : parts)

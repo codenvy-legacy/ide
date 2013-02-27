@@ -41,7 +41,6 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.RemoteListUnmarshaller;
 import org.exoplatform.ide.git.shared.Remote;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +54,7 @@ import java.util.List;
  */
 public class RemotePresenter extends GitPresenter implements ShowRemotesHandler, ViewClosedHandler
 {
+   
    public interface Display extends IsView
    {
       /**
@@ -171,7 +171,8 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
    {
       if (makeSelectionCheck())
       {
-         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+         String projectId = getSelectedProject().getId();
          getRemotes(projectId);
       }
    }
@@ -247,7 +248,9 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     */
    private void addRemoteRepository(String name, String url)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
+      
       try
       {
          GitClientService.getInstance().remoteAdd(vfs.getId(), projectId, name, url, new AsyncRequestCallback<String>()
@@ -264,7 +267,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
             {
                String errorMessage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteAddFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
             }
          });
       }
@@ -272,7 +275,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
       {
          String errorMessage =
             (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.remoteAddFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 
@@ -309,7 +312,9 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
     */
    private void doDelete(String name)
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
+      
       try
       {
          GitClientService.getInstance().remoteDelete(vfs.getId(), projectId, name, new AsyncRequestCallback<String>()
@@ -326,7 +331,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
             {
                String errorMessage =
                   (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES.remoteDeleteFailed();
-               IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
             }
          });
       }
@@ -334,7 +339,7 @@ public class RemotePresenter extends GitPresenter implements ShowRemotesHandler,
       {
          String errorMessage =
             (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.remoteDeleteFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 

@@ -142,10 +142,11 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
       project = event.getProject();
       if (project == null && makeSelectionCheck())
       {
-         project = ((ItemContext)selectedItems.get(0)).getProject();
+//         project = ((ItemContext)selectedItems.get(0)).getProject();
+         project = getSelectedProject();
       }
+      
       checkIsGitRepository(project);
-
    }
 
    private void checkIsGitRepository(final ProjectModel project)
@@ -571,7 +572,7 @@ public class BuildApplicationPresenter extends GitPresenter implements BuildAppl
    {
       String errorMessage =
          (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.initFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
    private void showBuildMessage(String message)

@@ -37,6 +37,7 @@ import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -65,7 +66,7 @@ import java.util.List;
  */
 
 public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHandler, ProjectOpenedHandler,
-   ProjectClosedHandler, AllFilesClosedHandler, VfsChangedHandler
+   ProjectClosedHandler, VfsChangedHandler
 {
 
    public interface Display extends IsView
@@ -89,9 +90,9 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    private Display display;
 
    /**
-    * ID of current opened project.
+    * Current opened project.
     */
-   private String currentOpenedProjectID;
+   private ProjectModel openedProject;
 
    /**
     * Virtual File System info.
@@ -110,7 +111,6 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       IDE.addHandler(VfsChangedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
-      IDE.addHandler(AllFilesClosedEvent.TYPE, this);
    }
 
    /**
@@ -196,7 +196,13 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
          }
 
          ProjectModel selectedProject = display.getSelectedItems().get(0);
-         if (selectedProject.getId().equals(currentOpenedProjectID))
+         if (openedProject == null)
+         {
+            display.setOpenButtonEnabled(true);
+            return;
+         }
+         
+         if (selectedProject.getId().equals(openedProject.getId()))
          {
             display.setOpenButtonEnabled(false);
          }
@@ -251,36 +257,6 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
    }
 
    /**
-    * Opens selected project. First, close all opened files.
-    */
-   private void openProject()
-   {
-      if (display.getSelectedItems().size() == 0)
-      {
-         return;
-      }
-
-      IDE.fireEvent(new CloseAllFilesEvent());
-   }
-
-   /**
-    * Opens the project after all files are closed.
-    * 
-    * @see org.exoplatform.ide.client.framework.event.AllFilesClosedHandler#onAllFilesClosed(org.exoplatform.ide.client.framework.event.AllFilesClosedEvent)
-    */
-   @Override
-   public void onAllFilesClosed(AllFilesClosedEvent event)
-   {
-      if (display == null)
-      {
-         return;
-      }
-
-      ProjectModel project = (ProjectModel)display.getSelectedItems().get(0);
-      IDE.fireEvent(new OpenProjectEvent(project));
-   }
-
-   /**
     * Handle {@link ViewClosedEvent} and reset instance of {@link Display}.
     * 
     * @see org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler#onViewClosed(org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent)
@@ -294,33 +270,60 @@ public class ShowProjectsPresenter implements ShowProjectsHandler, ViewClosedHan
       }
    }
 
-   /**
-    * Receives the name of the currently opened project.
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      currentOpenedProjectID = event.getProject().getId();
-
-      if (display != null)
-      {
-         IDE.getInstance().closeView(display.asView().getId());
-      }
-   }
-
    @Override
    public void onVfsChanged(VfsChangedEvent event)
    {
       vfsInfo = event.getVfsInfo();
    }
 
+   /**
+    * Receives the name of the currently opened project.
+    */
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+
+      if (display != null)
+      {
+         IDE.getInstance().closeView(display.asView().getId());
+      }
+   }
+   
+   /**
+    * Opens selected project. First, close all opened files.
+    */
+   private void openProject()
+   {
+      if (display.getSelectedItems().size() == 0)
+      {
+         return;
+      }
+      
+      if (openedProject != null)
+      {
+         IDE.fireEvent(new CloseProjectEvent());
+         return;
+      }
+      
+      ProjectModel project = (ProjectModel)display.getSelectedItems().get(0);
+      IDE.fireEvent(new OpenProjectEvent(project));
+      IDE.getInstance().closeView(display.asView().getId());
+   }
+   
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
-      if (event.getProject().getId().equals(currentOpenedProjectID))
+      openedProject = null;
+      
+      if (display == null)
       {
-         currentOpenedProjectID = null;
+         return;
       }
+      
+      ProjectModel project = (ProjectModel)display.getSelectedItems().get(0);
+      IDE.fireEvent(new OpenProjectEvent(project));
+      IDE.getInstance().closeView(display.asView().getId());
    }
 
 }

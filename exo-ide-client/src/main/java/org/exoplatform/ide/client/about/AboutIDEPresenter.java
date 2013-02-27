@@ -61,47 +61,6 @@ public class AboutIDEPresenter implements ShowAboutDialogHandler, ViewClosedHand
    @Override
    public void onShowAboutDialog(ShowAboutDialogEvent event)
    {
-      // Dialogs.getInstance().askForValue("ask for value title", "ask for value message", "this is default value", new
-      // StringValueReceivedHandler()
-      // {
-      // @Override
-      // public void stringValueReceived(String value)
-      // {
-      // Alert.alert("VALUE > " + value);
-      // }
-      // });
-
-      // Dialogs.getInstance().ask("ask title", "ask message", new BooleanValueReceivedHandler()
-      // {
-      // @Override
-      // public void booleanValueReceived(Boolean value)
-      // {
-      // Alert.alert("VALUE > " + value);
-      // }
-      // });
-
-      // Dialogs.getInstance().showError("error title", "error message", new BooleanValueReceivedHandler()
-      // {
-      // @Override
-      // public void booleanValueReceived(Boolean value)
-      // {
-      // Alert.alert("VALUE > " + value);
-      // }
-      // });
-
-      // Dialogs.getInstance().showInfo("my title", "my message", new BooleanValueReceivedHandler()
-      // {
-      // @Override
-      // public void booleanValueReceived(Boolean value)
-      // {
-      // Alert.alert("VALUE > " + value);
-      // }
-      // });
-
-      // if (true) {
-      // return;
-      // }
-
       if (display == null)
       {
          display = GWT.create(Display.class);

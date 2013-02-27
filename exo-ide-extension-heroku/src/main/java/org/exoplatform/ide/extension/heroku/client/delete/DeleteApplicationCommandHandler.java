@@ -33,7 +33,6 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInEvent;
 import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.Property;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.List;
@@ -47,6 +46,7 @@ import java.util.List;
  */
 public class DeleteApplicationCommandHandler extends GitPresenter implements DeleteApplicationHandler, LoggedInHandler
 {
+   
    private static final String NAME_PROPERTY = "name";
 
    private String application = null;
@@ -83,7 +83,9 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
     */
    protected void getApplicationInfo()
    {
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = getSelectedProject();
+      
       try
       {
          HerokuClientService.getInstance().getApplicationInfo(null, vfs.getId(), project.getId(), false,
@@ -168,15 +170,27 @@ public class DeleteApplicationCommandHandler extends GitPresenter implements Del
    private String detectProjectId()
    {
       String projectId = null;
-      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+      
+//      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+//      {
+//         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//         if (project != null && project.getPropertyValue("heroku-application") != null
+//            && application.equals((String)project.getPropertyValue("heroku-application")))
+//         {
+//            projectId = project.getId();
+//         }
+//      }
+      
+      if (selectedItem != null)
       {
-         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         ProjectModel project = getSelectedProject();
          if (project != null && project.getPropertyValue("heroku-application") != null
             && application.equals((String)project.getPropertyValue("heroku-application")))
          {
             projectId = project.getId();
          }
       }
+
       return projectId;
    }
 

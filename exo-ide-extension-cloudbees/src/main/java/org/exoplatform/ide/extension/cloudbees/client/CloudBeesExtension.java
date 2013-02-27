@@ -29,6 +29,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.paas.PaaS;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.project.ProjectType;
+import org.exoplatform.ide.extension.cloudbees.client.account.CreateAccountPresenter;
 import org.exoplatform.ide.extension.cloudbees.client.control.ApplicationListControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.CloudBeesControl;
 import org.exoplatform.ide.extension.cloudbees.client.control.InitializeApplicationControl;
@@ -45,7 +46,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * CloudBees extention for IDE.
+ * CloudBees extension for IDE.
  *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudBeesExtension.java Jun 23, 2011 10:11:59 AM vereshchaka $
@@ -97,7 +98,7 @@ public class CloudBeesExtension extends Extension implements InitializeServicesH
       new ApplicationListPresenter();
       new UpdateApplicationPresenter();
       new CloudBeesProjectPresenter();
-      //TODO new CreateAccountPresenter();
+      new CreateAccountPresenter();
    }
 
    public static boolean canBeDeployedToCB(ProjectModel project)

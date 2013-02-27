@@ -20,6 +20,7 @@ package org.exoplatform.ide.extension.appfog.client.update;
 
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBean;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
@@ -37,7 +38,6 @@ import org.exoplatform.ide.extension.maven.client.event.ProjectBuiltHandler;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -83,7 +83,8 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
    private void updateApplication()
    {
-      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel projectModel = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel projectModel = getSelectedProject();
 
       final String projectId = projectModel.getId();
 
@@ -153,7 +154,8 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
 
    private void validateData()
    {
-      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      final String projectId = getSelectedProject().getId();
 
       try
       {
@@ -178,7 +180,8 @@ public class UpdateApplicationPresenter extends GitPresenter implements UpdateAp
     */
    private void isBuildApplication()
    {
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = getSelectedProject();
 
       try
       {

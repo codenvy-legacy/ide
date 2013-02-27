@@ -25,6 +25,8 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
@@ -33,7 +35,9 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectProperties;
 import org.exoplatform.ide.client.framework.util.ProjectResolver;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
 
@@ -42,8 +46,10 @@ import java.util.List;
  * @version $Id: Dec 8, 2011 2:12:50 PM anya $
  *
  */
-public class ProjectPaaSControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, FolderRefreshedHandler, ActiveProjectChangedHandler
+public class ProjectPaaSControl extends SimpleControl implements IDEControl,
+   ProjectOpenedHandler, ProjectClosedHandler, FolderRefreshedHandler,
+   ItemsSelectedHandler
+//   , ActiveProjectChangedHandler
 {
 
    public static final String ID = "Project/PaaS";
@@ -73,7 +79,9 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(FolderRefreshedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+      
+      //IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
    /**
@@ -83,6 +91,7 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
    public void onProjectClosed(ProjectClosedEvent event)
    {
       setEnabled(false);
+      setVisible(false);
    }
 
    /**
@@ -93,14 +102,15 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
    {
       boolean enabled = isDeployed(event.getProject());
       setEnabled(enabled);
+      setVisible(enabled);
    }
    
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      boolean enabled = isDeployed(event.getProject());
-      setEnabled(enabled);
-   }
+//   @Override
+//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+//   {
+//      boolean enabled = isDeployed(event.getProject());
+//      setEnabled(enabled);
+//   }
 
    /**
     * Check project is deployed to one of the PaaS.
@@ -139,6 +149,25 @@ public class ProjectPaaSControl extends SimpleControl implements IDEControl, Pro
       {
          boolean enabled = isDeployed((ProjectModel)event.getFolder());
          setEnabled(enabled);
+         setVisible(enabled);
       }
    }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+      
+      Item selectedItem = event.getSelectedItems().get(0);
+      ProjectModel project = selectedItem instanceof ProjectModel ? (ProjectModel)selectedItem :
+         ((ItemContext)selectedItem).getProject();
+      boolean enabled = isDeployed(project);
+      setEnabled(enabled);
+      setVisible(enabled);
+   }
+
 }

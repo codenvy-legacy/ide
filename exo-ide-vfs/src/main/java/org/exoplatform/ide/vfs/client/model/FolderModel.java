@@ -25,6 +25,7 @@ import org.exoplatform.ide.vfs.shared.FolderImpl;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemListImpl;
+import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.Property;
 
@@ -43,13 +44,13 @@ import java.util.Map;
 
 public class FolderModel extends FolderImpl implements ItemContext
 {
-   private ItemList<Item> children = new ItemListImpl<Item>();
+   protected ItemList<Item> children = new ItemListImpl<Item>();
 
-   private ProjectModel project;
+   protected ProjectModel project;
 
-   private FolderModel parent;
+   protected FolderModel parent;
 
-   private boolean persisted;
+   protected boolean persisted;
 
    @SuppressWarnings("rawtypes")
    public FolderModel(String name, FolderModel parent)
@@ -77,8 +78,17 @@ public class FolderModel extends FolderImpl implements ItemContext
 
    public FolderModel(Folder folder)
    {
-      super(folder.getId(), folder.getName(), FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
+      this(folder.getId(), folder.getName(), ItemType.FOLDER, FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
          .getCreationDate(), folder.getProperties(), folder.getLinks());
+//      super(folder.getId(), folder.getName(), FOLDER_MIME_TYPE, folder.getPath(), folder.getParentId(), folder
+//         .getCreationDate(), folder.getProperties(), folder.getLinks());
+//      this.persisted = true;
+   }
+   
+   public FolderModel(String id, String name, ItemType itemType, String mimeType, String path, String parentId, long creationDate,
+      List<Property> properties, Map<String, Link> links)
+   {
+      super(id, name, itemType, mimeType, path, parentId, creationDate, properties, links);
       this.persisted = true;
    }
 
@@ -149,4 +159,5 @@ public class FolderModel extends FolderImpl implements ItemContext
    {
       return persisted;
    }
+   
 }

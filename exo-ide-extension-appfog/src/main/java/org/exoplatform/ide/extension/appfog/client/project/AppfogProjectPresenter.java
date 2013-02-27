@@ -35,10 +35,6 @@ import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
 import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
-import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -69,8 +65,9 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * @author <a href="mailto:vzhukovskii@exoplatform.com">Vladislav Zhukovskii</a>
  * @version $Id: $
  */
-public class AppfogProjectPresenter extends GitPresenter implements ProjectOpenedHandler, ProjectClosedHandler,
-   ManageAppfogProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler, ActiveProjectChangedHandler
+public class AppfogProjectPresenter extends GitPresenter implements /*ProjectOpenedHandler, ProjectClosedHandler,*/
+   ManageAppfogProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
+   /*, ActiveProjectChangedHandler*/
 {
    interface Display extends IsView
    {
@@ -126,10 +123,10 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
     */
    private Display display;
 
-   /**
-    * Opened project in Project Explorer.
-    */
-   private ProjectModel openedProject;
+//   /**
+//    * Opened project in Project Explorer.
+//    */
+//   private ProjectModel openedProject;
 
    private AppfogApplication application;
 
@@ -137,13 +134,13 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
    {
       IDE.getInstance().addControl(new AppfogControl());
 
-      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+//      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+//      IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ManageAppfogProjectEvent.TYPE, this);
       IDE.addHandler(ApplicationDeletedEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationInfoChangedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
+//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -266,7 +263,9 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
    {
       try
       {
-         AppfogClientService.getInstance().getLogs(vfs.getId(), openedProject.getId(),
+         ProjectModel project = getSelectedProject();
+         
+         AppfogClientService.getInstance().getLogs(vfs.getId(), project.getId(),
             new AsyncRequestCallback<StringBuilder>(new StringUnmarshaller(new StringBuilder()))
             {
 
@@ -308,32 +307,33 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
    @Override
    public void onManageAppfogProject(ManageAppfogProjectEvent event)
    {
-      getApplicationInfo(openedProject);
+//      getApplicationInfo(openedProject);
+      getApplicationInfo(getSelectedProject());
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      openedProject = null;
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
-    */
-   @Override
-   public void onProjectOpened(ProjectOpenedEvent event)
-   {
-      openedProject = event.getProject();
-   }
-
-   @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
-   {
-      openedProject = event.getProject();
-   }
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+//    */
+//   @Override
+//   public void onProjectClosed(ProjectClosedEvent event)
+//   {
+//      openedProject = null;
+//   }
+//
+//   /**
+//    * @see org.exoplatform.ide.client.framework.project.ProjectOpenedHandler#onProjectOpened(org.exoplatform.ide.client.framework.project.ProjectOpenedEvent)
+//    */
+//   @Override
+//   public void onProjectOpened(ProjectOpenedEvent event)
+//   {
+//      openedProject = event.getProject();
+//   }
+//
+//   @Override
+//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+//   {
+//      openedProject = event.getProject();
+//   }
 
    /**
     * Get application properties.
@@ -386,14 +386,17 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
    @Override
    public void onApplicationDeleted(ApplicationDeletedEvent event)
    {
-      if (event.getApplicationName() != null && openedProject != null
-         && event.getApplicationName().equals((String)openedProject.getPropertyValue("appfog-application")))
+//      if (event.getApplicationName() != null && openedProject != null
+//         && event.getApplicationName().equals((String)openedProject.getPropertyValue("appfog-application")))
+      if (event.getApplicationName() != null && getSelectedProject() != null
+               && event.getApplicationName().equals((String)getSelectedProject().getPropertyValue("appfog-application")))
       {
          if (display != null)
          {
             IDE.getInstance().closeView(display.asView().getId());
          }
-         IDE.fireEvent(new RefreshBrowserEvent(openedProject));
+         //IDE.fireEvent(new RefreshBrowserEvent(openedProject));
+         IDE.fireEvent(new RefreshBrowserEvent(getSelectedProject()));
       }
    }
 
@@ -428,11 +431,16 @@ public class AppfogProjectPresenter extends GitPresenter implements ProjectOpene
    @Override
    public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
    {
+//      if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
+//         && openedProject != null && openedProject.getId().equals(event.getProjectId()))
+//      {
+//         getApplicationInfo(openedProject);
+//      }
       if (display != null && event.getProjectId() != null && vfs.getId().equals(event.getVfsId())
-         && openedProject != null && openedProject.getId().equals(event.getProjectId()))
-      {
-         getApplicationInfo(openedProject);
-      }
+               && getSelectedProject() != null && getSelectedProject().getId().equals(event.getProjectId()))
+            {
+               getApplicationInfo(getSelectedProject());
+            }
    }
 
 }

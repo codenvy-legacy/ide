@@ -42,7 +42,6 @@ import org.exoplatform.ide.extension.heroku.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.heroku.client.marshaller.StackMigrationResponse;
 import org.exoplatform.ide.extension.heroku.shared.Stack;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 
 import java.util.List;
 
@@ -155,7 +154,8 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
 
    public void getStacks()
    {
-      String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+      //String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+      String projectId = (herokuApplication == null) ? getSelectedProject().getId() : null;
       try
       {
          HerokuClientService.getInstance().getStackList(herokuApplication, vfs.getId(), projectId,
@@ -205,7 +205,8 @@ public class ChangeStackPresenter extends GitPresenter implements ViewClosedHand
          return;
       }
 
-      String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+//      String projectId = (herokuApplication == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+      String projectId = (herokuApplication == null) ? getSelectedProject().getId() : null;
       try
       {
          HerokuClientService.getInstance().migrateStack(herokuApplication, vfs.getId(), projectId, stack.getName(),

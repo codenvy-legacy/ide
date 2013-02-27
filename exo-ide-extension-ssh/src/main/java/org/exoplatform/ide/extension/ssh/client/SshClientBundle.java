@@ -27,7 +27,7 @@ import com.google.gwt.resources.client.ClientBundle;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshClientBundle May 18, 2011 9:23:17 AM evgen $
- * 
+ *
  */
 public interface SshClientBundle extends ClientBundle
 {
@@ -39,5 +39,8 @@ public interface SshClientBundle extends ClientBundle
 
    @Source("org/exoplatform/ide/extension/ssh/client/images/ssh-key-manager.png")
    ImageResource sshKeyManager();
+
+   @Source("org/exoplatform/ide/extension/ssh/client/images/github-generate.png")
+   ImageResource sshKeyGithubGenerate();
 
 }

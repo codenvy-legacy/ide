@@ -44,6 +44,9 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.extension.ssh.client.JsonpAsyncCallback;
 import org.exoplatform.ide.extension.ssh.client.SshKeyService;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.GenerateGitHubKeyEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysEvent;
+import org.exoplatform.ide.extension.ssh.client.keymanager.event.RefreshKeysHandler;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowPublicSshKeyEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerEvent;
 import org.exoplatform.ide.extension.ssh.client.keymanager.event.ShowSshKeyManagerHandler;
@@ -55,10 +58,10 @@ import org.exoplatform.ide.extension.ssh.shared.KeyItem;
 /**
  * @author <a href="mailto:tnemov@gmail.com">Evgen Vidolob</a>
  * @version $Id: SshKeyManagerPresenter May 18, 2011 10:16:44 AM evgen $
- * 
+ *
  */
 public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClosedHandler,
-   ConfigurationReceivedSuccessfullyHandler, PreferencePerformer
+   ConfigurationReceivedSuccessfullyHandler, PreferencePerformer, RefreshKeysHandler
 {
    public interface Display extends IsView
    {
@@ -70,6 +73,8 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
 
       HasClickHandlers getUploadButton();
 
+      HasClickHandlers getGenerateGithubKeyButton();
+
    }
 
    private Display display;
@@ -77,14 +82,15 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    private IDEConfiguration configuration;
 
    /**
-   * 
-   */
+    *
+    */
    public SshKeyManagerPresenter()
    {
       IDE.addHandler(ShowSshKeyManagerEvent.TYPE, this);
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       // add hendler to handle Upload ssh key form closing, and refresh list of ssh keys
       IDE.addHandler(ViewClosedEvent.TYPE, this);
+      IDE.addHandler(RefreshKeysEvent.TYPE, this);
    }
 
    /**
@@ -94,7 +100,9 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    public void onShowSshKeyManager(ShowSshKeyManagerEvent event)
    {
       if (display != null)
+      {
          return;
+      }
 
       display = GWT.create(Display.class);
       IDE.getInstance().openView(display.asView());
@@ -104,7 +112,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    }
 
    /**
-    * 
+    *
     */
    private void refreshKeys()
    {
@@ -135,7 +143,7 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
    }
 
    /**
-    * 
+    *
     */
    private void bindDisplay()
    {
@@ -146,7 +154,9 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          public void onSelection(SelectionEvent<KeyItem> event)
          {
             if (event.getSelectedItem().getPublicKeyURL() != null)
+            {
                IDE.fireEvent(new ShowPublicSshKeyEvent(event.getSelectedItem()));
+            }
          }
       });
 
@@ -189,6 +199,15 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
          public void onClick(ClickEvent event)
          {
             new UploadSshKeyPresenter(configuration.getContext());
+         }
+      });
+
+      display.getGenerateGithubKeyButton().addClickHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new GenerateGitHubKeyEvent());
          }
       });
    }
@@ -300,4 +319,9 @@ public class SshKeyManagerPresenter implements ShowSshKeyManagerHandler, ViewClo
       return display.asView();
    }
 
+   @Override
+   public void onRefreshKeys(RefreshKeysEvent event)
+   {
+      refreshKeys();
+   }
 }

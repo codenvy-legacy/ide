@@ -26,6 +26,8 @@ import com.google.gwt.event.shared.EventHandler;
 /**
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CurrentProjectHandler.java Nov 7, 2012 vetal $
+ * 
+ * @deprecated
  *
  */
 public interface ActiveProjectChangedHandler extends EventHandler

@@ -30,7 +30,7 @@ public class OutputMessage
 
    public enum Type {
 
-      INFO, ERROR, WARNING, LOG, OUTPUT
+      INFO, ERROR, WARNING, LOG, OUTPUT, GIT
 
    }
 

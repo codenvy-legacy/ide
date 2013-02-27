@@ -63,5 +63,10 @@ public enum EditorCapability {
    /**
     * Editor and opened file type support validation feature
     */
-   VALIDATION
+   VALIDATION,
+
+   /**
+    * Editor supports the comment text
+    */
+   COMMENT_SOURCE
 }

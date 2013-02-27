@@ -26,6 +26,8 @@ import com.google.gwt.event.shared.EventHandler;
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: Aug 20, 2012 3:15:43 PM anya $
  * 
+ * @deprecated
+ * 
  */
 public interface ProjectSelectedHandler extends EventHandler
 {
