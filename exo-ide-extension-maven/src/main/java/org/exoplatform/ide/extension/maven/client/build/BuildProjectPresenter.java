@@ -202,7 +202,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          {
             project = ((ItemContext)item).getProject();
          }
-         
+
          //project = ((ItemContext)selectedItems.get(0)).getProject();
       }
 
@@ -265,7 +265,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
    /**
     * Starts checking job status by subscribing on receiving
     * messages over WebSocket or scheduling task to check status.
-    * 
+    *
     * @param buildId id of the build job to check status
     */
    private void startCheckingStatus(String buildId)
@@ -543,7 +543,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
          if (projectId != null)
          {
             writeBuildInfo(buildStatus);
-            checkIfProjectIsUnderWatching();
+            startWatchingProjectChanges();
          }
          if (publishAfterBuild)
          {
@@ -654,41 +654,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
 
    }
 
-   private void checkIfProjectIsUnderWatching()
-   {
-      try
-      {
-         final ProjectModel p = new ProjectModel();
-         p.setId(project.getId());
-
-         VirtualFileSystem.getInstance().getItemById(project.getId(),
-            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(p)))
-         {
-            @Override
-            protected void onSuccess(ItemWrapper result)
-            {
-               for (Property property : result.getItem().getProperties())
-               {
-                  if ("vfs:lastUpdateTime".equals(property.getName()))
-                  {
-                     return;
-                  }
-               }
-               startWatchingProjectChanges();
-            }
-
-            @Override
-            protected void onFailure(Throwable exception)
-            {
-            }
-         });
-      }
-      catch (RequestException e)
-      {
-         e.printStackTrace();
-      }
-   }
-
    private void startWatchingProjectChanges()
    {
       try
@@ -797,17 +762,17 @@ public class BuildProjectPresenter implements BuildProjectHandler, ItemsSelected
       }
 
       Item item = selectedItems.get(0);
-      
+
       if (item instanceof ProjectModel)
       {
          return true;
       }
-      
+
       if (((ItemContext)item).getProject() != null)
       {
          return true;
       }
-      
+
       Dialogs.getInstance().showInfo("Project is not selected.");
 //      if (!(selectedItems.get(0) instanceof ItemContext) || ((ItemContext)selectedItems.get(0)).getProject() == null)
 //      {

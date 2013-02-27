@@ -138,7 +138,7 @@ public class JcrFileSystem implements VirtualFileSystem
    private final String vfsID;
 
    private static final Log LOG = ExoLogger.getLogger(JcrFileSystem.class);
-     
+
    public JcrFileSystem(Repository repository,
                         String workspaceName,
                         String rootNodePath,
@@ -260,7 +260,7 @@ public class JcrFileSystem implements VirtualFileSystem
    @Path("folder/{parentId}")
    @Override
    public Folder createFolder(@PathParam("parentId") String parentId, //
-                                  @QueryParam("name") String name //
+                              @QueryParam("name") String name //
    ) throws ItemNotFoundException, InvalidArgumentException, PermissionDeniedException, VirtualFileSystemException
    {
       checkName(name);
@@ -1454,7 +1454,7 @@ public class JcrFileSystem implements VirtualFileSystem
                   null, //
                   mediaType2NodeTypeResolver.getFolderMixins(mediaType), //
                   mediaType2NodeTypeResolver.getFolderMixins((String)null));
-               
+
                List<Property> properties;
                try
                {
@@ -1742,14 +1742,13 @@ public class JcrFileSystem implements VirtualFileSystem
          {
             throw new InvalidArgumentException("Item is not a project. ");
          }
-         if (!listeners.addEventListener(
+         if (listeners.addEventListener(
             ProjectUpdateEventFilter.newFilter(this, (ProjectData)projectData), new ProjectUpdateListener(projectId)))
          {
-            throw new InvalidArgumentException("Project '" + projectData.getName() + "' is under watching already. ");
+            List<Property> properties = new ArrayList<Property>(1);
+            properties.add(new PropertyImpl("vfs:lastUpdateTime", "0"));
+            projectData.updateProperties(properties, null, null, null);
          }
-         List<Property> properties = new ArrayList<Property>(1);
-         properties.add(new PropertyImpl("vfs:lastUpdateTime", "0"));
-         projectData.updateProperties(properties, null, null, null);
       }
       finally
       {
