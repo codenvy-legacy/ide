@@ -26,6 +26,8 @@ import org.exoplatform.ide.vfs.server.observation.PathFilter;
 import org.exoplatform.ide.vfs.server.observation.TypeFilter;
 import org.exoplatform.ide.vfs.server.observation.VfsIDFilter;
 
+import static org.exoplatform.ide.vfs.server.observation.ChangeEvent.ChangeType;
+
 /**
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
@@ -46,12 +48,12 @@ class ProjectUpdateEventFilter extends ChangeEventFilter
       final ChangeEventFilter filter = ChangeEventFilter.createAndFilter(
          new VfsIDFilter(vfs.vfsId),
          new PathFilter(project.getPath() + "/.*"), // events for all project items
-         ChangeEventFilter.createOrFilter( // created, updated, deleted, renamed or moved
-            new TypeFilter(ChangeEvent.ChangeType.CREATED),
-            new TypeFilter(ChangeEvent.ChangeType.CONTENT_UPDATED),
-            new TypeFilter(ChangeEvent.ChangeType.DELETED),
-            new TypeFilter(ChangeEvent.ChangeType.RENAMED),
-            new TypeFilter(ChangeEvent.ChangeType.MOVED)
+         new TypeFilter(
+            ChangeType.CREATED,
+            ChangeType.CONTENT_UPDATED,
+            ChangeType.DELETED,
+            ChangeType.RENAMED,
+            ChangeType.MOVED
          )
       );
       return new ProjectUpdateEventFilter(

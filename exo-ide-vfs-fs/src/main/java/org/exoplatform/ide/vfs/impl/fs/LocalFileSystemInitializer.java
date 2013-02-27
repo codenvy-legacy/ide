@@ -45,24 +45,59 @@ public final class LocalFileSystemInitializer implements Startable
    private final Set<String> vfsIds;
    private final EventListenerList listeners;
    private final LocalFSMountStrategy mountStrategy;
+   private final SearcherProvider searcherProvider;
+
+   public LocalFileSystemInitializer(InitParams initParams,
+                                     VirtualFileSystemRegistry registry,
+                                     EventListenerList listeners,
+                                     LocalFSMountStrategy mountStrategy,
+                                     SearcherProvider searcherProvider)
+   {
+      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, searcherProvider);
+   }
 
    public LocalFileSystemInitializer(InitParams initParams,
                                      VirtualFileSystemRegistry registry,
                                      EventListenerList listeners,
                                      LocalFSMountStrategy mountStrategy)
    {
-      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy);
+      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, null);
    }
 
+   public LocalFileSystemInitializer(InitParams initParams,
+                                     VirtualFileSystemRegistry registry,
+                                     LocalFSMountStrategy mountStrategy)
+   {
+      this(readValuesParam(initParams, "id"), registry, null, mountStrategy, null);
+   }
+
+   /**
+    * @param vfsIds
+    *    ids of available file systems
+    * @param registry
+    *    VirtualFileSystemRegistry
+    * @param listeners
+    *    notification listeners, may be <code>null</code>
+    * @param mountStrategy
+    *    LocalFSMountStrategy
+    * @param searcherProvider
+    *    SearcherProvider, may be <code>null</code>
+    * @see VirtualFileSystemRegistry
+    * @see EventListenerList
+    * @see LocalFSMountStrategy
+    * @see SearcherProvider
+    */
    public LocalFileSystemInitializer(Collection<String> vfsIds,
                                      VirtualFileSystemRegistry registry,
                                      EventListenerList listeners,
-                                     LocalFSMountStrategy mountStrategy)
+                                     LocalFSMountStrategy mountStrategy,
+                                     SearcherProvider searcherProvider)
    {
       this.mountStrategy = mountStrategy;
       this.vfsIds = new HashSet<String>(vfsIds);
       this.registry = registry;
       this.listeners = listeners;
+      this.searcherProvider = searcherProvider;
    }
 
    @Override
@@ -73,7 +108,7 @@ public final class LocalFileSystemInitializer implements Startable
       {
          try
          {
-            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy));
+            registry.registerProvider(id, new LocalFileSystemProvider(id, mountStrategy, searcherProvider));
          }
          catch (VirtualFileSystemException e)
          {

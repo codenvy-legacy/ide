@@ -305,5 +305,10 @@ public final class JcrFileSystemInitializer implements Startable
             requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
             listeners);
       }
+
+      @Override
+      public void close()
+      {
+      }
    }
 }

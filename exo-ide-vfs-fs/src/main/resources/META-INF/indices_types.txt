@@ -22,3 +22,5 @@ application/x-php
 application/x-httpd-php
 text/x-python
 text/yaml
+text/directory                # all folders have this media type
+text/vnd.ideproject+directory # all projects have this media type

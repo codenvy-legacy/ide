@@ -18,220 +18,325 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
-import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanClause;
 import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.PrefixQuery;
-import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.SingleInstanceLockFactory;
+import org.apache.lucene.util.Version;
+import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.Collection;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.apache.lucene.search.BooleanClause.Occur;
 
 /**
+ * Lucene based searcher.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class Searcher
 {
-   private static final ConcurrentMap<File, SearchService> instances = new ConcurrentHashMap<File, SearchService>();
-
-   public static SearchService getInstance(MountPoint mountPoint)
+   private static final Log LOG = ExoLogger.getLogger(Searcher.class);
+   private static final int RESULT_LIMIT = 1000;
+   private static final FilenameFilter HIDDEN_DIR_FILTER = new FilenameFilter()
    {
-      final java.io.File key = mountPoint.getRoot().getIoFile();
-      SearchService searchService = instances.get(key);
-      if (searchService == null)
+      @Override
+      public boolean accept(java.io.File dir, String name)
       {
-         SearchService newSearchService = new SearchService();
-         searchService = instances.putIfAbsent(key, newSearchService);
-         if (searchService == null)
-         {
-            searchService = newSearchService;
-         }
+         return name.charAt(0) != '.';
       }
-      return searchService;
-   }
+   };
 
 
-   private final AtomicBoolean reopening = new AtomicBoolean(false);
+   protected final java.io.File indexDir;
+   protected final Set<String> indexedMediaTypes; // update after creation is not expected
+   protected final Directory luceneIndexDirectory;
+   protected final IndexWriter luceneIndexWriter;
 
-   private  Set<String> supportedMediaTypes;
+   private IndexSearcher luceneIndexSearcher;
+   private boolean reopening;
 
-   private IndexWriter indexWriter;
-   private IndexSearcher searcher;
-
-   private SearchService()
+   public Searcher(java.io.File indexDir, Set<String> indexedMediaTypes) throws IOException, VirtualFileSystemException
    {
-
+      this.indexDir = indexDir;
+      this.indexedMediaTypes = new HashSet<String>(indexedMediaTypes);
+      luceneIndexDirectory = FSDirectory.open(indexDir, new SingleInstanceLockFactory());
+      luceneIndexWriter = new IndexWriter(luceneIndexDirectory, makeAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
+      luceneIndexSearcher = new IndexSearcher(luceneIndexWriter.getReader());
    }
 
-   private void init(){
-      // TODO:
-   }
-
-   public SearchService(java.io.File indexDir, Set<String> supportedMediaTypes) throws VirtualFileSystemException
+   public java.io.File getIndexDir()
    {
-      initLucene(indexDir);
-      this.supportedMediaTypes = new LinkedHashSet<String>(supportedMediaTypes);
+      return indexDir;
    }
 
-   protected void initLucene(java.io.File indexDir) throws VirtualFileSystemException
+   /**
+    * Init lucene index. Need call this method is index directory is clean. Scan all files in virtual filesystem and
+    * add to index.
+    *
+    * @param mountPoint
+    *    MountPoint
+    * @throws IOException
+    *    if any i/o error
+    * @throws VirtualFileSystemException
+    *    if any virtual filesystem error
+    */
+   public void init(MountPoint mountPoint) throws IOException, VirtualFileSystemException
    {
-      try
+      final long start = System.currentTimeMillis();
+      int indexedFiles = addTree(mountPoint.getRoot());
+      final long end = System.currentTimeMillis();
+      LOG.info("Index creation time: {} ms, indexed: {} files", (end - start), indexedFiles);
+   }
+
+   /**
+    * Get IndexSearcher. It is important to call method {@link #releaseLuceneSearcher(org.apache.lucene.search.IndexSearcher)}
+    * to release obtained searcher.
+    * <pre>
+    *    Searcher searcher = ...
+    *    IndexSearcher luceneSearcher = searcher.getLuceneSearcher();
+    *    try {
+    *       // use obtained lucene searcher
+    *    } finally {
+    *       searcher.releaseLuceneSearcher(searcher);
+    *    }
+    * </pre>
+    *
+    * @return IndexSearcher
+    * @throws IOException
+    *    if any i/o error
+    */
+   public synchronized IndexSearcher getLuceneSearcher() throws IOException
+   {
+      maybeReopenIndexReader();
+      luceneIndexSearcher.getIndexReader().incRef();
+      return luceneIndexSearcher;
+   }
+
+   // MUST CALL UNDER LOCK
+   private void maybeReopenIndexReader() throws IOException
+   {
+      while (reopening)
       {
-         Directory directory = FSDirectory.open(indexDir, new SingleInstanceLockFactory());
-         indexWriter = new IndexWriter(directory, new SimpleAnalyzer(), IndexWriter.MaxFieldLength.UNLIMITED);
-         searcher = new IndexSearcher(indexWriter.getReader());
-      }
-      catch (IOException e)
-      {
-         throw new VirtualFileSystemException(e.getMessage(), e);// TODO : message
-      }
-   }
-
-   protected Collection<String> getListOfIndicesTypes() throws VirtualFileSystemException
-   {
-      Set<String> result = null;
-      final URL url = Thread.currentThread().getContextClassLoader().getResource("META-INF/indices_types.txt");
-      if (url != null)
-      {
-         BufferedReader reader = null;
          try
          {
-            reader = new BufferedReader(new FileReader(new java.io.File(url.toURI())));
-            result = new LinkedHashSet<String>();
-            String line;
-            while ((line = reader.readLine()) != null)
-            {
-               int c = line.indexOf('#');
-               if (c >= 0)
-               {
-                  line = line.substring(0, c);
-               }
-               line = line.trim();
-               if (line.length() > 0)
-               {
-                  result.add(line);
-               }
-            }
+            wait();
          }
-         catch (IOException e)
+         catch (InterruptedException e)
          {
-            throw new VirtualFileSystemException(
-               String.format("Failed to get list of media types for indexing. %s", e.getMessage()));
-         }
-         catch (URISyntaxException e)
-         {
-            throw new VirtualFileSystemException(
-               String.format("Failed to get list of media types for indexing. %s", e.getMessage()));
-         }
-         finally
-         {
-            if (reader != null)
-            {
-               try
-               {
-                  reader.close();
-               }
-               catch (IOException ignored)
-               {
-               }
-            }
+            notify();
+            throw new VirtualFileSystemRuntimeException(e);
          }
       }
-      if (result == null)
+
+      reopening = true;
+      try
       {
-         throw new VirtualFileSystemException("Failed to get list of media types for indexing. " +
-            "File 'META-INF/indices_types.txt not found or empty. ");
+         IndexReader reader = luceneIndexSearcher.getIndexReader();
+         IndexReader newReader = luceneIndexSearcher.getIndexReader().reopen();
+         if (newReader != reader)
+         {
+            luceneIndexSearcher = new IndexSearcher(newReader);
+         }
       }
-      return result;
+      finally
+      {
+         reopening = false;
+         notifyAll();
+      }
    }
 
-   public void search(QueryExpression query) throws Exception
+   /**
+    * Release IndexSearcher.
+    *
+    * @param luceneSearcher
+    *    IndexSearcher
+    * @throws IOException
+    *    if any i/o error
+    * @see #getLuceneSearcher()
+    */
+   public synchronized void releaseLuceneSearcher(IndexSearcher luceneSearcher) throws IOException
+   {
+      luceneSearcher.getIndexReader().decRef();
+   }
+
+   /**
+    * Return paths of matched items on virtual filesystem.
+    *
+    * @param query
+    *    query expression
+    * @return paths of matched items
+    * @throws VirtualFileSystemException
+    */
+   public String[] search(QueryExpression query) throws VirtualFileSystemException
    {
       final BooleanQuery luceneQuery = new BooleanQuery();
-
       final String name = query.getName();
       final String path = query.getPath();
       final String mediaType = query.getMediaType();
       final String text = query.getText();
-
-      if (name != null)
-      {
-         luceneQuery.add(new WildcardQuery(new Term("name", name)), Occur.MUST);
-      }
       if (path != null)
       {
-         luceneQuery.add(new PrefixQuery(new Term("path", path)), Occur.MUST);
+         luceneQuery.add(new PrefixQuery(new Term("path", path)), BooleanClause.Occur.MUST);
+      }
+      if (name != null)
+      {
+         luceneQuery.add(new WildcardQuery(new Term("name", name)), BooleanClause.Occur.MUST);
       }
       if (mediaType != null)
       {
-         luceneQuery.add(new TermQuery(new Term("media_type", mediaType)), Occur.MUST);
+         luceneQuery.add(new TermQuery(new Term("mediatype", mediaType)), BooleanClause.Occur.MUST);
       }
       if (text != null)
       {
-         luceneQuery.add(new TermQuery(new Term("text", text)), Occur.MUST);
+         QueryParser qParser = new QueryParser(Version.LUCENE_29, "text", makeAnalyzer());
+         try
+         {
+            luceneQuery.add(qParser.parse(text), BooleanClause.Occur.MUST);
+         }
+         catch (ParseException e)
+         {
+            throw new InvalidArgumentException(e.getMessage());
+         }
       }
-      final IndexSearcher searcher = getSearcher();
-      final TopDocs hits = searcher.search(luceneQuery, 100);
-      final int totalHits = hits.totalHits;
-      System.out.printf("     %s ==>> totalHits: %d%n", query, totalHits);
-      for (ScoreDoc scoreDoc : hits.scoreDocs)
-      {
-         Document doc = searcher.doc(scoreDoc.doc);
-         System.out.printf("     %s ==>> result : path=%s%n", query, doc.getField("path"));
-      }
-   }
-
-   public void add(VirtualFile f) throws VirtualFileSystemException
-   {
-      Reader inReader = null;
+      IndexSearcher luceneSearcher = null;
       try
       {
-         inReader = new BufferedReader(new InputStreamReader(f.getContent().getStream()));
-         indexWriter.addDocument(createDocument(f, inReader));
-      }
-      catch (CorruptIndexException e)
-      {
-         throw new VirtualFileSystemException(e.getMessage(), e);// TODO : message
+         luceneSearcher = getLuceneSearcher();
+         final TopDocs topDocs = luceneSearcher.search(luceneQuery, RESULT_LIMIT);
+         if (topDocs.totalHits > RESULT_LIMIT)
+         {
+            throw new VirtualFileSystemException(
+               String.format("Too many (%d) matched results found. ", topDocs.totalHits));
+         }
+         final String[] result = new String[topDocs.scoreDocs.length];
+         for (int i = 0, length = result.length; i < length; i++)
+         {
+            result[i] = luceneSearcher.doc(topDocs.scoreDocs[i].doc).getField("path").stringValue();
+         }
+         return result;
       }
       catch (IOException e)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);// TODO : message
+         throw new VirtualFileSystemException(e.getMessage(), e);
       }
       finally
       {
-         if (inReader != null)
+         try
+         {
+            releaseLuceneSearcher(luceneSearcher);
+         }
+         catch (IOException e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
+      }
+   }
+
+   public final void add(VirtualFile virtualFile) throws IOException, VirtualFileSystemException
+   {
+      if (indexedMediaTypes.contains(getMediaType(virtualFile)))
+      {
+         doAdd(virtualFile);
+      }
+   }
+
+   protected void doAdd(VirtualFile virtualFile) throws IOException, VirtualFileSystemException
+   {
+      if (virtualFile.isFolder())
+      {
+         addTree(virtualFile);
+      }
+      else
+      {
+         addFile(virtualFile);
+      }
+   }
+
+   private int addTree(VirtualFile tree) throws IOException, VirtualFileSystemException
+   {
+      final MountPoint mountPoint = tree.getMountPoint();
+      final java.io.File ioRoot = tree.getMountPoint().getRoot().getIoFile();
+      final LinkedList<VirtualFile> q = new LinkedList<VirtualFile>();
+      q.add(tree);
+      String[] names;
+      int indexedFiles = 0;
+      while (!q.isEmpty())
+      {
+         final VirtualFile folder = q.pop();
+         names = folder.getIoFile().list(HIDDEN_DIR_FILTER);
+         if (names == null)
+         {
+            // Something wrong. According to java docs may be null only if i/o error occurs.
+            throw new VirtualFileSystemException(String.format("Unable get children '%s'. ", folder.getPath()));
+         }
+
+         for (String name : names)
+         {
+            final Path childPath = folder.getInternalPath().newPath(name);
+            final VirtualFile child = new VirtualFile(new java.io.File(ioRoot, childPath.toIoPath()), childPath, mountPoint);
+            if (child.isFolder())
+            {
+               q.push(child);
+            }
+            else
+            {
+               if (indexedMediaTypes.contains(getMediaType(child)))
+               {
+                  addFile(child);
+                  indexedFiles++;
+               }
+            }
+         }
+      }
+      return indexedFiles;
+   }
+
+   private void addFile(VirtualFile file) throws IOException, VirtualFileSystemException
+   {
+      Reader fContentReader = null;
+      try
+      {
+         fContentReader = new BufferedReader(new InputStreamReader(file.getContent().getStream()));
+         luceneIndexWriter.addDocument(createDocument(file, fContentReader));
+      }
+      catch (OutOfMemoryError oome)
+      {
+         close();
+         throw oome;
+      }
+      finally
+      {
+         if (fContentReader != null)
          {
             try
             {
-               inReader.close();
+               fContentReader.close();
             }
             catch (IOException ignored)
             {
@@ -240,41 +345,52 @@ public class Searcher
       }
    }
 
-   public void delete(String path) throws VirtualFileSystemException
+   public final void delete(String path) throws IOException, VirtualFileSystemException
+   {
+      doDelete(new Term("path", path));
+   }
+
+   protected void doDelete(Term deleteTerm) throws IOException, VirtualFileSystemException
    {
       try
       {
-         indexWriter.deleteDocuments(new Term("path", path));
+         luceneIndexWriter.deleteDocuments(new PrefixQuery(deleteTerm));
       }
-      catch (IOException e)
+      catch (OutOfMemoryError oome)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);// TODO : message
+         close();
+         throw oome;
       }
    }
 
-   public void update(VirtualFile f) throws VirtualFileSystemException
+   public final void update(VirtualFile virtualFile) throws IOException, VirtualFileSystemException
    {
-      Reader inReader = null;
+      if (indexedMediaTypes.contains(getMediaType(virtualFile)))
+      {
+         doUpdate(new Term("path", virtualFile.getPath()), virtualFile);
+      }
+   }
+
+   protected void doUpdate(Term deleteTerm, VirtualFile virtualFile) throws IOException, VirtualFileSystemException
+   {
+      Reader fContentReader = null;
       try
       {
-         inReader = new BufferedReader(new InputStreamReader(f.getContent().getStream()));
-         indexWriter.updateDocument(new Term("path", f.getPath()), createDocument(f, inReader));
+         fContentReader = new BufferedReader(new InputStreamReader(virtualFile.getContent().getStream()));
+         luceneIndexWriter.updateDocument(deleteTerm, createDocument(virtualFile, fContentReader));
       }
-      catch (CorruptIndexException e)
+      catch (OutOfMemoryError oome)
       {
-         throw new VirtualFileSystemException(e.getMessage(), e);// TODO : message
-      }
-      catch (IOException e)
-      {
-         throw new VirtualFileSystemException(e.getMessage(), e);// TODO : message
+         close();
+         throw oome;
       }
       finally
       {
-         if (inReader != null)
+         if (fContentReader != null)
          {
             try
             {
-               inReader.close();
+               fContentReader.close();
             }
             catch (IOException ignored)
             {
@@ -283,47 +399,82 @@ public class Searcher
       }
    }
 
-   private Document createDocument(VirtualFile f, Reader inReader) throws VirtualFileSystemException
+   public void close()
+   {
+      closeQuietly(luceneIndexSearcher);
+      closeQuietly(luceneIndexWriter);
+      closeQuietly(luceneIndexDirectory);
+   }
+
+   protected Document createDocument(VirtualFile virtualFile, Reader inReader) throws VirtualFileSystemException
    {
       final Document doc = new Document();
-      doc.add(new Field("path", f.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-      doc.add(new Field("name", f.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
-      String mediaType = f.getMediaType();
-      int paramStartIndex = mediaType.indexOf(';');
-      if (paramStartIndex != -1)
-      {
-         mediaType = mediaType.substring(0, paramStartIndex).trim();
-      }
-      doc.add(new Field("media_type", mediaType, Field.Store.YES, Field.Index.NOT_ANALYZED));
+      doc.add(new Field("path", virtualFile.getPath(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+      doc.add(new Field("name", virtualFile.getName(), Field.Store.YES, Field.Index.NOT_ANALYZED));
+      doc.add(new Field("mediatype", getMediaType(virtualFile), Field.Store.YES, Field.Index.NOT_ANALYZED));
       doc.add(new Field("text", inReader));
       return doc;
    }
 
-   IndexSearcher getSearcher() throws VirtualFileSystemException
+   /** Get virtual file media type. Any additional parameters (e.g. 'charset') are removed. */
+   protected String getMediaType(VirtualFile virtualFile) throws VirtualFileSystemException
    {
-      if (reopening.compareAndSet(false, true))
+      String mediaType = virtualFile.getMediaType();
+      final int paramStartIndex = mediaType.indexOf(';');
+      if (paramStartIndex != -1)
+      {
+         mediaType = mediaType.substring(0, paramStartIndex).trim();
+      }
+      return mediaType;
+   }
+
+   protected Analyzer makeAnalyzer()
+   {
+      return new SimpleAnalyzer();
+   }
+
+   private void closeQuietly(IndexSearcher indexSearcher)
+   {
+      if (indexSearcher != null)
       {
          try
          {
-            IndexReader reader = searcher.getIndexReader();
-            IndexReader newReader = searcher.getIndexReader().reopen();
-            if (newReader != reader)
-            {
-               //System.out.println("UPDATE");
-               reader.close();
-               searcher = new IndexSearcher(newReader);
-            }
-            return searcher;
+            indexSearcher.getIndexReader().close();
          }
          catch (IOException e)
          {
-            throw new VirtualFileSystemException(e.getMessage(), e);// TODO : message
-         }
-         finally
-         {
-            reopening.set(false);
+            LOG.error(e.getMessage(), e);
          }
       }
-      return searcher;
+   }
+
+   private void closeQuietly(IndexWriter indexWriter)
+   {
+      if (indexWriter != null)
+      {
+         try
+         {
+            indexWriter.close();
+         }
+         catch (IOException e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
+      }
+   }
+
+   private void closeQuietly(Directory directory)
+   {
+      if (directory != null)
+      {
+         try
+         {
+            directory.close();
+         }
+         catch (IOException e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
+      }
    }
 }

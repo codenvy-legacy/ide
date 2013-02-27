@@ -35,18 +35,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ * Implementation of SearcherProvider which run Searcher initialization update tasks in ExecutorService.
+ * <p/>
+ * NOTE: This implementation always create new index in new directory. Index is not reused after call {@link
+ * org.exoplatform.ide.vfs.impl.fs.CleanableSearcher#close()}. Index directory is cleaned after close Searcher.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
 public class CleanableSearcherProvider extends SearcherProvider
 {
-
-//   * Implementation of Searcher which run all update tasks in ExecutorService.
-//   * <p/>
-//   * NOTE: This implementation always create new index in directory specified in constructor. This directory must be
-//   * empty. If directory is not empty IllegalStateException is thrown.
-
-
    private final ConcurrentMap<java.io.File, CleanableSearcher> instances;
    private final ExecutorService executor;
 
@@ -78,6 +76,7 @@ public class CleanableSearcherProvider extends SearcherProvider
       CleanableSearcher searcher = instances.get(vfsIoRoot);
       if (searcher == null)
       {
+
          final java.io.File indexDir;
          CleanableSearcher newSearcher;
          try
@@ -87,7 +86,7 @@ public class CleanableSearcherProvider extends SearcherProvider
          }
          catch (IOException e)
          {
-            throw new VirtualFileSystemException("Unable create searcher.");
+            throw new VirtualFileSystemException("Unable create searcher. " + e.getMessage(), e);
          }
          searcher = instances.putIfAbsent(vfsIoRoot, newSearcher);
          if (searcher == null)
@@ -101,8 +100,9 @@ public class CleanableSearcherProvider extends SearcherProvider
 
    void close(CleanableSearcher searcher)
    {
-      searcher.doClose();
       instances.values().remove(searcher);
+      searcher.doClose();
+      FileUtils.deleteRecursive(searcher.getIndexDir());
    }
 
    private Set<String> getIndexedMediaTypes() throws VirtualFileSystemException

@@ -153,7 +153,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, copy.getId(), copy.getPath(), copy.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return copy;
    }
@@ -192,7 +192,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, file.getId(), file.getPath(), file.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return file;
    }
@@ -262,7 +262,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, folder.getId(), folder.getPath(), folder.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return folder;
    }
@@ -303,7 +303,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED));
+            new ChangeEvent(this, project.getId(), project.getPath(), project.getMimeType(), ChangeType.CREATED, getCurrentUserId()));
       }
       return project;
    }
@@ -381,7 +381,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, object.getId(), deletePath, object.getMediaType(), ChangeType.DELETED));
+            new ChangeEvent(this, object.getId(), deletePath, object.getMediaType(), ChangeType.DELETED, getCurrentUserId()));
       }
    }
 
@@ -811,7 +811,7 @@ public class MemoryFileSystem implements VirtualFileSystem
       if (listeners != null)
       {
          listeners.notifyListeners(
-            new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED));
+            new ChangeEvent(this, moved.getId(), moved.getPath(), oldPath, moved.getMimeType(), ChangeType.MOVED, getCurrentUserId()));
       }
       return moved;
    }
@@ -870,8 +870,8 @@ public class MemoryFileSystem implements VirtualFileSystem
       Item renamed = fromMemoryItem(object, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, renamed.getId(), renamed.getPath(), oldPath, renamed.getMimeType(), ChangeType.RENAMED, getCurrentUserId()));
       }
       return renamed;
    }
@@ -969,8 +969,8 @@ public class MemoryFileSystem implements VirtualFileSystem
       object.setMediaType(mediaType == null ? null : mediaType.toString());
       if (listeners != null)
       {
-         listeners.notifyListeners(
-            new ChangeEvent(this, object.getId(), object.getPath(), object.getMediaType(), ChangeType.CONTENT_UPDATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, object.getId(), object.getPath(), object.getMediaType(), ChangeType.CONTENT_UPDATED, getCurrentUserId()));
       }
    }
 
@@ -995,8 +995,8 @@ public class MemoryFileSystem implements VirtualFileSystem
       Item updated = fromMemoryItem(object, PropertyFilter.ALL_FILTER);
       if (listeners != null)
       {
-         listeners.notifyListeners(new ChangeEvent(this, updated.getId(), updated.getPath(), updated.getMimeType(),
-            ChangeType.PROPERTIES_UPDATED));
+         listeners.notifyListeners(new ChangeEvent(
+            this, updated.getId(), updated.getPath(), updated.getMimeType(), ChangeType.PROPERTIES_UPDATED, getCurrentUserId()));
       }
       return updated;
    }
@@ -1310,8 +1310,8 @@ public class MemoryFileSystem implements VirtualFileSystem
             context.putItem(file);
             if (listeners != null)
             {
-               listeners.notifyListeners(
-                  new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CREATED));
+               listeners.notifyListeners(new ChangeEvent(
+                  this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CREATED, getCurrentUserId()));
             }
          }
          catch (ItemAlreadyExistException e)
@@ -1331,8 +1331,8 @@ public class MemoryFileSystem implements VirtualFileSystem
             file.setContent(contentItem.getInputStream());
             if (listeners != null)
             {
-               listeners.notifyListeners(
-                  new ChangeEvent(this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CONTENT_UPDATED));
+               listeners.notifyListeners(new ChangeEvent(
+                  this, file.getId(), file.getPath(), file.getMediaType(), ChangeType.CONTENT_UPDATED, getCurrentUserId()));
             }
          }
          return Response.ok("", MediaType.TEXT_HTML).build();
@@ -1472,7 +1472,7 @@ public class MemoryFileSystem implements VirtualFileSystem
 
    private boolean hasPermissions(MemoryItem object, String... permissions)
    {
-      return hasPermissions(object, getCurrentUser(), Arrays.asList(permissions));
+      return hasPermissions(object, getCurrentUserId(), Arrays.asList(permissions));
    }
 
    private boolean hasPermissions(MemoryItem object, String userId, Collection<String> checkPermissions)
@@ -1491,7 +1491,7 @@ public class MemoryFileSystem implements VirtualFileSystem
          || userPermissions.containsAll(checkPermissions));
    }
 
-   private String getCurrentUser()
+   private String getCurrentUserId()
    {
       ConversationState cs = ConversationState.getCurrent();
       if (cs != null)
@@ -1713,5 +1713,14 @@ public class MemoryFileSystem implements VirtualFileSystem
       URI uri = uriBuilder.build(vfsId);
 
       return uri.toString();
+   }
+
+   @Override
+   public String toString()
+   {
+      return "MemoryFileSystem{" +
+         "vfsId='" + vfsId + '\'' +
+         ", baseUri=" + baseUri +
+         '}';
    }
 }

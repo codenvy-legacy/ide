@@ -18,29 +18,75 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.TopDocs;
 import org.exoplatform.ide.vfs.server.LazyIterator;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.services.log.ExoLogger;
+import org.exoplatform.services.log.Log;
+
+import java.io.IOException;
 
 /**
-* @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
-* @version $Id: $
-*/
-class QueryResult extends LazyIterator<String>
+ * Query result. Method {@link #next()} return path of matched item on virtual filesystem.
+ * <p/>
+ * NOTE: important to call {@link #close()} method when get results.
+ *
+ * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
+ * @version $Id: $
+ */
+public final class QueryResult extends LazyIterator<String>
 {
-   final TopDocs hits;
-   int currentIndex = 0;
+   private final static Log LOG = ExoLogger.getLogger(QueryResult.class);
+   private final TopDocs hits;
+   private final Searcher searcher;
+   private final IndexSearcher luceneSearcher;
 
-   QueryResult(TopDocs hits)
+   private int index = 0;
+   private boolean closed;
+
+   QueryResult(TopDocs hits, Searcher searcher, IndexSearcher luceneSearcher)
    {
       this.hits = hits;
+      this.searcher = searcher;
+      this.luceneSearcher = luceneSearcher;
       fetchNext();
    }
 
    @Override
    protected void fetchNext()
    {
-      if (currentIndex<hits.scoreDocs.length)
-                      next=hits.scoreDocs[currentIndex++];
+      next = null;
+      if (!closed)
+      {
+         if (index < hits.scoreDocs.length)
+         {
+            try
+            {
+               next = luceneSearcher.doc(hits.scoreDocs[index++].doc).getField("path").stringValue();
+            }
+            catch (IOException e)
+            {
+               LOG.error(e.getMessage(), e);
+            }
+         }
+      }
+   }
+
+   public void close()
+   {
+      if (!closed)
+      {
+         try
+         {
+            searcher.releaseLuceneSearcher(luceneSearcher);
+         }
+         catch (IOException e)
+         {
+            LOG.error(e.getMessage(), e);
+         }
+         closed = true;
+      }
    }
 
    @Override
