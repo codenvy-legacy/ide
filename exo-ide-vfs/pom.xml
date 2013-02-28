@@ -111,7 +111,6 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
-            <version>2.6</version>
             <executions>
                <execution>
                   <id>copy-prod-resources</id>
@@ -144,7 +143,6 @@
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>gwt-maven-plugin</artifactId>
-            <version>${gwt.maven.plugin.version}</version>
             <configuration>
                <module>org.exoplatform.ide.vfs.IDEVFS</module>
                <logLevel>ERROR</logLevel>
