@@ -26,8 +26,8 @@ import com.google.collide.client.collaboration.CollaborationManager.Participants
 import com.google.collide.client.common.BaseResources.Css;
 import org.exoplatform.ide.communication.MessageFilter;
 import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.FileOperationNotification;
 import com.google.collide.dto.FileOperationNotification.Operation;
 import com.google.collide.dto.RoutingTypes;

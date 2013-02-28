@@ -15,10 +15,10 @@
 package com.google.collide.client.ui.list;
 
 import com.google.collide.client.ui.ElementView;
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.util.dom.DomUtils;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.mvp.UiComponent;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.dom.client.Node;

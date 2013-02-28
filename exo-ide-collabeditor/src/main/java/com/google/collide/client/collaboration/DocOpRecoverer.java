@@ -16,14 +16,14 @@ package com.google.collide.client.collaboration;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.cc.RevisionProvider;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.RecoverFromMissedDocOps;
 import com.google.collide.dto.RecoverFromMissedDocOpsResponse;
 import com.google.collide.dto.ServerToClientDocOp;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.RecoverFromMissedDocOpsImpl;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
-import com.google.collide.shared.util.ErrorCallback;
+import org.exoplatform.ide.shared.util.ErrorCallback;
 import elemental.util.Timer;
 
 import org.exoplatform.ide.communication.FrontendApi.ApiCallback;

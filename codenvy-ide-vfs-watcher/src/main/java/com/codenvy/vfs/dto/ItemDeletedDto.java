@@ -33,4 +33,5 @@ public interface ItemDeletedDto extends ServerToClientDto
 
    String getFilePath();
 
+   String getUserId();
 }

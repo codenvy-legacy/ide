@@ -22,11 +22,11 @@ import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.gutter.Gutter;
 import com.google.collide.client.editor.renderer.ChangeTracker.ChangeType;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import java.util.EnumSet;
 

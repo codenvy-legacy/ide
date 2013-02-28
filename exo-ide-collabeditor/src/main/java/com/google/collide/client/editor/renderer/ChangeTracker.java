@@ -20,8 +20,8 @@ import com.google.collide.client.editor.Spacer;
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.ViewportModel.Edge;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.ScheduledCommandExecutor;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.ScheduledCommandExecutor;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
@@ -31,7 +31,7 @@ import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.document.util.LineUtils.LineVisitor;
 import com.google.collide.shared.document.util.PositionUtils;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 

@@ -33,9 +33,9 @@ import com.google.collide.shared.ot.Composer.ComposeException;
 import com.google.collide.shared.ot.DocOpApplier;
 import com.google.collide.shared.ot.DocOpBuilder;
 import com.google.collide.shared.ot.DocOpUtils;
-import com.google.collide.shared.util.ErrorCallback;
+import org.exoplatform.ide.shared.util.ErrorCallback;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringMap;

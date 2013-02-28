@@ -15,8 +15,10 @@
 package com.google.collide.shared.util;
 
 import com.google.collide.shared.document.util.LineUtils;
-import com.google.collide.shared.util.SortedList.Comparator;
-import com.google.collide.shared.util.SortedList.OneWayComparator;
+
+import org.exoplatform.ide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.SortedList.Comparator;
+import org.exoplatform.ide.shared.util.SortedList.OneWayComparator;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;

@@ -14,7 +14,7 @@
 
 package com.google.collide.client.document;
 
-import com.google.collide.client.util.PathUtil;
+import com.codenvy.ide.client.util.PathUtil;
 import com.google.collide.dto.ConflictChunk;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
 import com.google.collide.shared.document.Document;

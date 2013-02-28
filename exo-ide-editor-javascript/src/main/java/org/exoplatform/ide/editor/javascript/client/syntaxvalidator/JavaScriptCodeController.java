@@ -18,7 +18,7 @@
  */
 package org.exoplatform.ide.editor.javascript.client.syntaxvalidator;
 
-import com.google.collide.client.util.ScheduledCommandExecutor;
+import com.codenvy.ide.client.util.ScheduledCommandExecutor;
 import com.google.gwt.core.client.JavaScriptException;
 import com.google.gwt.user.client.Timer;
 
@@ -229,7 +229,7 @@ public class JavaScriptCodeController implements EditorFileContentChangedHandler
       private FileModel file;
 
       /**
-       * @see com.google.collide.client.util.ScheduledCommandExecutor#execute()
+       * @see com.codenvy.ide.client.util.ScheduledCommandExecutor#execute()
        */
       @Override
       protected void execute()

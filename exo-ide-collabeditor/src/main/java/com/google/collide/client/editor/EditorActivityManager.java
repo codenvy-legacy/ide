@@ -16,13 +16,13 @@ package com.google.collide.client.editor;
 
 import com.google.collide.client.editor.Buffer.ScrollListener;
 import com.google.collide.client.editor.Editor.KeyListener;
-import com.google.collide.client.util.UserActivityManager;
+import com.codenvy.ide.client.util.UserActivityManager;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 import org.exoplatform.ide.json.shared.JsonArray;
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * A class that listens to editor events to update the user activity manager on

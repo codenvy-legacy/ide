@@ -43,7 +43,7 @@ public class DtoServerImpls {
 
   private  DtoServerImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "b05ff1873e61366aa9dcddb6eee35176ab925a1e";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "86b20dcd80e4972e25174b9dd6c3338f3b70049c";
 
   public static class ItemImpl extends org.exoplatform.ide.dtogen.server.RoutableDtoServerImpl implements com.codenvy.vfs.dto.Item, JsonSerializable {
 
@@ -464,6 +464,8 @@ public class DtoServerImpls {
 
     protected ItemImpl item;
     private boolean _hasItem;
+    protected java.lang.String userId;
+    private boolean _hasUserId;
 
     public boolean hasItem() {
       return _hasItem;
@@ -477,6 +479,21 @@ public class DtoServerImpls {
     public ItemCreatedDtoImpl setItem(ItemImpl v) {
       _hasItem = true;
       item = v;
+      return this;
+    }
+
+    public boolean hasUserId() {
+      return _hasUserId;
+    }
+
+    @Override
+    public java.lang.String getUserId() {
+      return userId;
+    }
+
+    public ItemCreatedDtoImpl setUserId(java.lang.String v) {
+      _hasUserId = true;
+      userId = v;
       return this;
     }
 
@@ -497,6 +514,14 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasUserId != other._hasUserId) {
+        return false;
+      }
+      if (this._hasUserId) {
+        if (!this.userId.equals(other.userId)) {
+          return false;
+        }
+      }
       return true;
     }
 
@@ -504,6 +529,7 @@ public class DtoServerImpls {
     public int hashCode() {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasItem ? item.hashCode() : 0);
+      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -513,6 +539,9 @@ public class DtoServerImpls {
 
       JsonElement itemOut = item == null ? JsonNull.INSTANCE : item.toJsonElement();
       result.add("item", itemOut);
+
+      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+      result.add("userId", userIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -541,6 +570,12 @@ public class DtoServerImpls {
         dto.setItem(itemOut);
       }
 
+      if (json.has("userId")) {
+        JsonElement userIdIn = json.get("userId");
+        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+        dto.setUserId(userIdOut);
+      }
+
       return dto;
     }
     public static ItemCreatedDtoImpl fromJsonString(String jsonString) {
@@ -566,25 +601,12 @@ public class DtoServerImpls {
       return new ItemDeletedDtoImpl();
     }
 
-    protected java.lang.String fileId;
-    private boolean _hasFileId;
     protected java.lang.String filePath;
     private boolean _hasFilePath;
-
-    public boolean hasFileId() {
-      return _hasFileId;
-    }
-
-    @Override
-    public java.lang.String getFileId() {
-      return fileId;
-    }
-
-    public ItemDeletedDtoImpl setFileId(java.lang.String v) {
-      _hasFileId = true;
-      fileId = v;
-      return this;
-    }
+    protected java.lang.String fileId;
+    private boolean _hasFileId;
+    protected java.lang.String userId;
+    private boolean _hasUserId;
 
     public boolean hasFilePath() {
       return _hasFilePath;
@@ -601,6 +623,36 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasFileId() {
+      return _hasFileId;
+    }
+
+    @Override
+    public java.lang.String getFileId() {
+      return fileId;
+    }
+
+    public ItemDeletedDtoImpl setFileId(java.lang.String v) {
+      _hasFileId = true;
+      fileId = v;
+      return this;
+    }
+
+    public boolean hasUserId() {
+      return _hasUserId;
+    }
+
+    @Override
+    public java.lang.String getUserId() {
+      return userId;
+    }
+
+    public ItemDeletedDtoImpl setUserId(java.lang.String v) {
+      _hasUserId = true;
+      userId = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -610,6 +662,14 @@ public class DtoServerImpls {
         return false;
       }
       ItemDeletedDtoImpl other = (ItemDeletedDtoImpl) o;
+      if (this._hasFilePath != other._hasFilePath) {
+        return false;
+      }
+      if (this._hasFilePath) {
+        if (!this.filePath.equals(other.filePath)) {
+          return false;
+        }
+      }
       if (this._hasFileId != other._hasFileId) {
         return false;
       }
@@ -618,11 +678,11 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasFilePath != other._hasFilePath) {
+      if (this._hasUserId != other._hasUserId) {
         return false;
       }
-      if (this._hasFilePath) {
-        if (!this.filePath.equals(other.filePath)) {
+      if (this._hasUserId) {
+        if (!this.userId.equals(other.userId)) {
           return false;
         }
       }
@@ -632,8 +692,9 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasFileId ? fileId.hashCode() : 0);
       hash = hash * 31 + (_hasFilePath ? filePath.hashCode() : 0);
+      hash = hash * 31 + (_hasFileId ? fileId.hashCode() : 0);
+      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -641,11 +702,14 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
+      JsonElement filePathOut = (filePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(filePath);
+      result.add("filePath", filePathOut);
+
       JsonElement fileIdOut = (fileId == null) ? JsonNull.INSTANCE : new JsonPrimitive(fileId);
       result.add("fileId", fileIdOut);
 
-      JsonElement filePathOut = (filePath == null) ? JsonNull.INSTANCE : new JsonPrimitive(filePath);
-      result.add("filePath", filePathOut);
+      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+      result.add("userId", userIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -668,16 +732,22 @@ public class DtoServerImpls {
       ItemDeletedDtoImpl dto = new ItemDeletedDtoImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
+      if (json.has("filePath")) {
+        JsonElement filePathIn = json.get("filePath");
+        java.lang.String filePathOut = gson.fromJson(filePathIn, java.lang.String.class);
+        dto.setFilePath(filePathOut);
+      }
+
       if (json.has("fileId")) {
         JsonElement fileIdIn = json.get("fileId");
         java.lang.String fileIdOut = gson.fromJson(fileIdIn, java.lang.String.class);
         dto.setFileId(fileIdOut);
       }
 
-      if (json.has("filePath")) {
-        JsonElement filePathIn = json.get("filePath");
-        java.lang.String filePathOut = gson.fromJson(filePathIn, java.lang.String.class);
-        dto.setFilePath(filePathOut);
+      if (json.has("userId")) {
+        JsonElement userIdIn = json.get("userId");
+        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+        dto.setUserId(userIdOut);
       }
 
       return dto;
@@ -709,6 +779,8 @@ public class DtoServerImpls {
     private boolean _hasMovedItem;
     protected java.lang.String oldPath;
     private boolean _hasOldPath;
+    protected java.lang.String userId;
+    private boolean _hasUserId;
 
     public boolean hasMovedItem() {
       return _hasMovedItem;
@@ -740,6 +812,21 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasUserId() {
+      return _hasUserId;
+    }
+
+    @Override
+    public java.lang.String getUserId() {
+      return userId;
+    }
+
+    public ItemMovedDtoImpl setUserId(java.lang.String v) {
+      _hasUserId = true;
+      userId = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -765,6 +852,14 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasUserId != other._hasUserId) {
+        return false;
+      }
+      if (this._hasUserId) {
+        if (!this.userId.equals(other.userId)) {
+          return false;
+        }
+      }
       return true;
     }
 
@@ -773,6 +868,7 @@ public class DtoServerImpls {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasMovedItem ? movedItem.hashCode() : 0);
       hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
+      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -785,6 +881,9 @@ public class DtoServerImpls {
 
       JsonElement oldPathOut = (oldPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(oldPath);
       result.add("oldPath", oldPathOut);
+
+      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+      result.add("userId", userIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -819,6 +918,12 @@ public class DtoServerImpls {
         dto.setOldPath(oldPathOut);
       }
 
+      if (json.has("userId")) {
+        JsonElement userIdIn = json.get("userId");
+        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+        dto.setUserId(userIdOut);
+      }
+
       return dto;
     }
     public static ItemMovedDtoImpl fromJsonString(String jsonString) {
@@ -848,6 +953,8 @@ public class DtoServerImpls {
     private boolean _hasOldPath;
     protected ItemImpl renamedItem;
     private boolean _hasRenamedItem;
+    protected java.lang.String userId;
+    private boolean _hasUserId;
 
     public boolean hasOldPath() {
       return _hasOldPath;
@@ -879,6 +986,21 @@ public class DtoServerImpls {
       return this;
     }
 
+    public boolean hasUserId() {
+      return _hasUserId;
+    }
+
+    @Override
+    public java.lang.String getUserId() {
+      return userId;
+    }
+
+    public ItemRenamedDtoImpl setUserId(java.lang.String v) {
+      _hasUserId = true;
+      userId = v;
+      return this;
+    }
+
     @Override
     public boolean equals(Object o) {
       if (!super.equals(o)) {
@@ -904,6 +1026,14 @@ public class DtoServerImpls {
           return false;
         }
       }
+      if (this._hasUserId != other._hasUserId) {
+        return false;
+      }
+      if (this._hasUserId) {
+        if (!this.userId.equals(other.userId)) {
+          return false;
+        }
+      }
       return true;
     }
 
@@ -912,6 +1042,7 @@ public class DtoServerImpls {
       int hash = super.hashCode();
       hash = hash * 31 + (_hasOldPath ? oldPath.hashCode() : 0);
       hash = hash * 31 + (_hasRenamedItem ? renamedItem.hashCode() : 0);
+      hash = hash * 31 + (_hasUserId ? userId.hashCode() : 0);
       return hash;
     }
 
@@ -924,6 +1055,9 @@ public class DtoServerImpls {
 
       JsonElement renamedItemOut = renamedItem == null ? JsonNull.INSTANCE : renamedItem.toJsonElement();
       result.add("renamedItem", renamedItemOut);
+
+      JsonElement userIdOut = (userId == null) ? JsonNull.INSTANCE : new JsonPrimitive(userId);
+      result.add("userId", userIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -956,6 +1090,12 @@ public class DtoServerImpls {
         JsonElement renamedItemIn = json.get("renamedItem");
         ItemImpl renamedItemOut = ItemImpl.fromJsonElement(renamedItemIn);
         dto.setRenamedItem(renamedItemOut);
+      }
+
+      if (json.has("userId")) {
+        JsonElement userIdIn = json.get("userId");
+        java.lang.String userIdOut = gson.fromJson(userIdIn, java.lang.String.class);
+        dto.setUserId(userIdOut);
       }
 
       return dto;
@@ -1144,25 +1284,25 @@ public class DtoServerImpls {
       super(type);
     }
 
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-    protected java.lang.String projectPath;
-    private boolean _hasProjectPath;
     protected java.lang.String vfsId;
     private boolean _hasVfsId;
+    protected java.lang.String projectPath;
+    private boolean _hasProjectPath;
+    protected java.lang.String projectId;
+    private boolean _hasProjectId;
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
+    public boolean hasVfsId() {
+      return _hasVfsId;
     }
 
     @Override
-    public java.lang.String projectId() {
-      return projectId;
+    public java.lang.String vfsId() {
+      return vfsId;
     }
 
-    public ProjectClosedDtoImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
+    public ProjectClosedDtoImpl setVfsId(java.lang.String v) {
+      _hasVfsId = true;
+      vfsId = v;
       return this;
     }
 
@@ -1181,18 +1321,18 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasVfsId() {
-      return _hasVfsId;
+    public boolean hasProjectId() {
+      return _hasProjectId;
     }
 
     @Override
-    public java.lang.String vfsId() {
-      return vfsId;
+    public java.lang.String projectId() {
+      return projectId;
     }
 
-    public ProjectClosedDtoImpl setVfsId(java.lang.String v) {
-      _hasVfsId = true;
-      vfsId = v;
+    public ProjectClosedDtoImpl setProjectId(java.lang.String v) {
+      _hasProjectId = true;
+      projectId = v;
       return this;
     }
 
@@ -1205,11 +1345,11 @@ public class DtoServerImpls {
         return false;
       }
       ProjectClosedDtoImpl other = (ProjectClosedDtoImpl) o;
-      if (this._hasProjectId != other._hasProjectId) {
+      if (this._hasVfsId != other._hasVfsId) {
         return false;
       }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
+      if (this._hasVfsId) {
+        if (!this.vfsId.equals(other.vfsId)) {
           return false;
         }
       }
@@ -1221,11 +1361,11 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasVfsId != other._hasVfsId) {
+      if (this._hasProjectId != other._hasProjectId) {
         return false;
       }
-      if (this._hasVfsId) {
-        if (!this.vfsId.equals(other.vfsId)) {
+      if (this._hasProjectId) {
+        if (!this.projectId.equals(other.projectId)) {
           return false;
         }
       }
@@ -1235,9 +1375,9 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
       hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
+      hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
+      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       return hash;
     }
 
@@ -1245,14 +1385,14 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
+      JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
+      result.add("vfsId", vfsIdOut);
 
       JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
       result.add("projectPath", projectPathOut);
 
-      JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
-      result.add("vfsId", vfsIdOut);
+      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+      result.add("projectId", projectIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -1275,10 +1415,10 @@ public class DtoServerImpls {
       ProjectClosedDtoImpl dto = new ProjectClosedDtoImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
+      if (json.has("vfsId")) {
+        JsonElement vfsIdIn = json.get("vfsId");
+        java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
+        dto.setVfsId(vfsIdOut);
       }
 
       if (json.has("projectPath")) {
@@ -1287,10 +1427,10 @@ public class DtoServerImpls {
         dto.setProjectPath(projectPathOut);
       }
 
-      if (json.has("vfsId")) {
-        JsonElement vfsIdIn = json.get("vfsId");
-        java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
-        dto.setVfsId(vfsIdOut);
+      if (json.has("projectId")) {
+        JsonElement projectIdIn = json.get("projectId");
+        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+        dto.setProjectId(projectIdOut);
       }
 
       return dto;
@@ -1314,25 +1454,25 @@ public class DtoServerImpls {
       super(type);
     }
 
-    protected java.lang.String projectId;
-    private boolean _hasProjectId;
-    protected java.lang.String projectPath;
-    private boolean _hasProjectPath;
     protected java.lang.String vfsId;
     private boolean _hasVfsId;
+    protected java.lang.String projectPath;
+    private boolean _hasProjectPath;
+    protected java.lang.String projectId;
+    private boolean _hasProjectId;
 
-    public boolean hasProjectId() {
-      return _hasProjectId;
+    public boolean hasVfsId() {
+      return _hasVfsId;
     }
 
     @Override
-    public java.lang.String projectId() {
-      return projectId;
+    public java.lang.String vfsId() {
+      return vfsId;
     }
 
-    public ProjectOpenedDtoImpl setProjectId(java.lang.String v) {
-      _hasProjectId = true;
-      projectId = v;
+    public ProjectOpenedDtoImpl setVfsId(java.lang.String v) {
+      _hasVfsId = true;
+      vfsId = v;
       return this;
     }
 
@@ -1351,18 +1491,18 @@ public class DtoServerImpls {
       return this;
     }
 
-    public boolean hasVfsId() {
-      return _hasVfsId;
+    public boolean hasProjectId() {
+      return _hasProjectId;
     }
 
     @Override
-    public java.lang.String vfsId() {
-      return vfsId;
+    public java.lang.String projectId() {
+      return projectId;
     }
 
-    public ProjectOpenedDtoImpl setVfsId(java.lang.String v) {
-      _hasVfsId = true;
-      vfsId = v;
+    public ProjectOpenedDtoImpl setProjectId(java.lang.String v) {
+      _hasProjectId = true;
+      projectId = v;
       return this;
     }
 
@@ -1375,11 +1515,11 @@ public class DtoServerImpls {
         return false;
       }
       ProjectOpenedDtoImpl other = (ProjectOpenedDtoImpl) o;
-      if (this._hasProjectId != other._hasProjectId) {
+      if (this._hasVfsId != other._hasVfsId) {
         return false;
       }
-      if (this._hasProjectId) {
-        if (!this.projectId.equals(other.projectId)) {
+      if (this._hasVfsId) {
+        if (!this.vfsId.equals(other.vfsId)) {
           return false;
         }
       }
@@ -1391,11 +1531,11 @@ public class DtoServerImpls {
           return false;
         }
       }
-      if (this._hasVfsId != other._hasVfsId) {
+      if (this._hasProjectId != other._hasProjectId) {
         return false;
       }
-      if (this._hasVfsId) {
-        if (!this.vfsId.equals(other.vfsId)) {
+      if (this._hasProjectId) {
+        if (!this.projectId.equals(other.projectId)) {
           return false;
         }
       }
@@ -1405,9 +1545,9 @@ public class DtoServerImpls {
     @Override
     public int hashCode() {
       int hash = super.hashCode();
-      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
-      hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
       hash = hash * 31 + (_hasVfsId ? vfsId.hashCode() : 0);
+      hash = hash * 31 + (_hasProjectPath ? projectPath.hashCode() : 0);
+      hash = hash * 31 + (_hasProjectId ? projectId.hashCode() : 0);
       return hash;
     }
 
@@ -1415,14 +1555,14 @@ public class DtoServerImpls {
     public JsonElement toJsonElement() {
       JsonObject result = new JsonObject();
 
-      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
-      result.add("projectId", projectIdOut);
+      JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
+      result.add("vfsId", vfsIdOut);
 
       JsonElement projectPathOut = (projectPath == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectPath);
       result.add("projectPath", projectPathOut);
 
-      JsonElement vfsIdOut = (vfsId == null) ? JsonNull.INSTANCE : new JsonPrimitive(vfsId);
-      result.add("vfsId", vfsIdOut);
+      JsonElement projectIdOut = (projectId == null) ? JsonNull.INSTANCE : new JsonPrimitive(projectId);
+      result.add("projectId", projectIdOut);
       result.add("_type", new JsonPrimitive(getType()));
       return result;
     }
@@ -1445,10 +1585,10 @@ public class DtoServerImpls {
       ProjectOpenedDtoImpl dto = new ProjectOpenedDtoImpl();
       JsonObject json = jsonElem.getAsJsonObject();
 
-      if (json.has("projectId")) {
-        JsonElement projectIdIn = json.get("projectId");
-        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
-        dto.setProjectId(projectIdOut);
+      if (json.has("vfsId")) {
+        JsonElement vfsIdIn = json.get("vfsId");
+        java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
+        dto.setVfsId(vfsIdOut);
       }
 
       if (json.has("projectPath")) {
@@ -1457,10 +1597,10 @@ public class DtoServerImpls {
         dto.setProjectPath(projectPathOut);
       }
 
-      if (json.has("vfsId")) {
-        JsonElement vfsIdIn = json.get("vfsId");
-        java.lang.String vfsIdOut = gson.fromJson(vfsIdIn, java.lang.String.class);
-        dto.setVfsId(vfsIdOut);
+      if (json.has("projectId")) {
+        JsonElement projectIdIn = json.get("projectId");
+        java.lang.String projectIdOut = gson.fromJson(projectIdIn, java.lang.String.class);
+        dto.setProjectId(projectIdOut);
       }
 
       return dto;

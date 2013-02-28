@@ -23,7 +23,7 @@ import com.google.collide.shared.document.anchor.AnchorUtils;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 

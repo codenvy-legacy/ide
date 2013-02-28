@@ -28,7 +28,7 @@ public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "b05ff1873e61366aa9dcddb6eee35176ab925a1e";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "86b20dcd80e4972e25174b9dd6c3338f3b70049c";
 
 
   public static class ItemImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.vfs.dto.Item {
@@ -169,6 +169,20 @@ public class DtoClientImpls {
       return this.hasOwnProperty("item");
     }-*/;
 
+    @Override
+    public final native java.lang.String getUserId() /*-{
+      return this["userId"];
+    }-*/;
+
+    public final native ItemCreatedDtoImpl setUserId(java.lang.String userId) /*-{
+      this["userId"] = userId;
+      return this;
+    }-*/;
+
+    public final native boolean hasUserId() /*-{
+      return this.hasOwnProperty("userId");
+    }-*/;
+
     public static native ItemCreatedDtoImpl make() /*-{
       return {
         _type: 4
@@ -178,6 +192,20 @@ public class DtoClientImpls {
 
   public static class ItemDeletedDtoImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.codenvy.vfs.dto.ItemDeletedDto {
     protected ItemDeletedDtoImpl() {}
+
+    @Override
+    public final native java.lang.String getFilePath() /*-{
+      return this["filePath"];
+    }-*/;
+
+    public final native ItemDeletedDtoImpl setFilePath(java.lang.String filePath) /*-{
+      this["filePath"] = filePath;
+      return this;
+    }-*/;
+
+    public final native boolean hasFilePath() /*-{
+      return this.hasOwnProperty("filePath");
+    }-*/;
 
     @Override
     public final native java.lang.String getFileId() /*-{
@@ -194,17 +222,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getFilePath() /*-{
-      return this["filePath"];
+    public final native java.lang.String getUserId() /*-{
+      return this["userId"];
     }-*/;
 
-    public final native ItemDeletedDtoImpl setFilePath(java.lang.String filePath) /*-{
-      this["filePath"] = filePath;
+    public final native ItemDeletedDtoImpl setUserId(java.lang.String userId) /*-{
+      this["userId"] = userId;
       return this;
     }-*/;
 
-    public final native boolean hasFilePath() /*-{
-      return this.hasOwnProperty("filePath");
+    public final native boolean hasUserId() /*-{
+      return this.hasOwnProperty("userId");
     }-*/;
 
     public static native ItemDeletedDtoImpl make() /*-{
@@ -245,6 +273,20 @@ public class DtoClientImpls {
       return this.hasOwnProperty("oldPath");
     }-*/;
 
+    @Override
+    public final native java.lang.String getUserId() /*-{
+      return this["userId"];
+    }-*/;
+
+    public final native ItemMovedDtoImpl setUserId(java.lang.String userId) /*-{
+      this["userId"] = userId;
+      return this;
+    }-*/;
+
+    public final native boolean hasUserId() /*-{
+      return this.hasOwnProperty("userId");
+    }-*/;
+
     public static native ItemMovedDtoImpl make() /*-{
       return {
         _type: 5
@@ -281,6 +323,20 @@ public class DtoClientImpls {
 
     public final native boolean hasRenamedItem() /*-{
       return this.hasOwnProperty("renamedItem");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getUserId() /*-{
+      return this["userId"];
+    }-*/;
+
+    public final native ItemRenamedDtoImpl setUserId(java.lang.String userId) /*-{
+      this["userId"] = userId;
+      return this;
+    }-*/;
+
+    public final native boolean hasUserId() /*-{
+      return this.hasOwnProperty("userId");
     }-*/;
 
     public static native ItemRenamedDtoImpl make() /*-{
@@ -344,17 +400,17 @@ public class DtoClientImpls {
     protected ProjectClosedDtoImpl() {}
 
     @Override
-    public final native java.lang.String projectId() /*-{
-      return this["projectId"];
+    public final native java.lang.String vfsId() /*-{
+      return this["vfsId"];
     }-*/;
 
-    public final native ProjectClosedDtoImpl setProjectId(java.lang.String projectId) /*-{
-      this["projectId"] = projectId;
+    public final native ProjectClosedDtoImpl setVfsId(java.lang.String vfsId) /*-{
+      this["vfsId"] = vfsId;
       return this;
     }-*/;
 
-    public final native boolean hasProjectId() /*-{
-      return this.hasOwnProperty("projectId");
+    public final native boolean hasVfsId() /*-{
+      return this.hasOwnProperty("vfsId");
     }-*/;
 
     @Override
@@ -372,17 +428,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String vfsId() /*-{
-      return this["vfsId"];
+    public final native java.lang.String projectId() /*-{
+      return this["projectId"];
     }-*/;
 
-    public final native ProjectClosedDtoImpl setVfsId(java.lang.String vfsId) /*-{
-      this["vfsId"] = vfsId;
+    public final native ProjectClosedDtoImpl setProjectId(java.lang.String projectId) /*-{
+      this["projectId"] = projectId;
       return this;
     }-*/;
 
-    public final native boolean hasVfsId() /*-{
-      return this.hasOwnProperty("vfsId");
+    public final native boolean hasProjectId() /*-{
+      return this.hasOwnProperty("projectId");
     }-*/;
 
     public static native ProjectClosedDtoImpl make() /*-{
@@ -396,17 +452,17 @@ public class DtoClientImpls {
     protected ProjectOpenedDtoImpl() {}
 
     @Override
-    public final native java.lang.String projectId() /*-{
-      return this["projectId"];
+    public final native java.lang.String vfsId() /*-{
+      return this["vfsId"];
     }-*/;
 
-    public final native ProjectOpenedDtoImpl setProjectId(java.lang.String projectId) /*-{
-      this["projectId"] = projectId;
+    public final native ProjectOpenedDtoImpl setVfsId(java.lang.String vfsId) /*-{
+      this["vfsId"] = vfsId;
       return this;
     }-*/;
 
-    public final native boolean hasProjectId() /*-{
-      return this.hasOwnProperty("projectId");
+    public final native boolean hasVfsId() /*-{
+      return this.hasOwnProperty("vfsId");
     }-*/;
 
     @Override
@@ -424,17 +480,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String vfsId() /*-{
-      return this["vfsId"];
+    public final native java.lang.String projectId() /*-{
+      return this["projectId"];
     }-*/;
 
-    public final native ProjectOpenedDtoImpl setVfsId(java.lang.String vfsId) /*-{
-      this["vfsId"] = vfsId;
+    public final native ProjectOpenedDtoImpl setProjectId(java.lang.String projectId) /*-{
+      this["projectId"] = projectId;
       return this;
     }-*/;
 
-    public final native boolean hasVfsId() /*-{
-      return this.hasOwnProperty("vfsId");
+    public final native boolean hasProjectId() /*-{
+      return this.hasOwnProperty("projectId");
     }-*/;
 
     public static native ProjectOpenedDtoImpl make() /*-{

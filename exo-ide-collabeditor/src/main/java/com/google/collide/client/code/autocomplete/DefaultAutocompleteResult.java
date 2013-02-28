@@ -18,7 +18,7 @@ import static com.google.collide.shared.document.util.PositionUtils.getPosition;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.client.editor.selection.SelectionModel;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.Position;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;

@@ -19,7 +19,7 @@ import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.util.LineUtils;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
 
 import org.exoplatform.ide.json.shared.JsonArray;

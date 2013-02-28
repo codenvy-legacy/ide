@@ -26,7 +26,7 @@ import com.google.collide.dto.shared.DocOpFactory;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.base.Preconditions;
 
 import org.exoplatform.ide.json.shared.JsonArray;

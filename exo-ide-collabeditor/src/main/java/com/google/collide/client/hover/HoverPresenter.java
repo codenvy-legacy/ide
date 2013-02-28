@@ -24,7 +24,7 @@ import com.google.collide.client.code.popup.EditorPopupController.Remover;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.MouseHoverManager.MouseHoverListener;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.shared.document.LineInfo;
 import elemental.html.Element;
 

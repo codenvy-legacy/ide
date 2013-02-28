@@ -23,7 +23,7 @@ import com.google.collide.client.ui.menu.PositionController.Position;
 import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.popup.Popup;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
@@ -33,6 +33,7 @@ import elemental.html.Element;
 import elemental.util.Timer;
 
 import org.exoplatform.ide.json.shared.JsonArray;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import javax.annotation.Nullable;
 
@@ -253,7 +254,7 @@ public class EditorPopupController {
       showTimer.schedule(delayMs);
     }
 
-    final com.google.collide.shared.util.ListenerRegistrar.Remover scrollListenerRemover =
+    final ListenerRegistrar.Remover scrollListenerRemover =
         editor.getBuffer().getScrollListenerRegistrar().add(scrollListener);
 
     return (currentPopupRemover = new Remover() {

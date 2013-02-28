@@ -15,10 +15,11 @@ import org.eclipse.jdt.client.core.dom.*;
 import org.eclipse.jdt.client.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.client.core.dom.rewrite.ListRewrite;
 import org.eclipse.jdt.client.internal.compiler.env.ICompilationUnit;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.List;
-
+@Ignore
 public class ASTRewritingWithStatementsRecoveryTest extends ASTRewritingTest
 {
 

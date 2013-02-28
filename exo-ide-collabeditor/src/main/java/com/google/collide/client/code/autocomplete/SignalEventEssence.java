@@ -15,13 +15,13 @@ package com.google.collide.client.code.autocomplete;
 
 import com.google.common.annotations.VisibleForTesting;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent;
-import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
+import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent.KeySignalType;
 
 // TODO: Replace with CharCodeWithModifiers.
 /**
  * Immutable holder of essential properties of
- * {@link org.waveprotocol.wave.client.common.util.SignalEvent}
+ * {@link com.codenvy.ide.client.util.SignalEvent}
  */
 public class SignalEventEssence {
   public final int keyCode;

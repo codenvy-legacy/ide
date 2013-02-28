@@ -14,7 +14,7 @@
 
 package com.google.collide.server.shared.merge;
 
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.base.Objects;
 import com.google.common.base.Objects.ToStringHelper;
 

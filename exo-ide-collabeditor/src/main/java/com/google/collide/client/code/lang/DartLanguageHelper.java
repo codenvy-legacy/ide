@@ -22,7 +22,7 @@ import com.google.collide.client.editor.input.InputScheme;
 import com.google.collide.client.editor.input.Shortcut;
 import com.google.gwt.regexp.shared.RegExp;
 
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * Dart-specific {@link LanguageHelper}.

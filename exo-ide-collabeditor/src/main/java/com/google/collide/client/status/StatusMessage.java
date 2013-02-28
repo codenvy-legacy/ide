@@ -14,7 +14,7 @@
 
 package com.google.collide.client.status;
 
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import elemental.client.Browser;

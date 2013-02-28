@@ -18,7 +18,7 @@ import static com.google.collide.client.code.autocomplete.AutocompleteResult.Pop
 import static com.google.collide.client.code.autocomplete.codegraph.ParseUtils.Context.*;
 import static com.google.collide.codemirror2.TokenType.STRING;
 import static com.google.gwt.event.dom.client.KeyCodes.KEY_BACKSPACE;
-import static org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType.DELETE;
+import static com.codenvy.ide.client.util.SignalEvent.KeySignalType.DELETE;
 
 import com.google.collide.client.code.autocomplete.DefaultAutocompleteResult;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
@@ -31,7 +31,7 @@ import com.google.collide.codemirror2.Token;
 import com.google.collide.codemirror2.TokenType;
 import com.google.collide.shared.document.Position;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 

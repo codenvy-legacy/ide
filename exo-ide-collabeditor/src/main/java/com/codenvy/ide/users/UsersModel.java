@@ -19,7 +19,7 @@
 package com.codenvy.ide.users;
 
 import com.google.collide.client.communication.FrontendApi;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.GetWorkspaceParticipants;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.ParticipantUserDetails;

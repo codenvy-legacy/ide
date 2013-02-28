@@ -23,8 +23,8 @@ import com.google.collide.dto.ServerToClientDocOps;
 import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.DocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 

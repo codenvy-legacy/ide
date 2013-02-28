@@ -29,7 +29,7 @@ import com.google.collide.shared.ot.DocOpUtils;
 import com.google.collide.shared.ot.Inverter;
 import com.google.collide.shared.ot.Transformer;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.waveprotocol.wave.model.operation.OperationPair;

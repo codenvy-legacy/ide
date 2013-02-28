@@ -19,9 +19,9 @@ import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.status.StatusManager;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
-import com.google.collide.client.util.logging.Log;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
+import com.codenvy.ide.client.util.logging.Log;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 import com.google.gwt.user.client.Timer;
 
 import org.exoplatform.ide.client.framework.websocket.MessageBus;

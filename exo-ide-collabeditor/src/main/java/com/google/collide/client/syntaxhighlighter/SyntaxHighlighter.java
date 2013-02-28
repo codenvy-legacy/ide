@@ -24,7 +24,7 @@ import com.google.collide.codemirror2.Token;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 

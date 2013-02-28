@@ -31,4 +31,6 @@ public interface ItemMovedDto extends ServerToClientDto
    Item movedItem();
 
    String oldPath();
+
+   String getUserId();
 }

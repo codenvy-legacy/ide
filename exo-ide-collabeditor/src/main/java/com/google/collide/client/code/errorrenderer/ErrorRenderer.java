@@ -15,14 +15,14 @@ package com.google.collide.client.code.errorrenderer;
 
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.renderer.LineRenderer;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.CodeError;
 import com.google.collide.dto.FilePosition;
 import com.google.collide.dto.client.DtoClientImpls;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineNumberAndColumn;
 import com.google.collide.shared.ot.PositionMigrator;
-import com.google.collide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.SortedList;
 
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.shared.JsonArray;

@@ -25,9 +25,9 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.TextChange.Type;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
-import com.google.collide.shared.util.StringUtils;
-import com.google.collide.shared.util.UnicodeUtils;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
+import org.exoplatform.ide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.UnicodeUtils;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 

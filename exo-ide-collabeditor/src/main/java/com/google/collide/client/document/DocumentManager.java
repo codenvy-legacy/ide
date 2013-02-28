@@ -16,7 +16,7 @@ package com.google.collide.client.document;
 
 import com.google.collide.client.AppContext;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.client.util.PathUtil;
+import com.codenvy.ide.client.util.PathUtil;
 import com.google.collide.dto.ConflictChunk;
 import com.google.collide.dto.FileContents;
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
@@ -24,9 +24,9 @@ import com.google.collide.shared.Pair;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringMap;

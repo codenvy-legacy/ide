@@ -24,7 +24,7 @@ import com.google.collide.client.code.Participant;
 import com.google.collide.client.collaboration.participants.ParticipantsPresenter.Display;
 import com.google.collide.client.ui.list.SimpleList;
 import com.google.collide.client.ui.list.SimpleList.View;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.Elements;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;

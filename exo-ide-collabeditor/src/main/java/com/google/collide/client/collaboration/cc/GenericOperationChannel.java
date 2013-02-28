@@ -15,12 +15,12 @@
 package com.google.collide.client.collaboration.cc;
 
 import com.google.collide.client.collaboration.cc.TransformQueue.Transformer;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.common.base.Preconditions;
 
-import org.waveprotocol.wave.client.scheduler.Scheduler;
-import org.waveprotocol.wave.client.scheduler.TimerService;
-import org.waveprotocol.wave.model.util.FuzzingBackOffGenerator;
+import com.codenvy.ide.client.scheduler.Scheduler;
+import com.codenvy.ide.client.scheduler.TimerService;
+import com.codenvy.ide.client.util.FuzzingBackOffGenerator;
 
 import java.util.EnumSet;
 import java.util.List;

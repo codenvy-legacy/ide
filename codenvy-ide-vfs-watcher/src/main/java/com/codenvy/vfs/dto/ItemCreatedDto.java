@@ -29,4 +29,6 @@ import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 public interface ItemCreatedDto extends ServerToClientDto
 {
    Item getItem();
+
+   String getUserId();
 }

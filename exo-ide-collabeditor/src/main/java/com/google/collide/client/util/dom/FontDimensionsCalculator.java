@@ -14,8 +14,8 @@
 
 package com.google.collide.client.util.dom;
 
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;

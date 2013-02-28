@@ -14,7 +14,7 @@
 
 package com.google.collide.client.communication;
 
-import com.google.collide.client.util.PathUtil;
+import com.codenvy.ide.client.util.PathUtil;
 
 import elemental.client.Browser;
 import elemental.html.Location;

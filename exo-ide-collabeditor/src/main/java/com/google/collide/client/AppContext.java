@@ -18,9 +18,9 @@ import com.google.collide.client.communication.FrontendApi;
 import org.exoplatform.ide.communication.MessageFilter;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.status.StatusManager;
-import com.google.collide.client.util.UserActivityManager;
+import com.codenvy.ide.client.util.UserActivityManager;
 
-import com.google.collide.client.util.WindowUnloadingController;
+import com.codenvy.ide.client.util.WindowUnloadingController;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 

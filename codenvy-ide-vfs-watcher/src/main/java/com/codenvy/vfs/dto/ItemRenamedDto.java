@@ -31,4 +31,6 @@ public interface ItemRenamedDto extends ServerToClientDto
    Item renamedItem();
 
    String oldPath();
+
+   String getUserId();
 }

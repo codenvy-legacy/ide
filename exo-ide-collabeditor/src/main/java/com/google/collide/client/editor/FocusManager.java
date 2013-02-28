@@ -14,10 +14,10 @@
 
 package com.google.collide.client.editor;
 
-import com.google.collide.client.util.Elements;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import com.codenvy.ide.client.util.Elements;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 
 import elemental.events.Event;
 import elemental.events.EventListener;

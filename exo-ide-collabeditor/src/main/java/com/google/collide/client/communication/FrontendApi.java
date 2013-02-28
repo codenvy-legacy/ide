@@ -16,7 +16,7 @@ package com.google.collide.client.communication;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.status.StatusManager;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.ClientToServerDocOp;
 import com.google.collide.dto.CloseEditor;
 import com.google.collide.dto.FileOperationNotification;

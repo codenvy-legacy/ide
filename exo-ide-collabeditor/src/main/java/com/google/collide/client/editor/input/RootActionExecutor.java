@@ -17,7 +17,7 @@ package com.google.collide.client.editor.input;
 import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.shared.JsonArray;
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * Implementation of proxy that delegated execution to a list of executors.

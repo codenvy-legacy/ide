@@ -21,7 +21,7 @@ import com.google.collide.shared.document.Document.TextListener;
 import com.google.collide.shared.document.LineNumberAndColumn;
 import com.google.collide.shared.document.TextChange;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 

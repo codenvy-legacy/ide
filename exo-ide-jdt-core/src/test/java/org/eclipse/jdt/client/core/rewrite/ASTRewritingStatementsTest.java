@@ -21,7 +21,7 @@ import org.exoplatform.ide.editor.shared.text.Document;
 import org.exoplatform.ide.editor.shared.text.edits.TextEdit;
 import org.junit.Ignore;
 import org.junit.Test;
-
+@Ignore
 public class ASTRewritingStatementsTest extends ASTRewritingTest
 {
 

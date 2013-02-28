@@ -14,7 +14,7 @@
 
 package com.google.collide.client.documentparser;
 
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.codemirror2.Parser;
 import com.google.collide.codemirror2.State;
 import com.google.collide.codemirror2.Stream;
@@ -26,7 +26,7 @@ import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.shared.util.StringUtils;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 

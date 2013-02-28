@@ -14,7 +14,7 @@
 
 package com.google.collide.client.editor.renderer;
 
-import com.google.collide.client.util.Executor;
+import com.codenvy.ide.client.util.Executor;
 import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.json.shared.JsonArray;

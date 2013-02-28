@@ -14,8 +14,6 @@
 
 package com.google.collide.client.editor.input;
 
-import com.google.collide.shared.document.Line;
-
 import com.google.collide.client.editor.Editor;
 import com.google.collide.client.editor.Spacer;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -24,13 +22,11 @@ import com.google.collide.client.util.input.CharCodeWithModifiers;
 import com.google.collide.client.util.input.KeyCodeMap;
 import com.google.collide.client.util.input.ModifierKeys;
 import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.util.SortedList;
+import org.exoplatform.ide.shared.util.SortedList;
 
-import org.waveprotocol.wave.client.common.util.JsoIntMap;
-import org.waveprotocol.wave.client.common.util.SignalEvent;
-import org.waveprotocol.wave.client.common.util.UserAgent;
-
-import elemental.events.KeyboardEvent;
+import com.codenvy.ide.client.util.JsoIntMap;
+import com.codenvy.ide.client.util.SignalEvent;
+import com.codenvy.ide.client.util.UserAgent;
 
 import java.util.Random;
 

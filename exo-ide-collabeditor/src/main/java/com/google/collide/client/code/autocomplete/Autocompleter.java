@@ -17,8 +17,8 @@ package com.google.collide.client.code.autocomplete;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter.ExplicitAction;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Editor;
-import com.google.collide.client.util.ScheduledCommandExecutor;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.ScheduledCommandExecutor;
+import com.codenvy.ide.client.util.logging.Log;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -32,8 +32,8 @@ import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.json.shared.JsonStringMap;
-import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
-import org.waveprotocol.wave.client.common.util.UserAgent;
+import com.codenvy.ide.client.util.SignalEvent.KeySignalType;
+import com.codenvy.ide.client.util.UserAgent;
 
 /**
  * Class to implement all the autocompletion support that is not specific to a
@@ -158,8 +158,7 @@ public class Autocompleter implements ContentAssistant
 
    /**
     * @param editor
-    * @param contentAssistant 
-    * @param exoEditor 
+    * @param exoEditor
     */
    Autocompleter(Editor editor, AutocompleteBox popup, org.exoplatform.ide.editor.client.api.Editor exoEditor)
    {
@@ -215,7 +214,6 @@ public class Autocompleter implements ContentAssistant
    }
 
    /**
-    * Callback passed to {@link AutocompleteController}.
     */
    private final AutocompleterCallback callback = new AutocompleterCallback()
    {

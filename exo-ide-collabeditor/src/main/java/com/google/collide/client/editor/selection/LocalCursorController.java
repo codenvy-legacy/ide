@@ -21,7 +21,7 @@ import com.google.collide.client.editor.Editor.ReadOnlyListener;
 import com.google.collide.client.editor.FocusManager;
 import com.google.collide.shared.document.LineInfo;
 import org.exoplatform.ide.json.shared.JsonCollections;
-import com.google.collide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
 
 import org.exoplatform.ide.json.shared.JsonArray;
 

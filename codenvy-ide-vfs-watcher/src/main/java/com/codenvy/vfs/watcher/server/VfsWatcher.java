@@ -49,10 +49,10 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -89,35 +89,40 @@ public class VfsWatcher
          switch (event.getType())
          {
             case CREATED:
-               ItemCreatedDtoImpl cDto = ItemCreatedDtoImpl.make();
-               cDto.setItem(getDtoItem(event.getVirtualFileSystem(), event.getItemId()));
-               message = cDto.toJson();
+               ItemCreatedDtoImpl createdDto = ItemCreatedDtoImpl.make();
+               createdDto.setItem(getDtoItem(event.getVirtualFileSystem(), event.getItemId()));
+               createdDto.setUserId(event.getUserId());
+               message = createdDto.toJson();
                break;
             case DELETED:
-               ItemDeletedDtoImpl dto = ItemDeletedDtoImpl.make();
-               dto.setFileId(event.getItemId());
-               dto.setFilePath(event.getItemPath());
-               message = dto.toJson();
+               ItemDeletedDtoImpl deletedDto = ItemDeletedDtoImpl.make();
+               deletedDto.setFileId(event.getItemId());
+               deletedDto.setFilePath(event.getItemPath());
+               deletedDto.setUserId(event.getUserId());
+               message = deletedDto.toJson();
                break;
             case MOVED:
                ItemMovedDtoImpl movedDto = ItemMovedDtoImpl.make();
                movedDto.setOldPath(event.getOldItemPath());
                movedDto.setMovedItem(getDtoItem(event.getVirtualFileSystem(),event.getItemId()));
+               movedDto.setUserId(event.getUserId());
                message = movedDto.toJson();
                break;
             case RENAMED:
                ItemRenamedDtoImpl renamedDto = ItemRenamedDtoImpl.make();
                renamedDto.setOldPath(event.getOldItemPath());
                renamedDto.setRenamedItem(getDtoItem(event.getVirtualFileSystem(), event.getItemId()));
+               renamedDto.setUserId(event.getUserId());
                message = renamedDto.toJson();
                break;
             default:
                return;
          }
-         Set<String> userIds = projectUsers.get(projectId);
-         if (message != null && userIds != null)
+         Set<String> clientIds = new HashSet<String>(projectUsers.get(projectId));
+         clientIds.remove(userId2clientId.get(event.getUserId()));
+         if (message != null && clientIds != null)
          {
-            broadcastToClients(message, userIds);
+            broadcastToClients(message, clientIds);
          }
       }
    }
@@ -183,6 +188,8 @@ public class VfsWatcher
 
    private final ConcurrentMap<String, Set<String>> projectUsers = new ConcurrentHashMap<String, Set<String>>();
 
+   private final ConcurrentMap<String, String> userId2clientId = new ConcurrentHashMap<String, String>();
+
    private VirtualFileSystemRegistry vfsRegistry;
 
    private EventListenerList listeners;
@@ -194,7 +201,7 @@ public class VfsWatcher
       this.listeners = listeners;
    }
 
-   public void openProject(String clientId, ProjectOpenedDto dto)
+   public void openProject(String clientId, String userId, ProjectOpenedDto dto)
    {
 
       if (!projectUsers.containsKey(dto.projectId()))
@@ -203,6 +210,7 @@ public class VfsWatcher
          addListenerToProject(dto.projectId(), dto.vfsId(), dto.projectPath());
       }
       projectUsers.get(dto.projectId()).add(clientId);
+      userId2clientId.putIfAbsent(userId, clientId);
    }
 
    private void addListenerToProject(String projectId, String vfsId, String projectPath)
@@ -223,7 +231,7 @@ public class VfsWatcher
 
    }
 
-   public void closeProject(String clientId, ProjectClosedDto dto)
+   public void closeProject(String clientId, String userId, ProjectClosedDto dto)
    {
       if (projectUsers.containsKey(dto.projectId()))
       {
@@ -236,6 +244,7 @@ public class VfsWatcher
             Pair<ChangeEventFilter, EventListener> pair = vfsListeners.remove(dto.projectId());
             listeners.removeEventListener(pair.first, pair.second);
          }
+         userId2clientId.remove(userId);
       }
    }
 

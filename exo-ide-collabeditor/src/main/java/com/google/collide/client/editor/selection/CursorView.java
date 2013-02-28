@@ -16,9 +16,9 @@ package com.google.collide.client.editor.selection;
 
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.Participant;
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.HoverController;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.HoverController;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.gwt.resources.client.ClientBundle;

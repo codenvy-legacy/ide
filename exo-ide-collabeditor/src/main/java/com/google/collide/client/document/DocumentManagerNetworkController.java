@@ -19,8 +19,8 @@ import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.document.DocumentManager.GetDocumentCallback;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
-import com.google.collide.client.util.PathUtil;
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.PathUtil;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.FileContents.ContentType;
 import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.RoutingTypes;
@@ -38,7 +38,7 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
  * server.
  * 
  * This class accepts multiple calls to
- * {@link #load(com.google.collide.client.util.PathUtil, com.google.collide.client.document.DocumentManager.GetDocumentCallback)} for the same path and intelligently
+ * {@link #load(com.codenvy.ide.client.util.PathUtil, com.google.collide.client.document.DocumentManager.GetDocumentCallback)} for the same path and intelligently
  * batches together the callbacks so only one network request will occur.
  */
 class DocumentManagerNetworkController {

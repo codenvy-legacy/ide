@@ -16,7 +16,7 @@ package com.google.collide.client.code;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.communication.FrontendApi;
-import com.google.collide.client.util.QueryCallbacks.SimpleCallback;
+import com.codenvy.ide.client.util.QueryCallbacks.SimpleCallback;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.ParticipantUserDetails;

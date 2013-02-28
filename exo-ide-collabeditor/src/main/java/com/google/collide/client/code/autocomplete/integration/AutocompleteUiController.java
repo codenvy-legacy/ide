@@ -28,8 +28,8 @@ import com.google.collide.client.ui.menu.PositionController.Positioner;
 import com.google.collide.client.ui.menu.PositionController.PositionerBuilder;
 import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.ui.popup.Popup;
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.client.util.dom.DomUtils;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.common.base.Preconditions;
@@ -51,7 +51,7 @@ import org.exoplatform.ide.editor.client.api.contentassist.Point;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.shared.JsonArray;
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * A controller for managing the UI for showing autocomplete proposals.

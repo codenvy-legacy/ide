@@ -14,7 +14,7 @@
 
 package com.google.collide.client.collaboration;
 
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.editor.selection.SelectionModel;
@@ -22,7 +22,7 @@ import com.google.collide.dto.client.DtoClientImpls.ClientToServerDocOpImpl;
 import com.google.collide.dto.client.DtoClientImpls.DocumentSelectionImpl;
 import com.google.collide.dto.client.DtoClientImpls.FilePositionImpl;
 import com.google.collide.shared.document.LineInfo;
-import com.google.collide.shared.util.ListenerRegistrar.Remover;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.Remover;
 
 /**
  * A class that tracks local cursor changes and eventually will aid in
