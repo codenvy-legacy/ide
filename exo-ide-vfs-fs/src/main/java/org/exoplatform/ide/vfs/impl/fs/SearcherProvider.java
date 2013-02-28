@@ -26,35 +26,38 @@ import java.io.File;
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 
 /**
- * Useful when virtual filesystem used in single workspace mode (not cloud environment).
+ * Manages instances of Searcher.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
  */
-public class SimpleLocalFSMountStrategy implements LocalFSMountStrategy
+public abstract class SearcherProvider
 {
-   private final java.io.File mountRoot;
+   protected final File indexRoot;
 
-   public SimpleLocalFSMountStrategy(InitParams initParams)
+   public SearcherProvider(InitParams initParams)
    {
-      this(new java.io.File(
-         readValueParam(initParams, "mount-root", System.getProperty("org.exoplatform.ide.server.fs-root-path"))));
+      this(readValueParam(initParams, "index-root"));
    }
 
-   public SimpleLocalFSMountStrategy(java.io.File mountRoot)
+   public SearcherProvider(String indexRoot)
    {
-      this.mountRoot = mountRoot;
+      this(indexRoot != null ? new java.io.File(indexRoot) : null);
    }
 
-   @Override
-   public File getMountPath(String workspace) throws VirtualFileSystemException
+   public SearcherProvider(java.io.File indexRoot)
    {
-      return new java.io.File(mountRoot, workspace == null || workspace.isEmpty() ? "default" : workspace);
+      this.indexRoot = indexRoot;
    }
 
-   @Override
-   public File getMountPath() throws VirtualFileSystemException
-   {
-      return getMountPath(null);
-   }
+   /**
+    * Get Searcher for specified MountPoint.
+    *
+    * @param mountPoint
+    *    MountPoint
+    * @return instance of Searcher
+    * @throws VirtualFileSystemException
+    * @see MountPoint
+    */
+   public abstract Searcher getSearcher(MountPoint mountPoint) throws VirtualFileSystemException;
 }

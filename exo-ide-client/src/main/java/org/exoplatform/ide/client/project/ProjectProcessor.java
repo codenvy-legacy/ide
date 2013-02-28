@@ -44,6 +44,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.project.api.ProjectBuilder;
 import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
+import org.exoplatform.ide.client.framework.project.api.IDEProject.FolderChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;
@@ -58,7 +59,7 @@ import java.util.List;
  * 
  */
 public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler, AllFilesClosedHandler,
-   RefreshBrowserHandler, ItemsSelectedHandler
+   RefreshBrowserHandler, ItemsSelectedHandler, FolderChangedHandler
 {
 
    private IDEProject openedProject;
@@ -82,6 +83,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
       }
 
       openedProject = ProjectBuilder.createProject(event.getProject());
+      openedProject.setFolderChangedHandler(ProjectProcessor.this);
 
       IDELoader.show("Loading project...");
       openedProject.refresh(openedProject, new AsyncCallback<Folder>()
@@ -281,8 +283,23 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          public void execute()
          {
             final IDEProject closedProject = openedProject;
+            closedProject.setFolderChangedHandler(null);
             openedProject = null;
             IDE.fireEvent(new ProjectClosedEvent(closedProject));
+         }
+      });      
+   }
+
+   @Override
+   public void onFolderChanged(final Folder folder)
+   {
+      IDE.fireEvent(new TreeRefreshedEvent(folder, itemToBeSelectedAfterRefreshing));
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            IDE.fireEvent(new FolderRefreshedEvent(folder));
          }
       });      
    }

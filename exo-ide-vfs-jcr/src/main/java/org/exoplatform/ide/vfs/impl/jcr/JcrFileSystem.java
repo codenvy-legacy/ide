@@ -202,7 +202,8 @@ public class JcrFileSystem implements VirtualFileSystem
             copy.getId(), //
             copy.getPath(), //
             copy.getMimeType(), //
-            ChangeEvent.ChangeType.CREATED)
+            ChangeEvent.ChangeType.CREATED, //
+            session.getUserID()) //
          );
          return copy;
       }
@@ -246,7 +247,8 @@ public class JcrFileSystem implements VirtualFileSystem
             file.getId(), //
             file.getPath(), //
             file.getMimeType(), //
-            ChangeEvent.ChangeType.CREATED)
+            ChangeEvent.ChangeType.CREATED, //
+            session.getUserID())
          );
          return file;
       }
@@ -281,7 +283,8 @@ public class JcrFileSystem implements VirtualFileSystem
             folder.getId(), //
             folder.getPath(), //
             folder.getMimeType(), //
-            ChangeEvent.ChangeType.CREATED) //
+            ChangeEvent.ChangeType.CREATED, //
+            session.getUserID()) //
          );
          return folder;
       }
@@ -329,7 +332,8 @@ public class JcrFileSystem implements VirtualFileSystem
             project.getId(), //
             project.getPath(), //
             project.getMimeType(), //
-            ChangeEvent.ChangeType.CREATED)
+            ChangeEvent.ChangeType.CREATED, //
+            session.getUserID())
          );
          LOG.info("EVENT#project-created# PROJECT#" + name + "# TYPE#" + project.getProjectType() + "#");
          return project;
@@ -374,7 +378,8 @@ public class JcrFileSystem implements VirtualFileSystem
             id, //
             path, //
             mediaType != null ? mediaType.toString() : null, //
-            ChangeEvent.ChangeType.DELETED)
+            ChangeEvent.ChangeType.DELETED, //
+            session.getUserID())
          );
       }
       finally
@@ -858,7 +863,8 @@ public class JcrFileSystem implements VirtualFileSystem
             moved.getPath(), //
             oldPath, //
             moved.getMimeType(), //
-            ChangeEvent.ChangeType.MOVED)
+            ChangeEvent.ChangeType.MOVED, //
+            session.getUserID())
          );
          return moved;
       }
@@ -905,7 +911,8 @@ public class JcrFileSystem implements VirtualFileSystem
             renamed.getPath(), //
             oldPath, //
             renamed.getMimeType(), //
-            ChangeEvent.ChangeType.RENAMED)
+            ChangeEvent.ChangeType.RENAMED, //
+            session.getUserID())
          );
          return renamed;
       }
@@ -1183,7 +1190,8 @@ public class JcrFileSystem implements VirtualFileSystem
             data.getId(), //
             data.getPath(), //
             mediaType != null ? mediaType.toString() : null, //
-            ChangeEvent.ChangeType.ACL_UPDATED)
+            ChangeEvent.ChangeType.ACL_UPDATED, //
+            session.getUserID())
          );
 
       }
@@ -1217,7 +1225,8 @@ public class JcrFileSystem implements VirtualFileSystem
             data.getId(), //
             data.getPath(), //
             mediaType != null ? mediaType.toString() : null, //
-            ChangeEvent.ChangeType.CONTENT_UPDATED)
+            ChangeEvent.ChangeType.CONTENT_UPDATED, //
+            session.getUserID())
          );
       }
       finally
@@ -1278,7 +1287,8 @@ public class JcrFileSystem implements VirtualFileSystem
                data.getId(), //
                data.getPath(), //
                mediaType != null ? mediaType.toString() : null, //
-               ChangeEvent.ChangeType.PROPERTIES_UPDATED)
+               ChangeEvent.ChangeType.PROPERTIES_UPDATED, //
+               session.getUserID())
             );
          }
          if (convertToProject)
@@ -1615,7 +1625,8 @@ public class JcrFileSystem implements VirtualFileSystem
                file.getId(), //
                file.getPath(), //
                file.getMediaType().toString(), //
-               ChangeEvent.ChangeType.CREATED)
+               ChangeEvent.ChangeType.CREATED, //
+               session.getUserID())
             );
          }
          else if (overwrite)
@@ -1632,7 +1643,8 @@ public class JcrFileSystem implements VirtualFileSystem
                file.getId(), //
                file.getPath(), //
                file.getMediaType().toString(), //
-               ChangeEvent.ChangeType.CONTENT_UPDATED)
+               ChangeEvent.ChangeType.CONTENT_UPDATED,
+               session.getUserID())
             );
          }
          else
@@ -2101,5 +2113,14 @@ public class JcrFileSystem implements VirtualFileSystem
       }
       return !(a == null || b == null)
          && a.getType().equalsIgnoreCase(b.getType()) && a.getSubtype().equalsIgnoreCase(b.getSubtype());
+   }
+
+   @Override
+   public String toString()
+   {
+      return "JcrFileSystem{" +
+         "vfsId='" + workspaceName + '\'' +
+         ", baseUri=" + baseUri +
+         '}';
    }
 }

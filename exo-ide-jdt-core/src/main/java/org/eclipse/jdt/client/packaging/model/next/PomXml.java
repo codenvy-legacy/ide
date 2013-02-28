@@ -221,21 +221,40 @@ public class PomXml
             Element dependencyElement = (Element)dependencies.item(i);
             Element artifactElement = (Element)dependencyElement.getElementsByTagName("artifactId").item(0);
             Element versionElement = (Element)dependencyElement.getElementsByTagName("version").item(0);
-            if (Node.TEXT_NODE == artifactElement.getChildNodes().item(0).getNodeType()
-               && Node.TEXT_NODE == versionElement.getChildNodes().item(0).getNodeType())
+            
+            String version = "";
+            if (versionElement != null && Node.TEXT_NODE == versionElement.getChildNodes().item(0).getNodeType())
             {
-               String artifact = artifactElement.getChildNodes().item(0).getNodeValue();
-               String version = versionElement.getChildNodes().item(0).getNodeValue();
-
+               version = versionElement.getChildNodes().item(0).getNodeValue();
                if (version.startsWith("${") && version.endsWith("}"))
                {
                   version = version.substring(2, version.length() - 1);
                   version = properties.get(version);
                }
-
-               String dependency = artifact + "-" + version + ".jar";
+            }
+            
+            if (Node.TEXT_NODE == artifactElement.getChildNodes().item(0).getNodeType())
+            {
+               String artifact = artifactElement.getChildNodes().item(0).getNodeValue();
+               String dependency = artifact + ( version != null ? "-" + version : "" )  + ".jar";
                mavenDependencies.add(dependency);
             }
+            
+//            if (Node.TEXT_NODE == artifactElement.getChildNodes().item(0).getNodeType()
+//               && Node.TEXT_NODE == versionElement.getChildNodes().item(0).getNodeType())
+//            {
+//               String artifact = artifactElement.getChildNodes().item(0).getNodeValue();
+//               String version = versionElement.getChildNodes().item(0).getNodeValue();
+//
+//               if (version.startsWith("${") && version.endsWith("}"))
+//               {
+//                  version = version.substring(2, version.length() - 1);
+//                  version = properties.get(version);
+//               }
+//
+//               String dependency = artifact + "-" + version + ".jar";
+//               mavenDependencies.add(dependency);
+//            }
          }
       }
       catch (Exception e)
