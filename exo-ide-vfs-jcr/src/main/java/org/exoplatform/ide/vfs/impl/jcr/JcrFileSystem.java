@@ -25,12 +25,8 @@ import org.everrest.core.impl.provider.json.JsonParser;
 import org.everrest.core.impl.provider.json.JsonWriter;
 import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
-import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
 import org.exoplatform.ide.vfs.server.LazyIterator;
-import org.exoplatform.ide.vfs.server.util.MediaTypes;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
-import org.exoplatform.ide.vfs.server.VirtualFileSystemFactory;
 import org.exoplatform.ide.vfs.server.exceptions.ConstraintException;
 import org.exoplatform.ide.vfs.server.exceptions.HtmlErrorFormatter;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
@@ -42,6 +38,10 @@ import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.server.observation.ChangeEvent;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
+import org.exoplatform.ide.vfs.server.observation.ProjectUpdateListener;
+import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
+import org.exoplatform.ide.vfs.server.util.LinksHelper;
+import org.exoplatform.ide.vfs.server.util.MediaTypes;
 import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
 import org.exoplatform.ide.vfs.server.util.ZipContent;
 import org.exoplatform.ide.vfs.shared.AccessControlEntry;
@@ -55,8 +55,6 @@ import org.exoplatform.ide.vfs.shared.ItemListImpl;
 import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemNodeImpl;
 import org.exoplatform.ide.vfs.shared.ItemType;
-import org.exoplatform.ide.vfs.shared.Link;
-import org.exoplatform.ide.vfs.shared.LinkImpl;
 import org.exoplatform.ide.vfs.shared.LockToken;
 import org.exoplatform.ide.vfs.shared.LockTokenImpl;
 import org.exoplatform.ide.vfs.shared.Project;
@@ -81,12 +79,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -117,7 +113,6 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author <a href="mailto:andrey.parfonov@exoplatform.com">Andrey Parfonov</a>
@@ -614,65 +609,9 @@ public class JcrFileSystem implements VirtualFileSystem
             new VirtualFileSystemInfoImpl(this.vfsID, true, true,
                org.exoplatform.services.security.IdentityConstants.ANONIM,
                org.exoplatform.services.security.IdentityConstants.ANY, permissions, ACLCapability.MANAGE,
-               QueryCapability.BOTHCOMBINED, createUrlTemplates(), root);
+               QueryCapability.BOTHCOMBINED, LinksHelper.createUrlTemplates(baseUri, vfsID), root);
       }
       return vfsInfo;
-   }
-
-   private Map<String, Link> createUrlTemplates()
-   {
-      Map<String, Link> templates = new HashMap<String, Link>();
-
-      templates.put(Link.REL_ITEM, //
-         new LinkImpl(createURI("item", "[id]"), Link.REL_ITEM, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_ITEM_BY_PATH, //
-         new LinkImpl(createURI("itembypath", "[path]"), Link.REL_ITEM_BY_PATH, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_TREE, //
-         new LinkImpl(createURI("tree", "[id]"), Link.REL_TREE, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_CREATE_FILE, //
-         new LinkImpl(createURI("file", "[parentId]", "name", "[name]"), //
-            Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_CREATE_FOLDER, //
-         new LinkImpl(createURI("folder", "[parentId]", "name", "[name]"), //
-            Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_CREATE_PROJECT, //
-         new LinkImpl(createURI("project", "[parentId]", "name", "[name]", "type", "[type]"), //
-            Link.REL_CREATE_PROJECT, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_COPY, //
-         new LinkImpl(createURI("copy", "[id]", "parentId", "[parentId]"), //
-            Link.REL_COPY, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_MOVE, //
-         new LinkImpl(createURI("move", "[id]", "parentId", "[parentId]", "lockToken", "[lockToken]"), //
-            Link.REL_MOVE, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_LOCK, //
-         new LinkImpl(createURI("lock", "[id]"), //
-            Link.REL_LOCK, MediaType.APPLICATION_JSON));
-
-      templates.put(Link.REL_UNLOCK, //
-         new LinkImpl(createURI("unlock", "[id]", "lockToken", "[lockToken]"), //
-            Link.REL_UNLOCK, null));
-
-      templates.put(
-         Link.REL_SEARCH_FORM, //
-         new LinkImpl(createURI("search", null, "maxItems", "[maxItems]", "skipCount", "[skipCount]", "propertyFilter",
-            "[propertyFilter]"), //
-            Link.REL_SEARCH_FORM, MediaType.APPLICATION_JSON));
-
-      templates.put(
-         Link.REL_SEARCH, //
-         new LinkImpl(createURI("search", null, "statement", "[statement]", "maxItems", "[maxItems]", "skipCount",
-            "[skipCount]"), //
-            Link.REL_SEARCH, MediaType.APPLICATION_JSON));
-
-      return templates;
    }
 
    /**
@@ -1840,177 +1779,39 @@ public class JcrFileSystem implements VirtualFileSystem
    private Item fromItemData(ItemData data, PropertyFilter propertyFilter, boolean addLinks)
       throws PermissionDeniedException, VirtualFileSystemException
    {
+      final String id = data.getId();
+      final String name = data.getName();
+      final String path = data.getPath();
+      final boolean isRoot = ItemType.FOLDER == data.getType() && ((FolderData)data).isRootFolder();
+      final String parentId = isRoot ? null : data.getParentId();
+      final MediaType mediaType = data.getMediaType();
+      final long created = data.getCreationDate();
+
       if (data.getType() == ItemType.FILE)
       {
          FileData fileData = (FileData)data;
-         return new FileImpl(fileData.getId(), fileData.getName(), fileData.getPath(), fileData.getParentId(),
-            fileData.getCreationDate(), fileData.getLastModificationDate(), fileData.getVersionId(), fileData
-            .getMediaType().toString(), fileData.getContentLength(), fileData.isLocked(),
-            fileData.getProperties(propertyFilter), addLinks ? createFileLinks(fileData) : null);
+         final boolean locked = fileData.isLocked();
+         final long length = fileData.getContentLength();
+         final long modified = fileData.getLastModificationDate();
+         final String versionId = fileData.getVersionId();
+         final String latestVersionId = fileData.getLatestVersionId();
+         return new FileImpl(id, name, path, parentId, created, modified, versionId, mediaType.toString(), length,
+            locked, fileData.getProperties(propertyFilter),
+            addLinks ? LinksHelper.createFileLinks(baseUri, vfsID, id, latestVersionId, path, mediaType.toString(), locked, parentId) : null);
       }
 
       if (data.getType() == ItemType.PROJECT)
       {
          ProjectData projectData = (ProjectData)data;
-         MediaType mediaType = projectData.getMediaType();
-         return new ProjectImpl(projectData.getId(), projectData.getName(), mediaType == null ? ProjectImpl.FOLDER_MIME_TYPE
-            : mediaType.toString(), projectData.getPath(), projectData.getParentId(), projectData.getCreationDate(),
-            projectData.getProperties(propertyFilter), addLinks ? createProjectLinks(projectData) : null,
-            projectData.getProjectType());
+         final String projectType = projectData.getProjectType();
+         return new ProjectImpl(id, name, mediaType == null ? Project.PROJECT_MIME_TYPE : mediaType.toString(),
+            path, parentId, created, projectData.getProperties(propertyFilter),
+            addLinks ? LinksHelper.createProjectLinks(baseUri, vfsID, id, parentId) : null, projectType);
       }
 
-      MediaType mediaType = data.getMediaType();
-      return new FolderImpl(data.getId(), data.getName(), mediaType == null ? null : mediaType.toString(), data.getPath(),
-         data.getParentId(), data.getCreationDate(), data.getProperties(propertyFilter),
-         addLinks ? createFolderLinks((FolderData)data) : null);
-   }
-
-   private Map<String, Link> createFileLinks(FileData file) throws VirtualFileSystemException
-   {
-      Map<String, Link> links = createBaseLinks(file);
-      String id = file.getId();
-
-      links.put(Link.REL_CONTENT, //
-         new LinkImpl(createURI("content", id), Link.REL_CONTENT, file.getMediaType().toString()));
-
-      links.put(Link.REL_DOWNLOAD_FILE, //
-         new LinkImpl(createURI("downloadfile", id), Link.REL_DOWNLOAD_FILE, file.getMediaType().toString()));
-
-      links.put(Link.REL_CONTENT_BY_PATH, //
-         new LinkImpl(createURI("contentbypath", file.getPath().substring(1)), Link.REL_CONTENT_BY_PATH, file
-            .getMediaType().toString()));
-
-      links.put(Link.REL_VERSION_HISTORY, //
-         new LinkImpl(createURI("version-history", id), Link.REL_VERSION_HISTORY, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CURRENT_VERSION, //
-         new LinkImpl(createURI("item", file.getLatestVersionId()), Link.REL_CURRENT_VERSION, MediaType.APPLICATION_JSON));
-
-      if (file.isLocked())
-      {
-         links.put(Link.REL_UNLOCK, //
-            new LinkImpl(createURI("unlock", id, "lockToken", "[lockToken]"), Link.REL_UNLOCK, null));
-      }
-      else
-      {
-         links.put(Link.REL_LOCK, //
-            new LinkImpl(createURI("lock", id), Link.REL_LOCK, MediaType.APPLICATION_JSON));
-      }
-
-      return links;
-   }
-
-   private Map<String, Link> createFolderLinks(FolderData folder) throws VirtualFileSystemException
-   {
-      Map<String, Link> links = createBaseFolderLinks(folder);
-      String id = folder.getId();
-
-      links.put(Link.REL_CREATE_PROJECT, //
-         new LinkImpl(createURI("project", id, "name", "[name]", "type", "[type]"), Link.REL_CREATE_PROJECT,
-            MediaType.APPLICATION_JSON));
-
-      return links;
-   }
-
-   private Map<String, Link> createProjectLinks(ProjectData project) throws VirtualFileSystemException
-   {
-      return createBaseFolderLinks(project);
-   }
-
-   private Map<String, Link> createBaseFolderLinks(FolderData folder) throws VirtualFileSystemException
-   {
-      Map<String, Link> links = createBaseLinks(folder);
-      String id = folder.getId();
-
-      links.put(Link.REL_CHILDREN, //
-         new LinkImpl(createURI("children", id), Link.REL_CHILDREN, MediaType.APPLICATION_JSON));
-
-//      links.put(Link.REL_TREE, //
-//         new Link(createURI("tree", id), Link.REL_TREE, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CREATE_FOLDER, //
-         new LinkImpl(createURI("folder", id, "name", "[name]"), Link.REL_CREATE_FOLDER, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_CREATE_FILE, //
-         new LinkImpl(createURI("file", id, "name", "[name]"), Link.REL_CREATE_FILE, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_UPLOAD_FILE, //
-         new LinkImpl(createURI("uploadfile", id), Link.REL_UPLOAD_FILE, MediaType.TEXT_HTML));
-
-      links.put(Link.REL_EXPORT, //
-         new LinkImpl(createURI("export", id), Link.REL_EXPORT, "application/zip"));
-
-      links.put(Link.REL_IMPORT, //
-         new LinkImpl(createURI("import", id), Link.REL_IMPORT, "application/zip"));
-
-      links.put(Link.REL_DOWNLOAD_ZIP, //
-         new LinkImpl(createURI("downloadzip", id), Link.REL_DOWNLOAD_ZIP, "application/zip"));
-
-      links.put(Link.REL_UPLOAD_ZIP, //
-         new LinkImpl(createURI("uploadzip", id), Link.REL_UPLOAD_ZIP, MediaType.TEXT_HTML));
-
-      return links;
-   }
-
-   private Map<String, Link> createBaseLinks(ItemData data) throws VirtualFileSystemException
-   {
-      Map<String, Link> links = new HashMap<String, Link>();
-      String id = data.getId();
-
-      links.put(Link.REL_SELF, //
-         new LinkImpl(createURI("item", id), Link.REL_SELF, MediaType.APPLICATION_JSON));
-
-      links.put(Link.REL_ACL, //
-         new LinkImpl(createURI("acl", id), Link.REL_ACL, MediaType.APPLICATION_JSON));
-
-      String parentId = data.getParentId();
-      // Root folder can't be moved copied and has not parent.
-      if (parentId != null)
-      {
-         links.put(Link.REL_DELETE, //
-            new LinkImpl((data.isLocked() ? createURI("delete", id, "lockToken", "[lockToken]") : createURI("delete", id)),
-               Link.REL_DELETE, null));
-
-         links.put(Link.REL_COPY, //
-            new LinkImpl(createURI("copy", id, "parentId", "[parentId]"), Link.REL_COPY, MediaType.APPLICATION_JSON));
-
-         links.put(Link.REL_MOVE, //
-            new LinkImpl((data.isLocked() ? createURI("move", id, "parentId", "[parentId]", "lockToken", "[lockToken]")
-               : createURI("move", id, "parentId", "[parentId]")), Link.REL_MOVE, MediaType.APPLICATION_JSON));
-
-         links.put(Link.REL_PARENT, //
-            new LinkImpl(createURI("item", parentId), Link.REL_PARENT, MediaType.APPLICATION_JSON));
-
-         links.put(
-            Link.REL_RENAME, //
-            new LinkImpl(createURI("rename", id, "newname", "[newname]", "mediaType", "[mediaType]", "lockToken",
-               "[lockToken]"), Link.REL_RENAME, MediaType.APPLICATION_JSON));
-      }
-      return links;
-   }
-
-   private String createURI(String rel, String id, String... query)
-   {
-      UriBuilder uriBuilder = UriBuilder.fromUri(baseUri);
-      uriBuilder.path(VirtualFileSystemFactory.class, "getFileSystem");
-      uriBuilder.path(rel);
-      if (id != null)
-      {
-         uriBuilder.path(id);
-      }
-      if (query != null && query.length > 0)
-      {
-         for (int i = 0; i < query.length; i++)
-         {
-            String name = query[i];
-            String value = i < query.length ? query[++i] : "";
-            uriBuilder.queryParam(name, value);
-         }
-      }
-
-      URI uri = uriBuilder.build(vfsID);
-
-      return uri.toString();
+      return new FolderImpl(id, name, mediaType == null ? Folder.FOLDER_MIME_TYPE : mediaType.toString(), path,
+         parentId, created, data.getProperties(propertyFilter),
+         addLinks ? LinksHelper.createFolderLinks(baseUri, vfsID, id, isRoot, parentId) : null);
    }
 
    private ItemData getItemData(Session session, String id) throws ItemNotFoundException, PermissionDeniedException,
