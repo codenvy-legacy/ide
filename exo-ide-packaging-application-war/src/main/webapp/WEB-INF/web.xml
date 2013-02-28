@@ -23,7 +23,7 @@
 	</listener>
 	<servlet>
 		<servlet-name>EverrestServlet</servlet-name>
-		<servlet-class>org.exoplatform.ide.davmount.DavMountRestServlet</servlet-class>
+		<servlet-class>org.everrest.exoplatform.servlet.EverrestExoServlet</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>ExoIdeWebSocketServlet</servlet-name>
@@ -49,6 +49,13 @@
 		<filter-class>org.exoplatform.services.security.web.SetCurrentIdentityFilter</filter-class>
 	</filter>
 
+         <filter>
+		<filter-name>SetEnvironmentContextFilter</filter-name>
+		<filter-class>com.codenvy.ide.SetEnvironmentContextFilter</filter-class>
+	</filter>
+
+
+
 	<filter>
 		<filter-name>ThreadLocalSessionProviderInitializedFilter</filter-name>
 		<filter-class>org.exoplatform.frameworks.jcr.web.ThreadLocalSessionProviderInitializedFilter</filter-class>
@@ -69,6 +76,18 @@
 		<filter-name>SetCurrentIdentityFilter</filter-name>
 		<url-pattern>/websocket</url-pattern>
 	</filter-mapping>
+	
+	<filter-mapping>
+		<filter-name>SetEnvironmentContextFilter</filter-name>
+		<url-pattern>/rest/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>SetEnvironmentContextFilter</filter-name>
+		<url-pattern>/websocket</url-pattern>
+	</filter-mapping>
+	
+	
 
 	<filter-mapping>
 		<filter-name>StandaloneAuthenticationFilter</filter-name>

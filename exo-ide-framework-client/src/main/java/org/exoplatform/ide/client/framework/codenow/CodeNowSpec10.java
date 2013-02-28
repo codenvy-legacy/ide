@@ -65,5 +65,11 @@ public class CodeNowSpec10
     * e.g. for "git@github.com:exodev/ide.git" project name will be "ide" 
     */
    public final static String PROJECT_NAME = "pn";
+   
+   
+   /**
+    * Optional parameter for project type, if not set we try detect it 
+    */
+   public final static String PROJECT_TYPE = "pt";
 
 }

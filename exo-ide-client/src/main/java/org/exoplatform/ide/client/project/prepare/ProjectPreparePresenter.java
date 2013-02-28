@@ -90,7 +90,8 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    {
       folderId = event.getFolderId();
       String url =
-         Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId();
+         Utils.getRestContext() + "/ide/project/prepare?vfsid=" + event.getVfsId() + "&folderid=" + event.getFolderId() +
+         (event.getProjectType() != null ? "&projecttype=" + event.getProjectType() : "");
 
       properties = event.getProperties();
       String data = JSONSerializer.PROPERTY_SERIALIZER.fromCollection(event.getProperties()).toString();
@@ -212,13 +213,15 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
    {
       try
       {
-         VirtualFileSystem.getInstance().updateItem(item, null, new AsyncRequestCallback<ItemWrapper>()
+         ItemWrapper itemWrapper = new ItemWrapper(item);
+         ItemUnmarshaller unmarshaller = new ItemUnmarshaller(itemWrapper);
+         VirtualFileSystem.getInstance().updateItem(item, null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
          {
             @Override
             protected void onSuccess(ItemWrapper result)
             {
                IDE.fireEvent(new OutputEvent("Project type updated.", OutputMessage.Type.INFO));
-               openPreparedProject(folderId);
+               IDE.fireEvent(new ProjectCreatedEvent((ProjectModel)result.getItem()));
             }
 
             @Override
@@ -259,6 +262,7 @@ public class ProjectPreparePresenter implements IDEControl, ConvertToProjectHand
             @Override
             protected void onFailure(Throwable exception)
             {
+               exception.printStackTrace();
                IDE.fireEvent(new ExceptionThrownEvent("Failed to opened prepared project."));
             }
          });

@@ -80,7 +80,7 @@ final class VersionData extends FileData
    }
 
    /**
-    * @see org.exoplatform.ide.vfs.impl.jcr.ItemData#getVersionId()
+    * @see org.exoplatform.ide.vfs.impl.jcr.FileData#getVersionId()
     */
    @Override
    String getVersionId() throws VirtualFileSystemException

@@ -19,7 +19,6 @@
 package org.exoplatform.ide.vfs.server;
 
 import org.exoplatform.ide.vfs.server.exceptions.LocalPathResolveException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**
  * Need for resolving location for file/folders on real-life file system. It can be need for using Git or some other
