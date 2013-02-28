@@ -129,8 +129,6 @@ public class ProjectTreeItem extends TreeItem
    
    private String getTitle(Item item)
    {
-//      return item.getName();
-
       if (locktokens == null)
       {
          return (item.getName() == null || item.getName().isEmpty()) ? "/" : item.getName();
