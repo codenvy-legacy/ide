@@ -30,11 +30,11 @@
       <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
    </component>
 
-   <!--
-   ***************************************************************************************
-   ********************** Codenvy Commons Components *************************************
-   ***************************************************************************************
-   -->
+<!-- 
+***************************************************************************************
+********************** eXo IDE Commons Components *************************************
+***************************************************************************************
+-->
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
@@ -74,7 +74,7 @@
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 
-   <component>
+   <!--component>
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
          <values-param>
@@ -83,13 +83,34 @@
             <value>production</value>
          </values-param>
       </init-params>
-   </component>
+   </component-->
 
-   <component>
+  <component>
+     <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
+     <init-params>
+        <values-param>
+           <name>id</name>
+           <value>production</value>
+           <value>dev-monit</value>
+        </values-param>
+     </init-params>
+  </component>
+   
+  <component>
+     <type>org.exoplatform.ide.vfs.impl.fs.SimpleLocalFSMountStrategy</type>
+     <init-params>
+        <!--value-param>
+           <name>mount-root</name>
+           <value>/home/andrew/tmp/tomcat-ide/data</value>
+        </value-param-->
+     </init-params>
+  </component>
+
+  <component>
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
    
-    <component>
+    <!--component>
       <type>org.exoplatform.ide.davmount.WebDavFolderBinder</type>
       <description>Bind WebDavFolder</description>
       <init-params>
@@ -119,7 +140,7 @@
             <value>http://127.0.0.1:8080</value>
          </value-param>
       </init-params>
-   </component>
+   </component-->
 
    <!-- End VirtualFileSystem -->
 
@@ -343,6 +364,35 @@
    ***************************************************************************************
    -->
 
+   <!-- Cloudbees -->
+   <component>
+      <type>org.exoplatform.ide.extension.cloudbees.server.rest.CloudBeesApplication</type>
+   </component>
+   
+   <component>
+      <key>org.exoplatform.ide.extension.jenkins.server.JenkinsClient</key>
+      <type>org.exoplatform.ide.extension.cloudbees.server.CloudBees</type>
+      <init-params>
+         <value-param>
+            <name>workspace</name>
+            <value>production</value>
+         </value-param>
+         <value-param>
+            <name>user-config</name>
+            <value>/ide-home/users/</value>
+         </value-param>
+         <value-param>
+            <name>jenkins-user</name>
+            <value>support@cloud-ide.com</value>
+         </value-param>
+         <value-param>
+            <name>jenkins-password</name>
+            <value>9zpkuZ3X</value>
+         </value-param>
+      </init-params>
+   </component>
+
+   <!-- End Cloudbees -->
 
    <!-- CloudFoundry -->
 
@@ -409,12 +459,12 @@
 
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.LocalPathResolverImpl</type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.GitUrlResolverFsImpl</type>
    </component>
 
    <!-- Heroku -->
