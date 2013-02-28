@@ -36,7 +36,7 @@ import org.exoplatform.ide.extension.cloudbees.shared.ApplicationInfo;
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: Sep 22, 2011 evgen $
- * 
+ *
  */
 public class ApplicationListGrid extends ListGrid<ApplicationInfo> implements HasApplicationListActions
 {
@@ -54,7 +54,7 @@ public class ApplicationListGrid extends ListGrid<ApplicationInfo> implements Ha
    private Column<ApplicationInfo, String> deleteColumn;
 
    /**
-    * 
+    *
     */
    public ApplicationListGrid()
    {
@@ -113,7 +113,7 @@ public class ApplicationListGrid extends ListGrid<ApplicationInfo> implements Ha
          @Override
          public String getValue(ApplicationInfo object)
          {
-            return object.getInstances();
+            return object.getClusterSize();
          }
       };
 

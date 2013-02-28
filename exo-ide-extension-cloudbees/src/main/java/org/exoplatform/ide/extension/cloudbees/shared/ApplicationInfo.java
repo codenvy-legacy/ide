@@ -64,12 +64,14 @@ public interface ApplicationInfo
    void setUrl(String url);
 
    /** @return the instances */
+   @Deprecated
    String getInstances();
 
    /**
     * @param instances
     *    the instances to set
     */
+   @Deprecated
    void setInstances(String instances);
 
    /** @return the securityMode */

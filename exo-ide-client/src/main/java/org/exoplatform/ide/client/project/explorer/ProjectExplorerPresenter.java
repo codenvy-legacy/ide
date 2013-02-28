@@ -812,13 +812,14 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       {
          return;
       }
-      
-       if (display.selectItem(editorActiveFile.getId()))
-       {
-          return;
-       }
-            
-      display.navigateToItem(editorActiveFile);
+
+      display.selectItem(editorActiveFile.getId());
+//       if (display.selectItem(editorActiveFile.getId()))
+//       {
+//          return;
+//       }
+//            
+//      display.navigateToItem(editorActiveFile);
    }
 
    /*

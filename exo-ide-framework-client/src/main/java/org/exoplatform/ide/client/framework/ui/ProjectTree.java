@@ -18,19 +18,13 @@
  */
 package org.exoplatform.ide.client.framework.ui;
 
-import com.google.gwt.event.logical.shared.OpenEvent;
-
-import com.google.gwt.event.logical.shared.OpenHandler;
-
-import com.google.gwt.user.client.Timer;
-
-import com.google.gwt.user.client.Timer;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.logical.shared.CloseEvent;
 import com.google.gwt.event.logical.shared.CloseHandler;
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.DOM;
@@ -64,7 +58,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    
    private CellTree.Resources RESOURCES = GWT.create(CellTree.Resources.class);
    
-//   private Map<String, String> locktokens;
+   private Map<String, String> locktokens = new HashMap<String, String>();
 
    private String id;
 
@@ -75,7 +69,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    public ProjectTree()
    {
       sinkEvents(Event.ONCONTEXTMENU);
-      addCloseHandler(CLOSE_HANDLER);
+//      addCloseHandler(CLOSE_HANDLER);
       addOpenHandler(this);
    }
 
@@ -89,7 +83,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       this.prefixId = prefixId;
 
       sinkEvents(Event.ONCONTEXTMENU);
-      addCloseHandler(CLOSE_HANDLER);
+//      addCloseHandler(CLOSE_HANDLER);
       addOpenHandler(this);
    }
    
@@ -162,7 +156,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       if (project == null)
       {
          project = (ProjectModel)value;
-         ProjectTreeItem item = new ProjectTreeItem(value, prefixId);
+         ProjectTreeItem item = new ProjectTreeItem(value, prefixId, locktokens);
          tree.addItem(item);
          treeItems.put(value.getId(), item);
       }
@@ -195,7 +189,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       //parentTreeItem.setState(false, false);
       for (Item item : filteredItems)
       {
-         ProjectTreeItem treeItem = new ProjectTreeItem(item, prefixId);
+         ProjectTreeItem treeItem = new ProjectTreeItem(item, prefixId, locktokens);
          parentTreeItem.addItem(treeItem);
          treeItems.put(item.getId(), treeItem);
       }
@@ -238,32 +232,33 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    }
    
    
-   private CloseHandler<Item> CLOSE_HANDLER = new CloseHandler<Item>()
-   {
-      @Override
-      public void onClose(CloseEvent<Item> event)
-      {
-//         final Folder target = (Folder)event.getTarget();
-//         System.out.println("folder id > " + target.getPath());
-//
-//         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//         {
-//            @Override
-//            public void execute()
-//            {
-//               System.out.println("ProjectTree >>>>>> Clearing children......................");
-//               
-//               TreeItem treeItem = treeItems.get(target.getId());
-//               if (treeItem != null)
-//               {
-//                  removeChildren(treeItem);
-//                  treeItem.addItem("");
-//               }
-//            }
-//         });
-      }
-   };
-   
+//   private CloseHandler<Item> CLOSE_HANDLER = new CloseHandler<Item>()
+//   {
+//      @Override
+//      public void onClose(CloseEvent<Item> event)
+//      {
+//         System.out.println("ProjectTree -> CLOSE HANDLER -> onClose");
+////         final Folder target = (Folder)event.getTarget();
+////         System.out.println("folder id > " + target.getPath());
+////
+////         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+////         {
+////            @Override
+////            public void execute()
+////            {
+////               System.out.println("ProjectTree >>>>>> Clearing children......................");
+////               
+////               TreeItem treeItem = treeItems.get(target.getId());
+////               if (treeItem != null)
+////               {
+////                  removeChildren(treeItem);
+////                  treeItem.addItem("");
+////               }
+////            }
+////         });
+//      }
+//   };
+//   
    
    
 
@@ -419,6 +414,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void updateFileState(FileModel file)
    {
+      
+      
 //      System.out.println("ProjectItemTree.updateFileState()");
       
       //   TreeItem fileNode = getNodeById(file.getId());
@@ -443,9 +440,13 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    {
 //      System.out.println("ProjectItemTree.setLockTokens()");
       
-      //   this.locktokens = lockTokens;
+      this.locktokens.clear();
+      
+      if (locktokens != null)
+      {
+         this.locktokens.putAll(lockTokens);
+      }      
    } 
-   
    
    /**
    * Add info icons to Item main icon
