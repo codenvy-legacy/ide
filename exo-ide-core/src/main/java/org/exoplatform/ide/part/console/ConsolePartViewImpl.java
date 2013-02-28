@@ -37,7 +37,9 @@ import com.google.inject.Singleton;
 public class ConsolePartViewImpl extends Composite implements ConsolePartView
 {
    private static ConsolePartViewImplUiBinder uiBinder = GWT.create(ConsolePartViewImplUiBinder.class);
-   @UiField FlowPanel consoleArea;
+
+   @UiField
+   FlowPanel consoleArea;
 
    interface ConsolePartViewImplUiBinder extends UiBinder<Widget, ConsolePartViewImpl>
    {
