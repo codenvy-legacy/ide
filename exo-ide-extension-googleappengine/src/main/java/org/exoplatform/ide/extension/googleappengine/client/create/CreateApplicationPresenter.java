@@ -27,9 +27,14 @@ import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.client.Window;
 import com.google.web.bindery.autobean.shared.AutoBean;
 
+import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
+import org.exoplatform.gwtframework.commons.loader.Loader;
+import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.project.api.FolderTreeUnmarshaller;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -40,6 +45,13 @@ import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEnginePrese
 import org.exoplatform.ide.extension.googleappengine.client.deploy.DeployApplicationEvent;
 import org.exoplatform.ide.extension.googleappengine.client.login.OAuthLoginView;
 import org.exoplatform.ide.extension.googleappengine.shared.GaeUser;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Item;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -133,15 +145,75 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
+      currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
+
       if (display == null)
       {
          display = GWT.create(Display.class);
-         bindDisplay();
-         IDE.getInstance().openView(display.asView());
       }
-      currentProject = (event.getProject() != null) ? event.getProject() : currentProject;
 
       isUserLogged();
+   }
+
+   private void checkIfAppengineWebXmlExist()
+   {
+      final Loader loader = new GWTLoader();
+
+      try
+      {
+         loader.setMessage("Searching for appengine-web.xml...");
+         loader.show();
+         FolderModel target = currentProject;
+         FolderTreeUnmarshaller unmarshaller = new FolderTreeUnmarshaller(target, currentProject);
+         VirtualFileSystem.getInstance().getTree(target.getId(), new AsyncRequestCallback<Folder>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(Folder result)
+            {
+               Item item = result;
+               List<Item> q = new ArrayList<Item>();
+               q.addAll(((FolderModel)item).getChildren().getItems());
+               while (!q.isEmpty())
+               {
+                  Item current = q.remove(0);
+
+                  if (current instanceof FolderModel)
+                  {
+                     if (((FolderModel)current).getChildren().getItems().size() > 0)
+                     {
+                        q.addAll(((FolderModel)current).getChildren().getItems());
+                     }
+                  }
+                  else
+                  {
+                     if ("appengine-web.xml".equals(current.getName())
+                        && "WEB-INF".equals(((FileModel)current).getParent().getName()))
+                     {
+                        loader.hide();
+                        bindDisplay();
+                        IDE.getInstance().openView(display.asView());
+                        return;
+                     }
+                  }
+               }
+
+               loader.hide();
+               Dialogs.getInstance().showError("File appengine-web.xml not found. Creating application failed.");
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               loader.hide();
+               IDE.fireEvent(new ExceptionThrownEvent(exception));
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         loader.hide();
+         IDE.fireEvent(new ExceptionThrownEvent(e));
+      }
    }
 
    /**
@@ -218,6 +290,10 @@ public class CreateApplicationPresenter extends GoogleAppEnginePresenter impleme
                   {
                      // IDE.fireEvent(new LoginEvent());
                      new OAuthLoginView();
+                  }
+                  else
+                  {
+                     checkIfAppengineWebXmlExist();
                   }
                }
 

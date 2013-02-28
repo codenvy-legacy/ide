@@ -531,7 +531,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
-                  <version>${gwt.maven.plugin.version}</version>
+                  <version>${version.gwt.plugin}</version>
                   <configuration>
                      <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
                      <logLevel>INFO</logLevel>
