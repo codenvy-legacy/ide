@@ -18,12 +18,11 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
+
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.services.security.ConversationState;
-
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 
 /**
  * Implementation of LocalFSMountStrategy that obtains name of workspace from attributes of ConversationState.
@@ -73,12 +72,12 @@ public class ConversationStateLocalFSMountStrategy implements LocalFSMountStrate
    {
       if (workspace == null)
       {
-//         ConversationState state = ConversationState.getCurrent();
-//         if (state != null)
-//         {
-//            workspace = (String)state.getAttribute("currentTenant");
-//         }
-         workspace = EnvironmentContext.getCurrentEnvironment().getEnvironmentVariable(EnvironmentContext.WORKSPACE).toString();
+         ConversationState state = ConversationState.getCurrent();
+         if (state != null)
+         {
+            workspace = (String)state.getAttribute("currentTenant");
+         }
+        
       }
       if (workspace == null || workspace.isEmpty())
       {
