@@ -96,7 +96,7 @@ public class VfsWatcher
             case DELETED:
                ItemDeletedDtoImpl dto = ItemDeletedDtoImpl.make();
                dto.setFileId(event.getItemId());
-               dto.setFileId(event.getItemPath());
+               dto.setFilePath(event.getItemPath());
                message = dto.toJson();
                break;
             case MOVED:
