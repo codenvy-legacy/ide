@@ -36,6 +36,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.ui.api.View;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
+import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
@@ -189,6 +190,11 @@ public abstract class GitControl extends SimpleControl implements IDEControl, It
       }
       
       setVisible(true);
+
+      if (selectedProject.getProperty(GitExtension.GIT_REPOSITORY_PROP) != null){
+        setEnabled(true);
+        return;
+      }
 
       List<Item> itemList = selectedProject.getChildren().getItems();
       for (Item child : itemList)

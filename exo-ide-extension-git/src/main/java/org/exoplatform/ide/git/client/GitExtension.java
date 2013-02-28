@@ -71,6 +71,8 @@ public class GitExtension extends Extension implements InitializeServicesHandler
 {
 
    public static final GitLocalizationConstant MESSAGES = GWT.create(GitLocalizationConstant.class);
+   
+   public static final String GIT_REPOSITORY_PROP = "isGitRepository";  
 
    public static final GitAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(GitAutoBeanFactory.class);
 

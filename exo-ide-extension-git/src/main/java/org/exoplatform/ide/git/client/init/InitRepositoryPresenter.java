@@ -37,7 +37,16 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestCallback;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
+import org.exoplatform.ide.vfs.client.VirtualFileSystem;
+import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
+import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Folder;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for Init Repository view.
@@ -149,7 +158,9 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
             protected void onSuccess(String result)
             {
                IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.initSuccess(), Type.INFO));
-               IDE.fireEvent(new RefreshBrowserEvent(project));
+//               IDE.fireEvent(new RefreshBrowserEvent(project));
+               updateProjectProperties();
+               
             }
 
             @Override
@@ -164,6 +175,40 @@ public class InitRepositoryPresenter extends GitPresenter implements InitReposit
       {
          initRepositoryREST(project.getId(), project.getName(), bare);
       }
+   }
+
+   protected void updateProjectProperties()
+   {
+      ProjectModel project = getSelectedProject();
+      List<Property> properties = new ArrayList<Property>();
+      properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
+      project.getProperties().addAll(properties);
+      ItemWrapper item = new ItemWrapper(project);
+      ItemUnmarshaller unmarshaller = new ItemUnmarshaller(item);
+      try
+      {
+         VirtualFileSystem.getInstance().updateItem(getSelectedProject(), null, new AsyncRequestCallback<ItemWrapper>(unmarshaller)
+         {
+            @Override
+            protected void onSuccess(ItemWrapper result)
+            {
+               IDE.fireEvent(new RefreshBrowserEvent((ProjectModel)result.getItem()));
+            }
+
+            @Override
+            protected void onFailure(Throwable exception)
+            {
+               exception.printStackTrace();
+               
+            }
+         });
+      }
+      catch (RequestException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      
    }
 
    /**
