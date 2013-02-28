@@ -22,6 +22,7 @@ import com.google.gwt.inject.client.Ginjector;
 import org.exoplatform.ide.client.BootstrapController;
 import org.exoplatform.ide.core.inject.CoreGinModule;
 import org.exoplatform.ide.extension.cloudfoundry.client.inject.CloudFoundryGinModule;
+import org.exoplatform.ide.extension.maven.client.inject.MavenGinModule;
 import org.exoplatform.ide.java.client.inject.JavaGinModule;
 
 /**
@@ -34,7 +35,8 @@ import org.exoplatform.ide.java.client.inject.JavaGinModule;
  *          exo@exoplatform.com
  * Jul 24, 2012  
  */
-@GinModules({IDEClientModule.class, CoreGinModule.class, JavaGinModule.class, CloudFoundryGinModule.class})
+@GinModules({IDEClientModule.class, CoreGinModule.class, JavaGinModule.class, CloudFoundryGinModule.class,
+   MavenGinModule.class})
 public interface IDEInjector extends Ginjector
 {
    /**

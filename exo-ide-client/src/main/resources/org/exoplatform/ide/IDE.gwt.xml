@@ -22,6 +22,7 @@
   <inherits name='org.exoplatform.ide.extension.css.Css' />
   <inherits name='org.exoplatform.ide.extension.gae.GAE' />
   <inherits name='org.exoplatform.ide.extension.cloudfoundry.CloudFoundry' />
+  <inherits name='org.exoplatform.ide.extension.maven.Maven' />
   <inherits name='org.exoplatform.ide.extension.tasks.Tasks' />
   
   <stylesheet src="IDE.css"/>

@@ -37,6 +37,7 @@ import org.exoplatform.ide.resources.marshal.FolderTreeUnmarshaller;
 import org.exoplatform.ide.resources.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.resources.marshal.JSONDeserializer;
 import org.exoplatform.ide.resources.marshal.JSONSerializer;
+import org.exoplatform.ide.resources.marshal.PropertyUnmarshaller;
 import org.exoplatform.ide.resources.marshal.StringUnmarshaller;
 import org.exoplatform.ide.rest.AsyncRequest;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
@@ -742,6 +743,41 @@ public class Project extends Folder
             .header(HTTPHeader.ACCEPT, MimeType.APPLICATION_JSON).loader(loader).send(internalCallback);
       }
       catch (Exception e)
+      {
+         callback.onFailure(e);
+      }
+   }
+
+   public void refreshProperties(final AsyncCallback<Project> callback)
+   {
+      try
+      {
+         AsyncRequestCallback<JsonArray<Property>> internalCallback =
+            new AsyncRequestCallback<JsonArray<Property>>(new PropertyUnmarshaller())
+            {
+               @Override
+               protected void onSuccess(JsonArray<Property> properties)
+               {
+                  // Update properties on client-side Object 
+                  properties.clear();
+                  properties.addAll(properties);
+
+                  callback.onSuccess(Project.this);
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  callback.onFailure(exception);
+               }
+            };
+
+         // get JSON for this Project
+         String url = vfsInfo.getUrlTemplates().get((Link.REL_ITEM)).getHref();
+         url = URL.decode(url).replace("[id]", id);
+         AsyncRequest.build(RequestBuilder.GET, URL.encode(url)).loader(loader).send(internalCallback);
+      }
+      catch (RequestException e)
       {
          callback.onFailure(e);
       }

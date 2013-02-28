@@ -94,6 +94,10 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ext-cloudfoundry</artifactId>
       </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ext-maven</artifactId>
+      </dependency>
 
     <!-- fix dependecies in JCR. Used for VFS-JCR -->
             <dependency>

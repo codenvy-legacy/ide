@@ -194,6 +194,11 @@
          </dependency>
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>exo-ext-maven</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ext-tasks</artifactId>
             <version>${project.version}</version>
          </dependency>
@@ -471,6 +476,7 @@
       <module>exo-ide-java</module>
       <module>exo-ext-gae</module>
       <module>exo-ext-cloudfoundry</module>
+      <module>exo-ext-maven</module>
       <module>exo-ide-client</module>
    </modules>
 </project>
