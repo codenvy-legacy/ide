@@ -89,7 +89,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
          {
             result.append(':').append(port);
          }
-         result.append('/').append(gitServer).append(workspace).append('/').append(vfsId).append(item.getPath());
+         result.append('/').append(gitServer).append(path).append('/').append(vfsId).append(item.getPath());
 
          return result.toString();
       }
