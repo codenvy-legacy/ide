@@ -137,6 +137,5 @@ public interface ResourceProvider extends Component
     * 
     * @return
     */
-   // TODO
    public String getVfsId();
 }

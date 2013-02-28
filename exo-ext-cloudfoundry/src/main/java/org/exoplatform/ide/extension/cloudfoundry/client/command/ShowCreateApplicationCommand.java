@@ -21,9 +21,11 @@ package org.exoplatform.ide.extension.cloudfoundry.client.command;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import org.exoplatform.ide.core.expressions.Expression;
 import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryResources;
+import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationEvent;
 import org.exoplatform.ide.extension.cloudfoundry.client.create.CreateApplicationPresenter;
 import org.exoplatform.ide.menu.ExtendedCommand;
 
@@ -39,6 +41,8 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
 
    private final CloudFoundryResources resources;
 
+   private final EventBus eventBus;
+
    /**
     * Create command.
     * 
@@ -46,10 +50,12 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
     * @param resources
     */
    @Inject
-   public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources)
+   public ShowCreateApplicationCommand(CreateApplicationPresenter presenter, CloudFoundryResources resources,
+      EventBus eventBus)
    {
       this.presenter = presenter;
       this.resources = resources;
+      this.eventBus = eventBus;
    }
 
    /**
@@ -58,7 +64,9 @@ public class ShowCreateApplicationCommand implements ExtendedCommand
    @Override
    public void execute()
    {
-      presenter.showDialog();
+      // TODO
+      //      presenter.showDialog();
+      eventBus.fireEvent(new CreateApplicationEvent());
    }
 
    /**

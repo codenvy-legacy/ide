@@ -38,9 +38,12 @@ import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.FrameworksUn
 import org.exoplatform.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.extension.cloudfoundry.shared.Framework;
+import org.exoplatform.ide.extension.maven.client.event.BuildProjectEvent;
+import org.exoplatform.ide.json.JsonArray;
 import org.exoplatform.ide.output.event.OutputEvent;
 import org.exoplatform.ide.output.event.OutputMessage;
 import org.exoplatform.ide.resources.model.Project;
+import org.exoplatform.ide.resources.model.Resource;
 import org.exoplatform.ide.rest.AsyncRequestCallback;
 import org.exoplatform.ide.rest.AutoBeanUnmarshaller;
 import org.exoplatform.ide.websocket.WebSocketException;
@@ -209,6 +212,24 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    }
 
    /**
+    * Check is selected item project and can be built.
+    */
+   private void checkIsProject(final Project project)
+   {
+      JsonArray<Resource> children = project.getChildren();
+
+      isMavenProject = false;
+      for (int i = 0; i < children.size(); i++)
+      {
+         Resource child = children.get(i);
+         if (child.isFile() && "pom.xml".equals(child.getName()))
+         {
+            isMavenProject = true;
+         }
+      }
+   }
+
+   /**
     * Find framework from list by name.
     * 
     * @param frameworkName
@@ -273,8 +294,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    {
       // TODO
       //      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
+      //      eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
       // Need for Maven
-      //      eventBus.fireEvent(new BuildProjectEvent());
+      eventBus.fireEvent(new BuildProjectEvent());
    }
 
    /**
@@ -703,6 +725,19 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //         IDE.fireEvent(new ExceptionThrownEvent(msg));
       //         return;
       //      }
+      Project selectedProject = resourceProvider.getActiveProject();
+      if (selectedProject != null)
+      {
+         checkIsProject(selectedProject);
+         showDialog();
+      }
+      else
+      {
+         //         String msg = lb.createApplicationNotFolder();
+         // TODO
+         //         IDE.fireEvent(new ExceptionThrownEvent(msg));
+         console.print("Exception");
+      }
    }
 
    /**
