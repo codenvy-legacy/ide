@@ -33,7 +33,7 @@
    </component>
 
    <component>
-      <type>org.everrest.exoplatform.EverrestInitializer</type>
+      <type>com.codenvy.ide.everrest.EverrestInitializer</type>
    </component>
    <component>
       <type>org.everrest.core.impl.ResourceBinderImpl</type>

@@ -26,6 +26,8 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
+import java.io.File;
+
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -48,48 +50,52 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
    public String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String id) throws GitUrlResolveException
    {
 
-      if (vfs == null)
-      {
-         throw new GitUrlResolveException("Can't resolve Git Url : Virtual file system not initialized");
-      }
-      if (id == null || id.length() == 0)
-      {
-         throw new GitUrlResolveException("Can't resolve Git Url. Item path may not be null or empty");
-      }
-      String gitServer = System.getProperty("org.exoplatform.ide.git.server");
-      if (gitServer == null)
-      {
-         throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
-      }
-      String workspace = EnvironmentContext.getCurrentEnvironment().getEnvironmentVariable(EnvironmentContext.WORKSPACE).toString();
-      if (!gitServer.endsWith("/"))
-      {
-         gitServer += "/";
-      }
-      Item item = null;
-      String vfsId = null;
       try
       {
+         if (vfs == null)
+         {
+            throw new GitUrlResolveException("Can't resolve Git Url : Virtual file system not initialized");
+         }
+         if (id == null || id.length() == 0)
+         {
+            throw new GitUrlResolveException("Can't resolve Git Url. Item path may not be null or empty");
+         }
+         String gitServer = System.getProperty("org.exoplatform.ide.git.server");
+         if (gitServer == null)
+         {
+            throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
+         }
+         String rootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
+         String workspace =
+         EnvironmentContext.getCurrentEnvironment().getEnvironmentVariable(EnvironmentContext.WORKSPACE).toString();
+         String path = mountStrategy.getMountPath(workspace).getPath();
+         path = path.substring(rootPath.length());
+         if (!gitServer.endsWith("/"))
+         {
+            gitServer += "/";
+         }
+         Item item = null;
+         String vfsId = null;
+
          vfsId = vfs.getInfo().getId();
          item = vfs.getItem(id, PropertyFilter.NONE_FILTER);
+         StringBuilder result = new StringBuilder();
+         // Set schema hardcode to "http", 
+         // it because we have not valid certificate on test servers
+         // and Jenkins can't clone source from this servers (IDE-2072)
+         result.append("http").append("://").append(uriInfo.getBaseUri().getHost());
+         int port = uriInfo.getBaseUri().getPort();
+         if (port != 80 && port != 443 && port != -1)
+         {
+            result.append(':').append(port);
+         }
+         result.append('/').append(gitServer).append(workspace).append('/').append(vfsId).append(item.getPath());
+
+         return result.toString();
       }
       catch (VirtualFileSystemException e)
       {
          throw new GitUrlResolveException("Can't resolve Git Url", e);
       }
-      StringBuilder result = new StringBuilder();
-      // Set schema hardcode to "http", 
-      // it because we have not valid certificate on test servers
-      // and Jenkins can't clone source from this servers (IDE-2072)
-      result.append("http").append("://").append(uriInfo.getBaseUri().getHost());
-      int port = uriInfo.getBaseUri().getPort();
-      if (port != 80 && port != 443 && port != -1)
-      {
-         result.append(':').append(port);
-      }
-      result.append('/').append(gitServer).append(workspace).append('/').append(vfsId).append(item.getPath());
-
-      return result.toString();
    }
-
 }
