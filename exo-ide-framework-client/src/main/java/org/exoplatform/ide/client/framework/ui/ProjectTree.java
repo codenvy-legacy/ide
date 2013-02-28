@@ -21,16 +21,16 @@ package org.exoplatform.ide.client.framework.ui;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.event.logical.shared.CloseEvent;
-import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.event.logical.shared.OpenEvent;
 import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.cellview.client.CellTree;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
+import com.google.gwt.user.client.ui.Grid;
 import com.google.gwt.user.client.ui.TreeItem;
 
+import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
 import org.exoplatform.ide.vfs.client.model.FileModel;
@@ -64,12 +64,9 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
 
    private String prefixId;
 
-//   private boolean expandProjects = true;
-
    public ProjectTree()
    {
       sinkEvents(Event.ONCONTEXTMENU);
-//      addCloseHandler(CLOSE_HANDLER);
       addOpenHandler(this);
    }
 
@@ -83,7 +80,6 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       this.prefixId = prefixId;
 
       sinkEvents(Event.ONCONTEXTMENU);
-//      addCloseHandler(CLOSE_HANDLER);
       addOpenHandler(this);
    }
    
@@ -186,14 +182,12 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       Collections.sort(children.getItems(), comparator);
       List<Item> filteredItems = DirectoryFilter.get().filter(children.getItems());      
       
-      //parentTreeItem.setState(false, false);
       for (Item item : filteredItems)
       {
          ProjectTreeItem treeItem = new ProjectTreeItem(item, prefixId, locktokens);
          parentTreeItem.addItem(treeItem);
          treeItems.put(item.getId(), treeItem);
       }
-      //parentTreeItem.setState(true, false);
       
       if (tree.getSelectedItem() != null)
       {
@@ -230,37 +224,6 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       
       treeItem.removeItems();
    }
-   
-   
-//   private CloseHandler<Item> CLOSE_HANDLER = new CloseHandler<Item>()
-//   {
-//      @Override
-//      public void onClose(CloseEvent<Item> event)
-//      {
-//         System.out.println("ProjectTree -> CLOSE HANDLER -> onClose");
-////         final Folder target = (Folder)event.getTarget();
-////         System.out.println("folder id > " + target.getPath());
-////
-////         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-////         {
-////            @Override
-////            public void execute()
-////            {
-////               System.out.println("ProjectTree >>>>>> Clearing children......................");
-////               
-////               TreeItem treeItem = treeItems.get(target.getId());
-////               if (treeItem != null)
-////               {
-////                  removeChildren(treeItem);
-////                  treeItem.addItem("");
-////               }
-////            }
-////         });
-//      }
-//   };
-//   
-   
-   
 
    /**
     * Comparator for comparing items in received directory.
@@ -414,21 +377,13 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void updateFileState(FileModel file)
    {
+      ProjectTreeItem item = treeItems.get(file.getId());
+      if (item == null)
+      {
+         return;
+      }
       
-      
-//      System.out.println("ProjectItemTree.updateFileState()");
-      
-      //   TreeItem fileNode = getNodeById(file.getId());
-      //   if (fileNode == null)
-      //   {
-      //      return;
-      //   }
-      //   TreeItem parentItem = fileNode.getParentItem();
-      //   parentItem.removeItem(fileNode);
-      //   fileNode = createTreeNode(file);
-      //   parentItem.addItem(fileNode);
-      //
-      //   fileNode.setState(true);
+      item.render();
    } 
    
    /**
@@ -438,8 +393,6 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void setLockTokens(Map<String, String> lockTokens)
    {
-//      System.out.println("ProjectItemTree.setLockTokens()");
-      
       this.locktokens.clear();
       
       if (locktokens != null)
@@ -455,24 +408,21 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
    {
-//      System.out.println("ProjectItemTree.addItemsIcons()");
-      
-      //   for (Item item : itemsIcons.keySet())
-      //   {
-      //      TreeItem node = getNodeById(item.getId());
-      //      if (node == null)
-      //      {
-      //         continue;
-      //      }
-      //      Grid grid = (Grid)node.getWidget();
-      //      TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-      //      Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);
-      //      for (TreeIconPosition position : map.keySet())
-      //      {
-      //         treeIcon.addIcon(position, map.get(position));
-      //      }
-      //
-      //   }
+      for (Item item : itemsIcons.keySet())
+      {
+         TreeItem node = treeItems.get(item.getId());
+         if (node == null)
+         {
+            continue;
+         }
+         Grid grid = (Grid)node.getWidget();
+         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+         Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);
+         for (TreeIconPosition position : map.keySet())
+         {
+            treeIcon.addIcon(position, map.get(position));
+         }   
+      }
    } 
 
    /**
@@ -482,46 +432,18 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
    {
-//      System.out.println("ProjectItemTree.removeItemIcons()");
-      
-      //   for (Item item : itemsIcons.keySet())
-      //   {
-      //      TreeItem node = getNodeById(item.getId());
-      //      Grid grid = (Grid)node.getWidget();
-      //      TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-      //      treeIcon.removeIcon(itemsIcons.get(item));
-      //   }
-   }
-   
-   public void setUpdateValue(boolean updateValue)
-   {
-//      System.out.println("ProjectItemTree.setUpdateValue()");
-      
-      //    this.updateValue = updateValue;
+      for (Item item : itemsIcons.keySet())
+      {
+         TreeItem node = treeItems.get(item.getId());
+         if (node == null)
+         {
+            continue;
+         }
+         
+         Grid grid = (Grid)node.getWidget();
+         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+         treeIcon.removeIcon(itemsIcons.get(item));
+      }
    }
 
-   /**
-   * @param folder
-   * @param isOpens
-   */
-   public void changeFolderIcon(Folder folder, boolean isOpens)
-   {
-//      System.out.println("ProjectItemTree.changeFolderIcon()");
-      
-      //   TreeItem node = getNodeById(folder.getId());
-      //   if (node == null)
-      //   {
-      //      return;
-      //   }
-      //   Grid grid = (Grid)node.getWidget();
-      //   TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
-      //   if(isOpens)
-      //   {
-      //      treeIcon.setIcon(res.cellTreeLoading());
-      //   }
-      //   else
-      //      treeIcon.setIcon(getItemIcon(folder));
-   }
-
-   
 }

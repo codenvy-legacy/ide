@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -42,9 +40,9 @@ import org.exoplatform.ide.client.framework.project.OpenProjectHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
+import org.exoplatform.ide.client.framework.project.api.IDEProject.FolderChangedHandler;
 import org.exoplatform.ide.client.framework.project.api.ProjectBuilder;
 import org.exoplatform.ide.client.framework.project.api.TreeRefreshedEvent;
-import org.exoplatform.ide.client.framework.project.api.IDEProject.FolderChangedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;

@@ -18,6 +18,9 @@
  */
 package org.eclipse.jdt.client.packaging;
 
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.Grid;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
@@ -31,7 +34,10 @@ import com.google.gwt.user.client.ui.TreeItem;
 import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.eclipse.jdt.client.packaging.model.next.Package;
 import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
+import org.exoplatform.gwtframework.ui.client.component.TreeIcon;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
+import org.exoplatform.ide.client.framework.ui.ProjectTreeItem;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
@@ -56,6 +62,8 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    private String id;
 
    private String prefixId;
+   
+   private Map<String, String> locktokens = new HashMap<String, String>();   
    
    /**
     * Comparator for comparing items in received directory.
@@ -214,7 +222,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          PackageExplorerTreeItem child = treeItem.getChildByItemId(sourceDirectory.getId());
          if (child == null)
          {
-            child = new PackageExplorerTreeItem(sourceDirectory);
+            child = new PackageExplorerTreeItem(sourceDirectory, locktokens);
             treeItem.insertItem(index, child);
             treeItems.put(sourceDirectory.getId(), child);
          }
@@ -248,7 +256,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          PackageExplorerTreeItem child = treeItem.getChildByItemId(projectItem.getId());
          if (child == null)
          {
-            child = new PackageExplorerTreeItem(projectItem);
+            child = new PackageExplorerTreeItem(projectItem, locktokens);
             treeItem.insertItem(index, child);
             treeItems.put(projectItem.getId(), child);
          }
@@ -374,7 +382,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          {
             if (isNeedShowPackage(_package))
             {
-               child = new PackageExplorerTreeItem(_package);
+               child = new PackageExplorerTreeItem(_package, locktokens);
                treeItem.insertItem(index, child);
                treeItems.put(_package.getId(), child);
                index++;
@@ -396,7 +404,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          PackageExplorerTreeItem child = treeItem.getChildByItemId(file.getId());
          if (child == null)
          {
-            child = new PackageExplorerTreeItem(file);
+            child = new PackageExplorerTreeItem(file, locktokens);
             treeItem.insertItem(index, child);
             treeItems.put(file.getId(), child);
          }
@@ -453,7 +461,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          PackageExplorerTreeItem child = treeItem.getChildByItemId(file.getId());
          if (child == null)
          {
-            child = new PackageExplorerTreeItem(file);
+            child = new PackageExplorerTreeItem(file, locktokens);
             treeItem.insertItem(index, child);
             treeItems.put(file.getId(), child);
          }
@@ -545,7 +553,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          PackageExplorerTreeItem child = treeItem.getChildByItemId(folderItem.getId());
          if (child == null)
          {
-            child = new PackageExplorerTreeItem(folderItem);
+            child = new PackageExplorerTreeItem(folderItem, locktokens);
             treeItem.insertItem(index, child);
             treeItems.put(folderItem.getId(), child);
          }
@@ -712,7 +720,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       if (project == null)
       {
          project = (JavaProject)value;
-         PackageExplorerTreeItem rootTreeItem = new PackageExplorerTreeItem(value);
+         PackageExplorerTreeItem rootTreeItem = new PackageExplorerTreeItem(value, locktokens);
          tree.addItem(rootTreeItem);
          treeItems.put(value.getId(), rootTreeItem);
          openTreeNode = true;
@@ -786,7 +794,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       // modules
       for (ProjectModel module : javaProject.getModules())
       {
-         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(module);
+         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(module, locktokens);
          projectItem.addItem(treeItem);
          treeItems.put(module.getId(), treeItem);
          treeItem.addItem("");
@@ -795,7 +803,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       // source directories
       for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories())
       {
-         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(sourceDirectory);
+         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(sourceDirectory, locktokens);
          projectItem.addItem(treeItem);
          treeItems.put(sourceDirectory.getId(), treeItem);
          if (sourceDirectory.getPackages().size() > 1 || !sourceDirectory.getPackages().get(0).getFiles().isEmpty())
@@ -832,7 +840,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             continue;
          }
 
-         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(item);
+         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(item, locktokens);
          projectItem.addItem(treeItem);
          treeItems.put(item.getId(), treeItem);
 
@@ -881,7 +889,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             continue;
          }
 
-         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(pack);
+         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(pack, locktokens);
          sourceDirectoryTreeItem.addItem(treeItem);
          treeItems.put(pack.getId(), treeItem);
 
@@ -896,7 +904,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          Collections.sort(defaultPackage.getFiles(), comparator);
          for (FileModel file : defaultPackage.getFiles())
          {
-            PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(file);
+            PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(file, locktokens);
             sourceDirectoryTreeItem.addItem(treeItem);
             treeItems.put(file.getId(), treeItem);
          }
@@ -935,7 +943,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       Collections.sort(pack.getFiles(), comparator);
       for (FileModel file : pack.getFiles())
       {
-         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(file);
+         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(file, locktokens);
          packageTreeItem.addItem(treeItem);
          treeItems.put(file.getId(), treeItem);
       }
@@ -954,7 +962,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
             continue;
          }
 
-         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(item);
+         PackageExplorerTreeItem treeItem = new PackageExplorerTreeItem(item, locktokens);
          folderTreeItem.addItem(treeItem);
          treeItems.put(item.getId(), treeItem);
 
@@ -1036,5 +1044,79 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       }
       */
    }
+   
+   /**
+   * @param file
+   */
+   public void updateFileState(FileModel file)
+   {
+      PackageExplorerTreeItem item = treeItems.get(file.getId());
+      if (item == null)
+      {
+         return;
+      }
+      
+      item.render();
+   } 
 
+   /**
+   * Set lock token map
+   * 
+   * @param lockTokens
+   */
+   public void setLockTokens(Map<String, String> lockTokens)
+   {
+      this.locktokens.clear();
+      
+      if (locktokens != null)
+      {
+         this.locktokens.putAll(lockTokens);
+      }      
+   }
+   
+   /**
+   * Add info icons to Item main icon
+   * 
+   * @param itemsIcons Map of Item, info icon position and info icon URL
+   */
+   public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
+   {
+      for (Item item : itemsIcons.keySet())
+      {
+         TreeItem node = treeItems.get(item.getId());
+         if (node == null)
+         {
+            continue;
+         }
+         Grid grid = (Grid)node.getWidget();
+         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+         Map<TreeIconPosition, ImageResource> map = itemsIcons.get(item);
+         for (TreeIconPosition position : map.keySet())
+         {
+            treeIcon.addIcon(position, map.get(position));
+         }   
+      }
+   }   
+   
+   /**
+   * Remove info icon from Item main icon
+   * 
+   * @param itemsIcons Map of item and position of info icon
+   */
+   public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
+   {
+      for (Item item : itemsIcons.keySet())
+      {
+         TreeItem node = treeItems.get(item.getId());
+         if (node == null)
+         {
+            continue;
+         }
+         
+         Grid grid = (Grid)node.getWidget();
+         TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
+         treeIcon.removeIcon(itemsIcons.get(item));
+      }
+   }   
+   
 }

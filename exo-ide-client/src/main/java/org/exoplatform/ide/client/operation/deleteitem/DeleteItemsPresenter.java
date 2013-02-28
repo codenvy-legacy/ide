@@ -24,6 +24,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.ui.HasValue;
+
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
@@ -40,7 +41,11 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
@@ -73,7 +78,8 @@ import java.util.Map;
  */
 
 public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler, ItemsSelectedHandler,
-   EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler, ProjectSelectedHandler
+   EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler, ProjectSelectedHandler,
+   ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public interface Display extends IsView
@@ -113,6 +119,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    private ProjectModel selectedProject;
 
    private boolean isProjectExplorer = false;
+   
+   private ProjectModel openedProject;
 
    /**
     * Creates new instance of this presenter.
@@ -128,6 +136,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       IDE.addHandler(DeleteItemEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ProjectSelectedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
@@ -186,7 +196,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    public void bindDisplay()
    {
       String message = "";
-      if (selectedProject != null && isProjectExplorer)
+      if (openedProject == null && selectedProject != null && isProjectExplorer)
       {
          message = IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteProject(selectedProject.getName());
       }
@@ -230,14 +240,24 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    {
       IDE.getInstance().closeView(display.asView().getId());
       itemsToDelete = new ArrayList<Item>();
-      if (selectedProject != null && isProjectExplorer)
+      
+      if (openedProject == null)
       {
-         itemsToDelete.add(selectedProject);
+         if (selectedProject != null && isProjectExplorer)
+         {
+            itemsToDelete.add(selectedProject);            
+         }
       }
       else if (items != null && !items.isEmpty())
       {
          itemsToDelete.addAll(items);
       }
+
+      if (itemsToDelete.isEmpty())
+      {
+         return;
+      }
+      
       deleteNextItem();
    }
 
@@ -472,4 +492,17 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
    {
       this.selectedProject = event.getProject();
    }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      openedProject = null;
+   }
+   
 }

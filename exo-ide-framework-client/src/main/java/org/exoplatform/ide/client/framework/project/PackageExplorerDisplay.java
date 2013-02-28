@@ -18,14 +18,19 @@
  */
 package org.exoplatform.ide.client.framework.project;
 
+import com.google.gwt.resources.client.ImageResource;
+
 import com.google.gwt.event.dom.client.HasClickHandlers;
 
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
+import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -49,11 +54,6 @@ public interface PackageExplorerDisplay extends IsView
    
    boolean selectItem(Item item);
    
-//   void setProject(ProjectModel project);
-//
-//   void treeUpdated(String path);
-//   
-
    Object getSelectedObject();
 
    void goToItem(List<Object> itemList, boolean collapseBranches);
@@ -83,4 +83,28 @@ public interface PackageExplorerDisplay extends IsView
     */
    void setLinkWithEditorButtonSelected(boolean selected);
 
+   /**
+    * Update the state of the item in the tree.
+    * 
+    * @param file
+    */
+   void updateItemState(FileModel file);   
+
+   /**
+    * Set lock tokens to the items in the tree.
+    * 
+    * @param locktokens
+    */
+   void setLockTokens(Map<String, String> locktokens);
+   
+   /**
+    * Add info icons to main item icon.
+    */
+   void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
+   
+   /**
+    * Remove additional icons from items.
+    */
+   void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
+   
 }

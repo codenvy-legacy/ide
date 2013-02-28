@@ -30,6 +30,12 @@ import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEven
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.FolderOpenedEvent;
+import org.exoplatform.ide.client.framework.project.api.FolderOpenedHandler;
 import org.exoplatform.ide.git.client.GitClientBundle;
 import org.exoplatform.ide.git.client.GitClientService;
 import org.exoplatform.ide.git.client.GitExtension;
@@ -38,12 +44,9 @@ import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
 import org.exoplatform.ide.git.shared.GitFile;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemList;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,18 +59,23 @@ import java.util.Map;
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Mar 28, 2011 3:58:20 PM anya $
  */
-public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler
+public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeStatusHandler, FolderRefreshedHandler, ProjectOpenedHandler, ProjectClosedHandler, FolderOpenedHandler
 {
    /**
     * Store the status of the working tree (changed, untracked files).
     * Status will be checked once, only when expands project item in Project Explorer.
     */
    private StatusResponse workingTreeStatus;
+   
+   private ProjectModel openedProject;
 
    public StatusCommandHandler()
    {
       IDE.addHandler(ShowWorkTreeStatusEvent.TYPE, this);
       IDE.addHandler(FolderRefreshedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(FolderOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
    /** @see org.exoplatform.ide.git.client.status.ShowWorkTreeStatusHandler#onShowWorkTreeStatus(org.exoplatform.ide.git.client.status.ShowWorkTreeStatusEvent) */
@@ -76,7 +84,6 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    {
       if (makeSelectionCheck())
       {
-//         getStatusText(((ItemContext)selectedItems.get(0)).getProject(), selectedItems.get(0));
          getStatusText(getSelectedProject(), selectedItem);
       }
    }
@@ -121,6 +128,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                   {
                      return;
                   }
+                                    
                   String status = result.getWorkTreeStatus();
                   status = status.replace("\n", "<br>");
                   IDE.fireEvent(new OutputEvent(status, OutputMessage.Type.GIT));
@@ -146,28 +154,13 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    @Override
    public void onFolderRefreshed(FolderRefreshedEvent event)
    {
-      updateBrowserTreeStatus(event.getFolder());
-   }
-
-   /**
-    * Get working directory of the Git repository and if found - get status.
-    *
-    * @param folder
-    */
-   private void updateBrowserTreeStatus(final Folder folder)
-   {
-      ItemList<Item> children =
-         (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren() : ((FolderModel)folder).getChildren();
-
-      if (children == null || children.getItems().size() <= 0 || folder.getId() == null || folder.getId().isEmpty())
+      FolderModel folder = (FolderModel)event.getFolder();
+      if (folder.getChildren().getItems().isEmpty() || folder.getId() == null || folder.getId().isEmpty())
       {
          return;
       }
 
-      if (folder instanceof ItemContext && ((ItemContext)folder).getProject() != null)
-      {
-         getStatus(((ItemContext)folder).getProject(), folder);
-      }
+      getStatus(folder, true);
    }
 
    /**
@@ -176,24 +169,24 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     * @param folder
     *    folder to be updated
     */
-   private void getStatus(final ProjectModel project, final Folder folder)
+   private void getStatus(final FolderModel folder, boolean forced)
    {
-      if (!(folder instanceof ProjectModel))
+      if (!folder.getId().equals(openedProject.getId()) && !forced)
       {
-         addItemsTreeIcons(project, folder);
+         addItemsTreeIcons(folder);
          return;
       }
-
+      
       try
       {
-         GitClientService.getInstance().status(vfs.getId(), project.getId(),
+         GitClientService.getInstance().status(vfs.getId(), openedProject.getId(),
             new AsyncRequestCallback<StatusResponse>(new StatusResponseUnmarshaller(new StatusResponse(), false))
             {
                @Override
                protected void onSuccess(StatusResponse result)
                {
                   workingTreeStatus = result;
-                  addItemsTreeIcons(project, folder);
+                  addItemsTreeIcons(folder);
                }
 
                @Override
@@ -215,7 +208,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     * @param folder
     *    folder to be updated
     */
-   private void addItemsTreeIcons(ProjectModel project, Folder folder)
+   private void addItemsTreeIcons(FolderModel folder)
    {
       if (workingTreeStatus == null)
       {
@@ -226,14 +219,12 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
          new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
 
       List<Item> itemsToCheck = new ArrayList<Item>();
-      ItemList<Item> children =
-         (folder instanceof ProjectModel) ? ((ProjectModel)folder).getChildren() : ((FolderModel)folder).getChildren();
-      itemsToCheck.addAll(children.getItems());
+      itemsToCheck.addAll(folder.getChildren().getItems());
       itemsToCheck.add(folder);
       for (Item item : itemsToCheck)
       {
          String path = URL.decodePathSegment(item.getPath());
-         String pattern = path.replaceFirst(project.getPath(), "");
+         String pattern = path.replaceFirst(openedProject.getPath(), "");
          pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
          Map<TreeIconPosition, ImageResource> map = new HashMap<TreeIconPosition, ImageResource>();
          if (pattern.length() == 0 || "/".equals(pattern))
@@ -254,10 +245,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
          }
          else
          {
-            if (item instanceof File)
-            {
-               map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository());
-            }
+            map.put(TreeIconPosition.BOTTOMRIGHT, GitClientBundle.INSTANCE.itemInRepository());            
          }
          treeNodesToUpdate.put(item, map);
       }
@@ -284,4 +272,24 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
       }
       return false;
    }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+      getStatus(openedProject, true);
+   }
+
+   @Override
+   public void onFolderOpened(FolderOpenedEvent event)
+   {
+      getStatus(event.getFolder(), false);
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      openedProject = null;
+   }
+   
 }
