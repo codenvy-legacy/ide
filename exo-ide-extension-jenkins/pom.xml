@@ -16,7 +16,6 @@
       <dependency>
          <groupId>javax.inject</groupId>
          <artifactId>javax.inject</artifactId>
-         <version>1</version> <!-- TODO add in parent pom.xml -->
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
