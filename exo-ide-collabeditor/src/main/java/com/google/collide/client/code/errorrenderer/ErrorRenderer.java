@@ -183,7 +183,7 @@ public class ErrorRenderer implements LineRenderer {
     DtoClientImpls.CodeErrorImpl newError = DtoClientImpls.CodeErrorImpl.make()
         .setErrorStart(newErrorStart)
         .setErrorEnd(newErrorEnd)
-        .setMessage(oldError.getMessage()).setError(oldError.isError());
+        .setMessage(oldError.getMessage()).setIsError(oldError.isError());
     Log.debug(getClass(), "Migrated error [" + codeErrorToString(oldError)
         + "] to [" + codeErrorToString(newError) + "]");
     return newError;

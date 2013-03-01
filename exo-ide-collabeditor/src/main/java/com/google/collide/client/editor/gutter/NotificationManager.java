@@ -486,7 +486,7 @@ public class NotificationManager implements DocumentListener
             error.setMessage(m.getMessage());
             error.setErrorEnd(getFilePosition(m.getEnd()));
             error.setErrorStart(getFilePosition(m.getStart()));
-            error.setError(m.isError());
+            error.setIsError(m.isError());
             errors.add(error);
          }
          addProblem(m);
