@@ -160,6 +160,8 @@ public class NotificationManager
 
    private static final Resources resources = GWT.create(Resources.class);
 
+   private static NotificationManager instance;
+
    private final InitialPositionCallback position;
 
    private final LinkedList<Notification> notifications = new LinkedList<Notification>();
@@ -193,6 +195,28 @@ public class NotificationManager
             reflow();
          }
       });
+   }
+
+   public static NotificationManager get()
+   {
+      if(instance == null)
+      {
+         instance = new NotificationManager(new InitialPositionCallback()
+         {
+            @Override
+            public int getBorderX()
+            {
+               return Window.getClientWidth() - 5;
+            }
+
+            @Override
+            public int getBorderY()
+            {
+               return 20;
+            }
+         });
+      }
+      return instance;
    }
 
    public void addNotification(final Notification notification)

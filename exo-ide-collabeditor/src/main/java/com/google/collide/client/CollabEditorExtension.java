@@ -63,8 +63,6 @@ public class CollabEditorExtension extends Extension implements MainSocketOpened
 
    private CollaborationManager collaborationManager;
 
-   private NotificationManager notificationManager;
-
    public static CollabEditorExtension get()
    {
       return instance;
@@ -84,20 +82,6 @@ public class CollabEditorExtension extends Extension implements MainSocketOpened
       documentManager = DocumentManager.create(context);
 
       new ParticipantsPresenter(context.getResources());
-      notificationManager = new NotificationManager(new InitialPositionCallback()
-      {
-         @Override
-         public int getBorderX()
-         {
-            return Window.getClientWidth() - 5;
-         }
-
-         @Override
-         public int getBorderY()
-         {
-            return 20;
-         }
-      });
    }
 
    public AppContext getContext()
@@ -228,7 +212,7 @@ public class CollabEditorExtension extends Extension implements MainSocketOpened
             IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
             collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient);
             UsersModel usersModel = new UsersModel(context.getFrontendApi(), context.getMessageFilter());
-            new NotificationController(notificationManager, collaborationManager, context.getMessageFilter(),usersModel, IDE.eventBus(),context.getResources().baseCss());
+            new NotificationController(NotificationManager.get(), collaborationManager, context.getMessageFilter(),usersModel, IDE.eventBus(),context.getResources().baseCss());
 
             DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
             //                     bus.close();

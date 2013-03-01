@@ -63,7 +63,7 @@ public class VfsWatcherService
       Principal principal = securityContext.getUserPrincipal();
       ProjectClosedDtoImpl closedDto = ProjectClosedDtoImpl.fromJsonString(message);
       vfsWatcher.closeProject(connection.getHttpSession().getId(),
-         principal != null ? principal.getName() : "anonymous", closedDto);
+         principal != null ? principal.getName() : "anonymous", closedDto.projectId());
    }
 
 }

@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -104,7 +105,7 @@ public class VfsWatcher
             case MOVED:
                ItemMovedDtoImpl movedDto = ItemMovedDtoImpl.make();
                movedDto.setOldPath(event.getOldItemPath());
-               movedDto.setMovedItem(getDtoItem(event.getVirtualFileSystem(),event.getItemId()));
+               movedDto.setMovedItem(getDtoItem(event.getVirtualFileSystem(), event.getItemId()));
                movedDto.setUserId(event.getUserId());
                message = movedDto.toJson();
                break;
@@ -154,7 +155,7 @@ public class VfsWatcher
    {
       Map<String, LinkImpl> converted = new HashMap<String, LinkImpl>(links.size());
 
-      for(String key : links.keySet())
+      for (String key : links.keySet())
       {
          LinkImpl link = LinkImpl.make();
          Link l = links.get(key);
@@ -169,7 +170,7 @@ public class VfsWatcher
    private List<PropertyImpl> convertProperties(List<Property> properties)
    {
       List<PropertyImpl> prop = new ArrayList<PropertyImpl>(properties.size());
-      for(Property p : properties)
+      for (Property p : properties)
       {
          PropertyImpl property = PropertyImpl.make();
          property.setName(p.getName());
@@ -231,22 +232,23 @@ public class VfsWatcher
 
    }
 
-   public void closeProject(String clientId, String userId, ProjectClosedDto dto)
+   public void closeProject(String clientId, String userId, String projectId)
    {
-      if (projectUsers.containsKey(dto.projectId()))
+      if (projectUsers.containsKey(projectId))
       {
-         Set<String> ids = projectUsers.get(dto.projectId());
+         Set<String> ids = projectUsers.get(projectId);
          ids.remove(clientId);
          if (ids.isEmpty())
          {
-            LOG.debug("Remove VFS listener for {} project", dto.projectPath());
-            projectUsers.remove(dto.projectId());
-            Pair<ChangeEventFilter, EventListener> pair = vfsListeners.remove(dto.projectId());
+            LOG.debug("Remove VFS listener for {} project", projectId);
+            projectUsers.remove(projectId);
+            Pair<ChangeEventFilter, EventListener> pair = vfsListeners.remove(projectId);
             listeners.removeEventListener(pair.first, pair.second);
          }
          userId2clientId.remove(userId);
       }
    }
+
 
    private static void broadcastToClients(String message, Set<String> collaborators)
    {
@@ -264,6 +266,44 @@ public class VfsWatcher
             LOG.error(e.getMessage(), e);
          }
       }
+   }
+
+   public void sessionDestroyed(String clientId)
+   {
+      String projectId = getProjectId(clientId);
+      String userId = getUserId(clientId);
+      if (projectId != null && userId != null)
+      {
+         closeProject(clientId, userId, projectId);
+      }
+   }
+
+   private String getUserId(String clientId)
+   {
+      for (Entry<String, String> entry : userId2clientId.entrySet())
+      {
+         if (entry.getValue().equals(clientId))
+         {
+            return entry.getKey();
+         }
+      }
+      return null;
+   }
+
+
+   private String getProjectId(String clientId)
+   {
+      for (Entry<String, Set<String>> projectEnty : projectUsers.entrySet())
+      {
+         for (String id : projectEnty.getValue())
+         {
+            if (clientId.equals(id))
+            {
+               return projectEnty.getKey();
+            }
+         }
+      }
+      return null;
    }
 
 }

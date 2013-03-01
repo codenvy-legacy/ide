@@ -24,6 +24,9 @@
    <listener>
       <listener-class>com.google.collide.server.FileEditSessionCleaner</listener-class>
    </listener>
+      <listener>
+      <listener-class>com.codenvy.vfs.watcher.server.WatcherSessionCleaner</listener-class>
+   </listener>
 
 	<servlet>
 		<servlet-name>EverrestServlet</servlet-name>
