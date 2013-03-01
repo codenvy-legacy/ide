@@ -18,7 +18,16 @@
  */
 package org.exoplatform.ide.git.client.history;
 
-import java.util.Date;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.TableCellElement;
+import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.i18n.client.DateTimeFormat;
+import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.SimplePanel;
+import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
 import org.exoplatform.gwtframework.ui.client.api.ListGridItem;
@@ -36,16 +45,7 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.commit.RevisionGrid;
 import org.exoplatform.ide.git.shared.Revision;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.TableCellElement;
-import com.google.gwt.event.dom.client.HasClickHandlers;
-import com.google.gwt.i18n.client.DateTimeFormat;
-import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.SimplePanel;
-import com.google.gwt.user.client.ui.Widget;
+import java.util.Date;
 
 /**
  * View for displaying the history of commits and it's diff. Must be pointed in Views.gwt.xml.
@@ -223,30 +223,15 @@ public class HistoryView extends ViewImpl implements HistoryPresenter.Display
     */
    public Editor createEditor(String content)
    {
-      Editor diffEditor = new CodeMirror(MimeType.DIFF, 
+      editor =
+         new CodeMirror(MimeType.DIFF,
          new CodeMirrorConfiguration()
             .setGenericParsers("['parsediff.js']")
             .setGenericStyles("['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
-      
-//         new CodeMirror(MimeType.DIFF, "CodeMirror diff editor", "diff", new CodeMirrorConfiguration()
-//            .setGenericParsers("['parsediff.js']").setGenericStyles(
-//               "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
-
-      //      /**
-      //       * Editor's producer.
-      //       */
-      //      private EditorProducer editorProducer = new CodeMirrorProducer(MimeType.DIFF, "CodeMirror diff editor", "diff",
-      //         null, true, new CodeMirrorConfiguration().setGenericParsers("['parsediff.js']").setGenericStyles(
-      //            "['" + CodeMirrorConfiguration.PATH + "css/diffcolors.css']"));
-
-      diffEditor.setReadOnly(true);
-      diffEditor.showLineNumbers(false);      
-      diffEditor.asWidget().setSize("100%", "100%");
-//      final HashMap<String, Object> params = new HashMap<String, Object>();
-//      params.put(EditorParameters.IS_READ_ONLY, true);
-//      params.put(EditorParameters.IS_SHOW_LINE_NUMER, false);
-//      editor = editorProducer.createEditor(content, IDE.eventBus(), params);
-      
+      editor.setReadOnly(true);
+      editor.showLineNumbers(false);
+      editor.asWidget().setSize("100%", "100%");
+      editor.setText(content);
       editorPanel.add(editor);
       return editor;
    }
