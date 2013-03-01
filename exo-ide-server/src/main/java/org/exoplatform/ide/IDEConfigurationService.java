@@ -161,6 +161,12 @@ public class IDEConfigurationService
    }
 
    @GET
+   @Path("ping")
+   public void ping()
+   {
+   }
+
+   @GET
    @Produces(MediaType.APPLICATION_JSON)
    @RolesAllowed("users")
    public String getConfiguration()
