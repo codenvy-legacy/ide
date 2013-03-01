@@ -40,6 +40,8 @@ public interface FileOperationNotification extends ServerToClientDto, ClientToSe
 
    String getUserId();
 
+   String getEditSessionId();
+
    Operation getOperation();
 
 }

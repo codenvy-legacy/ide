@@ -22,13 +22,14 @@
 package com.google.collide.dto.client;
 
 
+import com.google.collide.dto.GetOpenedFilesInWorkspaceResponse;
 
 @SuppressWarnings({"unchecked", "cast"})
 public class DtoClientImpls {
 
   private  DtoClientImpls() {}
 
-  public static final String CLIENT_SERVER_PROTOCOL_HASH = "35435f2fd870c9a675e56301d0098a5208d4816f";
+  public static final String CLIENT_SERVER_PROTOCOL_HASH = "90f95e56a52cb9aa7971d85425bf2ac09042487b";
 
 
   public static class AddMembersResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.AddMembersResponse {
@@ -125,20 +126,6 @@ public class DtoClientImpls {
     protected AddWorkspaceMembersImpl() {}
 
     @Override
-    public final native com.google.collide.dto.ChangeRoleInfo getChangeRoleInfo() /*-{
-      return this["changeRoleInfo"];
-    }-*/;
-
-    public final native AddWorkspaceMembersImpl setChangeRoleInfo(com.google.collide.dto.ChangeRoleInfo changeRoleInfo) /*-{
-      this["changeRoleInfo"] = changeRoleInfo;
-      return this;
-    }-*/;
-
-    public final native boolean hasChangeRoleInfo() /*-{
-      return this.hasOwnProperty("changeRoleInfo");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
@@ -150,6 +137,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.ChangeRoleInfo getChangeRoleInfo() /*-{
+      return this["changeRoleInfo"];
+    }-*/;
+
+    public final native AddWorkspaceMembersImpl setChangeRoleInfo(com.google.collide.dto.ChangeRoleInfo changeRoleInfo) /*-{
+      this["changeRoleInfo"] = changeRoleInfo;
+      return this;
+    }-*/;
+
+    public final native boolean hasChangeRoleInfo() /*-{
+      return this.hasOwnProperty("changeRoleInfo");
     }-*/;
 
     @Override
@@ -189,20 +190,6 @@ public class DtoClientImpls {
 
   public static class BeginUploadSessionImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.BeginUploadSession {
     protected BeginUploadSessionImpl() {}
-
-    @Override
-    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() /*-{
-      return this["workspacePathsToReplace"];
-    }-*/;
-
-    public final native BeginUploadSessionImpl setWorkspacePathsToReplace(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> workspacePathsToReplace) /*-{
-      this["workspacePathsToReplace"] = workspacePathsToReplace;
-      return this;
-    }-*/;
-
-    public final native boolean hasWorkspacePathsToReplace() /*-{
-      return this.hasOwnProperty("workspacePathsToReplace");
-    }-*/;
 
     @Override
     public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToUnzip() /*-{
@@ -272,6 +259,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
+    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getWorkspacePathsToReplace() /*-{
+      return this["workspacePathsToReplace"];
+    }-*/;
+
+    public final native BeginUploadSessionImpl setWorkspacePathsToReplace(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> workspacePathsToReplace) /*-{
+      this["workspacePathsToReplace"] = workspacePathsToReplace;
+      return this;
+    }-*/;
+
+    public final native boolean hasWorkspacePathsToReplace() /*-{
+      return this.hasOwnProperty("workspacePathsToReplace");
     }-*/;
 
     public static native BeginUploadSessionImpl make() /*-{
@@ -366,17 +367,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getFileEditSessionKey() /*-{
-      return this["fileEditSessionKey"];
+    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
+      return this["docOps2"];
     }-*/;
 
-    public final native ClientToServerDocOpImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
-      this["fileEditSessionKey"] = fileEditSessionKey;
+    public final native ClientToServerDocOpImpl setDocOps2(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
+      this["docOps2"] = docOps2;
       return this;
     }-*/;
 
-    public final native boolean hasFileEditSessionKey() /*-{
-      return this.hasOwnProperty("fileEditSessionKey");
+    public final native boolean hasDocOps2() /*-{
+      return this.hasOwnProperty("docOps2");
     }-*/;
 
     @Override
@@ -394,17 +395,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
-      return this["docOps2"];
+    public final native java.lang.String getFileEditSessionKey() /*-{
+      return this["fileEditSessionKey"];
     }-*/;
 
-    public final native ClientToServerDocOpImpl setDocOps2(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
-      this["docOps2"] = docOps2;
+    public final native ClientToServerDocOpImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
+      this["fileEditSessionKey"] = fileEditSessionKey;
       return this;
     }-*/;
 
-    public final native boolean hasDocOps2() /*-{
-      return this.hasOwnProperty("docOps2");
+    public final native boolean hasFileEditSessionKey() /*-{
+      return this.hasOwnProperty("fileEditSessionKey");
     }-*/;
 
     @Override
@@ -685,20 +686,6 @@ public class DtoClientImpls {
     protected CodeErrorImpl() {}
 
     @Override
-    public final native com.google.collide.dto.FilePosition getErrorEnd() /*-{
-      return this["errorEnd"];
-    }-*/;
-
-    public final native CodeErrorImpl setErrorEnd(com.google.collide.dto.FilePosition errorEnd) /*-{
-      this["errorEnd"] = errorEnd;
-      return this;
-    }-*/;
-
-    public final native boolean hasErrorEnd() /*-{
-      return this.hasOwnProperty("errorEnd");
-    }-*/;
-
-    @Override
     public final native com.google.collide.dto.FilePosition getErrorStart() /*-{
       return this["errorStart"];
     }-*/;
@@ -710,6 +697,20 @@ public class DtoClientImpls {
 
     public final native boolean hasErrorStart() /*-{
       return this.hasOwnProperty("errorStart");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.FilePosition getErrorEnd() /*-{
+      return this["errorEnd"];
+    }-*/;
+
+    public final native CodeErrorImpl setErrorEnd(com.google.collide.dto.FilePosition errorEnd) /*-{
+      this["errorEnd"] = errorEnd;
+      return this;
+    }-*/;
+
+    public final native boolean hasErrorEnd() /*-{
+      return this.hasOwnProperty("errorEnd");
     }-*/;
 
     @Override
@@ -789,20 +790,6 @@ public class DtoClientImpls {
     protected CodeErrorsRequestImpl() {}
 
     @Override
-    public final native java.lang.String getFileEditSessionKey() /*-{
-      return this["fileEditSessionKey"];
-    }-*/;
-
-    public final native CodeErrorsRequestImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
-      this["fileEditSessionKey"] = fileEditSessionKey;
-      return this;
-    }-*/;
-
-    public final native boolean hasFileEditSessionKey() /*-{
-      return this.hasOwnProperty("fileEditSessionKey");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
@@ -814,6 +801,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getFileEditSessionKey() /*-{
+      return this["fileEditSessionKey"];
+    }-*/;
+
+    public final native CodeErrorsRequestImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
+      this["fileEditSessionKey"] = fileEditSessionKey;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileEditSessionKey() /*-{
+      return this.hasOwnProperty("fileEditSessionKey");
     }-*/;
 
     public static native CodeErrorsRequestImpl make() /*-{
@@ -1015,6 +1016,20 @@ public class DtoClientImpls {
     protected CodeGraphRequestImpl() {}
 
     @Override
+    public final native java.lang.String getWorkspaceId() /*-{
+      return this["workspaceId"];
+    }-*/;
+
+    public final native CodeGraphRequestImpl setWorkspaceId(java.lang.String workspaceId) /*-{
+      this["workspaceId"] = workspaceId;
+      return this;
+    }-*/;
+
+    public final native boolean hasWorkspaceId() /*-{
+      return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
     public final native java.lang.String getFilePath() /*-{
       return this["filePath"];
     }-*/;
@@ -1042,20 +1057,6 @@ public class DtoClientImpls {
       return this.hasOwnProperty("freshness");
     }-*/;
 
-    @Override
-    public final native java.lang.String getWorkspaceId() /*-{
-      return this["workspaceId"];
-    }-*/;
-
-    public final native CodeGraphRequestImpl setWorkspaceId(java.lang.String workspaceId) /*-{
-      this["workspaceId"] = workspaceId;
-      return this;
-    }-*/;
-
-    public final native boolean hasWorkspaceId() /*-{
-      return this.hasOwnProperty("workspaceId");
-    }-*/;
-
     public static native CodeGraphRequestImpl make() /*-{
       return {
         _type: 11
@@ -1078,6 +1079,34 @@ public class DtoClientImpls {
 
     public final native boolean hasFreshness() /*-{
       return this.hasOwnProperty("freshness");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getLibsSubgraphJson() /*-{
+      return this["libsSubgraphJson"];
+    }-*/;
+
+    public final native CodeGraphResponseImpl setLibsSubgraphJson(java.lang.String libsSubgraphJson) /*-{
+      this["libsSubgraphJson"] = libsSubgraphJson;
+      return this;
+    }-*/;
+
+    public final native boolean hasLibsSubgraphJson() /*-{
+      return this.hasOwnProperty("libsSubgraphJson");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getFileTreeJson() /*-{
+      return this["fileTreeJson"];
+    }-*/;
+
+    public final native CodeGraphResponseImpl setFileTreeJson(java.lang.String fileTreeJson) /*-{
+      this["fileTreeJson"] = fileTreeJson;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileTreeJson() /*-{
+      return this.hasOwnProperty("fileTreeJson");
     }-*/;
 
     @Override
@@ -1134,34 +1163,6 @@ public class DtoClientImpls {
 
     public final native boolean hasFileReferencesJson() /*-{
       return this.hasOwnProperty("fileReferencesJson");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getLibsSubgraphJson() /*-{
-      return this["libsSubgraphJson"];
-    }-*/;
-
-    public final native CodeGraphResponseImpl setLibsSubgraphJson(java.lang.String libsSubgraphJson) /*-{
-      this["libsSubgraphJson"] = libsSubgraphJson;
-      return this;
-    }-*/;
-
-    public final native boolean hasLibsSubgraphJson() /*-{
-      return this.hasOwnProperty("libsSubgraphJson");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getFileTreeJson() /*-{
-      return this["fileTreeJson"];
-    }-*/;
-
-    public final native CodeGraphResponseImpl setFileTreeJson(java.lang.String fileTreeJson) /*-{
-      this["fileTreeJson"] = fileTreeJson;
-      return this;
-    }-*/;
-
-    public final native boolean hasFileTreeJson() /*-{
-      return this.hasOwnProperty("fileTreeJson");
     }-*/;
 
     public static native CodeGraphResponseImpl make() /*-{
@@ -1306,17 +1307,17 @@ public class DtoClientImpls {
     protected ConflictChunkImpl() {}
 
     @Override
-    public final native java.lang.String getLocalText() /*-{
-      return this["localText"];
+    public final native int getEndLineNumber() /*-{
+      return this["endLineNumber"];
     }-*/;
 
-    public final native ConflictChunkImpl setLocalText(java.lang.String localText) /*-{
-      this["localText"] = localText;
+    public final native ConflictChunkImpl setEndLineNumber(int endLineNumber) /*-{
+      this["endLineNumber"] = endLineNumber;
       return this;
     }-*/;
 
-    public final native boolean hasLocalText() /*-{
-      return this.hasOwnProperty("localText");
+    public final native boolean hasEndLineNumber() /*-{
+      return this.hasOwnProperty("endLineNumber");
     }-*/;
 
     @Override
@@ -1334,20 +1335,6 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native int getEndLineNumber() /*-{
-      return this["endLineNumber"];
-    }-*/;
-
-    public final native ConflictChunkImpl setEndLineNumber(int endLineNumber) /*-{
-      this["endLineNumber"] = endLineNumber;
-      return this;
-    }-*/;
-
-    public final native boolean hasEndLineNumber() /*-{
-      return this.hasOwnProperty("endLineNumber");
-    }-*/;
-
-    @Override
     public final native java.lang.String getBaseText() /*-{
       return this["baseText"];
     }-*/;
@@ -1359,6 +1346,20 @@ public class DtoClientImpls {
 
     public final native boolean hasBaseText() /*-{
       return this.hasOwnProperty("baseText");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getLocalText() /*-{
+      return this["localText"];
+    }-*/;
+
+    public final native ConflictChunkImpl setLocalText(java.lang.String localText) /*-{
+      this["localText"] = localText;
+      return this;
+    }-*/;
+
+    public final native boolean hasLocalText() /*-{
+      return this.hasOwnProperty("localText");
     }-*/;
 
     @Override
@@ -1681,6 +1682,20 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
+    public final native java.lang.String basePath() /*-{
+      return this["basePath"];
+    }-*/;
+
+    public final native DeployWorkspaceImpl setBasePath(java.lang.String basePath) /*-{
+      this["basePath"] = basePath;
+      return this;
+    }-*/;
+
+    public final native boolean hasBasePath() /*-{
+      return this.hasOwnProperty("basePath");
+    }-*/;
+
+    @Override
     public final native java.lang.String appId() /*-{
       return this["appId"];
     }-*/;
@@ -1706,20 +1721,6 @@ public class DtoClientImpls {
 
     public final native boolean hasAppVersion() /*-{
       return this.hasOwnProperty("appVersion");
-    }-*/;
-
-    @Override
-    public final native java.lang.String basePath() /*-{
-      return this["basePath"];
-    }-*/;
-
-    public final native DeployWorkspaceImpl setBasePath(java.lang.String basePath) /*-{
-      this["basePath"] = basePath;
-      return this;
-    }-*/;
-
-    public final native boolean hasBasePath() /*-{
-      return this.hasOwnProperty("basePath");
     }-*/;
 
     public static native DeployWorkspaceImpl make() /*-{
@@ -1785,17 +1786,17 @@ public class DtoClientImpls {
     protected DiffChunkResponseImpl() {}
 
     @Override
-    public final native java.lang.String getBeforeData() /*-{
-      return this["beforeData"];
+    public final native java.lang.String getAfterData() /*-{
+      return this["afterData"];
     }-*/;
 
-    public final native DiffChunkResponseImpl setBeforeData(java.lang.String beforeData) /*-{
-      this["beforeData"] = beforeData;
+    public final native DiffChunkResponseImpl setAfterData(java.lang.String afterData) /*-{
+      this["afterData"] = afterData;
       return this;
     }-*/;
 
-    public final native boolean hasBeforeData() /*-{
-      return this.hasOwnProperty("beforeData");
+    public final native boolean hasAfterData() /*-{
+      return this.hasOwnProperty("afterData");
     }-*/;
 
     @Override
@@ -1814,17 +1815,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getAfterData() /*-{
-      return this["afterData"];
+    public final native java.lang.String getBeforeData() /*-{
+      return this["beforeData"];
     }-*/;
 
-    public final native DiffChunkResponseImpl setAfterData(java.lang.String afterData) /*-{
-      this["afterData"] = afterData;
+    public final native DiffChunkResponseImpl setBeforeData(java.lang.String beforeData) /*-{
+      this["beforeData"] = beforeData;
       return this;
     }-*/;
 
-    public final native boolean hasAfterData() /*-{
-      return this.hasOwnProperty("afterData");
+    public final native boolean hasBeforeData() /*-{
+      return this.hasOwnProperty("beforeData");
     }-*/;
 
     public static native DiffChunkResponseImpl make() /*-{
@@ -2356,20 +2357,6 @@ public class DtoClientImpls {
     protected EnterWorkspaceResponseImpl() {}
 
     @Override
-    public final native com.google.collide.dto.GetDirectoryResponse getFileTree() /*-{
-      return this["fileTree"];
-    }-*/;
-
-    public final native EnterWorkspaceResponseImpl setFileTree(com.google.collide.dto.GetDirectoryResponse fileTree) /*-{
-      this["fileTree"] = fileTree;
-      return this;
-    }-*/;
-
-    public final native boolean hasFileTree() /*-{
-      return this.hasOwnProperty("fileTree");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
@@ -2381,20 +2368,6 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
-    }-*/;
-
-    @Override
-    public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
-      return this["participants"];
-    }-*/;
-
-    public final native EnterWorkspaceResponseImpl setParticipants(org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
-      this["participants"] = participants;
-      return this;
-    }-*/;
-
-    public final native boolean hasParticipants() /*-{
-      return this.hasOwnProperty("participants");
     }-*/;
 
     @Override
@@ -2440,6 +2413,35 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
+    public final native com.google.collide.dto.GetDirectoryResponse getFileTree() /*-{
+      return this["fileTree"];
+    }-*/;
+
+    public final native EnterWorkspaceResponseImpl setFileTree(com.google.collide.dto.GetDirectoryResponse fileTree) /*-{
+      this["fileTree"] = fileTree;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileTree() /*-{
+      return this.hasOwnProperty("fileTree");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.GetSyncStateResponse.SyncState getSyncState() /*-{
+      return @com.google.collide.dto.GetSyncStateResponse.SyncState::valueOf(Ljava/lang/String;)(this["syncState"]);
+    }-*/;
+
+    public final native EnterWorkspaceResponseImpl setSyncState(com.google.collide.dto.GetSyncStateResponse.SyncState syncState) /*-{
+      syncState = syncState.@com.google.collide.dto.GetSyncStateResponse.SyncState::toString()();
+      this["syncState"] = syncState;
+      return this;
+    }-*/;
+
+    public final native boolean hasSyncState() /*-{
+      return this.hasOwnProperty("syncState");
+    }-*/;
+
+    @Override
     public final native com.google.collide.dto.WorkspaceInfo getWorkspaceInfo() /*-{
       return this["workspaceInfo"];
     }-*/;
@@ -2468,18 +2470,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.dto.GetSyncStateResponse.SyncState getSyncState() /*-{
-      return @com.google.collide.dto.GetSyncStateResponse.SyncState::valueOf(Ljava/lang/String;)(this["syncState"]);
+    public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> getParticipants() /*-{
+      return this["participants"];
     }-*/;
 
-    public final native EnterWorkspaceResponseImpl setSyncState(com.google.collide.dto.GetSyncStateResponse.SyncState syncState) /*-{
-      syncState = syncState.@com.google.collide.dto.GetSyncStateResponse.SyncState::toString()();
-      this["syncState"] = syncState;
+    public final native EnterWorkspaceResponseImpl setParticipants(org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails> participants) /*-{
+      this["participants"] = participants;
       return this;
     }-*/;
 
-    public final native boolean hasSyncState() /*-{
-      return this.hasOwnProperty("syncState");
+    public final native boolean hasParticipants() /*-{
+      return this.hasOwnProperty("participants");
     }-*/;
 
     @Override
@@ -2545,6 +2546,20 @@ public class DtoClientImpls {
     protected FileContentsImpl() {}
 
     @Override
+    public final native java.lang.String getMimeType() /*-{
+      return this["mimeType"];
+    }-*/;
+
+    public final native FileContentsImpl setMimeType(java.lang.String mimeType) /*-{
+      this["mimeType"] = mimeType;
+      return this;
+    }-*/;
+
+    public final native boolean hasMimeType() /*-{
+      return this.hasOwnProperty("mimeType");
+    }-*/;
+
+    @Override
     public final native java.lang.String getFileEditSessionKey() /*-{
       return this["fileEditSessionKey"];
     }-*/;
@@ -2598,20 +2613,6 @@ public class DtoClientImpls {
 
     public final native boolean hasConflicts() /*-{
       return this.hasOwnProperty("conflicts");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getMimeType() /*-{
-      return this["mimeType"];
-    }-*/;
-
-    public final native FileContentsImpl setMimeType(java.lang.String mimeType) /*-{
-      this["mimeType"] = mimeType;
-      return this;
-    }-*/;
-
-    public final native boolean hasMimeType() /*-{
-      return this.hasOwnProperty("mimeType");
     }-*/;
 
     @Override
@@ -2732,6 +2733,20 @@ public class DtoClientImpls {
 
     public final native boolean hasOperation() /*-{
       return this.hasOwnProperty("operation");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getEditSessionId() /*-{
+      return this["editSessionId"];
+    }-*/;
+
+    public final native FileOperationNotificationImpl setEditSessionId(java.lang.String editSessionId) /*-{
+      this["editSessionId"] = editSessionId;
+      return this;
+    }-*/;
+
+    public final native boolean hasEditSessionId() /*-{
+      return this.hasOwnProperty("editSessionId");
     }-*/;
 
     @Override
@@ -3247,20 +3262,6 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native boolean isStatsOnly() /*-{
-      return this["isStatsOnly"];
-    }-*/;
-
-    public final native GetFileDiffImpl setIsStatsOnly(boolean isStatsOnly) /*-{
-      this["isStatsOnly"] = isStatsOnly;
-      return this;
-    }-*/;
-
-    public final native boolean hasIsStatsOnly() /*-{
-      return this.hasOwnProperty("isStatsOnly");
-    }-*/;
-
-    @Override
     public final native java.lang.String getAfterNodeId() /*-{
       return this["afterNodeId"];
     }-*/;
@@ -3272,6 +3273,20 @@ public class DtoClientImpls {
 
     public final native boolean hasAfterNodeId() /*-{
       return this.hasOwnProperty("afterNodeId");
+    }-*/;
+
+    @Override
+    public final native boolean isStatsOnly() /*-{
+      return this["isStatsOnly"];
+    }-*/;
+
+    public final native GetFileDiffImpl setIsStatsOnly(boolean isStatsOnly) /*-{
+      this["isStatsOnly"] = isStatsOnly;
+      return this;
+    }-*/;
+
+    public final native boolean hasIsStatsOnly() /*-{
+      return this.hasOwnProperty("isStatsOnly");
     }-*/;
 
     @Override
@@ -3297,20 +3312,6 @@ public class DtoClientImpls {
 
   public static class GetFileDiffResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetFileDiffResponse {
     protected GetFileDiffResponseImpl() {}
-
-    @Override
-    public final native com.google.collide.dto.DiffStatsDto getDiffStats() /*-{
-      return this["diffStats"];
-    }-*/;
-
-    public final native GetFileDiffResponseImpl setDiffStats(com.google.collide.dto.DiffStatsDto diffStats) /*-{
-      this["diffStats"] = diffStats;
-      return this;
-    }-*/;
-
-    public final native boolean hasDiffStats() /*-{
-      return this.hasOwnProperty("diffStats");
-    }-*/;
 
     @Override
     public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.DiffChunkResponse> getDiffChunks() /*-{
@@ -3352,6 +3353,20 @@ public class DtoClientImpls {
 
     public final native boolean hasAfterFilePath() /*-{
       return this.hasOwnProperty("afterFilePath");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.DiffStatsDto getDiffStats() /*-{
+      return this["diffStats"];
+    }-*/;
+
+    public final native GetFileDiffResponseImpl setDiffStats(com.google.collide.dto.DiffStatsDto diffStats) /*-{
+      this["diffStats"] = diffStats;
+      return this;
+    }-*/;
+
+    public final native boolean hasDiffStats() /*-{
+      return this.hasOwnProperty("diffStats");
     }-*/;
 
     public static native GetFileDiffResponseImpl make() /*-{
@@ -3421,6 +3436,20 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
+    public final native java.lang.String getMinId() /*-{
+      return this["minId"];
+    }-*/;
+
+    public final native GetFileRevisionsImpl setMinId(java.lang.String minId) /*-{
+      this["minId"] = minId;
+      return this;
+    }-*/;
+
+    public final native boolean hasMinId() /*-{
+      return this.hasOwnProperty("minId");
+    }-*/;
+
+    @Override
     public final native int getNumOfRevisions() /*-{
       return this["numOfRevisions"];
     }-*/;
@@ -3460,20 +3489,6 @@ public class DtoClientImpls {
 
     public final native boolean hasIncludeMostRecentRevision() /*-{
       return this.hasOwnProperty("includeMostRecentRevision");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getMinId() /*-{
-      return this["minId"];
-    }-*/;
-
-    public final native GetFileRevisionsImpl setMinId(java.lang.String minId) /*-{
-      this["minId"] = minId;
-      return this;
-    }-*/;
-
-    public final native boolean hasMinId() /*-{
-      return this.hasOwnProperty("minId");
     }-*/;
 
     @Override
@@ -3573,15 +3588,16 @@ public class DtoClientImpls {
     }-*/;  }
 
 
-  public static class GetOpenendFilesInWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements com.google.collide.dto.GetOpenendFilesInWorkspaceResponse {
-    protected GetOpenendFilesInWorkspaceResponseImpl() {}
+  public static class GetOpenedFilesInWorkspaceResponseImpl extends org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl implements GetOpenedFilesInWorkspaceResponse
+  {
+    protected GetOpenedFilesInWorkspaceResponseImpl() {}
 
     @Override
     public final native org.exoplatform.ide.json.shared.JsonStringMap<org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> getOpenedFiles() /*-{
       return this["openedFiles"];
     }-*/;
 
-    public final native GetOpenendFilesInWorkspaceResponseImpl setOpenedFiles(org.exoplatform.ide.json.shared.JsonStringMap<org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> openedFiles) /*-{
+    public final native GetOpenedFilesInWorkspaceResponseImpl setOpenedFiles(org.exoplatform.ide.json.shared.JsonStringMap<org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.ParticipantUserDetails>> openedFiles) /*-{
       this["openedFiles"] = openedFiles;
       return this;
     }-*/;
@@ -3590,7 +3606,7 @@ public class DtoClientImpls {
       return this.hasOwnProperty("openedFiles");
     }-*/;
 
-    public static native GetOpenendFilesInWorkspaceResponseImpl make() /*-{
+    public static native GetOpenedFilesInWorkspaceResponseImpl make() /*-{
       return {
         _type: 129
       };
@@ -3758,20 +3774,6 @@ public class DtoClientImpls {
     protected GetProjectByIdResponseImpl() {}
 
     @Override
-    public final native com.google.collide.dto.ProjectMembersInfo getProjectMembersInfo() /*-{
-      return this["projectMembersInfo"];
-    }-*/;
-
-    public final native GetProjectByIdResponseImpl setProjectMembersInfo(com.google.collide.dto.ProjectMembersInfo projectMembersInfo) /*-{
-      this["projectMembersInfo"] = projectMembersInfo;
-      return this;
-    }-*/;
-
-    public final native boolean hasProjectMembersInfo() /*-{
-      return this.hasOwnProperty("projectMembersInfo");
-    }-*/;
-
-    @Override
     public final native org.exoplatform.ide.json.shared.JsonArray<com.google.collide.dto.WorkspaceInfo> getWorkspaces() /*-{
       return this["workspaces"];
     }-*/;
@@ -3783,6 +3785,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaces() /*-{
       return this.hasOwnProperty("workspaces");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.ProjectMembersInfo getProjectMembersInfo() /*-{
+      return this["projectMembersInfo"];
+    }-*/;
+
+    public final native GetProjectByIdResponseImpl setProjectMembersInfo(com.google.collide.dto.ProjectMembersInfo projectMembersInfo) /*-{
+      this["projectMembersInfo"] = projectMembersInfo;
+      return this;
+    }-*/;
+
+    public final native boolean hasProjectMembersInfo() /*-{
+      return this.hasOwnProperty("projectMembersInfo");
     }-*/;
 
     @Override
@@ -3872,20 +3888,6 @@ public class DtoClientImpls {
     protected GetProjectsResponseImpl() {}
 
     @Override
-    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() /*-{
-      return this["hiddenProjectIds"];
-    }-*/;
-
-    public final native GetProjectsResponseImpl setHiddenProjectIds(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> hiddenProjectIds) /*-{
-      this["hiddenProjectIds"] = hiddenProjectIds;
-      return this;
-    }-*/;
-
-    public final native boolean hasHiddenProjectIds() /*-{
-      return this.hasOwnProperty("hiddenProjectIds");
-    }-*/;
-
-    @Override
     public final native java.lang.String getActiveProjectId() /*-{
       return this["activeProjectId"];
     }-*/;
@@ -3911,6 +3913,20 @@ public class DtoClientImpls {
 
     public final native boolean hasUserMembershipChangeNextVersion() /*-{
       return this.hasOwnProperty("userMembershipChangeNextVersion");
+    }-*/;
+
+    @Override
+    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getHiddenProjectIds() /*-{
+      return this["hiddenProjectIds"];
+    }-*/;
+
+    public final native GetProjectsResponseImpl setHiddenProjectIds(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> hiddenProjectIds) /*-{
+      this["hiddenProjectIds"] = hiddenProjectIds;
+      return this;
+    }-*/;
+
+    public final native boolean hasHiddenProjectIds() /*-{
+      return this.hasOwnProperty("hiddenProjectIds");
     }-*/;
 
     @Override
@@ -5007,6 +5023,20 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
+    public final native java.lang.String getEditSessionId() /*-{
+      return this["editSessionId"];
+    }-*/;
+
+    public final native NewFileCollaboratorImpl setEditSessionId(java.lang.String editSessionId) /*-{
+      this["editSessionId"] = editSessionId;
+      return this;
+    }-*/;
+
+    public final native boolean hasEditSessionId() /*-{
+      return this.hasOwnProperty("editSessionId");
+    }-*/;
+
+    @Override
     public final native java.lang.String getPath() /*-{
       return this["path"];
     }-*/;
@@ -5336,20 +5366,6 @@ public class DtoClientImpls {
     protected NodeMutationDtoImpl() {}
 
     @Override
-    public final native java.lang.String getFileEditSessionKey() /*-{
-      return this["fileEditSessionKey"];
-    }-*/;
-
-    public final native NodeMutationDtoImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
-      this["fileEditSessionKey"] = fileEditSessionKey;
-      return this;
-    }-*/;
-
-    public final native boolean hasFileEditSessionKey() /*-{
-      return this.hasOwnProperty("fileEditSessionKey");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
@@ -5361,6 +5377,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getFileEditSessionKey() /*-{
+      return this["fileEditSessionKey"];
+    }-*/;
+
+    public final native NodeMutationDtoImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
+      this["fileEditSessionKey"] = fileEditSessionKey;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileEditSessionKey() /*-{
+      return this.hasOwnProperty("fileEditSessionKey");
     }-*/;
 
     @Override
@@ -5483,20 +5513,6 @@ public class DtoClientImpls {
     protected ParticipantUserDetailsImpl() {}
 
     @Override
-    public final native com.google.collide.dto.Participant getParticipant() /*-{
-      return this["participant"];
-    }-*/;
-
-    public final native ParticipantUserDetailsImpl setParticipant(com.google.collide.dto.Participant participant) /*-{
-      this["participant"] = participant;
-      return this;
-    }-*/;
-
-    public final native boolean hasParticipant() /*-{
-      return this.hasOwnProperty("participant");
-    }-*/;
-
-    @Override
     public final native com.google.collide.dto.UserDetails getUserDetails() /*-{
       return this["userDetails"];
     }-*/;
@@ -5508,6 +5524,20 @@ public class DtoClientImpls {
 
     public final native boolean hasUserDetails() /*-{
       return this.hasOwnProperty("userDetails");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.Participant getParticipant() /*-{
+      return this["participant"];
+    }-*/;
+
+    public final native ParticipantUserDetailsImpl setParticipant(com.google.collide.dto.Participant participant) /*-{
+      this["participant"] = participant;
+      return this;
+    }-*/;
+
+    public final native boolean hasParticipant() /*-{
+      return this.hasOwnProperty("participant");
     }-*/;
 
     public static native ParticipantUserDetailsImpl make() /*-{
@@ -5549,6 +5579,20 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
+    public final native java.lang.String getRootWsId() /*-{
+      return this["rootWsId"];
+    }-*/;
+
+    public final native ProjectInfoImpl setRootWsId(java.lang.String rootWsId) /*-{
+      this["rootWsId"] = rootWsId;
+      return this;
+    }-*/;
+
+    public final native boolean hasRootWsId() /*-{
+      return this.hasOwnProperty("rootWsId");
+    }-*/;
+
+    @Override
     public final native com.google.collide.dto.Role getCurrentUserRole() /*-{
       return @com.google.collide.dto.Role::valueOf(Ljava/lang/String;)(this["currentUserRole"]);
     }-*/;
@@ -5561,20 +5605,6 @@ public class DtoClientImpls {
 
     public final native boolean hasCurrentUserRole() /*-{
       return this.hasOwnProperty("currentUserRole");
-    }-*/;
-
-    @Override
-    public final native java.lang.String getRootWsId() /*-{
-      return this["rootWsId"];
-    }-*/;
-
-    public final native ProjectInfoImpl setRootWsId(java.lang.String rootWsId) /*-{
-      this["rootWsId"] = rootWsId;
-      return this;
-    }-*/;
-
-    public final native boolean hasRootWsId() /*-{
-      return this.hasOwnProperty("rootWsId");
     }-*/;
 
     @Override
@@ -5796,17 +5826,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getFileEditSessionKey() /*-{
-      return this["fileEditSessionKey"];
+    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
+      return this["docOps2"];
     }-*/;
 
-    public final native RecoverFromMissedDocOpsImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
-      this["fileEditSessionKey"] = fileEditSessionKey;
+    public final native RecoverFromMissedDocOpsImpl setDocOps2(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
+      this["docOps2"] = docOps2;
       return this;
     }-*/;
 
-    public final native boolean hasFileEditSessionKey() /*-{
-      return this.hasOwnProperty("fileEditSessionKey");
+    public final native boolean hasDocOps2() /*-{
+      return this.hasOwnProperty("docOps2");
     }-*/;
 
     @Override
@@ -5824,17 +5854,17 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native org.exoplatform.ide.json.shared.JsonArray<java.lang.String> getDocOps2() /*-{
-      return this["docOps2"];
+    public final native java.lang.String getFileEditSessionKey() /*-{
+      return this["fileEditSessionKey"];
     }-*/;
 
-    public final native RecoverFromMissedDocOpsImpl setDocOps2(org.exoplatform.ide.json.shared.JsonArray<java.lang.String> docOps2) /*-{
-      this["docOps2"] = docOps2;
+    public final native RecoverFromMissedDocOpsImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
+      this["fileEditSessionKey"] = fileEditSessionKey;
       return this;
     }-*/;
 
-    public final native boolean hasDocOps2() /*-{
-      return this.hasOwnProperty("docOps2");
+    public final native boolean hasFileEditSessionKey() /*-{
+      return this.hasOwnProperty("fileEditSessionKey");
     }-*/;
 
     @Override
@@ -5962,20 +5992,6 @@ public class DtoClientImpls {
     protected ResolveConflictChunkImpl() {}
 
     @Override
-    public final native java.lang.String getFileEditSessionKey() /*-{
-      return this["fileEditSessionKey"];
-    }-*/;
-
-    public final native ResolveConflictChunkImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
-      this["fileEditSessionKey"] = fileEditSessionKey;
-      return this;
-    }-*/;
-
-    public final native boolean hasFileEditSessionKey() /*-{
-      return this.hasOwnProperty("fileEditSessionKey");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
@@ -5987,6 +6003,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getFileEditSessionKey() /*-{
+      return this["fileEditSessionKey"];
+    }-*/;
+
+    public final native ResolveConflictChunkImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
+      this["fileEditSessionKey"] = fileEditSessionKey;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileEditSessionKey() /*-{
+      return this.hasOwnProperty("fileEditSessionKey");
     }-*/;
 
     @Override
@@ -6531,20 +6561,6 @@ public class DtoClientImpls {
     protected ServerToClientDocOpImpl() {}
 
     @Override
-    public final native java.lang.String getFilePath() /*-{
-      return this["filePath"];
-    }-*/;
-
-    public final native ServerToClientDocOpImpl setFilePath(java.lang.String filePath) /*-{
-      this["filePath"] = filePath;
-      return this;
-    }-*/;
-
-    public final native boolean hasFilePath() /*-{
-      return this.hasOwnProperty("filePath");
-    }-*/;
-
-    @Override
     public final native java.lang.String getClientId() /*-{
       return this["clientId"];
     }-*/;
@@ -6559,20 +6575,6 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getFileEditSessionKey() /*-{
-      return this["fileEditSessionKey"];
-    }-*/;
-
-    public final native ServerToClientDocOpImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
-      this["fileEditSessionKey"] = fileEditSessionKey;
-      return this;
-    }-*/;
-
-    public final native boolean hasFileEditSessionKey() /*-{
-      return this.hasOwnProperty("fileEditSessionKey");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
@@ -6584,6 +6586,34 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getFilePath() /*-{
+      return this["filePath"];
+    }-*/;
+
+    public final native ServerToClientDocOpImpl setFilePath(java.lang.String filePath) /*-{
+      this["filePath"] = filePath;
+      return this;
+    }-*/;
+
+    public final native boolean hasFilePath() /*-{
+      return this.hasOwnProperty("filePath");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getFileEditSessionKey() /*-{
+      return this["fileEditSessionKey"];
+    }-*/;
+
+    public final native ServerToClientDocOpImpl setFileEditSessionKey(java.lang.String fileEditSessionKey) /*-{
+      this["fileEditSessionKey"] = fileEditSessionKey;
+      return this;
+    }-*/;
+
+    public final native boolean hasFileEditSessionKey() /*-{
+      return this.hasOwnProperty("fileEditSessionKey");
     }-*/;
 
     @Override
@@ -6915,20 +6945,6 @@ public class DtoClientImpls {
     protected SetWorkspaceRoleImpl() {}
 
     @Override
-    public final native com.google.collide.dto.ChangeRoleInfo getChangeRoleInfo() /*-{
-      return this["changeRoleInfo"];
-    }-*/;
-
-    public final native SetWorkspaceRoleImpl setChangeRoleInfo(com.google.collide.dto.ChangeRoleInfo changeRoleInfo) /*-{
-      this["changeRoleInfo"] = changeRoleInfo;
-      return this;
-    }-*/;
-
-    public final native boolean hasChangeRoleInfo() /*-{
-      return this.hasOwnProperty("changeRoleInfo");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceId() /*-{
       return this["workspaceId"];
     }-*/;
@@ -6940,6 +6956,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceId() /*-{
       return this.hasOwnProperty("workspaceId");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.ChangeRoleInfo getChangeRoleInfo() /*-{
+      return this["changeRoleInfo"];
+    }-*/;
+
+    public final native SetWorkspaceRoleImpl setChangeRoleInfo(com.google.collide.dto.ChangeRoleInfo changeRoleInfo) /*-{
+      this["changeRoleInfo"] = changeRoleInfo;
+      return this;
+    }-*/;
+
+    public final native boolean hasChangeRoleInfo() /*-{
+      return this.hasOwnProperty("changeRoleInfo");
     }-*/;
 
     @Override
@@ -7099,20 +7129,6 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getWorkspaceId() /*-{
-      return this["workspaceId"];
-    }-*/;
-
-    public final native SubmitImpl setWorkspaceId(java.lang.String workspaceId) /*-{
-      this["workspaceId"] = workspaceId;
-      return this;
-    }-*/;
-
-    public final native boolean hasWorkspaceId() /*-{
-      return this.hasOwnProperty("workspaceId");
-    }-*/;
-
-    @Override
     public final native java.lang.String getWorkspaceName() /*-{
       return this["workspaceName"];
     }-*/;
@@ -7124,6 +7140,20 @@ public class DtoClientImpls {
 
     public final native boolean hasWorkspaceName() /*-{
       return this.hasOwnProperty("workspaceName");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getWorkspaceId() /*-{
+      return this["workspaceId"];
+    }-*/;
+
+    public final native SubmitImpl setWorkspaceId(java.lang.String workspaceId) /*-{
+      this["workspaceId"] = workspaceId;
+      return this;
+    }-*/;
+
+    public final native boolean hasWorkspaceId() /*-{
+      return this.hasOwnProperty("workspaceId");
     }-*/;
 
     @Override
@@ -7856,20 +7886,6 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native java.lang.String getArchivedTime() /*-{
-      return this["archivedTime"];
-    }-*/;
-
-    public final native WorkspaceInfoImpl setArchivedTime(java.lang.String archivedTime) /*-{
-      this["archivedTime"] = archivedTime;
-      return this;
-    }-*/;
-
-    public final native boolean hasArchivedTime() /*-{
-      return this.hasOwnProperty("archivedTime");
-    }-*/;
-
-    @Override
     public final native java.lang.String getSortTime() /*-{
       return this["sortTime"];
     }-*/;
@@ -7884,21 +7900,6 @@ public class DtoClientImpls {
     }-*/;
 
     @Override
-    public final native com.google.collide.dto.Role getCurrentUserRole() /*-{
-      return @com.google.collide.dto.Role::valueOf(Ljava/lang/String;)(this["currentUserRole"]);
-    }-*/;
-
-    public final native WorkspaceInfoImpl setCurrentUserRole(com.google.collide.dto.Role currentUserRole) /*-{
-      currentUserRole = currentUserRole.@com.google.collide.dto.Role::toString()();
-      this["currentUserRole"] = currentUserRole;
-      return this;
-    }-*/;
-
-    public final native boolean hasCurrentUserRole() /*-{
-      return this.hasOwnProperty("currentUserRole");
-    }-*/;
-
-    @Override
     public final native java.lang.String getParentId() /*-{
       return this["parentId"];
     }-*/;
@@ -7910,6 +7911,20 @@ public class DtoClientImpls {
 
     public final native boolean hasParentId() /*-{
       return this.hasOwnProperty("parentId");
+    }-*/;
+
+    @Override
+    public final native java.lang.String getArchivedTime() /*-{
+      return this["archivedTime"];
+    }-*/;
+
+    public final native WorkspaceInfoImpl setArchivedTime(java.lang.String archivedTime) /*-{
+      this["archivedTime"] = archivedTime;
+      return this;
+    }-*/;
+
+    public final native boolean hasArchivedTime() /*-{
+      return this.hasOwnProperty("archivedTime");
     }-*/;
 
     @Override
@@ -7997,6 +8012,21 @@ public class DtoClientImpls {
 
     public final native boolean hasCurrentUserRoleForParent() /*-{
       return this.hasOwnProperty("currentUserRoleForParent");
+    }-*/;
+
+    @Override
+    public final native com.google.collide.dto.Role getCurrentUserRole() /*-{
+      return @com.google.collide.dto.Role::valueOf(Ljava/lang/String;)(this["currentUserRole"]);
+    }-*/;
+
+    public final native WorkspaceInfoImpl setCurrentUserRole(com.google.collide.dto.Role currentUserRole) /*-{
+      currentUserRole = currentUserRole.@com.google.collide.dto.Role::toString()();
+      this["currentUserRole"] = currentUserRole;
+      return this;
+    }-*/;
+
+    public final native boolean hasCurrentUserRole() /*-{
+      return this.hasOwnProperty("currentUserRole");
     }-*/;
 
     @Override

@@ -24,8 +24,8 @@ import com.google.collide.dto.GetEditSessionCollaborators;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.GetFileContents;
 import com.google.collide.dto.GetFileContentsResponse;
+import com.google.collide.dto.GetOpenedFilesInWorkspaceResponse;
 import com.google.collide.dto.GetOpenendFilesInWorkspace;
-import com.google.collide.dto.GetOpenendFilesInWorkspaceResponse;
 import com.google.collide.dto.GetWorkspaceParticipants;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.RecoverFromMissedDocOps;
@@ -165,7 +165,7 @@ public class FrontendApi {
     */
    public final SendApi<FileOperationNotification> FILE_OPERATION_NOTIFY = makeApi("ide/collab_editor/communication/notify/fileoperation");
 
-   public final RequestResponseApi<GetOpenendFilesInWorkspace, GetOpenendFilesInWorkspaceResponse> GET_ALL_FILES =
+   public final RequestResponseApi<GetOpenendFilesInWorkspace, GetOpenedFilesInWorkspaceResponse> GET_ALL_FILES =
       makeApi("ide/collab_editor/documents/all");
 
   /**

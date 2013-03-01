@@ -57,7 +57,7 @@ public class CommunicationService
    {
       FileOperationNotificationImpl fileOperationNotification = FileOperationNotificationImpl.fromJsonString(message);
       Set<String> collaborators = new HashSet<String>(sessions.getEditSessionCollaborators(
-         fileOperationNotification.getFilePath()));
+         fileOperationNotification.getEditSessionId()));
       //remove requester from broadcast
       collaborators.remove(fileOperationNotification.getUserId());
       WSUtil.broadcastToClients(message, collaborators);

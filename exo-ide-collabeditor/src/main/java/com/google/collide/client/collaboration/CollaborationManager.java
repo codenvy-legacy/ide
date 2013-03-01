@@ -25,7 +25,7 @@ import com.google.collide.client.editor.Editor;
 import com.google.collide.dto.DocumentSelection;
 import com.google.collide.dto.FileCollaboratorGone;
 import com.google.collide.dto.FileContents;
-import com.google.collide.dto.GetOpenendFilesInWorkspaceResponse;
+import com.google.collide.dto.GetOpenedFilesInWorkspaceResponse;
 import com.google.collide.dto.NewFileCollaborator;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.RoutingTypes;
@@ -171,6 +171,8 @@ public class CollaborationManager
 
    private final ListenerManager<ParticipantsListener> participantsListenerManager = ListenerManager.create();
 
+   private final JsonStringMap<String> path2sessionId = JsonCollections.createMap();
+
    private CollaborationManager(AppContext appContext, DocumentManager documentManager,
                                 IncomingDocOpDemultiplexer docOpRecipient)
    {
@@ -182,7 +184,7 @@ public class CollaborationManager
          appContext.getPushChannel().getListenerRegistrar().add(pushChannelListener));
       appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.NEWFILECOLLABORATOR, newFileCollaboratorMessageRecipient);
       appContext.getMessageFilter().registerMessageRecipient(RoutingTypes.FILECOLLABORATORGONE, fileCollaboratorGoneMessageRecipient);
-      appContext.getFrontendApi().GET_ALL_FILES.send(GetOpenendFilesInWorkspaceImpl.make(),new ApiCallback<GetOpenendFilesInWorkspaceResponse>()
+      appContext.getFrontendApi().GET_ALL_FILES.send(GetOpenendFilesInWorkspaceImpl.make(),new ApiCallback<GetOpenedFilesInWorkspaceResponse>()
       {
          @Override
          public void onFail(FailureReason reason)
@@ -191,7 +193,7 @@ public class CollaborationManager
          }
 
          @Override
-         public void onMessageReceived(GetOpenendFilesInWorkspaceResponse message)
+         public void onMessageReceived(GetOpenedFilesInWorkspaceResponse message)
          {
             openedFilesInWorkspace.putAll(message.getOpenedFiles());
          }
@@ -286,6 +288,7 @@ public class CollaborationManager
          openedFilesInWorkspace.put(message.getPath(),JsonCollections.<ParticipantUserDetails>createArray());
       }
       openedFilesInWorkspace.get(message.getPath()).add(message.getParticipant());
+      path2sessionId.put(message.getPath(), message.getEditSessionId());
       participantsListenerManager.dispatch(new Dispatcher<ParticipantsListener>()
       {
          @Override
@@ -328,6 +331,7 @@ public class CollaborationManager
       {
          openedFilesInWorkspace.remove(message.getPath());
       }
+      path2sessionId.remove(message.getPath());
       participantsListenerManager.dispatch(new Dispatcher<ParticipantsListener>()
       {
          @Override
@@ -357,6 +361,11 @@ public class CollaborationManager
    public ListenerManager<ParticipantsListener> getParticipantsListenerManager()
    {
       return participantsListenerManager;
+   }
+
+   public String getEditSessionId(String path)
+   {
+      return path2sessionId.get(path);
    }
 
 

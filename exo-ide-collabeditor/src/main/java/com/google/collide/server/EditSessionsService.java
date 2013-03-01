@@ -24,7 +24,7 @@ import com.google.collide.dto.server.DtoServerImpls.CloseEditorImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetEditSessionCollaboratorsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsImpl;
 import com.google.collide.dto.server.DtoServerImpls.GetFileContentsResponseImpl;
-import com.google.collide.dto.server.DtoServerImpls.GetOpenendFilesInWorkspaceResponseImpl;
+import com.google.collide.dto.server.DtoServerImpls.GetOpenedFilesInWorkspaceResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsImpl;
 import com.google.collide.dto.server.DtoServerImpls.RecoverFromMissedDocOpsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ServerToClientDocOpsImpl;
@@ -59,7 +59,7 @@ public class EditSessionsService
    @Produces(MediaType.APPLICATION_JSON)
    public String getAllOpenedFiles(String message)
    {
-      return ((GetOpenendFilesInWorkspaceResponseImpl)editSessions.getOpenendFiles()).toJson();
+      return ((GetOpenedFilesInWorkspaceResponseImpl)editSessions.getOpenedFiles()).toJson();
    }
 
    @POST

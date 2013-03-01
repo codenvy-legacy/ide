@@ -28,7 +28,7 @@ import org.exoplatform.ide.json.shared.JsonStringMap;
  * @version $Id:
  */
 @RoutingType(type = RoutingTypes.GETOPENEDFILESINWORKSPACERESPONSE)
-public interface GetOpenendFilesInWorkspaceResponse extends ServerToClientDto
+public interface GetOpenedFilesInWorkspaceResponse extends ServerToClientDto
 {
    /**
     * Key is file path, value array of users that open this file
