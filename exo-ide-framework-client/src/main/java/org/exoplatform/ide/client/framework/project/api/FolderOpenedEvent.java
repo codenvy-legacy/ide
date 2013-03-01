@@ -18,9 +18,13 @@
  */
 package org.exoplatform.ide.client.framework.project.api;
 
-import org.exoplatform.ide.vfs.client.model.FolderModel;
-
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Item;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -34,14 +38,32 @@ public class FolderOpenedEvent extends GwtEvent<FolderOpenedHandler>
 
    private FolderModel folder;
 
+   private List<Item> children;
+
    public FolderOpenedEvent(FolderModel folder)
    {
       this.folder = folder;
    }
 
+   public FolderOpenedEvent(FolderModel folder, List<Item> children)
+   {
+      this.folder = folder;
+      this.children = children;
+   }
+
    public FolderModel getFolder()
    {
       return folder;
+   }
+
+   public List<Item> getChildren()
+   {
+      if (children == null)
+      {
+         children = new ArrayList<Item>();
+      }
+      
+      return children;
    }
 
    @Override

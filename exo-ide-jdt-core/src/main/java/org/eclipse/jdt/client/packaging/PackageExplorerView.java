@@ -35,6 +35,7 @@ import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -175,6 +176,18 @@ public class PackageExplorerView extends ViewImpl implements PackageExplorerDisp
    public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
    {
       treeGrid.removeItemIcons(itemsIcons);
+   }
+
+   @Override
+   public List<Item> getTreeChildren(FolderModel folder)
+   {
+      return treeGrid.getTreeChildren(folder);
+   }
+
+   @Override
+   public List<Item> getVisibleItems()
+   {
+      return treeGrid.getVisibleItems();
    }   
    
 }

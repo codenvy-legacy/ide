@@ -160,7 +160,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
          return;
       }
 
-      getStatus(folder, true);
+      getStatus(folder, true, new ArrayList<Item>());
    }
 
    /**
@@ -169,11 +169,11 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     * @param folder
     *    folder to be updated
     */
-   private void getStatus(final FolderModel folder, boolean forced)
+   private void getStatus(final FolderModel folder, boolean forced, final List<Item> additionalItems)
    {
       if (!folder.getId().equals(openedProject.getId()) && !forced)
       {
-         addItemsTreeIcons(folder);
+         addItemsTreeIcons(folder, additionalItems);
          return;
       }
       
@@ -186,7 +186,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
                protected void onSuccess(StatusResponse result)
                {
                   workingTreeStatus = result;
-                  addItemsTreeIcons(folder);
+                  addItemsTreeIcons(folder, additionalItems);
                }
 
                @Override
@@ -208,7 +208,7 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
     * @param folder
     *    folder to be updated
     */
-   private void addItemsTreeIcons(FolderModel folder)
+   private void addItemsTreeIcons(FolderModel folder, List<Item> additionalItems)
    {
       if (workingTreeStatus == null)
       {
@@ -219,10 +219,18 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
          new HashMap<Item, Map<TreeIconPosition, ImageResource>>();
 
       List<Item> itemsToCheck = new ArrayList<Item>();
-      itemsToCheck.addAll(folder.getChildren().getItems());
+
       itemsToCheck.add(folder);
+      itemsToCheck.addAll(folder.getChildren().getItems());
+      itemsToCheck.addAll(additionalItems);
+      
       for (Item item : itemsToCheck)
       {
+         if (item instanceof FolderModel && ((FolderModel)item).getChildren().getItems().isEmpty())
+         {
+            continue;
+         }
+         
          String path = URL.decodePathSegment(item.getPath());
          String pattern = path.replaceFirst(openedProject.getPath(), "");
          pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
@@ -277,13 +285,13 @@ public class StatusCommandHandler extends GitPresenter implements ShowWorkTreeSt
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       openedProject = event.getProject();
-      getStatus(openedProject, true);
+      getStatus(openedProject, true, new ArrayList<Item>());
    }
 
    @Override
    public void onFolderOpened(FolderOpenedEvent event)
    {
-      getStatus(event.getFolder(), false);
+      getStatus(event.getFolder(), false, event.getChildren());
    }
 
    @Override

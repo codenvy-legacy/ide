@@ -26,6 +26,7 @@ import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
@@ -57,6 +58,10 @@ public interface PackageExplorerDisplay extends IsView
    Object getSelectedObject();
 
    void goToItem(List<Object> itemList, boolean collapseBranches);
+   
+   List<Item> getTreeChildren(FolderModel folder);
+   
+   List<Item> getVisibleItems();
 
    /*
     * Link with Editor

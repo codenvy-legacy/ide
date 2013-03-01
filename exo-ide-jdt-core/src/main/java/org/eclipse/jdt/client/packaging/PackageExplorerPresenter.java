@@ -221,7 +221,8 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
                public void execute()
                {
                   FolderModel folder = (FolderModel)event.getTarget();
-                  IDE.fireEvent(new FolderOpenedEvent(folder));
+                  List<Item> children = display.getTreeChildren(folder);
+                  IDE.fireEvent(new FolderOpenedEvent(folder, children));
                }
             });            
          }
@@ -541,7 +542,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    }
 
    @Override
-   public void onTreeRefreshed(TreeRefreshedEvent event)
+   public void onTreeRefreshed(final TreeRefreshedEvent event)
    {
       if (display != null)
       {
@@ -551,6 +552,16 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          {
             display.selectItem(event.getItemToSelect());
          }
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               List<Item> visibleItems = display.getVisibleItems();
+               IDE.fireEvent(new FolderOpenedEvent(event.getFolder(), visibleItems));
+            }
+         });
       }
    }
 

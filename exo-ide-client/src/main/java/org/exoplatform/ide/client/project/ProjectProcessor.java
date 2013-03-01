@@ -190,7 +190,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
                itemToBeSelectedAfterRefreshing = getItemToSelect(itemToBeSelectedAfterRefreshing);
             }
 
-            final Folder folder = refreshedFolders.remove(0);
+            final FolderModel folder = refreshedFolders.remove(0);
             IDE.fireEvent(new TreeRefreshedEvent(folder, itemToBeSelectedAfterRefreshing));
             Scheduler.get().scheduleDeferred(new ScheduledCommand()
             {
@@ -289,7 +289,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
    }
 
    @Override
-   public void onFolderChanged(final Folder folder)
+   public void onFolderChanged(final FolderModel folder)
    {
       IDE.fireEvent(new TreeRefreshedEvent(folder, itemToBeSelectedAfterRefreshing));
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
