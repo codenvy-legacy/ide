@@ -90,6 +90,8 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       sinkEvents(Event.ONCONTEXTMENU);
       addOpenHandler(this);
    }
+   
+   
 
    /**
     * @see com.google.gwt.user.client.ui.Composite#onBrowserEvent(com.google.gwt.user.client.Event)
@@ -1117,6 +1119,76 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
          treeIcon.removeIcon(itemsIcons.get(item));
       }
-   }   
+   }
+   
+   List<Item> getTreeChildren(FolderModel folder)
+   {
+      List<Item> children = new ArrayList<Item>();
+      
+      PackageExplorerTreeItem treeItem = treeItems.get(folder.getId());
+      if (treeItem != null)
+      {
+         for (int i = 0; i < treeItem.getChildCount(); i++)
+         {
+            TreeItem child = treeItem.getChild(i);
+            if (!(child instanceof PackageExplorerTreeItem))
+            {
+               continue;
+            }
+            
+            Item childItem = (Item)child.getUserObject();
+            if (childItem instanceof FolderModel || childItem instanceof FileModel)
+            {
+               children.add(childItem);
+            }
+         }
+      }
+      
+      return children;
+   }
+   
+   public List<Item> getVisibleItems()
+   {
+      List<Item> visibleItems = new ArrayList<Item>();
+      if (project != null)
+      {
+         PackageExplorerTreeItem projectItem = treeItems.get(project.getId());
+         visibleItems.add((Item)projectItem.getUserObject());
+         visibleItems.addAll(getVisibleItems(projectItem));
+      }
+      
+      return visibleItems;
+   }
+   
+   private List<Item> getVisibleItems(PackageExplorerTreeItem treeItem)
+   {
+      List<Item> visibleItems = new ArrayList<Item>();
+      if (treeItem.getState())
+      {
+         for (int i = 0; i < treeItem.getChildCount(); i++)
+         {
+            TreeItem child = treeItem.getChild(i);
+            if (!(child instanceof PackageExplorerTreeItem))
+            {
+               continue;
+            }
+
+            Item item = (Item)child.getUserObject();
+            if (!(item instanceof FileModel || item instanceof FolderModel))
+            {
+               continue;
+            }
+            
+            visibleItems.add(item);
+            
+            if (item instanceof FolderModel && child.getState())
+            {
+               visibleItems.addAll( getVisibleItems((PackageExplorerTreeItem)child) );
+            }
+         }
+      }
+      
+      return visibleItems;
+   }
    
 }

@@ -24,7 +24,7 @@ import org.exoplatform.ide.vfs.shared.Link;
 import org.exoplatform.ide.vfs.shared.LinkImpl;
 
 import java.net.URI;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.core.MediaType;
@@ -47,7 +47,9 @@ public class LinksHelper
                                                    boolean locked,
                                                    String parentId) throws VirtualFileSystemException
    {
-      final Map<String, Link> links = new LinkedHashMap<String, Link>();
+      // This method is used extremely actively so it is imported to set size of map directly
+      // and prevent unnecessary growth of map.
+      final Map<String, Link> links = new HashMap<String, Link>(16, 1.0f);
       final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
 
       links.put(Link.REL_SELF, //
@@ -70,7 +72,6 @@ public class LinksHelper
          new LinkImpl(createURI(baseUriBuilder.clone(), vfsId, "version-history", itemId), Link.REL_VERSION_HISTORY,
             MediaType.APPLICATION_JSON));
 
-      // Always have only one versioning since is not supported.
       links.put(Link.REL_CURRENT_VERSION, //
          new LinkImpl(createURI(baseUriBuilder.clone(), vfsId, "item", latestVersionId), Link.REL_CURRENT_VERSION,
             MediaType.APPLICATION_JSON));
@@ -123,7 +124,10 @@ public class LinksHelper
       throws VirtualFileSystemException
    {
       final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
-      final Map<String, Link> links = createBaseFolderLinks(baseUriBuilder, vfsId, itemId, isRoot, parentId);
+      // This method is used extremely actively so it is imported to set size of map directly
+      // and prevent unnecessary growth of map.
+      final Map<String, Link> links = new HashMap<String, Link>(32, 1.0f);
+      addBaseFolderLinks(links, baseUriBuilder, vfsId, itemId, isRoot, parentId);
       links.put(Link.REL_CREATE_PROJECT, //
          new LinkImpl(createURI(baseUriBuilder.clone(), vfsId, "project", itemId, "name", "[name]", "type", "[type]"),
             Link.REL_CREATE_PROJECT, MediaType.APPLICATION_JSON));
@@ -136,17 +140,20 @@ public class LinksHelper
                                                       String parentId)
    {
       final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
-      return createBaseFolderLinks(baseUriBuilder, vfsId, itemId, false, parentId);
+      // This method is used extremely actively so it is imported to set size of map directly
+      // and prevent unnecessary growth of map.
+      final Map<String, Link> links = new HashMap<String, Link>(16, 1.0f);
+      addBaseFolderLinks(links, baseUriBuilder, vfsId, itemId, false, parentId);
+      return links;
    }
 
-   private static Map<String, Link> createBaseFolderLinks(UriBuilder baseUriBuilder,
-                                                          String vfsId,
-                                                          String id,
-                                                          boolean isRoot,
-                                                          String parentId)
+   private static void addBaseFolderLinks(Map<String, Link> links,
+                                          UriBuilder baseUriBuilder,
+                                          String vfsId,
+                                          String id,
+                                          boolean isRoot,
+                                          String parentId)
    {
-      final Map<String, Link> links = new LinkedHashMap<String, Link>();
-
       links.put(Link.REL_SELF, //
          new LinkImpl(createURI(baseUriBuilder.clone(), vfsId, "item", id), Link.REL_SELF, MediaType.APPLICATION_JSON));
 
@@ -203,13 +210,11 @@ public class LinksHelper
 
       links.put(Link.REL_UPLOAD_ZIP, //
          new LinkImpl(createURI(baseUriBuilder.clone(), vfsId, "uploadzip", id), Link.REL_UPLOAD_ZIP, MediaType.TEXT_HTML));
-
-      return links;
    }
 
    public static Map<String, Link> createUrlTemplates(URI baseUri, String vfsId)
    {
-      final Map<String, Link> templates = new LinkedHashMap<String, Link>();
+      final Map<String, Link> templates = new HashMap<String, Link>(16, 1.0f);
       final UriBuilder baseUriBuilder = UriBuilder.fromUri(baseUri).path(VirtualFileSystemFactory.class, "getFileSystem");
 
       templates.put(Link.REL_ITEM,
