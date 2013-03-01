@@ -38,14 +38,24 @@ import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.control.Docking;
 import org.exoplatform.ide.client.framework.editor.event.EditorCloseFileEvent;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
+import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
+import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
+import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
@@ -63,11 +73,13 @@ import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- *
+ * 
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
@@ -87,11 +99,14 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
 
    }
 
-   private static final String UNLOCK_FAILURE_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileUnlockFailure();
+   private static final String UNLOCK_FAILURE_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .deleteFileUnlockFailure();
 
-   private static final String DELETE_FILE_FAILURE_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileFailure();
+   private static final String DELETE_FILE_FAILURE_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
+      .deleteFileFailure();
 
-   private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT.deleteFileDialogTitle();
+   private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT
+      .deleteFileDialogTitle();
 
    private Display display;
 
@@ -103,9 +118,15 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
 
    private Item lastDeletedItem;
 
+   private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
+
+   private Map<String, String> lockTokens = new HashMap<String, String>();
+
    private ProjectModel selectedProject;
 
    private boolean isProjectExplorer = false;
+   
+   private ProjectModel openedProject;
 
    /**
     * Creates new instance of this presenter.
@@ -114,10 +135,25 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    {
       IDE.getInstance().addControl(new DeleteItemControl(), Docking.TOOLBAR);
 
+      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
+      IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(DeleteItemEvent.TYPE, this);
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ProjectSelectedEvent.TYPE, this);
+      IDE.addHandler(ProjectOpenedEvent.TYPE, this);
+      IDE.addHandler(ProjectClosedEvent.TYPE, this);
+   }
+
+   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
+   {
+      ApplicationSettings applicationSettings = event.getApplicationSettings();
+      if (applicationSettings.getValueAsMap("lock-tokens") == null)
+      {
+         applicationSettings.setValue("lock-tokens", new LinkedHashMap<String, String>(), Store.COOKIES);
+      }
+      lockTokens = applicationSettings.getValueAsMap("lock-tokens");
    }
 
    /**
@@ -130,6 +166,22 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    }
 
    /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler#onEditorFileOpened(org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent)
+    */
+   public void onEditorFileOpened(EditorFileOpenedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   /**
+    * @see org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler#onEditorFileClosed(org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent)
+    */
+   public void onEditorFileClosed(EditorFileClosedEvent event)
+   {
+      openedFiles = event.getOpenedFiles();
+   }
+
+   /**
     * @see org.exoplatform.ide.client.operation.deleteitem.DeleteItemHandler#onDeleteItem(org.exoplatform.ide.client.operation.deleteitem.DeleteItemEvent)
     */
    public void onDeleteItem(DeleteItemEvent event)
@@ -139,12 +191,9 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
          return;
       }
 
-      if (checkWorkspaceFiles())
-      {
-         display = GWT.create(Display.class);
-         IDE.getInstance().openView(display.asView());
-         bindDisplay();
-      }
+      display = GWT.create(Display.class);
+      IDE.getInstance().openView(display.asView());
+      bindDisplay();
    }
 
    private boolean checkWorkspaceFiles()
@@ -252,14 +301,24 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    {
       IDE.getInstance().closeView(display.asView().getId());
       itemsToDelete = new ArrayList<Item>();
-      if (selectedProject != null && isProjectExplorer)
+      
+      if (openedProject == null)
       {
-         itemsToDelete.add(selectedProject);
+         if (selectedProject != null && isProjectExplorer)
+         {
+            itemsToDelete.add(selectedProject);            
+         }
       }
       else if (items != null && !items.isEmpty())
       {
          itemsToDelete.addAll(items);
       }
+
+      if (itemsToDelete.isEmpty())
+      {
+         return;
+      }
+      
       deleteNextItem();
    }
 
@@ -285,8 +344,9 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
             // TODO
             if (file.isContentChanged())
             {
-               String msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(
-                  item.getName());
+               String msg =
+                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(item
+                     .getName());
                showDialog(file, msg);
                return;
             }
@@ -302,7 +362,11 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
          // HashMap<String, File> openedFiles = context.getOpenedFiles();
 
          HashMap<String, FileModel> copy = new HashMap<String, FileModel>();
-         copy.putAll(openedFiles);
+         for (String key : openedFiles.keySet())
+         {
+            FileModel file = openedFiles.get(key);
+            copy.put(key, file);
+         }
 
          int files = 0;
          for (FileModel file : copy.values())
@@ -319,14 +383,14 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
             String msg;
             if (item instanceof ProjectModel)
             {
-               msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteProjectWithModifiedFiles(
-                  item.getName(), copy.size());
+               msg =
+                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
+                     .deleteItemsAskDeleteProjectWithModifiedFiles(item.getName(), copy.size());
             }
             else
-            {
-               msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteFolderWithModifiedFiles(
-                  item.getName(), copy.size());
-            }
+               msg =
+                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteFolderWithModifiedFiles(
+                     item.getName(), copy.size());
 
             showDialog(item, msg);
             return;
@@ -368,7 +432,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
 
    /**
     * Delete item.
-    *
+    * 
     * @param item
     */
    private void deleteItem(final Item item)
@@ -412,9 +476,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
                      }
                   }
                   if (item instanceof ProjectModel)
-                  {
                      IDE.fireEvent(new CloseProjectEvent());
-                  }
                }
                lastDeletedItem = item;
                deleteNextItem();
@@ -491,4 +553,17 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    {
       this.selectedProject = event.getProject();
    }
+
+   @Override
+   public void onProjectOpened(ProjectOpenedEvent event)
+   {
+      openedProject = event.getProject();
+   }
+
+   @Override
+   public void onProjectClosed(ProjectClosedEvent event)
+   {
+      openedProject = null;
+   }
+   
 }

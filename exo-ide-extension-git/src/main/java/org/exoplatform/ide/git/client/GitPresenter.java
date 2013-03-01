@@ -27,10 +27,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.Project;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
-
-import java.util.List;
 
 /**
  * Used as base for the most presenters, which work with Git. Most of the presenters have to store selected item in browser tree

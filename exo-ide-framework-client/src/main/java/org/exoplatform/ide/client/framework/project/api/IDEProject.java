@@ -48,7 +48,7 @@ public class IDEProject extends ProjectModel
    
    public interface FolderChangedHandler
    {
-      void onFolderChanged(Folder folder);
+      void onFolderChanged(FolderModel folder);
    }
 
    private FolderChangedHandler folderChangedHandler;

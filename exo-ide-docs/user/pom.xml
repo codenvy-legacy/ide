@@ -55,7 +55,6 @@
          <plugin>
             <groupId>org.wikbook</groupId>
             <artifactId>wikbook.maven</artifactId>
-            <version>0.9.26</version>
             <executions>
                <execution>
                   <phase>prepare-package</phase>
@@ -80,7 +79,6 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
-            <version>2.1</version>
             <executions>
                <execution>
                   <id>a</id>

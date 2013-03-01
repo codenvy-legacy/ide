@@ -18,6 +18,12 @@
  */
 package org.eclipse.jdt.client.packaging;
 
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+
+import com.google.gwt.event.logical.shared.OpenEvent;
+import com.google.gwt.event.logical.shared.OpenHandler;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
@@ -45,8 +51,12 @@ import org.exoplatform.ide.client.framework.event.FileSavedEvent;
 import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
+import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent;
+import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
 import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
@@ -54,6 +64,7 @@ import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
+import org.exoplatform.ide.client.framework.project.api.FolderOpenedEvent;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.project.api.ProjectBuilder;
 import org.exoplatform.ide.client.framework.project.api.ProjectBuilder.Builder;
@@ -71,10 +82,13 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewOpenedHandler;
 import org.exoplatform.ide.editor.client.api.Editor;
+import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
+import org.exoplatform.ide.vfs.shared.Lock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,7 +103,8 @@ import java.util.Map;
 public class PackageExplorerPresenter implements ShowPackageExplorerHandler, ViewOpenedHandler, ViewClosedHandler,
    ProjectOpenedHandler, ProjectClosedHandler, SelectItemHandler,
    EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
-   ApplicationSettingsReceivedHandler, FileSavedHandler, ItemsSelectedHandler, TreeRefreshedHandler
+   ApplicationSettingsReceivedHandler, ItemsSelectedHandler, TreeRefreshedHandler,
+   ItemLockedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler
 {
 
    private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
@@ -147,10 +162,12 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       IDE.addHandler(EditorFileOpenedEvent.TYPE, this);
       IDE.addHandler(EditorFileClosedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
-      IDE.addHandler(FileSavedEvent.TYPE, this);
       
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(TreeRefreshedEvent.TYPE, this);
+      IDE.addHandler(ItemLockedEvent.TYPE, this);
+      IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
+      IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
       
       for (String type : ProjectTypes.getList())
       {
@@ -193,6 +210,24 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
    private void bindDisplay()
    {
+      display.getBrowserTree().addOpenHandler(new OpenHandler<Item>()
+      {
+         @Override
+         public void onOpen(final OpenEvent<Item> event)
+         {
+            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+            {
+               @Override
+               public void execute()
+               {
+                  FolderModel folder = (FolderModel)event.getTarget();
+                  List<Item> children = display.getTreeChildren(folder);
+                  IDE.fireEvent(new FolderOpenedEvent(folder, children));
+               }
+            });            
+         }
+      });
+      
       display.getBrowserTree().addDoubleClickHandler(new DoubleClickHandler()
       {
          @Override
@@ -233,6 +268,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       });
 
       display.setLinkWithEditorButtonSelected(linkWithEditor);
+      display.setLockTokens(applicationSettings.getValueAsMap("lock-tokens"));      
    }
 
    private void treeItemSelected()
@@ -412,40 +448,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          linkWithEditor = applicationSettings.getValueAsBoolean(PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG);
       }
    }
-
-   @Override
-   public void onFileSaved(final FileSavedEvent event)
-   {
-//      if (openedProject == null || !"pom.xml".equals(event.getFile().getName()) || event.getFile().getProject() == null)
-//      {
-//         return;
-//      }
-//      
-//      if (!event.getFile().getProject().getId().equals(openedProject.getId()))
-//      {
-//         return;
-//      }
-//      
-//      if (!openedEditors.containsKey(event.getFile().getId()))
-//      {
-//         return;
-//      }
-//      
-//      final String pomXmlFileContent = openedEditors.get(event.getFile().getId()).getText();
-//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//      {
-//         @Override
-//         public void execute()
-//         {
-//            Dependencies dependencyListItem = treeParser.updateProjectDependencies(pomXmlFileContent);
-//            if (dependencyListItem != null)
-//            {
-//               display.getBrowserTree().setValue(dependencyListItem);
-//            }
-//         }
-//      });
-   }
-   
    
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
@@ -540,7 +542,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    }
 
    @Override
-   public void onTreeRefreshed(TreeRefreshedEvent event)
+   public void onTreeRefreshed(final TreeRefreshedEvent event)
    {
       if (display != null)
       {
@@ -550,7 +552,49 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
          {
             display.selectItem(event.getItemToSelect());
          }
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               List<Item> visibleItems = display.getVisibleItems();
+               IDE.fireEvent(new FolderOpenedEvent(event.getFolder(), visibleItems));
+            }
+         });
       }
    }
+
+   @Override
+   public void onItemLocked(ItemLockedEvent event)
+   {
+      Item item = event.getItem();
+      if (item instanceof FileModel)
+      {
+         FileModel file = (FileModel)item;
+         file.setLocked(true);
+         file.setLock(new Lock("", event.getLockToken().getLockToken(), 0));
+         display.updateItemState(file);
+      }      
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler#onAddItemTreeIcon(org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent)
+    */
+   @Override
+   public void onAddItemTreeIcon(AddItemTreeIconEvent event)
+   {
+      display.addItemsIcons(event.getTreeItemIcons());
+   }   
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler#onRemoveItemTreeIcon(org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent)
+    */
+   @Override
+   public void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event)
+   {
+      display.removeItemIcons(event.getIconsToRemove());
+   }
+   
    
 }

@@ -23,29 +23,32 @@ import com.google.gwt.event.shared.GwtEvent;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
  * @version $
  * 
  */
-public class TreeRefreshedEvent extends GwtEvent<TreeRefreshedHandler>
+public class FolderOpenedEvent extends GwtEvent<FolderOpenedHandler>
 {
 
-   public static final GwtEvent.Type<TreeRefreshedHandler> TYPE = new GwtEvent.Type<TreeRefreshedHandler>();
+   public static final GwtEvent.Type<FolderOpenedHandler> TYPE = new GwtEvent.Type<FolderOpenedHandler>();
 
    private FolderModel folder;
 
-   private Item itemToSelect;
+   private List<Item> children;
 
-   public TreeRefreshedEvent(FolderModel folder)
+   public FolderOpenedEvent(FolderModel folder)
    {
       this.folder = folder;
    }
 
-   public TreeRefreshedEvent(FolderModel folder, Item itemToSelect)
+   public FolderOpenedEvent(FolderModel folder, List<Item> children)
    {
       this.folder = folder;
-      this.itemToSelect = itemToSelect;
+      this.children = children;
    }
 
    public FolderModel getFolder()
@@ -53,21 +56,26 @@ public class TreeRefreshedEvent extends GwtEvent<TreeRefreshedHandler>
       return folder;
    }
 
-   public Item getItemToSelect()
+   public List<Item> getChildren()
    {
-      return itemToSelect;
+      if (children == null)
+      {
+         children = new ArrayList<Item>();
+      }
+      
+      return children;
    }
 
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<TreeRefreshedHandler> getAssociatedType()
+   public com.google.gwt.event.shared.GwtEvent.Type<FolderOpenedHandler> getAssociatedType()
    {
       return TYPE;
    }
 
    @Override
-   protected void dispatch(TreeRefreshedHandler handler)
+   protected void dispatch(FolderOpenedHandler handler)
    {
-      handler.onTreeRefreshed(this);
+      handler.onFolderOpened(this);
    }
 
 }

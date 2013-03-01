@@ -20,6 +20,7 @@ package org.eclipse.jdt.client.packaging;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
@@ -29,13 +30,16 @@ import com.google.gwt.user.client.ui.Widget;
 import org.eclipse.jdt.client.JdtClientBundle;
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
+import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
-import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Guluy</a>
@@ -144,16 +148,46 @@ public class PackageExplorerView extends ViewImpl implements PackageExplorerDisp
       return treeGrid.selectItem(item);
    }
 
-//   @Override
-//   public void setProject(ProjectModel project)
-//   {
-//      treeGrid.setProject(project);
-//   }
-//
-//   @Override
-//   public void treeUpdated(String path)
-//   {
-//      treeGrid.treeUpdated(path);
-//   }
+   @Override
+   public void updateItemState(FileModel file)
+   {
+      treeGrid.updateFileState(file);
+   }
+   
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setLockTokens(java.util.Map)
+    */
+   @Override
+   public void setLockTokens(Map<String, String> locktokens)
+   {
+      treeGrid.setLockTokens(locktokens);
+   }
+   
+   @Override
+   public void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons)
+   {
+      treeGrid.addItemsIcons(itemsIcons);
+   }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#removeItemIcons(java.util.Map)
+    */
+   @Override
+   public void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons)
+   {
+      treeGrid.removeItemIcons(itemsIcons);
+   }
+
+   @Override
+   public List<Item> getTreeChildren(FolderModel folder)
+   {
+      return treeGrid.getTreeChildren(folder);
+   }
+
+   @Override
+   public List<Item> getVisibleItems()
+   {
+      return treeGrid.getVisibleItems();
+   }   
+   
 }

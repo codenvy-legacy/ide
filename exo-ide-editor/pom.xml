@@ -16,7 +16,6 @@
    </parent>
 
    <modelVersion>4.0.0</modelVersion>
-   <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-editor</artifactId>
    <packaging>jar</packaging>
    <name>Codenvy IDE :: Editor</name>
@@ -57,7 +56,6 @@
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
-            <version>2.3.1</version>
             <configuration>
                <excludes>
                   <exclude>**/Editor.html</exclude>

@@ -7,7 +7,6 @@
 		<version>2.0.0-COLLAB</version>
 	</parent>
 	<artifactId>exo-ide-extension-aws</artifactId>
-	<version>2.0.0-COLLAB</version>
 	<name>Codenvy IDE :: Extension :: Amazon Web Services</name>
 
    <dependencies>
