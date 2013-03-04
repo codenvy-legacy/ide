@@ -57,6 +57,10 @@
                <groupId>javassist</groupId>
                <artifactId>javassist</artifactId>
             </exclusion>
+            <exclusion>
+               <groupId>ch.qos.logback</groupId>
+               <artifactId>logback-classic</artifactId>
+            </exclusion>
          </exclusions>
          <scope>runtime</scope>
       </dependency>
