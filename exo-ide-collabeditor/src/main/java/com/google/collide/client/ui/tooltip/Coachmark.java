@@ -26,7 +26,7 @@ import com.google.gwt.resources.client.CssResource;
 
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * An object which represents a coach mark (a tooltip like notification which is often dismissable).

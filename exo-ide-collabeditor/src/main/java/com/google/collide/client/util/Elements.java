@@ -27,8 +27,8 @@ import elemental.html.BodyElement;
 import elemental.html.ButtonElement;
 import elemental.html.CanvasElement;
 import elemental.html.DivElement;
-import elemental.html.Document;
-import elemental.html.Element;
+import elemental.dom.Document;
+import elemental.dom.Element;
 import elemental.html.FormElement;
 import elemental.html.HeadElement;
 import elemental.html.IFrameElement;
@@ -44,7 +44,7 @@ import elemental.html.TableRowElement;
 import elemental.html.TextAreaElement;
 import elemental.html.UListElement;
 import elemental.html.Window;
-import elemental.js.html.JsElement;
+import elemental.js.dom.JsElement;
 import elemental.ranges.Range;
 
 /**
@@ -115,13 +115,13 @@ public class Elements {
   }
 
   public static TableRowElement createTRElement(String... classNames) {
-    TableRowElement elem = getDocument().createTRElement();
+    TableRowElement elem = getDocument().createTableRowElement();
     addClassesToElement(elem, classNames);
     return elem;
   }
 
   public static TableCellElement createTDElement(String... classNames) {
-    TableCellElement elem = getDocument().createTDElement();
+    TableCellElement elem = getDocument().createTableCellElement();
     addClassesToElement(elem, classNames);
     return elem;
   }
@@ -182,7 +182,7 @@ public class Elements {
   }
 
   public static UListElement createUListElement(String... classNames) {
-    UListElement elem = getDocument().createULElement();
+    UListElement elem = getDocument().createUListElement();
     addClassesToElement(elem, classNames);
     return elem;
   }
@@ -208,7 +208,7 @@ public class Elements {
   }
 
   public static BodyElement getBody(Document document) {
-    return document.getBody();
+    return (BodyElement)document.getBody();
   }
 
   public static HeadElement getHead() {
@@ -330,7 +330,7 @@ public class Elements {
   public static void addClassesToElement(Element e, String... classNames) {
     for (String className : classNames) {
       if (!StringUtils.isNullOrEmpty(className)) {
-        e.addClassName(className);
+        e.getClassList().add(className);
       }
     }
   }

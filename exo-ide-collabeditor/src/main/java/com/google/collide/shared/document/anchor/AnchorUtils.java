@@ -20,7 +20,8 @@ import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.document.util.PositionUtils;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Utility methods relating to anchors.
@@ -64,11 +65,11 @@ public final class AnchorUtils {
    */
   public static void setTextBetweenAnchors(String text, Anchor begin, Anchor end,
       DocumentMutator documentMutator) {
-    Preconditions.checkArgument(begin.isAttached(), "begin must be attached");
-    Preconditions.checkArgument(begin.isLineAnchor(), "begin must be line anchor");
-    Preconditions.checkArgument(end.isLineAnchor(), "end must be line anchor");
-    Preconditions.checkArgument(end.isAttached(), "end must be attached");
-    Preconditions.checkArgument(
+     Assert.isLegal(begin.isAttached(), "begin must be attached");
+    Assert.isLegal(begin.isLineAnchor(), "begin must be line anchor");
+    Assert.isLegal(end.isLineAnchor(), "end must be line anchor");
+    Assert.isLegal(end.isAttached(), "end must be attached");
+    Assert.isLegal(
         begin.getLineNumber() <= end.getLineNumber(), "begin line below end line");
 
     // TODO: Fix same-line text replacement.

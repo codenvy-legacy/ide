@@ -16,8 +16,9 @@
  */
 package org.waveprotocol.wave.client.common.util;
 
-import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.Command;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Simple synchronization tool that waits for some fixed number of calls to
@@ -58,7 +59,7 @@ public final class CountdownLatch {
    *         expected number of times.
    */
   public void tick() {
-    Preconditions.checkState(count > 0);
+    Assert.isTrue(count > 0);
     count--;
     if (count == 0) {
       whenZero.execute();

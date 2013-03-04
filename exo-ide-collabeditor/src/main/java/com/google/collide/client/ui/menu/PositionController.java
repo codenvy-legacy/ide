@@ -18,13 +18,14 @@ import com.google.collide.client.AppContext;
 import com.google.collide.client.util.CssUtils;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.RelativeClientRect;
-import com.google.common.base.Preconditions;
 import com.google.gwt.user.client.Window;
 
 import elemental.css.CSSStyleDeclaration;
 import elemental.css.CSSStyleDeclaration.Unit;
 import elemental.html.ClientRect;
-import elemental.html.Element;
+import elemental.dom.Element;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * A controller which handles positioning an element relative to another element. This controller is
@@ -333,7 +334,7 @@ public class PositionController {
       Element ancestor = getOffsetAnchestorForAnchor();
       anchorOffsetTop = anchorOffsetLeft = 0;
       for (Element e = anchor; e != ancestor; e = e.getOffsetParent()) {
-        Preconditions.checkNotNull(e, "Offset parent specified is not in ancestory chain");
+         Assert.isNotNull(e, "Offset parent specified is not in ancestory chain");
         anchorOffsetTop += e.getOffsetTop();
         anchorOffsetLeft += e.getOffsetLeft();
       }

@@ -14,8 +14,6 @@
 
 package com.google.collide.shared.document;
 
-import javax.annotation.Nullable;
-
 /**
  * An interface that allows mutation of a document.
  */
@@ -34,7 +32,6 @@ public interface DocumentMutator {
    * @return the change that led to the deletion of the text, or {@code null}
    *         if no changes applied
    */
-  @Nullable
   TextChange deleteText(Line line, int column, int deleteCount);
 
   /**
@@ -43,7 +40,6 @@ public interface DocumentMutator {
    *
    * @return {@code null} if no changes applied
    */
-  @Nullable
   TextChange deleteText(Line line, int lineNumber, int column, int deleteCount);
 
   /**
@@ -53,7 +49,6 @@ public interface DocumentMutator {
    *
    * @return {@code null} if no changes applied
    */
-  @Nullable
   TextChange insertText(Line line, int column, String text);
 
   /**
@@ -62,7 +57,6 @@ public interface DocumentMutator {
    *
    * @return {@code null} if no changes applied
    */
-  @Nullable
   TextChange insertText(Line line, int lineNumber, int column, String text);
 
   /**
@@ -79,7 +73,6 @@ public interface DocumentMutator {
    *         inserted, then deletion text change is returned;
    *         {@code null} if no changes applied
    */
-  @Nullable
   TextChange insertText(Line line, int lineNumber, int column, String text,
       boolean canReplaceSelection);
 }

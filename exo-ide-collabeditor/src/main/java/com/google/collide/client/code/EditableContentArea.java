@@ -14,6 +14,7 @@
 
 package com.google.collide.client.code;
 
+import com.google.collide.client.util.dom.DomUtils;
 import com.google.gwt.resources.client.ClientBundle;
 
 import com.google.gwt.resources.client.ClientBundle.Source;
@@ -26,7 +27,7 @@ import com.google.collide.mvp.UiComponent;
 import com.google.gwt.resources.client.CssResource;
 
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * The main content area on the CodePerspective.
@@ -167,7 +168,7 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
     }
 
     if (currentContent != null) {
-      currentContent.getContentElement().removeFromParent();
+      DomUtils.removeFromParent(currentContent.getContentElement());
     }
 
     getView().getContentElement().setInnerHTML("");

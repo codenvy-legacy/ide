@@ -21,7 +21,8 @@ import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Mutator for the document that provides high-level document mutation API. The
@@ -260,8 +261,8 @@ class DocumentMutatorImpl implements DocumentMutator {
    */
   private LineInfo insertMultilineTextImpl(Line line, int lineNumber, int column, String text) {
     String lineText = line.getText();
-    Preconditions.checkArgument(lineText.endsWith("\n") ? column < lineText.length()
-        : column <= lineText.length(), "Given column is out-of-bounds");
+    Assert.isLegal(lineText.endsWith("\n") ? column < lineText.length() : column <= lineText.length(),
+       "Given column is out-of-bounds");
     
     JsonArray<Line> linesAdded = JsonCollections.createArray();
 
@@ -345,7 +346,7 @@ class DocumentMutatorImpl implements DocumentMutator {
 
   private void deleteTextImpl(final Line firstLine, final int firstLineNumber,
       final int firstLineColumn, final String deletedText) {
-    Preconditions.checkArgument(firstLineColumn <= LineUtils.getLastCursorColumn(firstLine),
+     Assert.isLegal(firstLineColumn <= LineUtils.getLastCursorColumn(firstLine),
         "The column is out-of-bounds");
     new TextDeleter(firstLine, firstLineNumber, firstLineColumn, deletedText).delete();
   }

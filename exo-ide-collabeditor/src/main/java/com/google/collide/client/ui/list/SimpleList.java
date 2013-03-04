@@ -27,8 +27,8 @@ import com.google.gwt.resources.client.CssResource;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.html.Element;
-import elemental.js.html.JsElement;
+import elemental.dom.Element;
+import elemental.js.dom.JsElement;
 
 // TODO: Where possible, port more lists that we have hand-rolled in
 // other parts of the UI to use this widget.
@@ -151,7 +151,7 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> {
      */
     public static <M> ListItem<M> create(ListItemRenderer<M> factory, Css css, M data) {
       Element element = factory.createElement();
-      element.addClassName(css.listItem());
+      element.getClassList().add(css.listItem());
       
       ListItem<M> item = ListItem.cast(element);
       item.setData(data);
@@ -363,8 +363,8 @@ public class SimpleList<M> extends UiComponent<SimpleList.View> {
     this.itemHolder = itemHolder;
     this.container = container;
 
-    view.addClassName(css.listBase());
-    container.addClassName(css.listContainer());
+    view.getClassList().add(css.listBase());
+    container.getClassList().add(css.listContainer());
     attachEventHandlers();
   }
 

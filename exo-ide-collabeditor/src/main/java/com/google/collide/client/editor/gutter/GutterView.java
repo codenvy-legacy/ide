@@ -25,7 +25,7 @@ import com.google.collide.mvp.CompositeView;
 
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.MouseEvent;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * The view component of the MVP stack for a gutter.

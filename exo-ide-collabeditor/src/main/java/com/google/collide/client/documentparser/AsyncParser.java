@@ -18,10 +18,8 @@ import com.google.collide.codemirror2.Token;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 
-import javax.annotation.Nonnull;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * An adapter for {@link DocumentParser.Listener} that performs only async
@@ -96,7 +94,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware>
 
   @Override
   public final void onDocumentLineParsed(
-      Line line, int lineNumber, @Nonnull JsonArray<Token> tokens) {
+      Line line, int lineNumber, JsonArray<Token> tokens) {
     if (detached) {
       return;
     }
@@ -108,7 +106,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware>
 
   @Override
   public final void onIterationFinish() {
-    Preconditions.checkState(iterating);
+     Assert.isLegal(iterating);
     if (detached) {
       return;
     }
@@ -118,7 +116,7 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware>
 
   @Override
   public final void onIterationStart(int lineNumber) {
-    Preconditions.checkState(!iterating);
+     Assert.isLegal(!iterating);
     if (detached) {
       return;
     }
@@ -152,7 +150,6 @@ public abstract class AsyncParser<T extends AsyncParser.LineAware>
    * <p>We support nodes array sorted by line number.
    * Now we use that property in modified binary search.
    */
-  @VisibleForTesting
   public static <T extends LineAware> int findCutTailIndex(JsonArray<T> nodes,
       int lineNumber) {
     int low = 0;

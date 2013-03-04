@@ -16,8 +16,6 @@ package com.google.collide.json.server;
 
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonArrayIterator;
-import com.google.common.base.Joiner;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -183,7 +181,19 @@ public class JsonArrayListAdapter<T> implements JsonArray<T> {
 
   @Override
   public String join(String separator) {
-    return Joiner.on(separator).join(delegate);
+     StringBuilder b = new StringBuilder();
+     Iterator<T> iterator = delegate.iterator();
+     if (iterator.hasNext())
+     {
+        b.append(iterator.next().toString());
+        while (iterator.hasNext())
+        {
+           T t = iterator.next();
+           b.append(separator);
+           b.append(t.toString());
+        }
+     }
+     return b.toString();
   }
 
   @Override

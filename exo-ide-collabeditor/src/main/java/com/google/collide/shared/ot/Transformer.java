@@ -18,7 +18,8 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
 import com.google.collide.dto.shared.DocOpFactory;
 import com.google.collide.json.shared.JsonArray;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /*
  * Influenced by Wave's Transformer and Composer classes. Generally, we can't
@@ -53,6 +54,10 @@ public class Transformer {
     public TransformException(String message, Throwable cause) {
       super(message, cause);
     }
+
+     public TransformException()
+     {
+     }
   }
 
   private static class DeleteProcessor extends Processor {
@@ -390,8 +395,7 @@ public class Transformer {
 
     @Override
     void handleOtherFinished(Processor other, ProcessorResult result) {
-      Preconditions.checkState(
-          lineCount == 1, "Cannot retain more than one line if other side is finished");
+       Assert.isLegal(lineCount == 1, "Cannot retain more than one line if other side is finished");
 
       if (result.isMyPreviousComponentInsertOfNewline) {
         other.output.retainLine(1);

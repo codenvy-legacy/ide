@@ -35,11 +35,8 @@ import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar.Remover;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Parser for a document that delegates to CodeMirror.
@@ -62,7 +59,6 @@ public class DocumentParser {
     return create(document, codeMirrorParser, scheduler);
   }
 
-  @VisibleForTesting
   public static DocumentParser create(Document document, Parser codeMirrorParser,
       IncrementalScheduler scheduler) {
     return new DocumentParser(document, codeMirrorParser, scheduler);
@@ -92,7 +88,7 @@ public class DocumentParser {
      * Note: This may be called synchronously with a user's key press, so do not
      * do too much work synchronously.
      */
-    void onDocumentLineParsed(Line line, int lineNumber, @Nonnull JsonArray<Token> tokens);
+    void onDocumentLineParsed(Line line, int lineNumber, JsonArray<Token> tokens);
   }
 
   private static final AnchorType PARSER_ANCHOR_TYPE = AnchorType.create(DocumentParser.class,
@@ -156,8 +152,8 @@ public class DocumentParser {
 
   private DocumentParser(
       Document document, Parser codeMirrorParser, IncrementalScheduler scheduler) {
-    Preconditions.checkNotNull(codeMirrorParser);
-    Preconditions.checkNotNull(scheduler);
+     Assert.isNotNull(codeMirrorParser);
+     Assert.isNotNull(scheduler);
     this.codeMirrorParser = codeMirrorParser;
     this.listenerManager = ListenerManager.create();
     this.scheduler = scheduler;
@@ -186,8 +182,7 @@ public class DocumentParser {
    * @return the parsed tokens, or {@code null} if there isn't a snapshot
    *         and it's not the first line
    */
-  @Nullable
-  public JsonArray<Token> parseLineSync(@Nonnull Line line) {
+  public JsonArray<Token> parseLineSync(Line line) {
     return worker.parseLine(line);
   }
 
@@ -229,7 +224,7 @@ public class DocumentParser {
     });
   }
 
-  void dispatch(final Line line, final int lineNumber, @Nonnull final JsonArray<Token> tokens) {
+  void dispatch(final Line line, final int lineNumber, final JsonArray<Token> tokens) {
     listenerManager.dispatch(new Dispatcher<Listener>() {
       @Override
       public void dispatch(Listener listener) {
@@ -270,8 +265,7 @@ public class DocumentParser {
    *
    * @return {@code null} if previous line is not parsed yet
    */
-  @Nullable
-  public String getInitialMode(@Nonnull TaggableLine line) {
+  public String getInitialMode(TaggableLine line) {
     return worker.getInitialMode(line);
   }
 
@@ -287,9 +281,9 @@ public class DocumentParser {
    * @see DocumentParserWorker#getParserState
    */
   public <T extends State> ParseResult<T> getState(Class<T> stateClass, Position position,
-      @Nullable String appendedText) {
-    Preconditions.checkArgument(getSyntaxType().checkStateClass(stateClass));
-    Preconditions.checkNotNull(position);
+       String appendedText) {
+     Assert.isLegal(getSyntaxType().checkStateClass(stateClass));
+     Assert.isNotNull(position);
     return worker.getParserState(position, appendedText);
   }
 }

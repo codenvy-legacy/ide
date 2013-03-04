@@ -21,6 +21,7 @@ import com.google.collide.client.editor.ViewportModel.Edge;
 import com.google.collide.client.editor.renderer.Renderer.LineLifecycleListener;
 import com.google.collide.client.testing.DebugAttributeSetter;
 import com.google.collide.client.util.Elements;
+import com.google.collide.client.util.dom.DomUtils;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
@@ -35,7 +36,7 @@ import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.Timer;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import java.util.Comparator;
 import java.util.EnumSet;
@@ -372,7 +373,7 @@ public class ViewportRenderer {
 
     Element element = line.getTag(LINE_TAG_LINE_ELEMENT);
     if (element != null && buffer.hasLineElement(element)) {
-      element.removeFromParent();
+      DomUtils.removeFromParent(element);
       line.putTag(LINE_TAG_LINE_ELEMENT, null);
     }
 

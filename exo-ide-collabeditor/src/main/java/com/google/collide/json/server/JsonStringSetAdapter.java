@@ -16,8 +16,8 @@ package com.google.collide.json.server;
 
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonStringSet;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -39,7 +39,7 @@ public class JsonStringSetAdapter implements JsonStringSet {
 
   @Override
   public JsonArray<String> getKeys() {
-    return new JsonArrayListAdapter<String>(Lists.newArrayList(delegate));
+    return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate));
   }
 
   @Override

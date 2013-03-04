@@ -17,7 +17,8 @@ package com.google.collide.client.code.autocomplete;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Object that holds a set of proposals produced by
@@ -135,8 +136,8 @@ public class AutocompleteProposals {
    */
   public AutocompleteProposals(SyntaxType syntaxType, Context context,
       JsonArray<AutocompleteProposal> items, String hint) {
-    Preconditions.checkNotNull(context);
-    Preconditions.checkNotNull(items);
+     Assert.isNotNull(context);
+     Assert.isNotNull(items);
     this.syntaxType = syntaxType;
     this.context = context;
     this.items = items;
@@ -171,7 +172,7 @@ public class AutocompleteProposals {
   }
 
   public ProposalWithContext select(AutocompleteProposal proposal) {
-    Preconditions.checkState(items.contains(proposal));
+     Assert.isLegal(items.contains(proposal));
     return new ProposalWithContext(syntaxType, proposal, context);
   }
 

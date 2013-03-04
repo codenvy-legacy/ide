@@ -14,10 +14,11 @@
 
 package com.google.collide.codemirror2;
 
-import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.TextResource;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Wraps the CodeMirror2 syntax parser modes.
@@ -44,7 +45,7 @@ public class CodeMirror2 {
   public static Parser getParser(String mimeType) {
     SyntaxType type = SyntaxType.syntaxTypeByMimeType(mimeType);
     CmParser parser = getParserForMime(type.getMimeType());
-    Preconditions.checkNotNull(parser);
+     Assert.isNotNull(parser);
     parser.setType(type);
 
     // TODO: testing no smart indentation to see how it feels

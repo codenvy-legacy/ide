@@ -16,8 +16,8 @@ package com.google.collide.json.server;
 
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonStringMap;
-import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -39,7 +39,7 @@ public class JsonStringMapAdapter<T> implements JsonStringMap<T> {
 
   @Override
   public JsonArray<String> getKeys() {
-    return new JsonArrayListAdapter<String>(Lists.newArrayList(delegate.keySet()));
+    return new JsonArrayListAdapter<String>(new ArrayList<String>(delegate.keySet()));
   }
 
   @Override

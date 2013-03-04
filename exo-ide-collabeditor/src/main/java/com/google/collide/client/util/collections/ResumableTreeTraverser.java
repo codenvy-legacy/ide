@@ -16,8 +16,8 @@ package com.google.collide.client.util.collections;
 
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 import java.util.Iterator;
 
@@ -137,7 +137,6 @@ public class ResumableTreeTraverser<E> {
     isPaused = true;
   }
   
-  @VisibleForTesting
   boolean hasMore() {
     return nodeIteratorStack.size() > 0;
   }
@@ -149,7 +148,7 @@ public class ResumableTreeTraverser<E> {
    * be resumed immediately synchronously.
    */
   public void resume() {
-    Preconditions.checkArgument(isPaused);
+     Assert.isLegal(isPaused);
     isPaused = false;
     
     if (!isDispatching) {
@@ -212,7 +211,7 @@ public class ResumableTreeTraverser<E> {
   }
 
   public void pause() {
-    Preconditions.checkArgument(!isPaused);
+     Assert.isLegal(!isPaused);
     
     isPaused = true;
   }

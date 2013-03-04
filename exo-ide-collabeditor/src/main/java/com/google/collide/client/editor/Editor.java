@@ -49,11 +49,10 @@ import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import elemental.events.Event;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
@@ -388,9 +387,9 @@ public class Editor extends UiComponent<Editor.View> {
       @Override
       public void onScroll(Buffer buffer, int scrollTop) {
         if (scrollTop < 20) {
-          getElement().removeClassName(getView().css.scrolled());
+          getElement().getClassList().remove(getView().css.scrolled());
         } else {
-          getElement().addClassName(getView().css.scrolled());
+          getElement().getClassList().add(getView().css.scrolled());
         }
       }
     });
@@ -413,7 +412,7 @@ public class Editor extends UiComponent<Editor.View> {
 
     gutters.add(gutter);
 
-    gutter.getGutterElement().addClassName(getView().css.gutter());
+    gutter.getGutterElement().getClassList().add(getView().css.gutter());
     getView().addGutter(gutter.getGutterElement());
     return gutter;
   }
@@ -642,7 +641,6 @@ public class Editor extends UiComponent<Editor.View> {
     return id;
   }
   
-  @VisibleForTesting
   public InputController getInput() {
     return input;
   }

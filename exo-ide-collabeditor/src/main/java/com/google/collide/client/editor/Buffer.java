@@ -51,7 +51,7 @@ import elemental.events.EventRemover;
 import elemental.events.MouseEvent;
 import elemental.html.ClientRect;
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /*
  * TODO: Buffer has turned into an EditorSurface, but is still
@@ -107,7 +107,7 @@ public class Buffer extends UiComponent<Buffer.View>
    * text buffer area of the editor.
    */
   public interface MouseDragListener {
-    void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, short button);
+    void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, int button);
 
     void onMouseDrag(Buffer buffer, int x, int y);
 
@@ -266,7 +266,7 @@ public class Buffer extends UiComponent<Buffer.View>
 
     private Element createScrollbarElement(BaseResources.Css baseCss) {
       final DivElement scrollbarElement = Elements.createDivElement(css.scrollbar());
-      scrollbarElement.addClassName(baseCss.documentScrollable());
+      scrollbarElement.getClassList().add(baseCss.documentScrollable());
 
       scrollbarElement.addEventListener(Event.SCROLL, new EventListener() {
         @Override
@@ -291,7 +291,7 @@ public class Buffer extends UiComponent<Buffer.View>
 
     private Element createScrollableElement(BaseResources.Css baseCss) {
       final DivElement scrollableElement = Elements.createDivElement(css.scrollable());
-      scrollableElement.addClassName(baseCss.documentScrollable());
+      scrollableElement.getClassList().add(baseCss.documentScrollable());
 
       scrollableElement.addEventListener(Event.SCROLL, new EventListener() {
         @Override
@@ -396,14 +396,14 @@ public class Buffer extends UiComponent<Buffer.View>
     private void addLine(Element lineElement) {
       String className = lineElement.getClassName();
       if (className == null || className.isEmpty()) {
-        lineElement.addClassName(css.line());
+        lineElement.getClassList().add(css.line());
       }
 
       textLayerElement.appendChild(lineElement);
     }
 
     private Element getFirstLine() {
-      return textLayerElement.getFirstChildElement();
+      return textLayerElement.getFirstElementChild();
     }
 
     private int getHeight() {
@@ -447,7 +447,7 @@ public class Buffer extends UiComponent<Buffer.View>
        * at the bottom of the vertical scrollbar that won't scroll the
        * scrollable element, but that's OK.)
        */
-      scrollbarElement.getFirstChildElement().getStyle()
+      scrollbarElement.getFirstElementChild().getStyle()
           .setHeight(height + Constants.SCROLLBAR_SIZE, CSSStyleDeclaration.Unit.PX);
     }
 
@@ -512,7 +512,7 @@ public class Buffer extends UiComponent<Buffer.View>
         int bufferClientLeft,
         int bufferClientTop,
         boolean isShiftHeld,
-        short button);
+        int button);
 
     void onMouseDrag(int clientX, int clientY);
 
@@ -621,7 +621,7 @@ public class Buffer extends UiComponent<Buffer.View>
           int bufferClientLeft,
           int bufferClientTop,
           final boolean isShiftHeld,
-          final short button) {
+          final int button) {
 
         this.bufferLeft = bufferClientLeft;
         this.bufferTop = bufferClientTop;

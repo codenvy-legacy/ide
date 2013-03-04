@@ -17,7 +17,7 @@ package com.google.collide.client.util;
 import com.google.gwt.dom.client.Style.Unit;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * Utility methods for dealing with CSS.
@@ -43,14 +43,14 @@ public class CssUtils {
   }
 
   public static boolean containsClassName(Element element, String className) {
-    return element.hasClassName(className);
+    return element.getClassList().contains(className);
   }
 
   public static void setClassNameEnabled(Element element, String className, boolean enable) {
     if (enable) {
-      element.addClassName(className);
+      element.getClassList().add(className);
     } else {
-      element.removeClassName(className);
+      element.getClassList().remove(className);
     }
   }
 

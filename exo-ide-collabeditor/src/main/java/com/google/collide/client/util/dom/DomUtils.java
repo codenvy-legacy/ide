@@ -23,7 +23,7 @@ import elemental.events.EventListener;
 import elemental.events.MouseEvent;
 import elemental.html.ClientRect;
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * Utility methods for DOM manipulation.
@@ -115,24 +115,24 @@ public final class DomUtils {
   }
 
   public static Element getNthChild(Element element, int index) {
-    Element child = element.getFirstChildElement();
+    Element child = element.getFirstElementChild();
     while (child != null && index > 0) {
       --index;
-      child = child.getNextSiblingElement();
+      child = child.getNextElementSibling();
     }
     return child;
   }
 
   public static Element getNthChildWithClassName(Element element, int index, String className) {
-    Element child = element.getFirstChildElement();
+    Element child = element.getFirstElementChild();
     while (child != null) {
-      if (child.hasClassName(className)) {
+      if (child.getClassList().contains(className)) {
         --index;
         if (index < 0) {
           break;
         }
       }
-      child = child.getNextSiblingElement();
+      child = child.getNextElementSibling();
     }
     return child;
   }
@@ -144,7 +144,7 @@ public final class DomUtils {
     int index = 0;
     while (element != null) {
       element = (Element) element.getPreviousSibling();
-      if (element != null && element.hasClassName(className)) {
+      if (element != null && element.getClassList().contains(className)) {
         ++index;
       }
     }
@@ -268,6 +268,13 @@ public final class DomUtils {
     Element active = element.getOwnerDocument().getActiveElement();
     return element.contains(active);
   }
+
+   public static final void removeFromParent(Element child) {
+      Element parent = child.getParentElement();
+      if (parent != null) {
+         parent.removeChild(child);
+      }
+   }
 
   private DomUtils() {} // COV_NF_LINE
 }

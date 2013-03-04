@@ -31,10 +31,8 @@ import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorType;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.util.Timer;
-
-import javax.annotation.Nullable;
 
 /**
  * Controller for the editor-wide popup.
@@ -220,8 +218,8 @@ public class EditorPopupController {
    * @return an instance of {@link Remover} to control the popup
    */
   public Remover showPopup(LineInfo lineInfo, int startColumn, int endColumn,
-      @Nullable String textCssClassName, PopupRenderer renderer,
-      final @Nullable JsonArray<Element> popupPartnerElements,
+      String textCssClassName, PopupRenderer renderer,
+      final JsonArray<Element> popupPartnerElements,
       final VerticalAlign verticalAlign, boolean shouldCaptureOutsideClickOnClose,
       int delayMs) {
     hide();
@@ -294,7 +292,7 @@ public class EditorPopupController {
     }
   }
 
-  private void setPopupPartnersEnabled(@Nullable JsonArray<Element> partnerElements,
+  private void setPopupPartnersEnabled(JsonArray<Element> partnerElements,
       boolean enable) {
     if (partnerElements != null) {
       for (int i = 0, n = partnerElements.size(); i < n; ++i) {

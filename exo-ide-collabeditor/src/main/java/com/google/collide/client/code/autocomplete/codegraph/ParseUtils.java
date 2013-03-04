@@ -30,9 +30,8 @@ import com.google.collide.codemirror2.TokenType;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.base.Preconditions;
 
-import javax.annotation.Nonnull;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Set of utilities to perform code parsing and parse results processing.
@@ -202,7 +201,7 @@ public class ParseUtils {
    * @param position point of interest
    */
   public static <T extends State> ExtendedParseResult<T> getExtendedParseResult(
-      Class<T> stateClass, @Nonnull DocumentParser parser, Position position) {
+      Class<T> stateClass, DocumentParser parser, Position position) {
     int column = position.getColumn();
     String text = position.getLine().getText().substring(0, column);
 
@@ -218,8 +217,7 @@ public class ParseUtils {
 
     JsonArray<Token> tokens = result.getTokens();
     Token lastToken = tokens.peek();
-    Preconditions.checkNotNull(lastToken,
-        "Last token expected to be non-null; text='%s', position=%s", text, position);
+    Assert.isNotNull(lastToken, "Last token expected to be non-null; text='" +text + "', position=" +position);
     TokenType lastTokenType = lastToken.getType();
     String lastTokenValue = lastToken.getValue();
     if (!addSpace) {
