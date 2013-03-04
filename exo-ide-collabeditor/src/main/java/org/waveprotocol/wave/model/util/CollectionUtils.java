@@ -18,24 +18,12 @@
 package org.waveprotocol.wave.model.util;
 
 
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
-import com.google.common.base.Preconditions;
-
-import org.waveprotocol.wave.model.util.ReadableStringMap.ProcV;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Set;
 
 /**
@@ -130,7 +118,7 @@ public class CollectionUtils {
     private final Map<String, V> backend;
 
     private StringMapAdapter(Map<String, V> backend) {
-      Preconditions.checkNotNull(backend, "Attempt to adapt a null map");
+       Assert.isNotNull(backend, "Attempt to adapt a null map");
       this.backend = backend;
     }
 
@@ -142,7 +130,7 @@ public class CollectionUtils {
 
     @Override
     public void putAll(Map<String, V> sourceMap) {
-      Preconditions.checkArgument(!sourceMap.containsKey(null),
+       Assert.isLegal(!sourceMap.containsKey(null),
           "Source map must not contain a null key");
       backend.putAll(sourceMap);
     }
@@ -154,25 +142,25 @@ public class CollectionUtils {
 
     @Override
     public void put(String key, V value) {
-      Preconditions.checkNotNull(key, "StringMap cannot contain null keys");
+      Assert.isNotNull(key, "StringMap cannot contain null keys");
       backend.put(key, value);
     }
 
     @Override
     public void remove(String key) {
-      Preconditions.checkNotNull(key, "StringMap cannot contain null keys");
+      Assert.isNotNull(key, "StringMap cannot contain null keys");
       backend.remove(key);
     }
 
     @Override
     public boolean containsKey(String key) {
-      Preconditions.checkNotNull(key, "StringMap cannot contain null keys");
+      Assert.isNotNull(key, "StringMap cannot contain null keys");
       return backend.containsKey(key);
     }
 
     @Override
     public V getExisting(String key) {
-      Preconditions.checkNotNull(key, "StringMap cannot contain null keys");
+      Assert.isNotNull(key, "StringMap cannot contain null keys");
       if (!backend.containsKey(key)) {
         // Not using Preconditions.checkState to avoid unecessary string concatenation
         throw new IllegalStateException("getExisting: Key '" + key + "' is not in map");
@@ -182,13 +170,13 @@ public class CollectionUtils {
 
     @Override
     public V get(String key) {
-      Preconditions.checkNotNull(key, "StringMap cannot contain null keys");
+      Assert.isNotNull(key, "StringMap cannot contain null keys");
       return backend.get(key);
     }
 
     @Override
     public V get(String key, V defaultValue) {
-      Preconditions.checkNotNull(key, "StringMap cannot contain null keys");
+      Assert.isNotNull(key, "StringMap cannot contain null keys");
       if (backend.containsKey(key)) {
         return backend.get(key);
       } else {
@@ -254,7 +242,7 @@ public class CollectionUtils {
 //    private final Map<Double, V> backend;
 //
 //    private NumberMapAdapter(Map<Double, V> backend) {
-//      Preconditions.checkNotNull(backend, "Attempt to adapt a null map");
+//      Assert.isNotNull(backend, "Attempt to adapt a null map");
 //      this.backend = backend;
 //    }
 //
@@ -358,7 +346,7 @@ public class CollectionUtils {
 //    private final Map<Integer, V> backend;
 //
 //    private IntMapAdapter(Map<Integer, V> backend) {
-//      Preconditions.checkNotNull(backend, "Attempt to adapt a null map");
+//      Assert.isNotNull(backend, "Attempt to adapt a null map");
 //      this.backend = backend;
 //    }
 //
@@ -461,13 +449,13 @@ public class CollectionUtils {
     private final Set<String> backend;
 
     private StringSetAdapter(Set<String> backend) {
-      Preconditions.checkNotNull(backend, "Attempt to adapt a null set");
+      Assert.isNotNull(backend, "Attempt to adapt a null set");
       this.backend = backend;
     }
 
     @Override
     public void add(String s) {
-      Preconditions.checkNotNull(s, "StringSet cannot contain null values");
+      Assert.isNotNull(s, "StringSet cannot contain null values");
       backend.add(s);
     }
 
@@ -478,13 +466,13 @@ public class CollectionUtils {
 
     @Override
     public boolean contains(String s) {
-      Preconditions.checkNotNull(s, "StringSet cannot contain null values");
+      Assert.isNotNull(s, "StringSet cannot contain null values");
       return backend.contains(s);
     }
 
     @Override
     public void remove(String s) {
-      Preconditions.checkNotNull(s, "StringSet cannot contain null values");
+      Assert.isNotNull(s, "StringSet cannot contain null values");
       backend.remove(s);
     }
 
@@ -565,7 +553,7 @@ public class CollectionUtils {
 //
 //    @Override
 //    public void add(T x) {
-//      Preconditions.checkNotNull(x, "IdentitySet cannot contain null values");
+//      Assert.isNotNull(x, "IdentitySet cannot contain null values");
 //      // Note: Boxed primitives, and String, are disallowed. There are special
 //      // purpose maps for those key types, and the equality semantics between
 //      // the boxed primitives of Javascript and Java are dubious at best.
@@ -585,13 +573,13 @@ public class CollectionUtils {
 //
 //    @Override
 //    public boolean contains(T s) {
-//      Preconditions.checkNotNull(s, "IdentitySet cannot contain null values");
+//      Assert.isNotNull(s, "IdentitySet cannot contain null values");
 //      return backend.containsKey(s);
 //    }
 //
 //    @Override
 //    public void remove(T s) {
-//      Preconditions.checkNotNull(s, "IdentitySet cannot contain null values");
+//      Assert.isNotNull(s, "IdentitySet cannot contain null values");
 //      backend.remove(s);
 //    }
 //
@@ -1157,7 +1145,7 @@ public class CollectionUtils {
 //   * Creates a new, immutable, singleton IdentitySet.
 //   */
 //  public static <V> ReadableIdentitySet<V> singleton(final V value) {
-//    Preconditions.checkNotNull(value, "Can not create singleton of null");
+//    Assert.isNotNull(value, "Can not create singleton of null");
 //    return new ReadableIdentitySet<V>() {
 //      @Override
 //      public boolean contains(V s) {

@@ -16,7 +16,8 @@ package com.google.collide.codemirror2;
 
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Enumeration of javascript and python style tokens returned from
@@ -81,7 +82,7 @@ public enum TokenType {
 
   static TokenType resolveTokenType(String cmTokenType, String tokenValue) {
     TokenType type = getTypesMap().get(cmTokenType);
-    Preconditions.checkArgument(cmTokenType == null || type != null, cmTokenType);
+     Assert.isLegal(cmTokenType == null || type != null, cmTokenType);
     if (type == null) {
       if (("\n").equals(tokenValue)) {
         type = TokenType.NEWLINE;

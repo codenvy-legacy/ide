@@ -20,7 +20,7 @@ import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * Utility class for using CSS3 transitions.

@@ -19,10 +19,6 @@ import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.Pair;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
-import com.google.common.annotations.VisibleForTesting;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Codemirror2 {@link Token} related utilities.
@@ -60,7 +56,7 @@ public class TokenUtil {
    * @throws IllegalArgumentException if the column is < 0
    */
   public static String findModeForColumn(
-      String initialMode, @Nonnull JsonArray<Pair<Integer, String>> modes, int column) {
+      String initialMode, JsonArray<Pair<Integer, String>> modes, int column) {
     if (column < 0) {
       throw new IllegalArgumentException("Column should be >= 0 but was " + column);
     }
@@ -87,9 +83,8 @@ public class TokenUtil {
    * @param tokens tokens from which to build the map
    * @return array of pairs (column, mode)
    */
-  @Nonnull
   public static JsonArray<Pair<Integer, String>> buildModes(
-      @Nullable String initialMode, @Nonnull JsonArray<Token> tokens) {
+      String initialMode, JsonArray<Token> tokens) {
     JsonArray<Pair<Integer, String>> modes = JsonCollections.createArray();
     String currentMode = initialMode;
     int currentColumn = 0;
@@ -109,7 +104,6 @@ public class TokenUtil {
     return modes;
   }
 
-  @VisibleForTesting
   static void addPlaceholders(String mode, JsonStringMap<JsonArray<Token>> splitTokenMap,
       int width) {
     for (String key : splitTokenMap.getKeys().asIterable()) {

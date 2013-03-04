@@ -40,11 +40,11 @@ import com.google.collide.shared.util.StringUtils;
 import com.google.collide.shared.util.TextUtils;
 import com.google.collide.shared.util.UnicodeUtils;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
-import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
 import com.google.gwt.regexp.shared.RegExp;
 
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.waveprotocol.wave.client.common.util.UserAgent;
 
 // TODO: this class is getting huge, time to split responsibilities
@@ -280,7 +280,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   }
 
   public void deleteSelection(DocumentMutator documentMutator) {
-    Preconditions.checkState(hasSelection(), "can't delete selection when there is no selection");
+     Assert.isLegal(hasSelection(), "can't delete selection when there is no selection");
     Position[] selectionRange = getSelectionRange(true);
     /*
      * TODO: optimize. It's currently O(n) where n is the number of
@@ -346,7 +346,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
    *        must currently be a selection.
    */
   public Position[] getSelectionRange(boolean inclusiveEnd) {
-    Preconditions.checkArgument(
+     Assert.isLegal(
         hasSelection() || !inclusiveEnd, "There must be a selection if inclusiveEnd is requested.");
     Position[] selection = new Position[2];
 
@@ -356,7 +356,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
     selection[0] = new Position(beginAnchor.getLineInfo(), beginAnchor.getColumn());
 
     if (inclusiveEnd) {
-      Preconditions.checkState(hasSelection(),
+       Assert.isLegal(hasSelection(),
           "Can't get selection range inclusive end when nothing is selected");
       selection[1] =
           PositionUtils.getPosition(endAnchor.getLine(), endAnchor.getLineNumber(),
@@ -767,10 +767,10 @@ public class SelectionModel implements Buffer.MouseDragListener {
   public void setSelection(LineInfo baseLineInfo, int baseColumn, LineInfo cursorLineInfo,
       int cursorColumn) {
 
-    Preconditions.checkArgument(baseColumn <= LineUtils.getLastCursorColumn(baseLineInfo.line()),
+     Assert.isLegal(baseColumn <= LineUtils.getLastCursorColumn(baseLineInfo.line()),
         "The base column is out-of-bounds");
     int lastCursorColumn = LineUtils.getLastCursorColumn(cursorLineInfo.line());
-    Preconditions.checkArgument(cursorColumn <= lastCursorColumn,
+     Assert.isLegal(cursorColumn <= lastCursorColumn,
         "The cursor column is out-of-bounds. Expected <= " + lastCursorColumn
             + ", got " + cursorColumn + ", line " + cursorLineInfo.number());
 
@@ -788,7 +788,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
 
   public void setCursorPosition(LineInfo lineInfo, int column) {
     int lastCursorColumn = LineUtils.getLastCursorColumn(lineInfo.line());
-    Preconditions.checkArgument(column <= lastCursorColumn,
+     Assert.isLegal(column <= lastCursorColumn,
         "The cursor column is out-of-bounds. Expected <= " + lastCursorColumn
             + ", got " + column + ", line " + lineInfo.number());
     moveCursor(lineInfo, column, true, hasSelection(), getSelectionRangeForCallback());

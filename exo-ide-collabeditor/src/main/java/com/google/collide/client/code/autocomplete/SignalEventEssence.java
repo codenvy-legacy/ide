@@ -13,8 +13,6 @@
 // limitations under the License.
 package com.google.collide.client.code.autocomplete;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
 
@@ -31,7 +29,6 @@ public class SignalEventEssence {
   public final boolean metaKey;
   public final KeySignalType type;
 
-  @VisibleForTesting
   public SignalEventEssence(int keyCode, boolean ctrlKey, boolean altKey, boolean shiftKey,
       boolean metaKey, KeySignalType type) {
     this.keyCode = keyCode;
@@ -42,7 +39,6 @@ public class SignalEventEssence {
     this.type = type;
   }
 
-  @VisibleForTesting
   public SignalEventEssence(int keyCode) {
     this(keyCode, false, false, false, false, KeySignalType.INPUT);
   }

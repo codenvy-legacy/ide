@@ -14,8 +14,7 @@
 
 package com.google.collide.client.util.input;
 
-import com.google.common.base.Preconditions;
-
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 // TODO: Add method that builds textual representation.
@@ -34,10 +33,8 @@ public class CharCodeWithModifiers {
   private final int digest;
 
   public CharCodeWithModifiers(int modifiers, int charCode) {
-    Preconditions.checkArgument(
-        !KeyCodeMap.needsShift(charCode) || (modifiers & ModifierKeys.SHIFT) == 0,
-        "Do not include ModifierKeys.SHIFT for EventShortcuts where the "
-            + "key pressed could be modified by pressing shift.");
+     Assert.isLegal(!KeyCodeMap.needsShift(charCode) || (modifiers & ModifierKeys.SHIFT) == 0,
+        "Do not include ModifierKeys.SHIFT for EventShortcuts where the " + "key pressed could be modified by pressing shift.");
     this.modifiers = modifiers;
     this.charCode = charCode;
     this.digest = computeKeyDigest(modifiers, charCode);

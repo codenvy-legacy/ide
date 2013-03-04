@@ -14,13 +14,10 @@
 
 package com.google.collide.client.util.collections;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.JavaScriptObject;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-
-import javax.annotation.Nonnull;
 
 /**
  * <a href="http://en.wikipedia.org/wiki/Skip_list">Skip List</a>
@@ -48,7 +45,6 @@ public final class SkipListStringSet {
    *
    * <p>Mostly, this interface is used for testing purpose.
    */
-  @VisibleForTesting
   interface LevelGenerator {
     int generate();
   }
@@ -151,7 +147,6 @@ public final class SkipListStringSet {
     return new SkipListStringSet(8, new RandomLevelGenerator(8, 0.25));
   }
 
-  @VisibleForTesting
   SkipListStringSet(int maxLevel, LevelGenerator levelGenerator) {
     this.levelGenerator = levelGenerator;
     this.maxLevel = maxLevel;
@@ -164,7 +159,7 @@ public final class SkipListStringSet {
    *
    * @param item non-{@code null} value to add.
    */
-  public void add(@Nonnull String item) {
+  public void add(String item) {
     Node backtrace = doSearch(item);
     Node cursor = backtrace.get(0).getNext();
 
@@ -192,7 +187,7 @@ public final class SkipListStringSet {
   /**
    * Searches the given node and returns "backtrace".
    */
-  private Node doSearch(@Nonnull String item) {
+  private Node doSearch(String item) {
     Node backtrace = Node.createHead(maxLevel);
     Node cursor = head;
     for (int i = currentLevel; i >= 0; --i) {
@@ -212,7 +207,7 @@ public final class SkipListStringSet {
    *
    * @param item non-{@code null} value to search
    */
-  public Iterable<String> search(@Nonnull final String item) {
+  public Iterable<String> search(final String item) {
     return new Iterable<String>() {
       @Override
       public Iterator<String> iterator() {
@@ -239,7 +234,7 @@ public final class SkipListStringSet {
    *
    * @param item non-{@code null} value to search
    */
-  public void remove(@Nonnull String item) {
+  public void remove(String item) {
     Node backtrace = doSearch(item);
     Node cursor = backtrace.get(0).getNext();
 

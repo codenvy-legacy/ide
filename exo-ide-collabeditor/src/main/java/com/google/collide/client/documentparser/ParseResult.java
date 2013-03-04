@@ -16,8 +16,8 @@ package com.google.collide.client.documentparser;
 import com.google.collide.codemirror2.State;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.json.shared.JsonArray;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * POJO that holds parser state and token array.
@@ -35,10 +35,9 @@ public class ParseResult<T extends State> {
 
   private final T state;
 
-  @VisibleForTesting
   public ParseResult(JsonArray<Token> tokens, T state) {
-    Preconditions.checkNotNull(tokens, "tokens");
-    Preconditions.checkNotNull(state, "state");
+     Assert.isNotNull(tokens, "tokens");
+     Assert.isNotNull(state, "state");
     this.tokens = tokens;
     this.state = state;
   }

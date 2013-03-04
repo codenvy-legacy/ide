@@ -26,7 +26,7 @@ import com.google.collide.mvp.UiComponent;
 import com.google.gwt.resources.client.CssResource;
 
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * The main content area on the CodePerspective.

@@ -28,15 +28,10 @@ import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonIntegerMap;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.json.shared.JsonStringSet;
-import com.google.common.base.Equivalence;
-import com.google.common.base.Objects;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-
-import javax.annotation.Nullable;
 
 /**
  * A set of static factory methods for lightweight collections.
@@ -148,100 +143,100 @@ public final class JsonCollections {
     self.addAll(addList);
   }
 
-  /**
-   * Check if two lists are equal. The lists are equal if they are both the same
-   * size, and the items at every index are equal. Returns true if both lists
-   * are null.
-   *
-   * @param <T> the data type of the arrays
-   */
-  public static <T> boolean equals(JsonArray<T> a, JsonArray<T> b) {
-    return equals(a, b, null);
-  }
-
-  /**
-   * Check if two lists are equal. The lists are equal if they are both the same
-   * size, and the items at every index are equal according to the provided
-   * equator. Returns true if both lists are null.
-   *
-   * @param equivalence if null the {@link Object#equals(Object)} is used to
-   *        determine item equality.
-   *
-   * @param <T> the data type of the arrays
-   */
-  public static <T> boolean equals(
-      JsonArray<T> a, JsonArray<T> b, @Nullable Equivalence<T> equivalence) {
-    if (a == b) {
-      // Same list or both null.
-      return true;
-    } else if (a == null || b == null) {
-      // One list is null, the other is not.
-      return false;
-    } else if (a.size() != b.size()) {
-      // Different sizes.
-      return false;
-    } else {
-      // Check the elements in the array.
-      for (int i = 0; i < a.size(); i++) {
-        T itemA = a.get(i);
-        T itemB = b.get(i);
-        // if the equator is null we just the equals method and some null checking
-        if (equivalence == null && !Objects.equal(itemA, itemB)) {
-          return false;
-        } else if (equivalence != null && !equivalence.equivalent(itemA, itemB)) {
-          return false;
-        }
-      }
-      return true;
-    }
-  }
-
-  /**
-   * Check if two maps are equal. The maps are equal if they have exactly the
-   * same set of keys value pairs.
-   *
-   * @param <T> the data type of the arrays
-   */
-  public static <T> boolean equals(final JsonStringMap<T> a, final JsonStringMap<T> b) {
-    return equals(a, b, null);
-  }
-
-  /**
-   * Check if two maps are equal. The maps are equal if they have exactly the
-   * same set of keys value pairs. Checks the values using a custom
-   * {@link Equivalence} check.
-   *
-   * @param equivalence if null {@link Objects#equal(Object, Object)} is used to
-   *        verify equivalence.
-   *
-   * @param <T> the data type of the arrays
-   */
-  public static <T> boolean equals(
-      final JsonStringMap<T> a, final JsonStringMap<T> b, @Nullable Equivalence<T> equivalence) {
-    if (a == b) {
-      // Same map or both null.
-      return true;
-    } else if (a == null || b == null) {
-      // One map is null, the other is not.
-      return false;
-    } else {
-      JsonArray<String> keys = a.getKeys();
-      if (!equals(keys, b.getKeys())) {
-        return false;
-      }
-
-      for (int i = 0; i < keys.size(); i++) {
-        String key = keys.get(i);
-        T valueA = a.get(key);
-        T valueB = b.get(key);
-        boolean isNotEquivalent = (equivalence == null && !Objects.equal(valueA, valueB))
-            || (equivalence != null && !equivalence.equivalent(valueA, valueB));
-        if (isNotEquivalent) {
-          return false;
-        }
-      }
-
-      return true;
-    }
-  }
+//  /**
+//   * Check if two lists are equal. The lists are equal if they are both the same
+//   * size, and the items at every index are equal. Returns true if both lists
+//   * are null.
+//   *
+//   * @param <T> the data type of the arrays
+//   */
+//  public static <T> boolean equals(JsonArray<T> a, JsonArray<T> b) {
+//    return equals(a, b, null);
+//  }
+//
+//  /**
+//   * Check if two lists are equal. The lists are equal if they are both the same
+//   * size, and the items at every index are equal according to the provided
+//   * equator. Returns true if both lists are null.
+//   *
+//   * @param equivalence if null the {@link Object#equals(Object)} is used to
+//   *        determine item equality.
+//   *
+//   * @param <T> the data type of the arrays
+//   */
+//  public static <T> boolean equals(
+//      JsonArray<T> a, JsonArray<T> b, Equivalence<T> equivalence) {
+//    if (a == b) {
+//      // Same list or both null.
+//      return true;
+//    } else if (a == null || b == null) {
+//      // One list is null, the other is not.
+//      return false;
+//    } else if (a.size() != b.size()) {
+//      // Different sizes.
+//      return false;
+//    } else {
+//      // Check the elements in the array.
+//      for (int i = 0; i < a.size(); i++) {
+//        T itemA = a.get(i);
+//        T itemB = b.get(i);
+//        // if the equator is null we just the equals method and some null checking
+//        if (equivalence == null && !Objects.equal(itemA, itemB)) {
+//          return false;
+//        } else if (equivalence != null && !equivalence.equivalent(itemA, itemB)) {
+//          return false;
+//        }
+//      }
+//      return true;
+//    }
+//  }
+//
+//  /**
+//   * Check if two maps are equal. The maps are equal if they have exactly the
+//   * same set of keys value pairs.
+//   *
+//   * @param <T> the data type of the arrays
+//   */
+//  public static <T> boolean equals(final JsonStringMap<T> a, final JsonStringMap<T> b) {
+//    return equals(a, b, null);
+//  }
+//
+//  /**
+//   * Check if two maps are equal. The maps are equal if they have exactly the
+//   * same set of keys value pairs. Checks the values using a custom
+//   * {@link Equivalence} check.
+//   *
+//   * @param equivalence if null {@link Objects#equal(Object, Object)} is used to
+//   *        verify equivalence.
+//   *
+//   * @param <T> the data type of the arrays
+//   */
+//  public static <T> boolean equals(
+//      final JsonStringMap<T> a, final JsonStringMap<T> b, Equivalence<T> equivalence) {
+//    if (a == b) {
+//      // Same map or both null.
+//      return true;
+//    } else if (a == null || b == null) {
+//      // One map is null, the other is not.
+//      return false;
+//    } else {
+//      JsonArray<String> keys = a.getKeys();
+//      if (!equals(keys, b.getKeys())) {
+//        return false;
+//      }
+//
+//      for (int i = 0; i < keys.size(); i++) {
+//        String key = keys.get(i);
+//        T valueA = a.get(key);
+//        T valueB = b.get(key);
+//        boolean isNotEquivalent = (equivalence == null && !Objects.equal(valueA, valueB))
+//            || (equivalence != null && !equivalence.equivalent(valueA, valueB));
+//        if (isNotEquivalent) {
+//          return false;
+//        }
+//      }
+//
+//      return true;
+//    }
+//  }
 }

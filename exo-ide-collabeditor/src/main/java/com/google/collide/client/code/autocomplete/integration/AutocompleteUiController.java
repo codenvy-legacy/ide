@@ -34,7 +34,6 @@ import com.google.collide.client.util.dom.DomUtils;
 import com.google.collide.json.client.JsoArray;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
-import com.google.common.base.Preconditions;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Timer;
@@ -43,13 +42,14 @@ import com.google.gwt.user.client.ui.Widget;
 import elemental.css.CSSStyleDeclaration;
 import elemental.dom.Node;
 import elemental.html.ClientRect;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
 
 import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContextInformation;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
@@ -123,7 +123,7 @@ public class AutocompleteUiController implements AutocompleteBox {
       new SimpleList.ListEventDelegate<CompletionProposal>() {
         @Override
         public void onListItemClicked(Element itemElement, CompletionProposal itemData) {
-          Preconditions.checkNotNull(delegate);
+           Assert.isNotNull(delegate);
           if (itemData == CAPPED_INDICATOR) {
             return;
           }
@@ -134,7 +134,7 @@ public class AutocompleteUiController implements AutocompleteBox {
 
         @Override
          public void onListItemDoubleClicked(Element listItemBase, CompletionProposal itemData) {
-            Preconditions.checkNotNull(delegate);
+           Assert.isNotNull(delegate);
             if (itemData == CAPPED_INDICATOR) {
                return;
             }
@@ -282,8 +282,8 @@ private void showPopup(Widget widget)
 
   @Override
   public boolean consumeKeySignal(SignalEventEssence signal) {
-    Preconditions.checkState(isShowing());
-    Preconditions.checkNotNull(delegate);
+     Assert.isLegal(isShowing());
+     Assert.isNotNull(delegate);
 
     if ((signal.keyCode == KeyCodes.KEY_TAB) || (signal.keyCode == KeyCodes.KEY_ENTER)) {
       delegate.onSelect(list.getSelectionModel().getSelectedItem());

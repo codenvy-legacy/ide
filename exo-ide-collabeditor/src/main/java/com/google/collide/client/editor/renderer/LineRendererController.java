@@ -23,11 +23,12 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.SortedList;
 import com.google.collide.shared.util.StringUtils;
-import com.google.common.base.Preconditions;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 import elemental.html.SpanElement;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * A class to maintain the list of {@link LineRenderer LineRenderers} and render
@@ -142,7 +143,7 @@ class LineRendererController {
 
     if (line.getText().endsWith("\n")) {
       Element lastChunk = (Element) contentElement.getLastChild();
-      Preconditions.checkState(lastChunk != null, "This line has no chunks!");
+       Assert.isLegal(lastChunk != null, "This line has no chunks!");
       if (!StringUtils.isNullOrWhitespace(lastChunk.getClassName())) {
         contentElement.getStyle().setProperty("float", "left");
         Element newlineCharacterElement = createLastChunkElement(targetElement);

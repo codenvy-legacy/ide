@@ -26,7 +26,7 @@ import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>

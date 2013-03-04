@@ -15,7 +15,6 @@
 package com.google.collide.codemirror2;
 
 import com.google.collide.json.shared.JsonArray;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.JavaScriptObject;
 
 /**
@@ -87,7 +86,6 @@ public class CmParser extends JavaScriptObject implements Parser {
     this.__preventSmartIndent = preventSmartIndent;
   }-*/;
 
-  @VisibleForTesting
   protected final void setType(SyntaxType type) {
     setTypeAndName(type, type.getName());
   }

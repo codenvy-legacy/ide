@@ -21,9 +21,10 @@ import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Line;
-import com.google.common.base.Preconditions;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * A {@link LineRenderer} to render the syntax highlighting.
@@ -55,7 +56,7 @@ public class SyntaxHighlighterRenderer implements LineRenderer {
   @Override
   public void renderNextChunk(Target target) {
     Token token = tokens.get(tokenPos++);
-    Preconditions.checkNotNull(token, "Token was null");
+     Assert.isNotNull(token, "Token was null");
     
     String tokenValue = token.getValue();
     

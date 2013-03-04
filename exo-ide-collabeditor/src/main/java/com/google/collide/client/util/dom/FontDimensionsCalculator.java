@@ -24,7 +24,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * A class that computes the height and width of a character.

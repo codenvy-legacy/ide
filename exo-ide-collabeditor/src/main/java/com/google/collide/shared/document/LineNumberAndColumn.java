@@ -14,8 +14,7 @@
 
 package com.google.collide.shared.document;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * A simple structure to store the line number and column.
@@ -30,7 +29,6 @@ public final class LineNumberAndColumn implements Comparable<LineNumberAndColumn
     return new LineNumberAndColumn(lineNumber, column);
   }
 
-  @VisibleForTesting
   public LineNumberAndColumn(int lineNumber, int column) {
     this.lineNumber = lineNumber;
     this.column = column;
@@ -43,7 +41,7 @@ public final class LineNumberAndColumn implements Comparable<LineNumberAndColumn
 
   @Override
   public int compareTo(LineNumberAndColumn o) {
-    Preconditions.checkNotNull(o);
+     Assert.isNotNull(o);
     int result = this.lineNumber - o.lineNumber;
     return result == 0 ? this.column - o.column : result;
   }

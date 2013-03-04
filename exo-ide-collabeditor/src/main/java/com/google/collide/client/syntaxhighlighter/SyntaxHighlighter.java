@@ -27,8 +27,6 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
 
-import javax.annotation.Nonnull;
-
 /**
  * Syntax highlighter for the Collide editor.
  *
@@ -97,7 +95,7 @@ public class SyntaxHighlighter implements DocumentParser.Listener, Renderer.Comp
   }
 
   @Override
-  public void onDocumentLineParsed(Line line, int lineNumber, @Nonnull JsonArray<Token> tokens) {
+  public void onDocumentLineParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
     if (!viewport.isLineInViewport(line)) {
       return;
     }

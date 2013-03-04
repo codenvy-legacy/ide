@@ -18,9 +18,6 @@ import com.google.collide.shared.Pair;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.util.SortedList;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * A cache object that is attached to each line which caches its offsets.
  *
@@ -110,8 +107,7 @@ class ColumnOffsetCache {
    *
    * @return {@code null} if cache doesn't exist
    */
-  @Nullable
-  public static ColumnOffsetCache getUnsafe(@Nonnull Line line) {
+  public static ColumnOffsetCache getUnsafe(Line line) {
     return line.getTag(LINE_TAG_COLUMN_OFFSET_CACHE);
   }
 

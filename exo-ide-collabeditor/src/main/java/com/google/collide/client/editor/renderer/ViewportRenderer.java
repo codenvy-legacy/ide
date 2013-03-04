@@ -35,7 +35,7 @@ import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.Timer;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 import java.util.Comparator;
 import java.util.EnumSet;

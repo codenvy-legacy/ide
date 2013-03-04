@@ -24,7 +24,7 @@ import elemental.events.EventListener;
 import elemental.events.EventRemover;
 import elemental.events.EventTarget;
 import elemental.events.MouseEvent;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * Controller to manage a group of elements that are hovered and unhovered

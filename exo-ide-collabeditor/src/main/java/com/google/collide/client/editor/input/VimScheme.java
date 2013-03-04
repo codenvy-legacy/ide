@@ -31,14 +31,14 @@ import com.google.collide.shared.document.util.PositionUtils;
 import com.google.collide.shared.util.ScopeMatcher;
 import com.google.collide.shared.util.StringUtils;
 import com.google.collide.shared.util.TextUtils;
-import com.google.common.base.Preconditions;
 
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.waveprotocol.wave.client.common.util.JsoIntMap;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 import org.waveprotocol.wave.client.common.util.SignalEvent.MoveUnit;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /**
  * Basic Vi(m) keybinding support. This is limited to single file operations.
@@ -711,7 +711,7 @@ public class VimScheme extends InputScheme {
           isLineCopy = false;
         }
 
-        Preconditions.checkState(selectionModel.hasSelection());
+        Assert.isLegal(selectionModel.hasSelection());
         getInputController().prepareForCopy();
         Position[] selectionRange = selectionModel.getSelectionRange(true);
         clipboard =
@@ -736,7 +736,7 @@ public class VimScheme extends InputScheme {
         SelectionModel selectionModel = getInputController().getEditor().getSelection();
         selectNextNLines(numLines);
 
-        Preconditions.checkState(selectionModel.hasSelection());
+         Assert.isLegal(selectionModel.hasSelection());
         getInputController().prepareForCopy();
         Position[] selectionRange = selectionModel.getSelectionRange(true);
         clipboard =

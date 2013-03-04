@@ -51,7 +51,7 @@ import elemental.events.EventRemover;
 import elemental.events.MouseEvent;
 import elemental.html.ClientRect;
 import elemental.html.DivElement;
-import elemental.html.Element;
+import elemental.dom.Element;
 
 /*
  * TODO: Buffer has turned into an EditorSurface, but is still

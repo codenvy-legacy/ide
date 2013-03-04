@@ -19,8 +19,8 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.anchor.InsertionPlacementStrategy.Placement;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.SortedList;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 // TODO: need to make an interface for the truly public methods
 /**
@@ -132,7 +132,6 @@ public class AnchorManager {
    * 
    * @see #getAnchorsOrNull(Line)
    */
-  @VisibleForTesting
   public static AnchorList getAnchors(Line line) {
     AnchorList columnAnchors = line.getTag(LINE_TAG_ANCHORS);
     if (columnAnchors == null) {
@@ -170,7 +169,6 @@ public class AnchorManager {
     return anchors;
   }
 
-  @VisibleForTesting
   public LineAnchorList getLineAnchors() {
     return lineAnchors;
   }
@@ -488,7 +486,7 @@ public class AnchorManager {
   private void updateAnchorPositionWithoutDispatch(final Anchor anchor, Line line, int lineNumber,
       int column) {
 
-    Preconditions.checkState(anchor.isAttached(), "Cannot move detached anchor");
+    Assert.isTrue(anchor.isAttached(), "Cannot move detached anchor");
     
     // Ensure it's different
     if (anchor.getLine() == line && anchor.getLineNumber() == lineNumber

@@ -16,8 +16,6 @@ package com.google.collide.client.editor.renderer;
 
 import com.google.collide.shared.document.Line;
 
-import javax.annotation.Nullable;
-
 /**
  * An interface for a renderer that renders a line at a time.
  */
@@ -28,7 +26,7 @@ public interface LineRenderer {
    * This is how the renderer "renders".
    */
   public interface Target {
-    void render(int characterCount, @Nullable String styleName);
+    void render(int characterCount, String styleName);
   }
 
   /**
