@@ -33,8 +33,8 @@
       <junit.version>4.10</junit.version>
       <gwt.version>2.5.0</gwt.version>
       <shindig.version>2.5.0-beta2</shindig.version>
-      <org.slf4j.version>1.5.8</org.slf4j.version>
       <chromattic.version>1.1.0-beta6</chromattic.version>
+      <org.slf4j.version>1.6.1</org.slf4j.version>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <commons-io.version>1.3.2</commons-io.version>
