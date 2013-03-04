@@ -72,7 +72,7 @@ public class RenameTest extends ResourcesBaseTest
    public void renameTypeTest() throws VirtualFileSystemException, IOException, CoreException
    {
       RefactoringService r = new RefactoringService();
-      r.rename(ID, project.getId(), "org.exoplatform.ide.client.IDE", 1000 - 39, "MyIde");
+      r.rename(ID, project.getId(), "org.exoplatform.ide.client.IDE", 1046, "MyIde");
       ContentStream content = vfs.getContent(
          project.getPath() + "/src/main/java2/org/exoplatform/ide/client/MyIde.java", null);
       String c = IOUtils.toString(content.getStream());
