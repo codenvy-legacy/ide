@@ -79,13 +79,13 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version @version $Id: $
  */
 
 public class DeleteItemsPresenter extends ItemsOperationPresenter
-   implements ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler, ProjectSelectedHandler
+   implements ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler, ProjectSelectedHandler, ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public interface Display extends IsView
@@ -99,14 +99,11 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
 
    }
 
-   private static final String UNLOCK_FAILURE_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-      .deleteFileUnlockFailure();
+   private static final String UNLOCK_FAILURE_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileUnlockFailure();
 
-   private static final String DELETE_FILE_FAILURE_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-      .deleteFileFailure();
+   private static final String DELETE_FILE_FAILURE_MESSAGE = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT.deleteFileFailure();
 
-   private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT
-      .deleteFileDialogTitle();
+   private static final String DELETE_FILE_DIALOG_TITLE = org.exoplatform.ide.client.IDE.NAVIGATION_CONSTANT.deleteFileDialogTitle();
 
    private Display display;
 
@@ -125,7 +122,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    private ProjectModel selectedProject;
 
    private boolean isProjectExplorer = false;
-   
+
    private ProjectModel openedProject;
 
    /**
@@ -190,10 +187,12 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
       {
          return;
       }
-
-      display = GWT.create(Display.class);
-      IDE.getInstance().openView(display.asView());
-      bindDisplay();
+      if (checkWorkspaceFiles())
+      {
+         display = GWT.create(Display.class);
+         IDE.getInstance().openView(display.asView());
+         bindDisplay();
+      }
    }
 
    private boolean checkWorkspaceFiles()
@@ -221,8 +220,8 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
                   //                  Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
                   new ResourceLockedPresenter(
                      new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true, i.getPath(),
-                     Operation.DELETE );
+                        i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,
+                     i.getPath(), Operation.DELETE);
                   return false;
                }
             }
@@ -230,7 +229,8 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
          if (collaborationManager.isFileOpened(i.getPath()))
          {
             new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,i.getPath() ,Operation.DELETE );
+               i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, i.getPath(), true,
+               i.getPath(), Operation.DELETE);
             //            Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
             return false;
          }
@@ -240,7 +240,8 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
             if (path.startsWith(i.getPath()))
             {
                new ResourceLockedPresenter(new SafeHtmlBuilder().appendHtmlConstant("Can't delete <b>").appendEscaped(
-                  i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path, i instanceof FileModel, i.getPath() ,Operation.DELETE );
+                  i.getName()).appendHtmlConstant("</b>").toSafeHtml(), collaborationManager, path,
+                  i instanceof FileModel, i.getPath(), Operation.DELETE);
                //               Dialogs.getInstance().showError("Can't delete <b>" + i.getName() + "</b>. This file opened by other users.");
                return false;
             }
@@ -301,12 +302,12 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    {
       IDE.getInstance().closeView(display.asView().getId());
       itemsToDelete = new ArrayList<Item>();
-      
+
       if (openedProject == null)
       {
          if (selectedProject != null && isProjectExplorer)
          {
-            itemsToDelete.add(selectedProject);            
+            itemsToDelete.add(selectedProject);
          }
       }
       else if (items != null && !items.isEmpty())
@@ -318,7 +319,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
       {
          return;
       }
-      
+
       deleteNextItem();
    }
 
@@ -344,9 +345,8 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
             // TODO
             if (file.isContentChanged())
             {
-               String msg =
-                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(item
-                     .getName());
+               String msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteModifiedFile(
+                  item.getName());
                showDialog(file, msg);
                return;
             }
@@ -383,14 +383,14 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
             String msg;
             if (item instanceof ProjectModel)
             {
-               msg =
-                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES
-                     .deleteItemsAskDeleteProjectWithModifiedFiles(item.getName(), copy.size());
+               msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteProjectWithModifiedFiles(
+                  item.getName(), copy.size());
             }
             else
-               msg =
-                  org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteFolderWithModifiedFiles(
-                     item.getName(), copy.size());
+            {
+               msg = org.exoplatform.ide.client.IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteFolderWithModifiedFiles(
+                  item.getName(), copy.size());
+            }
 
             showDialog(item, msg);
             return;
@@ -432,7 +432,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
 
    /**
     * Delete item.
-    * 
+    *
     * @param item
     */
    private void deleteItem(final Item item)
@@ -476,7 +476,9 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
                      }
                   }
                   if (item instanceof ProjectModel)
+                  {
                      IDE.fireEvent(new CloseProjectEvent());
+                  }
                }
                lastDeletedItem = item;
                deleteNextItem();
@@ -565,5 +567,5 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    {
       openedProject = null;
    }
-   
+
 }
