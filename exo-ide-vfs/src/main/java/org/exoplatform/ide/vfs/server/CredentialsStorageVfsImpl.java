@@ -20,9 +20,10 @@ package org.exoplatform.ide.vfs.server;
 
 import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
 
+import com.codenvy.ide.commons.CreadentialsStorage;
+import com.codenvy.ide.commons.Credentials;
+
 import org.exoplatform.container.xml.InitParams;
-import org.exoplatform.ide.commons.CreadentialsStorage;
-import org.exoplatform.ide.commons.Credentials;
 import org.exoplatform.ide.commons.ReadCredentialsException;
 import org.exoplatform.ide.commons.WriteCredentialsException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
