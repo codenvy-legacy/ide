@@ -18,12 +18,14 @@
  */
 package org.exoplatform.ide.git.client;
 
+import com.google.gwt.i18n.client.Messages;
+
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id: $
  * 
  */
-public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Messages
+public interface GitLocalizationConstant extends Messages
 {
 
    // BUTTONS
@@ -105,10 +107,10 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    String branchDeleteFailed();
 
    @Key("messages.clone_success")
-   String cloneSuccess();
+   String cloneSuccess(String repoUrl);
 
    @Key("messages.clone_failed")
-   String cloneFailed();
+   String cloneFailed(String repoUrl);
 
    @Key("messages.commit_success")
    String commitSuccess();
@@ -254,10 +256,10 @@ public interface GitLocalizationConstant extends com.google.gwt.i18n.client.Mess
    // ----CommitRequestHandler
 
    @Key("commit.started")
-   String commitStarted(String projectName);
+   String commitStarted(String projectName, String comment);
 
    @Key("commit.finished")
-   String commitFinished(String projectName);
+   String commitFinished(String projectName, String comment);
 
    // ----VIEWS------------------------------------------------------------------
 

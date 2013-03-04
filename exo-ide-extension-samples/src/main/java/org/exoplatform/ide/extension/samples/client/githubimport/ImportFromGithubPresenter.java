@@ -66,6 +66,8 @@ import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 
 import java.util.ArrayList;
@@ -372,7 +374,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
    /**
     * Get the necessary parameters values and call the clone repository method (over WebSocket or HTTP).
     */
-   private void cloneFolder(ProjectData repo, final FolderModel folder)
+   private void cloneFolder(final ProjectData repo, final FolderModel folder)
    {
       String remoteUri = "";
       if (display.getReadOnlyModeField().getValue())
@@ -403,7 +405,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, repo.getRepositoryUrl());
                }
             });
          IDE.getInstance().closeView(display.asView().getId());
@@ -414,7 +416,7 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
       }
    }
 
-   private void cloneFolderREST(final FolderModel folder, String remoteUri)
+   private void cloneFolderREST(final FolderModel folder, final String remoteUri)
    {
       try
       {
@@ -430,13 +432,13 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, remoteUri);
                }
             });
       }
       catch (RequestException e)
       {
-         handleError(e);
+         handleError(e, remoteUri);
       }
       finally
       {
@@ -452,8 +454,11 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
     */
    private void onRepositoryCloned(final RepoInfo gitRepositoryInfo, final FolderModel folder)
    {
-      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), OutputMessage.Type.INFO));
-      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()),
+         OutputMessage.Type.GIT));
+      List<Property> properties = new ArrayList<Property>();
+      properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
+      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null, properties));
 
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
@@ -475,10 +480,11 @@ public class ImportFromGithubPresenter implements ImportFromGithubHandler, ViewC
       this.vfs = event.getVfsInfo();
    }
 
-   private void handleError(Throwable t)
+   private void handleError(Throwable t, String repoUrl)
    {
       String errorMessage =
-         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.cloneFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.ERROR));
+         (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES
+            .cloneFailed(repoUrl);
+      IDE.fireEvent(new OutputEvent(errorMessage, OutputMessage.Type.GIT));
    }
 }

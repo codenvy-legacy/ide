@@ -341,7 +341,9 @@ public class ManageServicesPresenter implements ManageServicesHandler, ViewClose
             @Override
             protected void onFailure(Throwable exception)
             {
-               super.onFailure(exception);
+               //Maybe appear 502 unexpected gateway response from appfog while bind mysql service
+               //that's why we showing user error dialog that his service can't bind
+               Dialogs.getInstance().showError("Can't bind " + service.getName() + " service.");
                getApplicationInfo();
             }
          });

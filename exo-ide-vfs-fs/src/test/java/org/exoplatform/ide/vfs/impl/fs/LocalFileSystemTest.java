@@ -113,7 +113,7 @@ public abstract class LocalFileSystemTest extends TestCase
    };
 
    protected final String BASE_URI = "http://localhost/service";
-   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/" + VFS_ID +'/';
+   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/" + VFS_ID + '/';
    protected final String DEFAULT_CONTENT = "__TEST__";
    protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
@@ -121,12 +121,10 @@ public abstract class LocalFileSystemTest extends TestCase
 
    protected String testRootPath;
    protected ResourceLauncher launcher;
-
    protected java.io.File root;
+   protected MountPoint mountPoint;
    protected LocalFileSystemProvider provider;
-
-   private java.io.File testFsIoRoot;
-   private MountPoint mountPoint;
+   protected java.io.File testFsIoRoot;
 
    /** @see junit.framework.TestCase#setUp() */
    @Override
@@ -145,7 +143,7 @@ public abstract class LocalFileSystemTest extends TestCase
       testFsIoRoot = new java.io.File(ConversationStateLocalFSMountStrategy.calculateDirPath(root, WORKSPACE), VFS_ID);
       assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-      provider = new LocalFileSystemProvider(VFS_ID, new ConversationStateLocalFSMountStrategy(root));
+      provider = new LocalFileSystemProvider(VFS_ID, new ConversationStateLocalFSMountStrategy(root), null);
       provider.mount(testFsIoRoot);
       mountPoint = provider.getMounts().iterator().next();
       virtualFileSystemRegistry.registerProvider(VFS_ID, provider);
@@ -187,8 +185,9 @@ public abstract class LocalFileSystemTest extends TestCase
    protected void tearDown() throws Exception
    {
       mountPoint.getFileLockFactory().checkClean();
-      assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
+      //assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
       virtualFileSystemRegistry.unregisterProvider(VFS_ID);
+      assertTrue("Unable unmount local filesystem. ", provider.getMounts().isEmpty());
       if (!FileUtils.deleteRecursive(root))
       {
          fail("Unable clean test content. ");

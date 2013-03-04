@@ -189,6 +189,14 @@ public class DeleteTest extends LocalFileSystemTest
       assertFalse("Folder must be removed. ", exists(folderPath));
    }
 
+   public void testDeleteRootFolder() throws Exception
+   {
+      String requestPath = SERVICE_URI + "delete/" + ROOT_ID;
+      ContainerResponse response = launcher.service("POST", requestPath, BASE_URI, null, null, null);
+      assertEquals(400, response.getStatus()); // must not be able delete root folder
+      assertTrue("Folder must not be removed. ", exists("/"));
+   }
+
    public void testDeleteFolderNoPermissions() throws Exception
    {
       List<String> before = flattenDirectory(protectedFolderPath);

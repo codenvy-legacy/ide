@@ -41,7 +41,6 @@ import org.exoplatform.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import org.exoplatform.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import org.exoplatform.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
@@ -152,7 +151,9 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
 
    private void getApplicationInfo()
    {
-      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+//      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
+      String projectId = getSelectedProject().getId();
+      
       try
       {
          AutoBean<CloudFoundryApplication> cloudFoundryApplication =
@@ -191,16 +192,27 @@ public class DeleteApplicationPresenter extends GitPresenter implements DeleteAp
    {
       boolean isDeleteServices = display.getDeleteServicesCheckbox().getValue();
       String projectId = null;
-      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+      
+//      if (selectedItems.size() > 0 && selectedItems.get(0) instanceof ItemContext)
+//      {
+//         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//         if (project != null && project.getPropertyValue("cloudfoundry-application") != null
+//            && appName.equals((String)project.getPropertyValue("cloudfoundry-application")))
+//         {
+//            projectId = project.getId();
+//         }
+//      }
+
+      if (selectedItem != null)
       {
-         ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+         ProjectModel project = getSelectedProject();
          if (project != null && project.getPropertyValue("cloudfoundry-application") != null
             && appName.equals((String)project.getPropertyValue("cloudfoundry-application")))
          {
             projectId = project.getId();
          }
-      }
-
+      }      
+      
       try
       {
          CloudFoundryClientService.getInstance().deleteApplication(vfs.getId(), projectId, appName, serverName,

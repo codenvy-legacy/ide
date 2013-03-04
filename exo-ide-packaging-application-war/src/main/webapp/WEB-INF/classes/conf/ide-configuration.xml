@@ -30,11 +30,11 @@
       <type>org.exoplatform.ide.invite.IdeInviteUserService</type>
    </component>
 
-   <!--
-   ***************************************************************************************
-   ********************** Codenvy Commons Components *************************************
-   ***************************************************************************************
-   -->
+<!-- 
+***************************************************************************************
+********************** eXo IDE Commons Components *************************************
+***************************************************************************************
+-->
    <component>
       <type>org.exoplatform.ide.IDEServiceApplication</type>
       <init-params>
@@ -85,7 +85,22 @@
       </init-params>
    </component>
 
-   <component>
+  <!-- component>
+     <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
+     <init-params>
+        <values-param>
+           <name>id</name>
+           <value>production</value>
+           <value>dev-monit</value>
+        </values-param>
+     </init-params>
+  </component>
+   
+  <component>
+     <type>org.exoplatform.ide.vfs.impl.fs.SimpleLocalFSMountStrategy</type>
+  </component-->
+
+  <component>
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
    
@@ -438,12 +453,12 @@
 
    <component>
       <key>org.exoplatform.ide.vfs.server.LocalPathResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.LocalPathResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.LocalPathResolverImpl</type>
    </component>
 
    <component>
       <key>org.exoplatform.ide.vfs.server.GitUrlResolver</key>
-      <type>org.exoplatform.ide.vfs.impl.jcr.GitUrlResolverJcrImpl</type>
+      <type>org.exoplatform.ide.vfs.impl.fs.GitUrlResolverFsImpl</type>
    </component>
 
    <!-- Heroku -->

@@ -20,13 +20,13 @@ package org.exoplatform.ide.client.framework.project;
 
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.resources.client.ImageResource;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -50,13 +50,8 @@ public interface ProjectExplorerDisplay extends IsView
     * @return {@link TreeGridItem}
     */
    TreeGridItem<Item> getBrowserTree();
-
-   /**
-    * Set to update tree values.
-    * 
-    * @param updateTreeValue
-    */
-   void setUpdateTreeValue(boolean updateTreeValue);
+   
+   void navigateToItem(Item item);
 
    /**
     * Get selected items in the tree.
@@ -66,12 +61,12 @@ public interface ProjectExplorerDisplay extends IsView
    List<Item> getSelectedItems();
 
    /**
-    * Select item in browser tree by path.
+    * Select Item by id.
     * 
-    * @param path item's path
+    * @param id item ID
     * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
     */
-   boolean selectItem(String path);
+   boolean selectItem(String id);
 
    /**
     * Deselect item in browser tree by path.
@@ -100,11 +95,11 @@ public interface ProjectExplorerDisplay extends IsView
    void addItemsIcons(Map<Item, Map<TreeIconPosition, ImageResource>> itemsIcons);
 
    /**
-    * Remove info icon from item.
+    * Remove additional icons from items.
     */
    void removeItemIcons(Map<Item, TreeIconPosition> itemsIcons);
-
-   /*
+   
+   /**
     * Linking with Editor
     */
 
@@ -156,11 +151,5 @@ public interface ProjectExplorerDisplay extends IsView
     * @return {@link List} of selected projects
     */
    List<ProjectModel> getSelectedProjects();
-   
-   /**
-    * Used for change folder icon(set loader gif animation) while loading folder children's
-    * @param folder to change icon
-    * @param isOpens <code>true</code> if request is send, <code>false</code> if children received
-    */
-   void changeFolderIcon(Folder folder, boolean isOpens);
+
 }

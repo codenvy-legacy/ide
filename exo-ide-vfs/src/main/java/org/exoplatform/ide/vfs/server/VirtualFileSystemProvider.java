@@ -41,4 +41,11 @@ public interface VirtualFileSystemProvider
     */
    VirtualFileSystem newInstance(RequestContext requestContext, EventListenerList listeners)
       throws VirtualFileSystemException;
+
+   /**
+    * Close this provider. Call this method after unregister provider from VirtualFileSystemRegistry. Typically this
+    * method called from {@link VirtualFileSystemRegistry#unregisterProvider(String)}. Usually should not call it
+    * directly.
+    */
+   void close();
 }

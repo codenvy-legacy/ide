@@ -49,7 +49,7 @@ public class SimpleLocalFSMountStrategy implements LocalFSMountStrategy
    @Override
    public File getMountPath(String workspace) throws VirtualFileSystemException
    {
-      return new java.io.File(mountRoot, "default");
+      return new java.io.File(mountRoot, workspace == null || workspace.isEmpty() ? "default" : workspace);
    }
 
    @Override

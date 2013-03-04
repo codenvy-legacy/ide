@@ -43,6 +43,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
 
    private final String id;
    private final LocalFSMountStrategy mountStrategy;
+   private final SearcherProvider searcherProvider;
    private final ConcurrentMap<java.io.File, MountPoint> mounts;
 
    /**
@@ -54,8 +55,21 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
     */
    public LocalFileSystemProvider(String id, LocalFSMountStrategy mountStrategy)
    {
+      this(id, mountStrategy, null);
+   }
+
+   /**
+    * @param id
+    *    virtual file system identifier
+    * @param mountStrategy
+    *    LocalFSMountStrategy
+    * @see LocalFileSystemProvider
+    */
+   public LocalFileSystemProvider(String id, LocalFSMountStrategy mountStrategy, SearcherProvider searcherProvider)
+   {
       this.id = id;
       this.mountStrategy = mountStrategy;
+      this.searcherProvider = searcherProvider;
       this.mounts = new ConcurrentHashMap<java.io.File, MountPoint>();
    }
 
@@ -89,7 +103,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
       MountPoint mount = mounts.get(vfsIoRoot);
       if (mount == null)
       {
-         MountPoint newMount = new MountPoint(vfsIoRoot);
+         MountPoint newMount = new MountPoint(vfsIoRoot, searcherProvider);
          mount = mounts.putIfAbsent(vfsIoRoot, newMount);
          if (mount == null)
          {
@@ -99,7 +113,29 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
       return new LocalFileSystem(id,
          requestContext != null ? requestContext.getUriInfo().getBaseUri() : URI.create(""),
          listeners,
-         mount);
+         mount,
+         searcherProvider);
+   }
+
+   @Override
+   public void close()
+   {
+      for (MountPoint mount : mounts.values())
+      {
+         mount.reset();
+         if (searcherProvider != null)
+         {
+            try
+            {
+               searcherProvider.getSearcher(mount).close();
+            }
+            catch (VirtualFileSystemException e)
+            {
+               LOG.error(e.getMessage(), e);
+            }
+         }
+      }
+      mounts.clear();
    }
 
    /**
@@ -113,7 +149,7 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
     */
    public void mount(java.io.File ioFile) throws VirtualFileSystemException
    {
-      if (mounts.putIfAbsent(ioFile, new MountPoint(ioFile)) != null)
+      if (mounts.putIfAbsent(ioFile, new MountPoint(ioFile, searcherProvider)) != null)
       {
          throw new VirtualFileSystemException(String.format("Local filesystem '%s' already mounted. ", ioFile));
       }
@@ -133,6 +169,10 @@ public class LocalFileSystemProvider implements VirtualFileSystemProvider
       if (mount != null)
       {
          mount.reset();
+         if (searcherProvider != null)
+         {
+            searcherProvider.getSearcher(mount).close();
+         }
          return true;
       }
       return false;

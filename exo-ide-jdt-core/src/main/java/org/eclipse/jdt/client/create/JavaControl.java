@@ -18,22 +18,18 @@
  */
 package org.eclipse.jdt.client.create;
 
-import org.eclipse.jdt.client.packaging.PackageExplorerPresenter;
-import org.eclipse.jdt.client.packaging.model.ProjectItem;
-import org.eclipse.jdt.client.packaging.model.ResourceDirectoryItem;
+import org.eclipse.jdt.client.packaging.model.next.JavaProject;
+import org.eclipse.jdt.client.packaging.model.next.SourceDirectory;
 import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
-import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
-import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
+import org.exoplatform.ide.vfs.client.model.FileModel;
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -58,63 +54,144 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems().size() == 1 && event.getSelectedItems().get(0) instanceof ItemContext)
+      if (event.getSelectedItems().size() != 1)
       {
-         Item item = event.getSelectedItems().get(0);
-         ProjectModel project = ((ItemContext)item).getProject();
-
-         if (project != null)
+         setEnabled(false);
+         return;
+      }
+      
+      if ( !(event.getSelectedItems().get(0) instanceof FileModel) && !(event.getSelectedItems().get(0) instanceof FolderModel) )
+      {
+         setEnabled(false);
+         return;
+      }
+      
+      Item item = event.getSelectedItems().get(0);
+      ProjectModel project = ((ItemContext)item).getProject();
+      
+      if (project == null)
+      {
+         return;
+      }
+      
+      if (!(project instanceof JavaProject))
+      {
+         return;
+      }
+      
+      JavaProject javaProject = (JavaProject)project;
+      for (SourceDirectory sourceDirectory : javaProject.getSourceDirectories())
+      {
+         if (item.getPath().startsWith(sourceDirectory.getPath()))
          {
-            if (event.getView() instanceof ProjectExplorerDisplay)
-            {
-               String sourcePath;
-               List<String> paths = getDefaultPaths();
-
-               if (project.hasProperty("sourceFolder"))
-               {
-                  sourcePath = project.getPropertyValue("sourceFolder");
-                  paths.add(sourcePath);
-               }
-
-               for (String path : getDefaultPaths())
-               {
-                  if (item.getPath().startsWith((project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + path))
-                  {
-                     setEnabled(true);
-                     return;
-                  }
-               }
-            }
-            else if (event.getView() instanceof PackageExplorerDisplay)
-            {
-               setEnabled(isInResourceDirectory(item));
-               return;
-            }
+            setEnabled(true);
+            return;
          }
       }
-
+      
       setEnabled(false);
+      
+      
+      
+
+//      if (project != null)
+//      {
+//         if (event.getView() instanceof ProjectExplorerDisplay)
+//         {
+//            String sourcePath;
+//            List<String> paths = getDefaultPaths();
+//
+//            if (project.hasProperty("sourceFolder"))
+//            {
+//               sourcePath = project.getPropertyValue("sourceFolder");
+//               paths.add(sourcePath);
+//            }
+//
+//            for (String path : getDefaultPaths())
+//            {
+//               if (item.getPath().startsWith((project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + path))
+//               {
+//                  setEnabled(true);
+//                  return;
+//               }
+//            }
+//         }
+//         else if (event.getView() instanceof PackageExplorerDisplay)
+//         {
+//            setEnabled(isInResourceDirectory(item));
+//            return;
+//         }
+//      }
+      
+      
+      
+      
+      
+//      if (event.getSelectedItems().size() == 1 && event.getSelectedItems().get(0) instanceof ItemContext)
+//      {
+//         Item item = event.getSelectedItems().get(0);
+//         ProjectModel project = ((ItemContext)item).getProject();
+//
+//         if (project != null)
+//         {
+//            if (event.getView() instanceof ProjectExplorerDisplay)
+//            {
+//               String sourcePath;
+//               List<String> paths = getDefaultPaths();
+//
+//               if (project.hasProperty("sourceFolder"))
+//               {
+//                  sourcePath = project.getPropertyValue("sourceFolder");
+//                  paths.add(sourcePath);
+//               }
+//
+//               for (String path : getDefaultPaths())
+//               {
+//                  if (item.getPath().startsWith((project.getPath().endsWith("/") ? project.getPath() : project.getPath() + "/") + path))
+//                  {
+//                     setEnabled(true);
+//                     return;
+//                  }
+//               }
+//            }
+//            else if (event.getView() instanceof PackageExplorerDisplay)
+//            {
+//               setEnabled(isInResourceDirectory(item));
+//               return;
+//            }
+//         }
+//      }
+
+//      setEnabled(false);
    }
 
-   private boolean isInResourceDirectory(Item item)
-   {
-      ProjectItem projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
-
-      if (projectItem == null)
-      {
-         return false;
-      }
-
-      for (ResourceDirectoryItem resourceDirectory : projectItem.getResourceDirectories())
-      {
-         if (item.getPath().startsWith(resourceDirectory.getFolder().getPath()))
-         {
-            return true;
-         }
-      }
-
-      return false;
-   }
+//   private boolean isInResourceDirectory(Item item)
+//   {
+////      System.out.println("JavaControl.isInResourceDirectory()");
+////      return false;
+//
+//      System.out.println("class >>> " + item.getClass().getName());
+//      System.out.println("item >>>> " + item.getPath());
+//      
+//      return false;
+//      
+////      Project projectItem = PackageExplorerPresenter.getInstance().getProjectItem();
+////
+////      if (projectItem == null)
+////      {
+////         return false;
+////      }
+////
+////      for (ResourceDirectory resourceDirectory : projectItem.getResourceDirectories())
+////      {
+////         if (item.getPath().startsWith(resourceDirectory.getFolder().getPath()))
+////         {
+////            return true;
+////         }
+////      }
+////
+////      return false;
+//   }
 
    /**
     * @see org.exoplatform.ide.client.framework.control.IDEControl#initialize()
@@ -126,14 +203,15 @@ public class JavaControl extends SimpleControl implements IDEControl, ItemsSelec
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
    }
 
-   private List<String> getDefaultPaths()
-   {
-      List<String> sourceDirs = new ArrayList<String>();
-      sourceDirs.add("src/main/java");
-      sourceDirs.add("src/main/resources");
-      sourceDirs.add("src/test/java");
-      sourceDirs.add("src/test/resources");
-
-      return sourceDirs;
-   }
+//   private List<String> getDefaultPaths()
+//   {
+//      List<String> sourceDirs = new ArrayList<String>();
+//      sourceDirs.add("src/main/java");
+//      sourceDirs.add("src/main/resources");
+//      sourceDirs.add("src/test/java");
+//      sourceDirs.add("src/test/resources");
+//
+//      return sourceDirs;
+//   }
+   
 }

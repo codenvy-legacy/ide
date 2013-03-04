@@ -2,12 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <groupId>org.exoplatform</groupId>
-      <artifactId>exo.parent</artifactId>
-      <version>8.1</version>
-      <relativePath/>
-   </parent>
+    <parent>
+        <groupId>com.codenvy</groupId>
+        <artifactId>maven-parent-pom</artifactId>
+        <version>1.0.0</version>
+    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-parent</artifactId>
    <version>2.0.0-SNAPSHOT</version>
@@ -19,9 +18,6 @@
       <url>http://fisheye.exoplatform.org/browse/projects-internal/ide/trunk</url>
    </scm>
    <properties>
-      <!-- Repositories URLs -->
-      <exo.snapshots.repo.url>http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
-      <exo.product.name>exo-ide</exo.product.name>
       <!-- eXo Modules -->
       <org.exoplatform.jcr.version>1.14.9-GA</org.exoplatform.jcr.version>
       <org.exoplatform.kernel.version>2.3.9-GA</org.exoplatform.kernel.version>
@@ -29,34 +25,39 @@
       <org.exoplatform.ws.version>2.2.9-GA</org.exoplatform.ws.version>
       <!-- CodeAssistant DataBase -->
       <ide.codeassistant.lucene.index.version>20120627</ide.codeassistant.lucene.index.version>
+
+      <!-- Everrest -->
+      <everrest.version>1.0.11-SNAPSHOT</everrest.version>
+
       <!-- Third parties -->
+      <junit.version>4.10</junit.version>
       <gwt.version>2.5.0</gwt.version>
       <shindig.version>2.5.0-beta2</shindig.version>
-      <gwt.maven.plugin.version>2.5.0</gwt.maven.plugin.version>
-      <maven.compiler.source>1.6</maven.compiler.source>
-      <maven.compiler.target>1.6</maven.compiler.target>
       <org.slf4j.version>1.5.8</org.slf4j.version>
       <chromattic.version>1.1.0-beta6</chromattic.version>
       <apache.commons-compress.version>1.0</apache.commons-compress.version>
       <commons-fileupload.version>1.2.1</commons-fileupload.version>
       <commons-io.version>1.3.2</commons-io.version>
-      <javax.jcr.version>1.0</javax.jcr.version>
-      <javax.annotation.version>1.0</javax.annotation.version>
       <groovy.version>1.7.6</groovy.version>
-      <javax.ws.version>1.0</javax.ws.version>
-      <javax.ws.rs.version>1.0</javax.ws.rs.version>
       <version.failsafe.plugin>2.6</version.failsafe.plugin>
       <tomcat.version>7.0.32</tomcat.version>
       <gwt.test.skip>true</gwt.test.skip>
-      <jgit.version>2.2.0.201212191850-r</jgit.version>
+      <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
-      <everrest.version>1.0.10</everrest.version>
-      <version.buildnumber.plugin>1.1</version.buildnumber.plugin>
-      <version.release.plugin>2.2.1</version.release.plugin>
-      <version.enforcer.plugin>1.0.1</version.enforcer.plugin>
       <appengine.version>1.7.2</appengine.version>
       <ch.qos.logback.version>0.9.20</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
+
+
+
+
+      <tomcat.version>7.0.32</tomcat.version>
+      <javax.annotation.version>1.0</javax.annotation.version>
+      <javax.ws.version>1.0</javax.ws.version>
+      <javax.ws.rs.version>1.0</javax.ws.rs.version>
+      <javax.jcr.version>1.0</javax.jcr.version>
+      <javax.inject.version>1</javax.inject.version>
+
    </properties>
 
 
@@ -580,12 +581,12 @@
          <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-            <version>1</version>
+            <version>${javax.inject.version}</version>
          </dependency>
          <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.7</version>
+            <version>${junit.version}</version>
          </dependency>
          <dependency>
             <groupId>org.codehaus.groovy</groupId>
@@ -731,121 +732,7 @@
          </dependency>
       </dependencies>
    </dependencyManagement>
-   <build>
-      <pluginManagement>
-         <plugins>
-            <plugin>
-               <groupId>org.codehaus.mojo</groupId>
-               <artifactId>gwt-maven-plugin</artifactId>
-               <version>${gwt.maven.plugin.version}</version>
-            </plugin>
-            <plugin>
-               <artifactId>maven-eclipse-plugin</artifactId>
-               <configuration>
-                  <downloadSources>true</downloadSources>
-                  <downloadJavadocs>false</downloadJavadocs>
-                  <addVersionToProjectName>true</addVersionToProjectName>
-               </configuration>
-            </plugin>
-            <plugin>
-               <artifactId>maven-idea-plugin</artifactId>
-               <configuration>
-                  <downloadSources>true</downloadSources>
-                  <downloadJavadocs>false</downloadJavadocs>
-               </configuration>
-            </plugin>
-            <plugin>
-               <groupId>org.apache.maven.plugins</groupId>
-               <artifactId>maven-failsafe-plugin</artifactId>
-               <version>${version.failsafe.plugin}</version>
-            </plugin>
-         </plugins>
-      </pluginManagement>
-      <plugins>
-         <plugin>
-            <inherited>false</inherited>
-            <groupId>com.mycila.maven-license-plugin</groupId>
-            <artifactId>maven-license-plugin</artifactId>
-            <version>1.9.0</version>
-            <configuration>
-               <header>exo-ide-dev-resources/src/main/resources/licences/header.txt</header>
-               <validHeaders>
-                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2010.txt</validHeader>
-                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2010_now.txt</validHeader>
-                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2011.txt</validHeader>
-                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/header2012.txt</validHeader>
-                  <validHeader>exo-ide-dev-resources/src/main/resources/licences/headerApache.txt</validHeader>
-               </validHeaders>
-               <failIfMissing>false</failIfMissing>
-               <aggregate>true</aggregate>
-               <strictCheck>true</strictCheck>
-               <useDefaultExcludes>true</useDefaultExcludes>
-               <properties>
-                  <year>2012</year>
-               </properties>
-               <excludes>
-		  <exclude>exo-ide-docs/**</exclude>
-                  <exclude>exo-ide-jdt-core/**</exclude>
-		  <exclude>exo-ide-dev-resources/**</exclude>
-		  
-		  <exclude>**/src/test/resources/**</exclude>
-                  
-		  <exclude>**/codemirror/css/*.css</exclude>
-                  <exclude>**/codemirror2/**/*.css</exclude>
-                  <exclude>**/codemirror/js/*.js</exclude>
-                  <exclude>**/codemirror2/**/*.js</exclude>
-                  
-		  <exclude>**/ckeditor/**/*.css</exclude>
-                  <exclude>**/ckeditor/**/*.html</exclude>
-                  <exclude>**/ckeditor/**/*.js</exclude>
-		  
-		  <exclude>exo-ide-editor-ruby/src/main/resources/org/exoplatform/ide/editor/ruby/client/hello.rb</exclude>
-                  
-		  <exclude>exo-ide-client/src/main/resources/org/exoplatform/ide/client/samples/**</exclude>
-                                    
-                  <exclude>exo-ide-packaging-shell-war/src/main/resources/WEB-INF/crash/ssh/hostkey.pem</exclude>
-                  
-		  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/CheckoutResult_Copy.java</exclude>
-                  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/CheckoutCommand_Copy.java</exclude>
-                  <exclude>exo-ide-extension-git/src/main/java/org/exoplatform/ide/git/server/jgit/jgit_copy/DirCacheCheckout_Copy.java</exclude>
-                  
-                  <exclude>exo-ide-extension-java-runtime/src/main/java/Java.tokens</exclude>
-                  <exclude>exo-ide-extension-java-runtime/src/main/java/JavaTreeParser.tokens</exclude>
-                  <exclude>exo-ide-extension-java-runtime/src/main/resources/org/exoplatform/ide/extension/java/jdi/server/expression/JavaTreeParser.g</exclude>
-                  <exclude>exo-ide-extension-java-runtime/src/main/resources/org/exoplatform/ide/extension/java/jdi/server/expression/Java.g</exclude>
-                  <exclude>exo-ide-extension-java/src/main/resources/pom.xslt</exclude>
-                  <exclude>exo-ide-extension-jenkins/src/main/resources/jenkins-config.xslt</exclude>
-                  
-                  <exclude>exo-ide-shell/src/main/java/org/exoplatform/ide/shell/client/cli/**</exclude>
-		  
-		  <exclude>**/catalina.policy</exclude>
-                  <exclude>**/server.xml</exclude>
-                  <exclude>**/jaas.conf</exclude>
-                  
-		  <exclude>**/*.txt</exclude>
-		  <exclude>**/*.json</exclude>
-		  <exclude>**/.gwt/**</exclude>
-		  <exclude>**/LICENSE</exclude>
-                  <exclude>.idea/**</exclude>
-                  <exclude>README</exclude>
-		  <exclude>.gitignore</exclude>
-               </excludes>
-               <mapping>
-                  <java>SLASHSTAR_STYLE</java>
-               </mapping>
-            </configuration>
-            <executions>
-               <execution>
-                  <id>check-headers</id>
-                  <phase>verify</phase>
-                  <goals>
-                     <goal>check</goal>
-                  </goals>
-               </execution>
-            </executions>
-         </plugin>
-      </plugins>
-   </build>
+
    <modules>
       <module>codenvy-gwtframework-commons</module>
       <module>codenvy-gwtframework-ui</module>

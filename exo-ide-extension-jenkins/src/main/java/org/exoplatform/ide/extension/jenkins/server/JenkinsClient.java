@@ -90,9 +90,13 @@ public abstract class JenkinsClient
       public int read() throws IOException
       {
          if (closed)
+         {
             return -1;
+         }
          if (in == null)
+         {
             in = http.getInputStream();
+         }
          int i = in.read();
          if (i == -1)
          {
@@ -198,7 +202,9 @@ public abstract class JenkinsClient
          finally
          {
             if (wr != null)
+            {
                wr.close();
+            }
             out.close();
          }
 
@@ -211,7 +217,9 @@ public abstract class JenkinsClient
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
@@ -378,7 +386,9 @@ public abstract class JenkinsClient
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
@@ -424,8 +434,12 @@ public abstract class JenkinsClient
       {
          URL url = new URL(baseURL + "/job/" + jobName + "/build");
          http = (HttpURLConnection)url.openConnection();
-         http.setRequestMethod("GET");
+         http.setDoOutput(true);
+         http.setDoInput(true);
+         http.setInstanceFollowRedirects(false);
+         http.setRequestMethod("POST");
          authenticate(http);
+         http.setUseCaches(false);
          int responseCode = http.getResponseCode();
          // Returns 302 if build running. But may return 200 if run build failed, e. g. if user is not authenticated.
          if (responseCode != 302)
@@ -437,7 +451,9 @@ public abstract class JenkinsClient
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
       if (userState != null)
       {
@@ -559,7 +575,9 @@ public abstract class JenkinsClient
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
@@ -570,35 +588,45 @@ public abstract class JenkinsClient
       {
          URL url = new URL(baseURL + "/queue/api/xml" + //
             "?xpath=" + //
-            "/queue/item/task/name%3D'" + jobName + "'");
+            "/queue/item/task[name=\"" + jobName + "\"]");
          http = (HttpURLConnection)url.openConnection();
          http.setRequestMethod("GET");
          authenticate(http);
          int responseCode = http.getResponseCode();
-         if (responseCode != 200)
+         if (responseCode == 200)
+         {
+            InputStream input = http.getInputStream();
+            int contentLength = http.getContentLength();
+            String body = null;
+            if (input != null)
+            {
+               try
+               {
+                  body = readBody(input, contentLength);
+               }
+               finally
+               {
+                  input.close();
+               }
+            }
+            return (body != null) ? true : false;
+         }
+         else if (responseCode == 404)
+         {
+            //means that our task is not in queue
+            return false;
+         }
+         else
          {
             throw fault(http);
          }
-         InputStream input = http.getInputStream();
-         int contentLength = http.getContentLength();
-         String body = null;
-         if (input != null)
-         {
-            try
-            {
-               body = readBody(input, contentLength);
-            }
-            finally
-            {
-               input.close();
-            }
-         }
-         return Boolean.parseBoolean(body);
       }
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
    }
 
@@ -636,13 +664,17 @@ public abstract class JenkinsClient
       catch (IOException e)
       {
          if (http != null)
+         {
             http.disconnect();
+         }
          throw e;
       }
       catch (JenkinsException e)
       {
          if (http != null)
+         {
             http.disconnect();
+         }
          throw e;
       }
    }
@@ -671,7 +703,9 @@ public abstract class JenkinsClient
       finally
       {
          if (http != null)
+         {
             http.disconnect();
+         }
       }
       if (vfs != null && projectId != null)
       {
@@ -701,7 +735,9 @@ public abstract class JenkinsClient
       finally
       {
          if (errorStream != null)
+         {
             errorStream.close();
+         }
       }
    }
 
@@ -712,7 +748,9 @@ public abstract class JenkinsClient
       {
          byte[] b = new byte[contentLength];
          for (int point = -1, off = 0; (point = input.read(b, off, contentLength - off)) > 0; off += point) //
-         ;
+         {
+            ;
+         }
          body = new String(b);
       }
       else if (contentLength < 0)
@@ -754,7 +792,7 @@ public abstract class JenkinsClient
    /**
     * Periodically checks status of the previously launched job and sends
     * the status to WebSocket connection when job status will be changed.
-    * 
+    *
     * @param jobName
     *    identifier of the Jenkins job to check status
     * @param vfs
@@ -796,7 +834,7 @@ public abstract class JenkinsClient
 
    /**
     * Publishes the message over WebSocket connection.
-    * 
+    *
     * @param data
     *    the data to be sent to the client
     * @param channelID
@@ -824,7 +862,9 @@ public abstract class JenkinsClient
       {
          message.setType(ChannelBroadcastMessage.Type.ERROR);
          if (e instanceof JenkinsException)
+         {
             message.setBody(e.getMessage());
+         }
       }
 
       try

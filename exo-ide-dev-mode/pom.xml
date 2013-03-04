@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
    <parent>
       <groupId>org.exoplatform.ide</groupId>
       <artifactId>exo-ide-parent</artifactId>
-      <version>1.2.0-M17-SNAPSHOT</version>
+      <version>2.0.0-SNAPSHOT</version>
    </parent>
    <groupId>org.exoplatform.ide</groupId>
    <artifactId>exo-ide-dev-mode</artifactId>
@@ -12,6 +13,17 @@
    <name>Codenvy IDE :: DevMode</name>
 
    <dependencies>
+   
+      <dependency>
+          <groupId>com.google.gwt</groupId>
+          <artifactId>gwt-user</artifactId>
+          <exclusions>
+             <exclusion>
+                <groupId>xstream</groupId>
+                <artifactId>xstream</artifactId>
+             </exclusion>
+         </exclusions>
+     </dependency>
 
       <dependency>
          <groupId>com.google.code.gwt-log</groupId>
@@ -188,6 +200,12 @@
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-extension-appfog</artifactId>
       </dependency>
+      
+      
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>exo-ide-vfs</artifactId>
+      </dependency>
 
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
@@ -309,7 +327,8 @@
                   <phase>process-resources</phase>
                   <configuration>
                      <tasks>
-                        <unwar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar" dest="${project.build.directory}/share" />
+                        <unwar src="${project.build.directory}/dependency/exo-ide-client-${project.version}.jar"
+                               dest="${project.build.directory}/share"/>
                      </tasks>
                   </configuration>
                   <goals>
@@ -325,7 +344,9 @@
                   <phase>compile</phase>
                   <configuration>
                      <tasks>
-                        <echo file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties" append="false">
+                        <echo
+                           file="${project.build.directory}/classes/org/exoplatform/ide/client/BuildNumber.properties"
+                           append="false">
                            buildNumber = ${buildNumber}
                            buildTime = ${timestamp}
                            version = ${project.version}</echo>
@@ -339,7 +360,7 @@
                   <configuration>
                      <tasks>
                         <move todir="${project.build.directory}/${project.artifactId}-${project.version}">
-                           <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE" />
+                           <fileset dir="${project.build.directory}/${project.artifactId}-${project.version}/IDE"/>
                         </move>
                      </tasks>
                   </configuration>
@@ -459,42 +480,47 @@
                         </goals>
                         <configuration>
                            <tasks>
-                              <mkdir dir="target/git/repository/dev-monit" />
-                              <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}" />
+                              <mkdir dir="target/git/repository/dev-monit"/>
+                              <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip"
+                                     dest="${project.build.directory}"/>
                               overwrite="true" /&gt;
-                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}">
+                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip"
+                                     dest="${project.build.directory}">
                                  <patternset>
-                                    <exclude name="**/bin/**" />
-                                    <exclude name="**/demos/**" />
-                                    <exclude name="**/src/**" />
-                                    <exclude name="**/docs/javadoc/**" />
-                                    <exclude name="**/docs/remoteapi/**" />
-                                    <exclude name="**/docs/testing/**" />
-                                    <exclude name="**/docs/tools/**" />
-                                    <exclude name="**/docs/javadoc/**" />
-                                    <exclude name="**/ABOUT" />
-                                    <exclude name="**/COPYING" />
-                                    <exclude name="**/README" />
-                                    <exclude name="**/README.ORM" />
-                                    <exclude name="**/RELEASE_NOTES" />
-                                    <exclude name="**/RELEASE_NOTES.ORM" />
+                                    <exclude name="**/bin/**"/>
+                                    <exclude name="**/demos/**"/>
+                                    <exclude name="**/src/**"/>
+                                    <exclude name="**/docs/javadoc/**"/>
+                                    <exclude name="**/docs/remoteapi/**"/>
+                                    <exclude name="**/docs/testing/**"/>
+                                    <exclude name="**/docs/tools/**"/>
+                                    <exclude name="**/docs/javadoc/**"/>
+                                    <exclude name="**/ABOUT"/>
+                                    <exclude name="**/COPYING"/>
+                                    <exclude name="**/README"/>
+                                    <exclude name="**/README.ORM"/>
+                                    <exclude name="**/RELEASE_NOTES"/>
+                                    <exclude name="**/RELEASE_NOTES.ORM"/>
                                  </patternset>
                               </unzip>
-                              <move file="${project.build.directory}/appengine-java-sdk-${appengine.version}" tofile="${project.build.directory}/appengine-java-sdk" />
+                              <move file="${project.build.directory}/appengine-java-sdk-${appengine.version}"
+                                    tofile="${project.build.directory}/appengine-java-sdk"/>
 
 
-                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip" dest="${project.build.directory}">
+                              <unzip src="${project.build.directory}/packager-conf/appengine/appengine-python-sdk.zip"
+                                     dest="${project.build.directory}">
                                  <patternset>
-                                    <exclude name="**/demos/**" />
-                                    <exclude name="**/new_project_template/**" />
-                                    <exclude name="**/BUGS" />
-                                    <exclude name="**/LICENSE" />
-                                    <exclude name="**/README" />
-                                    <exclude name="**/RELEASE_NOTES" />
-                                    <exclude name="**/VERSION" />
+                                    <exclude name="**/demos/**"/>
+                                    <exclude name="**/new_project_template/**"/>
+                                    <exclude name="**/BUGS"/>
+                                    <exclude name="**/LICENSE"/>
+                                    <exclude name="**/README"/>
+                                    <exclude name="**/RELEASE_NOTES"/>
+                                    <exclude name="**/VERSION"/>
                                  </patternset>
                               </unzip>
-                              <move file="${project.build.directory}/google_appengine" tofile="${project.build.directory}/appengine-python-sdk" />
+                              <move file="${project.build.directory}/google_appengine"
+                                    tofile="${project.build.directory}/appengine-python-sdk"/>
 
                            </tasks>
                         </configuration>
@@ -505,7 +531,7 @@
                <plugin>
                   <groupId>org.codehaus.mojo</groupId>
                   <artifactId>gwt-maven-plugin</artifactId>
-                  <version>${gwt.maven.plugin.version}</version>
+                  <version>${version.gwt.plugin}</version>
                   <configuration>
                      <runTarget>org.exoplatform.ide.Shell/Shell.html</runTarget>
                      <logLevel>INFO</logLevel>

@@ -49,6 +49,10 @@
       <when-type-is class="org.exoplatform.ide.client.progress.ProgressPresenter.SingleJobDisplay"/>
    </replace-with>
 
+   <replace-with class="org.exoplatform.ide.client.operation.createfile.CreateFileView">
+      <when-type-is class="org.exoplatform.ide.client.operation.createfile.CreateFilePresenter.Display"/>
+   </replace-with>
+
    <replace-with class="org.exoplatform.ide.client.operation.createfolder.CreateFolderView">
       <when-type-is class="org.exoplatform.ide.client.operation.createfolder.CreateFolderPresenter.Display"/>
    </replace-with>

@@ -23,6 +23,7 @@ import com.google.web.bindery.autobean.shared.AutoBean;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
+import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage;
@@ -136,7 +137,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void checkIsStarted()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -176,7 +178,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void checkIsStopped()
    {
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       try
       {
@@ -219,9 +222,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void startApplication(String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = getSelectedProject();
 
       try
       {
@@ -231,7 +233,8 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
          AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
-         CloudFoundryClientService.getInstance().startApplication(vfs.getId(), projectId, name, null,
+         CloudFoundryClientService.getInstance().startApplication(vfs.getId(), project.getId(),
+            (name != null) ? name : project.getName(), null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null)
             {
                @Override
@@ -253,7 +256,7 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                                  getAppUrisAsString(result));
                      }
                      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), project.getId()));
                   }
                   else
                   {
@@ -262,6 +265,14 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
                      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
                   }
 
+               }
+
+               @Override
+               protected void onFailure(Throwable exception)
+               {
+                  String msg =
+                     CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(project.getName());
+                  Dialogs.getInstance().showError(msg);
                }
             });
       }
@@ -292,10 +303,12 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void stopApplication(final String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+//      final String projectId =
+//         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
+//            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
+      final String projectId = getSelectedProject() != null ? getSelectedProject().getId() : null;
+      
       try
       {
          CloudFoundryClientService.getInstance().stopApplication(vfs.getId(), projectId, name, null,
@@ -360,9 +373,11 @@ public class StartApplicationPresenter extends GitPresenter implements StartAppl
 
    private void restartApplication(String name)
    {
-      final String projectId =
-         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+//      final String projectId =
+//         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
+//            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
+
+      final String projectId = getSelectedProject() != null ? getSelectedProject().getId() : null;
 
       try
       {

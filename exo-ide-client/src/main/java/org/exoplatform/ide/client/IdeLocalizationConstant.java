@@ -92,6 +92,21 @@ public interface IdeLocalizationConstant extends Constants
    @Key("finishButton")
    String finishButton();
 
+   /*
+    * Create File
+    */
+   @DefaultStringValue("New File")
+   @Key("createFileFormTitle")
+   String createFileFormTitle();
+
+   @DefaultStringValue("Enter a new file name:")
+   @Key("createFileFormNameFieldTitle")
+   String createFileFormNameFieldTitle();
+
+   @DefaultStringValue("A name should be specified")
+   @Key("createFileFormNameEmpty")
+   String createFileFormNameEmpty();
+
    /* Create Folder */
    @DefaultStringValue("Create Folder")
    @Key("createFolderFormTitle")

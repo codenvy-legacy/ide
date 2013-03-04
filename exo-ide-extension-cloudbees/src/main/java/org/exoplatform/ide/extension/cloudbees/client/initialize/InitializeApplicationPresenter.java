@@ -50,7 +50,6 @@ import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltEvent;
 import org.exoplatform.ide.extension.jenkins.client.event.ApplicationBuiltHandler;
 import org.exoplatform.ide.extension.jenkins.client.event.BuildApplicationEvent;
 import org.exoplatform.ide.git.client.GitPresenter;
-import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 import java.util.ArrayList;
@@ -197,7 +196,8 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
       applicationId = display.getApplicationIdField().getValue();
 
       IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
-      IDE.fireEvent(new BuildApplicationEvent(((ItemContext)selectedItems.get(0)).getProject()));
+//      IDE.fireEvent(new BuildApplicationEvent(((ItemContext)selectedItems.get(0)).getProject()));
+      IDE.fireEvent(new BuildApplicationEvent(getSelectedProject()));
       closeView();
    }
 
@@ -217,7 +217,8 @@ public class InitializeApplicationPresenter extends GitPresenter implements View
     */
    private void doDeployApplication()
    {
-      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+//      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      final ProjectModel project = getSelectedProject();
       AutoBean<ApplicationInfo> autoBean = CloudBeesExtension.AUTO_BEAN_FACTORY.applicationInfo();
 
       try

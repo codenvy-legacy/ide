@@ -78,6 +78,8 @@ public class ProjectSupportingModule implements ConfigurationReceivedSuccessfull
 
       IDE.addHandler(ConfigurationReceivedSuccessfullyEvent.TYPE, this);
       IDE.addHandler(MigrateTemplatesEvent.TYPE, this);
+      
+      new ProjectProcessor();
    }
 
    /**

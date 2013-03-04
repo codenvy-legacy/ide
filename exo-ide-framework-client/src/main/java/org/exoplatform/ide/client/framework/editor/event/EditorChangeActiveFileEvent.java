@@ -36,7 +36,7 @@ public class EditorChangeActiveFileEvent extends GwtEvent<EditorChangeActiveFile
       new GwtEvent.Type<EditorChangeActiveFileHandler>();
 
    private FileModel file;
-
+   
    public EditorChangeActiveFileEvent(FileModel file)
    {
       this.file = file;
@@ -46,7 +46,7 @@ public class EditorChangeActiveFileEvent extends GwtEvent<EditorChangeActiveFile
    {
       return file;
    }
-
+   
    @Override
    protected void dispatch(EditorChangeActiveFileHandler handler)
    {

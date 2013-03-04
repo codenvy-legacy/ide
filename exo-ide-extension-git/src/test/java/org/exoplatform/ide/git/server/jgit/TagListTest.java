@@ -19,10 +19,7 @@
 package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.exoplatform.ide.git.shared.Tag;
 import org.exoplatform.ide.git.shared.TagListRequest;
 
@@ -42,16 +39,9 @@ public class TagListTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Repository repo = getDefaultRepository();
-
-      RevWalk revWalker = new RevWalk(repo);
-      Git git = new Git(repo);
-
-      Ref bugfixRef = git.tag().setName("bugfix-tag").setMessage("bugfix-tag").call();
-      Ref featureRef = git.tag().setName("feature-tag").setMessage("feature-tag").call();
-
-      bugfixTag = revWalker.parseTag(bugfixRef.getLeaf().getObjectId());
-      featureTag = revWalker.parseTag(featureRef.getLeaf().getObjectId());
+      Git git = new Git(getDefaultRepository());
+      bugfixTag = git.tag().setName("bugfix-tag").setMessage("bugfix-tag").call();
+      featureTag = git.tag().setName("feature-tag").setMessage("feature-tag").call();
    }
 
    public void testListAllTag() throws Exception

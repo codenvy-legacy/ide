@@ -11,6 +11,11 @@
    <name>Codenvy IDE :: Extension :: Maven</name>
    <dependencies>
       <dependency>
+         <groupId>com.google.gwt</groupId>
+         <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
          <groupId>javax.ws.rs</groupId>
          <artifactId>jsr311-api</artifactId>
       </dependency>

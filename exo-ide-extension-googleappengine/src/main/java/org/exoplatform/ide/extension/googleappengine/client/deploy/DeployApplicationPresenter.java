@@ -34,6 +34,7 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.AutoBeanUnmarshaller;
 import org.exoplatform.gwtframework.ui.client.component.GWTLoader;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
+import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.output.event.OutputEvent;
 import org.exoplatform.ide.client.framework.output.event.OutputMessage.Type;
@@ -59,7 +60,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  * Presenter for deploying application to Google App Engine, can be as a part of deployment step in wizard.
- * 
+ *
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 16, 2012 5:51:08 PM anya $
  */
@@ -190,6 +191,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                      .append("</a>");
                   IDE.fireEvent(new OutputEvent(GoogleAppEngineExtension.GAE_LOCALIZATION.deployApplicationSuccess(
                      project.getName(), link.toString()), Type.INFO));
+                  IDE.fireEvent(new RefreshBrowserEvent());
                }
             });
       }
@@ -222,7 +224,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    /**
     * Sets the application's id to configuration file (appengine-web.xml or app.yaml).
-    * 
+    *
     * @param appId application's id
     */
    private void setApplicationId(String appId, final ProjectModel project)
@@ -248,7 +250,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
 
    /**
     * Checks if user is logged to Google App Engine.
-    * 
+    *
     * @param wizardStep
     */
    private void isUserLogged(final boolean wizardStep)
@@ -372,7 +374,7 @@ public class DeployApplicationPresenter extends GoogleAppEnginePresenter impleme
                         }
                         else
                         {
-                           IDE.fireEvent(new CreateApplicationEvent());
+                           IDE.fireEvent(new CreateApplicationEvent(result));
                         }
                      }
                   });

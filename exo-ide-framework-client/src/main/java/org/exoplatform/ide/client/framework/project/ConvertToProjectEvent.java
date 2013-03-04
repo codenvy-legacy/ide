@@ -18,12 +18,12 @@
  */
 package org.exoplatform.ide.client.framework.project;
 
+import com.google.gwt.event.shared.GwtEvent;
+
 import org.exoplatform.ide.vfs.shared.Property;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import com.google.gwt.event.shared.GwtEvent;
 
 /**
  * Event occurs, when user tries to convert folder to project. Implement {@link ConvertToProjectHandler} to handle event.
@@ -39,28 +39,39 @@ public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
     */
    public static final GwtEvent.Type<ConvertToProjectHandler> TYPE = new GwtEvent.Type<ConvertToProjectHandler>();
 
-   private String folderId;
+   private final String folderId;
 
-   private String vfsId;
+   private final String vfsId;
    
-   private List<Property>  properties = new ArrayList<Property>();
+   private final String projectType;
+   
+   private List<Property>  properties;
 
-   public ConvertToProjectEvent()
+   /**
+    * @param folderId item id that be converted to project
+    * @param vfsId 
+    * @param projectType type of project (optional)
+    */
+   public ConvertToProjectEvent(String folderId, String vfsId, String projectType)
    {
+      this(folderId, vfsId, projectType, Collections.<Property>emptyList());
    }
-
-   public ConvertToProjectEvent(String folderId, String vfsId)
+   
+   /**
+    * @param folderId item id that be converted to project
+    * @param vfsId 
+    * @param projectType type of project (optional)
+    * @param properties the properties that be set to converted project
+    */
+   public ConvertToProjectEvent(String folderId, String vfsId, String projectType, List<Property> properties)
    {
       this.folderId = folderId;
       this.vfsId = vfsId;
-   }
-   
-   public ConvertToProjectEvent(String folderId, String vfsId, List<Property> properties)
-   {
-      this.folderId = folderId;
-      this.vfsId = vfsId;
+      this.projectType = projectType;
       this.properties = properties;
    }
+   
+   
 
    /**
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
@@ -93,5 +104,10 @@ public class ConvertToProjectEvent extends GwtEvent<ConvertToProjectHandler>
    public List<Property> getProperties()
    {
       return properties;
+   }
+   
+   public String getProjectType()
+   {
+      return projectType;
    }
 }

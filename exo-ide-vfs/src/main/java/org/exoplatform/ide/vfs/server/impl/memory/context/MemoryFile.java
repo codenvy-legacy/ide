@@ -41,6 +41,7 @@ public class MemoryFile extends MemoryItem
    private byte[] bytes;
    private final AtomicReference<String> lockHolder = new AtomicReference<String>();
    private long contentLastModificationDate;
+   private final Object contentLock = new Object();
 
    public MemoryFile(String name, String mediaType, InputStream content) throws IOException
    {
@@ -113,23 +114,29 @@ public class MemoryFile extends MemoryItem
 
    public final ContentStream getContent() throws VirtualFileSystemException
    {
-      byte[] bytes = this.bytes;
-      if (bytes == null)
+      synchronized (contentLock)
       {
-         bytes = new byte[0];
+         byte[] bytes = this.bytes;
+         if (bytes == null)
+         {
+            bytes = new byte[0];
+         }
+         return new ContentStream(getName(), new ByteArrayInputStream(bytes), getMediaType(), bytes.length,
+            new Date(contentLastModificationDate));
       }
-      return new ContentStream(getName(), new ByteArrayInputStream(bytes), getMediaType(), bytes.length,
-         new Date(contentLastModificationDate));
    }
 
    public final void setContent(InputStream content) throws IOException
    {
-      byte[] bytes = null;
-      if (content != null)
+      synchronized (contentLock)
       {
-         bytes = readContent(content);
+         byte[] bytes = null;
+         if (content != null)
+         {
+            bytes = readContent(content);
+         }
+         this.bytes = bytes;
       }
-      this.bytes = bytes;
       lastModificationDate = contentLastModificationDate = System.currentTimeMillis();
    }
 

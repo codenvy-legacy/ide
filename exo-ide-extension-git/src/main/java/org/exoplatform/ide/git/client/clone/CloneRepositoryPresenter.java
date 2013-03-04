@@ -47,6 +47,11 @@ import org.exoplatform.ide.git.shared.RepoInfo;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.marshal.FolderUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
+import org.exoplatform.ide.vfs.shared.Property;
+import org.exoplatform.ide.vfs.shared.PropertyImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Presenter for Clone Repository View.
@@ -215,8 +220,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                {
                   String errorMessage =
                      (exception.getMessage() != null && exception.getMessage().length() > 0) ? exception.getMessage()
-                        : GitExtension.MESSAGES.cloneFailed();
-                  IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+                        : GitExtension.MESSAGES.cloneFailed(remoteUri);
+                  IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
                }
             });
       }
@@ -225,8 +230,8 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
          e.printStackTrace();
          String errorMessage =
             (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
-               .cloneFailed();
-         IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+               .cloneFailed(remoteUri);
+         IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
       }
    }
 
@@ -237,7 +242,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param remoteName remote name instead of "origin"
     * @param folder folder (root of GIT repository)
     */
-   private void cloneRepository(String remoteUri, String remoteName, final FolderModel folder)
+   private void cloneRepository(final String remoteUri, String remoteName, final FolderModel folder)
    {
       try
       {
@@ -254,7 +259,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, remoteUri);
                }
             });
          IDE.getInstance().closeView(display.asView().getId());
@@ -272,7 +277,7 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     * @param remoteName remote name instead of "origin"
     * @param folder folder (root of GIT repository)
     */
-   private void cloneRepositoryREST(String remoteUri, String remoteName, final FolderModel folder)
+   private void cloneRepositoryREST(final String remoteUri, String remoteName, final FolderModel folder)
    {
       try
       {
@@ -288,13 +293,13 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
                @Override
                protected void onFailure(Throwable exception)
                {
-                  handleError(exception);
+                  handleError(exception, remoteUri);
                }
             });
       }
       catch (RequestException e)
       {
-         handleError(e);
+         handleError(e, remoteUri);
       }
       if (display != null)
       {
@@ -309,11 +314,14 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
     */
    private void onCloneSuccess(final RepoInfo gitRepositoryInfo, final FolderModel folder)
    {
-      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(), Type.INFO));
+      IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.cloneSuccess(gitRepositoryInfo.getRemoteUri()), Type.GIT));
       //TODO: not good, comment temporary need found other way
       // for inviting collaborators
       // showInvitation(result.getRemoteUri());
-      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId()));
+      
+      List<Property> properties = new ArrayList<Property>();
+      properties.add(new PropertyImpl(GitExtension.GIT_REPOSITORY_PROP, "true"));
+      IDE.fireEvent(new ConvertToProjectEvent(folder.getId(), vfs.getId(), null, properties));
 
       Scheduler.get().scheduleDeferred(new ScheduledCommand()
       {
@@ -329,11 +337,12 @@ public class CloneRepositoryPresenter extends GitPresenter implements CloneRepos
       });
    }
 
-   private void handleError(Throwable e)
+   private void handleError(Throwable e, String remoteUri)
    {
       String errorMessage =
-         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES.cloneFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+         (e.getMessage() != null && e.getMessage().length() > 0) ? e.getMessage() : GitExtension.MESSAGES
+            .cloneFailed(remoteUri);
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
    /**

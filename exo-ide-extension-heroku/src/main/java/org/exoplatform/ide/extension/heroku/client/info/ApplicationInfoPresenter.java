@@ -173,8 +173,8 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
     */
    public void getApplicationInfo()
    {
-      final String projectId =
-         (applicationName == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+      //final String projectId = (applicationName == null) ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null;
+      final String projectId = (applicationName == null) ? getSelectedProject().getId() : null;
       try
       {
          HerokuClientService.getInstance().getApplicationInfo(applicationName, vfs.getId(), projectId, false,
@@ -214,15 +214,6 @@ public class ApplicationInfoPresenter extends GitPresenter implements ShowApplic
       {
          IDE.fireEvent(new ExceptionThrownEvent(e));
       }
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler#onItemsSelected(org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent)
-    */
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      this.selectedItems = event.getSelectedItems();
    }
 
    /**

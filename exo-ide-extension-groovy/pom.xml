@@ -76,7 +76,6 @@
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
-         <version>4.7</version>
          <scope>test</scope>
       </dependency>
       <dependency>
@@ -95,6 +94,7 @@
       <dependency>
          <groupId>com.google.gwt</groupId>
          <artifactId>gwt-user</artifactId>
+         <scope>provided</scope>
       </dependency>
 
       <dependency>

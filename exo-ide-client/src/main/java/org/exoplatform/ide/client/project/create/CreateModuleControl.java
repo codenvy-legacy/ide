@@ -28,6 +28,7 @@ import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandle
 import org.exoplatform.ide.client.framework.project.CreateModuleEvent;
 import org.exoplatform.ide.client.framework.project.ProjectType;
 import org.exoplatform.ide.vfs.client.model.ItemContext;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 
 /**
@@ -40,11 +41,14 @@ public class CreateModuleControl extends SimpleControl implements IDEControl, It
 {
 
    public static final String ID = "Project/New/Create Module...";
+
    private static final String TITLE = "Create Module...";
+
    private static final String PROMPT = "Create Module...";
 
-//   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl();
-//   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplatePromptControl();
+   //   private static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplateTitleControl();
+
+   //   private static final String PROMPT = IDE.IDE_LOCALIZATION_CONSTANT.createProjectFromTemplatePromptControl();
 
    public CreateModuleControl()
    {
@@ -69,19 +73,41 @@ public class CreateModuleControl extends SimpleControl implements IDEControl, It
    @Override
    public void onItemsSelected(ItemsSelectedEvent event)
    {
-      if (event.getSelectedItems() == null || event.getSelectedItems().size() != 1)
+      if (event.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+         return;         
+      }
+
+//      if (event.getSelectedItems() == null || event.getSelectedItems().size() != 1)
+//      {
+//         setEnabled(false);
+//         return;
+//      }
+
+      Item item = event.getSelectedItems().get(0);
+      ProjectModel project = ((ItemContext)item).getProject();
+      if (project == null && item instanceof ProjectModel)
+      {
+         project = (ProjectModel)item;
+      }
+      
+      if (project == null)
       {
          setEnabled(false);
          return;
       }
       
+      setEnabled(ProjectType.MultiModule.equals(ProjectType.fromValue(project.getProjectType())));
+
+      /*
       Item selectedItem = event.getSelectedItems().get(0);
       if (!(selectedItem instanceof ItemContext))
       {
          setEnabled(false);
          return;
       }
-      
+
       ItemContext context = (ItemContext)selectedItem;
       if (context.getProject() == null)
       {
@@ -90,6 +116,7 @@ public class CreateModuleControl extends SimpleControl implements IDEControl, It
       }
 
       setEnabled(ProjectType.MultiModule.equals(ProjectType.fromValue(context.getProject().getProjectType())));
+      */
    }
-   
+
 }

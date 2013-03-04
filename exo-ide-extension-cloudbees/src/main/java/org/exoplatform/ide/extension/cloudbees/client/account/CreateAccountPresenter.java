@@ -263,7 +263,6 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
       CloudBeesAccount account = CloudBeesExtension.AUTO_BEAN_FACTORY.account().as();
       account.setName(display.getAccountNameField().getValue());
       account.setCompany(display.getCompanyField().getValue());
-
       AutoBean<CloudBeesAccount> accountBean = CloudBeesExtension.AUTO_BEAN_FACTORY.account();
       AutoBeanUnmarshaller<CloudBeesAccount> unmarshaller = new AutoBeanUnmarshaller<CloudBeesAccount>(accountBean);
 
@@ -309,6 +308,7 @@ public class CreateAccountPresenter implements CreateAccountHandler, ViewClosedH
          user.setFirst_name(display.getFirstNameField().getValue());
          user.setLast_name(display.getLastNameField().getValue());
          user.setPassword(display.getPasswordField().getValue());
+         user.setRole("admin");
       }
 
       AutoBean<CloudBeesUser> userBean = CloudBeesExtension.AUTO_BEAN_FACTORY.user();

@@ -27,10 +27,9 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
  * Registry for virtual file system providers.
- * 
+ *
  * @author <a href="mailto:aparfonov@exoplatform.com">Andrey Parfonov</a>
  * @version $Id: $
- * 
  * @see VirtualFileSystemFactory
  */
 public class VirtualFileSystemRegistry
@@ -48,7 +47,11 @@ public class VirtualFileSystemRegistry
 
    public void unregisterProvider(String vfsId) throws VirtualFileSystemException
    {
-      providers.remove(id(vfsId));
+      final VirtualFileSystemProvider removed = providers.remove(id(vfsId));
+      if (removed != null)
+      {
+         removed.close();
+      }
    }
 
    public VirtualFileSystemProvider getProvider(String vfsId) throws VirtualFileSystemException

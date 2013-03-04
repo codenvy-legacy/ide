@@ -88,6 +88,7 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
+			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
@@ -141,7 +142,6 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>${gwt.maven.plugin.version}</version>
 				<configuration>
 					<module>org.exoplatform.ide.git.GitTest</module>
 					<logLevel>ERROR</logLevel>

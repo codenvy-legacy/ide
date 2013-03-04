@@ -20,9 +20,7 @@ package org.exoplatform.ide.git.server.jgit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevTag;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.exoplatform.ide.git.shared.TagDeleteRequest;
 
 import java.util.Map;
@@ -40,17 +38,9 @@ public class TagDeleteTest extends BaseTest
    protected void setUp() throws Exception
    {
       super.setUp();
-      Repository repo = getDefaultRepository();
-
-      RevWalk revWalker = new RevWalk(repo);
-      Git git = new Git(repo);
-
-      Ref goodRef = git.tag().setName("good-tag").setMessage("good-tag").call();
-      Ref badRef = git.tag().setName("bad-tag").setMessage("bad-tag").call();
-
-      
-      goodTag = revWalker.parseTag(goodRef.getLeaf().getObjectId());
-      badTag = revWalker.parseTag(badRef.getLeaf().getObjectId());
+      Git git = new Git(getDefaultRepository());
+      goodTag = git.tag().setName("good-tag").setMessage("good-tag").call();
+      badTag = git.tag().setName("bad-tag").setMessage("bad-tag").call();
    }
 
    public void testDeleteTag() throws Exception

@@ -130,7 +130,8 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
          Display d = GWT.create(Display.class);
          IDE.getInstance().openView(d.asView());
          bindDisplay(d);
-         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+//         String workDir = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+         String workDir = getSelectedProject().getPath();
          display.getMessage().setValue(formMessage(workDir), true);
       }
    }
@@ -142,9 +143,15 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private String formMessage(String workdir)
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
+      if (selectedItem == null)
+      {
          return "";
-      Item selectedItem = selectedItems.get(0);
+      }
+      
+//      if (selectedItems == null || selectedItems.size() <= 0)
+//         return "";
+//      Item selectedItem = selectedItems.get(0);
+      
       String pattern = selectedItem.getPath().replaceFirst(workdir, "");
       pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
 
@@ -169,14 +176,15 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private void doAdd()
    {
-      if (selectedItems == null || selectedItems.size() <= 0)
-      {
-         return;
-      }
+//      if (selectedItems == null || selectedItems.size() <= 0)
+//      {
+//         return;
+//      }
+//
+//      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
+      ProjectModel project = getSelectedProject();
 
       boolean update = display.getUpdateValue().getValue();
-      ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
-
       try
       {
          GitClientService.getInstance().addWS(vfs.getId(), project, update, getFilePatterns(),
@@ -241,8 +249,12 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
     */
    private String[] getFilePatterns()
    {
-      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
-      String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
+//      String projectPath = ((ItemContext)selectedItems.get(0)).getProject().getPath();
+//      String pattern = selectedItems.get(0).getPath().replaceFirst(projectPath, "");
+      
+      String projectPath = getSelectedProject().getPath();
+      String pattern = selectedItem.getPath().replaceFirst(projectPath, "");
+
       pattern = (pattern.startsWith("/")) ? pattern.replaceFirst("/", "") : pattern;
       return (pattern.length() == 0 || "/".equals(pattern)) ? new String[]{"."} : new String[]{pattern};
    }
@@ -251,7 +263,7 @@ public class AddToIndexPresenter extends GitPresenter implements AddFilesHandler
    {
       String errorMessage =
          (t.getMessage() != null && t.getMessage().length() > 0) ? t.getMessage() : GitExtension.MESSAGES.addFailed();
-      IDE.fireEvent(new OutputEvent(errorMessage, Type.ERROR));
+      IDE.fireEvent(new OutputEvent(errorMessage, Type.GIT));
    }
 
 }

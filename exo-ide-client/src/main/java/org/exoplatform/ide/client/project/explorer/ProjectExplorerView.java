@@ -26,17 +26,17 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.HTMLPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Widget;
+
 import org.exoplatform.gwtframework.ui.client.api.TreeGridItem;
 import org.exoplatform.gwtframework.ui.client.component.IconButton;
 import org.exoplatform.gwtframework.ui.client.component.TreeIconPosition;
 import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.IDEImageBundle;
 import org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay;
-import org.exoplatform.ide.client.framework.ui.ItemTree;
+import org.exoplatform.ide.client.framework.ui.ProjectTree;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
-import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
 
 import java.util.List;
@@ -71,7 +71,8 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    }
 
    @UiField
-   ItemTree treeGrid;
+   //ItemTree treeGrid;
+   ProjectTree treeGrid;
 
    @UiField
    HTMLPanel projectNotOpenedPanel;
@@ -89,6 +90,21 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
       super(ID, "navigation", TITLE, new Image(IDEImageBundle.INSTANCE.projectExplorer()), WIDTH, HEIGHT);
       add(uiBinder.createAndBindUi(this));
       setCanShowContextMenu(true);
+   }
+   
+   @Override
+   public void activate()
+   {
+      super.activate();
+      
+      if (treeGrid.isVisible())
+      {
+         treeGrid.getElement().focus();
+      }
+      else
+      {
+         projectsListGrid.getElement().focus();
+      }
    }
 
    /**
@@ -113,9 +129,9 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
     * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#selectItem(java.lang.String)
     */
    @Override
-   public boolean selectItem(String path)
+   public boolean selectItem(String id)
    {
-      return treeGrid.selectItem(path);
+      return treeGrid.selectItem(id);
    }
 
    /**
@@ -197,15 +213,6 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#setUpdateTreeValue(boolean)
-    */
-   @Override
-   public void setUpdateTreeValue(boolean updateTreeValue)
-   {
-      treeGrid.setUpdateValue(updateTreeValue);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#getLinkWithEditorButton()
     */
    @Override
@@ -250,13 +257,10 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
       return projectsListGrid.getSelectedItems();
    }
 
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#changeFolderIcon(org.exoplatform.ide.vfs.shared.Folder, boolean)
-    */
    @Override
-   public void changeFolderIcon(Folder folder, boolean isOpens)
+   public void navigateToItem(Item item)
    {
-      treeGrid.changeFolderIcon(folder, isOpens);
+      treeGrid.navigateToItem(item);
    }
 
 }

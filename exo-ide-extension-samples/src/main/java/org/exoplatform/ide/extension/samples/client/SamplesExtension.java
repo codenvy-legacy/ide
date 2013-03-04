@@ -31,6 +31,7 @@ import org.exoplatform.ide.extension.samples.client.github.deploy.ImportSampleSt
 import org.exoplatform.ide.extension.samples.client.github.load.ProjectData;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesControl;
 import org.exoplatform.ide.extension.samples.client.github.load.ShowSamplesPresenter;
+import org.exoplatform.ide.extension.samples.client.github.ssh.GenerateGitHubSshKeyPresenter;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubControl;
 import org.exoplatform.ide.extension.samples.client.githubimport.ImportFromGithubPresenter;
 import org.exoplatform.ide.extension.samples.client.inviting.InviteClientService;
@@ -91,6 +92,7 @@ public class SamplesExtension extends Extension implements InitializeServicesHan
       new OAuthLoginPresenter();
 
       new ManageInvitePresenter();
+      new GenerateGitHubSshKeyPresenter();
 
       // Import from GitHub
       ImportSampleStep<ProjectData> firstStep = new ShowSamplesPresenter();
