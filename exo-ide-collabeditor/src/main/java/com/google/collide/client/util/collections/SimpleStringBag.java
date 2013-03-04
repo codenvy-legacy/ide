@@ -15,9 +15,9 @@
 package com.google.collide.client.util.collections;
 
 import com.google.collide.json.shared.JsonArray;
-import com.google.common.base.Preconditions;
 
-import javax.annotation.Nonnull;
+import org.exoplatform.ide.editor.shared.runtime.Assert;
+
 
 /**
  * Simple string multiset implementation on the base of {@link ClientStringMap}.
@@ -32,7 +32,7 @@ public class SimpleStringBag implements StringMultiset {
   }
 
   @Override
-  public void addAll(@Nonnull JsonArray<String> items) {
+  public void addAll(JsonArray<String> items) {
     // TODO: Check if iterate is faster.
     for (int i = 0, l = items.size(); i < l; i++) {
       add(items.get(i));
@@ -40,7 +40,7 @@ public class SimpleStringBag implements StringMultiset {
   }
 
   @Override
-  public void add(@Nonnull String item) {
+  public void add(String item) {
     Counter counter = delegate.get(item);
     if (counter == null) {
       counter = new Counter();
@@ -51,7 +51,7 @@ public class SimpleStringBag implements StringMultiset {
   }
 
   @Override
-  public void removeAll(@Nonnull JsonArray<String> items) {
+  public void removeAll(JsonArray<String> items) {
     // TODO: Check if iterate is faster.
     for (int i = 0, l = items.size(); i < l; i++) {
       remove(items.get(i));
@@ -59,17 +59,17 @@ public class SimpleStringBag implements StringMultiset {
   }
 
   @Override
-  public void remove(@Nonnull String id) {
+  public void remove(String id) {
     Counter counter = delegate.get(id);
     // TODO: Remove this precondition.
-    Preconditions.checkNotNull(counter, "trying to remove item that is not in collection: %s", id);
+     Assert.isNotNull(counter, "trying to remove item that is not in collection: " + id);
     if (counter.decrement()) {
       delegate.remove(id);
     }
   }
 
   @Override
-  public boolean contains(@Nonnull String item) {
+  public boolean contains(String item) {
     return delegate.containsKey(item);
   }
 

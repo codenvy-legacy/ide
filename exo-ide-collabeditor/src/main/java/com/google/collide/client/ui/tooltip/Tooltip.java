@@ -185,7 +185,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
   private static AutoHideView<Void> getViewInstance(Css css) {
     if (tooltipViewInstance == null) {
       tooltipViewInstance = new AutoHideView<Void>(Elements.createDivElement());
-      tooltipViewInstance.getElement().addClassName(css.tooltipPosition());
+      tooltipViewInstance.getElement().getClassList().add(css.tooltipPosition());
     }
     return tooltipViewInstance;
   }
@@ -355,20 +355,20 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
     HorizontalAlign hAlign = positioner.getHorizontalAlignment();
     switch (positioner.getVerticalAlignment()) {
       case TOP:
-         contentElement.addClassName(css.tooltipAbove());
+         contentElement.getClassList().add(css.tooltipAbove());
         break;
       case BOTTOM:
         if (hAlign == HorizontalAlign.RIGHT) {
-          contentElement.addClassName(css.tooltipBelowRightAligned());
+          contentElement.getClassList().add(css.tooltipBelowRightAligned());
         } else {
-          contentElement.addClassName(css.tooltipBelow());
+          contentElement.getClassList().add(css.tooltipBelow());
         }
         break;
       case MIDDLE:
         if (hAlign == HorizontalAlign.LEFT) {
-          contentElement.addClassName(css.tooltipLeft());
+          contentElement.getClassList().add(css.tooltipLeft());
         } else if (hAlign == HorizontalAlign.RIGHT) {
-          contentElement.addClassName(css.tooltipRight());
+          contentElement.getClassList().add(css.tooltipRight());
         }
         break;
     }
@@ -458,7 +458,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
       // Set the maximum width.
       setMaxWidth(maxWidth);
 
-      contentElement.addClassName(css.tooltip());
+      contentElement.getClassList().add(css.tooltip());
       Element triangle = Elements.createDivElement(css.triangle());
       switch (positioner.getHorizontalAlignment())
       {

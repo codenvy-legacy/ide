@@ -387,9 +387,9 @@ public class Editor extends UiComponent<Editor.View> {
       @Override
       public void onScroll(Buffer buffer, int scrollTop) {
         if (scrollTop < 20) {
-          getElement().removeClassName(getView().css.scrolled());
+          getElement().getClassList().remove(getView().css.scrolled());
         } else {
-          getElement().addClassName(getView().css.scrolled());
+          getElement().getClassList().add(getView().css.scrolled());
         }
       }
     });
@@ -412,7 +412,7 @@ public class Editor extends UiComponent<Editor.View> {
 
     gutters.add(gutter);
 
-    gutter.getGutterElement().addClassName(getView().css.gutter());
+    gutter.getGutterElement().getClassList().add(getView().css.gutter());
     getView().addGutter(gutter.getGutterElement());
     return gutter;
   }

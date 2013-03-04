@@ -19,6 +19,7 @@ import com.google.collide.client.editor.selection.LocalCursorController;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.editor.selection.SelectionModel.MoveAction;
 import com.google.collide.client.util.Elements;
+import com.google.collide.client.util.dom.DomUtils;
 import com.google.collide.client.util.input.CharCodeWithModifiers;
 import com.google.collide.client.util.input.KeyCodeMap;
 import com.google.collide.client.util.input.ModifierKeys;
@@ -1224,7 +1225,7 @@ public class VimScheme extends InputScheme {
   @Override
   public void teardown() {
     super.teardown();
-    statusHeader.removeFromParent();
+    DomUtils.removeFromParent(statusHeader);
   }
 
   /**

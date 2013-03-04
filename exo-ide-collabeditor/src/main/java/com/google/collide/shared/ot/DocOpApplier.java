@@ -26,8 +26,8 @@ import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.base.Preconditions;
 
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  */
@@ -92,8 +92,8 @@ public class DocOpApplier {
   }
 
   private void handleDelete(Delete deleteOp) {
-    Preconditions.checkArgument(!isFinished, "Unexpected finished while handling delete");
-    Preconditions.checkArgument(lineInfo.line().getText().substring(column).startsWith(
+    Assert.isLegal(!isFinished, "Unexpected finished while handling delete");
+     Assert.isLegal(lineInfo.line().getText().substring(column).startsWith(
         deleteOp.getText()), "To-be-deleted text isn't actually at location");
 
     StringBuilder text = new StringBuilder(deleteOp.getText());
@@ -108,7 +108,7 @@ public class DocOpApplier {
   }
 
   private void handleInsert(Insert insertOp) {
-    Preconditions.checkArgument(!isFinished, "Unexpected finished while handling insert");
+     Assert.isLegal(!isFinished, "Unexpected finished while handling insert");
 
     StringBuilder text = new StringBuilder();
     int newLineDelta = 0;
@@ -148,7 +148,7 @@ public class DocOpApplier {
   }
 
   private void handleRetain(Retain retainOp) {
-    Preconditions.checkArgument(!isFinished, "Unexpected finished while handling retain");
+     Assert.isLegal(!isFinished, "Unexpected finished while handling retain");
 
     if (retainOp.hasTrailingNewline()) {
       moveToNextLine();
@@ -158,7 +158,7 @@ public class DocOpApplier {
   }
 
   private void handleRetainLine(RetainLine retainLineOp) {
-    Preconditions.checkArgument(!isFinished, "Unexpected finished while handling retain line");
+     Assert.isLegal(!isFinished, "Unexpected finished while handling retain line");
 
     int lineCount = retainLineOp.getLineCount();
     int newLineNumber = lineInfo.number() + lineCount;
@@ -173,7 +173,7 @@ public class DocOpApplier {
 
   private void moveToNextLine() {
     boolean didMove = lineInfo.moveToNext();
-    Preconditions.checkArgument(didMove, "Did not actually move to next line");
+     Assert.isLegal(didMove, "Did not actually move to next line");
 
     column = 0;
   }

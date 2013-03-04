@@ -58,14 +58,15 @@ public class CurrentLineHighlighter
 
    /**
     * @param buffer
-    * @param editor
+    * @param selection
+    * @param res
     */
    public CurrentLineHighlighter(Buffer buffer, SelectionModel selection, Resources res)
    {
       this.buffer = buffer;
       listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
       lineHighlighter = Elements.createDivElement(res.workspaceEditorBufferCss().line());
-      lineHighlighter.addClassName(res.workspaceEditorBufferCss().currentLine());
+      lineHighlighter.getClassList().add(res.workspaceEditorBufferCss().currentLine());
       lineHighlighter.getStyle().setTop(0, "PX");
       buffer.addUnmanagedElement(lineHighlighter);
    }

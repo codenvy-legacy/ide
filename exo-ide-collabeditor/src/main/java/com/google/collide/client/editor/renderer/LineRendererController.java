@@ -153,7 +153,7 @@ class LineRendererController {
           LineRendererTarget target = currentLineRendererTargets.get(i);
           if (target.styleName != null) {
             if (!target.lineRenderer.shouldLastChunkFillToRight()) {
-              newlineCharacterElement.addClassName(target.styleName);
+              newlineCharacterElement.getClassList().add(target.styleName);
             } else {
               if (remainingSpaceElement == null) {
                 newlineCharacterElement.getStyle().setProperty("float", "left");
@@ -161,8 +161,8 @@ class LineRendererController {
                 remainingSpaceElement.getStyle().setWidth("100%");
               }
               // Also apply to last chunk element so that there's no gap.
-              newlineCharacterElement.addClassName(target.styleName);
-              remainingSpaceElement.addClassName(target.styleName);
+              newlineCharacterElement.getClassList().add(target.styleName);
+              remainingSpaceElement.getClassList().add(target.styleName);
             }
           }
         }
@@ -235,7 +235,7 @@ class LineRendererController {
     for (int i = 0, n = currentLineRendererTargets.size(); i < n; i++) {
       LineRendererTarget target = currentLineRendererTargets.get(i);
       if (target.styleName != null) {
-        element.addClassName(target.styleName);
+        element.getClassList().add(target.styleName);
       }
     }
   }

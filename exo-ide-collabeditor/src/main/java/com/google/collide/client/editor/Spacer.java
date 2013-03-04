@@ -129,7 +129,7 @@ public class Spacer {
 
     // Create div area for clients to draw inside
     element = Elements.createDivElement();
-    element.addClassName(cssClass);
+    element.getClassList().add(cssClass);
     element.getStyle().setLeft("0px");
     element.getStyle().setRight("0px");
     element.getStyle().setHeight(height, CSSStyleDeclaration.Unit.PX);
@@ -143,9 +143,9 @@ public class Spacer {
       }
     };
 
-    element.setOnMouseDown(bubblePreventionListener);
-    element.setOnMouseMove(bubblePreventionListener);
-    element.setOnMouseUp(bubblePreventionListener);
+    element.setOnmousedown(bubblePreventionListener);
+    element.setOnmousemove(bubblePreventionListener);
+    element.setOnmouseup(bubblePreventionListener);
 
     buffer.addAnchoredElement(anchor, element);
 

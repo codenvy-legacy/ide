@@ -16,9 +16,8 @@ package com.google.collide.client.util;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Document.Event;
+import elemental.dom.Document.Events;
 import elemental.js.events.JsEvent;
 
 /*
@@ -33,7 +32,7 @@ public abstract class AsyncRunner implements Runnable {
 
   private static final String EVENT_MESSAGE = "message";
 
-  private static class MessageEvent extends JsEvent implements Event {
+  private static class MessageEvent extends JsEvent implements Events {
     protected MessageEvent() {
     }
 

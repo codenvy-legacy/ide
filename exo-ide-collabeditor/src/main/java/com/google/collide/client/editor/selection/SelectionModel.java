@@ -534,7 +534,7 @@ public class SelectionModel implements Buffer.MouseDragListener {
   }
 
   @Override
-  public void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, short button) {
+  public void onMouseClick(Buffer buffer, int clickCount, int x, int y, boolean isShiftHeld, int button) {
     // (artem) if right mouse button pressed, not need to process click
     if (button == MouseEvent.Button.SECONDARY) {
        return;

@@ -16,7 +16,8 @@ package com.google.collide.client.code.autocomplete;
 
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
-import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Trie-based implementation of the prefix index.
@@ -151,7 +152,7 @@ public class AbstractTrie<T> implements PrefixIndex<T> {
    *         node exists
    */
   public static <T> TrieNode<T> findNode(String prefix, TrieNode<T> searchRoot) {
-    Preconditions.checkNotNull(prefix);
+    Assert.isNotNull(prefix);
     if (prefix.equals(searchRoot.getPrefix())) {
       return searchRoot;
     }
@@ -170,9 +171,8 @@ public class AbstractTrie<T> implements PrefixIndex<T> {
    * @return closest ancestor
    */
   static <T> TrieNode<T> findClosestAncestor(String key, TrieNode<T> searchRoot) {
-    Preconditions.checkNotNull(key);
-    Preconditions.checkArgument(key.startsWith(searchRoot.getPrefix()), "key=%s root prefix=%s",
-        key, searchRoot.getPrefix());
+     Assert.isNotNull(key);
+     Assert.isLegal(key.startsWith(searchRoot.getPrefix()), "key=" + key +" root prefix=" + searchRoot.getPrefix());
 
     TrieNode<T> result = searchRoot;
     for (TrieNode<T> child = searchRoot; child != null; child = child.findInsertionBranch(key)) {
