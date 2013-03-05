@@ -485,8 +485,8 @@
                <groupId>com.google.gwt</groupId>
             </exclusion>
             <exclusion>
-               <artifactId>gwt-elemental</artifactId><
-               groupId>com.google.gwt</groupId>
+               <artifactId>gwt-elemental</artifactId>
+               <groupId>com.google.gwt</groupId>
             </exclusion>
             <exclusion>
             	<artifactId>slf4j-log4j12</artifactId>
