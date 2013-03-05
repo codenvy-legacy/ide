@@ -17,7 +17,8 @@
 
 package org.waveprotocol.wave.client.common.util;
 
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 
 import java.util.Collection;
 
@@ -40,7 +41,7 @@ import java.util.Collection;
  * queries on an <em>n</em>-sized sequence is only <em>O(n + m)</em>. This is
  * not true for mutations, however: a series of <em>m</em> mutations, sequential
  * or not, will be <em>O(nm)</em>. For a sequence implementation that provides
- * expected constant time complexity for all methods, see {LinkedSequence}.
+ * expected constant time complexity for all methods, see {@link LinkedSequence}.
  *
  */
 //
@@ -71,6 +72,7 @@ public final class StringSequence implements Sequence<String> {
    */
   private int recentIndex;
 
+  @VisibleForTesting
   StringSequence(String data) {
     this.data = data;
   }
@@ -82,7 +84,8 @@ public final class StringSequence implements Sequence<String> {
 
   /** Creates a string sequence on a string from another {@code StringSequence}. */
   public static StringSequence create(String serializedSequence) {
-     Assert.isLegal(serializedSequence.startsWith(DELIMITER) && serializedSequence.endsWith(DELIMITER));
+    Preconditions.checkArgument(serializedSequence.startsWith(DELIMITER)
+        && serializedSequence.endsWith(DELIMITER));
     return new StringSequence(serializedSequence);
   }
 
@@ -254,7 +257,7 @@ public final class StringSequence implements Sequence<String> {
    *         non-null and not in this sequence.
    */
   public void insertBefore(String ref, String x) {
-     Assert.isLegal(x != null, "null item");
+    Preconditions.checkArgument(x != null, "null item");
     if (ref == null) {
       data += CODEC.encode(x) + DELIMITER;
     } else {
@@ -277,7 +280,7 @@ public final class StringSequence implements Sequence<String> {
    *         non-null and not in this sequence.
    */
   public void insertAfter(String ref, String x) {
-     Assert.isLegal(x != null, "null item");
+    Preconditions.checkArgument(x != null, "null item");
     if (ref == null) {
       data = DELIMITER + CODEC.encode(x) + data;
     } else {
@@ -302,7 +305,7 @@ public final class StringSequence implements Sequence<String> {
     // if ref = "foobar", then
     // , ... , b a r , f o o , b a z , ... ,
     // . . . . . . . ^refIndex
-     Assert.isLegal(x != null, "null item");
+    Preconditions.checkArgument(x != null, "null item");
     String coded = concat(DELIMITER, CODEC.encode(x), DELIMITER);
     int index = findBackward(coded);
     data = data.substring(0, index) + data.substring(index + coded.length() - DELIMITER.length());

@@ -49,10 +49,11 @@ import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
 import com.google.collide.shared.util.ListenerRegistrar;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import elemental.events.Event;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
@@ -641,6 +642,7 @@ public class Editor extends UiComponent<Editor.View> {
     return id;
   }
   
+  @VisibleForTesting
   public InputController getInput() {
     return input;
   }

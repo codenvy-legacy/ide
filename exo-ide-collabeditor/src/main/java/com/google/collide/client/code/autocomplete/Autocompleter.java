@@ -21,6 +21,8 @@ import com.google.collide.client.util.ScheduledCommandExecutor;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
@@ -28,7 +30,6 @@ import org.exoplatform.ide.editor.client.api.contentassist.CompletionProposal;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
 import org.exoplatform.ide.editor.client.api.contentassist.Point;
-import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;
 import org.exoplatform.ide.editor.shared.text.IDocument;
 import org.waveprotocol.wave.client.common.util.SignalEvent.KeySignalType;
@@ -130,14 +131,14 @@ public class Autocompleter implements ContentAssistant
       @Override
       protected void execute()
       {
-         Assert.isNotNull(selectedProposal);
+         Preconditions.checkNotNull(selectedProposal);
          applyChanges(selectedProposal);
          selectedProposal = null;
       }
 
       public void scheduleAutocompletion(CompletionProposal selectedProposal)
       {
-         Assert.isNotNull(selectedProposal);
+         Preconditions.checkNotNull(selectedProposal);
          this.selectedProposal = selectedProposal;
          scheduleDeferred();
       }
@@ -157,7 +158,8 @@ public class Autocompleter implements ContentAssistant
 
    /**
     * @param editor
-    * @param exoEditor
+    * @param contentAssistant 
+    * @param exoEditor 
     */
    Autocompleter(Editor editor, AutocompleteBox popup, org.exoplatform.ide.editor.client.api.Editor exoEditor)
    {
@@ -212,18 +214,18 @@ public class Autocompleter implements ContentAssistant
       }
    }
 
-//   /**
-//    * Callback passed to {@link AutocompleteController}.
-//    */
-//   private final AutocompleterCallback callback = new AutocompleterCallback()
-//   {
-//
-//      @Override
-//      public void rescheduleCompletionRequest()
-//      {
-//         scheduleRequestAutocomplete();
-//      }
-//   };
+   /**
+    * Callback passed to {@link AutocompleteController}.
+    */
+   private final AutocompleterCallback callback = new AutocompleterCallback()
+   {
+
+      @Override
+      public void rescheduleCompletionRequest()
+      {
+         scheduleRequestAutocomplete();
+      }
+   };
 
    //  private final OnSelectCommand onSelectCommand = new OnSelectCommand();
 
@@ -374,7 +376,7 @@ public class Autocompleter implements ContentAssistant
     */
    public void reset(DocumentParser parser)
    {
-      Assert.isNotNull(parser);
+      Preconditions.checkNotNull(parser);
 
       stop();
 
@@ -477,7 +479,7 @@ public class Autocompleter implements ContentAssistant
 
    private void performExplicitCompletion(AutocompleteResult completion)
    {
-      Assert.isLegal(!isAutocompleteInsertion);
+      Preconditions.checkState(!isAutocompleteInsertion);
       isAutocompleteInsertion = true;
       try
       {
@@ -489,6 +491,7 @@ public class Autocompleter implements ContentAssistant
       }
    }
 
+   @VisibleForTesting
    void requestAutocomplete(ContentAssistProcessor contentAssistProcessor, SignalEventEssence trigger)
    {
       if (contentAssistProcessor == null)
@@ -587,6 +590,7 @@ public class Autocompleter implements ContentAssistant
    }
 
    /**
+    * @param mode
     * @param autocompleter
     */
    public void addAutocompleter(LanguageSpecificAutocompleter autocompleter)

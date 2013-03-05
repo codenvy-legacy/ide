@@ -16,9 +16,8 @@ package com.google.collide.client.util;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Document.Event;
+import elemental.html.Document.Event;
 import elemental.js.events.JsEvent;
 
 /*

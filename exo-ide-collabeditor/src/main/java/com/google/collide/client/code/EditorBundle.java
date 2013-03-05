@@ -40,7 +40,7 @@ import com.google.collide.client.util.logging.Log;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.collide.codemirror2.Parser;
 import com.google.collide.shared.document.Document;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * A class that bundles together all of the editor-related components, such as the editor widget,

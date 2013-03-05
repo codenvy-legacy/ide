@@ -19,12 +19,13 @@ import com.google.collide.client.ui.menu.AutoHideView;
 import com.google.collide.client.ui.menu.PositionController;
 import com.google.collide.client.ui.menu.PositionController.Positioner;
 import com.google.collide.client.util.Elements;
+import com.google.common.base.Preconditions;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
-import elemental.dom.Element;
+import elemental.html.Element;
 
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import javax.annotation.Nullable;
 
 /**
  * Represents a floating popup, that can be attached to any element.
@@ -59,7 +60,7 @@ public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoH
       setElement(rootElement);
     }
 
-    void setContentElement(Element contentElement) {
+    void setContentElement(@Nullable Element contentElement) {
       contentHolder.setInnerHTML("");
       if (contentElement != null) {
         contentHolder.appendChild(contentElement);
@@ -80,7 +81,8 @@ public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoH
 
   @Override
   public void show() {
-     Assert.isNotNull(positionController, "You cannot show this popup without using a position controller");
+    Preconditions.checkNotNull(
+        positionController, "You cannot show this popup without using a position controller");
     positionController.updateElementPosition();
 
     cancelPendingHide();
@@ -101,7 +103,7 @@ public class Popup extends AutoHideComponent<Popup.View, AutoHideComponent.AutoH
    * @param contentElement the DOM element to show in the popup, or {@code null}
    *        to clean up the popup's DOM
    */
-  public void setContentElement(Element contentElement) {
+  public void setContentElement(@Nullable Element contentElement) {
     getView().setContentElement(contentElement);
   }
 

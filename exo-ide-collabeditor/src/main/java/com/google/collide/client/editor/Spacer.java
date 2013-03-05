@@ -23,7 +23,7 @@ import com.google.collide.shared.util.SortedList;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /*
  * TODO: Knowledge about what lines the spacer is logically linked

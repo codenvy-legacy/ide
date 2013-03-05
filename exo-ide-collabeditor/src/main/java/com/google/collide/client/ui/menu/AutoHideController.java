@@ -14,7 +14,7 @@
 
 package com.google.collide.client.ui.menu;
 
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /*
  * FIXME: this 'controller' is an 'AutoHideComponent', which is

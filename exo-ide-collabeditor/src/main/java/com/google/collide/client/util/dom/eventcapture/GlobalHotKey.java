@@ -18,13 +18,13 @@ import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.JsIntegerMap;
 import com.google.collide.client.util.SignalEventUtils;
 import com.google.collide.client.util.input.CharCodeWithModifiers;
+import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.editor.shared.runtime.Assert;
 import org.waveprotocol.wave.client.common.util.SignalEvent;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * Provides a mean for registering global hot key bindings, particularly
@@ -99,7 +99,8 @@ public class GlobalHotKey {
     }
     Data handle = new Data(key, handler, description);
     int keyDigest = key.getKeyDigest();
-     Assert.isLegal(handlers.get(keyDigest) == null, "Only one handler can be registered per a key");
+    Preconditions.checkState(
+        handlers.get(keyDigest) == null, "Only one handler can be registered per a key");
     handlers.put(keyDigest, handle);
     ++handlerCount;
   }
@@ -109,7 +110,7 @@ public class GlobalHotKey {
    */
   public static void unregister(CharCodeWithModifiers key) {
     int keyDigest = key.getKeyDigest();
-     Assert.isLegal(
+    Preconditions.checkState(
         handlers.get(keyDigest) != null, "No handler is register for this key");
     handlers.erase(keyDigest);
     if (--handlerCount == 0) {

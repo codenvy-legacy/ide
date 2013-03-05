@@ -14,7 +14,7 @@
 
 package com.google.collide.shared.util;
 
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.base.Preconditions;
 
 /**
  * Utilities for working with workspace paths.
@@ -69,8 +69,8 @@ public class PathUtils {
     }
     rootPath = normalizePath(rootPath);
 
-     Assert.isLegal(path.startsWith(rootPath),
-       "path \"" + path + "\" must be a descendent of rootPath \"" + rootPath + "\"");
+    Preconditions.checkArgument(path.startsWith(rootPath),
+        "path \"" + path + "\" must be a descendent of rootPath \"" + rootPath + "\"");
 
     int nextSlash = rootPath.length();
     while (nextSlash != -1) {

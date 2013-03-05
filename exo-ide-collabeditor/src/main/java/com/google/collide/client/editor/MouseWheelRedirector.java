@@ -21,7 +21,7 @@ import com.google.collide.json.client.Jso;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.MouseWheelEvent;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 import org.waveprotocol.wave.client.common.util.UserAgent;
 

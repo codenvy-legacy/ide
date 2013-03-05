@@ -16,9 +16,14 @@
 
 package com.google.collide.shared;
 
+import com.google.common.annotations.GwtCompatible;
+import com.google.common.base.Function;
+import com.google.common.base.Objects;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
+import javax.annotation.Nullable;
 
 /**
  * An immutable, semantic-free ordered pair of nullable values. These can be
@@ -38,14 +43,17 @@ import java.util.Comparator;
  *
  * This usually involves creating a new custom value-object type. This is
  * difficult to do "by hand" in Java, but avoid the temptation to extend {@code
- * Pair} to accomplish this; consider using the utilities
+ * Pair} to accomplish this; consider using the utilities {@link
+ * com.google.common.labs.misc.ComparisonKeys} or {@link
+ * com.google.common.labs.misc.ValueType} to help you with this instead.
  */
-public class Pair<A, B>{
+@GwtCompatible(serializable = true)
+public class Pair<A, B> implements Serializable {
 
   /**
    * Creates a new pair containing the given elements in order.
    */
-  public static <A, B> Pair<A, B> of(A first, B second) {
+  public static <A, B> Pair<A, B> of(@Nullable A first, @Nullable B second) {
     return new Pair<A, B>(first, second);
   }
 
@@ -62,7 +70,7 @@ public class Pair<A, B>{
   /**
    * Constructor.  It is usually easier to call {@link #of}.
    */
-  public Pair(A first, B second) {
+  public Pair(@Nullable A first, @Nullable B second) {
     this.first = first;
     this.second = second;
   }
@@ -180,13 +188,13 @@ public class Pair<A, B>{
   }
 
   // TODO: decide what level of commitment to make to this impl
-  @Override public boolean equals(Object object) {
+  @Override public boolean equals(@Nullable Object object) {
     // TODO: it is possible we want to change this to
     // if (object != null && object.getClass() == getClass()) {
     if (object instanceof Pair) {
       Pair<?,?> that = (Pair<?,?>) object;
-      return equal(this.first, that.first)
-          && equal(this.second, that.second);
+      return Objects.equal(this.first, that.first)
+          && Objects.equal(this.second, that.second);
     }
     return false;
   }
@@ -197,25 +205,7 @@ public class Pair<A, B>{
     return 31 * hash1 + hash2;
   }
 
-   /**
-    * Determines whether two possibly-null objects are equal. Returns:
-    *
-    * <ul>
-    * <li>{@code true} if {@code a} and {@code b} are both null.
-    * <li>{@code true} if {@code a} and {@code b} are both non-null and they are
-    *     equal according to {@link Object#equals(Object)}.
-    * <li>{@code false} in all other situations.
-    * </ul>
-    *
-    * <p>This assumes that any non-null objects passed to this function conform
-    * to the {@code equals()} contract.
-    */
-   private boolean equal( Object a, Object b) {
-      return a == b || (a != null && a.equals(b));
-   }
-
-
-   /**
+  /**
    * {@inheritDoc}
    *
    * <p>This implementation returns a string in the form
@@ -228,4 +218,6 @@ public class Pair<A, B>{
     // GWT doesn't support String.format().
     return "(" + first + ", " + second + ")";
   }
+
+  private static final long serialVersionUID = 747826592375603043L;
 }

@@ -24,7 +24,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.user.client.Timer;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * A presenter and anchor renderer for a cursor.

@@ -22,7 +22,7 @@ import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.EventRemover;
 import elemental.events.MouseEvent;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * An {@link EventListener} implementation that parses the low-level events and

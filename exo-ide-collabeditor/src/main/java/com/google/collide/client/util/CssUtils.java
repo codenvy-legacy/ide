@@ -17,7 +17,7 @@ package com.google.collide.client.util;
 import com.google.gwt.dom.client.Style.Unit;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * Utility methods for dealing with CSS.

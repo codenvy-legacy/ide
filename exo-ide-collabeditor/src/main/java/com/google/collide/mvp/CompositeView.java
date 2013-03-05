@@ -15,7 +15,7 @@
 package com.google.collide.mvp;
 
 
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * Wraps an Element that corresponds to some DOM subtree.
