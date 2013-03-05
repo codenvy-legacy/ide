@@ -14,7 +14,7 @@
 
 package com.google.collide.shared.util;
 
-import com.google.collide.json.client.JsoArray;
+import com.google.common.base.Joiner;
 import com.google.gwt.regexp.shared.RegExp;
 
 /**
@@ -198,7 +198,7 @@ public class UnicodeUtils {
     }
 
     public static CharacterClass concat(CharacterClass... characterClasses) {
-      String concatenatedClasses = from(characterClasses).join();
+      String concatenatedClasses = Joiner.on("").join(characterClasses);
       return new CharacterClass(concatenatedClasses);
     }
 
@@ -279,29 +279,14 @@ public class UnicodeUtils {
    * single regular expression.
    */
   private static RegExp compile(CharacterClass... regexPattern) {
-     JsoArray<String> ss = from(regexPattern);
-     String pattern = ss.join("|");
-     return RegExp.compile(pattern, "g");
+    String pattern = Joiner.on('|').join(regexPattern);
+    return RegExp.compile(pattern, "g");
   }
-   /**
-    * @param regexPattern
-    * @return
-    */
-   private static JsoArray<String> from(CharacterClass[] regexPattern)
-   {
-      JsoArray<String> arr = JsoArray.create();
-      for(CharacterClass clazz : regexPattern)
-      {
-         arr.add(clazz.toString());
-      }
-      return arr;
-   }
 
   /**
    * Joins multiple strings together.
    */
   private static String join(String... regex) {
-     JsoArray<String> ss = JsoArray.from(regex);
-     return ss.join();
+    return Joiner.on("").join(regex);
   }
 }

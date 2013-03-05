@@ -43,14 +43,14 @@ public class CssUtils {
   }
 
   public static boolean containsClassName(Element element, String className) {
-    return element.getClassList().contains(className);
+    return element.hasClassName(className);
   }
 
   public static void setClassNameEnabled(Element element, String className, boolean enable) {
     if (enable) {
-      element.getClassList().add(className);
+      element.addClassName(className);
     } else {
-      element.getClassList().remove(className);
+      element.removeClassName(className);
     }
   }
 

@@ -46,7 +46,7 @@ public class ScrollbarSizeCalculator {
     heightOfHorizontalScrollbar = noScrollbarClientHeight - container.getClientHeight();
     widthOfVerticalScrollbar = noScrollbarClientWidth - container.getClientWidth();
 
-    DomUtils.removeFromParent(container);
+    container.removeFromParent();
   }
 
   private Element createContainer() {

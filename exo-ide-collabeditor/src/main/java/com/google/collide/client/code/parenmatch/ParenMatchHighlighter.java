@@ -36,12 +36,12 @@ import com.google.collide.shared.document.anchor.AnchorType;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.RegExpUtils;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.user.client.Timer;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /*
  * TODO : Make this language specific and utilize code
@@ -239,7 +239,7 @@ public class ParenMatchHighlighter {
 
     @Override
     public ListenerRegistrar.Remover add(CursorListener listener) {
-      Assert.isLegal(this.cursorListener == null, "Can't register two listeners");
+      Preconditions.checkArgument(this.cursorListener == null, "Can't register two listeners");
       this.cursorListener = listener;
       register();
 
@@ -289,6 +289,7 @@ public class ParenMatchHighlighter {
   private Anchor matchAnchor;
   private LineRenderer matchRenderer;
 
+  @VisibleForTesting
   ParenMatchHighlighter(Document document, ViewportModel viewportModel,
       AnchorManager anchorManager, Resources res, Renderer renderer,
       IncrementalScheduler scheduler, ListenerRegistrar<CursorListener> listenerRegistrar) {
@@ -315,7 +316,7 @@ public class ParenMatchHighlighter {
    * Enable or disable the match highlighter. By default it's enabled.
    */
   public void setEnabled(boolean enabled) {
-     Assert.isNotNull(
+    Preconditions.checkNotNull(
         cursorListenerRemover, "can't enable when cursorListenerRemover is null");
     if (enabled) {
       cursorListenerRemover = listenerRegistrar.add(cursorListener);
@@ -380,6 +381,7 @@ public class ParenMatchHighlighter {
    * @param cursorLine the line where the to-be-matched character was found
    * @param column the column to the right of the to-be-matched character
    */
+  @VisibleForTesting
   protected void search(final SearchDirection direction, final char searchChar,
       final char cancelChar, final LineInfo cursorLine, final int column) {
     searchTaskHandler.initialize(cursorLine.line(), column, direction, searchChar, cancelChar);

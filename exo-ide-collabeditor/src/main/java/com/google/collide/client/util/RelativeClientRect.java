@@ -37,32 +37,32 @@ public class RelativeClientRect implements ClientRect {
   }
 
   @Override
-  public float getBottom() {
+  public double getBottom() {
     return rect.getBottom() - offsetTop;
   }
 
   @Override
-  public float getHeight() {
+  public double getHeight() {
     return rect.getHeight();
   }
 
   @Override
-  public float getLeft() {
+  public double getLeft() {
     return rect.getLeft() - offsetLeft;
   }
 
   @Override
-  public float getRight() {
+  public double getRight() {
     return rect.getRight() - offsetLeft;
   }
 
   @Override
-  public float getTop() {
+  public double getTop() {
     return rect.getTop() - offsetTop;
   }
 
   @Override
-  public float getWidth() {
+  public double getWidth() {
     return rect.getWidth();
   }
 }

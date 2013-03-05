@@ -86,9 +86,9 @@ public class CursorView extends UiComponent<CursorView.View> {
 
     private void setBlockMode(boolean isBlockMode) {
       if (isBlockMode) {
-        caret.getClassList().add(css.block());
+        caret.addClassName(css.block());
       } else {
-        caret.getClassList().remove(css.block());
+        caret.removeClassName(css.block());
       }
     }
   }

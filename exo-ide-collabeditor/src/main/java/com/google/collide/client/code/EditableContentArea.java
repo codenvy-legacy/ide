@@ -14,7 +14,6 @@
 
 package com.google.collide.client.code;
 
-import com.google.collide.client.util.dom.DomUtils;
 import com.google.gwt.resources.client.ClientBundle;
 
 import com.google.gwt.resources.client.ClientBundle.Source;
@@ -168,7 +167,7 @@ public class EditableContentArea extends UiComponent<EditableContentArea.View> {
     }
 
     if (currentContent != null) {
-      DomUtils.removeFromParent(currentContent.getContentElement());
+      currentContent.getContentElement().removeFromParent();
     }
 
     getView().getContentElement().setInnerHTML("");

@@ -20,8 +20,8 @@ import com.google.collide.client.editor.EditorDocumentMutator;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.shared.document.Position;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 
 /**
  * Implementation that allows to apply most common autocompletions.
@@ -94,11 +94,11 @@ public class DefaultAutocompleteResult implements AutocompleteResult {
 
   public DefaultAutocompleteResult(String autocompletionText, int jumpLength, int backspaceCount,
       int selectionCount, int deleteCount, PopupAction popupAction, String preContentSuffix) {
-    Assert.isTrue(jumpLength >= 0, "negative jump length");
-    Assert.isTrue(backspaceCount >= 0, "negative backspace count");
-    Assert.isTrue(selectionCount >= 0, "negative select count");
-    Assert.isTrue(deleteCount >= 0, "negative delete count");
-    Assert.isTrue(selectionCount <= jumpLength, "select count > jump length");
+    Preconditions.checkState(jumpLength >= 0, "negative jump length");
+    Preconditions.checkState(backspaceCount >= 0, "negative backspace count");
+    Preconditions.checkState(selectionCount >= 0, "negative select count");
+    Preconditions.checkState(deleteCount >= 0, "negative delete count");
+    Preconditions.checkState(selectionCount <= jumpLength, "select count > jump length");
 
     this.autocompletionText = autocompletionText;
     this.jumpLength = jumpLength;
@@ -121,18 +121,22 @@ public class DefaultAutocompleteResult implements AutocompleteResult {
     this(autocompletionText, jumpLength, 0, 0, 0, PopupAction.CLOSE, preContentSuffix);
   }
 
+  @VisibleForTesting
   public String getAutocompletionText() {
     return autocompletionText;
   }
 
+  @VisibleForTesting
   public int getJumpLength() {
     return jumpLength;
   }
 
+  @VisibleForTesting
   public int getBackspaceCount() {
     return backspaceCount;
   }
 
+  @VisibleForTesting
   public int getDeleteCount() {
     return deleteCount;
   }
