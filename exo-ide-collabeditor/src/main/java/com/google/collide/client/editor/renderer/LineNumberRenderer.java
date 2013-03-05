@@ -28,7 +28,7 @@ import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.gwt.resources.client.ClientBundle;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * A renderer for the line numbers in the left gutter.

@@ -29,6 +29,8 @@ import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Worker that performs the actual parsing of the document by delegating to
@@ -43,14 +45,10 @@ class DocumentParserWorker {
     ParserException(Throwable t) {
       super(t);
     }
-
-     private ParserException()
-     {
-     }
   }
 
   private interface ParsedTokensRecipient {
-    void onTokensParsed(Line line, int lineNumber, JsonArray<Token> tokens);
+    void onTokensParsed(Line line, int lineNumber, @Nonnull JsonArray<Token> tokens);
   }
 
   private static final String LINE_TAG_END_OF_LINE_PARSER_STATE_SNAPSHOT =
@@ -60,7 +58,7 @@ class DocumentParserWorker {
   private final DocumentParser documentParser;
   private final ParsedTokensRecipient documentParserDispatcher = new ParsedTokensRecipient() {
     @Override
-    public void onTokensParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
+    public void onTokensParsed(Line line, int lineNumber, @Nonnull JsonArray<Token> tokens) {
       documentParser.dispatch(line, lineNumber, tokens);
     }
   };
@@ -86,7 +84,7 @@ class DocumentParserWorker {
    * @param anchorToUpdate the optional anchor that this method will update
    */
   private boolean parseImplCm2(Line line, int lineNumber, int numLinesToProcess,
-      Anchor anchorToUpdate, ParsedTokensRecipient tokensRecipient) {
+      @Nullable Anchor anchorToUpdate, ParsedTokensRecipient tokensRecipient) {
 
     State parserState = loadParserStateForBeginningOfLine(line);
     if (parserState == null) {
@@ -163,7 +161,7 @@ class DocumentParserWorker {
       JsonArray<Token> tokens;
 
       @Override
-      public void onTokensParsed(Line line, int lineNumber, JsonArray<Token> tokens) {
+      public void onTokensParsed(Line line, int lineNumber, @Nonnull JsonArray<Token> tokens) {
         this.tokens = tokens;
       }
     }
@@ -214,7 +212,8 @@ class DocumentParserWorker {
    *
    * @see #loadParserStateForBeginningOfLine
    */
-  String getInitialMode(TaggableLine line) {
+  @Nullable
+  String getInitialMode(@Nonnull TaggableLine line) {
     State state = loadParserStateForBeginningOfLine(line);
     if (state == null) {
       return null;
@@ -232,6 +231,7 @@ class DocumentParserWorker {
    *
    * <p>New line char at the end of line is transformed to newline token.
    */
+  @Nonnull
   private JsonArray<Token> parseLine(State parserState, String lineText) throws ParserException {
     boolean endsWithNewline = lineText.endsWith("\n");
     lineText = endsWithNewline ? lineText.substring(0, lineText.length() - 1) : lineText;
@@ -273,7 +273,7 @@ class DocumentParserWorker {
    * @return {@code null} if it is currently impossible to parse.
    */
   <T extends State> ParseResult<T> getParserState(
-      Position position, String appendedText) {
+      Position position, @Nullable String appendedText) {
     Line line = position.getLine();
     T parserState = loadParserStateForBeginningOfLine(line);
     if (parserState == null) {

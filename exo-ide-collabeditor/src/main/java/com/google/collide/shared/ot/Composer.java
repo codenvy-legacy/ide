@@ -18,8 +18,8 @@ import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
 import com.google.collide.dto.shared.DocOpFactory;
 import com.google.collide.json.shared.JsonArray;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 
 import java.util.Iterator;
 
@@ -51,10 +51,6 @@ public class Composer {
     private ComposeException(String message, Exception e) {
       super(message, e);
     }
-
-     public ComposeException()
-     {
-     }
   }
 
   /**
@@ -71,10 +67,6 @@ public class Composer {
     private InternalComposeException(String message, Throwable t) {
       super(message, t);
     }
-
-     private InternalComposeException()
-     {
-     }
   }
 
   /**
@@ -153,7 +145,8 @@ public class Composer {
     }
 
     private void cancel(int count) {
-       Assert.isLegal(count <= bDeleteText.length(), "Cannot cancel if A's component is longer than B's");
+      Preconditions.checkArgument(count <= bDeleteText.length(),
+          "Cannot cancel if A's component is longer than B's");
       
       if (count < bDeleteText.length()) {
         bDeleteText = bDeleteText.substring(count);
@@ -212,7 +205,8 @@ public class Composer {
     }
 
     private void cancel(int count) {
-       Assert.isLegal(count <= bRetainCount, "Cannot cancel if A's component is longer than B's");
+      Preconditions.checkArgument(count <= bRetainCount,
+          "Cannot cancel if A's component is longer than B's");
 
       if (count < bRetainCount) {
         bRetainCount -= count;
@@ -419,7 +413,7 @@ public class Composer {
 
     @Override
     public void retainLine(int bRetainLineCount) {
-       Assert.isLegal(bRetainLineCount > 0, "Must retain more than one line");
+      Preconditions.checkArgument(bRetainLineCount > 0, "Must retain more than one line");
       
       output.retain(aRetainCount, aRetainHasTrailingNewline);
 
@@ -513,6 +507,7 @@ public class Composer {
     }
   }
 
+  @VisibleForTesting
   public static DocOp composeWithStartState(DocOpFactory factory, DocOp a, DocOp b,
       boolean startWithSpecificProcessingAState) throws ComposeException {
     try {

@@ -38,7 +38,7 @@ import elemental.events.EventListener;
 import elemental.events.EventRemover;
 import elemental.events.EventTarget;
 import elemental.events.MouseEvent;
-import elemental.dom.Element;
+import elemental.html.Element;
 import elemental.util.Timer;
 
 /**

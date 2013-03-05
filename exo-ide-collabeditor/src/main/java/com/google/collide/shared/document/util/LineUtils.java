@@ -22,8 +22,7 @@ import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.PositionOutOfBoundsException;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.util.TextUtils;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.base.Preconditions;
 
 /**
  * Utility methods for line manipulations.
@@ -132,8 +131,8 @@ public final class LineUtils {
    * range.
    */
   public static int getTextCount(Line beginLine, int beginColumn, Line endLine, int endColumn) {
-    Assert.isLegal(beginLine.isAttached(), "beginLine must be attached");
-    Assert.isLegal(endLine.isAttached(), "endLine must be attached");
+    Preconditions.checkArgument(beginLine.isAttached(), "beginLine must be attached");
+    Preconditions.checkArgument(endLine.isAttached(), "endLine must be attached");
 
     if (beginLine == endLine) {
       return endColumn - beginColumn + 1;

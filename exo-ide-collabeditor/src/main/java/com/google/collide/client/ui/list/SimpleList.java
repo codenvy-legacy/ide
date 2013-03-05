@@ -27,7 +27,7 @@ import com.google.gwt.resources.client.CssResource;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
+import elemental.html.Element;
 import elemental.js.html.JsElement;
 
 // TODO: Where possible, port more lists that we have hand-rolled in

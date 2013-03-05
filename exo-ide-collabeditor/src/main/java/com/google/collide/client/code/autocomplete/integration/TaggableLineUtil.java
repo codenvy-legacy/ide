@@ -17,6 +17,8 @@ package com.google.collide.client.code.autocomplete.integration;
 import com.google.collide.shared.TaggableLine;
 import com.google.collide.shared.document.Line;
 
+import javax.annotation.Nonnull;
+
 /**
  * {@link com.google.collide.shared.TaggableLine} utility class.
  *
@@ -53,7 +55,8 @@ public class TaggableLineUtil {
     }
   };
 
-  public static TaggableLine getPreviousLine(Line line) {
+  @Nonnull
+  public static TaggableLine getPreviousLine(@Nonnull Line line) {
     Line previousLine = line.getPreviousLine();
 
     if (previousLine != null) {

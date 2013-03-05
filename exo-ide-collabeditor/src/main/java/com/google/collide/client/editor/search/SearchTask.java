@@ -25,8 +25,7 @@ import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
 import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.base.Preconditions;
 
 /**
  * A class which can be used to iterate through the lines of a document. It will
@@ -255,9 +254,10 @@ public class SearchTask {
    * going to end well).
    */
   private boolean scanViewportStartingAtLine(LineInfo startLineInfo) {
-     Assert.isLegal(
-       startLineInfo.number() >= viewport.getTopLineNumber() && startLineInfo.number() <= viewport.getBottomLineNumber(),
-       "Editor: Search start line number not within viewport.");
+    Preconditions.checkArgument(
+        startLineInfo.number() >= viewport.getTopLineNumber() &&
+        startLineInfo.number() <= viewport.getBottomLineNumber(),
+        "Editor: Search start line number not within viewport.");
 
     LineInfo lineInfo = startLineInfo.copy();
     do {

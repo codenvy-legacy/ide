@@ -15,8 +15,7 @@
 package com.google.collide.shared.util;
 
 import com.google.collide.json.shared.JsonArray;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.base.Preconditions;
 
 /**
  * List that is sorted based on the given {@link Comparator}.
@@ -311,7 +310,7 @@ public class SortedList<T> {
   public final void ensureSortedIfEnabled() {
     if (ENSURE_SORTED_PRECONDITIONS_ENABLED) {
       for (int i = 1; i < array.size(); i++) {
-        Assert.isTrue(comparator.compare(array.get(i - 1), array.get(i)) <= 0);
+        Preconditions.checkState(comparator.compare(array.get(i - 1), array.get(i)) <= 0);
       }
     }
   }

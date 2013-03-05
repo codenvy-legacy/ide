@@ -868,9 +868,9 @@ public class CollabEditor extends Widget implements Editor, Markable, RequiresRe
        * @see com.google.collide.client.code.popup.EditorPopupController.PopupRenderer#renderDom()
        */
       @Override
-      public elemental.dom.Element renderDom()
+      public elemental.html.Element renderDom()
       {
-         return (elemental.dom.Element)element;
+         return (elemental.html.Element)element;
       }
 
    }

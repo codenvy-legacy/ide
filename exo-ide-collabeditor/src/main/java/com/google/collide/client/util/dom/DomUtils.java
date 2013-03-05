@@ -23,7 +23,7 @@ import elemental.events.EventListener;
 import elemental.events.MouseEvent;
 import elemental.html.ClientRect;
 import elemental.html.DivElement;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * Utility methods for DOM manipulation.
