@@ -45,7 +45,7 @@
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
       <appengine.version>1.7.2</appengine.version>
-      <ch.qos.logback.version>0.9.20</ch.qos.logback.version>
+      <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
 
 
