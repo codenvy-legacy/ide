@@ -18,6 +18,8 @@ import com.google.collide.codemirror2.Token;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.TaggableLine;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface that presents code analyzing facilities.
  */
@@ -35,7 +37,7 @@ public interface CodeAnalyzer {
    * @param line line being parsed
    * @param tokens tokens collected on the line
    */
-  void onParseLine(TaggableLine previousLine, TaggableLine line, JsonArray<Token> tokens);
+  void onParseLine(TaggableLine previousLine, TaggableLine line, @Nonnull JsonArray<Token> tokens);
 
   /**
    * Cleans up and perform batch operations at the end of parsing iteration.

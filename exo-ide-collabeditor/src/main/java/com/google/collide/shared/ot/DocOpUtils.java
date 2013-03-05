@@ -31,8 +31,7 @@ import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.TextChange;
 import com.google.collide.shared.document.util.LineUtils;
 import com.google.collide.shared.util.StringUtils;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.base.Preconditions;
 
 import java.util.List;
 
@@ -139,7 +138,7 @@ public final class DocOpUtils {
     if (remainingLineCount > 0) {
       components.add(factory.createRetainLine(remainingLineCount));
     } else {
-       Assert.isTrue(remainingLineCount == 0, "How is it negative?");
+      Preconditions.checkState(remainingLineCount == 0, "How is it negative?");
       /*
        * If the retainingLineCount calculation resulted in 0, there's still a
        * chance that there is a empty last line that needs to be retained. Our

@@ -16,6 +16,7 @@ package com.google.collide.client.code.autocomplete;
 
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.codemirror2.SyntaxType;
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Implementation that do not propose completions.
@@ -31,6 +32,7 @@ public class NoneAutocompleter extends LanguageSpecificAutocompleter {
     return instance;
   }
 
+  @VisibleForTesting
   NoneAutocompleter(SyntaxType mode) {
     super(mode);
   }

@@ -36,8 +36,10 @@ import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import javax.annotation.Nonnull;
 
 /**
  * Object that answers question about explicit actions and autocompletions.
@@ -77,7 +79,7 @@ public class ExplicitAutocompleter {
   }
 
   protected ExplicitAction getExplicitAction(SelectionModel selectionModel,
-      SignalEventEssence signal, boolean popupIsShown, DocumentParser parser) {
+      SignalEventEssence signal, boolean popupIsShown, @Nonnull DocumentParser parser) {
     char key = signal.getChar();
     if (!popupIsShown && key == '.') {
       return ExplicitAction.DEFERRED_COMPLETE;
@@ -106,7 +108,7 @@ public class ExplicitAutocompleter {
    * @return result that performs "del" or "del+bs" or nothing
    */
   private ExplicitAction getExplicitBackspaceAutocompletion(
-      SelectionModel selection, DocumentParser parser) {
+      SelectionModel selection, @Nonnull DocumentParser parser) {
     if (selection.hasSelection()) {
       return ExplicitAction.DEFAULT;
     }
@@ -141,7 +143,7 @@ public class ExplicitAutocompleter {
   }
 
   private ExplicitAction getExplicitDoublingAutocompletion(
-      SignalEventEssence trigger, SelectionModel selection, DocumentParser parser) {
+      SignalEventEssence trigger, SelectionModel selection, @Nonnull DocumentParser parser) {
     Position[] selectionRange = selection.getSelectionRange(false);
     ParseUtils.ExtendedParseResult<State> extendedParseResult = ParseUtils
         .getExtendedParseResult(State.class, parser, selectionRange[0]);
@@ -149,7 +151,7 @@ public class ExplicitAutocompleter {
 
     char key = trigger.getChar();
 
-     Assert.isTrue(key != 0);
+    Preconditions.checkState(key != 0);
 
     if (context == NOT_PARSED || context == IN_COMMENT) {
       return ExplicitAction.DEFAULT;
@@ -199,7 +201,7 @@ public class ExplicitAutocompleter {
         ParseResult<State> parseResult = parser.getState(State.class, selectionRange[0], key + " ");
         if (parseResult != null) {
           JsonArray<Token> tokens = parseResult.getTokens();
-           Assert.isTrue(!tokens.isEmpty());
+          Preconditions.checkState(!tokens.isEmpty());
           if (tokens.peek().getType() != STRING) {
             return new ExplicitAction(DefaultAutocompleteResult.PASS_CHAR);
           }
@@ -210,6 +212,7 @@ public class ExplicitAutocompleter {
     return ExplicitAction.DEFAULT;
   }
 
+  @VisibleForTesting
   static String calculateOpenParens(JsonArray<Token> tokens, int column) {
     if (column == 0) {
       return "";
@@ -245,6 +248,7 @@ public class ExplicitAutocompleter {
     return parens.join("");
   }
 
+  @VisibleForTesting
   static String calculateClosingParens(JsonArray<Token> tokens, int column) {
     StringBuilder result = new StringBuilder();
     int colSum = 0;

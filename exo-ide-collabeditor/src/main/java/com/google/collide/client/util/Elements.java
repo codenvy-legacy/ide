@@ -44,7 +44,7 @@ import elemental.html.TableRowElement;
 import elemental.html.TextAreaElement;
 import elemental.html.UListElement;
 import elemental.html.Window;
-import elemental.js.dom.JsElement;
+import elemental.js.html.JsElement;
 import elemental.ranges.Range;
 
 /**
@@ -115,13 +115,13 @@ public class Elements {
   }
 
   public static TableRowElement createTRElement(String... classNames) {
-    TableRowElement elem = getDocument().createTableRowElement();
+    TableRowElement elem = getDocument().createTRElement();
     addClassesToElement(elem, classNames);
     return elem;
   }
 
   public static TableCellElement createTDElement(String... classNames) {
-    TableCellElement elem = getDocument().createTableCellElement();
+    TableCellElement elem = getDocument().createTDElement();
     addClassesToElement(elem, classNames);
     return elem;
   }
@@ -182,7 +182,7 @@ public class Elements {
   }
 
   public static UListElement createUListElement(String... classNames) {
-    UListElement elem = getDocument().createUListElement();
+    UListElement elem = getDocument().createULElement();
     addClassesToElement(elem, classNames);
     return elem;
   }
@@ -208,7 +208,7 @@ public class Elements {
   }
 
   public static BodyElement getBody(Document document) {
-    return (BodyElement)document.getBody();
+    return document.getBody();
   }
 
   public static HeadElement getHead() {
@@ -330,7 +330,7 @@ public class Elements {
   public static void addClassesToElement(Element e, String... classNames) {
     for (String className : classNames) {
       if (!StringUtils.isNullOrEmpty(className)) {
-        e.getClassList().add(className);
+        e.addClassName(className);
       }
     }
   }

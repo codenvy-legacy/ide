@@ -18,7 +18,7 @@ import com.google.collide.mvp.UiComponent;
 import com.google.collide.mvp.View;
 
 import elemental.dom.Element;
-import elemental.js.dom.JsElement;
+import elemental.js.html.JsElement;
 
 /**
  * A single DOM Element.

@@ -106,7 +106,7 @@ public class AutocompleteUiController implements AutocompleteBox {
             //group.setTextContent(itemData.getPath().getPathString());
           } else {
             label.setTextContent("Type for more results");
-            label.getClassList().add(css.cappedProposalLabel());
+            label.addClassName(css.cappedProposalLabel());
           }
           itemElement.appendChild(icon);
           itemElement.appendChild(label);

@@ -17,8 +17,7 @@ package com.google.collide.client.code.lang;
 import com.google.collide.codemirror2.SyntaxType;
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.base.Preconditions;
 
 /**
  * Object thad holds instances of {@link LanguageHelper} and returns
@@ -56,7 +55,7 @@ public class LanguageHelperResolver {
 
   private LanguageHelper resolve(String typeName) {
     LanguageHelper result = mapping.get(typeName);
-     Assert.isNotNull(result, "can't resolve language helper");
+    Preconditions.checkNotNull(result, "can't resolve language helper");
     return result;
   }
 }
