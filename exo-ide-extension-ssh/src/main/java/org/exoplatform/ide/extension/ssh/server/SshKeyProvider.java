@@ -22,6 +22,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -91,8 +92,8 @@ public class SshKeyProvider
    public SshKeyProvider(VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
    {
       this(vfsRegistry, //
-         ExoConfigurationHelper.readValueParam(initParams, "workspace"), //
-         ExoConfigurationHelper.readValueParam(initParams, "user-config"));
+         ContainerUtils.readValueParam(initParams, "workspace"), //
+         ContainerUtils.readValueParam(initParams, "user-config"));
    }
 
    public SshKeyProvider(VirtualFileSystemRegistry vfsRegistry, String workspace, String config)

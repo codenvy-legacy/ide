@@ -67,9 +67,9 @@ public final class JcrFileSystemInitializer implements Startable
                                    EventListenerList listeners)
    {
       this(repositoryService,
-         ContainerUtils.readValuesParam(initParams, "id"),
+         ContainerUtils.readValuesParam(initParams, "repository-ids"),
          itemType2NodeTypeResolver,
-         ContainerUtils.readValueParam(initParams, "workspace"),
+         ContainerUtils.readValueParam(initParams, "jcr-workspace"),
          vfsRegistry,
          listeners);
    }
@@ -80,9 +80,9 @@ public final class JcrFileSystemInitializer implements Startable
                                    VirtualFileSystemRegistry vfsRegistry)
    {
       this(repositoryService,
-         ContainerUtils.readValuesParam(initParams, "id"),
+         ContainerUtils.readValuesParam(initParams, "repository-ids"),
          itemType2NodeTypeResolver,
-         ContainerUtils.readValueParam(initParams, "workspace"),
+         ContainerUtils.readValueParam(initParams, "jcr-workspace"),
          vfsRegistry,
          null);
    }

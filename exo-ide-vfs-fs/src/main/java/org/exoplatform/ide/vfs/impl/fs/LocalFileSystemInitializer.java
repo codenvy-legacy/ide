@@ -59,7 +59,7 @@ public final class LocalFileSystemInitializer implements Startable
                                      LocalFSMountStrategy mountStrategy,
                                      SearcherProvider searcherProvider)
    {
-      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, searcherProvider);
+      this(readValuesParam(initParams, "ids"), registry, listeners, mountStrategy, searcherProvider);
    }
 
    public LocalFileSystemInitializer(InitParams initParams,
@@ -67,14 +67,14 @@ public final class LocalFileSystemInitializer implements Startable
                                      EventListenerList listeners,
                                      LocalFSMountStrategy mountStrategy)
    {
-      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, null);
+      this(readValuesParam(initParams, "ids"), registry, listeners, mountStrategy, null);
    }
 
    public LocalFileSystemInitializer(InitParams initParams,
                                      VirtualFileSystemRegistry registry,
                                      LocalFSMountStrategy mountStrategy)
    {
-      this(readValuesParam(initParams, "id"), registry, null, mountStrategy, null);
+      this(readValuesParam(initParams, "ids"), registry, null, mountStrategy, null);
    }
 
    /**

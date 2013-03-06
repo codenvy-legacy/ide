@@ -84,13 +84,13 @@ public class AppengineServiceTest
       ConversationState.setCurrent(user);
       VirtualFileSystemRegistry vfsRegistry =
          (VirtualFileSystemRegistry)container.getComponentInstanceOfType(VirtualFileSystemRegistry.class);
-      vfs = vfsRegistry.getProvider("ws").newInstance(null, null);
+      vfs = vfsRegistry.getProvider("db1").newInstance(null, null);
 
       testFolder = vfs.createFolder(vfs.getInfo().getRoot().getId(), "test");
    }
 
    @Test
-   public void shoudChangeAppengineWebXml() throws Exception
+   public void testChangeAppengineWebXml() throws Exception
    {
       // create AppEngine Project
       URL testZipResource = Thread.currentThread().getContextClassLoader().getResource("google-app-engine.zip");
@@ -98,11 +98,7 @@ public class AppengineServiceTest
       FileInputStream in = new FileInputStream(f);
       vfs.importZip(testFolder.getId(), in, false);
       // Update app_id
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("change-appid/ws/")//
-         .append(testFolder.getId())//
-         .append("?app_id=test").toString();
+      String path = SERVICE_URI + "change-appid/db1/" + testFolder.getId() + "?app_id=test";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("GET", path, BASE_URI, h, null, null);
@@ -122,11 +118,7 @@ public class AppengineServiceTest
       FileInputStream in = new FileInputStream(f);
       vfs.importZip(testFolder.getId(), in, true);
       // Update app_id
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("change-appid/ws/")//
-         .append(testFolder.getId())//
-         .append("?app_id=test").toString();
+      String path = SERVICE_URI + "change-appid/db1/" + testFolder.getId() + "?app_id=test";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("GET", path, BASE_URI, h, null, null);

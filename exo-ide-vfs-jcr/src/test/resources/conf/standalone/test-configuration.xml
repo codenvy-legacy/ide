@@ -37,11 +37,11 @@
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
          <value-param>
-            <name>workspace</name>
+            <name>jcr-workspace</name>
             <value>ws</value>
          </value-param>
          <values-param>
-            <name>id</name>
+            <name>repository-ids</name>
             <value>db1</value>
          </values-param>
       </init-params>
