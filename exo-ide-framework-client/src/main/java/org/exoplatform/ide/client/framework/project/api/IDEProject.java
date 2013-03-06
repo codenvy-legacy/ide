@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.framework.project.api;
 
-import com.google.gwt.user.client.Timer;
-
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
