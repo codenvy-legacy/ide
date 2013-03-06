@@ -149,4 +149,18 @@ public class ProjectTreeItem extends TreeItem
       return title;
    }
 
+   public ProjectTreeItem getChildByItemId(String itemId)
+   {
+      for (int i = 0; i < getChildCount(); i++)
+      {
+         ProjectTreeItem childItem = (ProjectTreeItem)getChild(i);
+         if (childItem.getUserObject() != null && ((Item)childItem.getUserObject()).getId().equals(itemId))
+         {
+            return childItem;
+         }
+      }
+      
+      return null;
+   }
+
 }

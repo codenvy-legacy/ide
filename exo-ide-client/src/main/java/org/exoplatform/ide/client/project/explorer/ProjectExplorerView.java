@@ -263,4 +263,10 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
       treeGrid.navigateToItem(item);
    }
 
+   @Override
+   public void refreshTree()
+   {
+      treeGrid.refresh();
+   }
+
 }

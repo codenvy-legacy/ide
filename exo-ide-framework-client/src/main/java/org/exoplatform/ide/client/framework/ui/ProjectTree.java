@@ -199,6 +199,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    public void onOpen(OpenEvent<Item> event)
    {
       Folder folder = (Folder)event.getTarget();
+      System.out.println("on open > " + folder.getPath());
       setValue(folder);
    }
    
@@ -278,6 +279,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    
    public void navigateToItem(Item item)
    {
+      System.out.println("navigate to item > " + item.getPath());
+      
       if (project == null)
       {
          return;
@@ -285,15 +288,12 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       
       try
       {
-         String []parts = item.getPath().split("/");         
-         String path = "/" + parts[1];
-
          Folder parent = project;
          List<Item> items = new ArrayList<Item>();
+         String []parts = item.getPath().split("/");         
          
          for (int i = 2; i < parts.length; i++)
          {
-            path += "/" + parts[i];
             Item child = getChild(parent, parts[i]);
             if (child instanceof Folder)
             {
@@ -307,7 +307,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
             setValue(i);
          }
          
-         boolean selected = selectItem(item.getId());
+         selectItem(item.getId());
       }
       catch (Exception e)
       {
@@ -340,6 +340,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    */
    public boolean selectItem(String itemId)
    {
+      System.out.println("select item > " + itemId);
+      
       ProjectTreeItem treeItem = treeItems.get(itemId);
       if (treeItem == null) 
       {
@@ -443,6 +445,84 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
          Grid grid = (Grid)node.getWidget();
          TreeIcon treeIcon = (TreeIcon)grid.getWidget(0, 0);
          treeIcon.removeIcon(itemsIcons.get(item));
+      }
+   }
+   
+   public void refresh()
+   {
+      if (project != null)
+      {
+         refresh(project);
+         
+         if (tree.getSelectedItem() != null)
+         {
+            moveHighlight(tree.getSelectedItem());
+         }
+         else
+         {
+            hideHighlighter();
+         }
+      }
+
+   }
+   
+   private void refresh(Item item)
+   {
+      ProjectTreeItem treeItem = treeItems.get(item.getId());
+      if (treeItem == null)
+      {
+         return;
+      }
+      
+      treeItem.setUserObject(item);
+      treeItem.render();
+      
+      if (!(item instanceof FolderModel) || !treeItem.getState())
+      {
+         return;
+      }
+      
+      Collections.sort(((FolderModel)item).getChildren().getItems(), comparator);
+      List<Item> filteredItems = DirectoryFilter.get().filter(((FolderModel)item).getChildren().getItems());
+      
+      List<String> idList = new ArrayList<String>();
+      for (Item i : filteredItems)
+      {
+         idList.add(i.getId());
+      }
+         
+      // remove not existed items
+      List<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
+      for (int i = 0; i < treeItem.getChildCount(); i++)
+      {
+         TreeItem childItem = treeItem.getChild(i);
+         Item child = (Item)childItem.getUserObject();
+         if (!idList.contains(child.getId()))
+         {
+            itemsToRemove.add(childItem);
+         }
+      }
+      
+      for (TreeItem itemToRemove : itemsToRemove)
+      {
+         treeItem.removeItem(itemToRemove);
+      }
+      
+      // add necessary items
+      int index = 0;
+      for (Item itemToAdd : filteredItems)
+      {
+         ProjectTreeItem child = treeItem.getChildByItemId(itemToAdd.getId());
+         if (child != null)
+         {
+            refresh(itemToAdd);
+         }
+         else
+         {
+            child = new ProjectTreeItem(itemToAdd, prefixId, locktokens);
+            treeItem.insertItem(index, child);
+         }
+         index++;
       }
    }
 

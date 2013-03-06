@@ -151,5 +151,7 @@ public interface ProjectExplorerDisplay extends IsView
     * @return {@link List} of selected projects
     */
    List<ProjectModel> getSelectedProjects();
+   
+   void refreshTree();
 
 }
