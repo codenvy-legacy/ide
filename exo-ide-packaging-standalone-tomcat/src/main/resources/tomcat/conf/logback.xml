@@ -39,7 +39,7 @@
          <DefaultValue>default</DefaultValue>
       </discriminator>
       <sift>
-  <appender name="file" class="com.exoplatform.cloud.log.SecurityRollingFileAppender">
+  <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
       <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
          <!-- daily rollover -->
          <fileNamePattern>${org.exoplatform.logreader.logpath}/${currentTenant}/%d{yyyy/MM/dd/HH}/tenant-%i.log</fileNamePattern>
