@@ -21,14 +21,16 @@
 package org.exoplatform.gwtframework.ui.client.menu;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.user.client.Command;
 
 /**
- * 
+ *
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -77,9 +79,11 @@ public class PopupMenuItem extends MenuItem
 
    private UpdateItemEnablingCallback updateItemEnablingCallback;
 
+   private Map<String, String> attributes = new HashMap<String, String>();
+
    /**
     * Create PopupMenuItem
-    * 
+    *
     * @param title - title
     */
    public PopupMenuItem(String title)
@@ -89,7 +93,7 @@ public class PopupMenuItem extends MenuItem
 
    /**
     * Create PopupMenuItem
-    * 
+    *
     * @param icon - icon as HTML image for new item. Image must be prepared like "<img ... />" tag
     * @param title - title
     */
@@ -283,4 +287,13 @@ public class PopupMenuItem extends MenuItem
       this.updateItemEnablingCallback = updateItemEnablingCallback;
    }
 
+   public Map<String, String> getAttributes()
+   {
+      return attributes;
+   }
+
+   public void setAttributes(Map<String, String> attributes)
+   {
+      this.attributes = attributes;
+   }
 }

@@ -40,6 +40,18 @@ public interface SamplesClientBundle extends ClientBundle
    @Source("org/exoplatform/ide/extension/samples/client/wizard.css")
    Style css();
 
+   @Source("org/exoplatform/ide/extension/samples/client/images/help.png")
+   ImageResource help();
+
+   @Source("org/exoplatform/ide/extension/samples/client/images/help_disabled.png")
+   ImageResource helpDisabled();
+
+   @Source("org/exoplatform/ide/extension/samples/client/images/contact.png")
+   ImageResource contact();
+
+   @Source("org/exoplatform/ide/extension/samples/client/images/contact_disabled.png")
+   ImageResource contactDisabled();
+
    @Source("org/exoplatform/ide/extension/samples/client/images/invite/invite-background.png")
    ImageResource invitePageHeaderBackground();
 
