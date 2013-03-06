@@ -56,7 +56,7 @@ public class SimpleControl extends Control<SimpleControl>
    private String groupName;
 
    //this attributes appends to popup menu item to allow append to item events e.g. onClick or other things
-   private Map<String, String> attributes = new HashMap<String, String>();
+   private Map<String, String> attributes;
 
    public SimpleControl(String id)
    {
@@ -235,6 +235,8 @@ public class SimpleControl extends Control<SimpleControl>
 
    public Map<String, String> getAttributes()
    {
+      if (attributes != null)
+         attributes = new HashMap<String, String>();
       return attributes;
    }
 
