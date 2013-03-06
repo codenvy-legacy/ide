@@ -334,38 +334,9 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       }
       return items;
    }
-
-//   /**
-//   * Select item by itemId
-//   * 
-//   * @param itemId
-//   * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
-//   */
-//   public boolean selectItem(String itemId)
-//   {
-//      System.out.println("select item > " + itemId);
-//      
-//      ProjectTreeItem treeItem = treeItems.get(itemId);
-//      if (treeItem == null) 
-//      {
-//         return false;
-//      }
-//      
-//      tree.setSelectedItem(treeItem, true);
-//      tree.ensureSelectedItemVisible();
-//      
-//      if (project != null && itemId.equals(project))
-//      {
-//         return true;
-//      }
-//      
-//      return treeItem.getParentItem() != null;
-//   }  
    
    public boolean selectItem(Item item)
    {
-//      System.out.println("ProjectTree.selectItem() " + ( item != null ? item.getPath() : "null" ));
-      
       ProjectTreeItem treeItem = treeItems.get(item.getId());
       if (treeItem == null)
       {
@@ -517,11 +488,6 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       {
          return;
       }
-      
-//      if (!(item instanceof FolderModel) || !treeItem.getState())
-//      {
-//         return;
-//      }
       
       Collections.sort(((FolderModel)item).getChildren().getItems(), comparator);
       List<Item> filteredItems = DirectoryFilter.get().filter(((FolderModel)item).getChildren().getItems());
