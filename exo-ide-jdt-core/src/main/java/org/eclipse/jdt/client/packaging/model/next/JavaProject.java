@@ -371,5 +371,20 @@ public class JavaProject extends IDEProject
          classpathFolder.getClasspathList().add(classpath);
       }
    }
+   
+   @Override
+   public void resourceChanged(Item resource)
+   {
+      super.resourceChanged(resource);
+      
+      if (resource instanceof FileModel)
+      {
+         FileModel file = (FileModel)resource;
+         if ("pom.xml".equals(resource.getName()))
+         {
+            folderChangedHandler.onFolderChanged(file.getParent());
+         }
+      }
+   }
 
 }
