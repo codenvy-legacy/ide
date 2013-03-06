@@ -1,0 +1,35 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui" xmlns:p1="urn:import:com.google.gwt.user.cellview.client">
+
+	<ui:with field="locale"
+		type="com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"></ui:with>
+
+	<ui:style>
+		.floatLeft {
+			float: left;
+			margin-left: 10px;
+		}
+		
+		.floatRight {
+			float: right;
+		}
+	</ui:style>
+	<g:DockLayoutPanel unit="PX" width="930px" height="260px">
+		<g:south size="30.0">
+			<g:FlowPanel>
+				<g:Label text="{locale.appsServerLabel}" width="63px"
+					styleName="{style.floatLeft}" />
+				<g:ListBox styleName="{style.floatLeft}" width="410px"
+					ui:field="server" />
+				<g:Button addStyleNames="{style.floatLeft}" ui:field="btnShow" />
+				<g:Button addStyleNames="{style.floatRight}" ui:field="btnClose" />
+			</g:FlowPanel>
+		</g:south>
+		<g:center>
+			<g:SimplePanel>
+				<p1:CellTable width="100%" ui:field="appsTable" focus="false" />
+			</g:SimplePanel>
+		</g:center>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 

@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+<ui:UiBinder xmlns:ui="urn:ui:com.google.gwt.uibinder"
+	xmlns:g="urn:import:com.google.gwt.user.client.ui">
+	
+	<ui:with field="locale" type="com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant"></ui:with>
+	
+	<ui:style>
+		.alignRight {
+			float: right;
+		}
+	</ui:style>
+	<g:DockLayoutPanel unit="PX" width="410px" height="160px">
+		<g:south size="26.0">
+			<g:FlowPanel>
+				<g:Button addStyleNames="{style.alignRight}" width="90px" height="22px" ui:field="btnCancel" />
+				<g:Button addStyleNames="{style.alignRight}" width="90px" height="22px" ui:field="btnRename" />
+			</g:FlowPanel>
+		</g:south>
+		<g:center>
+			<g:FlowPanel>
+				<g:Label text="{locale.renameApplicationViewNameField}" width="100%" height="18px"/>
+				<g:TextBox width="100%" height="22px" ui:field="nameField"/>
+			</g:FlowPanel>
+		</g:center>
+	</g:DockLayoutPanel>
+</ui:UiBinder> 

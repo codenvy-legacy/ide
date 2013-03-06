@@ -6,20 +6,20 @@
       <artifactId>exo.parent</artifactId>
       <version>8.1</version>
    </parent>
-   <groupId>org.exoplatform.ide</groupId>
-   <artifactId>exo-ide-parent</artifactId>
+   <groupId>com.codenvy.ide</groupId>
+   <artifactId>codenvy-ide-parent</artifactId>
    <version>3.0.0-SNAPSHOT</version>
    <packaging>pom</packaging>
-   <name>eXo IDE2 :: Parent</name>
+   <name>Codenvy :: Parent</name>
    <scm>
-      <connection>scm:git:git@github.com:exoplatform/ide2.git</connection>
-      <developerConnection>scm:git:git@github.com:exoplatform/ide2.git</developerConnection>
+      <connection>scm:git:git@github.com:codenvy/ide2.git</connection>
+      <developerConnection>scm:git:git@github.com:codenvy/ide2.git</developerConnection>
       <url>https://fisheye.exoplatform.org/browse/ide2</url>
    </scm>
    <properties>
       <!-- Repositories URLs -->
       <exo.snapshots.repo.url>dav:http://repository.exoplatform.org/content/repositories/exo-private-snapshots</exo.snapshots.repo.url>
-      <exo.product.name>exo-ide</exo.product.name>
+      <exo.product.name>codenvy-ide</exo.product.name>
       <!-- eXo Modules -->
       <org.exoplatform.jcr.version>1.14.8-CR01</org.exoplatform.jcr.version>
       <org.exoplatform.kernel.version>2.3.8-CR01</org.exoplatform.kernel.version>
@@ -148,13 +148,13 @@
 	<!-- IDE -->
 
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-client</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-core</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-core</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
@@ -163,43 +163,38 @@
             <version>${org.exoplatform.vfs.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-commons</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-commons</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-java</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ide-java</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ext-demo</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-demo</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ext-css</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-css</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ext-gae</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-cloudfoundry</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ext-cloudfoundry</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-maven</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ext-maven</artifactId>
-            <version>${project.version}</version>
-         </dependency>
-         <dependency>
-            <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ext-tasks</artifactId>
+            <groupId>com.codenvy.ide</groupId>
+            <artifactId>codenvy-ext-tasks</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -474,7 +469,6 @@
       <module>exo-ext-css</module>
       <module>exo-ext-tasks</module>
       <module>exo-ide-java</module>
-      <module>exo-ext-gae</module>
       <module>exo-ext-cloudfoundry</module>
       <module>exo-ext-maven</module>
       <module>exo-ide-client</module>

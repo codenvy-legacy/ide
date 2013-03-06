@@ -5,13 +5,13 @@
    <!-- POM file generated with GWT webAppCreator -->
    <modelVersion>4.0.0</modelVersion>
    <parent>
-      <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-parent</artifactId>
+      <groupId>com.codenvy.ide</groupId>
+      <artifactId>codenvy-ide-parent</artifactId>
       <version>3.0.0-SNAPSHOT</version>
    </parent>
-   <artifactId>exo-ide-commons</artifactId>
+   <artifactId>codenvy-ide-commons</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE2 :: Commons</name>
+   <name>Codenvy :: Commons</name>
 
    <properties>
       <!-- Convenience property to set the GWT version -->

@@ -5,13 +5,13 @@
    <!-- POM file generated with GWT webAppCreator -->
    <modelVersion>4.0.0</modelVersion>
    <parent>
-      <groupId>org.exoplatform.ide</groupId>
-      <artifactId>exo-ide-parent</artifactId>
+      <groupId>com.codenvy.ide</groupId>
+      <artifactId>codenvy-ide-parent</artifactId>
       <version>3.0.0-SNAPSHOT</version>
    </parent>
-   <artifactId>exo-ext-css</artifactId>
+   <artifactId>codenvy-ext-css</artifactId>
    <packaging>jar</packaging>
-   <name>eXo IDE2 Extension :: CSS</name>
+   <name>Codenvy Extension :: CSS</name>
 
    <dependencies>
       <dependency>
@@ -42,8 +42,8 @@
          <scope>test</scope>
       </dependency>
       <dependency>
-         <groupId>org.exoplatform.ide</groupId>
-         <artifactId>exo-ide-core</artifactId>
+         <groupId>com.codenvy.ide</groupId>
+         <artifactId>codenvy-ide-core</artifactId>
       </dependency>
 
       <dependency>
