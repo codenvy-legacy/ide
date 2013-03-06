@@ -62,6 +62,8 @@ public interface PackageExplorerDisplay extends IsView
    List<Item> getTreeChildren(FolderModel folder);
    
    List<Item> getVisibleItems();
+   
+   void refreshTree();
 
    /*
     * Link with Editor

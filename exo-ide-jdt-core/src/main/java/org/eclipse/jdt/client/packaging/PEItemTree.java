@@ -1191,4 +1191,9 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       return visibleItems;
    }
    
+   public void refresh()
+   {
+      System.out.println("PEItemTree.refresh()");
+   }
+   
 }

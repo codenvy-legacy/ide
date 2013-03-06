@@ -53,6 +53,8 @@ import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconE
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -98,7 +100,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    ProjectOpenedHandler, ProjectClosedHandler, SelectItemHandler,
    EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler, ItemsSelectedHandler, TreeRefreshedHandler,
-   ItemLockedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler
+   ItemLockedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler
 {
 
    private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
@@ -162,6 +164,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       IDE.addHandler(ItemLockedEvent.TYPE, this);
       IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
+      IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
       
       for (String type : ProjectTypes.getList())
       {
@@ -562,6 +565,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onItemLocked(ItemLockedEvent event)
    {
+      if (display == null)
+      {
+         return;
+      }
+      
       Item item = event.getItem();
       if (item instanceof FileModel)
       {
@@ -593,8 +601,28 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event)
    {
-      display.removeItemIcons(event.getIconsToRemove());
+      if (display != null)
+      {
+         display.removeItemIcons(event.getIconsToRemove());         
+      }
    }
-   
+
+   @Override
+   public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
+   {
+      if (display == null)
+      {
+         return;
+      }
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            display.refreshTree();
+         }
+      });      
+   }
    
 }

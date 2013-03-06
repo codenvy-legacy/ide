@@ -16,11 +16,9 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.client.navigation.handler;
+package org.exoplatform.ide.client.framework.navigation.event;
 
 import com.google.gwt.event.shared.EventHandler;
-
-import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 
 /**
  * Class, that implements this handler, will listen to click on Show/Hide Hidden Files control in View menu.

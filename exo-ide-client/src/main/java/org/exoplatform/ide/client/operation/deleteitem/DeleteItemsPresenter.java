@@ -540,7 +540,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       if (folder != null)
       {
          IDE.fireEvent(new RefreshBrowserEvent(folder));
-         IDE.fireEvent(new SelectItemEvent(folder.getId()));
+         IDE.fireEvent(new SelectItemEvent(folder));
       }
    }
 

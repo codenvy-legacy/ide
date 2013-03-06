@@ -200,8 +200,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    {
       Folder folder = (Folder)event.getTarget();
       setValue(folder);
-   }
-   
+   }   
    
    private void removeChildren(TreeItem treeItem)
    {
@@ -278,6 +277,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    
    public void navigateToItem(Item item)
    {
+      System.out.println("navigate to item > " + item.getPath());
+      
       if (project == null)
       {
          return;
@@ -285,15 +286,12 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       
       try
       {
-         String []parts = item.getPath().split("/");         
-         String path = "/" + parts[1];
-
          Folder parent = project;
          List<Item> items = new ArrayList<Item>();
+         String []parts = item.getPath().split("/");         
          
          for (int i = 2; i < parts.length; i++)
          {
-            path += "/" + parts[i];
             Item child = getChild(parent, parts[i]);
             if (child instanceof Folder)
             {
@@ -307,7 +305,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
             setValue(i);
          }
          
-         boolean selected = selectItem(item.getId());
+         selectItem(item);
       }
       catch (Exception e)
       {
@@ -332,31 +330,62 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       return items;
    }
 
-   /**
-   * Select item by itemId
-   * 
-   * @param itemId
-   * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
-   */
-   public boolean selectItem(String itemId)
+//   /**
+//   * Select item by itemId
+//   * 
+//   * @param itemId
+//   * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
+//   */
+//   public boolean selectItem(String itemId)
+//   {
+//      System.out.println("select item > " + itemId);
+//      
+//      ProjectTreeItem treeItem = treeItems.get(itemId);
+//      if (treeItem == null) 
+//      {
+//         return false;
+//      }
+//      
+//      tree.setSelectedItem(treeItem, true);
+//      tree.ensureSelectedItemVisible();
+//      
+//      if (project != null && itemId.equals(project))
+//      {
+//         return true;
+//      }
+//      
+//      return treeItem.getParentItem() != null;
+//   }  
+   
+   public boolean selectItem(Item item)
    {
-      ProjectTreeItem treeItem = treeItems.get(itemId);
-      if (treeItem == null) 
+      System.out.println("ProjectTree.selectItem() " + ( item != null ? item.getPath() : "null" ));
+      
+      ProjectTreeItem treeItem = treeItems.get(item.getId());
+      if (treeItem == null)
       {
          return false;
       }
-      
-      tree.setSelectedItem(treeItem, true);
-      tree.ensureSelectedItemVisible();
-      
-      if (project != null && itemId.equals(project))
+
+      if (treeItem.getParentItem() == null)
       {
-         return true;
+         return false;
       }
-      
-      return treeItem.getParentItem() != null;
-   }  
-   
+
+      try
+      {
+         tree.setSelectedItem(treeItem);
+         tree.ensureSelectedItemVisible();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+
+      treeItem = treeItems.get(item.getId());
+      tree.setSelectedItem(treeItem);
+      return true;
+   }
    
    /**
    * Remove selection of Item
@@ -445,5 +474,127 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
          treeIcon.removeIcon(itemsIcons.get(item));
       }
    }
+   
+   public void refresh()
+   {
+      if (project != null)
+      {
+         refresh(project);
+         
+         if (tree.getSelectedItem() != null)
+         {
+            moveHighlight(tree.getSelectedItem());
+         }
+         else
+         {
+            hideHighlighter();
+         }
+      }
+   }
+   
+   private void refresh(Item item)
+   {
+      ProjectTreeItem treeItem = treeItems.get(item.getId());
+      if (treeItem == null)
+      {
+         return;
+      }
+      
+      treeItem.setUserObject(item);
+      treeItem.render();
+      
+      if (!(item instanceof FolderModel) || !treeItem.getState())
+      {
+         return;
+      }
+      
+      Collections.sort(((FolderModel)item).getChildren().getItems(), comparator);
+      List<Item> filteredItems = DirectoryFilter.get().filter(((FolderModel)item).getChildren().getItems());
+      
+      List<String> idList = new ArrayList<String>();
+      for (Item i : filteredItems)
+      {
+         idList.add(i.getId());
+      }
+         
+      // remove not existed items
+      List<TreeItem> itemsToRemove = new ArrayList<TreeItem>();
+      for (int i = 0; i < treeItem.getChildCount(); i++)
+      {
+         TreeItem childItem = treeItem.getChild(i);
+         Item child = (Item)childItem.getUserObject();
+         if (!idList.contains(child.getId()))
+         {
+            itemsToRemove.add(childItem);
+         }
+      }
+      
+      for (TreeItem itemToRemove : itemsToRemove)
+      {
+         treeItem.removeItem(itemToRemove);
+      }
+      
+      // add necessary items
+      int index = 0;
+      for (Item itemToAdd : filteredItems)
+      {
+         ProjectTreeItem child = treeItem.getChildByItemId(itemToAdd.getId());
+         if (child != null)
+         {
+            refresh(itemToAdd);
+         }
+         else
+         {
+            child = new ProjectTreeItem(itemToAdd, prefixId, locktokens);
+            treeItem.insertItem(index, child);
+         }
+         index++;
+      }
+   }
+   
+   public List<Item> getVisibleItems()
+   {
+      List<Item> visibleItems = new ArrayList<Item>();
+      if (project != null)
+      {
+         ProjectTreeItem projectItem = treeItems.get(project.getId());
+         visibleItems.add((Item)projectItem.getUserObject());
+         visibleItems.addAll(getVisibleItems(projectItem));
+      }
+      
+      return visibleItems;
+   }
+   
+   private List<Item> getVisibleItems(ProjectTreeItem treeItem)
+   {
+      List<Item> visibleItems = new ArrayList<Item>();
+      if (treeItem.getState())
+      {
+         for (int i = 0; i < treeItem.getChildCount(); i++)
+         {
+            TreeItem child = treeItem.getChild(i);
+            if (!(child instanceof ProjectTreeItem))
+            {
+               continue;
+            }
+
+            Item item = (Item)child.getUserObject();
+            if (!(item instanceof FileModel || item instanceof FolderModel))
+            {
+               continue;
+            }
+            
+            visibleItems.add(item);
+            
+            if (item instanceof FolderModel && child.getState())
+            {
+               visibleItems.addAll( getVisibleItems((ProjectTreeItem)child) );
+            }
+         }
+      }
+      
+      return visibleItems;
+   }
+   
 
 }

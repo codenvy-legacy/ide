@@ -803,8 +803,6 @@
       <module>exo-ide-extension-logreader</module>
       <module>exo-ide-extension-googleappengine</module>
 
-      <module>exo-ide-docs</module>
-
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>
       <module>exo-ide-websocket</module>
