@@ -463,14 +463,14 @@
       </pluginManagement>
    </build>
    <modules>
-      <module>exo-ide-commons</module>
-      <module>exo-ide-core</module>
-      <module>exo-ext-demo</module>
-      <module>exo-ext-css</module>
-      <module>exo-ext-tasks</module>
-      <module>exo-ide-java</module>
-      <module>exo-ext-cloudfoundry</module>
-      <module>exo-ext-maven</module>
-      <module>exo-ide-client</module>
+      <module>codenvy-ide-commons</module>
+      <module>codenvy-ide-core</module>
+      <module>codenvy-ext-demo</module>
+      <module>codenvy-ext-css</module>
+      <module>codenvy-ext-tasks</module>
+      <module>codenvy-ide-java</module>
+      <module>codenvy-ext-cloudfoundry</module>
+      <module>codenvy-ext-maven</module>
+      <module>codenvy-ide-client</module>
    </modules>
 </project>
