@@ -463,7 +463,7 @@ public class NavigatorPresenter implements RefreshBrowserHandler, SelectItemHand
          return;
       }
 
-      display.selectItem(event.getItemId());
+      display.selectItem(event.getItem().getId());
    }
 
    public void onItemUnlocked(ItemUnlockedEvent event)

@@ -199,10 +199,8 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
    public void onOpen(OpenEvent<Item> event)
    {
       Folder folder = (Folder)event.getTarget();
-      System.out.println("on open > " + folder.getPath());
       setValue(folder);
-   }
-   
+   }   
    
    private void removeChildren(TreeItem treeItem)
    {
@@ -307,7 +305,7 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
             setValue(i);
          }
          
-         selectItem(item.getId());
+         selectItem(item);
       }
       catch (Exception e)
       {
@@ -332,33 +330,62 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       return items;
    }
 
-   /**
-   * Select item by itemId
-   * 
-   * @param itemId
-   * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
-   */
-   public boolean selectItem(String itemId)
+//   /**
+//   * Select item by itemId
+//   * 
+//   * @param itemId
+//   * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
+//   */
+//   public boolean selectItem(String itemId)
+//   {
+//      System.out.println("select item > " + itemId);
+//      
+//      ProjectTreeItem treeItem = treeItems.get(itemId);
+//      if (treeItem == null) 
+//      {
+//         return false;
+//      }
+//      
+//      tree.setSelectedItem(treeItem, true);
+//      tree.ensureSelectedItemVisible();
+//      
+//      if (project != null && itemId.equals(project))
+//      {
+//         return true;
+//      }
+//      
+//      return treeItem.getParentItem() != null;
+//   }  
+   
+   public boolean selectItem(Item item)
    {
-      System.out.println("select item > " + itemId);
+      System.out.println("ProjectTree.selectItem() " + ( item != null ? item.getPath() : "null" ));
       
-      ProjectTreeItem treeItem = treeItems.get(itemId);
-      if (treeItem == null) 
+      ProjectTreeItem treeItem = treeItems.get(item.getId());
+      if (treeItem == null)
       {
          return false;
       }
-      
-      tree.setSelectedItem(treeItem, true);
-      tree.ensureSelectedItemVisible();
-      
-      if (project != null && itemId.equals(project))
+
+      if (treeItem.getParentItem() == null)
       {
-         return true;
+         return false;
       }
-      
-      return treeItem.getParentItem() != null;
-   }  
-   
+
+      try
+      {
+         tree.setSelectedItem(treeItem);
+         tree.ensureSelectedItemVisible();
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
+
+      treeItem = treeItems.get(item.getId());
+      tree.setSelectedItem(treeItem);
+      return true;
+   }
    
    /**
    * Remove selection of Item
@@ -463,7 +490,6 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
             hideHighlighter();
          }
       }
-
    }
    
    private void refresh(Item item)
@@ -525,5 +551,50 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
          index++;
       }
    }
+   
+   public List<Item> getVisibleItems()
+   {
+      List<Item> visibleItems = new ArrayList<Item>();
+      if (project != null)
+      {
+         ProjectTreeItem projectItem = treeItems.get(project.getId());
+         visibleItems.add((Item)projectItem.getUserObject());
+         visibleItems.addAll(getVisibleItems(projectItem));
+      }
+      
+      return visibleItems;
+   }
+   
+   private List<Item> getVisibleItems(ProjectTreeItem treeItem)
+   {
+      List<Item> visibleItems = new ArrayList<Item>();
+      if (treeItem.getState())
+      {
+         for (int i = 0; i < treeItem.getChildCount(); i++)
+         {
+            TreeItem child = treeItem.getChild(i);
+            if (!(child instanceof ProjectTreeItem))
+            {
+               continue;
+            }
+
+            Item item = (Item)child.getUserObject();
+            if (!(item instanceof FileModel || item instanceof FolderModel))
+            {
+               continue;
+            }
+            
+            visibleItems.add(item);
+            
+            if (item instanceof FolderModel && child.getState())
+            {
+               visibleItems.addAll( getVisibleItems((ProjectTreeItem)child) );
+            }
+         }
+      }
+      
+      return visibleItems;
+   }
+   
 
 }

@@ -341,11 +341,14 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     */
    public void onSelectItem(SelectItemEvent event)
    {
+      System.out.println("ProjectExplorerPresenter.onSelectItem()");
+      
       if (display == null)
       {
          return;
       }
-      display.selectItem(event.getItemId());
+      
+      display.selectItem(event.getItem());
    }
 
    public void onItemUnlocked(ItemUnlockedEvent event)
@@ -566,7 +569,8 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
          return;
       }
 
-      if (display.selectItem(editorActiveFile.getId()))
+      System.out.println("ProjectExplorerPresenter.goToFolder()");
+      if (display.selectItem(editorActiveFile))
       {
          return;
       }
@@ -866,7 +870,8 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       display.getBrowserTree().setValue(null);
       display.getBrowserTree().setValue(openedProject);
       
-      display.selectItem(openedProject.getId());
+      System.out.println("ProjectExplorerPresenter.showProjectTree()");
+      display.selectItem(openedProject);
       selectedItems = display.getSelectedItems();      
       
       display.setLinkWithEditorButtonEnabled(true);
@@ -875,14 +880,28 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
 
 
    @Override
-   public void onTreeRefreshed(TreeRefreshedEvent event)
+   public void onTreeRefreshed(final TreeRefreshedEvent event)
    {
-      if (display == null)
+      if (display != null)
       {
-         return;
-      }
-      
-      display.getBrowserTree().setValue(event.getFolder());
+         //System.out.println("tree refreshed. item to select >> " + itemToSelect);
+         display.getBrowserTree().setValue(event.getFolder());
+         if (event.getItemToSelect() != null)
+         {
+            System.out.println("ProjectExplorerPresenter.onTreeRefreshed()");
+            display.selectItem(event.getItemToSelect());
+         }
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               List<Item> visibleItems = display.getVisibleItems();
+               IDE.fireEvent(new FolderOpenedEvent(event.getFolder(), visibleItems));
+            }
+         });
+      }      
    }
 
    /**
