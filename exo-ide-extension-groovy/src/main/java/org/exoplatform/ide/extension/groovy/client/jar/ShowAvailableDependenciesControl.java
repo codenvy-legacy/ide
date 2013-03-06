@@ -25,7 +25,7 @@ import org.exoplatform.ide.extension.groovy.client.GroovyClientBundle;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -46,6 +46,7 @@ public class ShowAvailableDependenciesControl extends SimpleControl implements I
       super(ID);
       setTitle(TITLE);
       setPrompt(TITLE);
+      setGroupName("Hotkeys & Dependencies");
       setImages(GroovyClientBundle.INSTANCE.jarLibrary(), GroovyClientBundle.INSTANCE.jarLibraryDisabled());
       setEvent(new ShowAvailableDependenciesEvent());
    }
