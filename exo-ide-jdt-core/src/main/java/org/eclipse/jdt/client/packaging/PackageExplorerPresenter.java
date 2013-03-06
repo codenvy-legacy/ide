@@ -59,8 +59,6 @@ import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconE
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
-import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -592,10 +590,13 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onAddItemTreeIcon(AddItemTreeIconEvent event)
    {
+      //display can be null at this point. This check does not affects functionality.
+      //TODO Must be reviewed by client-side guys.
       if (display != null)
-      {         
+      {
          display.addItemsIcons(event.getTreeItemIcons());
       }
+
    }   
    
    /**
