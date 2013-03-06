@@ -247,6 +247,10 @@ public class IDEProject extends ProjectModel
          folderChangedHandler.onFolderChanged(parent);
       }
    }
+   
+   public void resourceChanged(Item resource)
+   {      
+   }
 
    public void refresh(final FolderModel folder, final AsyncCallback<Folder> callback)
    {
