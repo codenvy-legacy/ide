@@ -34,8 +34,14 @@ import java.util.Set;
 import static org.exoplatform.ide.commons.ContainerUtils.readValuesParam;
 
 /**
+ * Useful for local build if we have limited and known set of available virtual file systems. Do not use this component
+ * when run in cloud environment. In cloud environment virtual file systems should be added dynamically when new
+ * workspace is up and removed when workspace goes down.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry
+ * @see org.exoplatform.ide.vfs.server.VirtualFileSystemFactory
  */
 public final class LocalFileSystemInitializer implements Startable
 {

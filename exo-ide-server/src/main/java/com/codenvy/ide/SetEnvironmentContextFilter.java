@@ -19,10 +19,6 @@
 package com.codenvy.ide;
 
 import org.exoplatform.ide.commons.EnvironmentContext;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationRegistry;
-import org.exoplatform.services.security.ConversationState;
 
 import java.io.IOException;
 
@@ -35,39 +31,29 @@ import javax.servlet.ServletResponse;
 
 public class SetEnvironmentContextFilter implements Filter
 {
-
-   /**
-    * Logger.
-    */
-   private static final Log LOG = ExoLogger.getLogger(SetEnvironmentContextFilter.class);
-
-   /**
-    * Set current {@link EnvironmentContext}
-    */
+   /** Set current {@link EnvironmentContext} */
    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
       ServletException
    {
-      EnvironmentContext environment = new EnvironmentContext();
-      environment.setEnvironmentVariable(EnvironmentContext.WORKSPACE, "default");
-      EnvironmentContext.setCurrentEnvironment(environment);
-      chain.doFilter(request, response);
+      try
+      {
+         EnvironmentContext environment = EnvironmentContext.getCurrent();
+         environment.setVariable(EnvironmentContext.WORKSPACE_ID, "default");
+         chain.doFilter(request, response);
+      }
+      finally
+      {
+         EnvironmentContext.reset();
+      }
    }
-   
-   
 
-   /**
-    * {@inheritDoc}
-    */
+   @Override
    public void destroy()
    {
-      // nothing to do.
    }
 
    @Override
    public void init(FilterConfig filterConfig) throws ServletException
    {
-      // TODO Auto-generated method stub
-
    }
-
 }

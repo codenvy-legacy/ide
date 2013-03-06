@@ -250,7 +250,7 @@ public class EventsTest extends MemoryFileSystemTest
       testEventsFolder.addChild(project);
       memoryContext.putItem(project);
 
-      eventListenerList.addEventListener(ProjectUpdateEventFilter.newFilter("memory", project),
+      eventListenerList.addEventListener(ProjectUpdateEventFilter.newFilter(MY_WORKSPACE_ID, project),
          new ProjectUpdateListener(project.getId()));
 
       int configuredListeners = eventListenerList.size();
@@ -269,7 +269,7 @@ public class EventsTest extends MemoryFileSystemTest
       testEventsFolder.addChild(project);
       memoryContext.putItem(project);
 
-      eventListenerList.addEventListener(ProjectUpdateEventFilter.newFilter("memory", project),
+      eventListenerList.addEventListener(ProjectUpdateEventFilter.newFilter(MY_WORKSPACE_ID, project),
          new ProjectUpdateListener(project.getId()));
 
       String name = "testProjectUpdateListenerFolder";

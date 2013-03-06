@@ -45,7 +45,7 @@ public class GetAvailableFileSystemsTest extends LocalFileSystemTest
       VirtualFileSystemInfo vfsInfo = null;
       for (VirtualFileSystemInfo e : entity)
       {
-         if (e.getId().equals(VFS_ID))
+         if (e.getId().equals(MY_WORKSPACE_ID))
          {
             if (vfsInfo != null)
             {
@@ -61,7 +61,7 @@ public class GetAvailableFileSystemsTest extends LocalFileSystemTest
       assertEquals(QueryCapability.NONE, vfsInfo.getQueryCapability()); // TODO : update when implement search
       assertEquals(VirtualFileSystemInfo.ANONYMOUS_PRINCIPAL, vfsInfo.getAnonymousPrincipal());
       assertEquals(VirtualFileSystemInfo.ANY_PRINCIPAL, vfsInfo.getAnyPrincipal());
-      assertEquals(VFS_ID, vfsInfo.getId());
+      assertEquals(MY_WORKSPACE_ID, vfsInfo.getId());
       BasicPermissions[] basicPermissions = BasicPermissions.values();
       List<String> expectedPermissions = new ArrayList<String>(basicPermissions.length);
       for (BasicPermissions bp : basicPermissions)

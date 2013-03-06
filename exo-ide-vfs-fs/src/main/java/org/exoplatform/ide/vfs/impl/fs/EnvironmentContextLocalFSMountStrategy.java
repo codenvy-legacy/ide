@@ -18,21 +18,19 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import static org.exoplatform.ide.commons.ContainerUtils.readValueParam;
-
-import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.services.security.ConversationState;
 
 /**
- * Implementation of LocalFSMountStrategy that obtains name of workspace from attributes of ConversationState.
+ * Implementation of LocalFSMountStrategy that uses EnvironmentContext to determine mount point for virtual filesystem.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
- * @see org.exoplatform.services.security.ConversationState
- * @see org.exoplatform.services.security.ConversationState#getAttribute(String)
+ * @see org.exoplatform.ide.commons.EnvironmentContext
+ * @see MountPoint
+ * @see LocalFileSystem
  */
-public class ConversationStateLocalFSMountStrategy implements LocalFSMountStrategy
+public class EnvironmentContextLocalFSMountStrategy implements LocalFSMountStrategy
 {
    private static final String[] segments = new String[]
       {
@@ -54,48 +52,37 @@ public class ConversationStateLocalFSMountStrategy implements LocalFSMountStrate
          "f0", "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "fa", "fb", "fc", "fd", "fe", "ff",
       };
 
-   private final java.io.File mountRoot;
-
-   public ConversationStateLocalFSMountStrategy(InitParams initParams)
-   {
-      mountRoot = new java.io.File(
-         readValueParam(initParams, "mount-root", System.getProperty("org.exoplatform.ide.server.fs-root-path")));
-   }
-
-   public ConversationStateLocalFSMountStrategy(java.io.File mountRoot)
-   {
-      this.mountRoot = mountRoot;
-   }
-
    @Override
-   public java.io.File getMountPath(String workspace) throws VirtualFileSystemException
+   public java.io.File getMountPath(String workspaceId) throws VirtualFileSystemException
    {
-      if (workspace == null)
+      final EnvironmentContext context = EnvironmentContext.getCurrent();
+      if (workspaceId == null)
       {
-         ConversationState state = ConversationState.getCurrent();
-         if (state != null)
-         {
-            workspace = (String)state.getAttribute("currentTenant");
-         }
-        
+         workspaceId = (String)context.getVariable(EnvironmentContext.WORKSPACE_ID);
       }
-      if (workspace == null || workspace.isEmpty())
+      if (workspaceId == null || workspaceId.isEmpty())
       {
-         throw new VirtualFileSystemException("Unable get mount path for virtual file systems. ");
+         throw new VirtualFileSystemException("Unable get mount path for virtual file system. Workspace id is not set.");
+      }
+      java.io.File mountRoot = (java.io.File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR);
+      if (mountRoot == null)
+      {
+         throw new VirtualFileSystemException(
+            String.format("Unable get mount path for virtual file system '%s'. Root mount directory is not set. ", workspaceId));
       }
       // We can have a lot of workspace and create root folder for all of them at the same level of filesystem
       // may be inefficient. Keep workspace root folder in some hierarchy tree, use hash code for it.
-      return calculateDirPath(mountRoot, workspace);
+      return calculateDirPath((java.io.File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR), workspaceId);
    }
 
    // need package visibility for test
-   static java.io.File calculateDirPath(java.io.File parent, String workspace)
+   static java.io.File calculateDirPath(java.io.File parent, String workspaceId)
    {
-      final int hash = workspace.hashCode();
+      final int hash = workspaceId.hashCode();
       final String relPath = segments[hash & 0xff] +
          java.io.File.separatorChar + segments[(hash >> 8) & 0xff] +
          java.io.File.separatorChar + segments[(hash >> 16) & 0xff] +
-         java.io.File.separatorChar + workspace;
+         java.io.File.separatorChar + workspaceId;
       return new java.io.File(parent, relPath);
    }
 

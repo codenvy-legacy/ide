@@ -37,7 +37,7 @@ public class ResourceLoaderTest extends MemoryFileSystemTest
    private String fileId;
    private String filePath;
 
-   private String vfsId = "memory";
+   private String vfsId = MY_WORKSPACE_ID;
 
    @Override
    protected void setUp() throws Exception
