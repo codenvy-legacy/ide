@@ -880,10 +880,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
    {
       if (display != null)
       {
-//         System.out.println("ProjectExplorerPresenter.onTreeRefreshed()");
-//         System.out.println("folder > " + event.getFolder());
-//         System.out.println("item to select > " + event.getItemToSelect());
-         
          display.getBrowserTree().setValue(event.getFolder());
          if (event.getItemToSelect() != null)
          {
