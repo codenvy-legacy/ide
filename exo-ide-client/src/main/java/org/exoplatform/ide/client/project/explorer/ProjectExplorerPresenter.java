@@ -341,8 +341,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     */
    public void onSelectItem(SelectItemEvent event)
    {
-      System.out.println("ProjectExplorerPresenter.onSelectItem()");
-      
       if (display == null)
       {
          return;
@@ -569,7 +567,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
          return;
       }
 
-      System.out.println("ProjectExplorerPresenter.goToFolder()");
       if (display.selectItem(editorActiveFile))
       {
          return;
@@ -870,7 +867,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       display.getBrowserTree().setValue(null);
       display.getBrowserTree().setValue(openedProject);
       
-      System.out.println("ProjectExplorerPresenter.showProjectTree()");
       display.selectItem(openedProject);
       selectedItems = display.getSelectedItems();      
       
@@ -884,11 +880,13 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
    {
       if (display != null)
       {
-         //System.out.println("tree refreshed. item to select >> " + itemToSelect);
+//         System.out.println("ProjectExplorerPresenter.onTreeRefreshed()");
+//         System.out.println("folder > " + event.getFolder());
+//         System.out.println("item to select > " + event.getItemToSelect());
+         
          display.getBrowserTree().setValue(event.getFolder());
          if (event.getItemToSelect() != null)
          {
-            System.out.println("ProjectExplorerPresenter.onTreeRefreshed()");
             display.selectItem(event.getItemToSelect());
          }
          
