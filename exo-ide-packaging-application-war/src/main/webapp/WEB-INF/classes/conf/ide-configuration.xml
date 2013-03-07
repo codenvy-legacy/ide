@@ -89,7 +89,7 @@
      <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
      <init-params>
         <values-param>
-           <name>id</name>
+           <name>ids</name>
            <value>production</value>
            <value>dev-monit</value>
         </values-param>
@@ -97,13 +97,7 @@
   </component>
    
   <component>
-     <type>org.exoplatform.ide.vfs.impl.fs.SimpleLocalFSMountStrategy</type>
-     <init-params>
-        <!--value-param>
-           <name>mount-root</name>
-           <value>/home/andrew/tmp/tomcat-ide/data</value>
-        </value-param-->
-     </init-params>
+     <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
   </component>
 
   <component>
@@ -295,7 +289,7 @@
    <!-- Google Gadgets support-->
 
    <component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtensionApplication</type>
    </component>
 
    <!-- End Google Gadgets support-->

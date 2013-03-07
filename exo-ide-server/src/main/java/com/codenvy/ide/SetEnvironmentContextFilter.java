@@ -20,7 +20,12 @@ package com.codenvy.ide;
 
 import org.exoplatform.ide.commons.EnvironmentContext;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -31,6 +36,8 @@ import javax.servlet.ServletResponse;
 
 public class SetEnvironmentContextFilter implements Filter
 {
+   private Map<String, Object> env;
+
    /** Set current {@link EnvironmentContext} */
    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
       ServletException
@@ -38,7 +45,11 @@ public class SetEnvironmentContextFilter implements Filter
       try
       {
          EnvironmentContext environment = EnvironmentContext.getCurrent();
-         environment.setVariable(EnvironmentContext.WORKSPACE_ID, "default");
+         for (Map.Entry<String, Object> entry : env.entrySet())
+         {
+            environment.setVariable(entry.getKey(), entry.getValue());
+         }
+
          chain.doFilter(request, response);
       }
       finally
@@ -55,5 +66,13 @@ public class SetEnvironmentContextFilter implements Filter
    @Override
    public void init(FilterConfig filterConfig) throws ServletException
    {
+      Map<String, Object> myEnv = new HashMap<String, Object>();
+      myEnv.put(EnvironmentContext.WORKSPACE_NAME, "dev-monit");
+      myEnv.put(EnvironmentContext.WORKSPACE_ID, "dev-monit");
+      myEnv.put(EnvironmentContext.GIT_SERVER, "git");
+      myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
+      myEnv.put(EnvironmentContext.VFS_ROOT_DIR, new File("../temp/fs-root"));
+      myEnv.put(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
+      this.env = Collections.unmodifiableMap(myEnv);
    }
 }

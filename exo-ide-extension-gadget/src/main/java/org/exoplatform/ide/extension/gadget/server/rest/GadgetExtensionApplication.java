@@ -29,14 +29,14 @@ import javax.ws.rs.core.Application;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: $
  */
-public class GadgetExtenshionApplication extends Application
+public class GadgetExtensionApplication extends Application
 {
 
    private Set<Class<?>> classes;
 
    private Set<Object> singletons;
 
-   public GadgetExtenshionApplication()
+   public GadgetExtensionApplication()
    {
       classes = new HashSet<Class<?>>();
       classes.add(RestSecurityTokenGenerator.class);

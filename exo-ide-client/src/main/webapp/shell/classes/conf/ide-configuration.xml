@@ -240,7 +240,7 @@
 <!-- Google Gadgets support-->
 
    <!--component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
+      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtensionApplication</type>
    </component-->
    
 <!-- End Google Gadgets support-->   
