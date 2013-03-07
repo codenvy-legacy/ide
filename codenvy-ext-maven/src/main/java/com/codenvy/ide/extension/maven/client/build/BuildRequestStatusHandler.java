@@ -18,15 +18,12 @@
  */
 package com.codenvy.ide.extension.maven.client.build;
 
-import com.codenvy.ide.job.Job;
-import com.codenvy.ide.job.JobChangeEvent;
-import com.codenvy.ide.job.Job.JobStatus;
-import com.codenvy.ide.rest.RequestStatusHandler;
-
 import com.codenvy.ide.extension.maven.client.BuilderExtension;
-
+import com.codenvy.ide.job.Job;
+import com.codenvy.ide.job.Job.JobStatus;
+import com.codenvy.ide.job.JobChangeEvent;
+import com.codenvy.ide.rest.RequestStatusHandler;
 import com.google.web.bindery.event.shared.EventBus;
-
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
@@ -49,7 +46,7 @@ public class BuildRequestStatusHandler implements RequestStatusHandler
    }
 
    /**
-    * @see com.codenvy.gwtframework.commons.rest.RequestStatusHandler#requestInProgress(java.lang.String)
+    * {@inheritDoc}
     */
    @Override
    public void requestInProgress(String id)
@@ -60,7 +57,7 @@ public class BuildRequestStatusHandler implements RequestStatusHandler
    }
 
    /**
-    * @see com.codenvy.gwtframework.commons.rest.RequestStatusHandler#requestFinished(java.lang.String)
+    * {@inheritDoc}
     */
    @Override
    public void requestFinished(String id)
@@ -71,7 +68,7 @@ public class BuildRequestStatusHandler implements RequestStatusHandler
    }
 
    /**
-    * @see com.codenvy.gwtframework.commons.rest.RequestStatusHandler#requestError(java.lang.String, java.lang.Throwable)
+    * {@inheritDoc}
     */
    @Override
    public void requestError(String id, Throwable exception)

@@ -19,10 +19,7 @@
 package com.codenvy.ide.extension.maven.client.event;
 
 import com.codenvy.ide.resources.model.Project;
-
 import com.google.gwt.event.shared.GwtEvent;
-
-import com.codenvy.ide.extension.maven.client.event.BuildProjectHandler;
 
 /**
  * Event occurs, when user tries to build project by maven builder.
@@ -99,7 +96,7 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
    public static final GwtEvent.Type<BuildProjectHandler> TYPE = new GwtEvent.Type<BuildProjectHandler>();
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    * {@inheritDoc}
     */
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<BuildProjectHandler> getAssociatedType()
@@ -108,7 +105,7 @@ public class BuildProjectEvent extends GwtEvent<BuildProjectHandler>
    }
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    * {@inheritDoc}
     */
    @Override
    protected void dispatch(BuildProjectHandler handler)

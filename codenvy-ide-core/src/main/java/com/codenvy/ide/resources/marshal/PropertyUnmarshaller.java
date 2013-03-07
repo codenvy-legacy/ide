@@ -18,12 +18,11 @@
  */
 package com.codenvy.ide.resources.marshal;
 
-import com.codenvy.ide.resources.model.Property;
-
 import com.codenvy.ide.commons.exception.UnmarshallerException;
 import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.resources.model.Property;
 import com.codenvy.ide.rest.Unmarshallable;
-
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
@@ -36,7 +35,7 @@ import com.google.gwt.json.client.JSONParser;
  */
 public class PropertyUnmarshaller implements Unmarshallable<JsonArray<Property>>
 {
-   protected JsonArray<Property> properties;
+   protected JsonArray<Property> properties = JsonCollections.createArray();
 
    public PropertyUnmarshaller()
    {
@@ -51,7 +50,8 @@ public class PropertyUnmarshaller implements Unmarshallable<JsonArray<Property>>
       try
       {
          JSONObject itemObject = JSONParser.parseLenient(response.getText()).isObject();
-         properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+         JsonArray<Property> properties = JSONDeserializer.PROPERTY_DESERIALIZER.toList(itemObject.get("properties"));
+         this.properties.addAll(properties);
       }
       catch (Exception exc)
       {

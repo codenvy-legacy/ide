@@ -16,23 +16,20 @@
  */
 package com.codenvy.ide.client;
 
-import com.codenvy.ide.extension.demo.DemoExtension;
-
-import com.codenvy.ide.extension.css.CssExtension;
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-
-import com.google.inject.Inject;
-import com.google.inject.Provider;
-import com.google.inject.Singleton;
-
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.extension.ExtensionRegistry;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.css.CssExtension;
+import com.codenvy.ide.extension.demo.DemoExtension;
+import com.codenvy.ide.extension.maven.client.BuilderExtension;
 import com.codenvy.ide.extension.tasks.TasksExtension;
 import com.codenvy.ide.java.client.JavaExtension;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.json.JsonStringMap;
+import com.google.inject.Inject;
+import com.google.inject.Provider;
+import com.google.inject.Singleton;
 
 /**
  * {@link ExtensionManager} responsible for bringing up Extensions. It uses ExtensionRegistry to acquire 
@@ -54,8 +51,9 @@ public class ExtensionManager
     */
    @Inject
    public ExtensionManager(final ExtensionRegistry extensionRegistry, final Provider<DemoExtension> demoExt,
-      final Provider<CssExtension> cssExt, final Provider<JavaExtension> javaExt,  final Provider<TasksExtension> tasksExt, 
-      Provider<CloudFoundryExtension> cloudFoundryExt)
+      final Provider<CssExtension> cssExt, final Provider<JavaExtension> javaExt,
+      final Provider<TasksExtension> tasksExt, Provider<CloudFoundryExtension> cloudFoundryExt,
+      Provider<BuilderExtension> buildExt)
    {
       this.extensions = JsonCollections.createArray();
       this.extensionRegistry = extensionRegistry;
@@ -64,6 +62,7 @@ public class ExtensionManager
       this.extensions.add(javaExt);
       this.extensions.add(cloudFoundryExt);
       this.extensions.add(tasksExt);
+      this.extensions.add(buildExt);
    }
 
    /**

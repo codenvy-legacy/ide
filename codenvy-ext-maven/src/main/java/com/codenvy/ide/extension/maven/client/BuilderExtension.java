@@ -19,24 +19,20 @@
 package com.codenvy.ide.extension.maven.client;
 
 import com.codenvy.ide.extension.Extension;
-
+import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
+import com.codenvy.ide.loader.EmptyLoader;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.maven.client.BuilderAutoBeanFactory;
-import com.codenvy.ide.extension.maven.client.BuilderLocalizationConstant;
-import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
 
 /**
  * Maven builder extension entry point.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuilderExtension.java Feb 21, 2012 1:53:48 PM azatsarynnyy $
- * 
  */
 @Singleton
-@Extension(title = "Maven Support.", id = "ide.ext.maven", version = "2.0.0")
+@Extension(title = "Maven Support.", id = "ide.ext.maven", version = "3.0.0")
 public class BuilderExtension
 {
    public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);
@@ -53,6 +49,7 @@ public class BuilderExtension
    @Inject
    public BuilderExtension(BuildProjectPresenter buildProjectPresenter)
    {
-
+      String restContext = "/rest/private";
+      new BuilderClientServiceImpl(restContext, new EmptyLoader());
    }
 }
