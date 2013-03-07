@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.user.client.Timer;
+
+import com.google.gwt.user.client.Timer;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -35,6 +39,7 @@ import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
@@ -103,6 +108,15 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          {
             IDELoader.hide();
             IDE.fireEvent(new ProjectOpenedEvent(openedProject));
+            
+            new Timer()
+            {
+               @Override
+               public void run()
+               {
+                  IDE.fireEvent(new SelectItemEvent(openedProject));
+               }
+            }.schedule(1000);       
          }
       });
 

@@ -339,14 +339,26 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     * Select chosen item in browser.
     *
     */
-   public void onSelectItem(SelectItemEvent event)
+   public void onSelectItem(final SelectItemEvent event)
    {
       if (display == null)
       {
          return;
       }
       
-      display.selectItem(event.getItem());
+      if (display.asView().isViewVisible())
+      {
+         display.selectItem(event.getItem());
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
+            }
+         });         
+      }      
    }
 
    public void onItemUnlocked(ItemUnlockedEvent event)
@@ -857,8 +869,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       }
    }
    
-   
-   
    private void showProjectTree()
    {
       display.asView().setTitle(openedProject.getName());
@@ -867,13 +877,13 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       display.getBrowserTree().setValue(null);
       display.getBrowserTree().setValue(openedProject);
       
-      display.selectItem(openedProject);
-      selectedItems = display.getSelectedItems();      
-      
+      //display.selectItem(openedProject);
+      //selectedItems = display.getSelectedItems();
+      selectedItems = new ArrayList<Item>();
+
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
    }
-
 
    @Override
    public void onTreeRefreshed(final TreeRefreshedEvent event)

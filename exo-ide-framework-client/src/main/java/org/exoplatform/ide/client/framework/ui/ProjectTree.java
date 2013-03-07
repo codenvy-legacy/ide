@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.framework.ui;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.NativeEvent;
 import com.google.gwt.event.logical.shared.OpenEvent;
@@ -340,11 +342,13 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
       ProjectTreeItem treeItem = treeItems.get(item.getId());
       if (treeItem == null)
       {
+         updateHighlighter(null);
          return false;
       }
 
       if (treeItem.getParentItem() == null)
       {
+         updateHighlighter(null);
          return false;
       }
 
@@ -360,7 +364,28 @@ public class ProjectTree extends org.exoplatform.gwtframework.ui.client.componen
 
       treeItem = treeItems.get(item.getId());
       tree.setSelectedItem(treeItem);
+      
+      updateHighlighter(treeItem);
       return true;
+   }
+   
+   private void updateHighlighter(final TreeItem treeItem)
+   {
+//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//      {
+//         @Override
+//         public void execute()
+//         {
+//            if (treeItem != null)
+//            {
+//               moveHighlight(treeItem);
+//            }
+//            else
+//            {
+//               hideHighlighter();
+//            }            
+//         }
+//      });      
    }
    
    /**
