@@ -1230,13 +1230,22 @@ public class JcrFileSystem implements VirtualFileSystem
                session.getUserID())
             );
          }
+
+         final Item updItem = fromItemData(data, PropertyFilter.ALL_FILTER);
+         final String projectType = updItem.hasProperty("vfs:projectType") ? updItem.getPropertyValue("vfs:projectType") : null;
+         //TODO need to organize both ProjectType enums from server and client side to use one shared ProjectType
+         if (projectType != null && ("Servlet/JSP".equals(projectType) || "Spring".equals(projectType)))
+         {
+            String jRebelUsage = updItem.hasProperty("jrebel") ? updItem.getPropertyValue("jrebel") : "false";
+            LOG.info("EVENT#jrebel-usage# PROJECT#" + updItem.getName() + "# TYPE#" + projectType + "# JREBEL#" + jRebelUsage + "#");
+         }
+
          if (convertToProject)
          {
-            List<Property> props = data.getProperties(PropertyFilter.valueOf("vfs:projectType"));
-            String projectType = props.size() == 0 ? "" : props.get(0).getValue().get(0);
-            LOG.info("EVENT#project-created# PROJECT#" + data.getName() + "# TYPE#" + projectType + "#");
+            LOG.info("EVENT#project-created# PROJECT#" + updItem.getName() + "# TYPE#" + projectType + "#");
          }
-         return fromItemData(data, PropertyFilter.ALL_FILTER);
+
+         return updItem;
       }
       finally
       {
