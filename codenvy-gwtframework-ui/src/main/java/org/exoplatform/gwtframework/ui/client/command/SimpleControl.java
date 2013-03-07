@@ -235,8 +235,10 @@ public class SimpleControl extends Control<SimpleControl>
 
    public Map<String, String> getAttributes()
    {
-      if (attributes != null)
+      if (attributes == null)
+      {
          attributes = new HashMap<String, String>();
+      }
       return attributes;
    }
 
