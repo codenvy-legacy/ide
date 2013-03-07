@@ -111,7 +111,7 @@ public class Searcher
       final long start = System.currentTimeMillis();
       int indexedFiles = addTree(mountPoint.getRoot());
       final long end = System.currentTimeMillis();
-      LOG.info("Index creation time: {} ms, indexed: {} files", (end - start), indexedFiles);
+      LOG.debug("Index creation time: {} ms, indexed: {} files", (end - start), indexedFiles);
    }
 
    /**
