@@ -21,11 +21,10 @@ package org.exoplatform.ide.git.client.remove;
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
- * Event occurs, when user tries to remove selected items in browser from commit. Implement {@link RemoveFilesHandler} handler to
- * process event.
+ * Event is fired, when user tries to remove something from Git index. Implement {@link RemoveFilesHandler} handler for processing event.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 12, 2011 3:54:53 PM anya $
+ * @version $Id: Mar 29, 2011 4:26:18 PM anya $
  * 
  */
 public class RemoveFilesEvent extends GwtEvent<RemoveFilesHandler>
@@ -40,7 +39,7 @@ public class RemoveFilesEvent extends GwtEvent<RemoveFilesHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public Type<RemoveFilesHandler> getAssociatedType()
+   public GwtEvent.Type<RemoveFilesHandler> getAssociatedType()
    {
       return TYPE;
    }
