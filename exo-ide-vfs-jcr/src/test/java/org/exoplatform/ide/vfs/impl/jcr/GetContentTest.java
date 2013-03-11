@@ -77,10 +77,7 @@ public class GetContentTest extends JcrFileSystemTest
    public void testGetContent() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "content/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -93,10 +90,7 @@ public class GetContentTest extends JcrFileSystemTest
    {
       // Expect the same as 'get content' plus header "Content-Disposition". 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("downloadfile/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "downloadfile/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -109,10 +103,7 @@ public class GetContentTest extends JcrFileSystemTest
    public void testGetContentFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(folderID).toString();
+      String path = SERVICE_URI + "content/" + folderID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -126,10 +117,7 @@ public class GetContentTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "content/" + fileID;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -138,10 +126,7 @@ public class GetContentTest extends JcrFileSystemTest
    public void testGetContentByPath() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("contentbypath") //
-         .append(filePath).toString();
+      String path = SERVICE_URI + "contentbypath" + filePath;
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));
@@ -161,13 +146,7 @@ public class GetContentTest extends JcrFileSystemTest
       contentNode.setProperty("jcr:data", new ByteArrayInputStream("__GetContentTest__UPDATED".getBytes()));
       session.save();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("contentbypath") //
-         .append(filePath) //
-         .append("?") //
-         .append("versionId=") //
-         .append("1").toString();
+      String path = SERVICE_URI + "contentbypath" + filePath + "?" + "versionId=" + "1";
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       //log.info(new String(writer.getBody()));

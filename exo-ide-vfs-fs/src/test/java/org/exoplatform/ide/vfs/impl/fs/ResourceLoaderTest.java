@@ -43,8 +43,8 @@ public class ResourceLoaderTest extends LocalFileSystemTest
 
    public void testLoadFileById() throws Exception
    {
-      URL file = new URI("ide+vfs", "/" + VFS_ID, fileId).toURL();
-      final String expectedURL = "ide+vfs:/" + VFS_ID + '#' + fileId;
+      URL file = new URI("ide+vfs", "/" + MY_WORKSPACE_ID, fileId).toURL();
+      final String expectedURL = "ide+vfs:/" + MY_WORKSPACE_ID + '#' + fileId;
       assertEquals(expectedURL, file.toString());
       byte[] b = new byte[128];
       InputStream in = file.openStream();
@@ -55,8 +55,8 @@ public class ResourceLoaderTest extends LocalFileSystemTest
 
    public void testLoadFileByPath() throws Exception
    {
-      URL file = new URI("ide+vfs", "/" + VFS_ID, filePath).toURL();
-      final String expectedURL = "ide+vfs:/" + VFS_ID + '#' + filePath;
+      URL file = new URI("ide+vfs", "/" + MY_WORKSPACE_ID, filePath).toURL();
+      final String expectedURL = "ide+vfs:/" + MY_WORKSPACE_ID + '#' + filePath;
       assertEquals(expectedURL, file.toString());
       byte[] b = new byte[128];
       InputStream in = file.openStream();
@@ -67,8 +67,8 @@ public class ResourceLoaderTest extends LocalFileSystemTest
 
    public void testLoadFolderById() throws Exception
    {
-      URL folder = new URI("ide+vfs", "/" + VFS_ID, folderId).toURL();
-      final String expectedURL = "ide+vfs:/" + VFS_ID + '#' + folderId;
+      URL folder = new URI("ide+vfs", "/" + MY_WORKSPACE_ID, folderId).toURL();
+      final String expectedURL = "ide+vfs:/" + MY_WORKSPACE_ID + '#' + folderId;
       assertEquals(expectedURL, folder.toString());
       byte[] b = new byte[128];
       InputStream in = folder.openStream();
@@ -79,8 +79,8 @@ public class ResourceLoaderTest extends LocalFileSystemTest
 
    public void testLoadFolderByPath() throws Exception
    {
-      URL folder = new URI("ide+vfs", "/" + VFS_ID, folderPath).toURL();
-      final String expectedURL = "ide+vfs:/" + VFS_ID + '#' + folderPath;
+      URL folder = new URI("ide+vfs", "/" + MY_WORKSPACE_ID, folderPath).toURL();
+      final String expectedURL = "ide+vfs:/" + MY_WORKSPACE_ID + '#' + folderPath;
       assertEquals(expectedURL, folder.toString());
       byte[] b = new byte[128];
       InputStream in = folder.openStream();

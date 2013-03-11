@@ -69,19 +69,12 @@ public class ProjectTest extends JcrFileSystemTest
       String name = "testCreateProject";
       String properties = "[{\"name\":\"vfs:projectType\", \"value\":[\"java\"]}]";
       // 
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("project/") //
-         .append(projectTestId) //
-         .append("?") //
-         .append("name=") //
-         .append(name).append("&").append("type=") //
-         .append("java").toString();
+      String path = SERVICE_URI + "project/" + projectTestId + '?' + "name=" + name + "&" + "type=" + "java";
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, properties.getBytes(), null);
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
-      String expectedPath = projectTestPath + "/" + name;
+      String expectedPath = projectTestPath + '/' + name;
       assertTrue("Project was not created in expected location. ", session.itemExists(expectedPath));
       Node project = (Node)session.getItem(expectedPath);
       assertEquals("java", project.getProperty(".project/vfs:projectType").getString());
@@ -98,14 +91,7 @@ public class ProjectTest extends JcrFileSystemTest
       projectData.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
       session.save();
 
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("project/") //
-         .append(((ExtendedNode)parentProject).getIdentifier()) //
-         .append("?") //
-         .append("name=").append("childProject") //
-         .append("&") //
-         .append("type=").append("java").toString();
+      String path = SERVICE_URI + "project/" + ((ExtendedNode)parentProject).getIdentifier() + '?' + "name=childProject&type=java";
 
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
@@ -136,12 +122,8 @@ public class ProjectTest extends JcrFileSystemTest
 
       session.save();
 
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("copy/") //
-         .append(((ExtendedNode)project).getIdentifier()) //
-         .append("?") //
-         .append("parentId=").append(((ExtendedNode)destProject).getIdentifier()).toString();
+      String path = SERVICE_URI + "copy/" + ((ExtendedNode)project).getIdentifier() + '?' +
+         "parentId=" + ((ExtendedNode)destProject).getIdentifier();
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
@@ -169,12 +151,8 @@ public class ProjectTest extends JcrFileSystemTest
 
       session.save();
 
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("move/") //
-         .append(((ExtendedNode)project).getIdentifier()) //
-         .append("?") //
-         .append("parentId=").append(((ExtendedNode)destProject).getIdentifier()).toString();
+      String path = SERVICE_URI + "move/" + ((ExtendedNode)project).getIdentifier() + '?' + "parentId=" +
+         ((ExtendedNode)destProject).getIdentifier();
 
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       log.info(response.getEntity());
@@ -197,10 +175,7 @@ public class ProjectTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(((ExtendedNode)projectNode).getIdentifier()).toString();
+      String path = SERVICE_URI + "item/" + ((ExtendedNode)projectNode).getIdentifier();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
 
       assertEquals("Error: " + response.getEntity(), 200, response.getStatus());
@@ -239,10 +214,7 @@ public class ProjectTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("children/") //
-         .append(((ExtendedNode)theTestRoot).getIdentifier()).toString();
+      String path = SERVICE_URI + "children/" + ((ExtendedNode)theTestRoot).getIdentifier();
       ContainerResponse response = launcher.service("GET", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       @SuppressWarnings("unchecked")
@@ -274,11 +246,7 @@ public class ProjectTest extends JcrFileSystemTest
 
       String projectPath = project.getPath();
       String properties = "[{\"name\":\"MyProperty\", \"value\":[\"MyValue\"]}]";
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(((ExtendedNode)project).getIdentifier()) //
-         .toString();
+      String path = SERVICE_URI + "item/" + ((ExtendedNode)project).getIdentifier();
       Map<String, List<String>> h = new HashMap<String, List<String>>(1);
       h.put("Content-Type", Arrays.asList("application/json"));
       ContainerResponse response = launcher.service("POST", path, BASE_URI, h, properties.getBytes(), null);
@@ -292,24 +260,13 @@ public class ProjectTest extends JcrFileSystemTest
       Node folder = testRoot.addNode("testConvertFolderToProject", "nt:folder");
       session.save();
       String folderPath = folder.getPath();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(((ExtendedNode)folder).getIdentifier()) //
-         .append("?") //
-         .append("mediaType=") //
-         .append("text/vnd.ideproject%2Bdirectory") // text/vnd.ideproject+directory
-         .toString();
+      String path = SERVICE_URI + "rename/" + ((ExtendedNode)folder).getIdentifier() + '?' + "mediaType=text/vnd.ideproject%2Bdirectory";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       folder = (Node)session.getItem(folderPath);
       assertEquals("text/vnd.ideproject+directory", folder.getProperty(".project/vfs:mimeType").getString());
 
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(((ExtendedNode)folder).getIdentifier()) //
-         .toString();
+      path = SERVICE_URI + "item/" + ((ExtendedNode)folder).getIdentifier();
       response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       Folder project = (Folder)response.getEntity();
@@ -327,22 +284,11 @@ public class ProjectTest extends JcrFileSystemTest
 
       session.save();
 
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(((ExtendedNode)project).getIdentifier()) //
-         .append("?") //
-         .append("mediaType=") //
-         .append("text/directory") //
-         .toString();
+      String path = SERVICE_URI + "rename/" + ((ExtendedNode)project).getIdentifier() + '?' + "mediaType=" + "text/directory";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
 
-      path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("item/") //
-         .append(((ExtendedNode)project).getIdentifier()) //
-         .toString();
+      path = SERVICE_URI + "item/" + ((ExtendedNode)project).getIdentifier();
       response = launcher.service("GET", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       Folder folder = (Folder)response.getEntity();
@@ -350,88 +296,88 @@ public class ProjectTest extends JcrFileSystemTest
       assertFalse("Project must be converted to Folder. ", folder instanceof Project);
    }
 
-   public void testProjectUpdateEventsRepositoryIsolation() throws Exception
-   {
-      /* IDE-1768 */
-
-      String name = "testProjectUpdateEvents";
-      // JCR backend repository: db1, workspace: ws
-      Node projectNode = testRoot.addNode(name, "nt:folder");
-      projectNode.addMixin("vfs:project");
-      Node projectCfgNode = projectNode.getNode(".project");
-      projectCfgNode.setProperty("vfs:projectType", "java");
-      projectCfgNode.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
-      session.save();
-
-      // JCR backend repository: db2, workspace: ws
-      RepositoryService repositoryService =
-         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
-      ManageableRepository repository1 = repositoryService.getRepository("db2");
-      Session session1 = repository1.login(new CredentialsImpl("root", "exo".toCharArray()), "ws");
-      // create the same structure.
-      Node testRoot1 = session1.getRootNode().addNode(TEST_ROOT_NAME, "nt:unstructured");
-      Node projectNode1 = testRoot1.addNode(name, "nt:folder");
-      projectNode1.addMixin("vfs:project");
-      Node projectCfgNode1 = projectNode1.getNode(".project");
-      projectCfgNode1.setProperty("vfs:projectType", "java");
-      projectCfgNode1.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
-      session1.save();
-
-      // Now have the same structure in two different repositories.
-      // This is the same what we have in exo-cloud.
-
-      EventListenerList listeners = (EventListenerList)container.getComponentInstanceOfType(EventListenerList.class);
-
-      ProjectData project = (ProjectData)ItemData.fromNode(projectNode, "/");
-      ProjectData project1 = (ProjectData)ItemData.fromNode(projectNode1, "/");
-      final boolean[] notified = {false};
-      final boolean[] notified1 = {false};
-
-      ChangeEventFilter filter = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
-         session.getRepository(), "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
-      ChangeEventFilter filter1 = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
-         repository1, "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
-
-      ProjectUpdateListener listener = new ProjectUpdateListener(project.getId())
-      {
-         @Override
-         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-         {
-            notified[0] = true;
-            super.handleEvent(event);
-         }
-      };
-
-      ProjectUpdateListener listener1 = new ProjectUpdateListener(project1.getId())
-      {
-         @Override
-         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
-         {
-            notified1[0] = true;
-            super.handleEvent(event);
-         }
-      };
-
-      // Register listeners for both projects.
-      assertTrue(listeners.addEventListener(filter, listener));
-      // This one must not be notified.
-      assertTrue(listeners.addEventListener(filter1, listener1));
-
-      String path = SERVICE_URI + "file/" + project.getId() + "?" + "name=file";
-      Map<String, List<String>> headers = new HashMap<String, List<String>>();
-      List<String> contentType = new ArrayList<String>();
-      contentType.add("text/plain;charset=utf8");
-      headers.put("Content-Type", contentType);
-
-      // Create file. As result only repository 'db1' get notification.
-      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, new byte[0], null);
-      assertEquals(200, response.getStatus());
-
-      assertTrue("Listener must be notified. ", notified[0]);
-      assertFalse("Listener must not be notified. ", notified1[0]);
-
-      // test removing
-      assertTrue(listeners.removeEventListener(filter, listener));
-      assertTrue(listeners.removeEventListener(filter1, listener1));
-   }
+//   public void testProjectUpdateEventsRepositoryIsolation() throws Exception
+//   {
+//      /* IDE-1768 */
+//
+//      String name = "testProjectUpdateEvents";
+//      // JCR backend repository: db1, workspace: ws
+//      Node projectNode = testRoot.addNode(name, "nt:folder");
+//      projectNode.addMixin("vfs:project");
+//      Node projectCfgNode = projectNode.getNode(".project");
+//      projectCfgNode.setProperty("vfs:projectType", "java");
+//      projectCfgNode.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
+//      session.save();
+//
+//      // JCR backend repository: db2, workspace: ws
+//      RepositoryService repositoryService =
+//         (RepositoryService)container.getComponentInstanceOfType(RepositoryService.class);
+//      ManageableRepository repository1 = repositoryService.getRepository("db2");
+//      Session session1 = repository1.login(new CredentialsImpl("root", "exo".toCharArray()), "ws");
+//      // create the same structure.
+//      Node testRoot1 = session1.getRootNode().addNode(TEST_ROOT_NAME, "nt:unstructured");
+//      Node projectNode1 = testRoot1.addNode(name, "nt:folder");
+//      projectNode1.addMixin("vfs:project");
+//      Node projectCfgNode1 = projectNode1.getNode(".project");
+//      projectCfgNode1.setProperty("vfs:projectType", "java");
+//      projectCfgNode1.setProperty("vfs:mimeType", Project.PROJECT_MIME_TYPE);
+//      session1.save();
+//
+//      // Now have the same structure in two different repositories.
+//      // This is the same what we have in exo-cloud.
+//
+//      EventListenerList listeners = (EventListenerList)container.getComponentInstanceOfType(EventListenerList.class);
+//
+//      ProjectData project = (ProjectData)ItemData.fromNode(projectNode, "/");
+//      ProjectData project1 = (ProjectData)ItemData.fromNode(projectNode1, "/");
+//      final boolean[] notified = {false};
+//      final boolean[] notified1 = {false};
+//
+//      ChangeEventFilter filter = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
+//         session.getRepository(), "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
+//      ChangeEventFilter filter1 = ProjectUpdateEventFilter.newFilter(new JcrFileSystem(
+//         repository1, "ws", "/", "ws", new MediaType2NodeTypeResolver()), project);
+//
+//      ProjectUpdateListener listener = new ProjectUpdateListener(project.getId())
+//      {
+//         @Override
+//         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
+//         {
+//            notified[0] = true;
+//            super.handleEvent(event);
+//         }
+//      };
+//
+//      ProjectUpdateListener listener1 = new ProjectUpdateListener(project1.getId())
+//      {
+//         @Override
+//         public void handleEvent(ChangeEvent event) throws VirtualFileSystemException
+//         {
+//            notified1[0] = true;
+//            super.handleEvent(event);
+//         }
+//      };
+//
+//      // Register listeners for both projects.
+//      assertTrue(listeners.addEventListener(filter, listener));
+//      // This one must not be notified.
+//      assertTrue(listeners.addEventListener(filter1, listener1));
+//
+//      String path = SERVICE_URI + "file/" + project.getId() + '?' + "name=file";
+//      Map<String, List<String>> headers = new HashMap<String, List<String>>();
+//      List<String> contentType = new ArrayList<String>();
+//      contentType.add("text/plain;charset=utf8");
+//      headers.put("Content-Type", contentType);
+//
+//      // Create file. As result only repository 'db1' get notification.
+//      ContainerResponse response = launcher.service("POST", path, BASE_URI, headers, new byte[0], null);
+//      assertEquals(200, response.getStatus());
+//
+//      assertTrue("Listener must be notified. ", notified[0]);
+//      assertFalse("Listener must not be notified. ", notified1[0]);
+//
+//      // test removing
+//      assertTrue(listeners.removeEventListener(filter, listener));
+//      assertTrue(listeners.removeEventListener(filter1, listener1));
+//   }
 }

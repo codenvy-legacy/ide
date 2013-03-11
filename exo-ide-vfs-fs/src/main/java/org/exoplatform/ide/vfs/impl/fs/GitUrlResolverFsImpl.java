@@ -26,8 +26,6 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
-import java.io.File;
-
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -49,7 +47,6 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
    @Override
    public String resolve(UriInfo uriInfo, VirtualFileSystem vfs, String id) throws GitUrlResolveException
    {
-
       try
       {
          if (vfs == null)
@@ -60,25 +57,24 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
          {
             throw new GitUrlResolveException("Can't resolve Git Url. Item path may not be null or empty");
          }
-         String gitServer = System.getProperty("org.exoplatform.ide.git.server");
+         final EnvironmentContext context = EnvironmentContext.getCurrent();
+         String gitServer = (String)context.getVariable(EnvironmentContext.GIT_SERVER);
          if (gitServer == null)
          {
             throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
          }
-         String rootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
-         String workspace =
-         EnvironmentContext.getCurrentEnvironment().getEnvironmentVariable(EnvironmentContext.WORKSPACE).toString();
-         String path = mountStrategy.getMountPath(workspace).getPath();
-         path = path.substring(rootPath.length());
          if (!gitServer.endsWith("/"))
          {
             gitServer += "/";
          }
-         Item item = null;
-         String vfsId = null;
 
-         vfsId = vfs.getInfo().getId();
-         item = vfs.getItem(id, PropertyFilter.NONE_FILTER);
+         final String rootPath = (String)context.getVariable(EnvironmentContext.VFS_ROOT_DIR);
+         String path = mountStrategy.getMountPath().getPath();
+         path = path.substring(rootPath.length());
+
+         final String vfsId = vfs.getInfo().getId();
+         final Item item = vfs.getItem(id, PropertyFilter.NONE_FILTER);
+
          StringBuilder result = new StringBuilder();
          // Set schema hardcode to "http", 
          // it because we have not valid certificate on test servers

@@ -34,6 +34,7 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
+import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
@@ -79,28 +80,32 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.BasicPermissi
 
 public abstract class LocalFileSystemTest extends TestCase
 {
-   protected static final String VFS_ID = "fs1";
-   protected static final String WORKSPACE = "my-ws";
+   protected static final String MY_WORKSPACE_ID = "my-ws";
    protected static EventListenerList eventListenerList = new EventListenerList();
    protected static VirtualFileSystemRegistry virtualFileSystemRegistry = new VirtualFileSystemRegistry();
-
-   static
-   {
-      // enable assertion to test state of some components.
-      enableAssertion(MountPoint.class);
-   }
 
    private static void enableAssertion(Class<?> clazz)
    {
       clazz.getClassLoader().setPackageAssertionStatus(clazz.getPackage().getName(), true);
    }
 
+   protected static final String ROOT_ID;
    static
    {
+      // enable assertion to test state of some components.
+      enableAssertion(MountPoint.class);
+      try
+      {
+         // copy from LocalFileSystem
+         ROOT_ID = Base64.encodeBase64URLSafeString((MY_WORKSPACE_ID + ":root").getBytes("UTF-8"));
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         throw new IllegalStateException(e.getMessage(), e);
+      }
       URLHandlerFactorySetup.setup(virtualFileSystemRegistry, eventListenerList);
    }
 
-   protected static final String ROOT_ID = "root"; // copy from LocalFileSystem
 
    protected static final FileFilter SERVICE_DIR_FILTER = new FileFilter()
    {
@@ -113,7 +118,7 @@ public abstract class LocalFileSystemTest extends TestCase
    };
 
    protected final String BASE_URI = "http://localhost/service";
-   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/" + VFS_ID + '/';
+   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/v2/";
    protected final String DEFAULT_CONTENT = "__TEST__";
    protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
@@ -140,13 +145,13 @@ public abstract class LocalFileSystemTest extends TestCase
       // path to test directory
       testRootPath = '/' + testName;
       // backend for test virtual filesystem
-      testFsIoRoot = new java.io.File(ConversationStateLocalFSMountStrategy.calculateDirPath(root, WORKSPACE), VFS_ID);
+      testFsIoRoot = EnvironmentContextLocalFSMountStrategy.calculateDirPath(root, MY_WORKSPACE_ID);
       assertTrue(new java.io.File(testFsIoRoot, testName).mkdirs());
 
-      provider = new LocalFileSystemProvider(VFS_ID, new ConversationStateLocalFSMountStrategy(root), null);
+      provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy());
       provider.mount(testFsIoRoot);
-      mountPoint = provider.getMounts().iterator().next();
-      virtualFileSystemRegistry.registerProvider(VFS_ID, provider);
+      mountPoint = provider.getMountPoint();
+      virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
 
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
@@ -163,8 +168,11 @@ public abstract class LocalFileSystemTest extends TestCase
 
       // RUNTIME VARIABLES
       ConversationState user = new ConversationState(new Identity("admin"));
-      user.setAttribute("currentTenant", WORKSPACE);
       ConversationState.setCurrent(user);
+
+      EnvironmentContext env = EnvironmentContext.getCurrent();
+      env.setVariable(EnvironmentContext.VFS_ROOT_DIR, root);
+      env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
    }
 
    // Directory "fs-root" in "target" folder of maven project.
@@ -186,8 +194,8 @@ public abstract class LocalFileSystemTest extends TestCase
    {
       mountPoint.getFileLockFactory().checkClean();
       //assertTrue("Unable unmount local filesystem. ", provider.umount(testFsIoRoot));
-      virtualFileSystemRegistry.unregisterProvider(VFS_ID);
-      assertTrue("Unable unmount local filesystem. ", provider.getMounts().isEmpty());
+      virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
+      assertFalse("Unable unmount local filesystem. ", provider.isMounted());
       if (!FileUtils.deleteRecursive(root))
       {
          fail("Unable clean test content. ");
@@ -204,7 +212,7 @@ public abstract class LocalFileSystemTest extends TestCase
       }
       try
       {
-         return Base64.encodeBase64URLSafeString(path.getBytes("UTF-8"));
+         return Base64.encodeBase64URLSafeString((MY_WORKSPACE_ID + ':' + path).getBytes("UTF-8"));
       }
       catch (UnsupportedEncodingException e)
       {
@@ -555,10 +563,6 @@ public abstract class LocalFileSystemTest extends TestCase
    protected String readLock(String vfsPath) throws Exception
    {
       java.io.File file = getIoFile(vfsPath);
-      /*if (!file.isFile())
-      {
-         return null;
-      }*/
       java.io.File locksDir = new java.io.File(file.getParentFile(), MountPoint.LOCKS_DIR);
       java.io.File lockFile = new java.io.File(locksDir, file.getName() + MountPoint.LOCK_FILE_SUFFIX);
       FileInputStream fIn;

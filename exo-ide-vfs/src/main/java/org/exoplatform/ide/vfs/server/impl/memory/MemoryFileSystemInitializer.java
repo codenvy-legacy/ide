@@ -50,7 +50,7 @@ public final class MemoryFileSystemInitializer implements Startable
                                       VirtualFileSystemRegistry registry,
                                       EventListenerList listeners)
    {
-      this(readValuesParam(initParams, "id"), registry, listeners);
+      this(readValuesParam(initParams, "ids"), registry, listeners);
    }
 
    public MemoryFileSystemInitializer(Collection<String> vfsIds,

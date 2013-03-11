@@ -28,6 +28,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.util.Version;
 import org.everrest.core.impl.ContainerResponse;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
+import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
 
@@ -85,16 +86,20 @@ public class SearcherTest extends LocalFileSystemTest
       queryToResult[8] = new Pair<String[], String>(new String[]{file2, file3}, "name=SearcherTest*&mediaType=text/plain");
       queryToResult[9] = new Pair<String[], String>(new String[]{file1}, "name=SearcherTest*&mediaType=text/xml");
 
-      CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider(root.getParentFile());
+      CleanableSearcherProvider searcherProvider = new CleanableSearcherProvider();
       // Re-register virtual file system with searching enabled.
       // remove old one first
-      assertTrue(provider.umount(testFsIoRoot));
-      virtualFileSystemRegistry.unregisterProvider(VFS_ID);
+      provider.close();
+      assertFalse(provider.isMounted());
+      virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
       // create new one
-      provider = new LocalFileSystemProvider(VFS_ID, new ConversationStateLocalFSMountStrategy(root), searcherProvider);
+      provider = new LocalFileSystemProvider(MY_WORKSPACE_ID, new EnvironmentContextLocalFSMountStrategy(), searcherProvider);
       provider.mount(testFsIoRoot);
-      mountPoint = provider.getMounts().iterator().next();
-      virtualFileSystemRegistry.registerProvider(VFS_ID, provider);
+      mountPoint = provider.getMountPoint();
+      virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, provider);
+      // set up index directory
+      EnvironmentContext env = EnvironmentContext.getCurrent();
+      env.setVariable(EnvironmentContext.VFS_INDEX_DIR, root.getParentFile());
 
       // Touch Searcher to initialize it.
       searcher = (CleanableSearcher)searcherProvider.getSearcher(mountPoint);

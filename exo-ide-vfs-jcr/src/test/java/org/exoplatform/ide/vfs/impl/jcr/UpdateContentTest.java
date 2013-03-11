@@ -72,11 +72,7 @@ public class UpdateContentTest extends JcrFileSystemTest
 
    public void testUpdateContent() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "content/" + fileID;
       
       Map <String, List <String>> headers = new HashMap <String, List <String>> ();
       List <String> contentType = new ArrayList<String>();
@@ -95,10 +91,7 @@ public class UpdateContentTest extends JcrFileSystemTest
    public void testUpdateContentFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(folderID).toString();
+      String path = SERVICE_URI + "content/" + folderID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, content.getBytes(), writer, null);
       assertEquals(400, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -113,10 +106,7 @@ public class UpdateContentTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "content/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -126,14 +116,7 @@ public class UpdateContentTest extends JcrFileSystemTest
    {
       Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       Lock lock = file.lock(true, false);
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(fileID) //
-         .append("?") //
-         .append("lockToken=") //
-         .append(lock.getLockToken()) //
-         .toString();
+      String path = SERVICE_URI + "content/" + fileID + '?' + "lockToken=" + lock.getLockToken();
       
       Map <String, List <String>> headers = new HashMap <String, List <String>> ();
       List <String> contentType = new ArrayList<String>();
@@ -153,10 +136,7 @@ public class UpdateContentTest extends JcrFileSystemTest
       Node file = ((ExtendedSession)session).getNodeByIdentifier(fileID);
       file.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("content/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "content/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));

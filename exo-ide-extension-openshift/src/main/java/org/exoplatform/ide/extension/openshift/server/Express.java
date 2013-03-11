@@ -27,6 +27,7 @@ import com.openshift.client.OpenShiftConnectionFactory;
 import com.openshift.client.OpenShiftException;
 import com.openshift.internal.client.Cartridge;
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.extension.openshift.shared.AppInfo;
 import org.exoplatform.ide.extension.openshift.shared.RHUserInfo;
 import org.exoplatform.ide.extension.ssh.server.SshKey;
@@ -38,7 +39,6 @@ import org.exoplatform.ide.git.shared.InitRequest;
 import org.exoplatform.ide.git.shared.Remote;
 import org.exoplatform.ide.git.shared.RemoteAddRequest;
 import org.exoplatform.ide.git.shared.RemoteListRequest;
-import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -96,8 +96,8 @@ public class Express
    {
       this(vfsRegistry, //
          keyProvider, //
-         ExoConfigurationHelper.readValueParam(initParams, "workspace"), //
-         ExoConfigurationHelper.readValueParam(initParams, "user-config"));
+         ContainerUtils.readValueParam(initParams, "workspace"), //
+         ContainerUtils.readValueParam(initParams, "user-config"));
    }
 
    public Express(VirtualFileSystemRegistry vfsRegistry, SshKeyProvider keyProvider, String workspace, String config)

@@ -129,7 +129,7 @@
       <type>org.exoplatform.ide.vfs.server.impl.memory.MemoryFileSystemInitializer</type>
       <init-params>
          <values-param>
-            <name>id</name>
+            <name>ids</name>
             <value>dev-monit</value>
             <value>ws</value>
          </values-param>

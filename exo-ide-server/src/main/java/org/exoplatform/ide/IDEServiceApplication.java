@@ -19,6 +19,7 @@
 package org.exoplatform.ide;
 
 import org.exoplatform.container.xml.InitParams;
+import org.exoplatform.ide.commons.ContainerUtils;
 import org.exoplatform.ide.conversationstate.RestConversationState;
 import org.exoplatform.ide.googlecontacts.GoogleContactsRestService;
 import org.exoplatform.ide.project.ProjectPrepareExceptionMapper;
@@ -26,7 +27,6 @@ import org.exoplatform.ide.project.ProjectPrepareService;
 import org.exoplatform.ide.template.TemplatesRestService;
 import org.exoplatform.ide.upload.LoopbackContentService;
 import org.exoplatform.ide.upload.UploadServiceExceptionMapper;
-import org.exoplatform.ide.utils.ExoConfigurationHelper;
 import org.exoplatform.ide.vfs.server.RequestContextResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
 import org.exoplatform.ide.vfs.server.observation.EventListenerList;
@@ -53,11 +53,11 @@ public class IDEServiceApplication extends Application
    public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList,
                                 InitParams initParams)
    {
-      String entryPoint = ExoConfigurationHelper.readValueParam(initParams, "defaultEntryPoint");
-      boolean discoverable = Boolean.parseBoolean(ExoConfigurationHelper.readValueParam(initParams, "discoverable"));
-      String workspace = ExoConfigurationHelper.readValueParam(initParams, "workspace");
-      String config = ExoConfigurationHelper.readValueParam(initParams, "config");
-      String templateConfig = ExoConfigurationHelper.readValueParam(initParams, "template-config");
+      String entryPoint = ContainerUtils.readValueParam(initParams, "defaultEntryPoint");
+      boolean discoverable = Boolean.parseBoolean(ContainerUtils.readValueParam(initParams, "discoverable"));
+      String workspace = ContainerUtils.readValueParam(initParams, "workspace");
+      String config = ContainerUtils.readValueParam(initParams, "config");
+      String templateConfig = ContainerUtils.readValueParam(initParams, "template-config");
 
       objects.add(new UploadServiceExceptionMapper());
       objects.add(new IDEConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));

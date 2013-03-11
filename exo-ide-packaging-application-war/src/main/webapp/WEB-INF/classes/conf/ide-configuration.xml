@@ -85,7 +85,7 @@
       </init-params>
    </component>
 
-  <!-- component>
+  <component>
      <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
      <init-params>
         <values-param>
@@ -98,13 +98,13 @@
    
   <component>
      <type>org.exoplatform.ide.vfs.impl.fs.SimpleLocalFSMountStrategy</type>
-  </component-->
+  </component>
 
   <component>
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
    
-    <component>
+    <!--component>
       <type>org.exoplatform.ide.davmount.WebDavFolderBinder</type>
       <description>Bind WebDavFolder</description>
       <init-params>
@@ -134,7 +134,7 @@
             <value>http://127.0.0.1:8080</value>
          </value-param>
       </init-params>
-   </component>
+   </component-->
 
    <!-- End VirtualFileSystem -->
 

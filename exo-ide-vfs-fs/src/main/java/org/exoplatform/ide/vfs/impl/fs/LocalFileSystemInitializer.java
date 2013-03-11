@@ -34,8 +34,14 @@ import java.util.Set;
 import static org.exoplatform.ide.commons.ContainerUtils.readValuesParam;
 
 /**
+ * Useful for local build if we have limited and known set of available virtual file systems. Do not use this component
+ * when run in cloud environment. In cloud environment virtual file systems should be added dynamically when new
+ * workspace is up and removed when workspace goes down.
+ *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry
+ * @see org.exoplatform.ide.vfs.server.VirtualFileSystemFactory
  */
 public final class LocalFileSystemInitializer implements Startable
 {
@@ -53,7 +59,7 @@ public final class LocalFileSystemInitializer implements Startable
                                      LocalFSMountStrategy mountStrategy,
                                      SearcherProvider searcherProvider)
    {
-      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, searcherProvider);
+      this(readValuesParam(initParams, "ids"), registry, listeners, mountStrategy, searcherProvider);
    }
 
    public LocalFileSystemInitializer(InitParams initParams,
@@ -61,14 +67,14 @@ public final class LocalFileSystemInitializer implements Startable
                                      EventListenerList listeners,
                                      LocalFSMountStrategy mountStrategy)
    {
-      this(readValuesParam(initParams, "id"), registry, listeners, mountStrategy, null);
+      this(readValuesParam(initParams, "ids"), registry, listeners, mountStrategy, null);
    }
 
    public LocalFileSystemInitializer(InitParams initParams,
                                      VirtualFileSystemRegistry registry,
                                      LocalFSMountStrategy mountStrategy)
    {
-      this(readValuesParam(initParams, "id"), registry, null, mountStrategy, null);
+      this(readValuesParam(initParams, "ids"), registry, null, mountStrategy, null);
    }
 
    /**

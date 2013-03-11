@@ -33,6 +33,7 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
+import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;
@@ -80,8 +81,9 @@ public abstract class MemoryFileSystemTest extends TestCase
    protected MemoryFileSystemContext memoryContext;
    protected MemoryFolder testRoot;
 
+   protected static final String MY_WORKSPACE_ID = "my-ws";
    protected final String BASE_URI = "http://localhost/service";
-   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/memory/";
+   protected final String SERVICE_URI = BASE_URI + "/ide/vfs/v2/";
    protected final String DEFAULT_CONTENT = "__TEST__";
    protected final byte[] DEFAULT_CONTENT_BYTES = DEFAULT_CONTENT.getBytes();
 
@@ -106,7 +108,7 @@ public abstract class MemoryFileSystemTest extends TestCase
       memoryContext.putItem(testRoot);
 
       DependencySupplierImpl dependencies = new DependencySupplierImpl();
-      virtualFileSystemRegistry.registerProvider("memory", new MemoryFileSystemProvider("memory", memoryContext));
+      virtualFileSystemRegistry.registerProvider(MY_WORKSPACE_ID, new MemoryFileSystemProvider(MY_WORKSPACE_ID, memoryContext));
       dependencies.addComponent(VirtualFileSystemRegistry.class, virtualFileSystemRegistry);
       dependencies.addComponent(EventListenerList.class, eventListenerList);
       ResourceBinder resources = new ResourceBinderImpl();
@@ -122,12 +124,14 @@ public abstract class MemoryFileSystemTest extends TestCase
       // RUNTIME VARIABLES
       ConversationState user = new ConversationState(new Identity("john"));
       ConversationState.setCurrent(user);
+      EnvironmentContext env = EnvironmentContext.getCurrent();
+      env.setVariable(EnvironmentContext.WORKSPACE_ID, MY_WORKSPACE_ID);
    }
 
    /** @see junit.framework.TestCase#tearDown() */
    protected void tearDown() throws Exception
    {
-      virtualFileSystemRegistry.unregisterProvider("memory");
+      virtualFileSystemRegistry.unregisterProvider(MY_WORKSPACE_ID);
       super.tearDown();
    }
 

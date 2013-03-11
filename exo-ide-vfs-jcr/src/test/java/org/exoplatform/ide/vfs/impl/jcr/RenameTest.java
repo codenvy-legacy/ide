@@ -71,17 +71,7 @@ public class RenameTest extends JcrFileSystemTest
 
    public void testRenameFile() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(fileID) //
-         .append("?") //
-         .append("newname=") //
-         .append("_FILE_NEW_NAME_") //
-         .append("&") //
-         .append("mediaType=") //
-         .append("text/*;charset=ISO-8859-1") //
-         .toString();
+      String path = SERVICE_URI + "rename/" + fileID + '?' + "newname=_FILE_NEW_NAME_&mediaType=text/*;charset=ISO-8859-1";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = renameTestNode.getPath() + "/" + "_FILE_NEW_NAME_";
@@ -102,17 +92,7 @@ public class RenameTest extends JcrFileSystemTest
       existedFileContent.setProperty("jcr:data", new ByteArrayInputStream(DEFAULT_CONTENT.getBytes()));
       session.save();
       
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(fileID) //
-         .append("?") //
-         .append("newname=") //
-         .append("_FILE_NEW_NAME_") //
-         .append("&") //
-         .append("mediaType=") //
-         .append("text/*;charset=ISO-8859-1") //
-         .toString();
+      String path = SERVICE_URI + "rename/" + fileID + '?' + "newname=_FILE_NEW_NAME_&mediaType=text/*;charset=ISO-8859-1";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(400, response.getStatus());
       assertEquals(ExitCodes.ITEM_EXISTS, Integer.parseInt((String)response.getHttpHeaders().getFirst("X-Exit-Code")));
@@ -121,19 +101,8 @@ public class RenameTest extends JcrFileSystemTest
    public void testRenameFileLocked() throws Exception
    {
       Lock lock = fileNode.lock(true, false);
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(fileID) //
-         .append("?") //
-         .append("newname=") //
-         .append("_FILE_NEW_NAME_") //
-         .append("&") //
-         .append("mediaType=") //
-         .append("text/*;charset=ISO-8859-1") //
-         .append("&") //
-         .append("lockToken=") //
-         .append(lock.getLockToken()).toString();
+      String path = SERVICE_URI + "rename/" + fileID + '?' +
+         "newname=_FILE_NEW_NAME_&mediaType=text/*;charset=ISO-8859-1&lockToken=" + lock.getLockToken();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = renameTestNode.getPath() + "/" + "_FILE_NEW_NAME_";
@@ -148,17 +117,7 @@ public class RenameTest extends JcrFileSystemTest
    {
       fileNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(fileID) //
-         .append("?") //
-         .append("newname=") //
-         .append("_FILE_NEW_NAME_") //
-         .append("&") //
-         .append("mediaType=") //
-         .append("text/*;charset=ISO-8859-1") //
-         .toString();
+      String path = SERVICE_URI + "rename/" + fileID + '?' + "newname=_FILE_NEW_NAME_&mediaType=text/*;charset=ISO-8859-1";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -172,14 +131,7 @@ public class RenameTest extends JcrFileSystemTest
       ((ExtendedNode)fileNode).setPermissions(permissions);
       session.save();
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(fileID) //
-         .append("?") //
-         .append("newname=") //
-         .append("_FILE_NEW_NAME_") //
-         .toString();
+      String path = SERVICE_URI + "rename/" + fileID + '?' + "newname=_FILE_NEW_NAME_";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -187,14 +139,7 @@ public class RenameTest extends JcrFileSystemTest
 
    public void testRenameFolder() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("rename/") //
-         .append(folderID) //
-         .append("?") //
-         .append("newname=") //
-         .append("_FOLDER_NEW_NAME_") //
-         .toString();
+      String path = SERVICE_URI + "rename/" + folderID + '?' + "newname=_FOLDER_NEW_NAME_";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(200, response.getStatus());
       String expectedPath = renameTestNode.getPath() + "/" + "_FOLDER_NEW_NAME_";

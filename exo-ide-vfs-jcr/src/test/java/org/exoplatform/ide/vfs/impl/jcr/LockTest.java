@@ -68,10 +68,7 @@ public class LockTest extends JcrFileSystemTest
    public void testLockFile() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("lock/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "lock/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(200, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -88,10 +85,7 @@ public class LockTest extends JcrFileSystemTest
       node.lock(true, false);
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("lock/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "lock/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -105,10 +99,7 @@ public class LockTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("lock/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "lock/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -119,10 +110,7 @@ public class LockTest extends JcrFileSystemTest
    public void testLockFolder() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("lock/") //
-         .append(folderID).toString();
+      String path = SERVICE_URI + "lock/" + folderID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(400, response.getStatus());
    }

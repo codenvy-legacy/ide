@@ -85,10 +85,10 @@ import static org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo.*;
 public class LocalFileSystem implements VirtualFileSystem
 {
    private static final Log LOG = ExoLogger.getLogger(LocalFileSystem.class);
-   private static final String ROOT_ID = "root";
    private static final String FAKE_VERSION_ID = "0";
 
    final String vfsId;
+   final String rootId;
    final URI baseUri;
    final EventListenerList listeners;
    final MountPoint mountPoint;
@@ -107,6 +107,15 @@ public class LocalFileSystem implements VirtualFileSystem
       this.listeners = listeners;
       this.mountPoint = mountPoint;
       this.searcherProvider = searcherProvider;
+      try
+      {
+         this.rootId = Base64.encodeBase64URLSafeString((vfsId + ":root").getBytes("UTF-8"));
+      }
+      catch (UnsupportedEncodingException e)
+      {
+         // Should never happen.
+         throw new IllegalStateException(e.getMessage(), e);
+      }
    }
 
    @Path("copy/{id}")
@@ -886,7 +895,7 @@ public class LocalFileSystem implements VirtualFileSystem
 
    VirtualFile idToVirtualFile(String id) throws VirtualFileSystemException
    {
-      if (ROOT_ID.equals(id))
+      if (rootId.equals(id))
       {
          return mountPoint.getRoot();
       }
@@ -900,10 +909,9 @@ public class LocalFileSystem implements VirtualFileSystem
          // Should never happen.
          throw new IllegalStateException(e.getMessage(), e);
       }
-
       try
       {
-         return getVirtualFileByPath(path);
+         return getVirtualFileByPath(path.substring(vfsId.length() + 1)); // see virtualFileToId(VirtualFile)
       }
       catch (ItemNotFoundException e)
       {
@@ -916,18 +924,17 @@ public class LocalFileSystem implements VirtualFileSystem
    {
       if (virtualFile.isRoot())
       {
-         return ROOT_ID;
+         return rootId;
       }
       try
       {
-         return Base64.encodeBase64URLSafeString(virtualFile.getPath().getBytes("UTF-8"));
+         return Base64.encodeBase64URLSafeString((vfsId + ':' + virtualFile.getPath()).getBytes("UTF-8"));
       }
       catch (UnsupportedEncodingException e)
       {
          // Should never happen.
          throw new IllegalStateException(e.getMessage(), e);
       }
-
    }
 
    private Item fromVirtualFile(VirtualFile virtualFile, PropertyFilter propertyFilter) throws VirtualFileSystemException

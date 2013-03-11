@@ -80,10 +80,7 @@ public class DeleteTest extends JcrFileSystemTest
 
    public void testDeleteFile() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("delete/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "delete/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       try
@@ -99,14 +96,7 @@ public class DeleteTest extends JcrFileSystemTest
    public void testDeleteFileLocked() throws Exception
    {
       Lock lock = fileNode.lock(true, false);
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("delete/") //
-         .append(fileID) //
-         .append("?") //
-         .append("lockToken=") //
-         .append(lock.getLockToken()) //
-         .toString();
+      String path = SERVICE_URI + "delete/" + fileID + '?' + "lockToken=" + lock.getLockToken();
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       try
@@ -123,11 +113,7 @@ public class DeleteTest extends JcrFileSystemTest
    {
       fileNode.lock(true, false);
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("delete/") //
-         .append(fileID) //
-         .toString();
+      String path = SERVICE_URI + "delete/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(423, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -150,10 +136,7 @@ public class DeleteTest extends JcrFileSystemTest
       session.save();
 
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("delete/") //
-         .append(fileID).toString();
+      String path = SERVICE_URI + "delete/" + fileID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(403, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -170,10 +153,7 @@ public class DeleteTest extends JcrFileSystemTest
    public void testDeleteFileWrongID() throws Exception
    {
       ByteArrayContainerResponseWriter writer = new ByteArrayContainerResponseWriter();
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("delete/") //
-         .append(fileID + "_WRONG_ID").toString();
+      String path = SERVICE_URI + "delete/" + fileID + "_WRONG_ID";
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, writer, null);
       assertEquals(404, response.getStatus());
       log.info(new String(writer.getBody()));
@@ -181,10 +161,7 @@ public class DeleteTest extends JcrFileSystemTest
 
    public void testDeleteFolder() throws Exception
    {
-      String path = new StringBuilder() //
-         .append(SERVICE_URI) //
-         .append("delete/") //
-         .append(folderID).toString();
+      String path = SERVICE_URI + "delete/" + folderID;
       ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null);
       assertEquals(204, response.getStatus());
       try
