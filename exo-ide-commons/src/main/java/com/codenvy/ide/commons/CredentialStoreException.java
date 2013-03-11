@@ -18,27 +18,30 @@
  */
 package com.codenvy.ide.commons;
 
-import org.exoplatform.ide.commons.ReadCredentialsException;
-import org.exoplatform.ide.commons.WriteCredentialsException;
-
 /**
  * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
- * @version $Id: CreadentialsStorage.java Mar 1, 2013 vetal $
- *
+ * @version $Id: CredentialStoreException.java Mar 1, 2013 vetal $
  */
-public interface CreadentialsStorage
+@SuppressWarnings("serial")
+public final class CredentialStoreException extends Exception
 {
    /**
-    * @param user
-    * @param target
-    * @param credentials
+    * @param message
+    *    the detail message
+    * @param cause
+    *    the cause
     */
-   void writeCredetials(String user, String target, Credentials credentials) throws WriteCredentialsException;
+   public CredentialStoreException(String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 
    /**
-    * @param user
-    * @param target
-    * @return
+    * @param message
+    *    the detail message
     */
-   Credentials readCredetials(String user, String target) throws ReadCredentialsException;
+   public CredentialStoreException(String message)
+   {
+      super(message);
+   }
 }
