@@ -17,17 +17,15 @@
 package com.codenvy.ide.client;
 
 import com.codenvy.ide.client.extensionsPart.ExtensionsPage;
-
+import com.codenvy.ide.core.ComponentException;
+import com.codenvy.ide.core.ComponentRegistry;
+import com.codenvy.ide.perspective.PerspectivePresenter.PartStackType;
+import com.codenvy.ide.perspective.WorkspacePresenter;
 import com.google.gwt.core.client.Callback;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.SimplePanel;
 import com.google.inject.Inject;
-
-import com.codenvy.ide.core.ComponentException;
-import com.codenvy.ide.core.ComponentRegistry;
-import com.codenvy.ide.perspective.PerspectivePresenter.PartStackType;
-import com.codenvy.ide.perspective.WorkspacePresenter;
 
 /**
  * Performs initial application startup

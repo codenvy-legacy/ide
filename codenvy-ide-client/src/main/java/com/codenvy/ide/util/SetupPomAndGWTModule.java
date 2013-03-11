@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, see<http://www.gnu.org/licenses/>.
  */
-package org.exoplatform.ide.util;
+package com.codenvy.ide.util;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -22,7 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Pattern;
 
 /**
  * This is prototype (PoC) utility, that properly registers and Extension in Codenvy Project build.
@@ -42,14 +41,12 @@ import java.util.regex.Pattern;
  *      <li>IDE.gwt.xml<ul>
  *         <li>add inherits</li>
  *      </ul></li>
- *      <li>ExtensionManager.java<ul>
- *         <li>add constructor arg</li>
- *      </ul></li></ul></li>
+ *   </ul></li>
  *</ul>
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
-public class ProjectWithExtensionsInitializer
+public class SetupPomAndGWTModule
 {
 
    public static String GEN_START = "<!-- START OF AUTO GENERATED BLOCK -->\n";
@@ -66,8 +63,6 @@ public class ProjectWithExtensionsInitializer
 
    private final String gwtModuleFQN;
 
-   private final String extensionClassFQN;
-
    private final File projectRoot;
 
    // =======================================================================================================
@@ -76,7 +71,7 @@ public class ProjectWithExtensionsInitializer
 
    public static String DEP_MANAGE_END_TAG = "</dependencyManagement>";
 
-   public static String MODULE_CLEINT = "<module>exo-ide-client</module>";
+   public static String MODULE_CLEINT = "<module>codenvy-ide-client</module>";
 
    /**
     * Collect extension description and process project settings
@@ -86,15 +81,14 @@ public class ProjectWithExtensionsInitializer
    public static void main(String args[])
    {
       // validate args
-      if (args.length != 5)
+      if (args.length != 4)
       {
          System.out
             .println("Ooops, wrong usage. This tool requires 5 arguments to be able to register an extension properly.");
-         System.out.println("- Maven Group ID of the extension (i.e. 'org.exoplatform.ide')");
+         System.out.println("- Maven Group ID of the extension (i.e. 'com.codenvy.ide')");
          System.out.println("- Maven Artifact ID of the extension (i.e. 'ide-ext-tasks')");
          System.out.println("- Maven Module Version of the extension (i.e. '3.0')");
-         System.out.println("- GWT Module FQN (i.e. 'org.exoplatform.ide.extension.tasks.Tasks')");
-         System.out.println("- Extension Class FQN (i.e. 'org.exoplatform.ide.extension.tasks.TasksExtension')");
+         System.out.println("- GWT Module FQN (i.e. 'com.codenvy.ide.extension.tasks.Tasks')");
          return;
       }
 
@@ -104,10 +98,9 @@ public class ProjectWithExtensionsInitializer
       String mavenArtifactId = args[1];
       String mavenModuleVersion = args[2];
       String gwtModuleFQN = args[3];
-      String extensionClassFQN = args[4];
-      ProjectWithExtensionsInitializer projectWithExtensionsInitializer =
-         new ProjectWithExtensionsInitializer(mavenGroupId, mavenArtifactId, mavenModuleVersion, gwtModuleFQN,
-            extensionClassFQN, new File("."));
+      SetupPomAndGWTModule projectWithExtensionsInitializer =
+         new SetupPomAndGWTModule(mavenGroupId, mavenArtifactId, mavenModuleVersion, gwtModuleFQN,
+            new File("."));
 
       // try process
       try
@@ -130,15 +123,14 @@ public class ProjectWithExtensionsInitializer
     * @param extensionClassFQN
     * @param projectRoot
     */
-   public ProjectWithExtensionsInitializer(String mavenGroupId, String mavenArtifactId, String mavenModuleVersion,
-      String gwtModuleFQN, String extensionClassFQN, File projectRoot)
+   public SetupPomAndGWTModule(String mavenGroupId, String mavenArtifactId, String mavenModuleVersion,
+      String gwtModuleFQN, File projectRoot)
    {
       super();
       this.mavenGroupId = mavenGroupId;
       this.mavenArtifactId = mavenArtifactId;
       this.mavenModuleVersion = mavenModuleVersion;
       this.gwtModuleFQN = gwtModuleFQN;
-      this.extensionClassFQN = extensionClassFQN;
       this.projectRoot = projectRoot;
    }
 
@@ -173,14 +165,6 @@ public class ProjectWithExtensionsInitializer
       {
          throw new IOException("Failed to process Client GWT XML", e);
       }
-      try
-      {
-         processExtensionManagerJava();
-      }
-      catch (Exception e)
-      {
-         throw new IOException("Failed to process Extension Manager JAVA Class", e);
-      }
    }
 
    /**
@@ -214,7 +198,7 @@ public class ProjectWithExtensionsInitializer
 
    public static String DEP_END_TAG = "</dependencies>";
 
-   public static String CLIENT_POM = "exo-ide-client/pom.xml";
+   public static String CLIENT_POM = "codenvy-ide-client/pom.xml";
 
    /**
     * Insert dependency at the end of "dependencies" section.
@@ -243,9 +227,9 @@ public class ProjectWithExtensionsInitializer
 
    // =======================================================================================================
 
-   public static String IDE_GWT_MODULE = "exo-ide-client/src/main/resources/org/exoplatform/ide/IDE.gwt.xml";
+   public static String IDE_GWT_MODULE = "codenvy-ide-client/src/main/resources/com/codenvy/ide/IDE.gwt.xml";
 
-   public static String IDE_GWT_ENTRY_TAG = "<entry-point class='org.exoplatform.ide.client.IDE' />";
+   public static String IDE_GWT_ENTRY_TAG = "<entry-point class='com.codenvy.ide.client.IDE' />";
 
    /**
     * Insert "inherits" tag before "entry-point".
@@ -267,69 +251,6 @@ public class ProjectWithExtensionsInitializer
       gwtModuleContent = gwtModuleContent.replace(IDE_GWT_ENTRY_TAG, inheritsString + IDE_GWT_ENTRY_TAG);
       // write content
       writeFileContent(gwtModuleContent, gwtModuleFile);
-   }
-
-   // =======================================================================================================
-
-   public static String EXTENSION_MANAGER =
-      "exo-ide-client/src/main/java/org/exoplatform/ide/client/ExtensionManager.java";
-
-   public static String EXTENSION_MANAGER_CONSTRUCTOR_START = "public ExtensionManager(";
-
-   public static String CONSTRUCTOR_INSERT_CODE = "// INSERT CODE HERE";
-
-   private static final String IMPORT = "import";
-
-   /**
-    * Add import, constructor argument and add one more line of code to constructor.
-    * 
-    * @throws IOException
-    */
-   protected void processExtensionManagerJava() throws IOException
-   {
-      File extManagerJava = new File(projectRoot, EXTENSION_MANAGER);
-      String extManagerContent = readFileContent(extManagerJava);
-
-      // assert
-      if (extManagerContent.indexOf(IMPORT) < 0)
-      {
-         throw new IOException(String.format("File '%s' doesn't contain '%s'. Can't process file.", EXTENSION_MANAGER,
-            IMPORT));
-      }
-      if (extManagerContent.indexOf(EXTENSION_MANAGER_CONSTRUCTOR_START) < 0)
-      {
-         throw new IOException(String.format("File '%s' doesn't contain '%s'. Can't process file.", EXTENSION_MANAGER,
-            EXTENSION_MANAGER_CONSTRUCTOR_START));
-      }
-      if (extManagerContent.indexOf(CONSTRUCTOR_INSERT_CODE) < 0)
-      {
-         throw new IOException(String.format("File '%s' doesn't contain '%s'. Can't process file.", EXTENSION_MANAGER,
-            CONSTRUCTOR_INSERT_CODE));
-      }
-
-      StringBuilder extManagerBuilder = new StringBuilder(extManagerContent);
-
-      // Add import : import org....ExtensionClass
-      int importStartOffset = extManagerBuilder.indexOf(IMPORT);
-      String importString = String.format("import %s; %n", extensionClassFQN);
-      extManagerBuilder.insert(importStartOffset, importString);
-
-      // Add constructor argument : ExtensionClass argName
-      String[] fqnEntries = extensionClassFQN.split(Pattern.quote("."));
-      String constructorArgName = fqnEntries[fqnEntries.length - 1].toLowerCase();
-      String constructorArg = extensionClassFQN + " " + constructorArgName;
-      int constructorArgOffset =
-         extManagerBuilder.indexOf(EXTENSION_MANAGER_CONSTRUCTOR_START) + EXTENSION_MANAGER_CONSTRUCTOR_START.length();
-      extManagerBuilder.insert(constructorArgOffset, constructorArg);
-
-      // Add add arg to the list of extensions : this.extensions.add(argName);
-      String addExtensionToListLine = String.format("%nthis.extensions.add(%s);%n", constructorArgName);
-      int codePartOffset = extManagerBuilder.indexOf(CONSTRUCTOR_INSERT_CODE) + CONSTRUCTOR_INSERT_CODE.length();
-      extManagerBuilder.insert(codePartOffset, addExtensionToListLine);
-
-      // write content
-      writeFileContent(extManagerBuilder.toString(), extManagerJava);
-
    }
 
    // =======================================================================================================

@@ -41,7 +41,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-@Extension(title = "Demo extension", id = "ide.ext.demo", version = "2.0.0")
+@Extension  (title = "Demo extension", id = "ide.ext.demo", version = "2.0.0")
 public class DemoExtension
 {
 

@@ -18,18 +18,16 @@ package com.codenvy.ide.client.extensionsPart;
 
 import com.codenvy.ide.client.ExtensionManager;
 import com.codenvy.ide.client.PageResources;
-
-import com.google.gwt.resources.client.ImageResource;
-import com.google.gwt.user.client.ui.AcceptsOneWidget;
-import com.google.gwt.user.client.ui.HTMLPanel;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-
 import com.codenvy.ide.extension.DependencyDescription;
 import com.codenvy.ide.extension.ExtensionDescription;
 import com.codenvy.ide.json.JsonArray;
 import com.codenvy.ide.json.JsonStringMap.IterationCallback;
 import com.codenvy.ide.part.AbstractPartPresenter;
+import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.user.client.ui.AcceptsOneWidget;
+import com.google.gwt.user.client.ui.HTMLPanel;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 /**
  * For demo purposes. Displays the list of registered extensions and their dependensies.
