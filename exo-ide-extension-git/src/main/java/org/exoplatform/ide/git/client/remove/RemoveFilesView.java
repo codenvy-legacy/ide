@@ -22,74 +22,70 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.HasClickHandlers;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.Widget;
 
 import org.exoplatform.gwtframework.ui.client.component.ImageButton;
-import org.exoplatform.gwtframework.ui.client.component.Label;
+import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.git.client.GitExtension;
 
 /**
- * View for removing changes in git index.
+ * View for removing files from working directory and index. Must be added to Views.gwt.xml file.
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Mar 30, 2011 9:25:02 AM anya $
+ * @version $Id: Apr 12, 2011 5:57:31 PM anya $
  * 
  */
-public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPresenter.Display
+public class RemoveFilesView extends ViewImpl implements RemoveFilesPresenter.Display
 {
-   public static final int HEIGHT = 180;
+   private static final int HEIGHT = 290;
 
-   public static final int WIDTH = 420;
+   private static final int WIDTH = 480;
 
-   public static final String ID = "ideRemoveFromIndexView";
+   public static final String ID = "ideRemoveFilesView";
 
-   private static final String REMOVE_BUTTON_ID = "ideRemoveFromIndexViewRemoveButton";
+   /* Elements IDs */
+   private static final String REMOVE_BUTTON_ID = "ideRemoveFilesViewRemoveButton";
 
-   private static final String CANCEL_BUTTON_ID = "ideRemoveFromIndexViewCancelButton";
+   private static final String CANCEL_BUTTON_ID = "ideRemoveFilesViewCancelButton";
 
-
-   private static final String MESSAGE_FIELD_ID = "ideRemoveFromIndexViewMessageField";
-
-   /* Elements titles */
+   /**
+    * Save changes button.
+    */
    @UiField
    ImageButton removeButton;
 
+   /**
+    * Cancel button.
+    */
    @UiField
    ImageButton cancelButton;
 
+   /**
+    * The grid to view files in index.
+    */
    @UiField
-   Label messageField;
+   IndexFilesGrid indexFilesGrid;
 
-   interface RemoveFromIndexViewUiBinder extends UiBinder<Widget, RemoveFromIndexView>
+   interface RemoveFilesViewUiBinder extends UiBinder<Widget, RemoveFilesView>
    {
    }
 
-   private static RemoveFromIndexViewUiBinder uiBinder = GWT.create(RemoveFromIndexViewUiBinder.class);
+   private static RemoveFilesViewUiBinder uiBinder = GWT.create(RemoveFilesViewUiBinder.class);
 
-   public RemoveFromIndexView()
+   public RemoveFilesView()
    {
-      super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFromIndexTitle(), null, WIDTH, HEIGHT);
+      super(ID, ViewType.MODAL, GitExtension.MESSAGES.removeFilesViewTitle(), null, WIDTH, HEIGHT);
       setCloseOnEscape(true);
       add(uiBinder.createAndBindUi(this));
-      messageField.getElement().setId(MESSAGE_FIELD_ID);
+
       removeButton.setButtonId(REMOVE_BUTTON_ID);
       cancelButton.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getRemoveButton()
-    */
-   @Override
-   public HasClickHandlers getRemoveButton()
-   {
-      return removeButton;
-   }
-
-   /**
-    * @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getCancelButton()
+    * @see org.exoplatform.ide.git.client.remove.RemoveFilesPresenter.Display#getCancelButton()
     */
    @Override
    public HasClickHandlers getCancelButton()
@@ -98,11 +94,20 @@ public class RemoveFromIndexView extends ViewImpl implements RemoveFromIndexPres
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter.Display#getMessage()
+    * @see org.exoplatform.ide.git.client.remove.RemoveFilesPresenter.Display#getRemoveButton()
     */
    @Override
-   public HasValue<String> getMessage()
+   public HasClickHandlers getRemoveButton()
    {
-      return messageField;
+      return removeButton;
+   }
+
+   /**
+    * @see org.exoplatform.ide.git.client.remove.RemoveFilesPresenter.Display#getIndexFilesGrid()
+    */
+   @Override
+   public ListGrid<IndexFile> getIndexFilesGrid()
+   {
+      return indexFilesGrid;
    }
 }

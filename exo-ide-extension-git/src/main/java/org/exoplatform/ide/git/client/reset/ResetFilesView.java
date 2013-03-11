@@ -29,6 +29,8 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.git.client.GitExtension;
+import org.exoplatform.ide.git.client.remove.IndexFile;
+import org.exoplatform.ide.git.client.remove.IndexFilesGrid;
 
 /**
  * View for reseting files in index. Must be added to Views.gwt.xml file.

@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.reset;
+package org.exoplatform.ide.git.client.remove;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -37,43 +37,42 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
-import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.shared.GitFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Presenter for view for reseting files from index. The view must be pointed in Views.gwt.xml file.
+ * Presenter for view for removing files from working tree and Git index. The view must be pointed in Views.gwt.xml file.
  * 
- * When user tries to reset files from index: 1. Find Git work directory by selected item in browser tree. 2. Get status for found
- * work directory. 3. Display files ready for commit in grid. (Checked items will be reseted from index).
+ * When user tries to remove files from index: 1. Find Git work directory by selected item in browser tree. 2. Get status for
+ * found work directory. 3. Display files ready for commit in grid. (Checked items will be removed from index).
  * 
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
- * @version $Id: Apr 13, 2011 4:52:42 PM anya $
+ * @version $Id: Apr 12, 2011 4:03:44 PM anya $
  * 
  */
-public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandler
+public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHandler
 {
    
    interface Display extends IsView
    {
       /**
-       * Get reset files button click handler.
+       * Get click handler for remove button.
        * 
-       * @return {@link HasClickHandlers} click handler
+       * @return {@link HasClickHandlers}
        */
-      HasClickHandlers getResetButton();
+      HasClickHandlers getRemoveButton();
 
       /**
-       * Get cancel button click handler.
+       * Get click handler for cancel button.
        * 
-       * @return {@link HasClickHandlers} click handler
+       * @return {@link HasClickHandlers}
        */
       HasClickHandlers getCancelButton();
 
       /**
-       * Get grid with Git files.
+       * Get grid for displaying Git files.
        * 
        * @return {@link ListGrid}
        */
@@ -86,11 +85,11 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    private Display display;
 
    /**
-    * @param eventBus events handler
+    * @param eventBus event handlers
     */
-   public ResetFilesPresenter()
+   public RemoveFilesPresenter()
    {
-      IDE.addHandler(ResetFilesEvent.TYPE, this);
+      IDE.addHandler(RemoveFilesEvent.TYPE, this);
    }
 
    /**
@@ -102,13 +101,13 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    {
       this.display = d;
 
-      display.getResetButton().addClickHandler(new ClickHandler()
+      display.getRemoveButton().addClickHandler(new ClickHandler()
       {
 
          @Override
          public void onClick(ClickEvent event)
          {
-            doReset();
+            doRemove();
          }
       });
 
@@ -124,14 +123,15 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    }
 
    /**
-    * @see org.exoplatform.ide.git.client.reset.ResetFilesHandler#onResetFiles(org.exoplatform.ide.git.client.reset.ResetFilesEvent)
+    * @see org.exoplatform.ide.git.client.remove.RemoveFilesHandler#onRemoveFiles(org.exoplatform.ide.git.client.remove.RemoveFilesEvent)
     */
    @Override
-   public void onResetFiles(ResetFilesEvent event)
+   public void onRemoveFiles(RemoveFilesEvent event)
    {
       if (makeSelectionCheck())
       {
-         getStatus(getSelectedProject().getId());
+         String projectId = getSelectedProject().getId();
+         getStatus(projectId);
       }
    }
 
@@ -187,9 +187,9 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    }
 
    /**
-    * Reset checked files from index.
+    * Perform removing files from working directory and Git index.
     */
-   private void doReset()
+   private void doRemove()
    {
       List<String> files = new ArrayList<String>();
       for (IndexFile file : display.getIndexFilesGrid().getValue())
@@ -199,20 +199,19 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
             files.add(file.getPath());
          }
       }
-
+      
 //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = getSelectedProject().getId();
       try
       {
-         GitClientService.getInstance().reset(vfs.getId(), projectId, files.toArray(new String[files.size()]), "HEAD",
-            null, new AsyncRequestCallback<String>()
+         GitClientService.getInstance().remove(vfs.getId(), projectId, files.toArray(new String[files.size()]),
+            new AsyncRequestCallback<String>()
             {
 
                @Override
                protected void onSuccess(String result)
                {
                   IDE.getInstance().closeView(display.asView().getId());
-                  IDE.fireEvent(new OutputEvent(GitExtension.MESSAGES.resetFilesSuccessfully(), Type.GIT));
                   IDE.fireEvent(new RefreshBrowserEvent());
                }
 
@@ -221,15 +220,16 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                {
                   String errorMassage =
                      (exception.getMessage() != null) ? exception.getMessage() : GitExtension.MESSAGES
-                        .resetFilesFailed();
+                        .removeFilesFailed();
                   IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
                }
             });
       }
       catch (RequestException e)
       {
-         String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.resetFilesFailed();
+         String errorMassage = (e.getMessage() != null) ? e.getMessage() : GitExtension.MESSAGES.removeFilesFailed();
          IDE.fireEvent(new OutputEvent(errorMassage, Type.GIT));
       }
    }
+
 }

@@ -158,9 +158,6 @@ public interface GitLocalizationConstant extends Messages
    @Key("messages.remote_list_failed")
    String remoteListFailed();
 
-   @Key("messages.remove_files_success")
-   String removeFilesSuccessfull();
-
    @Key("messages.remove_files_failed")
    String removeFilesFailed();
 
@@ -259,14 +256,6 @@ public interface GitLocalizationConstant extends Messages
 
    @Key("add.finished")
    String addFinished(String projectName);
-
-   // ----RemoveRequestHandler
-
-   @Key("remove.started")
-   String removeStarted(String projectName);
-
-   @Key("remove.finished")
-   String removeFinished(String projectName);
 
    // ----CommitRequestHandler
 
@@ -394,17 +383,11 @@ public interface GitLocalizationConstant extends Messages
    String resetHardTypeDescription();
 
    // Remove
-   @Key("view.remove_from_index.all")
-   String removeFromIndexAll();
+   @Key("view.remove.files.grid.title")
+   String removeFilesGridTitle();
 
-   @Key("view.remove_from_index.folder")
-   String removeFromIndexFolder(String folder);
-
-   @Key("view.remove_from_index.file")
-   String removeFromIndexFile(String file);
-
-   @Key("view.remove_from_index.title")
-   String removeFromIndexTitle();
+   @Key("view.remove.files.title")
+   String removeFilesViewTitle();
 
    // Create
 

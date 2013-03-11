@@ -55,7 +55,7 @@ import org.exoplatform.ide.git.client.merge.MergePresenter;
 import org.exoplatform.ide.git.client.pull.PullPresenter;
 import org.exoplatform.ide.git.client.push.PushToRemotePresenter;
 import org.exoplatform.ide.git.client.remote.RemotePresenter;
-import org.exoplatform.ide.git.client.remove.RemoveFromIndexPresenter;
+import org.exoplatform.ide.git.client.remove.RemoveFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetFilesPresenter;
 import org.exoplatform.ide.git.client.reset.ResetToCommitPresenter;
 import org.exoplatform.ide.git.client.status.StatusCommandHandler;
@@ -113,7 +113,7 @@ public class GitExtension extends Extension implements InitializeServicesHandler
       new InitRepositoryPresenter();
       new StatusCommandHandler();
       new AddToIndexPresenter();
-      new RemoveFromIndexPresenter();
+      new RemoveFilesPresenter();
       new ResetFilesPresenter();
       new ResetToCommitPresenter();
       new RemotePresenter();

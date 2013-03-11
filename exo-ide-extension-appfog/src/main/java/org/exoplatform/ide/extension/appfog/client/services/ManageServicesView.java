@@ -85,7 +85,7 @@ public class ManageServicesView extends ViewImpl implements ManageServicesPresen
    }
 
    /**
-    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter.Display#getRemoveButton()
+    * @see org.exoplatform.ide.extension.cloudfoundry.client.services.ManageServicesPresenter.Display#getAddButton()
     */
    @Override
    public HasClickHandlers getAddButton()
