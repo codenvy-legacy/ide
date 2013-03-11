@@ -13,10 +13,9 @@
 // limitations under the License.
 package com.google.collide.client.util;
 
+import com.google.common.base.Preconditions;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.RepeatingCommand;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Executor of a cancellable repeating command.
@@ -117,8 +116,8 @@ public abstract class DeferredCommandExecutor {
    * Schedule / reschedule {@link #execute()} invocation.
    */
   public void schedule(int tickCount) {
-    Assert.isTrue(!isExecuting);
-    Assert.isLegal(tickCount > 0);
+    Preconditions.checkState(!isExecuting);
+    Preconditions.checkArgument(tickCount > 0);
 
     this.tickCount = tickCount;
 
@@ -132,7 +131,7 @@ public abstract class DeferredCommandExecutor {
    * Cancel scheduled {@link #execute()} invocation.
    */
   public void cancel() {
-     Assert.isTrue(!isExecuting);
+    Preconditions.checkState(!isExecuting);
     tickCount = -1;
   }
 
@@ -140,7 +139,7 @@ public abstract class DeferredCommandExecutor {
    * Check if executor is going to invoke {@link #execute()} again.
    */
   public boolean isScheduled() {
-     Assert.isTrue(!isExecuting);
+    Preconditions.checkState(!isExecuting);
     return tickCount >= 0;
   }
 

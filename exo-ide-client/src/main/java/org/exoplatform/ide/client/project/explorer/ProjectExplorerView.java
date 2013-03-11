@@ -126,15 +126,6 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    }
 
    /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#selectItem(java.lang.String)
-    */
-   @Override
-   public boolean selectItem(String id)
-   {
-      return treeGrid.selectItem(id);
-   }
-
-   /**
     * @see org.exoplatform.ide.client.framework.project.ProjectExplorerDisplay#deselectItem(java.lang.String)
     */
    @Override
@@ -261,6 +252,24 @@ public class ProjectExplorerView extends ViewImpl implements ProjectExplorerDisp
    public void navigateToItem(Item item)
    {
       treeGrid.navigateToItem(item);
+   }
+
+   @Override
+   public void refreshTree()
+   {
+      treeGrid.refresh();
+   }
+
+   @Override
+   public boolean selectItem(Item item)
+   {
+      return treeGrid.selectItem(item);
+   }
+
+   @Override
+   public List<Item> getVisibleItems()
+   {
+      return treeGrid.getVisibleItems();
    }
 
 }

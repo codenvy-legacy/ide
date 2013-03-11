@@ -16,9 +16,9 @@ package com.google.collide.codemirror2;
 
 import com.google.collide.json.shared.JsonStringMap;
 import com.google.collide.shared.util.JsonCollections;
+import com.google.common.base.Preconditions;
 
 import org.exoplatform.gwtframework.commons.rest.MimeType;
-import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Syntax types (languages / file formats) enumeration.
@@ -45,7 +45,7 @@ public enum SyntaxType {
    * @return
   */
   public static SyntaxType syntaxTypeByMimeType(String mimeType){
-     Assert.isNotNull(mimeType);
+     Preconditions.checkNotNull(mimeType);
      SyntaxType syntaxType = extensionToSyntaxType.get(mimeType);
      return (syntaxType != null) ? syntaxType : SyntaxType.NONE;
   }

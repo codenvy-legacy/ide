@@ -45,7 +45,7 @@
       <jgit.version>1.2.0.201112221803-r</jgit.version>
       <jsch.version>0.1.44-1</jsch.version>
       <appengine.version>1.7.2</appengine.version>
-      <ch.qos.logback.version>0.9.20</ch.qos.logback.version>
+      <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
 
 
@@ -730,6 +730,18 @@
             <artifactId>eclipse-jdt-core</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-core-asl</artifactId>
+          <version>1.9.4</version>
+        </dependency>
+        <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-mapper-asl</artifactId>
+         <version>1.9.4</version>
+      </dependency>
+        
       </dependencies>
    </dependencyManagement>
 
@@ -796,8 +808,6 @@
       <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>
       <module>exo-ide-extension-googleappengine</module>
-
-      <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>

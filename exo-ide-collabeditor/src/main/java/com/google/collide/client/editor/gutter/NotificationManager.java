@@ -46,7 +46,7 @@ import com.google.gwt.core.client.JsArrayNumber;
 import com.google.gwt.event.shared.HandlerRegistration;
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 import org.exoplatform.ide.editor.client.marking.Marker;
 import org.exoplatform.ide.editor.client.marking.ProblemClickEvent;

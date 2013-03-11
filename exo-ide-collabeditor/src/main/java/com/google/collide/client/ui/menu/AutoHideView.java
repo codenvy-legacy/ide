@@ -16,7 +16,7 @@ package com.google.collide.client.ui.menu;
 import com.google.collide.client.util.AnimationController;
 import com.google.collide.mvp.CompositeView;
 
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * The View for AutoHideComponent.

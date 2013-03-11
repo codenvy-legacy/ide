@@ -17,6 +17,8 @@ package com.google.collide.shared.util;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonIntegerMap;
 
+import javax.annotation.Nonnull;
+
 /**
  * Utility methods for string operations.
  *
@@ -158,7 +160,7 @@ public class StringUtils {
    * case of {@code string}.
    */
   public static boolean startsWith(
-      String prefix, String string, boolean caseInsensitive) {
+      @Nonnull String prefix, @Nonnull String string, boolean caseInsensitive) {
     if (caseInsensitive) {
       int prefixLength = prefix.length();
       if (string.length() < prefixLength) {

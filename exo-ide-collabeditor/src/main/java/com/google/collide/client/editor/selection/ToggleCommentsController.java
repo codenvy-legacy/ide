@@ -18,9 +18,8 @@ import com.google.collide.shared.document.DocumentMutator;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Position;
+import com.google.common.base.Preconditions;
 import com.google.gwt.regexp.shared.RegExp;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
 
 /**
  * Utility that comments / uncomments selected lines.
@@ -79,7 +78,7 @@ public class ToggleCommentsController {
   private boolean canUncommentAll(Line begin, Line end) {
     Line current = begin;
     while (current != end) {
-      Assert.isNotNull(current, "hasn't met terminator before document end");
+      Preconditions.checkNotNull(current, "hasn't met terminator before document end");
       if (!commentChecker.test(current.getText())) {
         return false;
       }

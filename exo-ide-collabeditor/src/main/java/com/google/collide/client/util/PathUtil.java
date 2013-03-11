@@ -17,8 +17,7 @@ package com.google.collide.client.util;
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.StringUtils;
-
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import com.google.common.base.Preconditions;
 
 /**
  * Utility class for dealing with File paths on the client.
@@ -150,7 +149,7 @@ public class PathUtil implements Comparable<PathUtil> {
    * it also contains "/tmp/something".
    */
   public boolean containsPath(PathUtil path) {
-     Assert.isNotNull(path, "Containing path must not be null");
+    Preconditions.checkNotNull(path, "Containing path must not be null");
     JsonArray<String> otherPathComponents = path.pathComponentsList;
     if (otherPathComponents.size() < pathComponentsList.size()) {
       // The path given has less components than ours, it cannot be a child
@@ -174,7 +173,7 @@ public class PathUtil implements Comparable<PathUtil> {
    * @return null if parent is invalid
    */
   public PathUtil makeRelativeToParent(PathUtil parent) {
-     Assert.isNotNull(parent, "Parent path cannot be null");
+    Preconditions.checkNotNull(parent, "Parent path cannot be null");
     JsonArray<String> parentPathComponents = parent.pathComponentsList;
     if (parentPathComponents.size() > pathComponentsList.size()) {
       // The path given has the same or more components, it can't be a parent

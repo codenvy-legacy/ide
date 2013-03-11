@@ -17,7 +17,7 @@ package com.google.collide.client.util.dom;
 import com.google.collide.client.util.Elements;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * A class that computes and caches the width of a vertical scrollbar and height
@@ -46,7 +46,7 @@ public class ScrollbarSizeCalculator {
     heightOfHorizontalScrollbar = noScrollbarClientHeight - container.getClientHeight();
     widthOfVerticalScrollbar = noScrollbarClientWidth - container.getClientWidth();
 
-    DomUtils.removeFromParent(container);
+    container.removeFromParent();
   }
 
   private Element createContainer() {

@@ -36,6 +36,8 @@ import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.TextUtils;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
@@ -45,7 +47,7 @@ import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.TextEvent;
-import elemental.dom.Element;
+import elemental.html.Element;
 import elemental.html.TextAreaElement;
 
 /**
@@ -300,6 +302,7 @@ public class InputController {
     return inputElement;
   }
 
+  @VisibleForTesting
   public void processSignalEvent(SignalEvent signalEvent) {
     boolean handled = dispatchKeyPress(signalEvent);
 

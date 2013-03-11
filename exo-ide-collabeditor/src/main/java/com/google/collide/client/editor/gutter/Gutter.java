@@ -25,7 +25,7 @@ import com.google.collide.shared.util.ListenerManager;
 import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.collide.shared.util.ListenerManager.Dispatcher;
 
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * A gutter is a slim vertical region adjacent to the text buffer of the editor.

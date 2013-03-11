@@ -21,7 +21,7 @@ import com.google.collide.shared.util.ListenerManager.Dispatcher;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * Tracks the focus state of the editor.

@@ -38,7 +38,7 @@ import elemental.events.EventListener;
 import elemental.events.EventRemover;
 import elemental.events.EventTarget;
 import elemental.events.MouseEvent;
-import elemental.dom.Element;
+import elemental.html.Element;
 import elemental.util.Timer;
 
 /**
@@ -185,7 +185,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
   private static AutoHideView<Void> getViewInstance(Css css) {
     if (tooltipViewInstance == null) {
       tooltipViewInstance = new AutoHideView<Void>(Elements.createDivElement());
-      tooltipViewInstance.getElement().getClassList().add(css.tooltipPosition());
+      tooltipViewInstance.getElement().addClassName(css.tooltipPosition());
     }
     return tooltipViewInstance;
   }
@@ -355,20 +355,20 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
     HorizontalAlign hAlign = positioner.getHorizontalAlignment();
     switch (positioner.getVerticalAlignment()) {
       case TOP:
-         contentElement.getClassList().add(css.tooltipAbove());
+         contentElement.addClassName(css.tooltipAbove());
         break;
       case BOTTOM:
         if (hAlign == HorizontalAlign.RIGHT) {
-          contentElement.getClassList().add(css.tooltipBelowRightAligned());
+          contentElement.addClassName(css.tooltipBelowRightAligned());
         } else {
-          contentElement.getClassList().add(css.tooltipBelow());
+          contentElement.addClassName(css.tooltipBelow());
         }
         break;
       case MIDDLE:
         if (hAlign == HorizontalAlign.LEFT) {
-          contentElement.getClassList().add(css.tooltipLeft());
+          contentElement.addClassName(css.tooltipLeft());
         } else if (hAlign == HorizontalAlign.RIGHT) {
-          contentElement.getClassList().add(css.tooltipRight());
+          contentElement.addClassName(css.tooltipRight());
         }
         break;
     }
@@ -458,7 +458,7 @@ public class Tooltip extends AutoHideComponent<AutoHideView<Void>,
       // Set the maximum width.
       setMaxWidth(maxWidth);
 
-      contentElement.getClassList().add(css.tooltip());
+      contentElement.addClassName(css.tooltip());
       Element triangle = Elements.createDivElement(css.triangle());
       switch (positioner.getHorizontalAlignment())
       {

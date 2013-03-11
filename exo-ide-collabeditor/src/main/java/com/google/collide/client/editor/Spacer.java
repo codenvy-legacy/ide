@@ -23,7 +23,7 @@ import com.google.collide.shared.util.SortedList;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /*
  * TODO: Knowledge about what lines the spacer is logically linked
@@ -129,7 +129,7 @@ public class Spacer {
 
     // Create div area for clients to draw inside
     element = Elements.createDivElement();
-    element.getClassList().add(cssClass);
+    element.addClassName(cssClass);
     element.getStyle().setLeft("0px");
     element.getStyle().setRight("0px");
     element.getStyle().setHeight(height, CSSStyleDeclaration.Unit.PX);
@@ -143,9 +143,9 @@ public class Spacer {
       }
     };
 
-    element.setOnmousedown(bubblePreventionListener);
-    element.setOnmousemove(bubblePreventionListener);
-    element.setOnmouseup(bubblePreventionListener);
+    element.setOnMouseDown(bubblePreventionListener);
+    element.setOnMouseMove(bubblePreventionListener);
+    element.setOnMouseUp(bubblePreventionListener);
 
     buffer.addAnchoredElement(anchor, element);
 

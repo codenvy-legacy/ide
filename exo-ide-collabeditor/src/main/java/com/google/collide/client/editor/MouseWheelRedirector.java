@@ -20,8 +20,8 @@ import com.google.collide.json.client.Jso;
 
 import elemental.events.Event;
 import elemental.events.EventListener;
-import elemental.dom.Element;
-import elemental.events.WheelEvent;
+import elemental.events.MouseWheelEvent;
+import elemental.html.Element;
 
 import org.waveprotocol.wave.client.common.util.UserAgent;
 
@@ -94,7 +94,7 @@ class MouseWheelRedirector {
     scrollableElement.addEventListener(Event.MOUSEWHEEL, new EventListener() {
       @Override
       public void handleEvent(Event evt) {
-        WheelEvent mouseWheelEvent = (WheelEvent) evt;
+        MouseWheelEvent mouseWheelEvent = (MouseWheelEvent) evt;
         
         /*
          * The negative is so the deltaX,Y are positive when the scroll delta

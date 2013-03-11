@@ -16,8 +16,9 @@ package com.google.collide.client.util.collections;
 
 import com.google.collide.json.shared.JsonArray;
 import com.google.collide.json.shared.JsonStringMap;
+import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import javax.annotation.Nonnull;
 
 /**
  * Implementation of sorted multiset of strings based
@@ -55,7 +56,7 @@ public final class SkipListStringBag implements StringMultiset {
   }
 
   @Override
-  public final void addAll(JsonArray<String> items) {
+  public final void addAll(@Nonnull JsonArray<String> items) {
     // TODO: Check if iterate is faster.
     for (int i = 0, l = items.size(); i < l; i++) {
       add(items.get(i));
@@ -63,7 +64,7 @@ public final class SkipListStringBag implements StringMultiset {
   }
 
   @Override
-  public final void add(String item) {
+  public final void add(@Nonnull String item) {
     Counter counter = itemCounters.get(item);
     if (counter == null) {
       counter = new Counter();
@@ -75,7 +76,7 @@ public final class SkipListStringBag implements StringMultiset {
   }
 
   @Override
-  public final void removeAll(JsonArray<String> items) {
+  public final void removeAll(@Nonnull JsonArray<String> items) {
     // TODO: Check if iterate is faster.
     for (int i = 0, l = items.size(); i < l; i++) {
       remove(items.get(i));
@@ -83,10 +84,10 @@ public final class SkipListStringBag implements StringMultiset {
   }
 
   @Override
-  public final void remove(String item) {
+  public final void remove(@Nonnull String item) {
     Counter counter = itemCounters.get(item);
     // TODO: Remove this precondition.
-     Assert.isNotNull(counter, "trying to remove absent item: " +item);
+    Preconditions.checkNotNull(counter, "trying to remove absent item: %s", item);
     if (counter.decrement()) {
       itemCounters.remove(item);
       itemsSet.remove(item);
@@ -94,11 +95,11 @@ public final class SkipListStringBag implements StringMultiset {
   }
 
   @Override
-  public boolean contains(String item) {
+  public boolean contains(@Nonnull String item) {
     return itemCounters.containsKey(item);
   }
 
-  public final Iterable<String> search(String item) {
+  public final Iterable<String> search(@Nonnull String item) {
     return itemsSet.search(item);
   }
 

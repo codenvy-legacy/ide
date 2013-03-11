@@ -17,9 +17,11 @@ package com.google.collide.client.code.autocomplete;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
+import com.google.collide.client.util.PathUtil;
 import com.google.collide.codemirror2.SyntaxType;
+import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.editor.shared.runtime.Assert;
+import javax.annotation.Nonnull;
 
 /**
  * Base class for language-specific autocompleters.
@@ -102,7 +104,7 @@ public abstract class LanguageSpecificAutocompleter {
   private DocumentParser documentParser;
 
   protected LanguageSpecificAutocompleter(SyntaxType mode) {
-     Assert.isNotNull(mode);
+    Preconditions.checkNotNull(mode);
     this.mode = mode;
   }
 
@@ -141,7 +143,7 @@ public abstract class LanguageSpecificAutocompleter {
    */
   protected void attach(
       DocumentParser parser) {
-     Assert.isNotNull(parser);
+    Preconditions.checkNotNull(parser);
     documentParser = parser;
     isPaused = true;
   }
@@ -192,8 +194,8 @@ public abstract class LanguageSpecificAutocompleter {
     return mode;
   }
 
+  @Nonnull
   protected DocumentParser getParser() {
-    Assert.isNotNull(documentParser);
-    return documentParser;
+    return Preconditions.checkNotNull(documentParser);
   }
 }

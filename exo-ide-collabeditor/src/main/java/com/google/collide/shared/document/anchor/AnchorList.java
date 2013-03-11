@@ -15,11 +15,13 @@
 package com.google.collide.shared.document.anchor;
 
 import com.google.collide.shared.util.SortedList;
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * List with anchor-specific optimizations. This class assumes all the anchors
  * in the list will be on the same line.
  */
+@VisibleForTesting
 public class AnchorList extends SortedList<Anchor> {
 
   private static class Comparator implements SortedList.Comparator<Anchor> {

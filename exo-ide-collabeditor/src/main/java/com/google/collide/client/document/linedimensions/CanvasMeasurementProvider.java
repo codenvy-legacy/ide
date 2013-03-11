@@ -17,8 +17,8 @@ package com.google.collide.client.document.linedimensions;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.dom.FontDimensionsCalculator;
 
-import elemental.html.CanvasRenderingContext2D;
-import elemental.html.TextMetrics;
+import elemental.canvas.CanvasRenderingContext2D;
+import elemental.canvas.TextMetrics;
 import elemental.html.CanvasElement;
 
 /**

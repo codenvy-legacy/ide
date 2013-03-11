@@ -28,7 +28,7 @@ import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 // TODO: support RangeAnchoredElements
 /**

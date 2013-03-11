@@ -35,7 +35,7 @@ import com.google.collide.shared.util.ListenerRegistrar.Remover;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.ui.Image;
 import elemental.css.CSSStyleDeclaration;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 import org.exoplatform.ide.editor.java.Breakpoint.Type;
 import org.exoplatform.ide.editor.java.client.JavaClientBundle;
@@ -110,7 +110,7 @@ public class BreakpointGutterManager
       gutter.setWidth(14);
       Resources resources = CollabEditorExtension.get().getContext().getResources();
       currentDebugHighlighter = Elements.createDivElement(resources.workspaceEditorBufferCss().line());
-      currentDebugHighlighter.getClassList().add(resources.workspaceEditorBufferCss().currentLine());
+      currentDebugHighlighter.addClassName(resources.workspaceEditorBufferCss().currentLine());
       currentDebugHighlighter.getStyle().setBackgroundColor("#ffc8c8");
       currentDebugHighlighter.getStyle().setTop(0, "PX");
    }

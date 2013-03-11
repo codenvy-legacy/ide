@@ -26,7 +26,7 @@ import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.util.JsonCollections;
 import com.google.collide.shared.util.ListenerRegistrar;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
@@ -58,15 +58,14 @@ public class CurrentLineHighlighter
 
    /**
     * @param buffer
-    * @param selection
-    * @param res
+    * @param editor
     */
    public CurrentLineHighlighter(Buffer buffer, SelectionModel selection, Resources res)
    {
       this.buffer = buffer;
       listenerRemovers.add(selection.getCursorListenerRegistrar().add(cursorListener));
       lineHighlighter = Elements.createDivElement(res.workspaceEditorBufferCss().line());
-      lineHighlighter.getClassList().add(res.workspaceEditorBufferCss().currentLine());
+      lineHighlighter.addClassName(res.workspaceEditorBufferCss().currentLine());
       lineHighlighter.getStyle().setTop(0, "PX");
       buffer.addUnmanagedElement(lineHighlighter);
    }

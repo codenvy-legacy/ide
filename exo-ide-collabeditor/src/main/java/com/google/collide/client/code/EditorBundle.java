@@ -36,12 +36,11 @@ import com.google.collide.client.editor.input.RootActionExecutor;
 import com.google.collide.client.syntaxhighlighter.SyntaxHighlighter;
 import com.google.collide.client.util.Elements;
 import com.google.collide.client.util.UserActivityManager;
-import com.google.collide.client.util.dom.DomUtils;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.collide.codemirror2.Parser;
 import com.google.collide.shared.document.Document;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * A class that bundles together all of the editor-related components, such as the editor widget,
@@ -208,7 +207,7 @@ public class EditorBundle implements Content {
     // TODO: remove
     Element readOnlyElement = Elements.getElementById("readOnly");
     if (readOnlyElement != null) {
-      DomUtils.removeFromParent(readOnlyElement);
+      readOnlyElement.removeFromParent();
     }
   }
 

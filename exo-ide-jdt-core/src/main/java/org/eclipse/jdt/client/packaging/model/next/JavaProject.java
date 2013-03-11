@@ -114,6 +114,48 @@ public class JavaProject extends IDEProject
    {
       return classpathFolders;
    }
+   
+   private FolderChangedHandler originalFolderChangedHandler;
+   
+   @Override
+   public void setFolderChangedHandler(FolderChangedHandler folderChangedHandler)
+   {
+      originalFolderChangedHandler = folderChangedHandler;
+      super.setFolderChangedHandler(this.folderChangedHandler);
+   }
+
+   private FolderChangedHandler folderChangedHandler = new FolderChangedHandler()
+   {
+      @Override
+      public void onFolderChanged(final FolderModel folder)
+      {
+         UpdateManager updateManager = new UpdateManager();
+         update(updateManager);
+         updateManager.update(new AsyncCallback<Boolean>()
+         {
+            @Override
+            public void onFailure(Throwable caught)
+            {
+               System.out.println("Update " + JavaProject.this.getPath() + " failed");
+               caught.printStackTrace();
+               
+               if (originalFolderChangedHandler != null)
+               {                  
+                  originalFolderChangedHandler.onFolderChanged(folder);
+               }
+            }
+
+            @Override
+            public void onSuccess(Boolean result)
+            {
+               if (originalFolderChangedHandler != null)
+               {
+                  originalFolderChangedHandler.onFolderChanged(folder);                  
+               }
+            }
+         });         
+      }
+   };
 
    @Override
    public void refresh(FolderModel folder, final AsyncCallback<Folder> callback)
@@ -180,7 +222,7 @@ public class JavaProject extends IDEProject
                   @Override
                   public void onFailure(Throwable caught)
                   {
-                     updateManager.updateFailed(caught);               
+                     updateManager.updateFailed(caught);
                   }
 
                   @Override
@@ -327,6 +369,21 @@ public class JavaProject extends IDEProject
       {
          Classpath classpath = new Classpath(dependency);
          classpathFolder.getClasspathList().add(classpath);
+      }
+   }
+   
+   @Override
+   public void resourceChanged(Item resource)
+   {
+      super.resourceChanged(resource);
+      
+      if (resource instanceof FileModel)
+      {
+         FileModel file = (FileModel)resource;
+         if ("pom.xml".equals(resource.getName()))
+         {
+            folderChangedHandler.onFolderChanged(file.getParent());
+         }
       }
    }
 

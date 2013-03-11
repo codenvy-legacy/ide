@@ -27,7 +27,7 @@ import com.google.collide.client.ui.menu.PositionController.VerticalAlign;
 import com.google.collide.client.util.logging.Log;
 import com.google.collide.json.client.JsoStringMap;
 import com.google.collide.shared.document.LineInfo;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 import org.exoplatform.ide.editor.client.hover.TextHover;
 import org.exoplatform.ide.editor.shared.text.BadLocationException;

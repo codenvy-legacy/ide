@@ -28,7 +28,7 @@ import com.google.collide.shared.util.ListenerRegistrar;
 import com.google.gwt.resources.client.ClientBundle;
 
 import elemental.css.CSSStyleDeclaration;
-import elemental.dom.Element;
+import elemental.html.Element;
 
 /**
  * A renderer for the line numbers in the left gutter.
@@ -86,14 +86,14 @@ public class LineNumberRenderer {
     if (renderedActiveLineNumber != NONE) {
       Element renderedActiveLine = lineNumberToElementCache.get(renderedActiveLineNumber);
       if (renderedActiveLine != null) {
-        renderedActiveLine.getClassList().remove(css.activeLineNumber());
+        renderedActiveLine.removeClassName(css.activeLineNumber());
         renderedActiveLineNumber = NONE;
       }
     }
     Element newActiveLine = lineNumberToElementCache.get(lineNumber);
     // Add class if it's in the viewport.
     if (newActiveLine != null) {
-      newActiveLine.getClassList().add(css.activeLineNumber());
+      newActiveLine.addClassName(css.activeLineNumber());
       renderedActiveLineNumber = lineNumber;
     }
   }
@@ -225,7 +225,7 @@ public class LineNumberRenderer {
     element.setTextContent(String.valueOf(lineNumber + 1));
     element.getStyle().setTop(buffer.calculateLineTop(lineNumber), CSSStyleDeclaration.Unit.PX);
     if (lineNumber == activeLineNumber) {
-      element.getClassList().add(css.activeLineNumber());
+      element.addClassName(css.activeLineNumber());
       renderedActiveLineNumber = activeLineNumber;
     }
     return element;

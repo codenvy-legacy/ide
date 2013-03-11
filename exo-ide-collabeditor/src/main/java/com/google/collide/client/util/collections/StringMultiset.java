@@ -16,6 +16,8 @@ package com.google.collide.client.util.collections;
 
 import com.google.collide.json.shared.JsonArray;
 
+import javax.annotation.Nonnull;
+
 // TODO: Combine with JsonStringSet?
 /**
  * <a href="http://en.wikipedia.org/wiki/Multiset">Multiset</a> interface.
@@ -23,15 +25,15 @@ import com.google.collide.json.shared.JsonArray;
  */
 public interface StringMultiset {
 
-  void addAll(JsonArray<String> items);
+  void addAll(@Nonnull JsonArray<String> items);
 
-  void add(String item);
+  void add(@Nonnull String item);
 
-  void removeAll(JsonArray<String> items);
+  void removeAll(@Nonnull JsonArray<String> items);
 
-  void remove(String item);
+  void remove(@Nonnull String item);
 
-  boolean contains(String item);
+  boolean contains(@Nonnull String item);
 
   void clear();
 }

@@ -18,11 +18,7 @@
  */
 package org.exoplatform.ide.client.application;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import com.google.gwt.http.client.RequestException;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -37,6 +33,8 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorReplaceFileHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -49,8 +47,6 @@ import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsEven
 import org.exoplatform.ide.client.framework.settings.SaveApplicationSettingsHandler;
 import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.model.SettingsService;
-import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
-import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemLockedEvent;
@@ -62,7 +58,11 @@ import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.shared.File;
 
-import com.google.gwt.http.client.RequestException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS.
