@@ -16,7 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.remove;
+package org.exoplatform.ide.git.client.reset;
 
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -31,10 +31,10 @@ import org.exoplatform.gwtframework.ui.client.component.ListGrid;
 
 /**
  * Grid for displaying git files.
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 12, 2011 5:05:49 PM anya $
- * 
+ *
  */
 public class IndexFilesGrid extends ListGrid<IndexFile>
 {

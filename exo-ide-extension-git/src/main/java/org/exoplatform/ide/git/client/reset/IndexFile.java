@@ -16,16 +16,16 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.git.client.remove;
+package org.exoplatform.ide.git.client.reset;
 
 import org.exoplatform.ide.git.shared.GitFile;
 
 /**
  * Git file in index. Used for work with index (remove, reset).
- * 
+ *
  * @author <a href="mailto:zhulevaanna@gmail.com">Ann Zhuleva</a>
  * @version $Id: Apr 13, 2011 11:57:38 AM anya $
- * 
+ *
  */
 public class IndexFile extends GitFile
 {

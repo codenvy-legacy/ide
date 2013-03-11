@@ -37,7 +37,6 @@ import org.exoplatform.ide.git.client.GitExtension;
 import org.exoplatform.ide.git.client.GitPresenter;
 import org.exoplatform.ide.git.client.marshaller.StatusResponse;
 import org.exoplatform.ide.git.client.marshaller.StatusResponseUnmarshaller;
-import org.exoplatform.ide.git.client.remove.IndexFile;
 import org.exoplatform.ide.git.shared.GitFile;
 
 import java.util.ArrayList;
