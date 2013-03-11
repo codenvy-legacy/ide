@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.client.framework.navigation.event;
 
+import org.exoplatform.ide.vfs.shared.Item;
+
 import com.google.gwt.event.shared.GwtEvent;
 
 /**
@@ -32,22 +34,29 @@ public class SelectItemEvent extends GwtEvent<SelectItemHandler>
 
    public static final GwtEvent.Type<SelectItemHandler> TYPE = new GwtEvent.Type<SelectItemHandler>();
 
-   private String itemId;
+   //private String itemId;
 
-   public SelectItemEvent(String itemId)
+   private Item item;
+
+   public SelectItemEvent(Item item)
    {
-      this.itemId = itemId;
+      this.item = item;
    }
 
-   public String getItemId()
-   {
-      return itemId;
-   }
+   //   public String getItemId()
+   //   {
+   //      return itemId;
+   //   }
 
    @Override
    protected void dispatch(SelectItemHandler handler)
    {
       handler.onSelectItem(this);
+   }
+
+   public Item getItem()
+   {
+      return item;
    }
 
    @Override

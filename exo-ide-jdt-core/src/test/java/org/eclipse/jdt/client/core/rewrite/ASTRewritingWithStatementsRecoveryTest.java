@@ -116,6 +116,7 @@ public class ASTRewritingWithStatementsRecoveryTest extends ASTRewritingTest
 
    //https://bugs.eclipse.org/bugs/show_bug.cgi?id=272711
    @Test
+   @Ignore
    public void testBug272711_03() throws Exception
    {
       StringBuffer buf = new StringBuffer();

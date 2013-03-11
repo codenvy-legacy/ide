@@ -22,13 +22,14 @@ import org.exoplatform.ide.client.IDE;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesEvent;
 import org.exoplatform.ide.client.framework.application.event.InitializeServicesHandler;
 import org.exoplatform.ide.client.framework.navigation.DirectoryFilter;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettings.Store;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
 import org.exoplatform.ide.client.model.Settings;
 import org.exoplatform.ide.client.navigation.control.ShowHideHiddenFilesControl;
-import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
 
 /**
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
