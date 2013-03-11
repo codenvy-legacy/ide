@@ -32,7 +32,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-@Extension(title = "Tasks extension", version = "2.0.0")
+@Extension(title = "Tasks extension", version = "3.0.0")
 public class TasksExtension
 {
 

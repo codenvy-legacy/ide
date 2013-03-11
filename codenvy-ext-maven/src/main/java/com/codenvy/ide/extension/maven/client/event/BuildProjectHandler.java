@@ -19,8 +19,6 @@
 package com.codenvy.ide.extension.maven.client.event;
 
 
-import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
-
 import com.google.gwt.event.shared.EventHandler;
 
 /**
@@ -28,7 +26,6 @@ import com.google.gwt.event.shared.EventHandler;
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: BuildProjectHandler.java Feb 17, 2012 4:05:12 PM azatsarynnyy $
- *
  */
 public interface BuildProjectHandler extends EventHandler
 {

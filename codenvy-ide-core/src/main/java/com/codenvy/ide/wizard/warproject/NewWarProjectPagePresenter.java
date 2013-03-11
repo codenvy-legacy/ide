@@ -19,19 +19,17 @@
 package com.codenvy.ide.wizard.warproject;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
+import com.codenvy.ide.json.JsonCollections;
 import com.codenvy.ide.resources.model.File;
 import com.codenvy.ide.resources.model.Folder;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.ProjectDescription;
 import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.rest.MimeType;
+import com.codenvy.ide.util.loging.Log;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPagePresenter;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectPageView;
 import com.codenvy.ide.wizard.newgenericproject.NewGenericProjectWizardResource;
-
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.rest.MimeType;
-import com.codenvy.ide.util.loging.Log;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
@@ -74,9 +72,10 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
    public void doFinish()
    {
       // TODO
+      // new Property("cloudfoundry-application", "aplotnikov2"),
       resourceProvider.createProject(view.getProjectName(), JsonCollections.<Property> createArray(new Property(
-         ProjectDescription.PROPERTY_PRIMARY_NATURE, "Servlet/JSP"), new Property("cloudfoundry-application",
-         "aplotnikov2"), new Property("vmc-target", "http://api.cloudfoundry.com")), new AsyncCallback<Project>()
+         ProjectDescription.PROPERTY_PRIMARY_NATURE, "Servlet/JSP"), new Property("vmc-target",
+         "http://api.cloudfoundry.com")), new AsyncCallback<Project>()
       {
          @Override
          public void onFailure(Throwable caught)

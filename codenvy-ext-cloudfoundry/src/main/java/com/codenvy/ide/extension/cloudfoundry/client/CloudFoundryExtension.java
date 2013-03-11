@@ -48,7 +48,7 @@ import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationPre
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-@Extension(title = "Cloud Foundry Support.", version = "2.0.0")
+@Extension(title = "Cloud Foundry Support.", version = "3.0.0")
 public class CloudFoundryExtension
 {
    /**

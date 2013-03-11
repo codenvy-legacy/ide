@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.extension.maven.client.build;
 
-import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.user.client.ui.Composite;
@@ -45,6 +43,8 @@ public class BuildProjectViewImpl extends Composite implements BuildProjectView
    protected BuildProjectViewImpl()
    {
       initWidget(uiBinder.createAndBindUi(this));
+      // TODO IDEX-57
+      // This view is empty. Need to add some elements and etc.
    }
 
    /**

@@ -20,41 +20,33 @@ package com.codenvy.ide.extension.cloudfoundry.client.create;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-import com.codenvy.ide.core.event.RefreshBrowserEvent;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.Resource;
-
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.output.event.OutputEvent;
-import com.codenvy.ide.output.event.OutputMessage;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
-
-import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
-
+import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
-
-import com.google.gwt.http.client.RequestException;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.FrameworksUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
+import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
+import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.output.event.OutputEvent;
+import com.codenvy.ide.output.event.OutputMessage;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
+import com.google.gwt.http.client.RequestException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,8 +57,9 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, CreateApplicationHandler
-// implements CreateApplicationHandler, ViewClosedHandler, ProjectBuiltHandler
+public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, CreateApplicationHandler,
+   ProjectBuiltHandler
+// implements CreateApplicationHandler, ViewClosedHandler
 {
    private class AppData
    {
@@ -301,8 +294,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    {
       // TODO
       //      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-      //      eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
-      // Need for Maven
+      eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildProjectEvent());
    }
 
@@ -331,42 +323,43 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
-      try
-      {
-         CloudFoundryClientService.getInstance().createWS(
-            appData.server,
-            appData.name,
-            appData.type,
-            appData.url,
-            appData.instances,
-            appData.memory,
-            appData.nostart,
-            resourceProvider.getVfsId(),
-            project.getId(),
-            warUrl,
-            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-               appData.server, eventBus)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  onAppCreatedSuccess(result);
-                  eventBus.fireEvent(new RefreshBrowserEvent(project));
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  // TODO
-                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         createApplicationREST(appData, project, loggedInHandler);
-      }
+      //      try
+      //      {
+      //         CloudFoundryClientService.getInstance().createWS(
+      //            appData.server,
+      //            appData.name,
+      //            appData.type,
+      //            appData.url,
+      //            appData.instances,
+      //            appData.memory,
+      //            appData.nostart,
+      //            resourceProvider.getVfsId(),
+      //            project.getId(),
+      //            warUrl,
+      //            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+      //               appData.server, eventBus)
+      //            {
+      //               @Override
+      //               protected void onSuccess(CloudFoundryApplication result)
+      //               {
+      //                  onAppCreatedSuccess(result);
+      //                  eventBus.fireEvent(new RefreshBrowserEvent(project));
+      //               }
+      //
+      //               @Override
+      //               protected void onFailure(Throwable exception)
+      //               {
+      //                  // TODO
+      //                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      //                  super.onFailure(exception);
+      //               }
+      //            });
+      //      }
+      //      catch (WebSocketException e)
+      //      {
+      //         createApplicationREST(appData, project, loggedInHandler);
+      //      }
+      createApplicationREST(appData, project, loggedInHandler);
    }
 
    /**
@@ -757,6 +750,21 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       if (framework != null)
       {
          view.setMemory(String.valueOf(framework.getMemory()));
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onProjectBuilt(ProjectBuiltEvent event)
+   {
+      // TODO ?
+      //      eventBus.removeHandler(event.getAssociatedType(), this);
+      if (event.getBuildStatus().getDownloadUrl() != null)
+      {
+         warUrl = event.getBuildStatus().getDownloadUrl();
+         createApplication(appData);
       }
    }
 }

@@ -20,20 +20,7 @@ package com.codenvy.ide.extension.maven.client.build;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-import com.codenvy.ide.resources.model.Project;
-import com.codenvy.ide.resources.model.ProjectDescription;
-import com.codenvy.ide.resources.model.Property;
-
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.rest.RequestStatusHandler;
-import com.codenvy.ide.rest.Unmarshallable;
-import com.codenvy.ide.util.loging.Log;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
-import com.codenvy.ide.websocket.rest.SubscriptionHandler;
-
 import com.codenvy.ide.extension.maven.client.BuilderClientService;
 import com.codenvy.ide.extension.maven.client.BuilderExtension;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -41,7 +28,17 @@ import com.codenvy.ide.extension.maven.client.event.BuildProjectHandler;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
 import com.codenvy.ide.extension.maven.shared.BuildStatus.Status;
-
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.ProjectDescription;
+import com.codenvy.ide.resources.model.Property;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.rest.RequestStatusHandler;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.codenvy.ide.util.loging.Log;
+import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
+import com.codenvy.ide.websocket.rest.SubscriptionHandler;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
@@ -55,10 +52,6 @@ import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
 
-import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
-import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
-import com.codenvy.ide.extension.maven.client.build.BuildRequestStatusHandler;
-
 /**
  * Presenter for created builder view. The view must be pointed in Views.gwt.xml.
  *
@@ -67,10 +60,10 @@ import com.codenvy.ide.extension.maven.client.build.BuildRequestStatusHandler;
  */
 @Singleton
 public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectView.ActionDelegate
+// TODO IDEX-57 
+// Need to research: do these classes need?
 // , ItemsSelectedHandler, ViewClosedHandler, VfsChangedHandler, ItemDeletedHandler
 {
-   private BuildProjectView view;
-
    private static final String BUILD_SUCCESS = BuilderExtension.LOCALIZATION_CONSTANT.buildSuccess();
 
    private static final String BUILD_FAILED = BuilderExtension.LOCALIZATION_CONSTANT.buildFailed();
@@ -78,6 +71,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
    private final static String LAST_SUCCESS_BUILD = "lastSuccessBuild";
 
    private final static String ARTIFACT_DOWNLOAD_URL = "artifactDownloadUrl";
+
+   private BuildProjectView view;
 
    /**
     * Identifier of project we want to send for build.
@@ -126,15 +121,16 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
    private Console console;
 
-   // TODO need change implementation of view to abstract class
    @Inject
-   protected BuildProjectPresenter(BuildProjectViewImpl view, EventBus eventBus, ResourceProvider resourceProvider,
+   protected BuildProjectPresenter(BuildProjectView view, EventBus eventBus, ResourceProvider resourceProvider,
       Console console)
    {
+      // TODO IDEX-57
+      // do these classes need?
+
       //      IDE.getInstance().addControl(new BuildProjectControl());
       //      IDE.getInstance().addControl(new BuildAndPublishProjectControl());
       //
-      //      IDE.addHandler(BuildProjectEvent.TYPE, this);
       //      IDE.addHandler(ViewClosedEvent.TYPE, this);
       //      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       //      IDE.addHandler(VfsChangedEvent.TYPE, this);
@@ -156,7 +152,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       if (isBuildInProgress)
       {
          String message = BuilderExtension.LOCALIZATION_CONSTANT.buildInProgress(project.getPath().substring(1));
-         // TODO
+         // TODO IDEX-57
+         // We don't have analog Dialogs class in IDE3
          //         Dialogs.getInstance().showError(message);
          Window.alert(message);
          return;
@@ -165,7 +162,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       project = event.getProject();
       if (project == null && makeSelectionCheck())
       {
-         // TODO
+         // TODO IDEX-57
+         // Check: is it good solution? may be need to get selected item from Selection service  
          //         project = ((ItemContext)selectedItems.get(0)).getProject();
          project = resourceProvider.getActiveProject();
       }
@@ -210,11 +208,15 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                   view.stopAnimation();
                   if (exception instanceof ServerException && exception.getMessage() != null)
                   {
+                     // TODO IDEX-57
+                     // Research: is it good solution?
                      //                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.ERROR));
                      console.print(exception.getMessage());
                   }
                   else
                   {
+                     // TODO IDEX-57
+                     // Research: is it good solution?
                      //                     IDE.fireEvent(new ExceptionThrownEvent(exception));
                      console.print(exception.getMessage());
                   }
@@ -225,7 +227,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       {
          setBuildInProgress(false);
          view.stopAnimation();
-         // TODO
+         // TODO IDEX-57
+         // Research: is it good solution?
          //         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.ERROR));
          console.print(e.getMessage());
       }
@@ -239,7 +242,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
     */
    private void startCheckingStatus(String buildId)
    {
-      // TODO
+      // TODO IDEX-57
+      // Problem with using Websocket
       //      try
       //      {
       buildStatusChannel = BuilderExtension.BUILD_STATUS_CHANNEL + buildId;
@@ -247,7 +251,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       //      }
       //      catch (WebSocketException e)
       //      {
-      //         refreshBuildStatusTimer.schedule(delay);
+      refreshBuildStatusTimer.schedule(delay);
       //      }
    }
 
@@ -284,11 +288,15 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                   view.stopAnimation();
                   if (exception instanceof ServerException && exception.getMessage() != null)
                   {
+                     // TODO IDEX-57
+                     // Research: is it good solution?
                      //                     IDE.fireEvent(new OutputEvent(exception.getMessage(), Type.INFO));
                      console.print(exception.getMessage());
                   }
                   else
                   {
+                     // TODO IDEX-57
+                     // Research: is it good solution?
                      //                     IDE.fireEvent(new ExceptionThrownEvent(exception));
                      console.print(exception.getMessage());
                   }
@@ -299,7 +307,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       {
          setBuildInProgress(false);
          view.stopAnimation();
-         // TODO
+         // TODO IDEX-57
+         // Research: is it good solution?
          //         IDE.fireEvent(new OutputEvent(e.getMessage(), Type.INFO));
          console.print(e.getMessage());
       }
@@ -321,37 +330,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       //Going to check is need built project.
       //Need compare to properties lastBuildTime and lastModificationTime  
       //After check is artifact available for downloading   
-      //         VirtualFileSystem.getInstance().getItemById(project.getId(),
-      //            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(project)))
-      //            {
-      //               @Override
-      //               protected void onSuccess(ItemWrapper result)
-      //               {
-      //                  Property downloadUrlProp = result.getItem().getProperty(ARTIFACT_DOWNLOAD_URL);
-      //                  if (downloadUrlProp != null && !downloadUrlProp.getValue().isEmpty())
-      //                  {
-      //                     if (isProjectChangedAfterLastBuild(result))
-      //                     {
-      //                        checkDownloadUrl(downloadUrlProp.getValue().get(0));
-      //                     }
-      //                     else
-      //                     {
-      //                        doBuild();
-      //                     }
-      //                  }
-      //                  else
-      //                  {
-      //                     doBuild();
-      //                  }
-      //               }
-      //
-      //               @Override
-      //               protected void onFailure(Throwable exception)
-      //               {
-      //                  doBuild();
-      //                  exception.printStackTrace();
-      //               }
-      //            });
       project.refreshProperties(new AsyncCallback<Project>()
       {
          @Override
@@ -373,7 +351,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
             {
                doBuild();
             }
-
          }
 
          @Override
@@ -409,14 +386,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       {
          BuilderClientService.getInstance().checkArtifactUrl(url, new AsyncRequestCallback<Object>()
          {
-
             @Override
             protected void onSuccess(Object result)
             {
                BuildStatus buildStatus = BuilderExtension.AUTO_BEAN_FACTORY.buildStatus().as();
                buildStatus.setStatus(BuildStatus.Status.SUCCESSFUL);
                buildStatus.setDownloadUrl(url);
-               //               IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
                eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
             }
 
@@ -425,7 +400,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
             {
                doBuild();
             }
-
          });
       }
       catch (RequestException e)
@@ -472,20 +446,19 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                {
                   setBuildInProgress(false);
                   view.stopAnimation();
-                  // TODO
+                  // TODO IDEX-57
+                  // Research: is it good solution?
                   //                  IDE.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
-
-               ;
-
             });
          }
          catch (RequestException e)
          {
             setBuildInProgress(false);
             view.stopAnimation();
-            // TODO
+            // TODO IDEX-57
+            // Research: is it good solution?
             //            IDE.fireEvent(new ExceptionThrownEvent(e));
             console.print(e.getMessage());
          }
@@ -522,7 +495,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
     */
    private void afterBuildFinished(BuildStatus buildStatus)
    {
-      // TODO
+      // TODO IDEX-57
+      // Problem with using Websocket
       //      try
       //      {
       //         IDE.messageBus().unsubscribe(buildStatusChannel, buildStatusHandler);
@@ -541,7 +515,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
       if (buildStatus.getStatus() == Status.SUCCESSFUL)
       {
-         // TODO
+         // TODO IDEX-57
+         // Research: is it good solution?
          //         IDE.fireEvent(new OutputEvent(BUILD_SUCCESS, Type.INFO));
          console.print(BUILD_SUCCESS);
 
@@ -558,7 +533,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       }
       else if (buildStatus.getStatus() == Status.FAILED)
       {
-         // TODO
+         // TODO IDEX-57
+         // Research: is it good solution?
          //         IDE.fireEvent(new OutputEvent(BUILD_FAILED, Type.ERROR));
          console.print(BUILD_FAILED);
 
@@ -575,7 +551,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       }
       showBuildMessage(message.toString());
       view.stopAnimation();
-      // TODO
+      // TODO IDEX-57
+      // Research: is it good solution?
       //      IDE.fireEvent(new ProjectBuiltEvent(buildStatus));
       eventBus.fireEvent(new ProjectBuiltEvent(buildStatus));
    }
@@ -599,7 +576,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                   if (json.containsKey("artifactDownloadUrl"))
                   {
                      String artifactUrl = json.get("artifactDownloadUrl").isString().stringValue();
-                     // TODO
+                     // TODO IDEX-57
+                     // Research: is it good solution?
                      //                     IDE.fireEvent(new OutputEvent("You can download your artifact :<a href=" + artifactUrl
                      //                        + " target=\"_blank\">" + artifactUrl + "</a>", Type.INFO));
                      console.print("You can download your artifact :<a href=" + artifactUrl + " target=\"_blank\">"
@@ -610,7 +588,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                      String dep = json.get("suggestDependency").isString().stringValue();
                      //format XML
                      String res = formatDepXml(dep);
-                     // TODO
+                     // TODO IDEX-57
+                     // Research: is it good solution?
                      //                     IDE.fireEvent(new OutputEvent("Dependency for your pom:<br><span style=\"color:black;\">" + res
                      //                        + "</span>", Type.INFO));
                      console.print("Dependency for your pom:<br><span style=\"color:black;\">" + res + "</span>");
@@ -622,7 +601,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
                {
                   // nothing to do
                }
-
             });
       }
       catch (RequestException e)
@@ -633,36 +611,11 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
    private void writeBuildInfo(BuildStatus buildStatus)
    {
-      // TODO
-      //      project.getProperties().add(new PropertyImpl(LAST_SUCCESS_BUILD, buildStatus.getTime()));
       project.getProperties().add(new Property(LAST_SUCCESS_BUILD, buildStatus.getTime()));
-      //      project.getProperties().add(new PropertyImpl(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
       project.getProperties().add(new Property(ARTIFACT_DOWNLOAD_URL, buildStatus.getDownloadUrl()));
-      //      try
-      //      {
-      //         VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
-      //         {
-      //
-      //            @Override
-      //            protected void onSuccess(ItemWrapper result)
-      //            {
-      //               //Nothing todo
-      //            }
-      //
-      //            @Override
-      //            protected void onFailure(Throwable ignore)
-      //            {
-      //               //Ignore this exception
-      //            }
-      //         });
-      //      }
-      //      catch (RequestException e)
-      //      {
-      //         e.printStackTrace();
-      //      }
+
       project.flushProjectProperties(new AsyncCallback<Project>()
       {
-
          @Override
          public void onSuccess(Project result)
          {
@@ -679,37 +632,6 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
    private void checkIfProjectIsUnderWatching()
    {
-      //      try
-      //      {
-      //         final Project p = new Project(eventBus);
-      //         p.setId(project.getId());
-      //
-      //         VirtualFileSystem.getInstance().getItemById(project.getId(),
-      //            new AsyncRequestCallback<ItemWrapper>(new ItemUnmarshaller(new ItemWrapper(p)))
-      //            {
-      //               @Override
-      //               protected void onSuccess(ItemWrapper result)
-      //               {
-      //                  for (Property property : result.getItem().getProperties())
-      //                  {
-      //                     if ("vfs:lastUpdateTime".equals(property.getName()))
-      //                     {
-      //                        return;
-      //                     }
-      //                  }
-      //                  startWatchingProjectChanges();
-      //               }
-      //
-      //               @Override
-      //               protected void onFailure(Throwable exception)
-      //               {
-      //               }
-      //            });
-      //      }
-      //      catch (RequestException e)
-      //      {
-      //         e.printStackTrace();
-      //      }
       project.refreshProperties(new AsyncCallback<Project>()
       {
          @Override
@@ -736,7 +658,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
    private void startWatchingProjectChanges()
    {
-      // TODO
+      // TODO IDEX-57
+      // We don't have vfs module. Need to create or use some analog method
       //      try
       //      {
       //         VirtualFileSystem.getInstance().startWatchUpdates(project.getId(), new AsyncRequestCallback<Object>()
@@ -767,7 +690,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
     */
    private void showBuildMessage(String message)
    {
-      // TODO
+      // TODO IDEX-57
+      // Review and change to new architecture
       //      if (display != null)
       //      {
       //         if (isViewClosed)
@@ -788,7 +712,12 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       //         isViewClosed = false;
       //      }
       //
+
+      // TODO IDEX-57
+      // View does nothing
       view.showMessageInOutput(message);
+      // This was added because need to see some message
+      console.print(message);
    }
 
    /**
@@ -802,6 +731,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
    private boolean makeSelectionCheck()
    {
+      // TODO IDEX-57
+      // Check: does this snippent need? 
       //      if (selectedItems == null || selectedItems.size() <= 0)
       //      {
       //         Dialogs.getInstance().showInfo(BuilderExtension.LOCALIZATION_CONSTANT.selectedItemsFail());
@@ -856,7 +787,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       @Override
       protected void onFailure(Throwable exception)
       {
-         // TODO
+         // TODO IDEX-57
+         // Problem with using Websocket
          //         try
          //         {
          //            IDE.messageBus().unsubscribe(buildStatusChannel, this);
@@ -868,7 +800,8 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
 
          setBuildInProgress(false);
          view.stopAnimation();
-         // TODO
+         // TODO IDEX-57
+         // Research: is it good solution?
          //         IDE.fireEvent(new ExceptionThrownEvent(exception));
          console.print(exception.getMessage());
       }
@@ -887,7 +820,7 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
       }
 
       /**
-       * @see com.codenvy.gwtframework.commons.rest.Unmarshallable#unmarshal(com.google.gwt.http.client.Response)
+       * {@inheritDoc}
        */
       @Override
       public void unmarshal(Response response)
@@ -895,11 +828,13 @@ public class BuildProjectPresenter implements BuildProjectHandler, BuildProjectV
          builder.append(response.getText());
       }
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
       public StringBuilder getPayload()
       {
-         // TODO Auto-generated method stub
-         return null;
+         return builder;
       }
    }
 }

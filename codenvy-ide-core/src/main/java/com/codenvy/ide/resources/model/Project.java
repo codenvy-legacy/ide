@@ -18,6 +18,10 @@ package com.codenvy.ide.resources.model;
 
 import com.codenvy.ide.core.event.ProjectActionEvent;
 import com.codenvy.ide.core.event.ResourceChangedEvent;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.loader.EmptyLoader;
+import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.resources.VirtualFileSystemInfo;
 import com.codenvy.ide.resources.marshal.FileContentUnmarshaller;
 import com.codenvy.ide.resources.marshal.FileUnmarshaller;
@@ -27,16 +31,10 @@ import com.codenvy.ide.resources.marshal.JSONDeserializer;
 import com.codenvy.ide.resources.marshal.JSONSerializer;
 import com.codenvy.ide.resources.marshal.PropertyUnmarshaller;
 import com.codenvy.ide.resources.marshal.StringUnmarshaller;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.HTTPHeader;
 import com.codenvy.ide.rest.MimeType;
-
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
@@ -754,15 +752,17 @@ public class Project extends Folder
    {
       try
       {
+         final JsonArray<Property> currentProperties = properties;
+         
          AsyncRequestCallback<JsonArray<Property>> internalCallback =
             new AsyncRequestCallback<JsonArray<Property>>(new PropertyUnmarshaller())
             {
                @Override
                protected void onSuccess(JsonArray<Property> properties)
                {
-                  // Update properties on client-side Object 
-                  properties.clear();
-                  properties.addAll(properties);
+                  // Update properties on client-side Object
+                  currentProperties.clear();
+                  currentProperties.addAll(properties);
 
                   callback.onSuccess(Project.this);
                }

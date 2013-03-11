@@ -19,21 +19,16 @@
 package com.codenvy.ide.extension.maven.client.event;
 
 import com.codenvy.ide.extension.maven.shared.BuildStatus;
-
 import com.google.gwt.event.shared.GwtEvent;
-
-import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
 
 /**
  * Event occurs, when project has built by maven builder.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: ProjectBuiltEvent.java Apr 3, 2012 12:23:44 PM azatsarynnyy $
- *
  */
 public class ProjectBuiltEvent extends GwtEvent<ProjectBuiltHandler>
 {
-
    /**
     * Status of build.
     */
@@ -53,7 +48,7 @@ public class ProjectBuiltEvent extends GwtEvent<ProjectBuiltHandler>
    }
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
+    * {@inheritDoc}
     */
    @Override
    public com.google.gwt.event.shared.GwtEvent.Type<ProjectBuiltHandler> getAssociatedType()
@@ -62,7 +57,7 @@ public class ProjectBuiltEvent extends GwtEvent<ProjectBuiltHandler>
    }
 
    /**
-    * @see com.google.gwt.event.shared.GwtEvent#dispatch(com.google.gwt.event.shared.EventHandler)
+    * {@inheritDoc}
     */
    @Override
    protected void dispatch(ProjectBuiltHandler handler)
@@ -79,5 +74,4 @@ public class ProjectBuiltEvent extends GwtEvent<ProjectBuiltHandler>
    {
       return status;
    }
-
 }
