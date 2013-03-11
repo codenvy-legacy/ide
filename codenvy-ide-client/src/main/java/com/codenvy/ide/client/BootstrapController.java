@@ -40,11 +40,11 @@ public class BootstrapController
     * @param componentRegistry
     * @param workspacePeresenter
     * @param styleInjector
-    * @param extensionManager
+    * @param extensionInitializer
     */
    @Inject
    public BootstrapController(ComponentRegistry componentRegistry, final WorkspacePresenter workspacePeresenter,
-      StyleInjector styleInjector, final ExtensionManager extensionManager, final ExtensionsPage extensionsPage)
+      StyleInjector styleInjector, final ExtensionInitializer extensionInitializer, final ExtensionsPage extensionsPage)
    {
       styleInjector.inject();
 
@@ -55,7 +55,7 @@ public class BootstrapController
          public void onSuccess(Void result)
          {
             // instantiate extensions
-            extensionManager.startExtensions();
+            extensionInitializer.startExtensions();
             // Start UI
             SimplePanel mainPanel = new SimplePanel();
             RootLayoutPanel.get().add(mainPanel);

@@ -36,7 +36,7 @@ import com.codenvy.ide.extension.maven.client.build.BuildProjectPresenter;
  * 
  */
 @Singleton
-@Extension(title = "Maven Support.", id = "ide.ext.maven", version = "2.0.0")
+@Extension(title = "Maven Support.", version = "2.0.0")
 public class BuilderExtension
 {
    public static final BuilderAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(BuilderAutoBeanFactory.class);

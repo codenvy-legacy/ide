@@ -71,7 +71,7 @@ import java.util.HashMap;
  * @version $Id:
  *
  */
-@Extension(title = "Java Support : syntax highlighting and autocomplete.", id = "ide.ext.java", version = "2.0.0")
+@Extension(title = "Java Support : syntax highlighting and autocomplete.", version = "2.0.0")
 public class JavaExtension
 {
    private static final String JAVA_PERSPECTIVE = "Java";

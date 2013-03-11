@@ -24,11 +24,6 @@ package com.codenvy.ide.extension;
 public @interface Extension {
 
    /**
-    * @return Extension unique String Id
-    */
-   String id();
-
-   /**
     * @return Extension version
     */
    String version();

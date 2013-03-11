@@ -38,6 +38,8 @@ public class ExtensionDescription
    private final JsonArray<DependencyDescription> dependencies;
 
    private final String title;
+   
+   private boolean enabled = false;
 
    /**
     * Construct {@link ExtensionDescription}
@@ -93,5 +95,21 @@ public class ExtensionDescription
    public JsonArray<DependencyDescription> getDependencies()
    {
       return dependencies;
+   }
+   
+   /**
+    * @return the enabled
+    */
+   public boolean isEnabled()
+   {
+      return enabled;
+   }
+   
+   /**
+    * @param enabled the enabled to set
+    */
+   public void setEnabled(boolean enabled)
+   {
+      this.enabled = enabled;
    }
 }

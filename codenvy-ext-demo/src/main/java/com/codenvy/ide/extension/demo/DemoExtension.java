@@ -21,19 +21,14 @@ import com.codenvy.ide.command.ProjectOpenedExpression;
 import com.codenvy.ide.core.editor.EditorAgent;
 import com.codenvy.ide.core.expressions.Expression;
 import com.codenvy.ide.extension.Extension;
+import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectivePresenter;
 import com.codenvy.ide.menu.ExtendedCommand;
 import com.codenvy.ide.menu.MainMenuPresenter;
-
-import com.codenvy.ide.extension.demo.perspective.ExtendedPerspectivePresenter;
-
-import elemental.html.Element;
-
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
-
 
 /**
  * Extension used to demonstrate the IDE 2.0 SDK fetures
@@ -41,7 +36,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-@Extension  (title = "Demo extension", id = "ide.ext.demo", version = "2.0.0")
+@Extension(title = "Demo extension", version = "2.0.0")
 public class DemoExtension
 {
 

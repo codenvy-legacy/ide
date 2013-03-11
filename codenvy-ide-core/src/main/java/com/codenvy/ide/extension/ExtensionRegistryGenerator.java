@@ -185,12 +185,17 @@ public class ExtensionRegistryGenerator extends Generator
             generateDependeciesForExtension(sw, extension);
 
             Extension annotation = extension.getAnnotation(Extension.class);
+            
             /*
                extensions.put("ide.ext.demo", new ExtensionDescription("ide.ext.demo", "1.0.0", "Demo extension", deps,
                demoExtProvider));
             */
+            
+            // the class's fqn
+            String extensionId = extension.getQualifiedSourceName();
+            
             sw.println("extensions.put(\"%s\", new ExtensionDescription(\"%s\",\"%s\",\"%s\",deps));",
-               escape(annotation.id()), escape(annotation.id()), escape(annotation.version()),
+               escape(extensionId), escape(extensionId), escape(annotation.version()),
                escape(annotation.title()));
             sw.outdent();
             sw.println("}");
@@ -242,7 +247,7 @@ public class ExtensionRegistryGenerator extends Generator
             }
             else if (argType.isAnnotationPresent(Extension.class))
             {
-               id = argType.getAnnotation(Extension.class).id();
+               id = argType.getQualifiedSourceName();
                version = argType.getAnnotation(Extension.class).version();
             }
             sw.println("deps.add(new DependencyDescription(\"%s\", \"%s\"));", escape(id), escape(version));

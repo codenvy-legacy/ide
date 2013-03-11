@@ -2,20 +2,23 @@ package com.codenvy.ide.client;
 
 import com.google.inject.Inject;
 import com.google.inject.Provider;
-import com.codenvy.ide.extension.ExtensionRegistry;
-import com.codenvy.ide.extension.demo.DemoExtension;
-import com.codenvy.ide.extension.maven.client.BuilderExtension;
-import com.codenvy.ide.extension.tasks.TasksExtension;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import com.codenvy.ide.java.client.JavaExtension;
-import com.codenvy.ide.extension.css.CssExtension;
+import com.google.inject.Singleton;
+import com.codenvy.ide.json.JsonStringMap;
+import com.codenvy.ide.json.JsonCollections;
 /**
  * THIS CLASS WILL BE OVERRIDEN BY MAVEN BUILD. DON'T EDIT CLASS, IT WILL HAVE NO EFFECT.
  */
-public class ExtensionManager extends AbstractExtensionManager
+@Singleton
+@SuppressWarnings("rawtypes")
+public class ExtensionManager
 {
+
+   /** Contains the map will all the Extnesion Providers <FullClassFQN, Provider>. */
+   protected final JsonStringMap<Provider> extensions = JsonCollections.createStringMap();
+
+   /** Constructor that accepts all the Extension found in IDE package */
    @Inject
-   public ExtensionManager(ExtensionRegistry extensionRegistry,
+   public ExtensionManager(
       Provider<com.codenvy.ide.extension.demo.DemoExtension> demoextension,
       Provider<com.codenvy.ide.extension.maven.client.BuilderExtension> builderextension,
       Provider<com.codenvy.ide.extension.tasks.TasksExtension> tasksextension,
@@ -24,12 +27,17 @@ public class ExtensionManager extends AbstractExtensionManager
       Provider<com.codenvy.ide.extension.css.CssExtension> cssextension
    )
    {
-      super(extensionRegistry);
-      this.extensions.add(demoextension);
-      this.extensions.add(builderextension);
-      this.extensions.add(tasksextension);
-      this.extensions.add(cloudfoundryextension);
-      this.extensions.add(javaextension);
-      this.extensions.add(cssextension);
+      this.extensions.put("com.codenvy.ide.extension.demo.DemoExtension",demoextension);
+      this.extensions.put("com.codenvy.ide.extension.maven.client.BuilderExtension",builderextension);
+      this.extensions.put("com.codenvy.ide.extension.tasks.TasksExtension",tasksextension);
+      this.extensions.put("com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension",cloudfoundryextension);
+      this.extensions.put("com.codenvy.ide.java.client.JavaExtension",javaextension);
+      this.extensions.put("com.codenvy.ide.extension.css.CssExtension",cssextension);
+   }
+
+   /** Returns  the map will all the Extnesion Providers <FullClassFQN, Provider>. */
+   public JsonStringMap<Provider> getExtensions()
+   {
+      return extensions;
    }
 }

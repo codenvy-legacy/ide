@@ -31,7 +31,6 @@ import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Singleton;
 
-
 /**
  * Extension add CSS support to the IDE Application.
  * It porivdes configured {@link TextEditorViewImpl} with {@link CssEditorProvider} with syntax coloring and
@@ -40,7 +39,7 @@ import com.google.inject.Singleton;
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
 @Singleton
-@Extension(title = "Css Support : syntax highlighting and autocomplete.", id = "ide.ext.css", version = "2.0.0")
+@Extension(title = "Css Support : syntax highlighting and autocomplete.", version = "2.0.0")
 public class CssExtension
 {
 

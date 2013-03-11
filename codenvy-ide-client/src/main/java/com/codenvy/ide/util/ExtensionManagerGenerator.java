@@ -136,13 +136,22 @@ public class ExtensionManagerGenerator
       builder.append("/**\n");
       builder.append(" * THIS CLASS WILL BE OVERRIDEN BY MAVEN BUILD. DON'T EDIT CLASS, IT WILL HAVE NO EFFECT.\n");
       builder.append(" */\n");
-      builder.append("public class ExtensionManager extends AbstractExtensionManager\n");
+      builder.append("@Singleton\n");
+      builder.append("@SuppressWarnings(\"rawtypes\")\n");
+      builder.append("public class ExtensionManager\n");
       builder.append("{\n");
+      builder.append("\n");
+
+      // field
+      builder.append(TAB + "/** Contains the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
+      builder.append(TAB
+         + "protected final JsonStringMap<Provider> extensions = JsonCollections.createStringMap();\n\n");
+
       // generate constructor
 
+      builder.append(TAB + "/** Constructor that accepts all the Extension found in IDE package */\n");
       builder.append(TAB + "@Inject\n");
-      String firstComma = extensionsFqn.isEmpty() ? "" : ",";
-      builder.append(TAB + "public ExtensionManager(ExtensionRegistry extensionRegistry" + firstComma + "\n");
+      builder.append(TAB + "public ExtensionManager(\n");
 
       // paste args here
       Iterator<Entry<String, String>> entryIterator = extensionsFqn.entrySet().iterator();
@@ -160,17 +169,27 @@ public class ExtensionManagerGenerator
 
       builder.append(TAB + ")\n");
       builder.append(TAB + "{\n");
-      builder.append(TAB2 + "super(extensionRegistry);\n");
 
       // paste add here
-      for (String extension : extensionsFqn.values())
+      for (Entry<String, String> extension : extensionsFqn.entrySet())
       {
-         String variableName = extension.toLowerCase();
-         builder.append(TAB2 + "this.extensions.add(" + variableName + ");\n");
+         String fullFqn = extension.getKey();
+         String variableName = extension.getValue().toLowerCase();
+
+         String putStatement = String.format("this.extensions.put(\"%s\",%s);%n", fullFqn, variableName);
+         builder.append(TAB2 + putStatement);
       }
 
       // close constructor
+      builder.append(TAB + "}\n\n");
+
+      // generate getter
+      builder.append(TAB + "/** Returns  the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
+      builder.append(TAB + "public JsonStringMap<Provider> getExtensions()\n");
+      builder.append(TAB + "{\n");
+      builder.append(TAB2 + "return extensions;\n");
       builder.append(TAB + "}\n");
+
       // close class
       builder.append("}\n");
 
@@ -186,14 +205,17 @@ public class ExtensionManagerGenerator
 
       builder.append("import com.google.inject.Inject;\n");
       builder.append("import com.google.inject.Provider;\n");
+      builder.append("import com.google.inject.Singleton;\n");
 
-      builder.append("import com.codenvy.ide.extension.ExtensionRegistry;\n");
+      builder.append("import com.codenvy.ide.json.JsonStringMap;\n");
+      builder.append("import com.codenvy.ide.json.JsonCollections;\n");
 
       // add all Extenions into the import
-      for (String fqn : extensionsFqn.keySet())
-      {
-         builder.append("import " + fqn + ";\n");
-      }
+      // NO NEED TO GENERATE IMPORT FOR EXTENSION, SINCE FULL FQN USED IN CONSTRUCTOR ARGUMENTS
+      //      for (String fqn : extensionsFqn.keySet())
+      //      {
+      //         builder.append("import " + fqn + ";\n");
+      //      }
    }
 
    /**
@@ -223,8 +245,13 @@ public class ExtensionManagerGenerator
                String packageName = getClassFQN(file.getAbsolutePath(), fileContent);
                if (!packageName.startsWith(COM_CODENVY_IDE_UTIL))
                {
-                  extensionsFqn.put(packageName + "." + className, className);
-                  System.out.println(String.format("New Extension Found: %s.%s", packageName, className));
+
+                  String fullFqn = packageName + "." + className;
+                  if (!extensionsFqn.containsKey(fullFqn))
+                  {
+                     extensionsFqn.put(fullFqn, className);
+                     System.out.println(String.format("New Extension Found: %s.%s", packageName, className));
+                  }
                }
                else
                {

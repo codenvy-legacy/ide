@@ -16,7 +16,7 @@
  */
 package com.codenvy.ide.client.extensionsPart;
 
-import com.codenvy.ide.client.ExtensionManager;
+import com.codenvy.ide.client.ExtensionInitializer;
 import com.codenvy.ide.client.PageResources;
 import com.codenvy.ide.extension.DependencyDescription;
 import com.codenvy.ide.extension.ExtensionDescription;
@@ -38,14 +38,14 @@ import com.google.inject.Singleton;
 public class ExtensionsPage extends AbstractPartPresenter
 {
 
-   private final ExtensionManager manager;
+   private final ExtensionInitializer extInitializer;
 
    private PageResources resources;
 
    @Inject
-   public ExtensionsPage(ExtensionManager manager, PageResources resources)
+   public ExtensionsPage(ExtensionInitializer extInitializer, PageResources resources)
    {
-      this.manager = manager;
+      this.extInitializer = extInitializer;
       this.resources = resources;
    }
 
@@ -57,7 +57,7 @@ public class ExtensionsPage extends AbstractPartPresenter
    {
       final StringBuilder builder = new StringBuilder();
 
-      manager.getExtensionDescriptions().iterate(new IterationCallback<ExtensionDescription>()
+      extInitializer.getExtensionDescriptions().iterate(new IterationCallback<ExtensionDescription>()
       {
 
          @Override
@@ -67,6 +67,7 @@ public class ExtensionsPage extends AbstractPartPresenter
 
             builder.append("<h3>");
             builder.append(ext.getId());
+            builder.append("(" + (ext.isEnabled() ? "enabled" : "disabled") + ")");
             builder.append("-");
             builder.append(ext.getVersion());
             builder.append("</h3>");
