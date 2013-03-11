@@ -188,6 +188,12 @@ public class PackageExplorerView extends ViewImpl implements PackageExplorerDisp
    public List<Item> getVisibleItems()
    {
       return treeGrid.getVisibleItems();
+   }
+
+   @Override
+   public void refreshTree()
+   {
+      treeGrid.refresh();
    }   
    
 }

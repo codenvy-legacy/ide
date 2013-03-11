@@ -48,7 +48,6 @@ import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
-import org.eclipse.jgit.dircache.DirCacheIterator;
 import org.eclipse.jgit.errors.AmbiguousObjectException;
 import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
@@ -59,7 +58,6 @@ import org.eclipse.jgit.errors.TransportException;
 import org.eclipse.jgit.errors.UnmergedPathException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.FileMode;
 import org.eclipse.jgit.lib.NullProgressMonitor;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -72,7 +70,6 @@ import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
-import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.PushResult;
@@ -82,13 +79,8 @@ import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.RemoteRefUpdate.Status;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
-import org.eclipse.jgit.treewalk.EmptyTreeIterator;
-import org.eclipse.jgit.treewalk.FileTreeIterator;
 import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.filter.AndTreeFilter;
-import org.eclipse.jgit.treewalk.filter.NotIgnoredFilter;
 import org.eclipse.jgit.treewalk.filter.PathFilterGroup;
-import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.exoplatform.ide.git.server.DiffPage;
 import org.exoplatform.ide.git.server.GitConnection;
 import org.exoplatform.ide.git.server.GitException;
@@ -523,10 +515,8 @@ public class JGitConnection implements GitConnection
          GitUser committer = getUser();
          if (configName != null || configEmail != null || committer != null)
          {
-            commitCommand.setCommitter(
-               (configName != null) ? configName : committer.getName(),
-               (configEmail != null) ? configEmail : committer.getEmail()
-            );
+            commitCommand.setCommitter((configName != null) ? configName : committer.getName(), (configEmail != null)
+               ? configEmail : committer.getEmail());
          }
 
          RevCommit commit = commitCommand.call();
@@ -537,7 +527,7 @@ public class JGitConnection implements GitConnection
 
          return new Revision(branch, commit.getId().getName(), commit.getFullMessage(),
             (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(),
-            committerIdentity.getEmailAddress()));
+               committerIdentity.getEmailAddress()));
       }
       catch (NoHeadException e)
       {
@@ -723,7 +713,7 @@ public class JGitConnection implements GitConnection
             PersonIdent committerIdentity = commit.getCommitterIdent();
             commits.add(new Revision(commit.getId().getName(), commit.getFullMessage(),
                (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(), committerIdentity
-               .getEmailAddress())));
+                  .getEmailAddress())));
          }
          return new LogPage(commits);
       }
@@ -1452,112 +1442,26 @@ public class JGitConnection implements GitConnection
          {
             throw new GitException("HEAD reference not found. Seems working directory is not git repository. ");
          }
+
          String currentBranch = Repository.shortenRefName(headRef.getLeaf().getName());
+         org.eclipse.jgit.api.Status status = new Git(repository).status().call();
 
          List<GitFile> changedNotUpdated = new ArrayList<GitFile>();
          List<GitFile> changedNotCommited = new ArrayList<GitFile>();
          List<GitFile> untracked = new ArrayList<GitFile>();
 
-         int headTreeN = 0;
-         int idxTreeN = 1;
-         int wdTreeN = 2;
-
-         DirCache dirCache = repository.readDirCache();
-
-         TreeWalk treeWalk = new TreeWalk(repository);
-         treeWalk.reset();
-         treeWalk.setRecursive(true);
-
-         TreeFilter fileFilter = null;
-         String[] rawFileFilter = request.getFileFilter();
-         if (rawFileFilter != null && rawFileFilter.length > 0)
-         {
-            fileFilter = PathFilterGroup.createFromStrings(Arrays.asList(rawFileFilter));
-         }
-
-         try
-         {
-            RevWalk revWalk = new RevWalk(repository);
-            ObjectId headId = headRef.getObjectId();
-            if (headId != null)
-            {
-               RevTree headTree;
-               try
-               {
-                  headTree = revWalk.parseTree(headRef.getObjectId());
-               }
-               finally
-               {
-                  revWalk.release();
-               }
-               treeWalk.addTree(headTree);
-            }
-            else
-            {
-               treeWalk.addTree(new EmptyTreeIterator());
-            }
-
-            treeWalk.addTree(new DirCacheIterator(dirCache));
-            treeWalk.addTree(new FileTreeIterator(repository));
-            if (fileFilter != null)
-            {
-               treeWalk.setFilter(AndTreeFilter.create(new NotIgnoredFilter(wdTreeN), fileFilter));
-            }
-            else
-            {
-               treeWalk.setFilter(new NotIgnoredFilter(wdTreeN));
-            }
-
-            while (treeWalk.next())
-            {
-               int headMode = treeWalk.getFileMode(headTreeN).getBits();
-               int idxMode = treeWalk.getFileMode(idxTreeN).getBits();
-               int wdMode = treeWalk.getFileMode(wdTreeN).getBits();
-
-               boolean tracked =
-                  wdMode != FileMode.TYPE_TREE
-                     && (idxMode != FileMode.TYPE_MISSING || headMode != FileMode.TYPE_MISSING);
-               boolean modified = !treeWalk.idEqual(wdTreeN, headTreeN);
-               boolean toCommit = treeWalk.idEqual(wdTreeN, idxTreeN);
-
-               String path = treeWalk.getPathString();
-
-               if (!tracked)
-               {
-                  untracked.add(new GitFile(path, GitFile.FileStatus.UNTRACKED));
-               }
-               else if (modified)
-               {
-                  GitFile.FileStatus status;
-                  if (headMode == FileMode.TYPE_MISSING && idxMode != FileMode.TYPE_MISSING)
-                  {
-                     status = GitFile.FileStatus.NEW;
-                  }
-                  else if (wdMode == FileMode.TYPE_MISSING
-                     && (idxMode != FileMode.TYPE_MISSING || headMode != FileMode.TYPE_MISSING))
-                  {
-                     status = GitFile.FileStatus.DELETED;
-                  }
-                  else
-                  {
-                     status = GitFile.FileStatus.MODIFIED;
-                  }
-
-                  if (toCommit)
-                  {
-                     changedNotCommited.add(new GitFile(path, status));
-                  }
-                  else
-                  {
-                     changedNotUpdated.add(new GitFile(path, status));
-                  }
-               }
-            }
-         }
-         finally
-         {
-            treeWalk.release();
-         }
+         changedNotCommited.addAll(JGitConnection.filterAndConvertFiles(status.getAdded(), GitFile.FileStatus.NEW));
+         changedNotCommited.addAll(JGitConnection.filterAndConvertFiles(status.getChanged(),
+            GitFile.FileStatus.MODIFIED));
+         changedNotUpdated.addAll(JGitConnection.filterAndConvertFiles(status.getModified(),
+            GitFile.FileStatus.MODIFIED));
+         changedNotUpdated.addAll(JGitConnection.filterAndConvertFiles(status.getConflicting(),
+            GitFile.FileStatus.MODIFIED));
+         changedNotCommited
+            .addAll(JGitConnection.filterAndConvertFiles(status.getMissing(), GitFile.FileStatus.DELETED));
+         changedNotCommited
+            .addAll(JGitConnection.filterAndConvertFiles(status.getRemoved(), GitFile.FileStatus.DELETED));
+         untracked.addAll(JGitConnection.filterAndConvertFiles(status.getUntracked(), GitFile.FileStatus.UNTRACKED));
 
          return new StatusPage(currentBranch, changedNotUpdated, changedNotCommited, untracked, request);
       }
@@ -1720,6 +1624,24 @@ public class JGitConnection implements GitConnection
          }
       }
       return tags;
+   }
+
+   private static Set<GitFile> filterAndConvertFiles(Set<String> source, GitFile.FileStatus status)
+   {
+      Set<GitFile> filtered = new HashSet<GitFile>();
+      for (String path : source)
+      {
+         if (path.startsWith(".vfs"))
+         {
+            continue;
+         }
+         else
+         {
+            filtered.add(new GitFile(path, status));
+         }
+      }
+      return filtered;
+
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#getUser() */

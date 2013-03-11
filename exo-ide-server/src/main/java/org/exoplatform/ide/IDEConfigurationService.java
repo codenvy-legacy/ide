@@ -106,7 +106,6 @@ public class IDEConfigurationService
          for (Iterator iterator = registeredProviders.iterator(); iterator.hasNext();)
          {
             VirtualFileSystemProvider virtualFileSystemProvider = (VirtualFileSystemProvider)iterator.next();
-            
          }
       }
       catch (VirtualFileSystemException e)
