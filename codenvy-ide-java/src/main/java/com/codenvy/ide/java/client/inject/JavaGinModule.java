@@ -18,13 +18,13 @@
  */
 package com.codenvy.ide.java.client.inject;
 
+import com.codenvy.ide.extension.ExtensionGinModule;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPageView;
 import com.codenvy.ide.java.client.wizard.NewJavaClassPageViewImpl;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPageView;
 import com.codenvy.ide.java.client.wizard.NewJavaProjectPageViewImpl;
 import com.codenvy.ide.java.client.wizard.NewPackagePageView;
 import com.codenvy.ide.java.client.wizard.NewPackagePageViewImpl;
-
 import com.google.gwt.inject.client.AbstractGinModule;
 
 /**
@@ -32,6 +32,7 @@ import com.google.gwt.inject.client.AbstractGinModule;
  * @version $Id:
  *
  */
+@ExtensionGinModule
 public class JavaGinModule extends AbstractGinModule
 {
 
