@@ -22,9 +22,9 @@ import org.everrest.core.impl.EverrestConfiguration;
 import org.everrest.core.impl.async.AsynchronousJobPool;
 import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.services.security.ConversationState;
+import org.exoplatform.services.security.Identity;
+import org.exoplatform.services.security.IdentityConstants;
 
-import java.lang.ref.WeakReference;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
@@ -49,55 +49,40 @@ public class CodenvyAsynchronousJobPool extends AsynchronousJobPool implements C
     * @see org.everrest.core.impl.async.AsynchronousJobPool#newCallable(java.lang.Object, java.lang.reflect.Method,
     *      java.lang.Object[])
     */
-   @SuppressWarnings("unchecked")
    @Override
    protected Callable<Object> newCallable(Object resource, Method method, Object[] params)
    {
-      final Callable<Object> callable = super.newCallable(resource, method, params);
-      java.lang.reflect.Proxy.newProxyInstance(callable.getClass().getClassLoader(), callable
-         .getClass().getInterfaces(), new EnvironmentContextRestoreHandler(callable)).toString();
-      return (Callable<Object>)java.lang.reflect.Proxy.newProxyInstance(callable.getClass().getClassLoader(), callable
-         .getClass().getInterfaces(), new EnvironmentContextRestoreHandler(callable));
+      return new CallableWrapper(super.newCallable(resource, method, params));
    }
 
-   private static final class EnvironmentContextRestoreHandler implements InvocationHandler
+   private static class CallableWrapper implements Callable<Object>
    {
-      private final WeakReference<EnvironmentContext> environmentContextHolder;
-      private final Callable callable;
+      private final EnvironmentContext envContext;
+      private final ConversationState state;
+      private final Callable<Object> callable;
 
-      public EnvironmentContextRestoreHandler(Callable callable)
+      public CallableWrapper(Callable<Object> callable)
       {
          this.callable = callable;
-         // Copy EnvironmentContext from a 'main' thread.
-         // EnvironmentContext is very important component for Codenvy IDE environment.
-         // Need have initialized it for each asynchronous thread. 
-         EnvironmentContext current = EnvironmentContext.getCurrentEnvironment();
-         environmentContextHolder = new WeakReference<EnvironmentContext>(current);
+         state = ConversationState.getCurrent();
+         envContext = EnvironmentContext.getCurrent();
       }
 
       @Override
-      public Object invoke(Object proxy, Method theMethod, Object[] theParams) throws Throwable
+      public Object call() throws Exception
       {
-         if ("call".equals(theMethod.getName()))
+         ConversationState.setCurrent(state == null
+            ? new ConversationState(new Identity(IdentityConstants.ANONIM)) : state);
+         EnvironmentContext.setCurrent(envContext);
+         try
          {
-            try
-            {
-               EnvironmentContext saved = environmentContextHolder.get();
-               if (saved == null)
-               {
-                  saved = new EnvironmentContext();
-               }
-               EnvironmentContext.setCurrentEnvironment(saved);
-               // Directly call method 'call' to simplify exception's handling.
-               return callable.call();
-            }
-            finally
-            {
-               ConversationState.setCurrent(null);
-            }
+            return callable.call();
          }
-         // Call other methods with reflection. It may be 'hashCode', 'equals' or 'toString' methods.
-         return theMethod.invoke(callable, theParams);
+         finally
+         {
+            EnvironmentContext.setCurrent(null);
+            ConversationState.setCurrent(null);
+         }
       }
    }
 }
