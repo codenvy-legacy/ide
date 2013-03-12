@@ -1,16 +1,50 @@
-.chatName{
+.chatName {
    font-weight: bold;
    float: left;
    color: #0a8ddd;
-   border-radius: 2px 2px 2px 2px;
 }
 
-.chatMessage{
+.chatMessage {
    word-wrap: break-word;
+   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
 }
 
-.chatTime{
+.chatTime {
    margin-left: -5px;
    float: left;
    color: #8282a2;
+}
+
+.chatParticipant {
+   margin: 3px;
+   border-radius: 4px 4px 4px 4px;
+   min-height: 25px;
+   padding: 5px;
+   /*background-color: #53ade0;*/
+   background-color: #7a8891;
+   color: #FFFFFF;
+   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
+}
+
+.chatParticipantImage {
+   float: left;
+}
+
+.chatParticipantName {
+   font-weight: bold;
+   left: 40px;
+   position: absolute;
+}
+
+.chatParticipantEmail {
+   left: 8px;
+   position: relative;
+   top: 12px;
+   color: #52ade0;
+}
+
+.chatCurrentName {
+   color: #0163cb;
+   font-weight: bold;
+   float: left;
 }

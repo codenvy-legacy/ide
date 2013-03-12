@@ -40,7 +40,7 @@
    </ui:style>
 
 	<g:SplitLayoutPanel>
-      <g:east size="300">
+      <g:east size="225">
 			<g:ScrollPanel ui:field="participantsPanel" />
 		</g:east>
       <g:center>

@@ -27,7 +27,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
@@ -35,12 +34,14 @@ import com.google.gwt.dom.client.Node;
 import elemental.events.EventListener;
 import elemental.html.DivElement;
 import elemental.html.Element;
+import elemental.html.ImageElement;
 import elemental.html.SpanElement;
 import elemental.html.TextAreaElement;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
 import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
 import java.util.Date;
 
@@ -98,12 +99,12 @@ public class ProjectChatView extends ViewImpl implements Display
       Date d = new Date(time);
       if (userDetails.getUserId().equals(lastUserId))
       {
-         DivElement messageElement = getMessageElement(message,"...", d);
+         DivElement messageElement = getMessageElement(message,"...", d, userDetails.isCurrentUser());
          lastMessageElement.appendChild(messageElement);
       }
       else
       {
-         DivElement messageElement = getMessageElement(message, userDetails.getDisplayName() + ":", d);
+         DivElement messageElement = getMessageElement(message, userDetails.getDisplayName() + ":", d, userDetails.isCurrentUser());
          chatPanel.getElement().appendChild((Node)messageElement);
          lastUserId = userDetails.getUserId();
          lastMessageElement = messageElement;
@@ -111,14 +112,14 @@ public class ProjectChatView extends ViewImpl implements Display
       chatPanel.scrollToBottom();
    }
 
-   private DivElement getMessageElement(String message, String name, Date d)
+   private DivElement getMessageElement(String message, String name, Date d, boolean isCurrentUser)
    {
       DivElement messageElement = Elements.createDivElement();
       DivElement timeElement = Elements.createDivElement(css.chatTime());
       timeElement.setInnerHTML("[" + timeFormat.format(d) + "]");
       messageElement.appendChild(timeElement);
 
-      SpanElement nameElement = Elements.createSpanElement(css.chatName());
+      SpanElement nameElement = Elements.createSpanElement(isCurrentUser?css.chatCurrentName() :css.chatName());
       nameElement.setInnerHTML(name);
       messageElement.appendChild(nameElement);
 
@@ -141,6 +142,34 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void setParticipants(JsonStringMap<UserDetails> chatParticipants)
    {
+      participantsPanel.getElement().setInnerHTML("");
+      chatParticipants.iterate(new IterationCallback<UserDetails>()
+      {
+         @Override
+         public void onIteration(String key, UserDetails value)
+         {
+           Element element = getParticipantElement(value);
+           participantsPanel.getElement().appendChild((Node)element);
+         }
+      });
+   }
+
+   private Element getParticipantElement(UserDetails userDetails)
+   {
+      DivElement element = Elements.createDivElement(css.chatParticipant());
+
+      ImageElement imageElement = Elements.createImageElement(css.chatParticipantImage());
+      imageElement.setSrc(userDetails.getPortraitUrl());
+      element.appendChild(imageElement);
+
+      DivElement nameElement = Elements.createDivElement(css.chatParticipantName());
+      nameElement.setInnerHTML(userDetails.getDisplayName());
+      element.appendChild(nameElement);
+
+      DivElement emailElement = Elements.createDivElement(css.chatParticipantEmail());
+      emailElement.setInnerHTML(userDetails.getDisplayEmail());
+      element.appendChild(emailElement);
+      return element;
    }
 
    /**

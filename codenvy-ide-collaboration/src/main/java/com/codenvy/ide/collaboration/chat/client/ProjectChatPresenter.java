@@ -26,6 +26,7 @@ import com.codenvy.ide.collaboration.dto.ChatParticipantRemove;
 import com.codenvy.ide.collaboration.dto.RoutingTypes;
 import com.codenvy.ide.collaboration.dto.UserDetails;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatMessageImpl;
+import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
@@ -151,6 +152,10 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private void addParticipant(UserDetails user)
    {
+      if(user.getUserId().equals(userId))
+      {
+         ((UserDetailsImpl)user).setIsCurrentUser(true);
+      }
       users.put(user.getUserId(),user);
       if (display != null)
       {
@@ -226,6 +231,10 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       users = JsonCollections.createMap();
       for(UserDetails ud : chatParticipants.asIterable())
       {
+         if(ud.getUserId().equals(userId))
+         {
+            ((UserDetailsImpl)ud).setIsCurrentUser(true);
+         }
          users.put(ud.getUserId(), ud);
       }
    }

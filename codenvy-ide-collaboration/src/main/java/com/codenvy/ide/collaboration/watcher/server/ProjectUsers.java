@@ -19,13 +19,13 @@
 package com.codenvy.ide.collaboration.watcher.server;
 
 import com.codenvy.ide.collaboration.chat.server.MD5Util;
-import com.codenvy.ide.collaboration.dto.ChatParticipantAdd;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ChatParticipantAddImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.ChatParticipantRemoveImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.UserDetailsImpl;
 
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
+import org.exoplatform.ide.shared.util.StringUtils;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 
@@ -141,7 +141,14 @@ public class ProjectUsers
    {
       UserDetailsImpl userDetails = UserDetailsImpl.make();
       userDetails.setUserId(userId);
-      userDetails.setDisplayName(userId);
+      String name = userId;
+      if(name.contains("@"))
+      {
+         name = name.substring(0, name.indexOf('@'));
+         name = StringUtils.capitalizeFirstLetter(name);
+      }
+      userDetails.setDisplayName(name);
+      userDetails.setDisplayEmail(userId);
       userDetails.setPortraitUrl(gravatarUrl + MD5Util.md5Hex(userId) + "?s=24&d=mm");
       return userDetails;
    }

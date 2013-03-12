@@ -35,6 +35,16 @@ public interface ChatResources extends ClientBundle
       String chatName();
 
       String chatTime();
+
+      String chatParticipant();
+
+      String chatParticipantName();
+
+      String chatParticipantImage();
+
+      String chatParticipantEmail();
+
+      String chatCurrentName();
    }
 
    @Source("Chat.css")
