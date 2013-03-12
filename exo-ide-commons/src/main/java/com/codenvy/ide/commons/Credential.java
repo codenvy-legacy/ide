@@ -16,40 +16,32 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.commons;
+package com.codenvy.ide.commons;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * @author <a href="mailto:vparfonov@codenvy.com">Vitaly Parfonov</a>
- * @version $Id: ReadCredentialsException.java Mar 1, 2013 vetal $
- *
+ * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
+ * @version $Id: Credentials.java Mar 1, 2013 vetal $
  */
-@SuppressWarnings("serial")
-public class ReadCredentialsException extends Exception
+public class Credential
 {
+   private final Map<String, String> credentials;
 
-   /**
-    * @param message the detail message
-    * @param cause the cause
-    */
-   public ReadCredentialsException(String message, Throwable cause)
+   public Credential()
    {
-      super(message, cause);
+      credentials = new HashMap<String, String>();
    }
 
-   /**
-    * @param message the detail message
-    */
-   public ReadCredentialsException(String message)
+   public String getAttribute(String name)
    {
-      super(message);
+      return credentials.get(name);
    }
 
-   /**
-    * @param cause the cause
-    */
-   public ReadCredentialsException(Throwable cause)
+   public void setAttribute(String name, String value)
    {
-      super(cause);
+      credentials.put(name, value);
    }
-
 }
+

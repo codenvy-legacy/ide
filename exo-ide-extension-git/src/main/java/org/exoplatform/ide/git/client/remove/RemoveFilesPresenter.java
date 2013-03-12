@@ -130,7 +130,6 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
    {
       if (makeSelectionCheck())
       {
-//         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
          String projectId = getSelectedProject().getId();
          getStatus(projectId);
       }
@@ -154,7 +153,7 @@ public class RemoveFilesPresenter extends GitPresenter implements RemoveFilesHan
                {
                   if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
                   {
-                     Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
+                     Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingChanged());
                      return;
                   }
 
