@@ -22,15 +22,17 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.ide.client.framework.control.GroupNames;
 import org.exoplatform.ide.client.framework.control.IDEControl;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.extension.googleappengine.client.GAEClientBundle;
 import org.exoplatform.ide.extension.googleappengine.client.GoogleAppEngineExtension;
+import org.exoplatform.ide.vfs.client.model.ItemContext;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
+import org.exoplatform.ide.vfs.shared.Item;
 
 /**
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
@@ -38,7 +40,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
  * 
  */
 public class AppEngineProjectControl extends SimpleControl implements IDEControl, ProjectOpenedHandler,
-   ProjectClosedHandler, ActiveProjectChangedHandler
+   ProjectClosedHandler, ItemsSelectedHandler
+//   , ActiveProjectChangedHandler
 {
    private static final String ID = "Project/PaaS/Google App Engine";
 
@@ -64,17 +67,8 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
    {
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
       IDE.addHandler(ProjectOpenedEvent.TYPE, this);
-      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
-    */
-   @Override
-   public void onProjectClosed(ProjectClosedEvent event)
-   {
-      setVisible(false);
-      setEnabled(false);
+      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+//      IDE.addHandler(ActiveProjectChangedEvent.TYPE, this);
    }
 
    /**
@@ -88,19 +82,52 @@ public class AppEngineProjectControl extends SimpleControl implements IDEControl
       setEnabled(isAppEngine);
    }
 
+   /**
+    * @see org.exoplatform.ide.client.framework.project.ProjectClosedHandler#onProjectClosed(org.exoplatform.ide.client.framework.project.ProjectClosedEvent)
+    */
    @Override
-   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+   public void onProjectClosed(ProjectClosedEvent event)
    {
-      boolean isAppEngine = isDeployed(event.getProject());
-      setVisible(isAppEngine);
-      setEnabled(isAppEngine);
+      setVisible(false);
+      setEnabled(false);
    }
+
+//   @Override
+//   public void onActiveProjectChanged(ActiveProjectChangedEvent event)
+//   {
+//      boolean isAppEngine = isDeployed(event.getProject());
+//      setVisible(isAppEngine);
+//      setEnabled(isAppEngine);
+//   }
 
    private boolean isDeployed(ProjectModel project)
    {
       return project != null
          && GoogleAppEngineExtension.isAppEngineProject(project)
          && project.getPropertyValue("gae-application") != null;
+   }
+
+   @Override
+   public void onItemsSelected(ItemsSelectedEvent event)
+   {
+      if (event.getSelectedItems().size() != 1)
+      {
+         setEnabled(false);
+         return;
+      }
+      
+      Item item = event.getSelectedItems().get(0);
+      ProjectModel project = null;
+      if (item instanceof ProjectModel)
+      {
+         project = (ProjectModel)item;
+      }
+      else
+      {
+         project = ((ItemContext)item).getProject();
+      }
+      
+      setEnabled(isDeployed(project));
    }
 
 }

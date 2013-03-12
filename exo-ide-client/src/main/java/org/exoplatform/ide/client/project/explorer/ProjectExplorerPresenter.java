@@ -346,9 +346,11 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
          return;
       }
       
+      display.selectItem(event.getItem());
+      
       if (display.asView().isViewVisible())
       {
-         display.selectItem(event.getItem());
+//         display.selectItem(event.getItem());
          
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
          {
