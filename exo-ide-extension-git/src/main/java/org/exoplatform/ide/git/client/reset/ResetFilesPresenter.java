@@ -131,7 +131,6 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
    {
       if (makeSelectionCheck())
       {
-//         getStatus(((ItemContext)selectedItems.get(0)).getProject().getId());
          getStatus(getSelectedProject().getId());
       }
    }
@@ -154,7 +153,7 @@ public class ResetFilesPresenter extends GitPresenter implements ResetFilesHandl
                {
                   if (result.getChangedNotCommited() == null || result.getChangedNotCommited().size() <= 0)
                   {
-                     Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingToCommit());
+                     Dialogs.getInstance().showInfo(GitExtension.MESSAGES.nothingChanged());
                      return;
                   }
 

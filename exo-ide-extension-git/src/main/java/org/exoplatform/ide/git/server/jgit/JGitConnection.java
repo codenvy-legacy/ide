@@ -1631,7 +1631,7 @@ public class JGitConnection implements GitConnection
       Set<GitFile> filtered = new HashSet<GitFile>();
       for (String path : source)
       {
-         if (path.startsWith(".vfs"))
+         if (path.contains(".vfs/"))
          {
             continue;
          }
