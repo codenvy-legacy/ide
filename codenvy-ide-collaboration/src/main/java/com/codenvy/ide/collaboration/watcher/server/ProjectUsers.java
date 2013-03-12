@@ -75,10 +75,10 @@ public class ProjectUsers
          {
             projectUsers.remove(projectId);
          }
-         userId2clientId.remove(userId);
          ChatParticipantRemoveImpl message = ChatParticipantRemoveImpl.make();
          message.setProjectId(projectId);
          message.setUserId(getUserId(clientId));
+         userId2clientId.remove(userId);
          broadcastToClients(message.toJson(), projectId);
       }
    }
