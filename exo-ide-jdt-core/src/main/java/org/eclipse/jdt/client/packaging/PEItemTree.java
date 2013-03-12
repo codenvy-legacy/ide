@@ -127,11 +127,13 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
       PackageExplorerTreeItem treeItem = treeItems.get(item.getId());
       if (treeItem == null)
       {
+         updateHighlighter(null);
          return false;
       }
 
       if (treeItem.getParentItem() == null)
       {
+         updateHighlighter(null);
          return false;
       }
 
@@ -147,8 +149,29 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
 
       treeItem = treeItems.get(item.getId());
       tree.setSelectedItem(treeItem);
+
+      updateHighlighter(treeItem);
       return true;
    }
+   
+   private void updateHighlighter(final TreeItem treeItem)
+   {
+//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//      {
+//         @Override
+//         public void execute()
+//         {
+//            if (treeItem != null)
+//            {
+//               moveHighlight(treeItem);
+//            }
+//            else
+//            {
+//               hideHighlighter();
+//            }            
+//         }
+//      });      
+   }   
    
    private void refreshProject(JavaProject project, Item destinationItem)
    {

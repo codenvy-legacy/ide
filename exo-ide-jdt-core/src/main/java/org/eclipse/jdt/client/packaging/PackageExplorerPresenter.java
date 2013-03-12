@@ -333,11 +333,25 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
 
 
    @Override
-   public void onSelectItem(SelectItemEvent event)
+   public void onSelectItem(final SelectItemEvent event)
    {
       if (display == null)
       {
          return;
+      }
+      
+      if (display.asView().isViewVisible())
+      {
+         display.selectItem(event.getItem());
+
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
+            }
+         });         
       }
    }
 
@@ -477,11 +491,9 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       }
 
       display.setPackageExplorerTreeVisible(true);
-      
       display.getBrowserTree().setValue(openedProject);
       //display.setProject(openedProject);
    }
-   
    
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
