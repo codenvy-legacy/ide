@@ -40,7 +40,7 @@ public class RemoveFilesEvent extends GwtEvent<RemoveFilesHandler>
     * @see com.google.gwt.event.shared.GwtEvent#getAssociatedType()
     */
    @Override
-   public com.google.gwt.event.shared.GwtEvent.Type<RemoveFilesHandler> getAssociatedType()
+   public Type<RemoveFilesHandler> getAssociatedType()
    {
       return TYPE;
    }
