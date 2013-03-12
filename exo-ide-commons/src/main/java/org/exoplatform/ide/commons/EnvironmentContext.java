@@ -23,51 +23,70 @@ import java.util.Map;
 
 /**
  * <p>Defines a component that holds variables of type {@link ThreadLocal}
- * whose value is required by the component to work normally and cannot be recovered. 
+ * whose value is required by the component to work normally and cannot be recovered.
  * This component is mainly used when we want to do a task asynchronously, in that case
- * to ensure that the task will be executed in the same conditions as if it would be 
+ * to ensure that the task will be executed in the same conditions as if it would be
  * executed synchronously we need to transfer the thread context from the original
  * thread to the executor thread.</p>
- * 
+ *
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: EnvironmentContext.java Feb 26, 2013 vetal $
- *
  */
 public class EnvironmentContext
 {
+   public final static String WORKSPACE_ID = "com.codenvy.workspace.id";
+   public final static String WORKSPACE_NAME = "com.codenvy.workspace.name";
+   public final static String VFS_ROOT_DIR = "com.codenvy.vfs.rootdir";
+   public final static String VFS_INDEX_DIR = "com.codenvy.vfs.indexdir";
+   public final static String TMP_DIR = "com.codenvy.tmpdir";
+   /**
+    * Name of web application that gives access to source files over Git.
+    *
+    * @see org.exoplatform.ide.vfs.server.GitUrlResolver
+    */
+   public final static String GIT_SERVER = "com.codenvy.git.server.application";
 
-   public final static String WORKSPACE = "workspace";
+   /** ThreadLocal keeper for EnvironmentContext. */
+   private static ThreadLocal<EnvironmentContext> current = new ThreadLocal<EnvironmentContext>()
+   {
+      @Override
+      protected EnvironmentContext initialValue()
+      {
+         return new EnvironmentContext();
+      }
+   };
+
+   public static EnvironmentContext getCurrent()
+   {
+      return current.get();
+   }
+
+   public static void setCurrent(EnvironmentContext environment)
+   {
+      current.set(environment);
+   }
+
+   public static void reset()
+   {
+      current.remove();
+   }
+
+   //
 
    private Map<String, Object> environment;
-
-   /**
-    * ThreadLocal keeper for EnvironmentContext.
-    */
-   private static ThreadLocal<EnvironmentContext> current = new ThreadLocal<EnvironmentContext>();
 
    public EnvironmentContext()
    {
       environment = new HashMap<String, Object>();
    }
 
-   public static EnvironmentContext getCurrentEnvironment()
-   {
-      return current.get();
-   }
-
-   public static void setCurrentEnvironment(EnvironmentContext environment)
-   {
-      current.set(environment);
-   }
-
-   public void setEnvironmentVariable(String name, String value)
+   public void setVariable(String name, Object value)
    {
       environment.put(name, value);
    }
 
-   public Object getEnvironmentVariable(String name)
+   public Object getVariable(String name)
    {
       return environment.get(name);
    }
-
 }
