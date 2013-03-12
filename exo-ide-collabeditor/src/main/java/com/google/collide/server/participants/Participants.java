@@ -22,8 +22,10 @@ import com.google.collide.dto.server.DtoServerImpls.UserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserLogOutDtoImpl;
 import com.google.collide.server.WSUtil;
 
+import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,14 +40,15 @@ public class Participants
    /**
     * Map of per-user session IDs LoggedInUsers.
     */
-   private final ConcurrentMap<String, LoggedInUser> loggedInUsers = new ConcurrentHashMap<String, LoggedInUser>();
+   private final ConcurrentMap<String, ConcurrentMap<String, LoggedInUser>> loggedInUsers = new ConcurrentHashMap<String, ConcurrentMap<String, LoggedInUser>>();
 
    public GetWorkspaceParticipantsResponse getParticipants()
    {
       GetWorkspaceParticipantsResponseImpl resp = GetWorkspaceParticipantsResponseImpl.make();
       List<ParticipantUserDetailsImpl> collaboratorsArr = new ArrayList<ParticipantUserDetailsImpl>();
-
-      for (LoggedInUser user : loggedInUsers.values())
+      Object tenantName = getTenantName();
+      ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
+      for (LoggedInUser user : users.values())
       {
          final String userId = user.getId();
          final String username = user.getName();
@@ -71,8 +74,9 @@ public class Participants
    public List<ParticipantUserDetailsImpl> getParticipants(Set<String> userIds)
    {
       List<ParticipantUserDetailsImpl> result = new ArrayList<ParticipantUserDetailsImpl>();
-
-      for (LoggedInUser user : loggedInUsers.values())
+      Object tenantName = getTenantName();
+      ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
+      for (LoggedInUser user : users.values())
       {
          final String userId = user.getId();
          if (userIds.contains(userId))
@@ -94,7 +98,9 @@ public class Participants
 
    public ParticipantUserDetailsImpl getParticipant(String userId)
    {
-      LoggedInUser user = loggedInUsers.get(userId);
+      Object tenantName = getTenantName();
+      ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
+      LoggedInUser user = users.get(userId);
       if (user != null)
       {
          ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
@@ -111,10 +117,12 @@ public class Participants
    public boolean removeParticipant(String userId)
    {
       LOG.debug("Remove participant: {} ", userId);
-      if (loggedInUsers.containsKey(userId))
+      Object tenantName = getTenantName();
+      ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
+      if (users.containsKey(userId))
       {
          ParticipantUserDetailsImpl participant = getParticipant(userId);
-         loggedInUsers.remove(userId);
+         users.remove(userId);
          Set<String> allParticipantId = getAllParticipantId();
          UserLogOutDtoImpl userLogOutDto = UserLogOutDtoImpl.make();
          userLogOutDto.setParticipant((ParticipantImpl)participant.getParticipant());
@@ -125,12 +133,23 @@ public class Participants
       {
          return false;
       }
-      //      return loggedInUsers.remove(userId) != null;
    }
 
    public void addParticipant(LoggedInUser user)
    {
       LOG.debug("Add participant: name={}, id={} ", user.getName(), user.getId());
-      loggedInUsers.putIfAbsent(user.getId(), user);
+      Object tenantName = getTenantName();
+      ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
+      if(users == null)
+      {
+         loggedInUsers.putIfAbsent((String)tenantName, new ConcurrentHashMap<String, LoggedInUser>());
+      }
+      loggedInUsers.get(tenantName).putIfAbsent(user.getId(), user);
+   }
+
+   private Object getTenantName()
+   {
+      Object tenant = ConversationState.getCurrent().getAttribute("currentTenant");
+      return  tenant == null ? "standalone" : tenant;
    }
 }

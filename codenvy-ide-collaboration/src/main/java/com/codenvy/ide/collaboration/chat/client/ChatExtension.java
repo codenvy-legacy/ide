@@ -42,6 +42,7 @@ import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.client.Jso;
+import org.exoplatform.ide.vfs.client.model.ProjectModel;
 
 /**
  *
@@ -74,6 +75,10 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
 
    private UserInfo userInfo;
 
+   private ProjectModel currentProject;
+
+   private boolean subscribeOnReady = false;
+
    /**
     * {@inheritDoc}
     */
@@ -91,6 +96,10 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
    @Override
    public void onMainSocketOpened(MainSocketOpenedEvent event)
    {
+      if(subscribeOnReady && currentProject != null)
+      {
+         subscribeToChanel();
+      }
       createPresenter();
       handlerRegistration.removeHandler();
    }
@@ -99,19 +108,32 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
    {
       chatApi = new ChatApi(IDE.messageBus());
       chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl, userInfo.getName());
-
    }
 
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
    {
       IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);
+      currentProject = null;
    }
 
    @Override
    public void onProjectOpened(ProjectOpenedEvent event)
    {
-      String projectId = event.getProject().getId();
+      currentProject = event.getProject();
+      if (IDE.messageBus().getReadyState() != ReadyState.OPEN)
+      {
+         subscribeOnReady = true;
+      }
+      else
+      {
+        subscribeToChanel();
+      }
+   }
+
+   private void subscribeToChanel()
+   {
+      String projectId = currentProject.getId();
       IDE.messageBus().subscribe("project_chat." + projectId, handler);
       GetChatParticipantsImpl request = GetChatParticipantsImpl.make();
       request.setProjectId(projectId);
