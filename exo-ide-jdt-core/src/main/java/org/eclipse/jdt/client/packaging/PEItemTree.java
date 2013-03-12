@@ -131,7 +131,7 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
          return false;
       }
 
-      if (treeItem.getParentItem() == null)
+      if (treeItem.getParentItem() == null && !item.getId().equals(project.getId()))
       {
          updateHighlighter(null);
          return false;
@@ -156,22 +156,22 @@ public class PEItemTree extends org.exoplatform.gwtframework.ui.client.component
    
    private void updateHighlighter(final TreeItem treeItem)
    {
-//      Scheduler.get().scheduleDeferred(new ScheduledCommand()
-//      {
-//         @Override
-//         public void execute()
-//         {
-//            if (treeItem != null)
-//            {
-//               moveHighlight(treeItem);
-//            }
-//            else
-//            {
-//               hideHighlighter();
-//            }            
-//         }
-//      });      
-   }   
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            if (treeItem != null)
+            {
+               moveHighlight(treeItem);
+            }
+            else
+            {
+               hideHighlighter();
+            }            
+         }
+      });      
+   }
    
    private void refreshProject(JavaProject project, Item destinationItem)
    {
