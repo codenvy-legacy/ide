@@ -24,9 +24,9 @@ import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.client.DtoClientImpls;
 
-import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
-import org.exoplatform.ide.communication.MessageFilter;
-import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.dtogen.shared.ServerError;
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.client.JsoStringMap;

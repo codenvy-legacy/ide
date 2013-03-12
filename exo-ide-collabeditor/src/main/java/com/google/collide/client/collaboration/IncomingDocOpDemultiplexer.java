@@ -14,8 +14,8 @@
 
 package com.google.collide.client.collaboration;
 
-import org.exoplatform.ide.communication.MessageFilter;
-import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
@@ -26,7 +26,7 @@ import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 
 /**
- * Receives {@link com.google.collide.dto.ServerToClientDocOp} from the {@link org.exoplatform.ide.communication.MessageFilter} and
+ * Receives {@link com.google.collide.dto.ServerToClientDocOp} from the {@link org.exoplatform.ide.client.framework.websocket.MessageFilter} and
  * forwards them.
  */
 public class IncomingDocOpDemultiplexer {

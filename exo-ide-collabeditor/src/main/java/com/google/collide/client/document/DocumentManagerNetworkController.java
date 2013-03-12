@@ -27,7 +27,7 @@ import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.client.DtoClientImpls.GetFileContentsImpl;
 import com.google.common.base.Preconditions;
 
-import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;

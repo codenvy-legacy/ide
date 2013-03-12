@@ -30,13 +30,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
-import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.Widget;
 import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.TableCellElement;
 import elemental.html.TableElement;
-import elemental.html.TextAreaElement;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
@@ -47,7 +45,7 @@ import java.util.List;
 
 /**
  * View for displaying the collaborators.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ParticipantsView.java Jan 30, 2013 3:21:19 PM azatsarynnyy $
  *
@@ -83,12 +81,6 @@ public class ParticipantsView extends ViewImpl implements Display
    @UiField
    ScrollPanel participantsPanel;
 
-   @UiField
-   ScrollPanel chatPanel;
-
-   @UiField
-   TextArea chatMessageInput;
-
    /**
     * UI binder for this view.
     */
@@ -111,9 +103,6 @@ public class ParticipantsView extends ViewImpl implements Display
       participantsList =
          SimpleList.create((View)tableElement, resources.defaultSimpleListCss(), listItemRenderer, listDelegate);
       participantsPanel.add(participantsList);
-//      chatMessageInput.getElement().
-      TextAreaElement element = (TextAreaElement)chatMessageInput.getElement();
-      element.setPlaceholder("Type here to chat");
    }
 
    /**

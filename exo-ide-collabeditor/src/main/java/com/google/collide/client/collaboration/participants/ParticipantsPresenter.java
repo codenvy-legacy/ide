@@ -41,7 +41,7 @@ import java.util.Map;
 
 /**
  * Presenter for displaying the collaborators.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ParticipantsPresenter.java Jan 30, 2013 3:18:56 PM azatsarynnyy $
  *
@@ -56,7 +56,7 @@ public class ParticipantsPresenter implements ShowHideParticipantsHandler, ViewC
    {
       /**
        * Set participant list.
-       * 
+       *
        * @param value participant list
        */
       void setValue(List<Participant> value);
@@ -84,8 +84,8 @@ public class ParticipantsPresenter implements ShowHideParticipantsHandler, ViewC
 
    /**
     * Creates new instance of {@link ParticipantsPresenter}.
-    * 
-    * @param resources {@link Resource}
+    *
+    * @param resources {@link Resources}
     */
    public ParticipantsPresenter(Resources resources)
    {

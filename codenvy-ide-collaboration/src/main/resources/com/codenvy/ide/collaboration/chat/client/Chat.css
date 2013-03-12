@@ -1,0 +1,16 @@
+.chatName{
+   font-weight: bold;
+   float: left;
+   color: #0a8ddd;
+   border-radius: 2px 2px 2px 2px;
+}
+
+.chatMessage{
+   word-wrap: break-word;
+}
+
+.chatTime{
+   margin-left: -5px;
+   float: left;
+   color: #8282a2;
+}

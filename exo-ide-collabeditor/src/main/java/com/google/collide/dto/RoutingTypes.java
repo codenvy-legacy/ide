@@ -152,7 +152,7 @@ public class RoutingTypes {
   public static final int FILECOLLABORATORGONE = 127;
   public static final int GETOPENEDFILESINWORKSPACE=128;
   public static final int GETOPENEDFILESINWORKSPACERESPONSE=129;
-   public static final int FILEOPERATIONNOTIFICATION=130;
-   public static final int USERLOGIN =131;
-   public static final int USERLOGOUT =132;
+  public static final int FILEOPERATIONNOTIFICATION=130;
+  public static final int USERLOGIN =131;
+  public static final int USERLOGOUT =132;
 }

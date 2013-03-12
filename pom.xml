@@ -467,7 +467,7 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>codenvy-ide-vfs-watcher</artifactId>
+            <artifactId>codenvy-ide-collaboration</artifactId>
             <version>${project.version}</version>
          </dependency>
 
@@ -747,7 +747,7 @@
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-fs</module>
       <module>exo-ide-vfs-jcr</module>
-      <module>codenvy-ide-vfs-watcher</module>
+      <module>codenvy-ide-collaboration</module>
       <module>exo-ide-security</module>
 
       <module>exo-ide-server</module>

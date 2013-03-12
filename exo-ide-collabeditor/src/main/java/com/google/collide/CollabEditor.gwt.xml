@@ -49,7 +49,6 @@
    <inherits name="com.codenvy.ide.client.scheduler.Scheduler"/>
    <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
    <inherits name="org.exoplatform.ide.json.Json"/>
-   <inherits name="org.exoplatform.ide.communication.Communication"/>
    <inherits name="org.exoplatform.ide.shared.Util"/>
 
    <!-- This provides deferred binding for the client windowing system.

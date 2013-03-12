@@ -36,9 +36,9 @@ import com.google.collide.dto.shared.JsonFieldConstants;
 import org.exoplatform.ide.json.shared.JsonCollections;
 
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
-import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
-import org.exoplatform.ide.communication.FrontendApi.RequestResponseApi;
-import org.exoplatform.ide.communication.FrontendApi.SendApi;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.RequestResponseApi;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.SendApi;
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ClientToServerDto;
 import org.exoplatform.ide.dtogen.shared.RoutableDto;

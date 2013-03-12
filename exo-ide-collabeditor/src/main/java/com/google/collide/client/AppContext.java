@@ -15,7 +15,7 @@
 package com.google.collide.client;
 
 import com.google.collide.client.communication.FrontendApi;
-import org.exoplatform.ide.communication.MessageFilter;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.status.StatusManager;
 import com.codenvy.ide.client.util.UserActivityManager;

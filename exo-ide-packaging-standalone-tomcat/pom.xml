@@ -607,7 +607,7 @@
       </dependency>
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
-         <artifactId>codenvy-ide-vfs-watcher</artifactId>
+         <artifactId>codenvy-ide-collaboration</artifactId>
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
