@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
+import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.SignalEventUtils;
 import com.codenvy.ide.collaboration.dto.ChatMessage;
@@ -27,12 +28,19 @@ import com.codenvy.ide.collaboration.dto.RoutingTypes;
 import com.codenvy.ide.collaboration.dto.UserDetails;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ChatMessageImpl;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
+import com.codenvy.ide.notification.Notification;
+import com.codenvy.ide.notification.Notification.NotificationType;
+import com.codenvy.ide.notification.NotificationManager;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Node;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
+import com.google.gwt.user.client.ui.HTML;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.KeyboardEvent.KeyCode;
+import elemental.html.DivElement;
+import elemental.html.Element;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -105,6 +113,8 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private String projectId;
 
+   private boolean viewClosed;
+
    public ProjectChatPresenter(ChatApi chatApi, MessageFilter messageFilter, IDE ide, ShowChatControl chatControl,
       String userId)
    {
@@ -167,6 +177,18 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    private void messageReceived(ChatMessage message)
    {
       display.addMessage(users.get(message.getUserId()), message.getMessage(), Long.valueOf(message.getDateTime()));
+      if(viewClosed || !display.asView().isViewVisible())
+      {
+         HTML m = new HTML();
+         DivElement name = Elements.createDivElement();
+         name.setInnerHTML(users.get(message.getUserId()).getDisplayName());
+         DivElement mes = Elements.createDivElement();
+         mes.setInnerHTML(message.getMessage());
+         m.getElement().appendChild((Node)name);
+         m.getElement().appendChild((Node)mes);
+         Notification chatNotification = new Notification(m, NotificationType.INFO, 5000);
+         NotificationManager.get().addNotification(chatNotification);
+      }
    }
 
    private void sendMessage()
@@ -202,6 +224,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       if (event.getView().getId().equals(Display.ID))
       {
          control.chatOpened(false);
+         viewClosed = true;
       }
    }
 
@@ -216,9 +239,13 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          if (display != null)
          {
             ide.openView(display.asView());
+            viewClosed = false;
          }
          else
          {
+            display = GWT.create(Display.class);
+            display.addListener(enterListener);
+            display.setParticipants(users);
             openChat();
          }
       }
@@ -231,6 +258,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    private void openChat()
    {
       ide.openView(display.asView());
+      viewClosed = false;
       control.chatOpened(true);
    }
 

@@ -204,7 +204,6 @@ public class CollabEditorExtension extends Extension implements MainSocketOpened
          @Override
          public void onReply(String message)
          {
-            Window.alert(message);
             JSONObject object = JSONParser.parseLenient(message).isObject();
             BootstrapSession.getBootstrapSession().setUserId(object.get("userId").isString().stringValue());
             BootstrapSession.getBootstrapSession().setActiveClientId(object.get("activeClientId").isString().stringValue());

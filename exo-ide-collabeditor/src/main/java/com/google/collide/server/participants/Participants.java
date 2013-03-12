@@ -69,7 +69,7 @@ public class Participants
    public Set<String> getAllParticipantId()
    {
       String key = getTenantName();
-      if(!loggedInUsers.containsKey(key))
+      if (!loggedInUsers.containsKey(key))
       {
          loggedInUsers.putIfAbsent(key, new ConcurrentHashMap<String, LoggedInUser>());
       }
@@ -145,7 +145,7 @@ public class Participants
       LOG.debug("Add participant: name={}, id={} ", user.getName(), user.getId());
       String tenantName = getTenantName();
       ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
-      if(users == null)
+      if (users == null)
       {
          loggedInUsers.putIfAbsent(tenantName, new ConcurrentHashMap<String, LoggedInUser>());
       }
@@ -154,7 +154,15 @@ public class Participants
 
    private String getTenantName()
    {
-      Object tenant = ConversationState.getCurrent().getAttribute("currentTenant");
-      return  tenant == null ? "standalone" : (String)tenant;
+
+      EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
+      if (environmentContext != null)
+      {
+         return (String)environmentContext.getVariable(EnvironmentContext.WORKSPACE_ID);
+      }
+      else
+      {
+         return (String)ConversationState.getCurrent().getAttribute("currentTenant");
+      }
    }
 }

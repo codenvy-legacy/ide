@@ -99,12 +99,13 @@ public class ProjectChatView extends ViewImpl implements Display
       Date d = new Date(time);
       if (userDetails.getUserId().equals(lastUserId))
       {
-         DivElement messageElement = getMessageElement(message,"...", d, userDetails.isCurrentUser());
+         DivElement messageElement = getMessageElement(message, "...", d, userDetails.isCurrentUser());
          lastMessageElement.appendChild(messageElement);
       }
       else
       {
-         DivElement messageElement = getMessageElement(message, userDetails.getDisplayName() + ":", d, userDetails.isCurrentUser());
+         DivElement messageElement = getMessageElement(message, userDetails.getDisplayName() + ":", d,
+            userDetails.isCurrentUser());
          chatPanel.getElement().appendChild((Node)messageElement);
          lastUserId = userDetails.getUserId();
          lastMessageElement = messageElement;
@@ -119,7 +120,7 @@ public class ProjectChatView extends ViewImpl implements Display
       timeElement.setInnerHTML("[" + timeFormat.format(d) + "]");
       messageElement.appendChild(timeElement);
 
-      SpanElement nameElement = Elements.createSpanElement(isCurrentUser?css.chatCurrentName() :css.chatName());
+      SpanElement nameElement = Elements.createSpanElement(isCurrentUser ? css.chatCurrentName() : css.chatName());
       nameElement.setInnerHTML(name);
       messageElement.appendChild(nameElement);
 
@@ -148,8 +149,11 @@ public class ProjectChatView extends ViewImpl implements Display
          @Override
          public void onIteration(String key, UserDetails value)
          {
-           Element element = getParticipantElement(value);
-           participantsPanel.getElement().appendChild((Node)element);
+            if (!value.isCurrentUser())
+            {
+               Element element = getParticipantElement(value);
+               participantsPanel.getElement().appendChild((Node)element);
+            }
          }
       });
    }
