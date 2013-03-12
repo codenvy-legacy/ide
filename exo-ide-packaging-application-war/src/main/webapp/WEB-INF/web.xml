@@ -85,6 +85,11 @@
 		<filter-name>SetCurrentIdentityFilter</filter-name>
 		<url-pattern>/websocket</url-pattern>
 	</filter-mapping>
+
+   <filter-mapping>
+		<filter-name>SetCurrentIdentityFilter</filter-name>
+		<url-pattern>/collaboration</url-pattern>
+	</filter-mapping>
 	
 	<filter-mapping>
 		<filter-name>SetEnvironmentContextFilter</filter-name>

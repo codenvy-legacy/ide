@@ -152,11 +152,11 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private void addParticipant(UserDetails user)
    {
-      if(user.getUserId().equals(userId))
+      if (user.getUserId().equals(userId))
       {
          ((UserDetailsImpl)user).setIsCurrentUser(true);
       }
-      users.put(user.getUserId(),user);
+      users.put(user.getUserId(), user);
       if (display != null)
       {
          display.setParticipants(users);
@@ -177,7 +177,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       {
          return;
       }
-      if(StringUtils.isNullOrWhitespace(message))
+      if (StringUtils.isNullOrWhitespace(message))
       {
          return;
       }
@@ -201,7 +201,6 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    {
       if (event.getView().getId().equals(Display.ID))
       {
-         display = null;
          control.chatOpened(false);
       }
    }
@@ -214,11 +213,14 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    {
       if (event.isShow())
       {
-         display = GWT.create(Display.class);
-         display.addListener(enterListener);
-         display.setParticipants(users);
-         ide.openView(display.asView());
-         control.chatOpened(true);
+         if (display != null)
+         {
+            ide.openView(display.asView());
+         }
+         else
+         {
+            openChat();
+         }
       }
       else
       {
@@ -226,12 +228,18 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       }
    }
 
+   private void openChat()
+   {
+      ide.openView(display.asView());
+      control.chatOpened(true);
+   }
+
    public void setChatParticipants(JsonArray<UserDetails> chatParticipants)
    {
       users = JsonCollections.createMap();
-      for(UserDetails ud : chatParticipants.asIterable())
+      for (UserDetails ud : chatParticipants.asIterable())
       {
-         if(ud.getUserId().equals(userId))
+         if (ud.getUserId().equals(userId))
          {
             ((UserDetailsImpl)ud).setIsCurrentUser(true);
          }
@@ -242,5 +250,18 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    public void setProjectId(String projectId)
    {
       this.projectId = projectId;
+      display = GWT.create(Display.class);
+      display.addListener(enterListener);
+      display.setParticipants(users);
+      if (users.size() > 1)
+      {
+         openChat();
+      }
+   }
+
+   public void projectClosed()
+   {
+      ide.closeView(Display.ID);
+      display = null;
    }
 }

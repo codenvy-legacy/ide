@@ -68,6 +68,11 @@ public class Participants
 
    public Set<String> getAllParticipantId()
    {
+      String key = getTenantName();
+      if(!loggedInUsers.containsKey(key))
+      {
+         loggedInUsers.putIfAbsent(key, new ConcurrentHashMap<String, LoggedInUser>());
+      }
       return loggedInUsers.keySet();
    }
 
@@ -138,18 +143,18 @@ public class Participants
    public void addParticipant(LoggedInUser user)
    {
       LOG.debug("Add participant: name={}, id={} ", user.getName(), user.getId());
-      Object tenantName = getTenantName();
+      String tenantName = getTenantName();
       ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
       if(users == null)
       {
-         loggedInUsers.putIfAbsent((String)tenantName, new ConcurrentHashMap<String, LoggedInUser>());
+         loggedInUsers.putIfAbsent(tenantName, new ConcurrentHashMap<String, LoggedInUser>());
       }
       loggedInUsers.get(tenantName).putIfAbsent(user.getId(), user);
    }
 
-   private Object getTenantName()
+   private String getTenantName()
    {
       Object tenant = ConversationState.getCurrent().getAttribute("currentTenant");
-      return  tenant == null ? "standalone" : tenant;
+      return  tenant == null ? "standalone" : (String)tenant;
    }
 }

@@ -115,6 +115,7 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
    {
       IDE.messageBus().unsubscribe("project_chat." + event.getProject().getId(), handler);
       currentProject = null;
+      chatPresenter.projectClosed();
    }
 
    @Override
@@ -133,12 +134,11 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
 
    private void subscribeToChanel()
    {
-      String projectId = currentProject.getId();
+      final String projectId = currentProject.getId();
       IDE.messageBus().subscribe("project_chat." + projectId, handler);
       GetChatParticipantsImpl request = GetChatParticipantsImpl.make();
       request.setProjectId(projectId);
-      chatPresenter.setProjectId(projectId);
-      chatApi.GET_CHAT_PARTISIPANTS.send(request,new ApiCallback<GetChatParticipantsResponse>()
+      chatApi.GET_CHAT_PARTISIPANTS.send(request, new ApiCallback<GetChatParticipantsResponse>()
       {
          @Override
          public void onFail(FailureReason reason)
@@ -150,6 +150,7 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
          public void onMessageReceived(GetChatParticipantsResponse message)
          {
             chatPresenter.setChatParticipants(message.getParticipants());
+            chatPresenter.setProjectId(projectId);
          }
       });
    }
