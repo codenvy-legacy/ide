@@ -29,9 +29,9 @@ import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.UserLogOutDto;
 import com.google.collide.dto.client.DtoClientImpls.GetWorkspaceParticipantsImpl;
 
-import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
-import org.exoplatform.ide.communication.MessageFilter;
-import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;

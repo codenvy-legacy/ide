@@ -25,7 +25,7 @@
       <listener-class>com.google.collide.server.FileEditSessionCleaner</listener-class>
    </listener>
       <listener>
-      <listener-class>com.codenvy.vfs.watcher.server.WatcherSessionCleaner</listener-class>
+      <listener-class>com.codenvy.ide.collaboration.watcher.server.WatcherSessionCleaner</listener-class>
    </listener>
 
 	<servlet>

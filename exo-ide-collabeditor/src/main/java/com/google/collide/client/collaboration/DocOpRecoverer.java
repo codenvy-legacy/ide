@@ -26,8 +26,8 @@ import com.google.collide.dto.client.DtoClientImpls.ServerToClientDocOpImpl;
 import org.exoplatform.ide.shared.util.ErrorCallback;
 import elemental.util.Timer;
 
-import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
-import org.exoplatform.ide.communication.FrontendApi.RequestResponseApi;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.RequestResponseApi;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.shared.JsonArray;

@@ -45,7 +45,7 @@ import java.util.List;
 
 /**
  * View for displaying the collaborators.
- * 
+ *
  * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
  * @version $Id: ParticipantsView.java Jan 30, 2013 3:21:19 PM azatsarynnyy $
  *

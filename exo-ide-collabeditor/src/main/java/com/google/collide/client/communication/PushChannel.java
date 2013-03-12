@@ -33,7 +33,7 @@ import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
-import org.exoplatform.ide.communication.MessageFilter;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.client.Jso;
@@ -150,7 +150,6 @@ public class PushChannel
       }
    };
 
-   
    private final ConnectionOpenedHandler openedHandler = new ConnectionOpenedHandler()
    {
       @Override

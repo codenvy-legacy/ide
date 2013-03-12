@@ -59,9 +59,9 @@ import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceived
 import org.exoplatform.ide.client.framework.ui.api.IsView;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
-import org.exoplatform.ide.client.operation.ItemsOperationPresenter;
 import org.exoplatform.ide.client.project.explorer.ProjectSelectedEvent;
 import org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler;
+import org.exoplatform.ide.editor.client.api.Editor;
 import org.exoplatform.ide.vfs.client.VirtualFileSystem;
 import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
@@ -84,8 +84,9 @@ import java.util.Map;
  * @version @version $Id: $
  */
 
-public class DeleteItemsPresenter extends ItemsOperationPresenter
-   implements ItemsSelectedHandler, EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler, ProjectSelectedHandler, ProjectOpenedHandler, ProjectClosedHandler
+public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler, ItemsSelectedHandler,
+   EditorFileOpenedHandler, EditorFileClosedHandler, DeleteItemHandler, ViewClosedHandler, ProjectSelectedHandler,
+   ProjectOpenedHandler, ProjectClosedHandler
 {
 
    public interface Display extends IsView
@@ -117,6 +118,8 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
 
    private Map<String, FileModel> openedFiles = new HashMap<String, FileModel>();
 
+   private Map<String, Editor> openedEditors = new HashMap<String, Editor>();
+
    private Map<String, String> lockTokens = new HashMap<String, String>();
 
    private ProjectModel selectedProject;
@@ -143,6 +146,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
       IDE.addHandler(ProjectClosedEvent.TYPE, this);
    }
 
+   @Override
    public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
    {
       ApplicationSettings applicationSettings = event.getApplicationSettings();
@@ -168,6 +172,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    public void onEditorFileOpened(EditorFileOpenedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+      openedEditors.put(event.getFile().getPath(), event.getEditor());
    }
 
    /**
@@ -176,6 +181,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    public void onEditorFileClosed(EditorFileClosedEvent event)
    {
       openedFiles = event.getOpenedFiles();
+      openedEditors.remove(event.getFile().getPath());
    }
 
    /**
@@ -258,7 +264,7 @@ public class DeleteItemsPresenter extends ItemsOperationPresenter
    public void bindDisplay()
    {
       String message = "";
-      if (selectedProject != null && isProjectExplorer)
+      if (openedProject == null && selectedProject != null && isProjectExplorer)
       {
          message = IDE.IDE_LOCALIZATION_MESSAGES.deleteItemsAskDeleteProject(selectedProject.getName());
       }

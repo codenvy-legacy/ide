@@ -137,13 +137,22 @@
    </component>
    
    <component>
-      <type>com.codenvy.vfs.watcher.server.VfsWatcher</type>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcher</type>
    </component>
    <component>
-      <type>com.codenvy.vfs.watcher.server.VfsWatcherApplication</type>
+      <type>com.codenvy.ide.collaboration.watcher.server.VfsWatcherApplication</type>
+   </component>
+   <!-- End VirtualFileSystem -->
+
+  <!-- Chat -->
+   <component>
+      <type>com.codenvy.ide.collaboration.watcher.server.ProjectUsers</type>
    </component>
 
-   <!-- End VirtualFileSystem -->
+   <component>
+      <type>com.codenvy.ide.collaboration.chat.server.ChatApplication</type>
+   </component>
+   <!-- End Chat -->
 
    <!-- LogReader -->
    <component>

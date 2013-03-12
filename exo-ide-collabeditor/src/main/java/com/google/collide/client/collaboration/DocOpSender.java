@@ -28,7 +28,7 @@ import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 
-import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.client.Jso;
 import org.exoplatform.ide.json.client.JsoArray;

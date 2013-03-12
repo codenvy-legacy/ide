@@ -38,9 +38,9 @@ import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.communication.FrontendApi.ApiCallback;
-import org.exoplatform.ide.communication.MessageFilter;
-import org.exoplatform.ide.communication.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter;
+import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
 import org.exoplatform.ide.json.client.JsIntegerMap;
 import org.exoplatform.ide.json.client.Jso;
