@@ -20,30 +20,20 @@ package com.codenvy.ide.extension.cloudfoundry.client.start;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-import com.codenvy.ide.resources.model.Project;
-
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationHandler;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 
 import java.util.List;
 
@@ -382,7 +372,6 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                                  CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(result.getName());
                               // TODO
                               //                              IDE.fireEvent(new OutputEvent(msg));
-                              //                              IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                               console.print(msg);
                               eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                            }
@@ -468,7 +457,6 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                      }
                      // TODO
                      //                     IDE.fireEvent(new OutputEvent(msg, Type.INFO));
-                     //                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                      console.print(msg);
                      eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                   }

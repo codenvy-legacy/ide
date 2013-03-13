@@ -20,25 +20,20 @@ package com.codenvy.ide.extension.cloudfoundry.client.url;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlView;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 import java.util.List;
 
@@ -89,7 +84,6 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
          // TODO
          //         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
          String projectId = resourceProvider.getActiveProject().getId();
-         //         IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
          eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
       }
 

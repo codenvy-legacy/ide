@@ -20,31 +20,31 @@ package com.codenvy.ide.extension.cloudfoundry.client.deploy;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-import com.codenvy.ide.paas.DeployResultHandler;
-import com.codenvy.ide.paas.HasPaaSActions;
-import com.codenvy.ide.resources.model.Project;
-
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.websocket.WebSocketException;
-import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
-
+import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
-
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
+import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
+import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.paas.DeployResultHandler;
+import com.codenvy.ide.paas.HasPaaSActions;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.resources.model.Resource;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationView;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,8 +55,9 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class DeployApplicationPresenter implements DeployApplicationView.ActionDelegate, HasPaaSActions
-//implements ProjectBuiltHandler, HasPaaSActions, VfsChangedHandler
+public class DeployApplicationPresenter implements DeployApplicationView.ActionDelegate, HasPaaSActions,
+   ProjectBuiltHandler
+//implements VfsChangedHandler
 {
    private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
 
@@ -85,8 +86,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private Console console;
 
-   // TODO
-   //   private DeployResultHandler deployResultHandler;
+   private HandlerRegistration projectBuildHandler;
 
    @Inject
    protected DeployApplicationPresenter(DeployApplicationView view, EventBus eventBus,
@@ -159,47 +159,48 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
-      try
-      {
-         // Application will be started after creation (IDE-1618)
-         boolean noStart = false;
-         CloudFoundryClientService.getInstance().createWS(
-            server,
-            name,
-            null,
-            url,
-            0,
-            0,
-            noStart,
-            resourcesProvider.getVfsId(),
-            // TODO
-            resourcesProvider.getActiveProject().getId(),
-            warUrl,
-            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-               server, eventBus)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  onAppCreatedSuccess(result);
-               }
-
-               @Override
-               protected void onFailure(Throwable exception)
-               {
-                  // TODO
-                  //                  deployResultHandler.onDeployFinished(false);
-                  // TODO
-                  //                     IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-                  console.print(lb.applicationCreationFailed());
-                  super.onFailure(exception);
-               }
-            });
-      }
-      catch (WebSocketException e)
-      {
-         createApplicationREST(loggedInHandler);
-      }
+      //      try
+      //      {
+      //         // Application will be started after creation (IDE-1618)
+      //         boolean noStart = false;
+      //         CloudFoundryClientService.getInstance().createWS(
+      //            server,
+      //            name,
+      //            null,
+      //            url,
+      //            0,
+      //            0,
+      //            noStart,
+      //            resourcesProvider.getVfsId(),
+      //            // TODO
+      //            resourcesProvider.getActiveProject().getId(),
+      //            warUrl,
+      //            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
+      //               server, eventBus)
+      //            {
+      //               @Override
+      //               protected void onSuccess(CloudFoundryApplication result)
+      //               {
+      //                  onAppCreatedSuccess(result);
+      //               }
+      //
+      //               @Override
+      //               protected void onFailure(Throwable exception)
+      //               {
+      //                  // TODO
+      //                  //                  deployResultHandler.onDeployFinished(false);
+      //                  // TODO
+      //                  //                     IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      //                  console.print(lb.applicationCreationFailed());
+      //                  super.onFailure(exception);
+      //               }
+      //            });
+      //      }
+      //      catch (WebSocketException e)
+      //      {
+      //         createApplicationREST(loggedInHandler);
+      //      }
+      createApplicationREST(loggedInHandler);
    }
 
    /**
@@ -286,9 +287,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       // TODO
       //      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       console.print(msg);
-      // TODO
-      //      IDE.fireEvent(new RefreshBrowserEvent(project));
-      //      eventBus.fireEvent(new RefreshBrowserEvent(project));
+      eventBus.fireEvent(new RefreshBrowserEvent(project));
    }
 
    /**
@@ -316,6 +315,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       return appUris;
    }
 
+   // TODO This method will use when shows view
    /**
     * Get the list of server and put them to select field.
     */
@@ -401,42 +401,19 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private void beforeDeploy()
    {
-      // TODO Unmarshaller
-      //      try
-      //      {
-      //         VirtualFileSystem.getInstance().getChildren(project,
-      //            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-      //            {
-      //
-      //               @Override
-      //               protected void onSuccess(List<Item> result)
-      //               {
-      //                  project.getChildren().setItems(result);
-      //                  for (Item i : result)
-      //                  {
-      //                     if (i.getItemType() == ItemType.FILE && "pom.xml".equals(i.getName()))
-      //                     {
-      //                        buildApplication();
-      //                        return;
-      //                     }
-      //                  }
-      //                  createApplication();
-      //               }
-      //
-      //               @Override
-      //               protected void onFailure(Throwable exception)
-      //               {
-      //                  IDE.fireEvent(new ExceptionThrownEvent(exception, "Can't receive project children "
-      //                     + project.getName()));
-      //               }
-      //            });
-      //      }
-      //      catch (RequestException e)
-      //      {
-      //         // TODO
-      //         //         IDE.fireEvent(new ExceptionThrownEvent(e));
-      //         console.print(e.getMessage());
-      //      }
+      JsonArray<Resource> children = project.getChildren();
+
+      for (int i = 0; i < children.size(); i++)
+      {
+         Resource child = children.get(i);
+         if (child.isFile() && "pom.xml".equals(child.getName()))
+         {
+            buildApplication();
+            return;
+         }
+      }
+
+      createApplication();
    }
 
    /**
@@ -452,8 +429,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private void buildApplication()
    {
-      //      IDE.addHandler(ApplicationBuiltEvent.TYPE, this);
-      //      IDE.fireEvent(new BuildApplicationEvent(project));
+      projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
+      eventBus.fireEvent(new BuildProjectEvent(project));
    }
 
    /**
@@ -463,5 +440,19 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    public boolean validate()
    {
       return view.getName() != null && !view.getName().isEmpty() && view.getUrl() != null && !view.getUrl().isEmpty();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onProjectBuilt(ProjectBuiltEvent event)
+   {
+      projectBuildHandler.removeHandler();
+      if (event.getBuildStatus().getDownloadUrl() != null)
+      {
+         warUrl = event.getBuildStatus().getDownloadUrl();
+         createApplication();
+      }
    }
 }

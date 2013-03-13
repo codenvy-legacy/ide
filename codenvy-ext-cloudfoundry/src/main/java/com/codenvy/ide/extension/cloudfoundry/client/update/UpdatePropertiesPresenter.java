@@ -20,27 +20,19 @@ package com.codenvy.ide.extension.cloudfoundry.client.update;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateInstancesEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateInstancesHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateMemoryHandler;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 /**
  * 
@@ -85,7 +77,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
    @Override
    public void onOkClicked()
    {
-      // TODO
       try
       {
          if (isMemoryEditing)
@@ -261,8 +252,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
                   // TODO
                   //                  IDE.fireEvent(new OutputEvent(msg));
                   console.print(msg);
-                  // TODO
-                  //                  IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                   eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                }
             });
@@ -435,8 +424,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
                               // TODO
                               //                              IDE.fireEvent(new OutputEvent(msg));
                               console.print(msg);
-                              // TODO
-                              //                              IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
                               eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                            }
                         });

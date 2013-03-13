@@ -222,36 +222,6 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
       }
       warUrl = null;
       updateApplication();
-
-      // TODO
-      //         VirtualFileSystem.getInstance().getChildren(project,
-      //            new AsyncRequestCallback<List<Item>>(new ChildrenUnmarshaller(new ArrayList<Item>()))
-      //            {
-      //
-      //               @Override
-      //               protected void onSuccess(List<Item> result)
-      //               {
-      //                  for (Item item : result)
-      //                  {
-      //                     if ("pom.xml".equals(item.getName()))
-      //                     {
-      //                        buildApplication();
-      //                        return;
-      //                     }
-      //                  }
-      //                  warUrl = null;
-      //                  updateApplication();
-      //               }
-      //
-      //               @Override
-      //               protected void onFailure(Throwable exception)
-      //               {
-      //                  String msg =
-      //                     CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationForbidden(project.getName());
-      //                  IDE.fireEvent(new ExceptionThrownEvent(msg));
-      //               }
-      //            });
-
    }
 
    private void buildApplication()

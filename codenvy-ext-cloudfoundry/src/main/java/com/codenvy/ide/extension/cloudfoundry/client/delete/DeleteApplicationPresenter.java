@@ -215,33 +215,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
          //         IDE.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
-
-      /*try
-      {
-         CloudFoundryClientService.getInstance().deleteApplication(resourceProvider.getVfsId(), projectId, appName,
-            serverName, isDeleteServices,
-            new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus)
-            {
-               @Override
-               protected void onSuccess(String result)
-               {
-                  view.close();
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
-                  //                     .applicationDeletedMsg(appName), Type.INFO));
-                  console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName));
-                  // TODO
-                  //                  IDE.fireEvent(new ApplicationDeletedEvent(appName));
-                  eventBus.fireEvent(new ApplicationDeletedEvent(appName));
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }*/
    }
 
    public void showDialog(String appName)
