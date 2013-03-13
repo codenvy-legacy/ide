@@ -113,7 +113,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private String projectId;
 
-   private boolean viewClosed;
+   private boolean viewClosed = true;
 
    public ProjectChatPresenter(ChatApi chatApi, MessageFilter messageFilter, IDE ide, ShowChatControl chatControl,
       String userId)

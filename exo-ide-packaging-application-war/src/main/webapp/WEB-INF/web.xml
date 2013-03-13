@@ -101,6 +101,11 @@
 		<url-pattern>/websocket</url-pattern>
 	</filter-mapping>
 
+   <filter-mapping>
+		<filter-name>SetEnvironmentContextFilter</filter-name>
+		<url-pattern>/collaboration</url-pattern>
+	</filter-mapping>
+
 	<filter-mapping>
 		<filter-name>StandaloneAuthenticationFilter</filter-name>
 		<url-pattern>/rest/private/*</url-pattern>

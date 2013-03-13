@@ -124,7 +124,28 @@ public class Participants
    {
       LOG.debug("Remove participant: {} ", userId);
       Object tenantName = getTenantName();
-      ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
+      ConcurrentMap<String, LoggedInUser> users = null;
+      if (tenantName == null)
+      {
+         for (String key : loggedInUsers.keySet())
+         {
+            ConcurrentMap<String, LoggedInUser> tenantUsers = loggedInUsers.get(key);
+            if (tenantUsers.containsKey(userId))
+            {
+               users = tenantUsers;
+               break;
+            }
+         }
+      }
+      else
+      {
+         users = loggedInUsers.get(tenantName);
+      }
+      if(users == null)
+      {
+         LOG.debug("Can't find participant: {} to remove", userId);
+         return false;
+      }
       if (users.containsKey(userId))
       {
          ParticipantUserDetailsImpl participant = getParticipant(userId);
@@ -163,16 +184,21 @@ public class Participants
       }
       else
       {
-         return (String)ConversationState.getCurrent().getAttribute("currentTenant");
+         String currentTenant = (String)ConversationState.getCurrent().getAttribute("currentTenant");
+         if(currentTenant == null)
+         {
+            currentTenant = "StandAlone";
+         }
+         return currentTenant;
       }
    }
 
    public Collection<? extends String> getAllParticipantId(String userId)
    {
-      for(String key : loggedInUsers.keySet())
+      for (String key : loggedInUsers.keySet())
       {
          ConcurrentMap<String, LoggedInUser> tenantUsers = loggedInUsers.get(key);
-         if(tenantUsers.containsKey(userId))
+         if (tenantUsers.containsKey(userId))
          {
             return tenantUsers.keySet();
          }

@@ -29,6 +29,7 @@ import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.LinkImpl;
 import com.codenvy.ide.collaboration.dto.server.DtoServerImpls.PropertyImpl;
 import com.google.gson.internal.Pair;
 
+import org.everrest.websockets.WSConnection;
 import org.everrest.websockets.WSConnectionContext;
 import org.everrest.websockets.message.ChannelBroadcastMessage;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
@@ -48,6 +49,7 @@ import org.exoplatform.ide.vfs.shared.Property;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
+import org.picocontainer.Startable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,8 +66,22 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class VfsWatcher
+public class VfsWatcher  implements Startable
 {
+   private class WSConnectionListener implements org.everrest.websockets.WSConnectionListener
+   {
+      @Override
+      public void onOpen(WSConnection connection)
+      {
+      }
+
+      @Override
+      public void onClose(WSConnection connection)
+      {
+         String userId = connection.getHttpSession().getId();
+         sessionDestroyed(userId);
+      }
+   }
 
    private class EventListenerImpl implements EventListener
    {
@@ -85,6 +101,23 @@ public class VfsWatcher
 
       private void notifyUsers(ChangeEvent event)
       {
+
+         //TODO when switch to FS VFS remove this
+         String path = event.getItemPath();
+         path = path.substring(0, path.indexOf("/",1));
+         try
+         {
+            Item project = event.getVirtualFileSystem().getItemByPath(path, null, PropertyFilter.ALL_FILTER);
+            if(!projectId.equals(project.getId()))
+            {
+               return;
+            }
+         }
+         catch (VirtualFileSystemException e)
+         {
+            LOG.error("Can't find project: " + path, e);
+            return;
+         }
          String message;
          switch (event.getType())
          {
@@ -186,6 +219,7 @@ public class VfsWatcher
     */
    private final ConcurrentMap<String, Pair<ChangeEventFilter, EventListener>> vfsListeners = new ConcurrentHashMap<String, Pair<ChangeEventFilter, EventListener>>();
 
+   private WSConnectionListener listener;
 
    private VirtualFileSystemRegistry vfsRegistry;
 
@@ -273,4 +307,16 @@ public class VfsWatcher
       }
    }
 
+   @Override
+   public void start()
+   {
+      listener = new WSConnectionListener();
+      WSConnectionContext.registerConnectionListener(listener);
+   }
+
+   @Override
+   public void stop()
+   {
+      WSConnectionContext.removeConnectionListener(listener);
+   }
 }

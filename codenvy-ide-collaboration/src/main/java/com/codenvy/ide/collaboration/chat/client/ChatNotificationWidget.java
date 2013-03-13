@@ -21,9 +21,13 @@ package com.codenvy.ide.collaboration.chat.client;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.dto.UserDetails;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
 import elemental.html.DivElement;
+
+import org.exoplatform.ide.client.framework.module.IDE;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
@@ -38,10 +42,18 @@ public class ChatNotificationWidget extends Composite
       html = new HTML();
       DivElement name = Elements.createDivElement(ChatExtension.resources.chatCss().notificationName());
       name.setInnerHTML(user.getDisplayName());
-      DivElement mes = Elements.createDivElement();
+      DivElement mes = Elements.createDivElement(ChatExtension.resources.chatCss().notificationMessage());
       mes.setInnerHTML(message);
       html.getElement().appendChild((Node)name);
       html.getElement().appendChild((Node)mes);
       initWidget(html);
+      html.addDomHandler(new ClickHandler()
+      {
+         @Override
+         public void onClick(ClickEvent event)
+         {
+            IDE.fireEvent(new ShowHideChatEvent(true));
+         }
+      }, ClickEvent.getType());
    }
 }

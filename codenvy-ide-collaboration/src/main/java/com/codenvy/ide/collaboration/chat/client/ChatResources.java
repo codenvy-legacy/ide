@@ -48,6 +48,9 @@ public interface ChatResources extends ClientBundle
 
       @ClassName("chatNotificationName")
       String notificationName();
+
+      @ClassName("chatNotificationMessage")
+      String notificationMessage();
    }
 
    @Source("Chat.css")

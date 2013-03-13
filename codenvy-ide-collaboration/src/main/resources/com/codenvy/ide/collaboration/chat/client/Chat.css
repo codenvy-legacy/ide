@@ -53,3 +53,9 @@
    font-weight: bold;
    font-size: 15;
 }
+.chatNotificationMessage{
+   text-overflow: ellipsis;
+   width: 250px;
+   overflow: hidden;
+   white-space: nowrap;
+}
