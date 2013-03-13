@@ -19,6 +19,8 @@
 package org.exoplatform.ide.client.framework.navigation.event;
 
 import com.google.gwt.event.shared.GwtEvent;
+
+import org.exoplatform.ide.vfs.client.model.FolderModel;
 import org.exoplatform.ide.vfs.shared.Folder;
 
 /**
@@ -42,12 +44,12 @@ public class FolderRefreshedEvent extends GwtEvent<FolderRefreshedHandler>
    /**
     * Refreshed folder.
     */
-   private Folder folder;
+   private FolderModel folder;
 
    /**
     * @param folder refreshed folder
     */
-   public FolderRefreshedEvent(Folder folder)
+   public FolderRefreshedEvent(FolderModel folder)
    {
       this.folder = folder;
    }
@@ -73,7 +75,7 @@ public class FolderRefreshedEvent extends GwtEvent<FolderRefreshedHandler>
    /**
     * @return the folder
     */
-   public Folder getFolder()
+   public FolderModel getFolder()
    {
       return folder;
    }

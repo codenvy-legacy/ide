@@ -74,10 +74,10 @@ import java.util.regex.Pattern;
 public class CloudfoundryApplicationRunner implements ApplicationRunner, Startable
 {
    /** Default application lifetime (in minutes). After this time application may be stopped automatically. */
-   private static final int DEFAULT_APPLICATION_LIFETIME = 1;
+   private static final int DEFAULT_APPLICATION_LIFETIME = 10;
 
    /** Expiration time (in milliseconds) which is left to notify user about this. */
-   private static final long EXPIRATION_TIME_LEFT_TO_NOTIFY = 60 * 1000;
+   private static final long EXPIRATION_TIME_LEFT_TO_NOTIFY = 2 * 60 * 1000;
 
    private static final Log LOG = ExoLogger.getLogger(CloudfoundryApplicationRunner.class);
 
