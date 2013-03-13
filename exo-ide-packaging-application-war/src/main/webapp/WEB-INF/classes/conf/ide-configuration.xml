@@ -74,7 +74,7 @@
       <type>org.exoplatform.ide.vfs.server.observation.EventListenerList</type>
    </component>
 
-   <component>
+   <!--component>
       <type>org.exoplatform.ide.vfs.impl.jcr.JcrFileSystemInitializer</type>
       <init-params>
          <values-param>
@@ -83,21 +83,20 @@
             <value>production</value>
          </values-param>
       </init-params>
-   </component>
+   </component-->
 
   <component>
      <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
      <init-params>
         <values-param>
            <name>id</name>
-           <value>production</value>
            <value>dev-monit</value>
         </values-param>
      </init-params>
   </component>
    
   <component>
-     <type>org.exoplatform.ide.vfs.impl.fs.SimpleLocalFSMountStrategy</type>
+     <type>org.exoplatform.ide.vfs.impl.fs.EnvironmentContextLocalFSMountStrategy</type>
   </component>
 
   <component>
@@ -286,13 +285,6 @@
 
    <!-- End Python Support -->
 
-   <!-- Google Gadgets support-->
-
-   <component>
-      <type>org.exoplatform.ide.extension.gadget.server.rest.GadgetExtenshionApplication</type>
-   </component>
-
-   <!-- End Google Gadgets support-->
 
    <!--
    ***************************************************************************************
