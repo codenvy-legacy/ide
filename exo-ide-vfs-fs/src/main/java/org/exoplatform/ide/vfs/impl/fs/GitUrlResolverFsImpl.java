@@ -67,7 +67,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
          }
          String rootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
          String workspace =
-         EnvironmentContext.getCurrentEnvironment().getEnvironmentVariable(EnvironmentContext.WORKSPACE).toString();
+         EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID).toString();
          String path = mountStrategy.getMountPath(workspace).getPath();
          path = path.substring(rootPath.length());
          if (!gitServer.endsWith("/"))
