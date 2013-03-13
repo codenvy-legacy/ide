@@ -50,21 +50,14 @@ public class IDEServiceApplication extends Application
 
    private final Set<Object> objects = new HashSet<Object>();
 
-   public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList,
-                                InitParams initParams)
+   public IDEServiceApplication(VirtualFileSystemRegistry vfsRegistry, EventListenerList eventListenerList)
    {
-      String entryPoint = ContainerUtils.readValueParam(initParams, "defaultEntryPoint");
-      boolean discoverable = Boolean.parseBoolean(ContainerUtils.readValueParam(initParams, "discoverable"));
-      String workspace = ContainerUtils.readValueParam(initParams, "workspace");
-      String config = ContainerUtils.readValueParam(initParams, "config");
-      String templateConfig = ContainerUtils.readValueParam(initParams, "template-config");
-
       objects.add(new UploadServiceExceptionMapper());
-      objects.add(new IDEConfigurationService(vfsRegistry, entryPoint, discoverable, workspace, config));
-      objects.add(new TemplatesRestService(workspace, templateConfig, vfsRegistry, eventListenerList));
       objects.add(new ProjectPrepareExceptionMapper());
 
+      objects.add(TemplatesRestService.class);
       classes.add(LoopbackContentService.class);
+      classes.add(IDEConfigurationService.class);
       classes.add(RequestContextResolver.class);
       classes.add(RestConversationState.class);
       classes.add(GoogleContactsRestService.class);

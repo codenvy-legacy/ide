@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import junit.framework.TestCase;
 import org.apache.commons.codec.binary.Base64;
 import org.everrest.core.RequestHandler;
@@ -34,7 +36,6 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;

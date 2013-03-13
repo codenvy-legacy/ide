@@ -18,7 +18,9 @@
  */
 package org.exoplatform.ide.vfs.server.impl.memory;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import junit.framework.TestCase;
+
 import org.everrest.core.RequestHandler;
 import org.everrest.core.ResourceBinder;
 import org.everrest.core.impl.ApplicationContextImpl;
@@ -33,7 +35,6 @@ import org.everrest.core.impl.ResourceBinderImpl;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.DependencySupplierImpl;
 import org.everrest.core.tools.ResourceLauncher;
-import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.vfs.server.ContentStream;
 import org.exoplatform.ide.vfs.server.URLHandlerFactorySetup;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemApplication;

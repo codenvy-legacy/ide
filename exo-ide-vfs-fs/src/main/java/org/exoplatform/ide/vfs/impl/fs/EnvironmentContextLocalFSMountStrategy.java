@@ -18,7 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import org.exoplatform.ide.commons.EnvironmentContext;
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 
 /**

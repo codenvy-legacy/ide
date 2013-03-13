@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.vfs.impl.jcr;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import junit.framework.TestCase;
 import org.everrest.core.RequestHandler;
 import org.everrest.core.impl.ApplicationContextImpl;
@@ -26,7 +28,6 @@ import org.everrest.core.impl.ProviderBinder;
 import org.everrest.core.tools.ByteArrayContainerResponseWriter;
 import org.everrest.core.tools.ResourceLauncher;
 import org.exoplatform.container.StandaloneContainer;
-import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.ItemList;
