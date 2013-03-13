@@ -156,7 +156,7 @@ public class Participants
    {
 
       EnvironmentContext environmentContext = EnvironmentContext.getCurrent();
-      if (environmentContext != null)
+      if (environmentContext != null && environmentContext.getVariable(EnvironmentContext.WORKSPACE_ID) != null)
       {
          return (String)environmentContext.getVariable(EnvironmentContext.WORKSPACE_ID);
       }

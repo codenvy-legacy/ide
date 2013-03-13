@@ -18,44 +18,30 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
-import com.google.gwt.resources.client.ClientBundle;
-import com.google.gwt.resources.client.CssResource;
-import com.google.gwt.resources.client.ImageResource;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.collaboration.dto.UserDetails;
+import com.google.gwt.dom.client.Node;
+import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
+import elemental.html.DivElement;
 
 /**
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public interface ChatResources extends ClientBundle
+public class ChatNotificationWidget extends Composite
 {
-   public interface ChatCss extends CssResource
+   private HTML html;
+
+   public ChatNotificationWidget(UserDetails user, String message)
    {
-      String chatMessage();
-
-      String chatName();
-
-      String chatTime();
-
-      String chatParticipant();
-
-      String chatParticipantName();
-
-      String chatParticipantImage();
-
-      String chatParticipantEmail();
-
-      String chatCurrentName();
-
-      @ClassName("chatNotificationName")
-      String notificationName();
+      html = new HTML();
+      DivElement name = Elements.createDivElement(ChatExtension.resources.chatCss().notificationName());
+      name.setInnerHTML(user.getDisplayName());
+      DivElement mes = Elements.createDivElement();
+      mes.setInnerHTML(message);
+      html.getElement().appendChild((Node)name);
+      html.getElement().appendChild((Node)mes);
+      initWidget(html);
    }
-
-   @Source("Chat.css")
-   ChatCss chatCss();
-
-   @Source("chat.png")
-   ImageResource chat();
-
-   @Source("chat_Disabled.png")
-   ImageResource chatDisabled();
 }

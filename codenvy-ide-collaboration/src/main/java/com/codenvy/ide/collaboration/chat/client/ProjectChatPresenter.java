@@ -179,14 +179,8 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       display.addMessage(users.get(message.getUserId()), message.getMessage(), Long.valueOf(message.getDateTime()));
       if(viewClosed || !display.asView().isViewVisible())
       {
-         HTML m = new HTML();
-         DivElement name = Elements.createDivElement();
-         name.setInnerHTML(users.get(message.getUserId()).getDisplayName());
-         DivElement mes = Elements.createDivElement();
-         mes.setInnerHTML(message.getMessage());
-         m.getElement().appendChild((Node)name);
-         m.getElement().appendChild((Node)mes);
-         Notification chatNotification = new Notification(m, NotificationType.INFO, 5000);
+         ChatNotificationWidget widget = new ChatNotificationWidget(users.get(message.getUserId()), message.getMessage());
+         Notification chatNotification = new Notification(widget, NotificationType.INFO, 5000);
          NotificationManager.get().addNotification(chatNotification);
       }
    }
@@ -243,9 +237,9 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          }
          else
          {
-            display = GWT.create(Display.class);
-            display.addListener(enterListener);
-            display.setParticipants(users);
+//            display = GWT.create(Display.class);
+//            display.addListener(enterListener);
+//            display.setParticipants(users);
             openChat();
          }
       }

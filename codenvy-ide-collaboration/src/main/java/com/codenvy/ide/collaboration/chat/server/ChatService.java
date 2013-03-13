@@ -51,9 +51,12 @@ public class ChatService
       GetChatParticipantsImpl get = GetChatParticipantsImpl.fromJsonString(message);
       Set<String> users = projectUsers.getProjectUsers(get.projectId());
       GetChatParticipantsResponseImpl response = GetChatParticipantsResponseImpl.make();
-      for (String clientId : users)
+      if (users != null)
       {
-         response.addParticipants(projectUsers.getUserDetails(projectUsers.getUserId(clientId)));
+         for (String clientId : users)
+         {
+            response.addParticipants(projectUsers.getUserDetails(projectUsers.getUserId(clientId)));
+         }
       }
       return response.toJson();
    }
