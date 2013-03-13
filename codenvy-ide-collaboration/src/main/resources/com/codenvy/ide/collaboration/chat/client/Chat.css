@@ -48,3 +48,8 @@
    font-weight: bold;
    float: left;
 }
+
+.chatNotificationName{
+   font-weight: bold;
+   font-size: 15;
+}
