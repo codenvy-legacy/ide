@@ -65,7 +65,7 @@ import java.util.Map;
 public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
 {
 
-   public static final int DURATION = 3000;
+   public static final int DURATION = 7000;
 
    private CollaborationApi collaborationApi;
 

@@ -61,7 +61,7 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
 {
 
 
-   public static final int DURATION = 3000;
+   public static final int DURATION = 7000;
 
    private MessageRecipient<FileOperationNotification> fileOperationNotificationRecipient = new MessageRecipient<FileOperationNotification>()
    {
@@ -118,7 +118,7 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
    {
       AnchorElement anchorElement = Elements.createAnchorElement(css.anchor());
       anchorElement.setHref("javascript:;");
-      anchorElement.setTextContent(path);
+      anchorElement.setTextContent(path.substring(path.lastIndexOf('/') + 1, path.length()));
       anchorElement.addEventListener(Event.CLICK, new EventListener()
       {
          @Override

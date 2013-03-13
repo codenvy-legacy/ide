@@ -180,7 +180,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       if(viewClosed || !display.asView().isViewVisible())
       {
          ChatNotificationWidget widget = new ChatNotificationWidget(users.get(message.getUserId()), message.getMessage());
-         Notification chatNotification = new Notification(widget, NotificationType.INFO, 5000);
+         Notification chatNotification = new Notification(widget, NotificationType.MESSAGE, 10000);
          NotificationManager.get().addNotification(chatNotification);
       }
    }

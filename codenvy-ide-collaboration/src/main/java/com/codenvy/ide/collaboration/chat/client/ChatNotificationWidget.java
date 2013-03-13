@@ -21,11 +21,16 @@ package com.codenvy.ide.collaboration.chat.client;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.dto.UserDetails;
 import com.google.gwt.dom.client.Node;
+import com.google.gwt.dom.client.Style;
+import com.google.gwt.dom.client.Style.Position;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.Image;
 import elemental.html.DivElement;
+import elemental.html.SpanElement;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 
@@ -40,12 +45,21 @@ public class ChatNotificationWidget extends Composite
    public ChatNotificationWidget(UserDetails user, String message)
    {
       html = new HTML();
-      DivElement name = Elements.createDivElement(ChatExtension.resources.chatCss().notificationName());
-      name.setInnerHTML(user.getDisplayName());
-      DivElement mes = Elements.createDivElement(ChatExtension.resources.chatCss().notificationMessage());
-      mes.setInnerHTML(message);
-      html.getElement().appendChild((Node)name);
-      html.getElement().appendChild((Node)mes);
+      Image i = new Image(ChatExtension.resources.chat());
+      i.getElement().getStyle().setPosition(Position.RELATIVE);
+      i.getElement().getStyle().setTop(-15, Unit.PX);
+      i.getElement().getStyle().setFloat(Style.Float.LEFT);
+
+      html.getElement().appendChild(i.getElement());
+
+      SpanElement nameElement = Elements.createSpanElement(ChatExtension.resources.chatCss().notificationName());
+      nameElement.setInnerHTML(user.getDisplayName() +":");
+      html.getElement().appendChild((Node)nameElement);
+
+      DivElement messageDiv = Elements.createDivElement(ChatExtension.resources.chatCss().notificationMessage());
+      messageDiv.setInnerHTML("&nbsp;" + message);
+      html.getElement().appendChild((Node)messageDiv);
+
       initWidget(html);
       html.addDomHandler(new ClickHandler()
       {

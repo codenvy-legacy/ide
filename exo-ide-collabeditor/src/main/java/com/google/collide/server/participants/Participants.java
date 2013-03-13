@@ -74,7 +74,7 @@ public class Participants
       {
          loggedInUsers.putIfAbsent(key, new ConcurrentHashMap<String, LoggedInUser>());
       }
-      return loggedInUsers.keySet();
+      return loggedInUsers.get(key).keySet();
    }
 
    public List<ParticipantUserDetailsImpl> getParticipants(Set<String> userIds)
