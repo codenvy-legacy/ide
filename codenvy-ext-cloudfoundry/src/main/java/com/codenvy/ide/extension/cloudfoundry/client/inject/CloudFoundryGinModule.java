@@ -18,32 +18,30 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.inject;
 
+import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
 import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;
 import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationView;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationView;
 import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoView;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoginView;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView;
 import com.codenvy.ide.extension.cloudfoundry.client.project.CloudFoundryProjectViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceView;
 import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesView;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesView;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesViewImpl;
+import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlView;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlViewImpl;
-
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationView;
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationView;
-import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoView;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginView;
-import com.codenvy.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceView;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesView;
-import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlView;
 
 /**
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>

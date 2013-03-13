@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.cloudfoundry.client.create;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -35,18 +34,18 @@ import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltEvent;
 import com.codenvy.ide.extension.maven.client.event.ProjectBuiltHandler;
 import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.output.event.OutputEvent;
-import com.codenvy.ide.output.event.OutputMessage;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.resources.model.Resource;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.codenvy.ide.websocket.rest.AutoBeanUnmarshallerWS;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
+import com.google.web.bindery.event.shared.HandlerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,6 +111,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private ResourceProvider resourceProvider;
 
+   private HandlerRegistration projectBuildHandler;
+
    private EventBus eventBus;
 
    private Console console;
@@ -176,8 +177,11 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          }
          catch (NumberFormatException e)
          {
-            eventBus
-               .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
+            // TODO
+            //            eventBus
+            //               .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
+            console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat());
+
          }
       }
 
@@ -203,8 +207,10 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (NumberFormatException e)
       {
-         eventBus
-            .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
+         // TODO
+         //         eventBus
+         //            .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
+         console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat());
       }
       boolean nostart = !view.isStartAfterCreation();
 
@@ -286,15 +292,15 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         // TODO
+         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
       }
    }
 
    private void buildApplication()
    {
-      // TODO
-      //      IDE.addHandler(ProjectBuiltEvent.TYPE, this);
-      eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
+      projectBuildHandler = eventBus.addHandler(ProjectBuiltEvent.TYPE, this);
       eventBus.fireEvent(new BuildProjectEvent());
    }
 
@@ -349,7 +355,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //               @Override
       //               protected void onFailure(Throwable exception)
       //               {
-      //                  // TODO
       //                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
       //                  super.onFailure(exception);
       //               }
@@ -359,7 +364,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //      {
       //         createApplicationREST(appData, project, loggedInHandler);
       //      }
-      createApplicationREST(appData, project, loggedInHandler);
    }
 
    /**
@@ -393,10 +397,22 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                appData.server, eventBus)
             {
                @Override
-               protected void onSuccess(CloudFoundryApplication result)
+               protected void onSuccess(final CloudFoundryApplication cloudFoundryApp)
                {
-                  onAppCreatedSuccess(result);
-                  eventBus.fireEvent(new RefreshBrowserEvent(project));
+                  project.refreshProperties(new AsyncCallback<Project>()
+                  {
+                     @Override
+                     public void onSuccess(Project result)
+                     {
+                        onAppCreatedSuccess(cloudFoundryApp);
+                        eventBus.fireEvent(new RefreshBrowserEvent(project));
+                     }
+                     
+                     @Override
+                     public void onFailure(Throwable caught)
+                     {
+                     }
+                  });
                }
 
                @Override
@@ -437,17 +453,23 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          {
             msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
          }
-         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+         // TODO
+         //         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+         console.print(msg);
       }
       else if ("STARTED".equals(app.getState()) && app.getInstances() != app.getRunningInstances())
       {
          String msg = lb.applicationWasNotStarted(app.getName());
-         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+         // TODO
+         //         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+         console.print(msg);
       }
       else
       {
          String msg = lb.applicationCreatedSuccessfully(app.getName());
-         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+         // TODO
+         //         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+         console.print(msg);
       }
    }
 
@@ -554,7 +576,9 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         // TODO
+         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
       }
    }
 
@@ -733,10 +757,10 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       else
       {
-         //         String msg = lb.createApplicationNotFolder();
+         String msg = lb.createApplicationNotFolder(view.getName());
          // TODO
          //         IDE.fireEvent(new ExceptionThrownEvent(msg));
-         console.print("Exception");
+         console.print(msg);
       }
    }
 
@@ -759,8 +783,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    @Override
    public void onProjectBuilt(ProjectBuiltEvent event)
    {
-      // TODO ?
-      //      eventBus.removeHandler(event.getAssociatedType(), this);
+      projectBuildHandler.removeHandler();
       if (event.getBuildStatus().getDownloadUrl() != null)
       {
          warUrl = event.getBuildStatus().getDownloadUrl();

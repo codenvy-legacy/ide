@@ -18,21 +18,15 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
+import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-
-import com.codenvy.ide.rest.AsyncRequestCallback;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
-
-import com.google.gwt.http.client.RequestException;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
@@ -40,8 +34,14 @@ import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChan
 import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.web.bindery.event.shared.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,8 +52,9 @@ import java.util.List;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, ApplicationInfoChangedHandler
-// implements ViewClosedHandler, ShowApplicationsHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler
+public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, ApplicationInfoChangedHandler,
+   ApplicationDeletedHandler
+// implements ViewClosedHandler, ShowApplicationsHandler, ApplicationInfoChangedHandler
 {
    private ApplicationsView view;
 
@@ -65,14 +66,18 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
 
    private Console console;
 
+   private ResourceProvider resourceProvider;
+
    @Inject
    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, Console console,
-      StartApplicationPresenter startAppPresenter)
+      ResourceProvider resourceProvider, StartApplicationPresenter startAppPresenter,
+      DeleteApplicationPresenter deleteAppPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
+      this.resourceProvider = resourceProvider;
 
       this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
    }
@@ -264,7 +269,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));
-      //      eventBus.fireEvent(new DeleteApplicationEvent(app.getName(), currentServer));
+      eventBus.fireEvent(new DeleteApplicationEvent(app.getName(), currentServer));
    }
 
    /**
@@ -272,6 +277,15 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     */
    @Override
    public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
+   {
+      getApplicationList();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onApplicationDeleted(ApplicationDeletedEvent event)
    {
       getApplicationList();
    }

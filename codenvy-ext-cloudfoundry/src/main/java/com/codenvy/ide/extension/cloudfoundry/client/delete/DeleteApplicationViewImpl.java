@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.cloudfoundry.client.delete;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -34,8 +33,6 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationView;
 
 /**
  *
@@ -52,9 +49,6 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
 
    @UiField
    Button btnDelete;
-
-   @UiField
-   Label askDeleteServicesLabel;
 
    @UiField
    CheckBox deleteServicesField;
@@ -76,8 +70,8 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
       this.setText("Delete application from CloudFoundry");
       this.setWidget(widget);
 
-      btnCancel.setText(new Image(resources.cancelButton()) + " " + constants.cancelButton());
-      btnDelete.setText(new Image(resources.okButton()) + " " + constants.deleteButton());
+      btnCancel.setHTML(new Image(resources.cancelButton()) + " " + constants.cancelButton());
+      btnDelete.setHTML(new Image(resources.okButton()) + " " + constants.deleteButton());
    }
 
    /**
@@ -102,6 +96,15 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
     * {@inheritDoc}
     */
    @Override
+   public void setDeleteServices(boolean isDeleted)
+   {
+      deleteServicesField.setValue(isDeleted);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void setAskMessage(String message)
    {
       // TODO set HTML
@@ -115,7 +118,7 @@ public class DeleteApplicationViewImpl extends DialogBox implements DeleteApplic
    public void setAskDeleteServices(String text)
    {
       // TODO set HTML
-      askDeleteServicesLabel.setText(text);
+      deleteServicesField.setText(text);
    }
 
    /**

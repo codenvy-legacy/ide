@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013 eXo Platform SAS.
+ * Copyright (C) 2011 eXo Platform SAS.
  *
  * This is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -16,38 +16,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.codenvy.ide.extension.cloudfoundry.client.delete;
+package com.codenvy.ide.extension.cloudfoundry.client.update;
 
-import com.codenvy.ide.view.View;
+
+import com.google.gwt.event.shared.EventHandler;
 
 /**
- *
- *
- * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
+ * Handler for {@link UpdateApplicationEvent} event.
+ * 
+ * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
+ * @version $Id: UpdateApplicationHandler.java Jul 14, 2011 11:45:35 AM vereshchaka $
  */
-public interface DeleteApplicationView extends View<DeleteApplicationView.ActionDelegate>
+public interface UpdateApplicationHandler extends EventHandler
 {
-   public interface ActionDelegate
-   {
-      public void onDeleteClicked();
-
-      public void onCancelClicked();
-   }
-
-   public boolean isDeleteServices();
-
-   public void setDeleteServices(boolean isDeleted);
-
    /**
-    * Set the ask message to delete application.
+    * Perform actions, when user tries to update application.
     * 
-    * @param message
+    * @param event
     */
-   public void setAskMessage(String message);
-
-   public void setAskDeleteServices(String text);
-
-   public void showDialog();
-
-   public void close();
+   void onUpdateApplication(UpdateApplicationEvent event);
 }

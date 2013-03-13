@@ -20,38 +20,37 @@ package com.codenvy.ide.extension.cloudfoundry.client.project;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-import com.codenvy.ide.resources.model.Project;
-
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
+import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
-
-import com.google.gwt.http.client.RequestException;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.event.shared.EventBus;
-
+import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateInstancesEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
+import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.google.gwt.http.client.RequestException;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * 
@@ -60,7 +59,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
  */
 @Singleton
 public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate,
-   ApplicationInfoChangedHandler, ManageServicesHandler
+   ApplicationInfoChangedHandler, ManageServicesHandler, ApplicationDeletedHandler
 // ProjectOpenedHandler, ProjectClosedHandler,
 //   ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler, ActiveProjectChangedHandler
 {
@@ -74,6 +73,8 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
    private ManageServicesPresenter manageServicesPresenter;
 
+   private UpdateApplicationPresenter updateApplicationPresenter;
+
    private EventBus eventBus;
 
    private ResourceProvider resourceProvider;
@@ -86,6 +87,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view,
       ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
       UpdatePropertiesPresenter updateProperyPresenter, ManageServicesPresenter manageServicesPresenter,
+      UpdateApplicationPresenter updateApplicationPresenter,
       EventBus eventBus, ResourceProvider resourceProvider, Console console)
    {
       this.view = view;
@@ -97,6 +99,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.manageServicesPresenter = manageServicesPresenter;
+      this.updateApplicationPresenter = updateApplicationPresenter;
 
       this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
       this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
@@ -129,7 +132,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    {
       // TODO
       //      IDE.eventBus().fireEvent(new UpdateApplicationEvent());
-      //      eventBus.fireEvent(new UpdateApplicationEvent());
+      eventBus.fireEvent(new UpdateApplicationEvent());
    }
 
    /**
@@ -268,7 +271,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    {
       // TODO
       //      IDE.eventBus().fireEvent(new DeleteApplicationEvent());
-      //      eventBus.fireEvent(new DeleteApplicationEvent());
+      eventBus.fireEvent(new DeleteApplicationEvent());
    }
 
    /**
@@ -369,5 +372,19 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    public void onManageServices(ManageServicesEvent event)
    {
       getApplicationInfo(resourceProvider.getActiveProject());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onApplicationDeleted(ApplicationDeletedEvent event)
+   {
+      Project openedProject = resourceProvider.getActiveProject();
+      if (event.getApplicationName() != null && openedProject != null
+         && event.getApplicationName().equals(openedProject.getPropertyValue("cloudfoundry-application")))
+      {
+         eventBus.fireEvent(new RefreshBrowserEvent(openedProject));
+      }
    }
 }

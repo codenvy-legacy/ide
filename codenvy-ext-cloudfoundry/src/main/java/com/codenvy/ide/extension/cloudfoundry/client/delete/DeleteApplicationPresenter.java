@@ -20,26 +20,18 @@ package com.codenvy.ide.extension.cloudfoundry.client.delete;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-import com.codenvy.ide.resources.model.Project;
-
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.resources.model.Project;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationView;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 /**
  *
@@ -72,6 +64,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       EventBus eventBus, Console console)
    {
       this.view = view;
+      this.view.setDelegate(this);
       this.resourceProvider = resourceProvider;
       this.eventBus = eventBus;
       this.console = console;
@@ -222,12 +215,40 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
          //         IDE.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
+
+      /*try
+      {
+         CloudFoundryClientService.getInstance().deleteApplication(resourceProvider.getVfsId(), projectId, appName,
+            serverName, isDeleteServices,
+            new CloudFoundryAsyncRequestCallback<String>(null, deleteAppLoggedInHandler, null, eventBus)
+            {
+               @Override
+               protected void onSuccess(String result)
+               {
+                  view.close();
+                  // TODO
+                  //                  IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
+                  //                     .applicationDeletedMsg(appName), Type.INFO));
+                  console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationDeletedMsg(appName));
+                  // TODO
+                  //                  IDE.fireEvent(new ApplicationDeletedEvent(appName));
+                  eventBus.fireEvent(new ApplicationDeletedEvent(appName));
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         // TODO
+         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
+      }*/
    }
 
    public void showDialog(String appName)
    {
       view.setAskMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationQuestion(appName));
       view.setAskDeleteServices(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteApplicationAskDeleteServices());
+      view.setDeleteServices(false);
 
       view.showDialog();
    }
