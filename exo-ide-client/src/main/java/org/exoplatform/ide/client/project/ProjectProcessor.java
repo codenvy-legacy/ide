@@ -116,7 +116,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
                {
                   IDE.fireEvent(new SelectItemEvent(openedProject));
                }
-            }.schedule(100);       
+            }.schedule(200);       
          }
       });
 
