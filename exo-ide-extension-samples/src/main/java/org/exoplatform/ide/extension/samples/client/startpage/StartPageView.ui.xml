@@ -126,7 +126,7 @@
             <g:Image ui:field="logo" resource="{resource.ideLogo}"
                      styleName="{resource.css.welcomeHeaderLogo}"></g:Image>
          </div>
-         <div>
+         <div class="{style.floatLeft}">
             <g:Label text="{locale.aboutIde}" styleName="{resource.css.welcomeHeaderText}"></g:Label>
             <iframe class="{style.fbLikePanel}" src="/IDE/fblike.html" frameborder="0" marginheight="0px"
                     marginwidth="0px;" style="overflow:hidden;" allowtransparency="true"></iframe>
