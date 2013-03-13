@@ -34,8 +34,11 @@ import com.codenvy.ide.core.editor.ResourceDocumentProvider;
 import com.codenvy.ide.core.expressions.ExpressionManager;
 import com.codenvy.ide.editor.DocumentProvider;
 import com.codenvy.ide.editor.EditorProvider;
+import com.codenvy.ide.extension.ExtensionGinModule;
 import com.codenvy.ide.extension.ExtensionRegistry;
 import com.codenvy.ide.keybinding.KeyBindingManager;
+import com.codenvy.ide.loader.EmptyLoader;
+import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.menu.MainMenuPresenter;
 import com.codenvy.ide.menu.MainMenuView;
 import com.codenvy.ide.menu.MainMenuViewImpl;
@@ -44,10 +47,10 @@ import com.codenvy.ide.outline.OutlinePartViewImpl;
 import com.codenvy.ide.paas.PaaSAgentImpl;
 import com.codenvy.ide.part.FocusManager;
 import com.codenvy.ide.part.PartStackPresenter;
+import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
 import com.codenvy.ide.part.PartStackUIResources;
 import com.codenvy.ide.part.PartStackView;
 import com.codenvy.ide.part.PartStackViewImpl;
-import com.codenvy.ide.part.PartStackPresenter.PartStackEventHandler;
 import com.codenvy.ide.part.console.ConsolePartPresenter;
 import com.codenvy.ide.part.console.ConsolePartView;
 import com.codenvy.ide.part.console.ConsolePartViewImpl;
@@ -65,12 +68,8 @@ import com.codenvy.ide.selection.SelectionAgentImpl;
 import com.codenvy.ide.toolbar.ToolbarPresenter;
 import com.codenvy.ide.toolbar.ToolbarView;
 import com.codenvy.ide.toolbar.ToolbarViewImpl;
-import com.codenvy.ide.wizard.WizardAgentImpl;
-
-import com.codenvy.ide.loader.EmptyLoader;
-import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.util.executor.UserActivityManager;
-
+import com.codenvy.ide.wizard.WizardAgentImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -84,6 +83,7 @@ import com.google.web.bindery.event.shared.SimpleEventBus;
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
+@ExtensionGinModule
 public class CoreGinModule extends AbstractGinModule
 {
 

@@ -16,6 +16,8 @@
  */
 package com.codenvy.ide.util;
 
+import com.codenvy.ide.client.ExtensionManager;
+
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -25,10 +27,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Generates {@link ExtensionManager} class source
  *
  * @author <a href="mailto:nzamosenchuk@exoplatform.com">Nikolay Zamosenchuk</a> 
  */
@@ -36,42 +38,29 @@ public class ExtensionManagerGenerator
 {
 
    /**
-    * CLI Argument
+    * Annotation to look for.
     */
-   private static final String ROOT_DIR_PARAMETER = "--rootDir=";
-
-   /**
-    * Current Package name, used to avoid miss-hits of Extension's lookup
-    */
-   private static final String COM_CODENVY_IDE_UTIL = "com.codenvy.ide.util";
-
-   public static final String EXT_ANNOTATION = "@Extension";
+   protected static final String EXT_ANNOTATION = "@Extension";
 
    /**
     * Reg Exp that matches the "@Extension  ( ... )"
     */
-   public static final Pattern EXT_PATTERN = Pattern.compile(".*@Extension\\s*\\(.*\\).*", Pattern.DOTALL);
+   protected static final Pattern EXT_PATTERN = Pattern.compile(".*@Extension\\s*\\(.*\\).*", Pattern.DOTALL);
 
    /**
-    * Reg Exp that matches the package declaration
+    * Path of the ouput class, it definitely should already exits. To ensure proper config.
+    * File content will be overriden.
     */
-   public static final Pattern PACKAGE_PATTERN = Pattern
-      .compile(".*package\\s+([a-zA_Z_][\\.\\w]*);.*", Pattern.DOTALL);
-
-   public static final String EXT_MANAGER_PATH =
+   protected static final String EXT_MANAGER_PATH =
       "codenvy-ide-client/src/main/java/com/codenvy/ide/client/ExtensionManager.java";
-
-   public static final String TAB = "   ";
-
-   public static final String TAB2 = TAB + TAB;
 
    /**
     * Map containing <FullFQN, ClassName>
     */
-   public static final Map<String, String> extensionsFqn = new HashMap<String, String>();
+   protected static final Map<String, String> extensionsFqn = new HashMap<String, String>();
 
    /**
-    * Utility entry point
+    * Entry point. --rootDir is the optional parameter.
     * 
     * @param args
     */
@@ -83,18 +72,21 @@ public class ExtensionManagerGenerator
          // try to read argument
          if (args.length == 1)
          {
-            if (args[0].startsWith(ROOT_DIR_PARAMETER))
+            if (args[0].startsWith(GeneratorUtils.ROOT_DIR_PARAMETER))
             {
-               rootDirPath = args[0].substring(ROOT_DIR_PARAMETER.length());
+               rootDirPath = args[0].substring(GeneratorUtils.ROOT_DIR_PARAMETER.length());
             }
             else
             {
-               System.err.print("Wrong usage. There is only one allowed argument : " + ROOT_DIR_PARAMETER);
+               System.err.print("Wrong usage. There is only one allowed argument : "
+                  + GeneratorUtils.ROOT_DIR_PARAMETER);
                System.exit(1);
             }
          }
-         System.out.println("Starting extension lookup from directory : '" + rootDirPath + "'");
          File rootFolder = new File(rootDirPath);
+         System.out.println(" ------------------------------------------------------------------------ ");
+         System.out.println(String.format("Searching for Extensions in %s", rootFolder.getAbsolutePath()));
+         System.out.println(" ------------------------------------------------------------------------ ");
          // find all Extension FQNs
          findExtensions(rootFolder);
          generateExtensionManager(rootFolder);
@@ -108,6 +100,8 @@ public class ExtensionManagerGenerator
    }
 
    /**
+    * Generate to source of the Class
+    * 
     * @param rootFolder
     */
    public static void generateExtensionManager(File rootFolder) throws IOException
@@ -128,6 +122,8 @@ public class ExtensionManagerGenerator
    }
 
    /**
+    * Generate Class declarations
+    * 
     * @param builder
     */
    public static void generateClass(StringBuilder builder)
@@ -143,15 +139,16 @@ public class ExtensionManagerGenerator
       builder.append("\n");
 
       // field
-      builder.append(TAB + "/** Contains the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
-      builder.append(TAB
+      builder.append(GeneratorUtils.TAB
+         + "/** Contains the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
+      builder.append(GeneratorUtils.TAB
          + "protected final JsonStringMap<Provider> extensions = JsonCollections.createStringMap();\n\n");
 
       // generate constructor
 
-      builder.append(TAB + "/** Constructor that accepts all the Extension found in IDE package */\n");
-      builder.append(TAB + "@Inject\n");
-      builder.append(TAB + "public ExtensionManager(\n");
+      builder.append(GeneratorUtils.TAB + "/** Constructor that accepts all the Extension found in IDE package */\n");
+      builder.append(GeneratorUtils.TAB + "@Inject\n");
+      builder.append(GeneratorUtils.TAB + "public ExtensionManager(\n");
 
       // paste args here
       Iterator<Entry<String, String>> entryIterator = extensionsFqn.entrySet().iterator();
@@ -164,11 +161,11 @@ public class ExtensionManagerGenerator
          // fullFQN classNameToLowerCase,
          String classFQN = String.format("Provider<%s>", extensionEntry.getKey());
          String variableName = extensionEntry.getValue().toLowerCase();
-         builder.append(TAB2 + classFQN + " " + variableName + hasComma + "\n");
+         builder.append(GeneratorUtils.TAB2 + classFQN + " " + variableName + hasComma + "\n");
       }
 
-      builder.append(TAB + ")\n");
-      builder.append(TAB + "{\n");
+      builder.append(GeneratorUtils.TAB + ")\n");
+      builder.append(GeneratorUtils.TAB + "{\n");
 
       // paste add here
       for (Entry<String, String> extension : extensionsFqn.entrySet())
@@ -177,18 +174,19 @@ public class ExtensionManagerGenerator
          String variableName = extension.getValue().toLowerCase();
 
          String putStatement = String.format("this.extensions.put(\"%s\",%s);%n", fullFqn, variableName);
-         builder.append(TAB2 + putStatement);
+         builder.append(GeneratorUtils.TAB2 + putStatement);
       }
 
       // close constructor
-      builder.append(TAB + "}\n\n");
+      builder.append(GeneratorUtils.TAB + "}\n\n");
 
       // generate getter
-      builder.append(TAB + "/** Returns  the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
-      builder.append(TAB + "public JsonStringMap<Provider> getExtensions()\n");
-      builder.append(TAB + "{\n");
-      builder.append(TAB2 + "return extensions;\n");
-      builder.append(TAB + "}\n");
+      builder.append(GeneratorUtils.TAB
+         + "/** Returns  the map will all the Extnesion Providers <FullClassFQN, Provider>. */\n");
+      builder.append(GeneratorUtils.TAB + "public JsonStringMap<Provider> getExtensions()\n");
+      builder.append(GeneratorUtils.TAB + "{\n");
+      builder.append(GeneratorUtils.TAB2 + "return extensions;\n");
+      builder.append(GeneratorUtils.TAB + "}\n");
 
       // close class
       builder.append("}\n");
@@ -219,13 +217,14 @@ public class ExtensionManagerGenerator
    }
 
    /**
+    * Find all the Java Classes that have proper @Extension declaration
+    * 
     * @throws IOException
     */
    @SuppressWarnings("unchecked")
    public static void findExtensions(File rootFolder) throws IOException
    {
 
-      System.out.println(String.format("Searching for files in %s", rootFolder.getAbsolutePath()));
       // list all Java Files
       String[] extensions = {"java"};
       Collection<File> listFiles = FileUtils.listFiles(rootFolder, extensions, true);
@@ -242,8 +241,8 @@ public class ExtensionManagerGenerator
             {
                // read package name and class name
                String className = file.getName().split("\\.")[0];
-               String packageName = getClassFQN(file.getAbsolutePath(), fileContent);
-               if (!packageName.startsWith(COM_CODENVY_IDE_UTIL))
+               String packageName = GeneratorUtils.getClassFQN(file.getAbsolutePath(), fileContent);
+               if (!packageName.startsWith(GeneratorUtils.COM_CODENVY_IDE_UTIL))
                {
 
                   String fullFqn = packageName + "." + className;
@@ -263,29 +262,5 @@ public class ExtensionManagerGenerator
          }
       }
       System.out.println(String.format("Found: %d extensions", extensionsFqn.size()));
-   }
-
-   /**
-    * Extracts Package declaration from file
-    * 
-    * @param fileName
-    * @param content
-    * @return
-    * @throws IOException
-    */
-   public static String getClassFQN(String fileName, String content) throws IOException
-   {
-      Matcher matcher = ExtensionManagerGenerator.PACKAGE_PATTERN.matcher(content);
-      if (!matcher.matches())
-      {
-         throw new IOException(String.format("Class %s doesn't seem to be valid. Package declaration is missing.",
-            fileName));
-      }
-      if (matcher.groupCount() != 1)
-      {
-         throw new IOException(String.format("Class %s doesn't seem to be valid. Package declaration is missing.",
-            fileName));
-      }
-      return matcher.group(1);
    }
 }

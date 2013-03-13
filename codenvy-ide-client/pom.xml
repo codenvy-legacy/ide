@@ -155,7 +155,6 @@
 
       <plugins>
          <!-- Source Generator invocation -->
-
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
             <artifactId>exec-maven-plugin</artifactId>
@@ -169,6 +168,19 @@
                   </goals>
                   <configuration>
                      <mainClass>com.codenvy.ide.util.ExtensionManagerGenerator</mainClass>
+                     <arguments>
+                        <argument>--rootDir=${project.basedir}/../</argument>
+                     </arguments>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>IDEInjector-client</id>
+                  <phase>compile</phase>
+                  <goals>
+                     <goal>java</goal>
+                  </goals>
+                  <configuration>
+                     <mainClass>com.codenvy.ide.util.IDEInjectorGenerator</mainClass>
                      <arguments>
                         <argument>--rootDir=${project.basedir}/../</argument>
                      </arguments>

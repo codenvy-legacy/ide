@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.maven.client.inject;
 
+import com.codenvy.ide.extension.ExtensionGinModule;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectView;
 import com.codenvy.ide.extension.maven.client.build.BuildProjectViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -26,6 +27,7 @@ import com.google.inject.Singleton;
 /**
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
+@ExtensionGinModule
 public class MavenGinModule extends AbstractGinModule
 {
    /**

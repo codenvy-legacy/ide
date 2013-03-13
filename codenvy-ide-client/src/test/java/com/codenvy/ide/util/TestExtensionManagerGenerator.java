@@ -18,12 +18,8 @@ package com.codenvy.ide.util;
 
 import static junit.framework.Assert.*;
 
-import com.codenvy.ide.util.ExtensionManagerGenerator;
-
-
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -77,32 +73,4 @@ public class TestExtensionManagerGenerator
       }
    }
 
-   /**
-    * Should match package name
-    */
-   @Test
-   public void shouldMatchPackage()
-   {
-      String packageString =
-         "* along with this program; if not, see<http://www.gnu.org/licenses/>.\n" + "*/ \n"
-            + "package com.codenvy.ide.util;" + "import junit.framework.Assert;";
-      Matcher matcher = ExtensionManagerGenerator.PACKAGE_PATTERN.matcher(packageString);
-      assertTrue(matcher.matches());
-      assertEquals(1, matcher.groupCount());
-      String group = matcher.group(1);
-
-      assertEquals("com.codenvy.ide.util", group);
-   }
-   /**
-    * Should match package name
-    * @throws IOException 
-    */
-   @Test
-   public void shouldExtractPackage() throws IOException
-   {
-      String packageString =
-               "* along with this program; if not, see<http://www.gnu.org/licenses/>.\n" + "*/ \n"
-                        + "package com.codenvy.ide.util;" + "import junit.framework.Assert;";
-      assertEquals("com.codenvy.ide.util", ExtensionManagerGenerator.getClassFQN("dummy", packageString));
-   }
 }
