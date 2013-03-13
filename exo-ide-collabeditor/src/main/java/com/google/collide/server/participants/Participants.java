@@ -28,6 +28,7 @@ import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -164,5 +165,18 @@ public class Participants
       {
          return (String)ConversationState.getCurrent().getAttribute("currentTenant");
       }
+   }
+
+   public Collection<? extends String> getAllParticipantId(String userId)
+   {
+      for(String key : loggedInUsers.keySet())
+      {
+         ConcurrentMap<String, LoggedInUser> tenantUsers = loggedInUsers.get(key);
+         if(tenantUsers.containsKey(userId))
+         {
+            return tenantUsers.keySet();
+         }
+      }
+      return null;
    }
 }
