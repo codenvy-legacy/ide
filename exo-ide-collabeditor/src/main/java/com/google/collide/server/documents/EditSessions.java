@@ -64,6 +64,8 @@ import org.picocontainer.Startable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -286,7 +288,12 @@ public class EditSessions implements Startable
    {
       List<String> result = new ArrayList<String>();
       Set<String> sendTo = new LinkedHashSet<String>();
-      sendTo.addAll(participants.getAllParticipantId());
+      Collection<? extends String> allParticipantId = participants.getAllParticipantId(userId);
+      if(allParticipantId == null)
+      {
+         return Collections.emptyList();
+      }
+      sendTo.addAll(allParticipantId);
       sendTo.remove(userId);
 
       for (Map.Entry<String, FileEditSession> e : editSessionsByResourceId.entrySet())
