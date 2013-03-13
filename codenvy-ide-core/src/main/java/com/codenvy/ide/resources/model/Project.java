@@ -748,6 +748,11 @@ public class Project extends Folder
       }
    }
 
+   /**
+    * Reads or Refreshes all project properties.
+    * 
+    * @param callback
+    */
    public void refreshProperties(final AsyncCallback<Project> callback)
    {
       try

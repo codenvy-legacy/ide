@@ -71,11 +71,8 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
    @Override
    public void doFinish()
    {
-      // TODO
-      // new Property("cloudfoundry-application", "aplotnikov2"),
       resourceProvider.createProject(view.getProjectName(), JsonCollections.<Property> createArray(new Property(
-         ProjectDescription.PROPERTY_PRIMARY_NATURE, "Servlet/JSP"), new Property("vmc-target",
-         "http://api.cloudfoundry.com")), new AsyncCallback<Project>()
+         ProjectDescription.PROPERTY_PRIMARY_NATURE, "Servlet/JSP")), new AsyncCallback<Project>()
       {
          @Override
          public void onFailure(Throwable caught)
@@ -90,13 +87,14 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
                .createFile(
                   project,
                   "pom.xml",
-                  "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-                     + "xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">"
-                     + " <modelVersion>4.0.0</modelVersion>\n"
-                     + "<groupId>com.codenvy.codenvy</groupId>\n<artifactId>CloudFoundryTest</artifactId>\n"
-                     + "<packaging>war</packaging>\n<version>1.0-SNAPSHOT</version>\n"
-                     + "<name>java-web-sample</name>\n<build>\n<finalName>java-web-sample</finalName>\n</build>\n</project>",
-                  MimeType.TEXT_XML, new AsyncCallback<File>()
+                  "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+                     + "\txsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">\n"
+                     + "\t<modelVersion>4.0.0</modelVersion>\n" + "\t<groupId>1.0.0.127</groupId>\n"
+                     + "\t<artifactId>" + view.getProjectName() + "</artifactId>\n" + "\t<packaging>war</packaging>\n"
+                     + "\t<version>1.0-SNAPSHOT</version>\n" + "\t<name>java-web-sample</name>\n"
+                     + "\t<build>\n\t\t<finalName>java-web-sample</finalName>\n\t</build>\n</project>",
+                  MimeType.TEXT_XML,
+                  new AsyncCallback<File>()
                   {
                      @Override
                      public void onSuccess(File result)
@@ -153,10 +151,11 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
                            @Override
                            public void onSuccess(Folder result)
                            {
-                              project.createFile(result, "sayhello.jsp",
-                                 "<table border=\"0\" width=\"700\">\n<tr>\n<td width=\"150\"> &nbsp; </td>\n\n<td width=\"550\">\n\n"
-                                    + "<h1>Hello, <%= request.getParameter(\"username\") %>\n"
-                                    + "</h1>\n\n</td>\n</tr>\n</table>", MimeType.APPLICATION_JSP,
+                              project.createFile(result, "sayhello.jsp", "<table border=\"0\" width=\"700\">\n"
+                                 + "\t<tr>\n" + "\t\t<td width=\"150\"> &nbsp; </td>\n"
+                                 + "\n\t\t<td width=\"550\">\n\n"
+                                 + "\t\t\t<h1>Hello, <%= request.getParameter(\"username\") %>\n"
+                                 + "\t\t\t</h1>\n\n\t\t</td>\n\t</tr>\n</table>", MimeType.APPLICATION_JSP,
                                  new AsyncCallback<File>()
                                  {
                                     @Override
@@ -175,15 +174,27 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
                                  .createFile(
                                     result,
                                     "index.jsp",
-                                    "<html>\n<head>\n<title>Hello, User</title>\n</head>\n<body bgcolor=\"#ffffff\">"
-                                       + "<table border=\"0\" width=\"700\">\n<tr>\n<td width=\"150\"> &nbsp; </td>\n"
-                                       + "<td width=\"550\">\n<h1>My name is eXo. What's yours?</h1>\n</td>\n</tr>\n"
-                                       + "<tr>\n<td width=\"150\" &nbsp; </td>\n<td width=\"550\">\n"
-                                       + "<form method=\"get\"><input type=\"text\" name=\"username\" size=\"25\">\n"
-                                       + "<br>\n<input type=\"submit\" value=\"Submit\"><input type=\"reset\" value=\"Reset\">\n"
-                                       + "</td>\n</tr>\n</form>\n</table>\n"
-                                       + "<%  if ( request.getParameter(\"username\") != null ) { %>\n"
-                                       + "<%@include file=\"sayhello.jsp\" %>\n" + "<% } %>\n" + "</body>\n</html>",
+                                    "<html>\n"
+                                       + "\t<head>\n"
+                                       + "\t\t<title>Hello, User</title>\n"
+                                       + "\t</head>\n"
+                                       + "\t<body bgcolor=\"#ffffff\">\n"
+                                       + "\t\t<table border=\"0\" width=\"700\">\n"
+                                       + "\t\t\t<tr>\n"
+                                       + "\t\t\t\t<td width=\"150\"> &nbsp; </td>\n"
+                                       + "\t\t\t\t<td width=\"550\">\n"
+                                       + "\t\t\t\t\t<h1>My name is eXo. What's yours?</h1>\n"
+                                       + "\t\t\t\t</td>\n"
+                                       + "\t\t\t</tr>\n"
+                                       + "\t\t\t<tr>\n"
+                                       + "\t\t\t\t<td width=\"150\" &nbsp; </td>\n"
+                                       + "\t\t\t\t<td width=\"550\">\n"
+                                       + "\t\t\t\t\t<form method=\"get\"><input type=\"text\" name=\"username\" size=\"25\">\n"
+                                       + "\t\t\t\t\t<br><input type=\"submit\" value=\"Submit\"><input type=\"reset\" value=\"Reset\">\n"
+                                       + "\t\t\t\t</td>\n" + "\t\t\t</tr>\n" + "\t\t\t\t</form>\n" + "\t\t</table>\n"
+                                       + "<%\n\tif ( request.getParameter(\"username\") != null ) {\n%>\n"
+                                       + "<%@include file=\"sayhello.jsp\" %>\n" + "<%\n\t}\n%>\n" + "\t</body>\n"
+                                       + "</html>",
                                     MimeType.APPLICATION_JSP, new AsyncCallback<File>()
                                     {
                                        @Override
@@ -203,13 +214,11 @@ public class NewWarProjectPagePresenter extends NewGenericProjectPagePresenter
                                  @Override
                                  public void onSuccess(Folder result)
                                  {
-                                    project
-                                       .createFile(
-                                          result,
-                                          "web.xml",
-                                          "<!DOCTYPE web-app PUBLIC\"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"\n\"http://java.sun.com/dtd/web-app_2_3.dtd\" >\n<web-app>\n"
-                                             + "<display-name>Web Application Created With eXo IDE</display-name>\n</web-app>",
-                                          MimeType.TEXT_XML, new AsyncCallback<File>()
+                                    project.createFile(result, "web.xml", "<!DOCTYPE web-app PUBLIC\n"
+                                       + "\t\"-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN\"\n"
+                                       + "\t\"http://java.sun.com/dtd/web-app_2_3.dtd\" >\n" + "<web-app>\n"
+                                       + "\t<display-name>Web Application Created With eXo IDE</display-name>\n"
+                                       + "</web-app>", MimeType.TEXT_XML, new AsyncCallback<File>()
                                           {
                                              @Override
                                              public void onSuccess(File result)
