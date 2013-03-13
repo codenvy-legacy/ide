@@ -14,6 +14,7 @@
 
 package com.google.collide.server.participants;
 
+import com.codenvy.commons.env.EnvironmentContext;
 import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.server.DtoServerImpls.GetWorkspaceParticipantsResponseImpl;
 import com.google.collide.dto.server.DtoServerImpls.ParticipantImpl;
@@ -22,7 +23,6 @@ import com.google.collide.dto.server.DtoServerImpls.UserDetailsImpl;
 import com.google.collide.dto.server.DtoServerImpls.UserLogOutDtoImpl;
 import com.google.collide.server.WSUtil;
 
-import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.services.log.ExoLogger;
 import org.exoplatform.services.log.Log;
 import org.exoplatform.services.security.ConversationState;
