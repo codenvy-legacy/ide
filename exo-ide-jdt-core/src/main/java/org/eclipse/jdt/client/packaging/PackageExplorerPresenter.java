@@ -331,7 +331,6 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       });
    }
 
-
    @Override
    public void onSelectItem(final SelectItemEvent event)
    {
@@ -469,16 +468,35 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
           if (ProjectTypes.contains(openedProject))
           {
-             new Timer()
-             {
-                @Override
-                public void run()
-                {
-                   display = GWT.create(PackageExplorerDisplay.class);
-                   bindDisplay();
-                   IDE.getInstance().openView(display.asView());
-                }
-             }.schedule(500);
+             display = GWT.create(PackageExplorerDisplay.class);
+             bindDisplay();
+             IDE.getInstance().openView(display.asView());                  
+             
+             
+//             new Timer()
+//             {
+//                @Override
+//                public void run()
+//                {
+//                   display = GWT.create(PackageExplorerDisplay.class);
+//                   bindDisplay();
+//                   IDE.getInstance().openView(display.asView());
+//                }
+//             }.schedule(500);
+             
+             
+//            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//            {
+//               @Override
+//               public void execute()
+//               {
+//                  display = GWT.create(PackageExplorerDisplay.class);
+//                  bindDisplay();
+//                  IDE.getInstance().openView(display.asView());                  
+//               }
+//            });
+             
+             
           }
    
           return;         
@@ -515,15 +533,18 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       if (event.getView() instanceof PackageExplorerDisplay && openedProject != null)
       {
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-            @Override
-            public void execute()
-            {
-               display.setPackageExplorerTreeVisible(true);
-               display.getBrowserTree().setValue(openedProject);
-            }
-         });
+         display.setPackageExplorerTreeVisible(true);
+         display.getBrowserTree().setValue(openedProject);
+         
+//         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//         {
+//            @Override
+//            public void execute()
+//            {
+//               display.setPackageExplorerTreeVisible(true);
+//               display.getBrowserTree().setValue(openedProject);
+//            }
+//         });
       }
    }
    
