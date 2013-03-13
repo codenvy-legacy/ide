@@ -32,14 +32,14 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
  */
 public class ShowChatControl extends SimpleControl implements IDEControl, ProjectOpenedHandler, ProjectClosedHandler
 {
-   public static final String ID = "Project/Chat";
+   public static final String ID = "View/Project Chat";
 
 
    public ShowChatControl(ChatResources resources)
    {
       super(ID);
-      setTitle("Chat");
-      setPrompt("Chat");
+      setTitle("Project Chat");
+      setPrompt("Project Chat");
       setImages(resources.chat(), resources.chatDisabled());
       setEvent(new ShowHideChatEvent(true));
       setCanBeSelected(true);

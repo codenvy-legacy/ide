@@ -107,7 +107,7 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
    {
       if (isShow(path))
       {
-         HTML html = new HTML("User <b>" + user.getDisplayName() + "</b> open file: ");
+         HTML html = new HTML("User <b>" + user.getDisplayName() + "</b> opened file: ");
          AnchorElement anchorElement = getAnchorElement(path);
          html.getElement().appendChild((Node)anchorElement);
          manager.addNotification(new Notification(html, NotificationType.INFO, DURATION));
@@ -208,7 +208,7 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
    {
       if (isShow(path))
       {
-         HTML html = new HTML("User <b>" + user.getDisplayName() + "</b> close file: ");
+         HTML html = new HTML("User <b>" + user.getDisplayName() + "</b> closed file: ");
          AnchorElement anchorElement = getAnchorElement(path);
          html.getElement().appendChild((Node)anchorElement);
          manager.addNotification(new Notification(html, NotificationType.INFO, DURATION));

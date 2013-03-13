@@ -76,7 +76,7 @@ public class ProjectChatView extends ViewImpl implements Display
 
    public ProjectChatView()
    {
-      super(ID, ViewType.OPERATION, "Chat", new Image(ChatExtension.resources.chat()));
+      super(ID, ViewType.OPERATION, "Project Chat", new Image(ChatExtension.resources.chat()));
       add(ourUiBinder.createAndBindUi(this));
       css = ChatExtension.resources.chatCss();
    }

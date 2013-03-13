@@ -55,7 +55,11 @@ public class ChatService
       {
          for (String clientId : users)
          {
-            response.addParticipants(projectUsers.getUserDetails(projectUsers.getUserId(clientId)));
+            String userId = projectUsers.getUserId(clientId);
+            if(userId != null)
+            {
+               response.addParticipants(projectUsers.getUserDetails(userId));
+            }
          }
       }
       return response.toJson();

@@ -33,6 +33,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
@@ -54,7 +55,7 @@ public class ProjectUsers
    {
       if (!projectUsers.containsKey(projectId))
       {
-         projectUsers.put(projectId, new CopyOnWriteArraySet<String>());
+         projectUsers.put(projectId, new ConcurrentSkipListSet<String>());
       }
       projectUsers.get(projectId).add(clientId);
       userId2clientId.putIfAbsent(userId, clientId);
