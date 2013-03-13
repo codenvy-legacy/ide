@@ -184,6 +184,10 @@ public class Participants
       }
       else
       {
+         if(ConversationState.getCurrent() == null)
+         {
+            return null;
+         }
          String currentTenant = (String)ConversationState.getCurrent().getAttribute("currentTenant");
          if(currentTenant == null)
          {
