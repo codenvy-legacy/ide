@@ -18,12 +18,11 @@
  */
 package com.codenvy.ide;
 
-import org.exoplatform.ide.commons.EnvironmentContext;
+import com.codenvy.commons.env.EnvironmentContext;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
