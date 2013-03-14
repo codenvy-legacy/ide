@@ -102,11 +102,8 @@ public class IDEConfigurationService
             final Map<String, Object> userSettings = getUserSettings();
             result.put("userSettings", userSettings);
          }
-         String href =
-            uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path(vfsId).build().toString();
-         result.put("defaultEntrypoint", href);
          result.put("vfsId", vfsId);
-         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).build().toString());
+         result.put("vfsBaseUrl", uriInfo.getBaseUriBuilder().path(VirtualFileSystemFactory.class).path("v2").build().toString());
          return result;
       }
       catch (Exception e)

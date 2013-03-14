@@ -754,7 +754,7 @@
    <modules>
       <module>codenvy-gwtframework-commons</module>
       <module>codenvy-gwtframework-ui</module>
-      <module>exo-ide-dev-resources</module>
+      <!--module>exo-ide-dev-resources</module-->
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>
       <module>exo-ide-vfs-fs</module>

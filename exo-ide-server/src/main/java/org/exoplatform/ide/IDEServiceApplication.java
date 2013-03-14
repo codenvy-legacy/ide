@@ -55,7 +55,7 @@ public class IDEServiceApplication extends Application
       objects.add(new UploadServiceExceptionMapper());
       objects.add(new ProjectPrepareExceptionMapper());
 
-      objects.add(TemplatesRestService.class);
+      classes.add(TemplatesRestService.class);
       classes.add(LoopbackContentService.class);
       classes.add(IDEConfigurationService.class);
       classes.add(RequestContextResolver.class);
