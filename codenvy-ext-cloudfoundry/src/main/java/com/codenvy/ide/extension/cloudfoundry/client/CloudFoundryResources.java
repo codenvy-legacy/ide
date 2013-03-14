@@ -22,11 +22,10 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
- * CloudFoundry client resources (images).
+ * CloudFoundry client resources.
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: CloudFoundryClientBundle.java Jul 12, 2011 10:24:35 AM vereshchaka $
- * 
  */
 public interface CloudFoundryResources extends ClientBundle
 {

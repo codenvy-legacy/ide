@@ -20,7 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.google.gwt.cell.client.AbstractSafeHtmlCell;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -44,14 +44,12 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-
 import java.util.List;
 
 /**
+ * The implementation of {@link ApplicationsView}.
+ * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
- *
  */
 @Singleton
 public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
@@ -59,7 +57,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
    private class ListLink extends AbstractSafeHtmlCell<List<String>>
    {
       /**
-       * 
+       * Create Link list.
        */
       public ListLink()
       {
@@ -74,12 +72,10 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
       {
          sb.append(data);
       }
-
    }
 
    private class SafeHtmlListRenderer implements SafeHtmlRenderer<List<String>>
    {
-      // TODO List...
       /**
        * {@inheritDoc}
        */
@@ -144,6 +140,12 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
 
    private ActionDelegate delegate;
 
+   /**
+    * Create view.
+    * 
+    * @param resources
+    * @param constant
+    */
    @Inject
    protected ApplicationsViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant)
    {
@@ -158,6 +160,9 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
       btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
    }
 
+   /**
+    * Creates table what contains list of available applications.
+    */
    private void createAppsTable()
    {
       Column<CloudFoundryApplication, String> nameColumn = new Column<CloudFoundryApplication, String>(new TextCell())
@@ -229,7 +234,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
          @Override
          public void update(int index, CloudFoundryApplication object, String value)
          {
-            delegate.doStartApplication(object);
+            delegate.onStartClicked(object);
          }
       });
 
@@ -250,7 +255,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
          @Override
          public void update(int index, CloudFoundryApplication object, String value)
          {
-            delegate.doStopApplication(object);
+            delegate.onStopClicked(object);
          }
       });
 
@@ -270,7 +275,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
          @Override
          public void update(int index, CloudFoundryApplication object, String value)
          {
-            delegate.doRestartApplication(object);
+            delegate.onRestartClicked(object);
          }
       });
 
@@ -289,7 +294,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
          @Override
          public void update(int index, CloudFoundryApplication object, String value)
          {
-            delegate.doDeleteApplication(object);
+            delegate.onDeleteClicked(object);
          }
       });
 
@@ -384,13 +389,13 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
    @UiHandler("btnShow")
    void onBtnShowClick(ClickEvent event)
    {
-      delegate.doShow();
+      delegate.onShowClicked();
    }
 
    @UiHandler("btnClose")
    void onBtnCloseClick(ClickEvent event)
    {
-      delegate.doClose();
+      delegate.onCloseClicked();
    }
 
    /**

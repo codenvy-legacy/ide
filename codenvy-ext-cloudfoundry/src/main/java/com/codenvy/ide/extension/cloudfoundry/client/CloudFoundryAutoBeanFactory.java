@@ -18,12 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
-
-import com.google.web.bindery.autobean.shared.AutoBean;
-import com.google.web.bindery.autobean.shared.AutoBeanFactory;
-
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
 import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
@@ -31,13 +27,14 @@ import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemResources;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
+import com.google.web.bindery.autobean.shared.AutoBean;
+import com.google.web.bindery.autobean.shared.AutoBeanFactory;
 
 /**
  * The interface for the AutoBean generator.
  * 
  * @author <a href="mailto:azatsarynnyy@exoplatform.org">Artem Zatsarynnyy</a>
  * @version $Id: CloudFoundryAutoBeanFactory.java Mar 16, 2012 12:27:47 PM azatsarynnyy $
- * 
  */
 public interface CloudFoundryAutoBeanFactory extends AutoBeanFactory
 {

@@ -20,18 +20,14 @@ package com.codenvy.ide.extension.cloudfoundry.client;
 
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.rest.HTTPStatus;
-import com.codenvy.ide.websocket.rest.RequestCallback;
-import com.codenvy.ide.websocket.rest.Unmarshallable;
-
-import com.google.gwt.user.client.Window;
-import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginEvent;
+import com.codenvy.ide.rest.HTTPStatus;
+import com.codenvy.ide.websocket.rest.RequestCallback;
+import com.codenvy.ide.websocket.rest.Unmarshallable;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * WebSocket CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
@@ -56,12 +52,29 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
 
    private EventBus eventBus;
 
+   /**
+    * Create callback.
+    * 
+    * @param unmarshaller
+    * @param loggedIn
+    * @param loginCanceled
+    * @param eventBus
+    */
    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, EventBus eventBus)
    {
       this(unmarshaller, loggedIn, loginCanceled, null, eventBus);
    }
 
+   /**
+    * Create callback.
+    * 
+    * @param unmarshaller
+    * @param loggedIn
+    * @param loginCanceled
+    * @param loginUrl
+    * @param eventBus
+    */
    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus)
    {

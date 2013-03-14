@@ -18,45 +18,98 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
-import com.codenvy.ide.view.View;
-
-import com.codenvy.ide.extension.cloudfoundry.client.apps.ApplicationsView;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.view.View;
 
 import java.util.List;
 
 /**
- * 
+ * The view of {@link ApplicationsPresenter}.
  * 
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 public interface ApplicationsView extends View<ApplicationsView.ActionDelegate>
 {
+   /**
+    * Needs for delegate some function into Applications view.
+    */
    public interface ActionDelegate
    {
-      public void doClose();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Close button.
+       */
+      public void onCloseClicked();
 
-      public void doShow();
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Show button.
+       */
+      public void onShowClicked();
 
-      public void doStartApplication(CloudFoundryApplication app);
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Start button.
+       * 
+       * @param app current application what need to start.
+       */
+      public void onStartClicked(CloudFoundryApplication app);
 
-      public void doStopApplication(CloudFoundryApplication app);
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Stop button.
+       * 
+       * @param app current application what need to stop.
+       */
+      public void onStopClicked(CloudFoundryApplication app);
 
-      public void doRestartApplication(CloudFoundryApplication app);
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Restart button.
+       * 
+       * @param app current application what need to restart.
+       */
+      public void onRestartClicked(CloudFoundryApplication app);
 
-      public void doDeleteApplication(CloudFoundryApplication app);
+      /**
+       * Performs any actions appropriate in response to the user 
+       * having pressed the Delete button.
+       * 
+       * @param app current application what need to delete.
+       */
+      public void onDeleteClicked(CloudFoundryApplication app);
    }
 
+   /**
+    * Sets available application into special place on the view.
+    * 
+    * @param apps list of available applications.
+    */
    public void setApplications(List<CloudFoundryApplication> apps);
 
+   /**
+    * Returns selected server name.
+    * 
+    * @return
+    */
    public String getServer();
 
+   /**
+    * Select new server name.
+    * 
+    * @param server
+    */
    public void setServer(String server);
 
+   /**
+    * Sets list of server names.
+    * 
+    * @param servers
+    */
    public void setServers(List<String> servers);
 
    /**
-    *Close dialog.
+    * Close dialog.
     */
    public void close();
 

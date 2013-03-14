@@ -20,18 +20,14 @@ package com.codenvy.ide.extension.cloudfoundry.client;
 
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.HTTPStatus;
-import com.codenvy.ide.rest.Unmarshallable;
-
-import com.google.gwt.user.client.Window;
-import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoginEvent;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.HTTPStatus;
+import com.codenvy.ide.rest.Unmarshallable;
+import com.google.gwt.user.client.Window;
+import com.google.web.bindery.event.shared.EventBus;
 
 /**
  * Asynchronous CloudFoundry request. The {@link #onFailure(Throwable)} method contains the check for user not authorized
@@ -54,6 +50,14 @@ public abstract class CloudFoundryAsyncRequestCallback<T> extends AsyncRequestCa
 
    private final static String CLOUDFOUNDRY_EXIT_CODE = "Cloudfoundry-Exit-Code";
 
+   /**
+    * Create callback.
+    * 
+    * @param unmarshaller
+    * @param loggedIn
+    * @param loginCanceled
+    * @param eventBus
+    */
    public CloudFoundryAsyncRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
       LoginCanceledHandler loginCanceled, EventBus eventBus)
    {

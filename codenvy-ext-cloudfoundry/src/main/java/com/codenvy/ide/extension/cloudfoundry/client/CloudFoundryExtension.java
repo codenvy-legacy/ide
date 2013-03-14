@@ -20,27 +20,20 @@ package com.codenvy.ide.extension.cloudfoundry.client;
 
 import com.codenvy.ide.api.ui.paas.PaaSAgent;
 import com.codenvy.ide.extension.Extension;
-import com.codenvy.ide.menu.MainMenuPresenter;
-
-import com.codenvy.ide.json.JsonArray;
-import com.codenvy.ide.json.JsonCollections;
-import com.codenvy.ide.loader.EmptyLoader;
-
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowApplicationsCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowCreateApplicationCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowLoginCommand;
 import com.codenvy.ide.extension.cloudfoundry.client.command.ShowProjectPropertiesCommand;
-
+import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
+import com.codenvy.ide.json.JsonArray;
+import com.codenvy.ide.json.JsonCollections;
+import com.codenvy.ide.loader.EmptyLoader;
+import com.codenvy.ide.menu.MainMenuPresenter;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientServiceImpl;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-import com.codenvy.ide.extension.cloudfoundry.client.deploy.DeployApplicationPresenter;
 
 /**
  * Extension add Cloud Foundry support to the IDE Application.
@@ -66,6 +59,19 @@ public class CloudFoundryExtension
 
    public static final String ID = "CloudFoundry";
 
+   /**
+    * Create CloudFoundry extension.
+    * 
+    * @param paasAgent
+    * @param resources
+    * @param menu
+    * @param createApplicationCommand
+    * @param loginCommand
+    * @param showApplicationsCommand
+    * @param showProjectPropertiesCommand
+    * @param eventBus
+    * @param deployAppPresenter
+    */
    @Inject
    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuPresenter menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
@@ -74,7 +80,6 @@ public class CloudFoundryExtension
    {
       // TODO Auto-generated constructor stub
       //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, preferencePage);
-      //Arrays.asList(ProjectType.JSP, ProjectType.RUBY_ON_RAILS, ProjectType.SPRING, ProjectType.WAR)
       // TODO change hard code types
       JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
       paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, deployAppPresenter, null);

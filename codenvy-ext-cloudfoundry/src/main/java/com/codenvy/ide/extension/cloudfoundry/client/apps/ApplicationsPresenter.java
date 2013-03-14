@@ -47,14 +47,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The applications presenter manager CloudFounry application.
+ * The presenter can start, stop, update, delete application.
  * 
- * 
- * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
+ * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
+ * @version $Id: Aug 18, 2011 evgen $
  */
 @Singleton
 public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, ApplicationInfoChangedHandler,
    ApplicationDeletedHandler
-// implements ViewClosedHandler, ShowApplicationsHandler, ApplicationInfoChangedHandler
 {
    private ApplicationsView view;
 
@@ -68,6 +69,16 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
 
    private ResourceProvider resourceProvider;
 
+   /**
+    * Create presenter.
+    * 
+    * @param view
+    * @param eventBus
+    * @param console
+    * @param resourceProvider
+    * @param startAppPresenter
+    * @param deleteAppPresenter
+    */
    @Inject
    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, Console console,
       ResourceProvider resourceProvider, StartApplicationPresenter startAppPresenter,
@@ -86,7 +97,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     * {@inheritDoc}
     */
    @Override
-   public void doClose()
+   public void onCloseClicked()
    {
       view.close();
    }
@@ -95,11 +106,14 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     * {@inheritDoc}
     */
    @Override
-   public void doShow()
+   public void onShowClicked()
    {
       checkLogginedToServer();
    }
 
+   /**
+    * Gets list of available application for current user.
+    */
    private void getApplicationList()
    {
       try
@@ -139,6 +153,9 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
       }
    }
 
+   /**
+    * Gets servers.
+    */
    private void getServers()
    {
       try
@@ -178,6 +195,10 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
       checkLogginedToServer();
    }
 
+   /**
+    * Gets target from CloudFoundry server. If this works well then we will know 
+    * we have connect to CloudFoundry server.
+    */
    private void checkLogginedToServer()
    {
       try
@@ -218,6 +239,9 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
       }
    }
 
+   /**
+    * Opens view.
+    */
    private void openView()
    {
       view.setServers(servers);
@@ -232,7 +256,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     * {@inheritDoc}
     */
    @Override
-   public void doStartApplication(CloudFoundryApplication app)
+   public void onStartClicked(CloudFoundryApplication app)
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
@@ -243,7 +267,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     * {@inheritDoc}
     */
    @Override
-   public void doStopApplication(CloudFoundryApplication app)
+   public void onStopClicked(CloudFoundryApplication app)
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
@@ -254,7 +278,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     * {@inheritDoc}
     */
    @Override
-   public void doRestartApplication(CloudFoundryApplication app)
+   public void onRestartClicked(CloudFoundryApplication app)
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
@@ -265,7 +289,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     * {@inheritDoc}
     */
    @Override
-   public void doDeleteApplication(CloudFoundryApplication app)
+   public void onDeleteClicked(CloudFoundryApplication app)
    {
       // TODO Auto-generated method stub
       //      IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));

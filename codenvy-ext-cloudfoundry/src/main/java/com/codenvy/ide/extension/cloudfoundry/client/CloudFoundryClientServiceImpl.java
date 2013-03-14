@@ -18,6 +18,13 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
+import com.codenvy.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
+import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
+import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
+import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
+import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 import com.codenvy.ide.loader.Loader;
 import com.codenvy.ide.rest.AsyncRequest;
 import com.codenvy.ide.rest.AsyncRequestCallback;
@@ -27,26 +34,11 @@ import com.codenvy.ide.websocket.MessageBus;
 import com.codenvy.ide.websocket.WebSocketException;
 import com.codenvy.ide.websocket.rest.RequestMessage;
 import com.codenvy.ide.websocket.rest.RequestMessageBuilder;
-
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
-
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestException;
 import com.google.web.bindery.autobean.shared.AutoBeanCodex;
 import com.google.web.bindery.autobean.shared.AutoBeanUtils;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CreateApplicationRequestStatusHandler;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import com.codenvy.ide.extension.cloudfoundry.shared.CreateApplicationRequest;
-import com.codenvy.ide.extension.cloudfoundry.shared.Credentials;
-import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
-import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.List;
 
@@ -131,6 +123,14 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    private MessageBus wsMessageBus;
 
+   /**
+    * Create CloudFoundry client service.
+    * 
+    * @param restContext
+    * @param loader
+    * @param wsMessageBus
+    * @param eventBus
+    */
    public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus)
    {
       this.loader = loader;
@@ -140,10 +140,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#create(java.lang.String, java.lang.String,
-    *      java.lang.String, int, java.lang.String, java.lang.String, java.lang.String,
-    *      com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void create(String server, String name, String type, String url, int instances, int memory, boolean nostart,
@@ -175,10 +172,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws WebSocketException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#createWS(java.lang.String, java.lang.String,
-    *       java.lang.String, java.lang.String, int, int, boolean, java.lang.String, java.lang.String, java.lang.String,
-    *       com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void createWS(String server, String name, String type, String url, int instances, int memory,
@@ -219,9 +213,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#login(java.lang.String, java.lang.String,
-    *      com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void login(String server, String email, String password, AsyncRequestCallback<String> callback)
@@ -243,8 +235,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#logout(com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void logout(String server, AsyncRequestCallback<String> callback) throws RequestException
@@ -259,9 +250,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationInfo(java.lang.String,
-    *      java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void getApplicationInfo(String vfsId, String projectId, String appId, String server,
@@ -282,9 +271,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteApplication(java.lang.String,
-    *      java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void deleteApplication(String vfsId, String projectId, String appId, String server, boolean deleteServices,
@@ -305,8 +292,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#getFrameworks()
+    * {@inheritDoc}
     */
    @Override
    public void getFrameworks(AsyncRequestCallback<List<Framework>> callback, String server)
@@ -319,9 +305,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#startApplication(java.lang.String,
-    *      java.lang.String)
+    * {@inheritDoc}
     */
    @Override
    public void startApplication(String vfsId, String projectId, String name, String server,
@@ -342,9 +326,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#stopApplication(java.lang.String,
-    *      java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void stopApplication(String vfsId, String projectId, String name, String server,
@@ -365,9 +347,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#restartApplication(java.lang.String,
-    *      java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void restartApplication(String vfsId, String projectId, String name, String server,
@@ -388,9 +368,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateApplication(java.lang.String,
-    *      java.lang.String, java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void updateApplication(String vfsId, String projectId, String name, String server, String war,
@@ -412,9 +390,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#renameApplication(java.lang.String,
-    *      java.lang.String, java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void renameApplication(String vfsId, String projectId, String name, String server, String newName,
@@ -435,9 +411,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#mapUrl(java.lang.String, java.lang.String,
-    *      java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void mapUrl(String vfsId, String projectId, String name, String server, String url,
@@ -458,9 +432,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#unmapUrl(java.lang.String,
-    *      java.lang.String, java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void unmapUrl(String vfsId, String projectId, String name, String server, String url,
@@ -481,9 +453,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateMemory(java.lang.String,
-    *      java.lang.String, int, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void updateMemory(String vfsId, String projectId, String name, String server, int mem,
@@ -504,9 +474,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#updateInstances(java.lang.String,
-    *      java.lang.String, java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void updateInstances(String vfsId, String projectId, String name, String server, String expression,
@@ -527,10 +495,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#validateAction(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void validateAction(String action, String server, String appName, String framework, String url, String vfsId,
@@ -556,8 +521,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#getSystemInfo(com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void getSystemInfo(String server, AsyncRequestCallback<SystemInfo> callback) throws RequestException
@@ -573,8 +537,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#getApplicationList(com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void getApplicationList(String server,
@@ -593,8 +556,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTargets(com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void getTargets(AsyncRequestCallback<List<String>> callback) throws RequestException
@@ -606,8 +568,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @throws RequestException
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#getTarget(com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void getTarget(AsyncRequestCallback<StringBuilder> callback) throws RequestException
@@ -626,12 +587,10 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    {
       String url = restServiceContext + LOGS + "?projectid=" + projectId + "&vfsid=" + vfsId;
       AsyncRequest.build(RequestBuilder.GET, url).loader(loader).send(callback);
-
    }
 
    /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#services(java.lang.String,
-    *      com.codenvy.gwtframework.commons.rest.AsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void services(String server, AsyncRequestCallback<CloudFoundryServices> callback) throws RequestException
@@ -644,9 +603,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#createService(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void createService(String server, String type, String name, String application, String vfsId,
@@ -678,8 +635,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#deleteService(java.lang.String,
-    *      java.lang.String, com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void deleteService(String server, String name, CloudFoundryAsyncRequestCallback<Object> callback)
@@ -693,9 +649,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#bindService(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void bindService(String server, String name, String application, String vfsId, String projectId,
@@ -726,9 +680,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
    }
 
    /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService#unbindService(java.lang.String,
-    *      java.lang.String, java.lang.String, java.lang.String, java.lang.String,
-    *      com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback)
+    * {@inheritDoc}
     */
    @Override
    public void unbindService(String server, String name, String application, String vfsId, String projectId,

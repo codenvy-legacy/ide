@@ -18,20 +18,14 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.websocket.WebSocketException;
-
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
-
-import com.google.gwt.http.client.RequestException;
-
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryRESTfulRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.websocket.WebSocketException;
+import com.google.gwt.http.client.RequestException;
 
 import java.util.List;
 
@@ -43,7 +37,6 @@ import java.util.List;
  */
 public abstract class CloudFoundryClientService
 {
-
    private static CloudFoundryClientService instance;
 
    public static CloudFoundryClientService getInstance()

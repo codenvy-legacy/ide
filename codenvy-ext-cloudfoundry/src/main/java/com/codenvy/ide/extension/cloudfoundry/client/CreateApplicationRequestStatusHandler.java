@@ -19,15 +19,14 @@
 package com.codenvy.ide.extension.cloudfoundry.client;
 
 import com.codenvy.ide.job.Job;
-import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.job.Job.JobStatus;
+import com.codenvy.ide.job.JobChangeEvent;
 import com.codenvy.ide.rest.RequestStatusHandler;
-
 import com.google.web.bindery.event.shared.EventBus;
 
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-
 /**
+ * The class helps to work with status of application.
+ * 
  * @author <a href="mailto:azhuleva@exoplatform.com">Ann Shumilova</a>
  * @version $Id: May 21, 2012 9:35:47 AM anya $
  */
@@ -37,6 +36,12 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
 
    private EventBus eventBus;
 
+   /**
+    * Create application request status handler.
+    * 
+    * @param applicationName
+    * @param eventBus
+    */
    public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus)
    {
       this.applicationName = applicationName;
