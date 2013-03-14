@@ -20,6 +20,8 @@ package org.exoplatform.ide.maven;
 
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.codehaus.plexus.util.cli.CommandLineException;
+import org.everrest.core.impl.provider.json.ObjectValue;
+import org.everrest.core.impl.provider.json.StringValue;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -67,21 +69,22 @@ public class Builder
             .type(MediaType.TEXT_PLAIN).build());
       }
    }
-   
-   
+
+
    @GET
    @Path("state")
-   public Response getSizeOfBuilderQueue(){
+   public Response getSizeOfBuilderQueue()
+   {
       int size = tasks.getSize();
-      String resp = "{\"current_queue_size\":\"" + size 
-                    + "\",\"clean_build_result_delay_millis\":\"" + tasks.getCleanBuildResultDelayMillis()
-                    + "\",\"publish_repository\":\"" +  tasks.getPublishRepository()
-                    + "\",\"publish_repository_url\":\"" + tasks.getPublishRepositoryUrl()
-                    + "\",\"max_size_of_build_queue\":\""+ tasks.getMaxSizeOfBuildQueue()
-                    + "\",\"builder_repository\":\"" + tasks.getRepository()
-                    + "\",\"builder_timeout\":\"" + tasks.getTimeoutMillis()
-                    + "\",\"builder_workers_number\":\"" + tasks.getWorkerNumber() + "\"}";
-     
+      String resp = "{\"current_queue_size\":\"" + size
+         + "\",\"clean_build_result_delay_millis\":\"" + tasks.getCleanBuildResultDelayMillis()
+         + "\",\"publish_repository\":\"" + tasks.getPublishRepository()
+         + "\",\"publish_repository_url\":\"" + tasks.getPublishRepositoryUrl()
+         + "\",\"max_size_of_build_queue\":\"" + tasks.getMaxSizeOfBuildQueue()
+         + "\",\"builder_repository\":\"" + tasks.getRepository()
+         + "\",\"builder_timeout\":\"" + tasks.getTimeoutMillis()
+         + "\",\"builder_workers_number\":\"" + tasks.getWorkerNumber() + "\"}";
+
       return Response.ok(resp).build();
    }
 
@@ -134,6 +137,7 @@ public class Builder
    public Response status(@PathParam("buildid") String buildID, @Context UriInfo uriInfo)
    {
       MavenBuildTask task = tasks.get(buildID);
+      ObjectValue jsonObject = new ObjectValue();
       if (task != null)
       {
          if (task.isDone())
@@ -147,21 +151,23 @@ public class Builder
                   if (result.getResult() != null)
                   {
                      result.getResult().getTime();
+                     jsonObject.addElement("status", new StringValue("SUCCESSFUL"));
+                     jsonObject.addElement("downloadUrl",
+                        new StringValue(uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()));
+                     jsonObject.addElement("time", new StringValue(Long.toString(result.getResult().getTime())));
                      return Response
                         .status(200)
-                        .entity(
-                           "{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\""
-                              + uriInfo.getBaseUriBuilder().path(getClass(), "download").build(buildID).toString()
-                              + "\",\"time\":\"" + Long.toString(result.getResult().getTime()) + "\"}")
+                        .entity(jsonObject.toString())
                         .type(MediaType.APPLICATION_JSON).build();
                   }
                   else
                   {
+                     jsonObject.addElement("status", new StringValue("SUCCESSFUL"));
+                     jsonObject.addElement("downloadUrl", new StringValue(""));
+                     jsonObject.addElement("time", new StringValue(Long.toString(System.currentTimeMillis())));
                      return Response
                         .status(200)
-                        .entity(
-                           "{\"status\":\"SUCCESSFUL\",\"downloadUrl\":\"\",\"time\":\""
-                              + Long.toString(System.currentTimeMillis()) + "\"}").type(MediaType.APPLICATION_JSON)
+                        .entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON)
                         .build();
                   }
                }
@@ -170,8 +176,10 @@ public class Builder
                   CommandLineException cle = result.getExecutionException();
                   if (cle != null)
                   {
+                     jsonObject.addElement("status", new StringValue("FAILED"));
+                     jsonObject.addElement("error", new StringValue(cle.getMessage()));
                      return Response.status(200)
-                        .entity("{\"status\":\"FAILED\",\"error\":\"" + cle.getMessage() + "\"}")
+                        .entity(jsonObject.toString())
                         .type(MediaType.APPLICATION_JSON).build();
                   }
                   Reader reader = task.getLogger().getLogReader();
@@ -206,8 +214,11 @@ public class Builder
                      reader.close();
                   }
                   error.append("</div>");
+                  jsonObject.addElement("status", new StringValue("FAILED"));
+                  jsonObject.addElement("exitCode", new StringValue(Integer.toString(result.getExitCode())));
+                  jsonObject.addElement("error", new StringValue(error.toString()));
                   return Response.status(200)
-                     .entity("{\"status\":\"FAILED\",\"exitCode\":" + result.getExitCode() + ",\"error\":\"" + error + "\"}")
+                     .entity(jsonObject.toString())
                      .type(MediaType.APPLICATION_JSON).build();
                }
             }
@@ -220,7 +231,8 @@ public class Builder
                throw new WebApplicationException(e);
             }
          }
-         return Response.status(200).entity("{\"status\":\"IN_PROGRESS\"}").type(MediaType.APPLICATION_JSON).build();
+         jsonObject.addElement("status", new StringValue("IN_PROGRESS"));
+         return Response.status(200).entity(jsonObject.toString()).type(MediaType.APPLICATION_JSON).build();
       }
       // Incorrect task ID.
       throw new WebApplicationException(Response.status(404).entity("Job " + buildID + " not found. ")

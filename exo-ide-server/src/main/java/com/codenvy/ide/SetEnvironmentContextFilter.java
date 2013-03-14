@@ -18,13 +18,13 @@
  */
 package com.codenvy.ide;
 
-import org.exoplatform.ide.commons.EnvironmentContext;
-import org.exoplatform.services.log.ExoLogger;
-import org.exoplatform.services.log.Log;
-import org.exoplatform.services.security.ConversationRegistry;
-import org.exoplatform.services.security.ConversationState;
+import com.codenvy.commons.env.EnvironmentContext;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,39 +35,43 @@ import javax.servlet.ServletResponse;
 
 public class SetEnvironmentContextFilter implements Filter
 {
+   private Map<String, Object> env;
 
-   /**
-    * Logger.
-    */
-   private static final Log LOG = ExoLogger.getLogger(SetEnvironmentContextFilter.class);
-
-   /**
-    * Set current {@link EnvironmentContext}
-    */
+   /** Set current {@link EnvironmentContext} */
    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
       ServletException
    {
-      EnvironmentContext environment = new EnvironmentContext();
-      environment.setEnvironmentVariable(EnvironmentContext.WORKSPACE, "default");
-      EnvironmentContext.setCurrentEnvironment(environment);
-      chain.doFilter(request, response);
-   }
-   
-   
+      try
+      {
+         EnvironmentContext environment = EnvironmentContext.getCurrent();
+         for (Map.Entry<String, Object> entry : env.entrySet())
+         {
+            environment.setVariable(entry.getKey(), entry.getValue());
+         }
 
-   /**
-    * {@inheritDoc}
-    */
+         chain.doFilter(request, response);
+      }
+      finally
+      {
+         EnvironmentContext.reset();
+      }
+   }
+
+   @Override
    public void destroy()
    {
-      // nothing to do.
    }
 
    @Override
    public void init(FilterConfig filterConfig) throws ServletException
    {
-      // TODO Auto-generated method stub
-
+      Map<String, Object> myEnv = new HashMap<String, Object>();
+      myEnv.put(EnvironmentContext.WORKSPACE_NAME, "dev-monit");
+      myEnv.put(EnvironmentContext.WORKSPACE_ID, "dev-monit");
+      myEnv.put(EnvironmentContext.GIT_SERVER, "git");
+      myEnv.put(EnvironmentContext.TMP_DIR, new File("../temp"));
+      myEnv.put(EnvironmentContext.VFS_ROOT_DIR, new File("../temp/fs-root"));
+      myEnv.put(EnvironmentContext.VFS_INDEX_DIR, new File("../temp/fs-index-root"));
+      this.env = Collections.unmodifiableMap(myEnv);
    }
-
 }

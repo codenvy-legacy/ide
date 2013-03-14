@@ -18,15 +18,14 @@
  */
 package org.exoplatform.ide.vfs.impl.fs;
 
-import org.exoplatform.ide.commons.EnvironmentContext;
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.ide.vfs.server.GitUrlResolver;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.exceptions.GitUrlResolveException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
-
-import java.io.File;
 
 import javax.ws.rs.core.UriInfo;
 
@@ -67,7 +66,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
          }
          String rootPath = System.getProperty("org.exoplatform.ide.server.fs-root-path");
          String workspace =
-         EnvironmentContext.getCurrentEnvironment().getEnvironmentVariable(EnvironmentContext.WORKSPACE).toString();
+         EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID).toString();
          String path = mountStrategy.getMountPath(workspace).getPath();
          path = path.substring(rootPath.length());
          if (!gitServer.endsWith("/"))

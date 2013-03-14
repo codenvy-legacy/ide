@@ -114,6 +114,7 @@ public class BranchGrid extends ListGrid<Branch>
       if (value != null && value.size() > 0)
       {
          selectItem(value.get(0));
+         updateGrid();
       }
    }
 

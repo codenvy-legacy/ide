@@ -11,6 +11,10 @@
    <name>Codenvy IDE :: Virtual File System :: FS</name>
    <dependencies>
       <dependency>
+         <groupId>com.codenvy.commons</groupId>
+         <artifactId>codenvy-commons-env</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs</artifactId>
       </dependency>
