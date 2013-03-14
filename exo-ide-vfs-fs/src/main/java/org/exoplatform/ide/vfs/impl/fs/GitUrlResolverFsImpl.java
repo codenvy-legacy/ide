@@ -27,6 +27,8 @@ import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.PropertyFilter;
 
+import java.io.File;
+
 import javax.ws.rs.core.UriInfo;
 
 /**
@@ -64,13 +66,13 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
          {
             throw new GitUrlResolveException("Can't resolve Git Url. Git server path may not be null.");
          }
-         if (!gitServer.endsWith("/"))
+         if (gitServer.endsWith("/"))
          {
-            gitServer += "/";
+            gitServer = gitServer.substring(0, gitServer.length() - 1);
          }
 
-         final String rootPath = (String)context.getVariable(EnvironmentContext.VFS_ROOT_DIR);
-         String path = mountStrategy.getMountPath().getPath();
+         final String rootPath = ((File)context.getVariable(EnvironmentContext.VFS_ROOT_DIR)).getAbsolutePath();
+         String path = mountStrategy.getMountPath().getAbsolutePath();
          path = path.substring(rootPath.length());
 
          final String vfsId = vfs.getInfo().getId();
@@ -86,7 +88,7 @@ public class GitUrlResolverFsImpl implements GitUrlResolver
          {
             result.append(':').append(port);
          }
-         result.append('/').append(gitServer).append(path).append('/').append(vfsId).append(item.getPath());
+         result.append('/').append(gitServer).append(path).append(item.getPath());
 
          return result.toString();
       }
