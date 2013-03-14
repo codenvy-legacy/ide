@@ -20,9 +20,11 @@ package com.codenvy.ide.extension.cloudfoundry.client.rename;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
@@ -53,15 +55,18 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
     */
    private String applicationName;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
    protected RenameApplicationPresenter(RenameApplicationView view, EventBus eventBus,
-      ResourceProvider resourceProvider, Console console)
+      ResourceProvider resourceProvider, Console console, CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.resourceProvider = resourceProvider;
       this.console = console;
       this.eventBus = eventBus;
+      this.constant = constant;
 
       this.eventBus.addHandler(RenameApplicationEvent.TYPE, this);
    }
@@ -98,33 +103,27 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
    private void renameApplication()
    {
       final String newName = view.getName();
-      // TODO
-      //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = resourceProvider.getActiveProject().getId();
 
       try
       {
          CloudFoundryClientService.getInstance().renameApplication(resourceProvider.getVfsId(), projectId,
             applicationName, null, newName,
-            new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<String>(null, renameAppLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(String result)
                {
                   view.close();
 
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(
-                  //                     applicationName, newName)));
-                  console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.renameApplicationSuccess(applicationName,
-                     newName));
+                  console.print(constant.renameApplicationSuccess(applicationName, newName));
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -144,11 +143,6 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
    @Override
    public void onRenameApplication(RenameApplicationEvent event)
    {
-      // TODO GIT
-      //      if (makeSelectionCheck())
-      //      {
-      //         getApplicationInfo();
-      //      }
       getApplicationInfo();
    }
 
@@ -163,8 +157,6 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
 
    private void getApplicationInfo()
    {
-      // TODO
-      //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = resourceProvider.getActiveProject().getId();
 
       try
@@ -177,7 +169,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
 
          CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, appInfoLoggedInHandler, null,
-               eventBus)
+               eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -189,8 +181,7 @@ public class RenameApplicationPresenter implements RenameApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

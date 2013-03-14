@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client;
 
+import com.codenvy.ide.api.ui.console.Console;
 import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
@@ -52,6 +53,10 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
 
    private EventBus eventBus;
 
+   private Console console;
+
+   private CloudFoundryLocalizationConstant constant;
+
    /**
     * Create callback.
     * 
@@ -61,9 +66,9 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
     * @param eventBus
     */
    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, EventBus eventBus)
+      LoginCanceledHandler loginCanceled, EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant)
    {
-      this(unmarshaller, loggedIn, loginCanceled, null, eventBus);
+      this(unmarshaller, loggedIn, loginCanceled, null, eventBus, console, constant);
    }
 
    /**
@@ -76,13 +81,15 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
     * @param eventBus
     */
    public CloudFoundryRESTfulRequestCallback(Unmarshallable<T> unmarshaller, LoggedInHandler loggedIn,
-      LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus)
+      LoginCanceledHandler loginCanceled, String loginUrl, EventBus eventBus, Console console,
+      CloudFoundryLocalizationConstant constant)
    {
       super(unmarshaller);
       this.loggedIn = loggedIn;
       this.loginCanceled = loginCanceled;
       this.loginUrl = loginUrl;
       this.eventBus = eventBus;
+      this.constant = constant;
    }
 
    /**
@@ -111,9 +118,7 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
             && serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE) != null
             && "301".equals(serverException.getHeader(CLOUDFOUNDRY_EXIT_CODE)))
          {
-            // TODO
-            //            Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationNotFound());
-            Window.alert(CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationNotFound());
+            Window.alert(constant.applicationNotFound());
             return;
          }
          else
@@ -127,12 +132,12 @@ public abstract class CloudFoundryRESTfulRequestCallback<T> extends RequestCallb
             {
                msg = "Status:&nbsp;" + serverException.getHTTPStatus();// + "&nbsp;" + serverException.getStatusText();
             }
-            // TODO
-            //            Dialogs.getInstance().showError(msg);
+
             Window.alert(msg);
             return;
          }
       }
       eventBus.fireEvent(new ExceptionThrownEvent(exception));
+      console.print(exception.getMessage());
    }
 }

@@ -36,16 +36,20 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
 
    private EventBus eventBus;
 
+   private CloudFoundryLocalizationConstant constant;
+
    /**
     * Create application request status handler.
     * 
     * @param applicationName
     * @param eventBus
     */
-   public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus)
+   public CreateApplicationRequestStatusHandler(String applicationName, EventBus eventBus,
+      CloudFoundryLocalizationConstant constant)
    {
       this.applicationName = applicationName;
       this.eventBus = eventBus;
+      this.constant = constant;
    }
 
    /**
@@ -55,7 +59,7 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
    public void requestInProgress(String id)
    {
       Job job = new Job(id, JobStatus.STARTED);
-      job.setStartMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationStarted(applicationName));
+      job.setStartMessage(constant.createApplicationStarted(applicationName));
       eventBus.fireEvent(new JobChangeEvent(job));
    }
 
@@ -66,7 +70,7 @@ public class CreateApplicationRequestStatusHandler implements RequestStatusHandl
    public void requestFinished(String id)
    {
       Job job = new Job(id, JobStatus.FINISHED);
-      job.setFinishMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.createApplicationFinished(applicationName));
+      job.setFinishMessage(constant.createApplicationFinished(applicationName));
       eventBus.fireEvent(new JobChangeEvent(job));
    }
 

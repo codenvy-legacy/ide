@@ -19,30 +19,23 @@
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.ui.console.Console;
-
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
-
+import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
+import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CloudFoundryServicesUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceView;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ProvisionedServiceCreatedHandler;
-import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemService;
 
 import java.util.LinkedHashMap;
 
@@ -60,6 +53,8 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
    /**
     * Handler for successful service creation.
     */
@@ -76,12 +71,14 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
    };
 
    @Inject
-   protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, Console console)
+   protected CreateServicePresenter(CreateServiceView view, EventBus eventBus, Console console,
+      CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
+      this.constant = constant;
 
       this.eventBus.addHandler(CreateServiceEvent.TYPE, this);
    }
@@ -116,7 +113,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
             null,
             null,
             new CloudFoundryAsyncRequestCallback<ProvisionedService>(unmarshaller, createServiceLoggedInHandler, null,
-               eventBus)
+               eventBus, console, constant)
             {
                @Override
                protected void onSuccess(ProvisionedService result)
@@ -128,8 +125,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -157,7 +153,6 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
 
    public void showDialog()
    {
-      // TODO
       view.setName("");
 
       view.showDialog();
@@ -187,16 +182,13 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
-                  Window.alert(CloudFoundryExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
+                  Window.alert(constant.retrieveServicesFailed());
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

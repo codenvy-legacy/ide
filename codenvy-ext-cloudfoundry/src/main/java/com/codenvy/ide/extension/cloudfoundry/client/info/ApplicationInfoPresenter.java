@@ -20,24 +20,19 @@ package com.codenvy.ide.extension.cloudfoundry.client.info;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
-
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
-
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoView;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 
 /**
  * 
@@ -55,15 +50,18 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
    protected ApplicationInfoPresenter(ApplicationInfoView view, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console)
+      Console console, CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
+      this.constant = constant;
 
       this.eventBus.addHandler(ApplicationInfoEvent.TYPE, this);
    }
@@ -91,11 +89,6 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
    @Override
    public void onShowApplicationInfo(ApplicationInfoEvent event)
    {
-      // TODO Auto-generated method stub
-      //      if (makeSelectionCheck())
-      //      {
-      //         showApplicationInfo(((ItemContext)selectedItems.get(0)).getProject().getId());
-      //      }
       showApplicationInfo(resourceProvider.getActiveProject().getId());
    }
 
@@ -117,7 +110,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
                {
                   showApplicationInfo(projectId);
                }
-            }, null, eventBus)
+            }, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -140,8 +133,7 @@ public class ApplicationInfoPresenter implements ApplicationInfoView.ActionDeleg
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

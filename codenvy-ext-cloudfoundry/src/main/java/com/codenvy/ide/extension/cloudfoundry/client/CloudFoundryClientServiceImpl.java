@@ -123,6 +123,8 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     */
    private MessageBus wsMessageBus;
 
+   private CloudFoundryLocalizationConstant constant;
+
    /**
     * Create CloudFoundry client service.
     * 
@@ -131,12 +133,14 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
     * @param wsMessageBus
     * @param eventBus
     */
-   public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus)
+   public CloudFoundryClientServiceImpl(String restContext, Loader loader, MessageBus wsMessageBus, EventBus eventBus,
+      CloudFoundryLocalizationConstant constant)
    {
       this.loader = loader;
       this.restServiceContext = restContext;
       this.wsMessageBus = wsMessageBus;
       this.eventBus = eventBus;
+      this.constant = constant;
    }
 
    /**
@@ -167,7 +171,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
 
       AsyncRequest.build(RequestBuilder.POST, requestUrl, true)
-         .requestStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus)).data(data)
+         .requestStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant)).data(data)
          .header(HTTPHeader.CONTENTTYPE, MimeType.APPLICATION_JSON).send(callback);
    }
 
@@ -195,7 +199,7 @@ public class CloudFoundryClientServiceImpl extends CloudFoundryClientService
       createApplicationRequest.setWar(war);
 
       String data = AutoBeanCodex.encode(AutoBeanUtils.getAutoBean(createApplicationRequest)).getPayload();
-      callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus));
+      callback.setStatusHandler(new CreateApplicationRequestStatusHandler(name, eventBus, constant));
 
       RequestMessage message =
          RequestMessageBuilder.build(RequestBuilder.POST, CREATE).data(data)

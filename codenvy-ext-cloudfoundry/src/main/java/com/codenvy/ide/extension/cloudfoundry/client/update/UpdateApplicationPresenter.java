@@ -20,9 +20,11 @@ package com.codenvy.ide.extension.cloudfoundry.client.update;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.maven.client.event.BuildProjectEvent;
@@ -59,14 +61,18 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
    private HandlerRegistration projectBuildHandler;
 
    @Inject
-   public UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console)
+   public UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
+      CloudFoundryLocalizationConstant constant)
    {
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
+      this.constant = constant;
 
       this.eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
    }
@@ -86,22 +92,18 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
    @Override
    public void onUpdateApplication(UpdateApplicationEvent event)
    {
-      //      if (makeSelectionCheck())
-      //      {
       validateData();
-      //      }
    }
 
    private void updateApplication()
    {
-      // TODO
-      //      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       final String projectId = resourceProvider.getActiveProject().getId();
 
       try
       {
          CloudFoundryClientService.getInstance().updateApplication(resourceProvider.getVfsId(), projectId, null, null,
-            warUrl, new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus)
+            warUrl,
+            new CloudFoundryAsyncRequestCallback<String>(null, loggedInHandler, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(String result)
@@ -120,23 +122,18 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
                         null,
                         null,
                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null,
-                           eventBus)
+                           eventBus, console, constant)
                         {
                            @Override
                            protected void onSuccess(CloudFoundryApplication result)
                            {
-                              // TODO
-                              //                              IDE.fireEvent(new OutputEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT
-                              //                                 .updateApplicationSuccess(result.getName()), Type.INFO));
-                              console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateApplicationSuccess(result
-                                 .getName()));
+                              console.print(constant.updateApplicationSuccess(result.getName()));
                            }
                         });
                   }
                   catch (RequestException e)
                   {
-                     // TODO
-                     //                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                     eventBus.fireEvent(new ExceptionThrownEvent(e));
                      console.print(e.getMessage());
                   }
                }
@@ -144,8 +141,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -175,15 +171,13 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
 
    private void validateData()
    {
-      // TODO
-      //      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       final String projectId = resourceProvider.getActiveProject().getId();
 
       try
       {
          CloudFoundryClientService.getInstance().validateAction("update", null, null, null, null,
             resourceProvider.getVfsId(), projectId, 0, 0, false,
-            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(String result)
@@ -194,8 +188,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -205,8 +198,6 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
     */
    private void isBuildApplication()
    {
-      // TODO
-      //      final ProjectModel project = ((ItemContext)selectedItems.get(0)).getProject();
       final Project project = resourceProvider.getActiveProject();
 
       JsonArray<Resource> children = project.getChildren();

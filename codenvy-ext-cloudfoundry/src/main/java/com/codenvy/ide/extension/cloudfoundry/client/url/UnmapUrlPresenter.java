@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.url;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
@@ -47,8 +48,6 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 {
    private UnmapUrlView view;
 
-   private CloudFoundryLocalizationConstant localeBundle = CloudFoundryExtension.LOCALIZATION_CONSTANT;
-
    private List<String> registeredUrls;
 
    private String unregisterUrl;
@@ -63,14 +62,18 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
-   protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus, Console console)
+   protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus,
+      Console console, CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.resourceProvider = resourceProvider;
       this.eventBus = eventBus;
       this.console = console;
+      this.constant = constant;
    }
 
    /**
@@ -81,8 +84,6 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
    {
       if (isBindingChanged)
       {
-         // TODO
-         //         String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
          String projectId = resourceProvider.getActiveProject().getId();
          eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
       }
@@ -101,9 +102,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       {
          if (url.equals(urlToMap) || ("http://" + url).equals(urlToMap))
          {
-            // TODO
-            //            Dialogs.getInstance().showError(localeBundle.mapUrlAlredyRegistered());
-            Window.alert(localeBundle.mapUrlAlredyRegistered());
+            Window.alert(constant.mapUrlAlredyRegistered());
             return;
          }
       }
@@ -142,8 +141,6 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
    private void getAppRegisteredUrls()
    {
-      // TODO
-      //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = resourceProvider.getActiveProject().getId();
 
       try
@@ -155,7 +152,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
             new AutoBeanUnmarshaller<CloudFoundryApplication>(cloudFoundryApplication);
 
          CloudFoundryClientService.getInstance().getApplicationInfo(resourceProvider.getVfsId(), projectId, null, null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -174,8 +172,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -194,14 +191,13 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
    private void mapUrl(final String url)
    {
-      // TODO
-      //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = resourceProvider.getActiveProject().getId();
 
       try
       {
          CloudFoundryClientService.getInstance().mapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
-            new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus)
+               new CloudFoundryAsyncRequestCallback<String>(null, mapUrlLoggedInHandler, null, eventBus, console,
+                  constant)
             {
                @Override
                protected void onSuccess(String result)
@@ -213,9 +209,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
                      registeredUrl = "http://" + url;
                   }
                   registeredUrl = "<a href=\"" + registeredUrl + "\" target=\"_blank\">" + registeredUrl + "</a>";
-                  String msg = localeBundle.mapUrlRegisteredSuccess(registeredUrl);
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent(msg));
+                     String msg = constant.mapUrlRegisteredSuccess(registeredUrl);
                   console.print(msg);
                   registeredUrls.add(url);
                   view.setRegisteredUrls(registeredUrls);
@@ -225,8 +219,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -263,13 +256,12 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
    private void unregisterUrl(final String url)
    {
-      // TODO
-      //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = resourceProvider.getActiveProject().getId();
       try
       {
          CloudFoundryClientService.getInstance().unmapUrl(resourceProvider.getVfsId(), projectId, null, null, url,
-            new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<Object>(null, unregisterUrlLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(Object result)
@@ -282,17 +274,14 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
                   {
                      unmappedUrl = "http://" + unmappedUrl;
                   }
-                  String msg = localeBundle.unmapUrlSuccess(unmappedUrl);
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent(msg));
+                  String msg = constant.unmapUrlSuccess(unmappedUrl);
                   console.print(msg);
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

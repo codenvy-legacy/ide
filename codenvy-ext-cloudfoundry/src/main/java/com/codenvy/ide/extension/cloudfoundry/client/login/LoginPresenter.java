@@ -19,32 +19,23 @@
 package com.codenvy.ide.extension.cloudfoundry.client.login;
 
 import com.codenvy.ide.api.ui.console.Console;
-
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.commons.exception.ServerException;
 import com.codenvy.ide.commons.exception.UnmarshallerException;
-import com.codenvy.ide.output.event.OutputEvent;
-import com.codenvy.ide.output.event.OutputMessage.Type;
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-import com.codenvy.ide.rest.HTTPStatus;
-
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-
+import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
+import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
+import com.codenvy.ide.rest.HTTPStatus;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginCanceledHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginView;
-import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.shared.SystemInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,21 +57,23 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
     */
    private String server;
 
-   private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
-
    private LoggedInHandler loggedIn;
 
    private LoginCanceledHandler loginCanceled;
 
    private EventBus eventBus;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
-   protected LoginPresenter(LoginView view, EventBus eventBus, Console console)
+   protected LoginPresenter(LoginView view, EventBus eventBus, Console console,
+      CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
+      this.constant = constant;
 
       eventBus.addHandler(LoginEvent.TYPE, this);
    }
@@ -116,13 +109,11 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                protected void onSuccess(String result)
                {
                   server = enteredServer;
-                  eventBus.fireEvent(new OutputEvent(lb.loginSuccess(), Type.INFO));
+                  console.print(constant.loginSuccess());
                   if (loggedIn != null)
                   {
                      loggedIn.onLoggedIn();
                   }
-
-                  console.print(lb.loginSuccess());
 
                   view.close();
                }
@@ -140,27 +131,25 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                         && serverException.getMessage() != null
                         && serverException.getMessage().contains("Can't access target."))
                      {
-                        view.setError(lb.loginViewErrorUnknownTarget());
+                        view.setError(constant.loginViewErrorUnknownTarget());
                         return;
                      }
                      else if (HTTPStatus.OK != serverException.getHTTPStatus() && serverException.getMessage() != null
                         && serverException.getMessage().contains("Operation not permitted"))
                      {
-                        view.setError(lb.loginViewErrorInvalidUserOrPassword());
+                        view.setError(constant.loginViewErrorInvalidUserOrPassword());
                         return;
                      }
                      // otherwise will be called method from superclass.
                   }
-                  //                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
-                  //                  //TODO
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         //TODO
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -268,9 +257,7 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                {
                   if (exception instanceof UnmarshallerException)
                   {
-                     // TODO
-                     //                     Dialogs.getInstance().showError(exception.getMessage());
-                     console.print(exception.getMessage());
+                     Window.alert(exception.getMessage());
                   }
                   else
                   {
@@ -281,8 +268,7 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
       }
       catch (RequestException e)
       {
-         // TODO
-         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -328,16 +314,14 @@ public class LoginPresenter implements LoginView.ActionDelegate, LoginHandler
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

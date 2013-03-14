@@ -18,11 +18,12 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.apps;
 
-import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
@@ -67,7 +68,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
 
    private Console console;
 
-   private ResourceProvider resourceProvider;
+   private CloudFoundryLocalizationConstant constant;
 
    /**
     * Create presenter.
@@ -81,14 +82,14 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
     */
    @Inject
    protected ApplicationsPresenter(ApplicationsView view, EventBus eventBus, Console console,
-      ResourceProvider resourceProvider, StartApplicationPresenter startAppPresenter,
-      DeleteApplicationPresenter deleteAppPresenter)
+      StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter,
+      CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
-      this.resourceProvider = resourceProvider;
+      this.constant = constant;
 
       this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
    }
@@ -128,7 +129,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
                {
                   getApplicationList();
                }
-            }, null, currentServer, eventBus)
+            }, null, currentServer, eventBus, console, constant)
             {
 
                @Override
@@ -147,8 +148,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
       }
       catch (RequestException e)
       {
-         // TODO
-         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -173,16 +173,14 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -225,16 +223,14 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

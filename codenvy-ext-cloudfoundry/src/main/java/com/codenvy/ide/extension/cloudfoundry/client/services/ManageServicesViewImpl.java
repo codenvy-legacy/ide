@@ -18,10 +18,9 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
+import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.TextCell;
@@ -40,9 +39,6 @@ import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesView;
-import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 
 import java.util.List;
 
@@ -77,9 +73,13 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
 
    private ActionDelegate delegate;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
    protected ManageServicesViewImpl(CloudFoundryResources resources, CloudFoundryLocalizationConstant constant)
    {
+      this.constant = constant;
+
       createBoundServicesTable();
       createServicesTable();
 
@@ -109,7 +109,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
          @Override
          public String getValue(String object)
          {
-            return CloudFoundryExtension.LOCALIZATION_CONSTANT.unBindButton();
+            return constant.unBindButton();
          }
       };
 
@@ -149,7 +149,7 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
          @Override
          public String getValue(ProvisionedService object)
          {
-            return CloudFoundryExtension.LOCALIZATION_CONSTANT.bindButton();
+            return constant.bindButton();
          }
       };
 

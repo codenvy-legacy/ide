@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.create;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -58,7 +59,6 @@ import java.util.List;
 @Singleton
 public class CreateApplicationPresenter implements CreateApplicationView.ActionDelegate, CreateApplicationHandler,
    ProjectBuiltHandler
-// implements CreateApplicationHandler, ViewClosedHandler
 {
    private class AppData
    {
@@ -88,8 +88,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
    }
 
-   private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
-
    private CreateApplicationView view;
 
    private List<Framework> frameworks;
@@ -117,9 +115,20 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
+   /**
+    * Create presenter.
+    * 
+    * @param resourceProvider
+    * @param view
+    * @param eventBus
+    * @param console
+    * @param constant
+    */
    @Inject
    protected CreateApplicationPresenter(ResourceProvider resourceProvider, CreateApplicationView view,
-      EventBus eventBus, Console console)
+      EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant)
    {
       this.frameworks = new ArrayList<Framework>();
 
@@ -128,6 +137,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       this.view.setDelegate(this);
       this.console = console;
       this.eventBus = eventBus;
+      this.constant = constant;
 
       this.eventBus.addHandler(CreateApplicationEvent.TYPE, this);
    }
@@ -177,11 +187,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
          }
          catch (NumberFormatException e)
          {
-            // TODO
-            //            eventBus
-            //               .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat()));
-            console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorMemoryFormat());
-
+            eventBus.fireEvent(new ExceptionThrownEvent(constant.errorMemoryFormat()));
+            console.print(constant.errorMemoryFormat());
          }
       }
 
@@ -207,10 +214,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (NumberFormatException e)
       {
-         // TODO
-         //         eventBus
-         //            .fireEvent(new ExceptionThrownEvent(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat()));
-         console.print(CloudFoundryExtension.LOCALIZATION_CONSTANT.errorInstancesFormat());
+         eventBus.fireEvent(new ExceptionThrownEvent(constant.errorInstancesFormat()));
+         console.print(constant.errorInstancesFormat());
       }
       boolean nostart = !view.isStartAfterCreation();
 
@@ -272,7 +277,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       {
          CloudFoundryClientService.getInstance().validateAction("create", app.server, app.name, app.type, app.url,
             resourceProvider.getVfsId(), project.getId(), app.instances, app.memory, app.nostart,
-            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus)
+            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, app.server, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(String result)
@@ -292,8 +298,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         // TODO
-         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -324,11 +329,10 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       AutoBean<CloudFoundryApplication> cloudFoundryApplication =
          CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
-      createApplicationREST(appData, project, loggedInHandler);
-
       AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
+      // TODO This code uses WebSocket but we have not ported it yet.
       //      try
       //      {
       //         CloudFoundryClientService.getInstance().createWS(
@@ -343,7 +347,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //            project.getId(),
       //            warUrl,
       //            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-      //               appData.server, eventBus)
+      //               appData.server, eventBus, console, constant)
       //            {
       //               @Override
       //               protected void onSuccess(CloudFoundryApplication result)
@@ -355,7 +359,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //               @Override
       //               protected void onFailure(Throwable exception)
       //               {
-      //                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
+      //                  console.print(constant.applicationCreationFailed());
       //                  super.onFailure(exception);
       //               }
       //            });
@@ -364,6 +368,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       //      {
       //         createApplicationREST(appData, project, loggedInHandler);
       //      }
+      createApplicationREST(appData, project, loggedInHandler);
    }
 
    /**
@@ -394,7 +399,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
             project.getId(),
             warUrl,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
-               appData.server, eventBus)
+               appData.server, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(final CloudFoundryApplication cloudFoundryApp)
@@ -418,18 +423,14 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-                  console.print(lb.applicationCreationFailed());
+                  console.print(constant.applicationCreationFailed());
                   super.onFailure(exception);
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         eventBus.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-         console.print(lb.applicationCreationFailed());
+         console.print(constant.applicationCreationFailed());
       }
    }
 
@@ -444,31 +445,25 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
 
       if ("STARTED".equals(app.getState()) && app.getInstances() == app.getRunningInstances())
       {
-         String msg = lb.applicationCreatedSuccessfully(app.getName());
+         String msg = constant.applicationCreatedSuccessfully(app.getName());
          if (app.getUris().isEmpty())
          {
-            msg += "<br>" + lb.applicationStartedWithNoUrls();
+            msg += "<br>" + constant.applicationStartedWithNoUrls();
          }
          else
          {
-            msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+            msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
          }
-         // TODO
-         //         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
          console.print(msg);
       }
       else if ("STARTED".equals(app.getState()) && app.getInstances() != app.getRunningInstances())
       {
-         String msg = lb.applicationWasNotStarted(app.getName());
-         // TODO
-         //         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+         String msg = constant.applicationWasNotStarted(app.getName());
          console.print(msg);
       }
       else
       {
-         String msg = lb.applicationCreatedSuccessfully(app.getName());
-         // TODO
-         //         eventBus.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
+         String msg = constant.applicationCreatedSuccessfully(app.getName());
          console.print(msg);
       }
    }
@@ -558,7 +553,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       {
          CloudFoundryClientService.getInstance().getFrameworks(
             new CloudFoundryAsyncRequestCallback<List<Framework>>(
-               new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null, eventBus)
+               new FrameworksUnmarshaller(new ArrayList<Framework>()), getFrameworksLoggedInHandler, null, eventBus,
+               console, constant)
             {
                @Override
                protected void onSuccess(List<Framework> result)
@@ -576,8 +572,7 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         // TODO
-         //         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -698,7 +693,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                      view.setServer(result.get(0));
                      getFrameworks(result.get(0));
                   }
-                  //                  view.getNameField().setValue(((ItemContext)selectedItems.get(0)).getProject().getName());
                   view.setName(resourceProvider.getActiveProject().getName());
                   updateUrlField();
                }
@@ -706,16 +700,14 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -726,29 +718,6 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
    @Override
    public void onCreateApplication(CreateApplicationEvent event)
    {
-      // TODO Auto-generated method stub
-      //      if (selectedItems == null || selectedItems.size() == 0)
-      //      {
-      //         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.selectFolderToCreate();
-      //         IDE.fireEvent(new ExceptionThrownEvent(msg));
-      //         return;
-      //      }
-      //      if (selectedItems.get(0).getPath().isEmpty() || selectedItems.get(0).getPath().equals("/"))
-      //      {
-      //         Dialogs.getInstance().showInfo(GitExtension.MESSAGES.selectedWorkace());
-      //         return;
-      //      }
-      //
-      //      if ((selectedItems.get(0) instanceof ItemContext) && ((ItemContext)selectedItems.get(0)).getProject() != null)
-      //      {
-      //         checkIsProject(((ItemContext)selectedItems.get(0)).getProject());
-      //      }
-      //      else
-      //      {
-      //         String msg = lb.createApplicationNotFolder(selectedItems.get(0).getName());
-      //         IDE.fireEvent(new ExceptionThrownEvent(msg));
-      //         return;
-      //      }
       Project selectedProject = resourceProvider.getActiveProject();
       if (selectedProject != null)
       {
@@ -757,9 +726,8 @@ public class CreateApplicationPresenter implements CreateApplicationView.ActionD
       }
       else
       {
-         String msg = lb.createApplicationNotFolder(view.getName());
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(msg));
+         String msg = constant.createApplicationNotFolder(view.getName());
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
          console.print(msg);
       }
    }

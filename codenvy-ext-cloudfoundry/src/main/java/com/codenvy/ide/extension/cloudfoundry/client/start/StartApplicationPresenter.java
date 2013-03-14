@@ -20,9 +20,11 @@ package com.codenvy.ide.extension.cloudfoundry.client.start;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -54,12 +56,16 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
-   public StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console)
+   public StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
+      CloudFoundryLocalizationConstant constant)
    {
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
+      this.constant = constant;
 
       this.eventBus.addHandler(StartApplicationEvent.TYPE, this);
       this.eventBus.addHandler(StopApplicationEvent.TYPE, this);
@@ -140,8 +146,6 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    @Override
    public void onStartApplication(StartApplicationEvent event)
    {
-      // TODO
-      //      if (event.getApplicationName() == null && makeSelectionCheck())
       if (event.getApplicationName() == null)
       {
          checkIsStarted();
@@ -155,8 +159,6 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    private void checkIsStarted()
    {
       Project project = resourceProvider.getActiveProject();
-      // TODO
-      //      ((ItemContext)selectedItems.get(0)).getProject()
 
       try
       {
@@ -170,17 +172,14 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStartedLoggedInHandler,
-               null, eventBus)
+               null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
                   if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances())
                   {
-                     String msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStarted(result.getName());
-                     // TODO
-                     //                     IDE.fireEvent(new OutputEvent(msg));
+                     String msg = constant.applicationAlreadyStarted(result.getName());
                      console.print(msg);
                   }
                   else
@@ -192,8 +191,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -201,8 +199,6 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    private void checkIsStopped()
    {
       Project project = resourceProvider.getActiveProject();
-      // TODO
-      //      ((ItemContext)selectedItems.get(0)).getProject()
 
       try
       {
@@ -218,18 +214,14 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
-               null, eventBus)
+               null, eventBus, console, constant)
             {
-
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
                   if ("STOPPED".equals(result.getState()))
                   {
-                     String msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationAlreadyStopped(result.getName());
-                     // TODO
-                     //                     IDE.fireEvent(new OutputEvent(msg));
+                     String msg = constant.applicationAlreadyStopped(result.getName());
                      console.print(msg);
                   }
                   else
@@ -241,8 +233,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -251,9 +242,6 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    {
       final String projectId =
          resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
-      // TODO
-      //         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-      //            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
       try
       {
@@ -269,38 +257,29 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
             name,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, startLoggedInHandler, null,
-               eventBus)
+               eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
                   if ("STARTED".equals(result.getState()) && result.getInstances() == result.getRunningInstances())
                   {
-                     String msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationCreatedSuccessfully(result.getName());
+                     String msg = constant.applicationCreatedSuccessfully(result.getName());
                      if (result.getUris().isEmpty())
                      {
-                        msg += "<br>" + CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedWithNoUrls();
+                        msg += "<br>" + constant.applicationStartedWithNoUrls();
                      }
                      else
                      {
-                        msg +=
-                           "<br>"
-                              + CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStartedOnUrls(result.getName(),
-                                 getAppUrisAsString(result));
+                        msg += "<br>" + constant.applicationStartedOnUrls(result.getName(), getAppUrisAsString(result));
                      }
-                     // TODO
-                     //                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
-                     //                     IDE.fireEvent(new ApplicationInfoChangedEvent(vfs.getId(), projectId));
+
                      console.print(msg);
                      eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                   }
                   else
                   {
-                     String msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
-                     // TODO
-                     //                     IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.ERROR));
+                     String msg = constant.applicationWasNotStarted(result.getName());
                      console.print(msg);
                   }
                }
@@ -308,8 +287,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -337,14 +315,11 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    {
       final String projectId =
          resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
-      // TODO
-      //         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-      //            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
       try
       {
          CloudFoundryClientService.getInstance().stopApplication(resourceProvider.getVfsId(), projectId, name, null,
-            new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<String>(null, stopLoggedInHandler, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(String result)
@@ -363,15 +338,12 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                         name,
                         null,
                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null,
-                           eventBus)
+                           eventBus, console, constant)
                         {
                            @Override
                            protected void onSuccess(CloudFoundryApplication result)
                            {
-                              final String msg =
-                                 CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationStopped(result.getName());
-                              // TODO
-                              //                              IDE.fireEvent(new OutputEvent(msg));
+                              final String msg = constant.applicationStopped(result.getName());
                               console.print(msg);
                               eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                            }
@@ -379,8 +351,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                   }
                   catch (RequestException e)
                   {
-                     // TODO
-                     //                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                     eventBus.fireEvent(new ExceptionThrownEvent(e));
                      console.print(e.getMessage());
                   }
                }
@@ -388,21 +359,18 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
 
    /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationHandler#onRestartApplication(com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationEvent)
+    * {@inheritDoc}
     */
    @Override
    public void onRestartApplication(RestartApplicationEvent event)
    {
-
       restartApplication(event.getApplicationName());
-
    }
 
    private LoggedInHandler restartLoggedInHandler = new LoggedInHandler()
@@ -418,9 +386,6 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    {
       final String projectId =
          resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
-      // TODO
-//         ((selectedItems != null && !selectedItems.isEmpty() && ((ItemContext)selectedItems.get(0)).getProject() != null)
-//            ? ((ItemContext)selectedItems.get(0)).getProject().getId() : null);
 
       try
       {
@@ -436,7 +401,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
             name,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, restartLoggedInHandler, null,
-               eventBus)
+               eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -447,25 +412,19 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                      String msg = "";
                      if (appUris.isEmpty())
                      {
-                        msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestarted(result.getName());
+                        msg = constant.applicationRestarted(result.getName());
                      }
                      else
                      {
-                        msg =
-                           CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationRestartedUris(result.getName(),
-                              appUris);
+                        msg = constant.applicationRestartedUris(result.getName(), appUris);
                      }
-                     // TODO
-                     //                     IDE.fireEvent(new OutputEvent(msg, Type.INFO));
+
                      console.print(msg);
                      eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                   }
                   else
                   {
-                     String msg =
-                        CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationWasNotStarted(result.getName());
-                     // TODO
-                     //                     IDE.fireEvent(new OutputEvent(msg, Type.ERROR));
+                     String msg = constant.applicationWasNotStarted(result.getName());
                      console.print(msg);
                   }
                }
@@ -473,8 +432,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

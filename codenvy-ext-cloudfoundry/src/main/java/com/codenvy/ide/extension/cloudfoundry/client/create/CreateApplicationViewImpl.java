@@ -18,8 +18,6 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.create;
 
-import com.codenvy.ide.extension.cloudfoundry.client.create.CreateApplicationView;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -46,24 +44,6 @@ import java.util.List;
 public class CreateApplicationViewImpl extends DialogBox implements CreateApplicationView
 {
    private static CreateApplicationViewImplUiBinder uiBinder = GWT.create(CreateApplicationViewImplUiBinder.class);
-
-   private static final String ID = "ideCloudFoundryCreateAppView";
-
-   private static final String CREATE_BUTTON_ID = "ideCloudFoundryAppViewCreateButton";
-
-   private static final String CANCEL_BUTTON_ID = "ideCloudFoundryAppViewCancelButton";
-
-   private static final String TYPE_FIELD_ID = "ideCloudFoundryAppViewTypeField";
-
-   private static final String NAME_FIELD_ID = "ideCloudFoundryAppViewNameField";
-
-   private static final String URL_FIELD_ID = "ideCloudFoundryAppViewUrlField";
-
-   private static final String INSTANCES_FIELD_ID = "ideCloudFoundryAppViewInstancesField";
-
-   private static final String MEMORY_FIELD_ID = "ideCloudFoundryAppViewMemoryField";
-
-   private static final String SERVER_FIELD_ID = "ideCloudFoundryAppViewServerField";
 
    @UiField
    TextBox name;
@@ -111,15 +91,6 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
 
       this.setText("Create Application");
       this.setWidget(widget);
-
-      //      server.setName(SERVER_FIELD_ID);
-      //      type.setName(TYPE_FIELD_ID);
-      //      name.setName(NAME_FIELD_ID);
-      //      url.setName(URL_FIELD_ID);
-      //      instances.setName(INSTANCES_FIELD_ID);
-      //      memory.setName(MEMORY_FIELD_ID);
-      //      btnCreate.setButtonId(CREATE_BUTTON_ID);
-      //      btnCancel.setButtonId(CANCEL_BUTTON_ID);
    }
 
    /**
@@ -423,27 +394,6 @@ public class CreateApplicationViewImpl extends DialogBox implements CreateApplic
       delegate.doCreate();
    }
 
-   //   @SuppressWarnings("rawtypes")
-   //   @UiHandler("autodetectType")
-   //   void onAutodetectTypeValueChange(ValueChangeEvent event)
-   //   {
-   //      //      delegate.autoDetectTypeChanged((Boolean)event.getValue());
-   //   }
-   //
-   //   @SuppressWarnings("rawtypes")
-   //   @UiHandler("customUrl")
-   //   void onCustomUrlValueChange(ValueChangeEvent event)
-   //   {
-   //      //      delegate.customUrlChanged((Boolean)event.getValue());
-   //   }
-   //
-   //   @SuppressWarnings("rawtypes")
-   //   @UiHandler("name")
-   //   void onNameValueChange(ValueChangeEvent event)
-   //   {
-   //      //      delegate.applicationNameChanged();
-   //   }
-   //
    @UiHandler("server")
    void onServerChange(ChangeEvent event)
    {

@@ -20,9 +20,11 @@ package com.codenvy.ide.extension.cloudfoundry.client.update;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -57,15 +59,18 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
 
    private boolean isMemoryEditing;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
    protected UpdatePropertiesPresenter(UpdatePropertiesView view, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console)
+      Console console, CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
+      this.constant = constant;
 
       this.eventBus.addHandler(UpdateMemoryEvent.TYPE, this);
       this.eventBus.addHandler(UpdateInstancesEvent.TYPE, this);
@@ -93,9 +98,8 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       }
       catch (NumberFormatException e)
       {
-         String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesInvalidValueMessage();
-         // TODO
-         //                     IDE.fireEvent(new ExceptionThrownEvent(msg));
+         String msg = constant.updateInstancesInvalidValueMessage();
+         eventBus.fireEvent(new ExceptionThrownEvent(msg));
          console.print(msg);
       }
 
@@ -126,11 +130,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
    @Override
    public void onUpdateMemory(UpdateMemoryEvent event)
    {
-      // TODO
-      //      if (makeSelectionCheck())
-      //      {
-      //         getOldMemoryValue();
-      //      }
       isMemoryEditing = true;
       getOldMemoryValue();
    }
@@ -149,8 +148,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
 
    private void getOldMemoryValue()
    {
-      // TODO
-      //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = resourceProvider.getActiveProject().getId();
       try
       {
@@ -166,7 +163,7 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-               getOldMemoryValueLoggedInHandler, null, eventBus)
+               getOldMemoryValueLoggedInHandler, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -177,8 +174,7 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -207,7 +203,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       //                  catch (NumberFormatException e)
       //                  {
       //                     String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryInvalidNumberMessage();
-      //                     // TODO
       //                     //                     IDE.fireEvent(new ExceptionThrownEvent(msg));
       //                     console.print(msg);
       //                  }
@@ -215,8 +210,8 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       //            }
       //         });
 
-      view.setDialogTitle(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogTitle());
-      view.setMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogMessage());
+      view.setDialogTitle(constant.updateMemoryDialogTitle());
+      view.setMessage(constant.updateMemoryDialogMessage());
       view.setProperty(String.valueOf(oldMemoryValue));
 
       view.showDialog();
@@ -236,21 +231,19 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
 
    private void updateMemory(final int memory)
    {
-      // TODO
-      //      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       final String projectId = resourceProvider.getActiveProject().getId();
 
       try
       {
          CloudFoundryClientService.getInstance().updateMemory(resourceProvider.getVfsId(), projectId, null, null,
-            memory, new CloudFoundryAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null, eventBus)
+            memory,
+            new CloudFoundryAsyncRequestCallback<String>(null, updateMemoryLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(String result)
                {
-                  String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemorySuccess(String.valueOf(memory));
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent(msg));
+                  String msg = constant.updateMemorySuccess(String.valueOf(memory));
                   console.print(msg);
                   eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                }
@@ -258,8 +251,7 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -288,8 +280,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
 
    private void getOldInstancesValue()
    {
-      // TODO
-      //      String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       String projectId = resourceProvider.getActiveProject().getId();
 
       try
@@ -306,7 +296,7 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
             null,
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-               getOldInstancesValueLoggedInHandler, null, eventBus)
+               getOldInstancesValueLoggedInHandler, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -317,8 +307,7 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -358,8 +347,8 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       //            }
       //         });
 
-      view.setDialogTitle(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogTitle());
-      view.setMessage(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogMessage());
+      view.setDialogTitle(constant.updateInstancesDialogTitle());
+      view.setMessage(constant.updateInstancesDialogMessage());
       view.setProperty(String.valueOf(oldInstancesValue));
 
       view.showDialog();
@@ -384,8 +373,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
     */
    private void updateInstances(final String instancesExpression)
    {
-      // TODO
-      //      final String projectId = ((ItemContext)selectedItems.get(0)).getProject().getId();
       final String projectId = resourceProvider.getActiveProject().getId();
 
       String encodedExp = URL.encodePathSegment(instancesExpression);
@@ -394,7 +381,8 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       {
          CloudFoundryClientService.getInstance().updateInstances(resourceProvider.getVfsId(), projectId, null, null,
             encodedExp,
-            new CloudFoundryAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<String>(null, updateInstancesLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(String result)
@@ -413,16 +401,12 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
                         null,
                         null,
                         new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, null, null,
-                           eventBus)
+                           eventBus, console, constant)
                         {
                            @Override
                            protected void onSuccess(CloudFoundryApplication result)
                            {
-                              String msg =
-                                 CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesSuccess(String
-                                    .valueOf(result.getInstances()));
-                              // TODO
-                              //                              IDE.fireEvent(new OutputEvent(msg));
+                              String msg = constant.updateInstancesSuccess(String.valueOf(result.getInstances()));
                               console.print(msg);
                               eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
                            }
@@ -430,8 +414,7 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
                   }
                   catch (RequestException e)
                   {
-                     // TODO
-                     //                     IDE.fireEvent(new ExceptionThrownEvent(e));
+                     eventBus.fireEvent(new ExceptionThrownEvent(e));
                      console.print(e.getMessage());
                   }
                }
@@ -439,8 +422,7 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

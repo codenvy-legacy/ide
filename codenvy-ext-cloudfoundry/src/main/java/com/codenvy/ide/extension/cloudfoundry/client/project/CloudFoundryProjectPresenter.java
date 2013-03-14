@@ -20,10 +20,12 @@ package com.codenvy.ide.extension.cloudfoundry.client.project;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
@@ -60,8 +62,7 @@ import com.google.web.bindery.event.shared.EventBus;
 @Singleton
 public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate,
    ApplicationInfoChangedHandler, ManageServicesHandler, ApplicationDeletedHandler
-// ProjectOpenedHandler, ProjectClosedHandler,
-//   ManageCloudFoundryProjectHandler, ViewClosedHandler, ApplicationDeletedHandler, ApplicationInfoChangedHandler, ActiveProjectChangedHandler
+// ProjectOpenedHandler, ProjectClosedHandler,  ManageCloudFoundryProjectHandler,  ActiveProjectChangedHandler
 {
    private CloudFoundryProjectView view;
 
@@ -83,12 +84,14 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
    private CloudFoundryApplication application;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view,
       ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
       UpdatePropertiesPresenter updateProperyPresenter, ManageServicesPresenter manageServicesPresenter,
-      UpdateApplicationPresenter updateApplicationPresenter,
-      EventBus eventBus, ResourceProvider resourceProvider, Console console)
+      UpdateApplicationPresenter updateApplicationPresenter, EventBus eventBus, ResourceProvider resourceProvider,
+      Console console, CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -100,6 +103,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.console = console;
       this.manageServicesPresenter = manageServicesPresenter;
       this.updateApplicationPresenter = updateApplicationPresenter;
+      this.constant = constant;
 
       this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
       this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
@@ -155,24 +159,20 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                @Override
                protected void onSuccess(StringBuilder result)
                {
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent("<pre>" + result.toString() + "</pre>", Type.OUTPUT));
                   console.print("<pre>" + result.toString() + "</pre>");
                }
 
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  IDE.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception.getMessage()));
                   console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e.getMessage()));
+         eventBus.fireEvent(new ExceptionThrownEvent(e.getMessage()));
          console.print(e.getMessage());
 
          e.printStackTrace();
@@ -211,10 +211,9 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                @Override
                public void onLoggedIn()
                {
-                  // TODO
                   getApplicationInfo(project);
                }
-            }, null, eventBus)
+            }, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -233,8 +232,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

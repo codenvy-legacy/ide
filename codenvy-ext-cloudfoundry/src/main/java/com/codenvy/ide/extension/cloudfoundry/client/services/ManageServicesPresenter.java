@@ -19,32 +19,23 @@
 package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.api.ui.console.Console;
-
-import com.codenvy.ide.rest.AsyncRequestCallback;
-import com.codenvy.ide.rest.AutoBeanUnmarshaller;
-
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
+import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
+import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
+import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryServices;
-
+import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
+import com.codenvy.ide.rest.AsyncRequestCallback;
+import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
 import com.google.web.bindery.event.shared.EventBus;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CloudFoundryServicesUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServicePresenter;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesView;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ProvisionedServiceCreatedHandler;
-import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
-import com.codenvy.ide.extension.cloudfoundry.shared.ProvisionedService;
 
 import java.util.Arrays;
 
@@ -116,15 +107,18 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
    protected ManageServicesPresenter(ManageServicesView view, EventBus eventBus, Console console,
-      CreateServicePresenter createServicePresenter)
+      CreateServicePresenter createServicePresenter, CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.console = console;
       this.createServicePresenter = createServicePresenter;
+      this.constant = constant;
 
       this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
    }
@@ -184,7 +178,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       try
       {
          CloudFoundryClientService.getInstance().deleteService(null, service.getName(),
-            new CloudFoundryAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<Object>(null, deleteServiceLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(Object result)
@@ -199,8 +194,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -215,7 +209,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       try
       {
          CloudFoundryClientService.getInstance().bindService(null, service.getName(), application.getName(), null,
-            null, new CloudFoundryAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus)
+            null,
+            new CloudFoundryAsyncRequestCallback<Object>(null, bindServiceLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(Object result)
@@ -233,8 +229,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -249,7 +244,8 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       try
       {
          CloudFoundryClientService.getInstance().unbindService(null, service, application.getName(), null, null,
-            new CloudFoundryAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus)
+            new CloudFoundryAsyncRequestCallback<Object>(null, unBindServiceLoggedInHandler, null, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(Object result)
@@ -260,8 +256,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -306,7 +301,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
             application.getName(),
             null,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller,
-               getApplicationInfoLoggedInHandler, null, eventBus)
+               getApplicationInfoLoggedInHandler, null, eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -319,8 +314,7 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -345,16 +339,13 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  Dialogs.getInstance().showError(CloudFoundryExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
-                  Window.alert(CloudFoundryExtension.LOCALIZATION_CONSTANT.retrieveServicesFailed());
+                  Window.alert(constant.retrieveServicesFailed());
                }
             });
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }

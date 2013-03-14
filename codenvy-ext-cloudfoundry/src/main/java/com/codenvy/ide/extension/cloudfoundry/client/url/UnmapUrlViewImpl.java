@@ -18,10 +18,8 @@
  */
 package com.codenvy.ide.extension.cloudfoundry.client.url;
 
-import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
 import com.google.gwt.cell.client.ButtonCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.SafeHtmlCell;
@@ -41,8 +39,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlView;
 
 import java.util.List;
 
@@ -72,17 +68,16 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
    {
    }
 
-   private final String URL = CloudFoundryExtension.LOCALIZATION_CONSTANT.applicationUnmapUrlGridUrlField();
-
-   private final String UNMAP_BUTTON_TITLE = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapButton();
-
-   private final String UNMAP_COLUMN_HEADER = CloudFoundryExtension.LOCALIZATION_CONSTANT.unmapUrlListGridColumnTitle();
-
    private UnmapUrlView.ActionDelegate delegate;
 
+   private CloudFoundryLocalizationConstant constant;
+
    @Inject
-   protected UnmapUrlViewImpl(CloudFoundryLocalizationConstant constatns, CloudFoundryResources resources)
+   protected UnmapUrlViewImpl(CloudFoundryLocalizationConstant constatns, CloudFoundryResources resources,
+      CloudFoundryLocalizationConstant constant)
    {
+      this.constant = constant;
+
       createUrlsTable();
 
       Widget widget = uiBinder.createAndBindUi(this);
@@ -101,7 +96,7 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
          @Override
          public String getValue(String object)
          {
-            return UNMAP_BUTTON_TITLE;
+            return constant.unmapButton();
          }
       };
 
@@ -133,9 +128,9 @@ public class UnmapUrlViewImpl extends DialogBox implements UnmapUrlView
          }
       };
 
-      urlsTable.addColumn(valueColumn, URL);
+      urlsTable.addColumn(valueColumn, constant.applicationUnmapUrlGridUrlField());
       urlsTable.setColumnWidth(valueColumn, "75%");
-      urlsTable.addColumn(buttonColumn, UNMAP_COLUMN_HEADER);
+      urlsTable.addColumn(buttonColumn, constant.unmapUrlListGridColumnTitle());
       urlsTable.setColumnWidth(buttonColumn, "25%");
 
       // don't show loading indicator

@@ -49,9 +49,6 @@ public class CloudFoundryExtension
     */
    public static final CloudFoundryAutoBeanFactory AUTO_BEAN_FACTORY = GWT.create(CloudFoundryAutoBeanFactory.class);
 
-   public static final CloudFoundryLocalizationConstant LOCALIZATION_CONSTANT = GWT
-      .create(CloudFoundryLocalizationConstant.class);
-
    /**
     * Default CloudFoundry server.
     */
@@ -76,7 +73,7 @@ public class CloudFoundryExtension
    public CloudFoundryExtension(PaaSAgent paasAgent, CloudFoundryResources resources, MainMenuPresenter menu,
       ShowCreateApplicationCommand createApplicationCommand, ShowLoginCommand loginCommand,
       ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand,
-      EventBus eventBus, DeployApplicationPresenter deployAppPresenter)
+      EventBus eventBus, DeployApplicationPresenter deployAppPresenter, CloudFoundryLocalizationConstant constant)
    {
       // TODO Auto-generated constructor stub
       //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, preferencePage);
@@ -85,7 +82,7 @@ public class CloudFoundryExtension
       paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, deployAppPresenter, null);
      
       String restContext = "/rest/private";
-      new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus);
+      new CloudFoundryClientServiceImpl(restContext, new EmptyLoader(), null, eventBus, constant);
 
       menu.addMenuItem("PaaS/CloudFoudry/Create Application...", createApplicationCommand);
       menu.addMenuItem("PaaS/CloudFoudry/Applications...", showApplicationsCommand);

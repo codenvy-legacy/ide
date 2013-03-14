@@ -20,6 +20,7 @@ package com.codenvy.ide.extension.cloudfoundry.client.deploy;
 
 import com.codenvy.ide.api.resources.ResourceProvider;
 import com.codenvy.ide.api.ui.console.Console;
+import com.codenvy.ide.commons.exception.ExceptionThrownEvent;
 import com.codenvy.ide.core.event.RefreshBrowserEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCallback;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
@@ -57,10 +58,7 @@ import java.util.List;
 @Singleton
 public class DeployApplicationPresenter implements DeployApplicationView.ActionDelegate, HasPaaSActions,
    ProjectBuiltHandler
-//implements VfsChangedHandler
 {
-   private static final CloudFoundryLocalizationConstant lb = CloudFoundryExtension.LOCALIZATION_CONSTANT;
-
    private DeployApplicationView view;
 
    private EventBus eventBus;
@@ -86,17 +84,20 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
 
    private Console console;
 
+   private CloudFoundryLocalizationConstant constant;
+
    private HandlerRegistration projectBuildHandler;
 
    @Inject
    protected DeployApplicationPresenter(DeployApplicationView view, EventBus eventBus,
-      ResourceProvider resourcesProvider, Console console)
+      ResourceProvider resourcesProvider, Console console, CloudFoundryLocalizationConstant constant)
    {
       this.view = view;
       this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.resourcesProvider = resourcesProvider;
       this.console = console;
+      this.constant = constant;
    }
 
    /**
@@ -152,13 +153,15 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
             createApplication();
          }
       };
-      // TODO
+      // TODO Need to create some special service after this class
+      // This class still doesn't have analog.
       //      JobManager.get().showJobSeparated();
       AutoBean<CloudFoundryApplication> cloudFoundryApplication =
          CloudFoundryExtension.AUTO_BEAN_FACTORY.cloudFoundryApplication();
       AutoBeanUnmarshallerWS<CloudFoundryApplication> unmarshaller =
          new AutoBeanUnmarshallerWS<CloudFoundryApplication>(cloudFoundryApplication);
 
+      // TODO This code uses WebSocket but we have not ported it yet.
       //      try
       //      {
       //         // Application will be started after creation (IDE-1618)
@@ -172,7 +175,6 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       //            0,
       //            noStart,
       //            resourcesProvider.getVfsId(),
-      //            // TODO
       //            resourcesProvider.getActiveProject().getId(),
       //            warUrl,
       //            new CloudFoundryRESTfulRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null,
@@ -189,9 +191,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       //               {
       //                  // TODO
       //                  //                  deployResultHandler.onDeployFinished(false);
-      //                  // TODO
-      //                  //                     IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-      //                  console.print(lb.applicationCreationFailed());
+      //                  console.print(constant.applicationCreationFailed());
       //                  super.onFailure(exception);
       //               }
       //            });
@@ -227,12 +227,10 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
             0,
             noStart,
             resourcesProvider.getVfsId(),
-            // TODO
-            //            project.getId(),
             resourcesProvider.getActiveProject().getId(),
             warUrl,
             new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, loggedInHandler, null, server,
-               eventBus)
+               eventBus, console, constant)
             {
                @Override
                protected void onSuccess(CloudFoundryApplication result)
@@ -245,9 +243,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
                {
                   // TODO
                   //                  deployResultHandler.onDeployFinished(false);
-                  // TODO
-                  //                  IDE.fireEvent(new OutputEvent(lb.applicationCreationFailed(), OutputMessage.Type.INFO));
-                  console.print(lb.applicationCreationFailed());
+                  console.print(constant.applicationCreationFailed());
                   super.onFailure(exception);
                }
             });
@@ -256,8 +252,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       {
          // TODO
          //         deployResultHandler.onDeployFinished(false);
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -270,22 +265,20 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
    private void onAppCreatedSuccess(CloudFoundryApplication app)
    {
       warUrl = null;
-      String msg = lb.applicationCreatedSuccessfully(app.getName());
+      String msg = constant.applicationCreatedSuccessfully(app.getName());
       if ("STARTED".equals(app.getState()))
       {
          if (app.getUris().isEmpty())
          {
-            msg += "<br>" + lb.applicationStartedWithNoUrls();
+            msg += "<br>" + constant.applicationStartedWithNoUrls();
          }
          else
          {
-            msg += "<br>" + lb.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
+            msg += "<br>" + constant.applicationStartedOnUrls(app.getName(), getAppUrlsAsString(app));
          }
       }
       // TODO
       //      deployResultHandler.onDeployFinished(true);
-      // TODO
-      //      IDE.fireEvent(new OutputEvent(msg, OutputMessage.Type.INFO));
       console.print(msg);
       eventBus.fireEvent(new RefreshBrowserEvent(project));
    }
@@ -354,15 +347,14 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
                @Override
                protected void onFailure(Throwable exception)
                {
-                  // TODO
-                  //                  IDE.fireEvent(new ExceptionThrownEvent(exception));
+                  eventBus.fireEvent(new ExceptionThrownEvent(exception));
                   console.print(exception.getMessage());
                }
             });
       }
       catch (RequestException e)
       {
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
@@ -382,7 +374,8 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       {
          CloudFoundryClientService.getInstance().validateAction("create", server, name, null, url,
             resourcesProvider.getVfsId(), null, 0, 0, true,
-            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus)
+            new CloudFoundryAsyncRequestCallback<String>(null, validateHandler, null, server, eventBus, console,
+               constant)
             {
                @Override
                protected void onSuccess(String result)
@@ -393,8 +386,7 @@ public class DeployApplicationPresenter implements DeployApplicationView.ActionD
       }
       catch (RequestException e)
       {
-         // TODO
-         //         IDE.fireEvent(new ExceptionThrownEvent(e));
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
          console.print(e.getMessage());
       }
    }
