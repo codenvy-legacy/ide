@@ -89,7 +89,7 @@
      <type>org.exoplatform.ide.vfs.impl.fs.LocalFileSystemInitializer</type>
      <init-params>
         <values-param>
-           <name>id</name>
+           <name>ids</name>
            <value>dev-monit</value>
         </values-param>
      </init-params>
