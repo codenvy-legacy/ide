@@ -18,18 +18,14 @@
  */
 package com.codenvy.ide.collaboration.watcher.client;
 
-import com.google.gwt.event.shared.HandlerRegistration;
-
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.userinfo.UserInfo;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedEvent;
 import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
-import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedEvent;
-import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedHandler;
-import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
 import org.exoplatform.ide.json.client.Jso;
@@ -38,16 +34,16 @@ import org.exoplatform.ide.json.client.Jso;
  * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
  * @version $Id:
  */
-public class VfsWatcherExtension extends Extension implements MainSocketOpenedHandler, UserInfoReceivedHandler
+public class VfsWatcherExtension extends Extension implements ConnectionOpenedHandler, UserInfoReceivedHandler
 {
 
    private UserInfo userInfo;
 
-   private HandlerRegistration handlerRegistration;
-
    private MessageFilter messageFilter = new MessageFilter();
 
    private CollaborationApi collaborationApi;
+
+   private boolean connectionOpened = false;
 
    /**
     * {@inheritDoc}
@@ -56,16 +52,7 @@ public class VfsWatcherExtension extends Extension implements MainSocketOpenedHa
    public void initialize()
    {
       IDE.eventBus().addHandler(UserInfoReceivedEvent.TYPE, this);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onMainSocketOpened(MainSocketOpenedEvent event)
-   {
-      handlerRegistration.removeHandler();
-      subscribe();
+      IDE.messageBus().setOnOpenHandler(this);
    }
 
    /**
@@ -75,20 +62,17 @@ public class VfsWatcherExtension extends Extension implements MainSocketOpenedHa
    public void onUserInfoReceived(UserInfoReceivedEvent event)
    {
       userInfo = event.getUserInfo();
-      if (IDE.messageBus().getReadyState() != ReadyState.OPEN)
+      if (connectionOpened)
       {
-         handlerRegistration = IDE.eventBus().addHandler(MainSocketOpenedEvent.TYPE, this);
-         return;
+         subscribe();
       }
-
-      subscribe();
    }
 
    private void subscribe()
    {
       collaborationApi = new CollaborationApi(IDE.messageBus());
       new VfsWatcher(messageFilter, IDE.eventBus(), collaborationApi);
-      IDE.messageBus().subscribe("vfs_watcher." + userInfo.getClientId(),new MessageHandler()
+      IDE.messageBus().subscribe("vfs_watcher." + userInfo.getClientId(), new MessageHandler()
       {
          @Override
          public void onMessage(String message)
@@ -97,5 +81,15 @@ public class VfsWatcherExtension extends Extension implements MainSocketOpenedHa
             messageFilter.dispatchMessage(dto);
          }
       });
+   }
+
+   @Override
+   public void onOpen()
+   {
+      connectionOpened = true;
+      if (userInfo != null)
+      {
+         subscribe();
+      }
    }
 }

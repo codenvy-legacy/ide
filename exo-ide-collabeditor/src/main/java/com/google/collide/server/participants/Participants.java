@@ -105,10 +105,26 @@ public class Participants
    public ParticipantUserDetailsImpl getParticipant(String userId)
    {
       Object tenantName = getTenantName();
-      ConcurrentMap<String, LoggedInUser> users = loggedInUsers.get(tenantName);
-      LoggedInUser user = users.get(userId);
-      if (user != null)
+      ConcurrentMap<String, LoggedInUser> users = null;
+      if (tenantName == null)
       {
+         for (String key : loggedInUsers.keySet())
+         {
+            ConcurrentMap<String, LoggedInUser> tenantUsers = loggedInUsers.get(key);
+            if (tenantUsers.containsKey(userId))
+            {
+               users = tenantUsers;
+               break;
+            }
+         }
+      }
+      else
+      {
+         users = loggedInUsers.get(tenantName);
+      }
+      if (users != null && users.containsKey(userId))
+      {
+         LoggedInUser user = users.get(userId);
          ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
          ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
          UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(userId).setDisplayEmail(
@@ -150,7 +166,7 @@ public class Participants
       {
          ParticipantUserDetailsImpl participant = getParticipant(userId);
          users.remove(userId);
-         Set<String> allParticipantId = getAllParticipantId();
+         Set<String> allParticipantId = users.keySet();
          UserLogOutDtoImpl userLogOutDto = UserLogOutDtoImpl.make();
          userLogOutDto.setParticipant((ParticipantImpl)participant.getParticipant());
          WSUtil.broadcastToClients(userLogOutDto.toJson(), allParticipantId);

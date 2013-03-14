@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.websocket;
 
-import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.IDE;
@@ -27,15 +25,11 @@ import org.exoplatform.ide.client.framework.application.event.ApplicationClosedE
 import org.exoplatform.ide.client.framework.application.event.ApplicationClosedHandler;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent;
 import org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler;
-import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
-import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedEvent;
 import org.exoplatform.ide.client.framework.websocket.events.WebSocketClosedEvent;
 import org.exoplatform.ide.client.framework.websocket.rest.RESTMessageBus;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessageBuilder;
-import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
 
 /**
  * Handler that opens WebSocket connection when IDE loaded and close WebSocket on close IDE.
@@ -44,90 +38,19 @@ import org.exoplatform.ide.client.framework.websocket.rest.RequestMessage;
  * @version $Id: WebSocketHandler.java Jun 19, 2012 12:33:42 PM azatsarynnyy $
  *
  */
-public class WebSocketHandler implements ApplicationSettingsReceivedHandler, ApplicationClosedHandler
+public class WebSocketHandler implements ApplicationClosedHandler
 {
-   /**
-    * Period (in milliseconds) to send heartbeat pings.
-    */
-   private static final int HEARTBEAT_PERIOD = 50 * 1000;
 
-   /**
-    * Period (in milliseconds) between reconnection attempts after connection has been closed.
-    */
-   private final static int FREQUENTLY_RECONNECTION_PERIOD = 1 * 1000;
-
-   /**
-    * Period (in milliseconds) between reconnection attempts after all previous
-    * <code>MAX_FREQUENTLY_RECONNECTION_ATTEMPTS</code> attempts is failed.
-    */
-   private final static int SELDOM_RECONNECTION_PERIOD = 60 * 1000;
-
-   /**
-    * Max. number of attempts to reconnect for every <code>FREQUENTLY_RECONNECTION_PERIOD</code> ms.
-    */
-   private final static int MAX_FREQUENTLY_RECONNECTION_ATTEMPTS = 5;
-
-   /**
-    * Max. number of attempts to reconnect for every <code>SELDOM_RECONNECTION_PERIOD</code> ms.
-    */
-   private final static int MAX_SELDOM_RECONNECTION_ATTEMPTS = 5;
-
-   /**
-    * Counter of attempts to reconnect.
-    */
-   private static int frequentlyReconnectionAttemptsCounter;
-
-   /**
-    * Counter of attempts to reconnect.
-    */
-   private static int seldomReconnectionAttemptsCounter;
 
    public WebSocketHandler()
    {
-      IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ApplicationClosedEvent.TYPE, this);
-   }
-
-   /**
-    * @see org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedHandler#onApplicationSettingsReceived(org.exoplatform.ide.client.framework.settings.ApplicationSettingsReceivedEvent)
-    */
-   @Override
-   public void onApplicationSettingsReceived(ApplicationSettingsReceivedEvent event)
-   {
       IDE.setMessageBus(new RESTMessageBus(getWebSocketServerURL()));
       initialize();
    }
 
    private void initialize()
    {
-      IDE.messageBus().setOnOpenHandler(new ConnectionOpenedHandler()
-      {
-         @Override
-         public void onOpen()
-         {
-            // If the any timer has been started then stop it.
-            if (frequentlyReconnectionAttemptsCounter > 0)
-               frequentlyReconnectionTimer.cancel();
-            if (seldomReconnectionAttemptsCounter > 0)
-               seldomReconnectionTimer.cancel();
-
-            frequentlyReconnectionAttemptsCounter = 0;
-            seldomReconnectionAttemptsCounter = 0;
-            heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
-            IDE.eventBus().fireEvent(new MainSocketOpenedEvent());
-         }
-      });
-
-      IDE.messageBus().setOnCloseHandler(new ConnectionClosedHandler()
-      {
-         @Override
-         public void onClose(WebSocketClosedEvent event)
-         {
-            heartbeatTimer.cancel();
-            frequentlyReconnectionTimer.scheduleRepeating(FREQUENTLY_RECONNECTION_PERIOD);
-         }
-      });
-
       IDE.messageBus().setOnErrorHandler(new ConnectionErrorHandler()
       {
          @Override
@@ -162,66 +85,6 @@ public class WebSocketHandler implements ApplicationSettingsReceivedHandler, App
          return "ws://" + Window.Location.getHost() + "/IDE/websocket";
    }
 
-   /**
-    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
-    */
-   private final Timer heartbeatTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         RequestMessage message =
-            RequestMessageBuilder.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
-               .getRequestMessage();
-         try
-         {
-            IDE.messageBus().send(message, null);
-         }
-         catch (WebSocketException e)
-         {
-            // nothing to do
-         }
-      }
-   };
 
-   /**
-    * Timer for reconnecting WebSocket.
-    */
-   private Timer frequentlyReconnectionTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         if (frequentlyReconnectionAttemptsCounter == MAX_FREQUENTLY_RECONNECTION_ATTEMPTS)
-         {
-            cancel();
-            seldomReconnectionTimer.scheduleRepeating(SELDOM_RECONNECTION_PERIOD);
-            return;
-         }
-         frequentlyReconnectionAttemptsCounter++;
-         IDE.messageBus().initialize();
-         initialize();
-      }
-   };
-
-
-   /**
-    * Timer for reconnecting WebSocket.
-    */
-   private Timer seldomReconnectionTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         if (seldomReconnectionAttemptsCounter == MAX_SELDOM_RECONNECTION_ATTEMPTS)
-         {
-            cancel();
-            return;
-         }
-         seldomReconnectionAttemptsCounter++;
-         IDE.messageBus().initialize();
-         initialize();
-      }
-   };
 
 }

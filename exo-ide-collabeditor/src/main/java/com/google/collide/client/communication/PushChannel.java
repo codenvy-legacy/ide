@@ -22,11 +22,13 @@ import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.websocket.MessageBus;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionClosedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionErrorHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
@@ -48,11 +50,6 @@ import java.util.List;
  */
 public class PushChannel
 {
-   
-   /**
-    * Period (in milliseconds) to send heartbeat pings.
-    */
-   private static final int HEARTBEAT_PERIOD = 50 * 1000;
 
    public interface Listener
    {
@@ -116,28 +113,6 @@ public class PushChannel
    private final ListenerManager<Listener> listenerManager = ListenerManager.create();
 
    private final DisconnectedTooLongTimer disconnectedTooLongTimer = new DisconnectedTooLongTimer();
-
-   /**
-    * Timer for sending heartbeat pings to prevent autoclosing an idle WebSocket connection.
-    */
-   private final Timer heartbeatTimer = new Timer()
-   {
-      @Override
-      public void run()
-      {
-         RequestMessage message =
-                  RequestMessageBuilder.build(RequestBuilder.POST, null).header("x-everrest-websocket-message-type", "ping")
-                  .getRequestMessage();
-         try
-         {
-            eventBus.send(message, null);
-         }
-         catch (WebSocketException e)
-         {
-            // nothing to do
-         }
-      }
-   };
    
    private final ConnectionClosedHandler closedHandler = new ConnectionClosedHandler()
    {
@@ -146,7 +121,6 @@ public class PushChannel
       {
          hasReceivedOnDisconnected = true;
          disconnectedTooLongTimer.schedule();
-         heartbeatTimer.cancel();
       }
    };
 
@@ -178,8 +152,6 @@ public class PushChannel
             }
          }
 
-         heartbeatTimer.scheduleRepeating(HEARTBEAT_PERIOD);
-         
          // Notify listeners who handle reconnections.
          if (hasReceivedOnDisconnected)
          {

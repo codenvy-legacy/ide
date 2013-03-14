@@ -44,6 +44,10 @@ public class WebSocketClosedEvent
     */
    private boolean wasClean;
 
+   public WebSocketClosedEvent()
+   {
+   }
+
    public WebSocketClosedEvent(int code, String reason, boolean wasClean)
    {
       this.code = code;

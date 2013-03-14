@@ -21,7 +21,6 @@ package com.codenvy.ide.collaboration.chat.client;
 import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipantsImpl;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.shared.HandlerRegistration;
 
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
@@ -35,8 +34,7 @@ import org.exoplatform.ide.client.framework.userinfo.event.UserInfoReceivedHandl
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageBus.ReadyState;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
-import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedEvent;
-import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.MessageHandler;
 import org.exoplatform.ide.dtogen.client.RoutableDtoClientImpl;
 import org.exoplatform.ide.dtogen.shared.ServerError.FailureReason;
@@ -47,7 +45,7 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  *
  */
-public class ChatExtension extends Extension implements MainSocketOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler
+public class ChatExtension extends Extension implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler
 {
 
    public static final ChatResources resources = GWT.create(ChatResources.class);
@@ -71,8 +69,6 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
 
    private ProjectChatPresenter chatPresenter;
 
-   private HandlerRegistration handlerRegistration;
-
    private UserInfo userInfo;
 
    private ProjectModel currentProject;
@@ -93,19 +89,12 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
       IDE.addHandler(UserInfoReceivedEvent.TYPE, this);
    }
 
-   @Override
-   public void onMainSocketOpened(MainSocketOpenedEvent event)
-   {
-      if(subscribeOnReady && currentProject != null)
-      {
-         subscribeToChanel();
-      }
-      createPresenter();
-      handlerRegistration.removeHandler();
-   }
-
    private void createPresenter()
    {
+      if(chatPresenter != null)
+      {
+         return;
+      }
       chatApi = new ChatApi(IDE.messageBus());
       chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl, userInfo.getName());
    }
@@ -161,10 +150,20 @@ public class ChatExtension extends Extension implements MainSocketOpenedHandler,
       userInfo = event.getUserInfo();
       if (IDE.messageBus().getReadyState() != ReadyState.OPEN)
       {
-         handlerRegistration = IDE.eventBus().addHandler(MainSocketOpenedEvent.TYPE, this);
+         IDE.messageBus().setOnOpenHandler(this);
          return;
       }
 
+      createPresenter();
+   }
+
+   @Override
+   public void onOpen()
+   {
+      if(subscribeOnReady && currentProject != null)
+      {
+         subscribeToChanel();
+      }
       createPresenter();
    }
 }

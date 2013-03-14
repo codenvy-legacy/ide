@@ -29,6 +29,7 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import elemental.css.CSSStyleDeclaration;
 import elemental.css.CSSStyleDeclaration.Display;
+import elemental.css.CSSStyleDeclaration.Unit;
 import elemental.css.CSSStyleDeclaration.Visibility;
 import elemental.events.Event;
 import elemental.events.EventListener;
@@ -175,6 +176,8 @@ public class StatusPresenter extends UiComponent<StatusPresenter.View>
       } else {
         // Fatal messages are 100% width.
         getElement().getStyle().setWidth(100, CSSStyleDeclaration.Unit.PCT);
+        getElement().getStyle().setHeight(100, CSSStyleDeclaration.Unit.PCT);
+        getElement().getStyle().setTop(0, Unit.PX);
         getElement().getStyle().setMarginLeft(0, CSSStyleDeclaration.Unit.PX);
       }
 
@@ -303,7 +306,7 @@ public class StatusPresenter extends UiComponent<StatusPresenter.View>
       @Override
       public void onStatusExpanded() {
         getView().more.getStyle().setDisplay(CSSStyleDeclaration.Display.NONE);
-        getView().longText.getStyle().setDisplay(CSSStyleDeclaration.Display.BLOCK);
+//        getView().longText.getStyle().setDisplay(CSSStyleDeclaration.Display.BLOCK);
         if (statusMessage.getType() != MessageType.FATAL) {
           getView().getElement().addClassName(getView().css.expandedRegular());
           getView().dynamicallyPositionMessage();

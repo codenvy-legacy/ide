@@ -45,6 +45,9 @@ public class RESTMessageBus extends MessageBus
 
    private static final String MESSAGE_TYPE_HEADER_NAME = "x-everrest-websocket-message-type";
 
+   public static final RequestMessage HEARTBEAT_MESSAGE = RequestMessageBuilder.build(RequestBuilder.POST, null).header(
+      "x-everrest-websocket-message-type", "ping").getRequestMessage();
+
    /**
     * Creates new {@link RESTMessageBus} instance.
     * 
@@ -81,7 +84,13 @@ public class RESTMessageBus extends MessageBus
    @Override
    protected Message parseMessage(String message)
    {
-      return (Message)AutoBeanCodex.decode(AUTO_BEAN_FACTORY, ResponseMessage.class, message).as();
+      return AutoBeanCodex.decode(AUTO_BEAN_FACTORY, ResponseMessage.class, message).as();
+   }
+
+   @Override
+   protected Message getHeartbeatMessage()
+   {
+      return HEARTBEAT_MESSAGE;
    }
 
    /**

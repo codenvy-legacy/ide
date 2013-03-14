@@ -18,9 +18,10 @@
  */
 package com.codenvy.ide.everrest;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.everrest.core.impl.EverrestConfiguration;
 import org.everrest.core.impl.async.AsynchronousJobPool;
-import org.exoplatform.ide.commons.EnvironmentContext;
 import org.exoplatform.services.security.ConversationState;
 import org.exoplatform.services.security.Identity;
 import org.exoplatform.services.security.IdentityConstants;

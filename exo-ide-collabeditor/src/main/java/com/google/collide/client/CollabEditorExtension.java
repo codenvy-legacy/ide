@@ -18,8 +18,9 @@
  */
 package com.google.collide.client;
 
+import com.codenvy.ide.client.util.ClientImplementationsInjector;
+import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.notification.NotificationManager;
-import com.codenvy.ide.notification.NotificationManager.InitialPositionCallback;
 import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.collaboration.CollaborationManager;
@@ -28,28 +29,25 @@ import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
 import com.google.collide.client.collaboration.NotificationController;
 import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
 import com.google.collide.client.document.DocumentManager;
-import com.codenvy.ide.client.util.ClientImplementationsInjector;
-import com.codenvy.ide.client.util.Elements;
+import com.google.collide.client.status.StatusPresenter;
 import com.google.collide.codemirror2.CodeMirror2;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.StyleInjector;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import elemental.dom.Node;
 
 import org.exoplatform.ide.client.framework.module.Extension;
 import org.exoplatform.ide.client.framework.module.IDE;
-import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedEvent;
-import org.exoplatform.ide.client.framework.websocket.events.MainSocketOpenedHandler;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.client.framework.websocket.events.ReplyHandler;
 
 /**
  * @author <a href="mailto:evidolob@exoplatform.com">Evgen Vidolob</a>
  * @version $Id:  7/18/12 evgen $
  */
-public class CollabEditorExtension extends Extension implements MainSocketOpenedHandler
+public class CollabEditorExtension extends Extension implements ConnectionOpenedHandler
 {
 
    private static CollabEditorExtension instance;
@@ -77,11 +75,11 @@ public class CollabEditorExtension extends Extension implements MainSocketOpened
       instance = this;
       ClientImplementationsInjector.inject();
 
-      IDE.addHandler(MainSocketOpenedEvent.TYPE, this);
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
 
       new ParticipantsPresenter(context.getResources());
+      IDE.messageBus().setOnOpenHandler(this);
    }
 
    public AppContext getContext()
@@ -150,7 +148,7 @@ public class CollabEditorExtension extends Extension implements MainSocketOpened
 //    styleBuilder.append(resources.workspaceNavigationOutlineNodeRendererCss().getText());
       styleBuilder.append(resources.workspaceNavigationParticipantListCss().getText());
 //    styleBuilder.append(resources.searchContainerCss().getText());
-//    styleBuilder.append(resources.statusPresenterCss().getText());
+      styleBuilder.append(resources.statusPresenterCss().getText());
 //    styleBuilder.append(resources.noFileSelectedPanelCss().getText());
 //    styleBuilder.append(resources.diffRendererCss().getText());
 //    styleBuilder.append(resources.deltaInfoBarCss().getText());
@@ -193,11 +191,21 @@ public class CollabEditorExtension extends Extension implements MainSocketOpened
       styleBuilder.append(resources.notificationCss().getText());
       StyleInjector.inject(styleBuilder.toString());
       Elements.injectJs(CodeMirror2.getJs());
+
+      // Status Presenter
+      StatusPresenter statusPresenter = StatusPresenter.create(context.getResources());
+      Elements.getBody().appendChild(statusPresenter.getView().getElement());
+      context.getStatusManager().setHandler(statusPresenter);
+
    }
 
    @Override
-   public void onMainSocketOpened(MainSocketOpenedEvent event)
+   public void onOpen()
    {
+      if(collaborationManager != null)
+      {
+         return;
+      }
       init();
       IDE.messageBus().send("ide/collab_editor/participants/add", "{}", new ReplyHandler()
       {

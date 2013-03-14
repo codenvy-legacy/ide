@@ -33,6 +33,7 @@ import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ProjectClosedDtoI
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.ProjectOpenedDtoImpl;
 import com.google.gwt.event.shared.HandlerManager;
 
+import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
 import org.exoplatform.ide.client.framework.project.ProjectOpenedEvent;
@@ -40,6 +41,7 @@ import org.exoplatform.ide.client.framework.project.ProjectOpenedHandler;
 import org.exoplatform.ide.client.framework.project.api.IDEProject;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
+import org.exoplatform.ide.client.framework.websocket.events.ConnectionOpenedHandler;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
@@ -103,7 +105,12 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
             resource.setName(messageItem.getName());
             resource.setId(messageItem.getId());
             resource.getLinks().putAll(convertDto2VfsLinks(messageItem.getLinks()));
-            resource.setMimeType(messageItem.getMimeType());
+            String mimeType = messageItem.getMimeType();
+            if(mimeType.contains(";"))
+            {
+               mimeType = mimeType.substring(0, mimeType.indexOf(';'));
+            }
+            resource.setMimeType(mimeType);
             ideProject.notifyFolderChanged(((ItemContext)resource).getParent().getPath());
             Notification notification = new Notification("User <b>" + message.getUserId() + "</b> rename: " + message.oldPath() + " to " + messageItem.getName(),
                NotificationType.INFO, DURATION);
@@ -135,6 +142,17 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
             NotificationManager.get().addNotification(notification);
          }
       });
+      IDE.messageBus().setOnOpenHandler(new ConnectionOpenedHandler()
+      {
+         @Override
+         public void onOpen()
+         {
+            if(project != null)
+            {
+               addVfsListener();
+            }
+         }
+      });
    }
 
    private org.exoplatform.ide.vfs.shared.Item convertDto2VfsItem(Item messageItem)
@@ -153,9 +171,14 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
             item = new ProjectModel();
             break;
       }
-      if(messageItem.getMimeType() != null)
+      String mimeType = messageItem.getMimeType();
+      if(mimeType != null)
       {
-         item.setMimeType(messageItem.getMimeType());
+         if(mimeType.contains(";"))
+         {
+            mimeType = mimeType.substring(0, mimeType.indexOf(';'));
+         }
+         item.setMimeType(mimeType);
       }
       item.setId(messageItem.getId());
       item.setParentId(messageItem.getParentId());
@@ -221,10 +244,15 @@ public class VfsWatcher implements ProjectOpenedHandler, ProjectClosedHandler
    public void onProjectOpened(ProjectOpenedEvent event)
    {
       project = event.getProject();
+      addVfsListener();
+   }
+
+   private void addVfsListener()
+   {
       ProjectOpenedDtoImpl dto = ProjectOpenedDtoImpl.make();
-      dto.setProjectPath(event.getProject().getPath());
+      dto.setProjectPath(project.getPath());
       dto.setVfsId(VirtualFileSystem.getInstance().getInfo().getId());
-      dto.setProjectId(event.getProject().getId());
+      dto.setProjectId(project.getId());
       collaborationApi.PROJECT_OPEN.send(dto);
    }
 }

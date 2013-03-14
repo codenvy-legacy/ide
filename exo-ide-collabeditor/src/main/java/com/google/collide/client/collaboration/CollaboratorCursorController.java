@@ -46,13 +46,13 @@ class CollaboratorCursorController {
   private class CollaboratorState {
     private Anchor anchor;
     private CursorView cursorView;
-    private Timer inactiveTimer = new Timer() {
-      @Override
-      public void run() {
-         //TODO
-        cursorView.setVisibility(false);
-      }
-    };
+//    private Timer inactiveTimer = new Timer() {
+//      @Override
+//      public void run() {
+//         //TODO
+//        cursorView.setVisibility(false);
+//      }
+//    };
     
     CollaboratorState(Anchor anchor, CursorView cursorView) {
       this.anchor = anchor;
@@ -60,7 +60,7 @@ class CollaboratorCursorController {
     }
 
     void markAsActive() {
-      inactiveTimer.schedule(INACTIVE_DELAY_MS);
+//      inactiveTimer.schedule(INACTIVE_DELAY_MS);
       
       if (!cursorView.isVisible()) {
         cursorView.setVisibility(true);
@@ -71,7 +71,7 @@ class CollaboratorCursorController {
   private static final AnchorType COLLABORATOR_CURSOR_ANCHOR_TYPE = AnchorType.create(
       CollaboratorCursorController.class, "collaboratorCursor");
 
-  private static final int INACTIVE_DELAY_MS = 10 * 1000;
+//  private static final int INACTIVE_DELAY_MS = 10 * 1000;
   
   private final AppContext appContext;
   private final Buffer buffer;
