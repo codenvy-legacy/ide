@@ -19,7 +19,7 @@
    <groupId>org.exoplatform.gwt</groupId>
    <artifactId>codenvy-gwtframework-ui</artifactId>
    <packaging>jar</packaging>
-   <name>eXo GWT Framework :: UI</name>
+   <name>Codenvy IDE :: GWT Framework :: UI</name>
 
    <properties>
       <!-- Repositories URLs -->

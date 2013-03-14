@@ -94,11 +94,18 @@ public class JavaProject extends IDEProject
       
    }
    
-   private PomXml pom;   
+   private PomXml pom;
+   
+   private List<ProjectModel> modules = new ArrayList<ProjectModel>();
    
    public JavaProject(ProjectModel project)
    {
       super(project);
+   }
+
+   public List<ProjectModel> getModules()
+   {
+      return modules;
    }
 
    private List<SourceDirectory> sourceDirectories = new ArrayList<SourceDirectory>();
