@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.cloudfoundry.client.services;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -29,13 +28,12 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceView;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -64,6 +62,15 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
    @UiField
    Button btnCancel;
 
+   @UiField
+   Label serviceTypeLabel;
+
+   @UiField
+   Label nameLabel;
+
+   @UiField
+   Label optionalLabel;
+
    interface CreateServiceViewImplUiBinder extends UiBinder<Widget, CreateServiceViewImpl>
    {
    }
@@ -78,7 +85,12 @@ public class CreateServiceViewImpl extends DialogBox implements CreateServiceVie
       this.setWidget(widget);
       this.setText("Create service");
 
-      btnCreate.setHTML(new Image(resources.okButton()) + " "+constant.createButton());
+      this.addStyleName(resources.cloudFoundryCss().createService());
+      serviceTypeLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
+      nameLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
+      optionalLabel.addStyleName(resources.cloudFoundryCss().serviceLabel());
+
+      btnCreate.setHTML(new Image(resources.okButton()) + " " + constant.createButton());
       btnCancel.setHTML(new Image(resources.cancelButton()) + " " + constant.cancelButton());
    }
 

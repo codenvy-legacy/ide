@@ -22,7 +22,6 @@ import com.codenvy.ide.websocket.events.ConnectionClosedHandler;
 import com.codenvy.ide.websocket.events.ConnectionErrorHandler;
 import com.codenvy.ide.websocket.events.ConnectionOpenedHandler;
 import com.codenvy.ide.websocket.events.MessageReceivedHandler;
-
 import com.google.gwt.core.client.JavaScriptObject;
 
 
@@ -48,7 +47,7 @@ public class WebSocket extends JavaScriptObject
     */
    public static native WebSocket create(String url)
    /*-{
-      return new WebSocket(url);
+		return new WebSocket(url);
    }-*/;
 
    /**
@@ -61,7 +60,7 @@ public class WebSocket extends JavaScriptObject
     */
    public static native WebSocket create(String url, String protocol)
    /*-{
-      return new WebSocket(url, protocol);
+		return new WebSocket(url, protocol);
    }-*/;
 
    /**
@@ -70,7 +69,7 @@ public class WebSocket extends JavaScriptObject
     */
    public final native void close()
    /*-{
-      this.close();
+		this.close();
    }-*/;
 
    /**
@@ -81,7 +80,7 @@ public class WebSocket extends JavaScriptObject
     */
    public static native boolean isSupported()
    /*-{
-      return !!window.WebSocket;
+		return !!window.WebSocket;
    }-*/;
 
    /**
@@ -91,7 +90,7 @@ public class WebSocket extends JavaScriptObject
     */
    public final native short getReadyState()
    /*-{
-      return this.readyState;
+		return this.readyState;
    }-*/;
 
    /**
@@ -102,7 +101,7 @@ public class WebSocket extends JavaScriptObject
     */
    public final native int getBufferedAmount()
    /*-{
-      return this.bufferedAmount;
+		return this.bufferedAmount;
    }-*/;
 
    /**
@@ -112,7 +111,7 @@ public class WebSocket extends JavaScriptObject
     */
    public final native void send(String data)
    /*-{
-      this.send(data);
+		this.send(data);
    }-*/;
 
    /**
@@ -122,9 +121,9 @@ public class WebSocket extends JavaScriptObject
     */
    public final native void setOnOpenHandler(ConnectionOpenedHandler handler)
    /*-{
-      this.onopen = $entry(function() {
-         handler.@com.codenvy.ide.websocket.events.ConnectionOpenedHandler::onOpen()();
-      });
+		this.onopen = $entry(function() {
+			handler.@com.codenvy.ide.websocket.events.ConnectionOpenedHandler::onOpen()();
+		});
    }-*/;
 
    /**
@@ -134,10 +133,10 @@ public class WebSocket extends JavaScriptObject
     */
    public final native void setOnCloseHandler(ConnectionClosedHandler handler)
    /*-{
-      this.onclose = $entry(function() {
-         var webSocketClosedEventInstance = @com.codenvy.ide.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
-         handler.@com.codenvy.ide.websocket.events.ConnectionClosedHandler::onClose(Lcom/codenvy/ide/client/framework/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
-      });
+		this.onclose = $entry(function() {
+			var webSocketClosedEventInstance = @com.codenvy.ide.websocket.events.WebSocketClosedEvent::new(ILjava/lang/String;Z)(event.code,event.reason,event.wasClean);
+			handler.@com.codenvy.ide.websocket.events.ConnectionClosedHandler::onClose(Lcom/codenvy/ide/websocket/events/WebSocketClosedEvent;)(webSocketClosedEventInstance);
+		});
    }-*/;
 
    /**
@@ -147,9 +146,9 @@ public class WebSocket extends JavaScriptObject
     */
    public final native void setOnErrorHandler(ConnectionErrorHandler handler)
    /*-{
-      this.onerror = $entry(function() {
-         handler.@com.codenvy.ide.websocket.events.ConnectionErrorHandler::onError()();
-      });
+		this.onerror = $entry(function() {
+			handler.@com.codenvy.ide.websocket.events.ConnectionErrorHandler::onError()();
+		});
    }-*/;
 
    /**
@@ -160,9 +159,9 @@ public class WebSocket extends JavaScriptObject
     */
    public final native void setOnMessageHandler(MessageReceivedHandler handler)
    /*-{
-      this.onmessage = $entry(function(event) {
-         var webSocketMessageEventInstance = @com.codenvy.ide.websocket.events.MessageReceivedEvent::new(Ljava/lang/String;)(event.data);
-         handler.@com.codenvy.ide.websocket.events.MessageReceivedHandler::onMessageReceived(Lcom/codenvy/ide/client/framework/websocket/events/MessageReceivedEvent;)(webSocketMessageEventInstance);
-      });
+		this.onmessage = $entry(function(event) {
+			var webSocketMessageEventInstance = @com.codenvy.ide.websocket.events.MessageReceivedEvent::new(Ljava/lang/String;)(event.data);
+			handler.@com.codenvy.ide.websocket.events.MessageReceivedHandler::onMessageReceived(Lcom/codenvy/ide/websocket/events/MessageReceivedEvent;)(webSocketMessageEventInstance);
+		});
    }-*/;
 }

@@ -10,24 +10,9 @@
 			float: right;
 		}
 		
-		.label {
-			cursor: default;
-			font-family: Verdana, Bitstream Vera Sans, sans-serif;
-			font-size: 11px;
-			font-style: normal;
-			font-weight: normal;
-		}
-		
 		.errLabel {
 			margin-bottom: 11px;
-			cursor: default;
-			font-family: Verdana, Bitstream Vera Sans, sans-serif;
-			font-size: 11px;
-			font-style: normal;
-			font-weight: normal;
-			color: #d21a1a;
 			text-align: center;
-			height: 14px;
 		}
 		
 		.spacing {
@@ -47,7 +32,7 @@
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%"
 				styleName="{style.spacing}">
 				<g:west size="100.0">
-					<g:Label text="{locale.loginViewTargetField}" styleName="{style.label}" />
+					<g:Label text="{locale.loginViewTargetField}" ui:field="serverLabel" />
 				</g:west>
 				<g:center>
 					<g:ListBox ui:field="server"/>
@@ -58,7 +43,7 @@
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%"
 				styleName="{style.spacing}">
 				<g:west size="100.0">
-					<g:Label text="{locale.loginViewEmailField}" styleName="{style.label}" />
+					<g:Label text="{locale.loginViewEmailField}" ui:field="emailLabel" />
 				</g:west>
 				<g:center>
 					<g:TextBox width="270px" ui:field="email" />
@@ -69,7 +54,7 @@
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%"
 				styleName="{style.spacing}">
 				<g:west size="100.0">
-					<g:Label text="{locale.loginViewPasswordField}" styleName="{style.label}" />
+					<g:Label text="{locale.loginViewPasswordField}" ui:field="passwordLabel" />
 				</g:west>
 				<g:center>
 					<g:PasswordTextBox ui:field="password" width="270px" />

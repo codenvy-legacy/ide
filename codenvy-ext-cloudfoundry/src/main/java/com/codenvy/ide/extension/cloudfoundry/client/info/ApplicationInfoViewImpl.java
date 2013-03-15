@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.cloudfoundry.client.info;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
 import com.google.gwt.cell.client.TextCell;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -31,13 +30,12 @@ import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.DockLayoutPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoView;
 
 import java.util.List;
 
@@ -87,6 +85,18 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
    @UiField
    Label stack;
 
+   @UiField
+   DockLayoutPanel statePanel;
+
+   @UiField
+   DockLayoutPanel versionPanel;
+
+   @UiField
+   DockLayoutPanel memoryPanel;
+
+   @UiField
+   DockLayoutPanel stackPanel;
+
    interface ApplicationInfoViewImplUiBinder extends UiBinder<Widget, ApplicationInfoViewImpl>
    {
    }
@@ -104,6 +114,12 @@ public class ApplicationInfoViewImpl extends DialogBox implements ApplicationInf
 
       this.setText("Application Info");
       this.setWidget(widget);
+
+      this.addStyleName(resources.cloudFoundryCss().appInfo());
+      statePanel.addStyleName(resources.cloudFoundryCss().event());
+      versionPanel.addStyleName(resources.cloudFoundryCss().event());
+      memoryPanel.addStyleName(resources.cloudFoundryCss().event());
+      stackPanel.addStyleName(resources.cloudFoundryCss().event());
 
       btnOk.setHTML(new Image(resources.okButton()) + " " + constants.okButton());
    }

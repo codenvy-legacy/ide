@@ -9,10 +9,6 @@
 		.alignRight {
 			float: right;
 		}
-		
-		.event {
-			background: #f1f2f5;
-		}
 	</ui:style>
 	<g:DockLayoutPanel unit="PX" width="480px" height="360px">
 		<g:south size="26.0">
@@ -33,7 +29,7 @@
 		</g:north>
 		<g:north size="20.0">
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%"
-				styleName="{style.event}">
+				ui:field="statePanel">
 				<g:west size="100.0">
 					<g:Label text="{locale.appInfoState}" />
 				</g:west>
@@ -54,7 +50,7 @@
 		</g:north>
 		<g:north size="20.0">
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%"
-				styleName="{style.event}">
+				ui:field="versionPanel">
 				<g:west size="100.0">
 					<g:Label text="{locale.appInfoVersion}" />
 				</g:west>
@@ -75,7 +71,7 @@
 		</g:north>
 		<g:north size="20.0">
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%"
-				styleName="{style.event}">
+				ui:field="memoryPanel">
 				<g:west size="100.0">
 					<g:Label text="{locale.appInfoResourcesMemory}" />
 				</g:west>
@@ -96,7 +92,7 @@
 		</g:north>
 		<g:north size="20.0">
 			<g:DockLayoutPanel unit="PX" width="100%" height="100%"
-				styleName="{style.event}">
+				ui:field="stackPanel">
 				<g:west size="100.0">
 					<g:Label text="{locale.appInfoStagingStack}" />
 				</g:west>

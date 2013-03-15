@@ -34,6 +34,7 @@ import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.NoSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
@@ -67,6 +68,12 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
    @UiField
    Button btnDelete;
 
+   @UiField
+   Label boundServiceLabel;
+
+   @UiField
+   Label provisionServiceLabel;
+
    interface ManageServicesViewImplUiBinder extends UiBinder<Widget, ManageServicesViewImpl>
    {
    }
@@ -87,6 +94,10 @@ public class ManageServicesViewImpl extends DialogBox implements ManageServicesV
 
       this.setWidget(widget);
       this.setText("Manage CloudFoundry Services");
+
+      this.addStyleName(resources.cloudFoundryCss().manageService());
+      boundServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
+      provisionServiceLabel.addStyleName(resources.cloudFoundryCss().manageLabel());
 
       btnClose.setHTML(new Image(resources.cancelButton()) + " " + constant.closeButton());
       btnAdd.setHTML(new Image(resources.addButton()) + " " + constant.addButton());

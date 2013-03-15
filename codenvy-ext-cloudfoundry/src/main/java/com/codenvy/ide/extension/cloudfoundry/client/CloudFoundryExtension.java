@@ -75,8 +75,8 @@ public class CloudFoundryExtension
       ShowApplicationsCommand showApplicationsCommand, ShowProjectPropertiesCommand showProjectPropertiesCommand,
       EventBus eventBus, DeployApplicationPresenter deployAppPresenter, CloudFoundryLocalizationConstant constant)
    {
-      // TODO Auto-generated constructor stub
-      //      paasAgent.registerPaaS(id, title, image, providesTemplate, supportedProjectTypes, preferencePage);
+      resources.cloudFoundryCss().ensureInjected();
+
       // TODO change hard code types
       JsonArray<String> requiredProjectTypes = JsonCollections.createArray("Servlet/JSP", "Rails", "Spring", "War");
       paasAgent.registerPaaS(ID, ID, resources.cloudFoundry48(), false, requiredProjectTypes, deployAppPresenter, null);

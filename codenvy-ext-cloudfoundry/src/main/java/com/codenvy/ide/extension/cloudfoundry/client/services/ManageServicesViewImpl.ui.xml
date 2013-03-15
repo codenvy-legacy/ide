@@ -16,10 +16,7 @@
 		}
 		
 		.label {
-			font-size: 11px;
-			font-family: Verdana, Bitstream Vera Sans, sans-serif;
 			float: left;
-			height: 22px;
 			margin-bottom: 5px;
 		}
 	</ui:style>
@@ -31,8 +28,8 @@
 		</g:south>
 		<g:north size="22.0">
 			<g:FlowPanel>
-				<g:Label text="{locale.boundedServices}" width="240px" styleName="{style.label}" />
-				<g:Label text="{locale.provisionedServices}" width="380px" styleName="{style.label}" />
+				<g:Label text="{locale.boundedServices}" width="240px" styleName="{style.label}" ui:field="boundServiceLabel" />
+				<g:Label text="{locale.provisionedServices}" width="380px" styleName="{style.label}" ui:field="provisionServiceLabel" />
 			</g:FlowPanel>
 		</g:north>
 		<g:east size="100.0">

@@ -20,7 +20,6 @@ package com.codenvy.ide.extension.cloudfoundry.client.project;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -35,8 +34,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView;
 
 /**
  * 
@@ -105,6 +102,30 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
    @UiField
    Button btnClose;
 
+   @UiField
+   Label applicationLabel;
+
+   @UiField
+   Label urlLabel;
+
+   @UiField
+   Label memoryLabel;
+
+   @UiField
+   Label instanceLabel;
+
+   @UiField
+   Label stackLabel;
+
+   @UiField
+   Label modelLabel;
+
+   @UiField
+   Label statusLabel;
+
+   @UiField
+   Label actionLabel;
+
    interface CloudFoundryProjectViewImplUiBinder extends UiBinder<Widget, CloudFoundryProjectViewImpl>
    {
    }
@@ -118,6 +139,20 @@ public class CloudFoundryProjectViewImpl extends DialogBox implements CloudFound
 
       this.setText("CloudFoundry Project");
       this.setWidget(widget);
+
+      this.addStyleName(resources.cloudFoundryCss().project());
+      applicationLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      urlLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      memoryLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      instanceLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      stackLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      modelLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      statusLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      actionLabel.addStyleName(resources.cloudFoundryCss().labelH());
+      url.addStyleName(resources.cloudFoundryCss().link());
+      applicationName.addStyleName(resources.cloudFoundryCss().textinput());
+      memory.addStyleName(resources.cloudFoundryCss().textinput());
+      instances.addStyleName(resources.cloudFoundryCss().textinput());
 
       btnInfo.setHTML(new Image(resources.propertiesButton()).toString());
       btnEditMemory.setHTML(new Image(resources.editButton()).toString());

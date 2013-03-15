@@ -19,7 +19,6 @@
 package com.codenvy.ide.extension.cloudfoundry.client.login;
 
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryResources;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -36,8 +35,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
-import com.codenvy.ide.extension.cloudfoundry.client.login.LoginView;
 
 /**
  * 
@@ -63,7 +60,18 @@ public class LoginViewImpl extends DialogBox implements LoginView
 
    @UiField
    Label errorText;
-   @UiField ListBox server;
+
+   @UiField
+   ListBox server;
+
+   @UiField
+   Label serverLabel;
+
+   @UiField
+   Label emailLabel;
+
+   @UiField
+   Label passwordLabel;
 
    private ActionDelegate delegate;
 
@@ -78,6 +86,12 @@ public class LoginViewImpl extends DialogBox implements LoginView
 
       this.setText("Login to CloudFoundry");
       this.setWidget(widget);
+
+      this.addStyleName(resources.cloudFoundryCss().login());
+      serverLabel.addStyleName(resources.cloudFoundryCss().loginFont());
+      emailLabel.addStyleName(resources.cloudFoundryCss().loginFont());
+      passwordLabel.addStyleName(resources.cloudFoundryCss().loginFont());
+      errorText.addStyleName(resources.cloudFoundryCss().loginErrorFont());
 
       btnLogIn.setHTML(new Image(resources.okButton()) + " Log In");
       btnCancel.setHTML(new Image(resources.cancelButton()) + " Cancel");
