@@ -40,6 +40,7 @@ import elemental.html.TextAreaElement;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 
@@ -74,6 +75,8 @@ public class ProjectChatView extends ViewImpl implements Display
 
    private ChatCss css;
 
+   private JsonStringMap<Element> currentUserMessages = JsonCollections.createMap();
+
    public ProjectChatView()
    {
       super(ID, ViewType.OPERATION, "Project Chat", new Image(ChatExtension.resources.chat()));
@@ -97,18 +100,23 @@ public class ProjectChatView extends ViewImpl implements Display
    public void addMessage(UserDetails userDetails, String message, long time)
    {
       Date d = new Date(time);
+      DivElement messageElement;
       if (userDetails.getUserId().equals(lastUserId))
       {
-         DivElement messageElement = getMessageElement(message, "...", d, userDetails.isCurrentUser());
+         messageElement = getMessageElement(message, "...", d, userDetails.isCurrentUser());
          lastMessageElement.appendChild(messageElement);
       }
       else
       {
-         DivElement messageElement = getMessageElement(message, userDetails.getDisplayName() + ":", d,
+         messageElement = getMessageElement(message, userDetails.getDisplayName() + ":", d,
             userDetails.isCurrentUser());
          chatPanel.getElement().appendChild((Node)messageElement);
          lastUserId = userDetails.getUserId();
          lastMessageElement = messageElement;
+      }
+      if(userDetails.isCurrentUser())
+      {
+         currentUserMessages.put(String.valueOf(d.getTime()), messageElement);
       }
       chatPanel.scrollToBottom();
    }
@@ -156,6 +164,36 @@ public class ProjectChatView extends ViewImpl implements Display
             }
          }
       });
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void messageNotDelivered(String messageId)
+   {
+      if(currentUserMessages.containsKey(messageId))
+      {
+         Element messageElement = currentUserMessages.get(messageId);
+
+         DivElement divElement = Elements.createDivElement(css.messageNotDelivered());
+         divElement.setTitle("This message is not delivered yet.");
+         messageElement.getFirstChildElement().getNextSiblingElement().appendChild(divElement);
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void messageDelivered(String messageId)
+   {
+      if(currentUserMessages.containsKey(messageId))
+      {
+         Element messageElement = currentUserMessages.get(messageId);
+
+         messageElement.getFirstChildElement().getNextSiblingElement().getFirstChildElement().removeFromParent();
+      }
    }
 
    private Element getParticipantElement(UserDetails userDetails)

@@ -289,8 +289,8 @@ public abstract class MessageBus implements MessageReceivedHandler
       ws.setOnOpenHandler(wsListener);
       ws.setOnCloseHandler(wsListener);
       ws.setOnErrorHandler(wsListener);
-      callbackMap.clear();
-      channelToSubscribersMap.clear();
+//      callbackMap.clear();
+//      channelToSubscribersMap.clear();
    }
 
    /**

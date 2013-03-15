@@ -51,6 +51,8 @@ public interface ChatResources extends ClientBundle
 
       @ClassName("chatNotificationMessage")
       String notificationMessage();
+
+      String messageNotDelivered();
    }
 
    @Source("Chat.css")
@@ -61,4 +63,7 @@ public interface ChatResources extends ClientBundle
 
    @Source("chat_Disabled.png")
    ImageResource chatDisabled();
+
+   @Source("notDelivered.png")
+   ImageResource notDelivered();
 }

@@ -54,15 +54,61 @@ public class ParticipantModel {
   private static class ColorGenerator {
 
     private static final String[] COLORS = new String[] {
+        "#465FE6", // Blue
         "#FC9229", // Orange
         "#51D13F", // Green
         "#B744D1", // Purple
         "#3BC9D1", // Cyan
         "#D13B45", // Pinky Red
-        "#465FE6", // Blue
         "#F41BDB", // Magenta
         "#B7AC4A", // Mustard
-        "#723226" // Brown
+        "#723226", // Brown
+
+        "#7B68EE", //MediumSlateBlue
+        "#FF69B4", //HotPink
+        "#87CEFA", //LightSkyBlue
+        "#00FF00", //Lime
+        "#9400D3", //DarkViolet
+        "#90EE90", //LightGreen
+        "#00BFFF", //DeepSkyBlue
+        "#6495ED", //CornflowerBlue
+        "#C71585", //MediumVioletRed
+        "#FF7F50", //Coral
+        "#FF4500", //OrangeRed
+        "#FF8C00", //DarkOrange
+        "#FF00FF", //Magenta
+        "#FFA500", //Orange
+        "#9966CC", //Amethyst
+        "#7B68EE", //MediumSlateBlue
+        "#8A2BE2", //BlueViolet
+        "#9932CC", //DarkOrchid
+        "#8B008B", //DarkMagenta
+        "#BA55D3", //Magenta
+        "#9370DB", //MediumPurple
+        "#800080", //Purple
+        "#1E90FF", //DodgerBlue
+        "#6A5ACD", //SlateBlue
+        "#483D8B", //DarkSlateBlue
+        "#FF6347", //Tomato
+        "#8B0000", //DarkRed
+        "#ADFF2F", //
+        "#7FFF00", //Chartreuse
+        "#7CFC00", //LawnGreen
+        "#32CD32", //LimeGreen
+        "#B22222", //FireBrick
+        "#98FB98", //PaleGreen
+        "#4B0082", //Indigo
+        "#00FA9A", //MediumSpringGreen
+        "#00FF7F", //SpringGreen
+        "#FF1493", //DeepPink
+        "#3CB371", //
+        "#2E8B57", //SeaGreen
+        "#228B22", //ForestGreen
+        "#008000", //Green
+        "#4169E1", //RoyalBlue
+        "#DC143C", // Crimson
+        "#006400", //DarkGreen
+        "#87CEEB", //SkyBlue
     };
 
     private int previousColorIndex = -1;

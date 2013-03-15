@@ -61,3 +61,8 @@
    white-space: nowrap;
    font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
 }
+
+@sprite .messageNotDelivered{
+   gwt-image: 'notDelivered';
+   float: left;
+}

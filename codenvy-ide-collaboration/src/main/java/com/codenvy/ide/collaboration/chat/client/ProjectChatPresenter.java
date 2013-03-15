@@ -18,9 +18,9 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
-import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.client.util.SignalEvent;
 import com.codenvy.ide.client.util.SignalEventUtils;
+import com.codenvy.ide.client.util.logging.Log;
 import com.codenvy.ide.collaboration.dto.ChatMessage;
 import com.codenvy.ide.collaboration.dto.ChatParticipantAdd;
 import com.codenvy.ide.collaboration.dto.ChatParticipantRemove;
@@ -32,15 +32,11 @@ import com.codenvy.ide.notification.Notification;
 import com.codenvy.ide.notification.Notification.NotificationType;
 import com.codenvy.ide.notification.NotificationManager;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.dom.client.Node;
-import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.Timer;
 import elemental.events.Event;
 import elemental.events.EventListener;
 import elemental.events.KeyboardEvent.KeyCode;
-import elemental.html.DivElement;
-import elemental.html.Element;
 
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.ui.api.IsView;
@@ -48,7 +44,7 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
-import org.exoplatform.ide.dtogen.shared.ServerToClientDto;
+import org.exoplatform.ide.client.framework.websocket.WebSocketException;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
@@ -76,7 +72,36 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       void addListener(EventListener eventListener);
 
       void setParticipants(JsonStringMap<UserDetails> chatParticipants);
+
+      void messageNotDelivered(String messageId);
+
+      void messageDelivered(String messageId);
    }
+
+   private class MessagesTimer extends Timer
+   {
+
+      private String messageId;
+
+      public boolean executed = false;
+
+      private MessagesTimer(String messageId)
+      {
+         this.messageId = messageId;
+      }
+
+      @Override
+      public void run()
+      {
+         executed = true;
+         if(display != null)
+         {
+            display.messageNotDelivered(messageId);
+         }
+      }
+   }
+
+   public static final int MESSAGE_DELIVER_TIMEOUT = 10000;
 
 
    private EventListener enterListener = new EventListener()
@@ -108,6 +133,8 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    private Display display;
 
    private JsonStringMap<UserDetails> users = JsonCollections.createMap();
+
+   private JsonStringMap<MessagesTimer> deliverTimers = JsonCollections.createMap();
 
    private String userId;
 
@@ -176,6 +203,19 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private void messageReceived(ChatMessage message)
    {
+      if(message.getUserId().equals(userId))
+      {
+         MessagesTimer timer = deliverTimers.remove(message.getDateTime());
+         if(timer.executed)
+         {
+            display.messageDelivered(message.getDateTime());
+         }
+         else
+         {
+            timer.cancel();
+         }
+         return;
+      }
       display.addMessage(users.get(message.getUserId()), message.getMessage(), Long.valueOf(message.getDateTime()));
       if(viewClosed || !display.asView().isViewVisible())
       {
@@ -202,11 +242,23 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       chatMessage.setProjectId(projectId);
       Date d = new Date();
       chatMessage.setDateTime(String.valueOf(d.getTime()));
+      MessagesTimer messagesTimer = new MessagesTimer(chatMessage.getDateTime());
+      messagesTimer.schedule(MESSAGE_DELIVER_TIMEOUT);
+      deliverTimers.put(chatMessage.getDateTime(), messagesTimer);
       SafeHtmlBuilder b = new SafeHtmlBuilder();
       b.appendEscapedLines(message);
       chatMessage.setMessage(b.toSafeHtml().asString());
-      chatApi.SEND_MESSAGE.send(chatMessage);
       display.clearMessage();
+      display.addMessage(users.get(userId), chatMessage.getMessage(), d.getTime());
+      try
+      {
+        chatApi.SEND_MESSAGE.send(chatMessage);
+      }
+      catch (WebSocketException e)
+      {
+         Log.debug(ProjectChatPresenter.class, e);
+      }
+
    }
 
    /**

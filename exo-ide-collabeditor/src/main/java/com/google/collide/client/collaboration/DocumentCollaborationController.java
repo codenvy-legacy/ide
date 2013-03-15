@@ -240,6 +240,7 @@ public class DocumentCollaborationController implements DocOpRecoveryInitiator {
 
   @Override
   public void recover() {
+
     fileConcurrencyController.recover(new ErrorCallback() {
       @Override
       public void onError() {

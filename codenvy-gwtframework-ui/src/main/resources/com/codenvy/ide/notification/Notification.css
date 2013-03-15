@@ -29,9 +29,8 @@
       /*color-stop(1, rgb(1,61,7))*/
    /*);*/
    background: -moz-linear-gradient(bottom, #07ace1 11%, #3cc3ee 56%);
-   /*background: linear-gradient(to bottom, #2b6f1f 0%, #11610f 100%);*/
-   background:-webkit-gradient(bottom, #07ace1 11%, #3cc3ee 56%);
-   background-image: linear-gradient(bottom, #07ace1 11%, #3cc3ee 56%);
+   background-image:-webkit-linear-gradient(bottom, #07ace1 11%, #3cc3ee 56%);
+   background-image: linear-gradient(to bottom, #07ace1 11%, #3cc3ee 56%);
    /*background-color: rgb(16,97,2);*/
    border-radius: 4px;
    color: #EFEFEF;

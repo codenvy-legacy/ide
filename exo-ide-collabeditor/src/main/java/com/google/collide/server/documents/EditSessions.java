@@ -92,7 +92,7 @@ public class EditSessions implements Startable
       {
          String userId = connection.getHttpSession().getId();
          closeAllSessions(userId);
-         //         participants.removeParticipant(userId);
+//         participants.removeParticipant(userId);
       }
    }
 

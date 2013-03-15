@@ -14,13 +14,13 @@
 
 package com.google.collide.client.document;
 
+import com.codenvy.ide.client.util.PathUtil;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.bootstrap.BootstrapSession;
 import com.google.collide.client.document.DocumentManager.GetDocumentCallback;
 import com.google.collide.client.status.StatusMessage;
 import com.google.collide.client.status.StatusMessage.MessageType;
-import com.codenvy.ide.client.util.PathUtil;
-import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.dto.FileContents.ContentType;
 import com.google.collide.dto.GetFileContentsResponse;
 import com.google.collide.dto.RoutingTypes;

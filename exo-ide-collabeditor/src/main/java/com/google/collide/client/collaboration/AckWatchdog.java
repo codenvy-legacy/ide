@@ -38,8 +38,8 @@ import java.util.List;
 
 class AckWatchdog implements DocOpListener {
 
-  private static final int ACK_WARNING_TIMEOUT_MS = 10000;
-  private static final int ACK_ERROR_TIMEOUT_MS = 60000;
+  private static final int ACK_WARNING_TIMEOUT_MS = 5000; //10000;
+  private static final int ACK_ERROR_TIMEOUT_MS =  20000; //60000;
 
   /*
    * TODO: editor read-only state can be touched by multiple
