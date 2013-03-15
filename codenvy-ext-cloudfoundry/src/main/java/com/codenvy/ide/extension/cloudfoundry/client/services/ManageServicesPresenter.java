@@ -268,22 +268,10 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
     */
    private void askBeforeDelete(final ProvisionedService service)
    {
-      // TODO
-      //      Dialogs.getInstance().ask(CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteServiceTitle(),
-      //         CloudFoundryExtension.LOCALIZATION_CONSTANT.deleteServiceQuestion(service.getName()),
-      //         new BooleanValueReceivedHandler()
-      //         {
-      //
-      //            @Override
-      //            public void booleanValueReceived(Boolean value)
-      //            {
-      //               if (value != null && value)
-      //               {
-      //                  deleteService(service);
-      //               }
-      //            }
-      //         });
-      deleteService(service);
+      if (Window.confirm(constant.deleteServiceQuestion(service.getName())))
+      {
+         deleteService(service);
+      }
    }
 
    private void getApplicationInfo()

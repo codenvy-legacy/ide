@@ -226,23 +226,11 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
    private void askForUnmapUrl(final String url)
    {
-      // TODO
-      //      Dialogs.getInstance().ask(localeBundle.unmapUrlConfirmationDialogTitle(),
-      //         localeBundle.unmapUrlConfirmationDialogMessage(), new BooleanValueReceivedHandler()
-      //         {
-      //            @Override
-      //            public void booleanValueReceived(Boolean value)
-      //            {
-      //               if (value == null || !value)
-      //                  return;
-      //
-      //               unregisterUrl = url;
-      //               unregisterUrl(unregisterUrl);
-      //            }
-      //         });
-
-      unregisterUrl = url;
-      unregisterUrl(unregisterUrl);
+      if (Window.confirm(constant.unmapUrlConfirmationDialogMessage()))
+      {
+         unregisterUrl = url;
+         unregisterUrl(unregisterUrl);
+      }
    }
 
    LoggedInHandler unregisterUrlLoggedInHandler = new LoggedInHandler()

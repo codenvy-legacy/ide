@@ -37,8 +37,6 @@ import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceView;
 import com.codenvy.ide.extension.cloudfoundry.client.services.CreateServiceViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesView;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesViewImpl;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesView;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesViewImpl;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlView;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlViewImpl;
 import com.google.gwt.inject.client.AbstractGinModule;
@@ -66,6 +64,5 @@ public class CloudFoundryGinModule extends AbstractGinModule
       bind(DeployApplicationView.class).to(DeployApplicationViewImpl.class).in(Singleton.class);
       bind(ApplicationInfoView.class).to(ApplicationInfoViewImpl.class).in(Singleton.class);
       bind(UnmapUrlView.class).to(UnmapUrlViewImpl.class).in(Singleton.class);
-      bind(UpdatePropertiesView.class).to(UpdatePropertiesViewImpl.class).in(Singleton.class);
    }
 }

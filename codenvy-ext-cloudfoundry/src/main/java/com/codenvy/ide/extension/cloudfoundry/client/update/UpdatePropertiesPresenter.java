@@ -31,6 +31,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -42,11 +43,8 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDelegate, UpdateMemoryHandler,
-   UpdateInstancesHandler
+public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateInstancesHandler
 {
-   private UpdatePropertiesView view;
-
    private int memory;
 
    private String instances;
@@ -57,16 +55,12 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
 
    private Console console;
 
-   private boolean isMemoryEditing;
-
    private CloudFoundryLocalizationConstant constant;
 
    @Inject
-   protected UpdatePropertiesPresenter(UpdatePropertiesView view, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console, CloudFoundryLocalizationConstant constant)
+   protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
+      CloudFoundryLocalizationConstant constant)
    {
-      this.view = view;
-      this.view.setDelegate(this);
       this.eventBus = eventBus;
       this.resourceProvider = resourceProvider;
       this.console = console;
@@ -80,57 +74,8 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
     * {@inheritDoc}
     */
    @Override
-   public void onOkClicked()
-   {
-      try
-      {
-         if (isMemoryEditing)
-         {
-            memory = Integer.parseInt(view.getProperty());
-            updateMemory(memory);
-         }
-         else
-         {
-            instances = view.getProperty();
-            Integer.parseInt(instances);
-            updateInstances(instances);
-         }
-      }
-      catch (NumberFormatException e)
-      {
-         String msg = constant.updateInstancesInvalidValueMessage();
-         eventBus.fireEvent(new ExceptionThrownEvent(msg));
-         console.print(msg);
-      }
-
-      view.close();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onCancelClicked()
-   {
-      view.close();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onPropertyChanged()
-   {
-      view.setEnableOkButton(!view.getProperty().isEmpty());
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public void onUpdateMemory(UpdateMemoryEvent event)
    {
-      isMemoryEditing = true;
       getOldMemoryValue();
    }
 
@@ -181,40 +126,22 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
 
    private void askForNewMemoryValue(int oldMemoryValue)
    {
-      // TODO
-      //      Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogTitle(),
-      //         CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryDialogMessage(), String.valueOf(oldMemoryValue),
-      //         new StringValueReceivedHandler()
-      //         {
-      //            @Override
-      //            public void stringValueReceived(String value)
-      //            {
-      //               if (value == null)
-      //               {
-      //                  return;
-      //               }
-      //               else
-      //               {
-      //                  try
-      //                  {
-      //                     memory = Integer.parseInt(value);
-      //                     updateMemory(memory);
-      //                  }
-      //                  catch (NumberFormatException e)
-      //                  {
-      //                     String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateMemoryInvalidNumberMessage();
-      //                     //                     IDE.fireEvent(new ExceptionThrownEvent(msg));
-      //                     console.print(msg);
-      //                  }
-      //               }
-      //            }
-      //         });
-
-      view.setDialogTitle(constant.updateMemoryDialogTitle());
-      view.setMessage(constant.updateMemoryDialogMessage());
-      view.setProperty(String.valueOf(oldMemoryValue));
-
-      view.showDialog();
+      String value = Window.prompt(constant.updateMemoryInvalidNumberMessage(), String.valueOf(oldMemoryValue));
+      if (value != null)
+      {
+         try
+         {
+            // check, is instances contains only numbers
+            memory = Integer.parseInt(value);
+            updateMemory(memory);
+         }
+         catch (NumberFormatException e)
+         {
+            String msg = constant.updateMemoryInvalidNumberMessage();
+            eventBus.fireEvent(new ExceptionThrownEvent(msg));
+            Window.alert(msg);
+         }
+      }
    }
 
    /**
@@ -262,7 +189,6 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
    @Override
    public void onUpdateInstances(UpdateInstancesEvent event)
    {
-      isMemoryEditing = false;
       getOldInstancesValue();
    }
 
@@ -314,44 +240,23 @@ public class UpdatePropertiesPresenter implements UpdatePropertiesView.ActionDel
 
    private void askForInstancesNumber(int oldInstancesValue)
    {
-      // TODO
-      //      Dialogs.getInstance().askForValue(CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogTitle(),
-      //         CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesDialogMessage(), String.valueOf(oldInstancesValue),
-      //         new StringValueReceivedHandler()
-      //         {
-      //            @Override
-      //            public void stringValueReceived(String value)
-      //            {
-      //               if (value == null)
-      //               {
-      //                  return;
-      //               }
-      //               else
-      //               {
-      //
-      //                  instances = value;
-      //                  try
-      //                  {
-      //                     // check, is instances contains only numbers
-      //                     Integer.parseInt(instances);
-      //                     updateInstances(instances);
-      //                  }
-      //                  catch (NumberFormatException e)
-      //                  {
-      //                     String msg = CloudFoundryExtension.LOCALIZATION_CONSTANT.updateInstancesInvalidValueMessage();
-      //                     // TODO
-      //                     //                     IDE.fireEvent(new ExceptionThrownEvent(msg));
-      //                     console.print(msg);
-      //                  }
-      //               }
-      //            }
-      //         });
-
-      view.setDialogTitle(constant.updateInstancesDialogTitle());
-      view.setMessage(constant.updateInstancesDialogMessage());
-      view.setProperty(String.valueOf(oldInstancesValue));
-
-      view.showDialog();
+      String value = Window.prompt(constant.updateInstancesDialogMessage(), String.valueOf(oldInstancesValue));
+      if (value != null)
+      {
+         instances = value;
+         try
+         {
+            // check, is instances contains only numbers
+            Integer.parseInt(instances);
+            updateInstances(instances);
+         }
+         catch (NumberFormatException e)
+         {
+            String msg = constant.updateInstancesInvalidValueMessage();
+            eventBus.fireEvent(new ExceptionThrownEvent(msg));
+            Window.alert(msg);
+         }
+      }
    }
 
    private LoggedInHandler updateInstancesLoggedInHandler = new LoggedInHandler()
