@@ -35,6 +35,8 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewActivatedHandler;
 import org.exoplatform.ide.client.project.explorer.ProjectSelectedEvent;
 import org.exoplatform.ide.client.project.explorer.ProjectSelectedHandler;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedEvent;
+import org.exoplatform.ide.vfs.client.event.ItemDeletedHandler;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.Item;
 import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
@@ -49,7 +51,7 @@ import java.util.List;
  */
 @RolesAllowed({"administrators", "developers"})
 public class DeleteItemControl extends SimpleControl implements IDEControl, ItemsSelectedHandler, VfsChangedHandler,
-   ViewActivatedHandler, ProjectSelectedHandler
+   ViewActivatedHandler, ProjectSelectedHandler, ItemDeletedHandler
 {
 
    private static final String ID = "File/Delete...";
@@ -96,6 +98,7 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
       IDE.addHandler(ViewActivatedEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ProjectSelectedEvent.TYPE, this);
+      IDE.addHandler(ItemDeletedEvent.TYPE, this);
    }
 
    @Override
@@ -161,6 +164,12 @@ public class DeleteItemControl extends SimpleControl implements IDEControl, Item
    {
       this.selectedProject = event.getProject();
       updateState();
+   }
+
+   @Override
+   public void onItemDeleted(ItemDeletedEvent event)
+   {
+      setEnabled(false);
    }
 
 }

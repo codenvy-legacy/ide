@@ -297,6 +297,11 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          @Override
          public void execute()
          {
+            if (openedProject == null)
+            {
+               return;
+            }
+            
             final IDEProject closedProject = openedProject;
             closedProject.setFolderChangedHandler(null);
             openedProject = null;
