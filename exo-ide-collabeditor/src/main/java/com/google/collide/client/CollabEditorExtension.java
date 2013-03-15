@@ -27,7 +27,6 @@ import com.google.collide.client.collaboration.CollaborationManager;
 import com.google.collide.client.collaboration.DocOpsSavedNotifier;
 import com.google.collide.client.collaboration.IncomingDocOpDemultiplexer;
 import com.google.collide.client.collaboration.NotificationController;
-import com.google.collide.client.collaboration.participants.ParticipantsPresenter;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.status.StatusPresenter;
 import com.google.collide.codemirror2.CodeMirror2;
@@ -61,6 +60,8 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
 
    private CollaborationManager collaborationManager;
 
+   private UsersModel usersModel;
+
    public static CollabEditorExtension get()
    {
       return instance;
@@ -78,7 +79,6 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
       context = AppContext.create();
       documentManager = DocumentManager.create(context);
 
-      new ParticipantsPresenter(context.getResources());
       IDE.messageBus().setOnOpenHandler(this);
    }
 
@@ -95,6 +95,11 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
    public CollaborationManager getCollaborationManager()
    {
       return collaborationManager;
+   }
+
+   public UsersModel getUsersModel()
+   {
+      return usersModel;
    }
 
    /**
@@ -218,9 +223,10 @@ public class CollabEditorExtension extends Extension implements ConnectionOpened
             context.initializeCollaboration();
             //                  ParticipantModel participantModel = ParticipantModel.create(context.getFrontendApi(), context.getMessageFilter());
             IncomingDocOpDemultiplexer docOpRecipient = IncomingDocOpDemultiplexer.create(context.getMessageFilter());
-            collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient);
-            UsersModel usersModel = new UsersModel(context.getFrontendApi(), context.getMessageFilter());
-            new NotificationController(NotificationManager.get(), collaborationManager, context.getMessageFilter(),usersModel, IDE.eventBus(),context.getResources().baseCss());
+            usersModel = new UsersModel(context.getFrontendApi(), context.getMessageFilter());
+            collaborationManager = CollaborationManager.create(context, documentManager, docOpRecipient, usersModel);
+            new NotificationController(NotificationManager.get(), collaborationManager, context.getMessageFilter(),
+               usersModel, IDE.eventBus(),context.getResources().baseCss());
 
             DocOpsSavedNotifier docOpSavedNotifier = new DocOpsSavedNotifier(documentManager, collaborationManager);
             //                     bus.close();

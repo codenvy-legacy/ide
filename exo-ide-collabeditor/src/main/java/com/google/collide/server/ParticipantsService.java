@@ -65,6 +65,6 @@ public class ParticipantsService
       UserLogInDtoImpl userLogInDto = UserLogInDtoImpl.make();
       userLogInDto.setParticipant(participant);
       WSUtil.broadcastToClients(userLogInDto.toJson(), participantsToBroadcast);
-      return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getId(), user.getId());
+      return String.format("{\"userId\":\"%s\",\"activeClientId\":\"%s\"}", user.getName(), user.getId());
    }
 }

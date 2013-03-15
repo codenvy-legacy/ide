@@ -54,8 +54,8 @@ public class Participants
          final String userId = user.getId();
          final String username = user.getName();
          ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
-         ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
-         UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(userId).setDisplayEmail(
+         ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(username);
+         UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(username).setDisplayEmail(
             username).setDisplayName(username).setGivenName(username);
 
          participantDetails.setParticipant(participant);
@@ -126,8 +126,8 @@ public class Participants
       {
          LoggedInUser user = users.get(userId);
          ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
-         ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
-         UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(userId).setDisplayEmail(
+         ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(user.getName());
+         UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(user.getName()).setDisplayEmail(
             user.getName()).setDisplayName(user.getName()).setGivenName(user.getName());
          participantDetails.setParticipant(participant);
          participantDetails.setUserDetails(userDetails);

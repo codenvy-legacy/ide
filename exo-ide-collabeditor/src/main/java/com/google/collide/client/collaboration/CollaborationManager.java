@@ -14,9 +14,9 @@
 
 package com.google.collide.client.collaboration;
 
+import com.codenvy.ide.users.UsersModel;
 import com.google.collide.client.AppContext;
 import com.google.collide.client.code.ParticipantModel;
-import com.google.collide.client.collaboration.participants.CollaborationDocumentLinkedEvent;
 import com.google.collide.client.communication.PushChannel;
 import com.google.collide.client.document.DocumentManager;
 import com.google.collide.client.document.DocumentManager.LifecycleListener;
@@ -33,11 +33,7 @@ import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.UserLogInDto;
 import com.google.collide.dto.client.DtoClientImpls.GetOpenendFilesInWorkspaceImpl;
 import com.google.collide.shared.document.Document;
-import org.exoplatform.ide.shared.util.ListenerManager;
-import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
-import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
-import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
@@ -48,6 +44,9 @@ import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonIntegerMap;
 import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 /**
  * A manager for real-time collaboration.
@@ -165,7 +164,9 @@ public class CollaborationManager
 
    private final IncomingDocOpDemultiplexer docOpRecipient;
 
-//   private JsonIntegerMap<ParticipantList.View> participantsViews = JsonCollections.createIntegerMap();
+   private UsersModel usersModel;
+
+   //   private JsonIntegerMap<ParticipantList.View> participantsViews = JsonCollections.createIntegerMap();
 
    private JsonStringMap<JsonArray<ParticipantUserDetails>> openedFilesInWorkspace = JsonCollections.createMap();
 
@@ -174,11 +175,12 @@ public class CollaborationManager
    private final JsonStringMap<String> path2sessionId = JsonCollections.createMap();
 
    private CollaborationManager(AppContext appContext, DocumentManager documentManager,
-                                IncomingDocOpDemultiplexer docOpRecipient)
+                                IncomingDocOpDemultiplexer docOpRecipient, UsersModel usersModel)
    {
       this.appContext = appContext;
       this.documentManager = documentManager;
       this.docOpRecipient = docOpRecipient;
+      this.usersModel = usersModel;
       removerManager.track(documentManager.getLifecycleListenerRegistrar().add(lifecycleListener));
       removerManager.track(
          appContext.getPushChannel().getListenerRegistrar().add(pushChannelListener));
@@ -202,14 +204,14 @@ public class CollaborationManager
    }
 
    public static CollaborationManager create(AppContext appContext, DocumentManager documentManager,
-                                             IncomingDocOpDemultiplexer docOpRecipient)
+                                             IncomingDocOpDemultiplexer docOpRecipient, UsersModel usersModel)
    {
     /*
      * Ideally this whole stack wouldn't be stuck on passing around a workspace id but it is too
      * much work right now to refactor it out so here it stays.
      */
       return new CollaborationManager(appContext, documentManager,
-         docOpRecipient);
+         docOpRecipient, usersModel);
    }
 
    public void cleanup()
@@ -228,7 +230,7 @@ public class CollaborationManager
    {
 
       String fileEditSessionKey = DocumentMetadata.getFileEditSessionKey(document);
-      ParticipantModel participantModel = ParticipantModel.create(appContext.getFrontendApi(), appContext.getMessageFilter(), fileEditSessionKey);
+      ParticipantModel participantModel = ParticipantModel.create(appContext.getFrontendApi(), appContext.getMessageFilter(), usersModel, fileEditSessionKey);
 //      ParticipantList.View view = new ParticipantList.View(appContext.getResources());
 //      ParticipantList.create(view, appContext.getResources(), participantModel);
 //      participantsViews.put(document.getId(),view);
@@ -238,8 +240,6 @@ public class CollaborationManager
          DocumentMetadata.getBeginCcRevision(document));
 
       docCollabControllersByDocumentId.put(document.getId(), docCollabController);
-
-      IDE.fireEvent(new CollaborationDocumentLinkedEvent(document, participantModel));
    }
 
    private void handleDocumentUnlinkingFromFile(Document document)
@@ -280,7 +280,7 @@ public class CollaborationManager
       if(document != null)
       {
          DocumentCollaborationController collaborationController = docCollabControllersByDocumentId.get(document.getId());
-         collaborationController.getParticipantModel().addParticipant(true, message.getParticipant());
+         collaborationController.getParticipantModel().addParticipant(message.getParticipant());
       }
 
       if(!openedFilesInWorkspace.containsKey(message.getPath()))

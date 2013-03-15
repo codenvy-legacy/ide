@@ -18,6 +18,7 @@
  */
 package com.codenvy.ide.collaboration.chat.client;
 
+import com.codenvy.ide.client.util.AnimationController;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.chat.client.ChatResources.ChatCss;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display;
@@ -27,6 +28,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
@@ -76,6 +78,10 @@ public class ProjectChatView extends ViewImpl implements Display
    private ChatCss css;
 
    private JsonStringMap<Element> currentUserMessages = JsonCollections.createMap();
+
+   private JsonStringMap<Element> participants = JsonCollections.createMap();
+
+   AnimationController animationController = AnimationController.FADE_ANIMATION_CONTROLLER;
 
    public ProjectChatView()
    {
@@ -148,24 +154,6 @@ public class ProjectChatView extends ViewImpl implements Display
       ((TextAreaElement)chatMessageInput).setOnKeyDown(eventListener);
    }
 
-   @Override
-   public void setParticipants(JsonStringMap<UserDetails> chatParticipants)
-   {
-      participantsPanel.getElement().setInnerHTML("");
-      chatParticipants.iterate(new IterationCallback<UserDetails>()
-      {
-         @Override
-         public void onIteration(String key, UserDetails value)
-         {
-            if (!value.isCurrentUser())
-            {
-               Element element = getParticipantElement(value);
-               participantsPanel.getElement().appendChild((Node)element);
-            }
-         }
-      });
-   }
-
    /**
     * {@inheritDoc}
     */
@@ -196,7 +184,24 @@ public class ProjectChatView extends ViewImpl implements Display
       }
    }
 
-   private Element getParticipantElement(UserDetails userDetails)
+   @Override
+   public void removeParticipant(String userId)
+   {
+      Element element = participants.remove(userId);
+      element.removeFromParent();
+      animationController.hide(element);
+   }
+
+   @Override
+   public void addParticipant(Participant participant)
+   {
+      Element element = getParticipantElement(participant);
+      participants.put(participant.getUserId(), element);
+      participantsPanel.getElement().appendChild((Node)element);
+      animationController.show(element);
+   }
+
+   private Element getParticipantElement(Participant userDetails)
    {
       DivElement element = Elements.createDivElement(css.chatParticipant());
 
@@ -206,6 +211,7 @@ public class ProjectChatView extends ViewImpl implements Display
 
       DivElement nameElement = Elements.createDivElement(css.chatParticipantName());
       nameElement.setInnerHTML(userDetails.getDisplayName());
+      nameElement.getStyle().setBackgroundColor(userDetails.getColor());
       element.appendChild(nameElement);
 
       DivElement emailElement = Elements.createDivElement(css.chatParticipantEmail());

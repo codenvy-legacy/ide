@@ -16,21 +16,34 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package com.google.collide.client.collaboration.participants;
+package com.codenvy.ide.collaboration.chat.client;
 
-import com.google.gwt.event.shared.EventHandler;
+
+import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
 
 /**
- * {@link EventHandler} for listening {@link ShowHideParticipantsEvent}s.
- * 
- * @author <a href="mailto:azatsarynnyy@exoplatfrom.com">Artem Zatsarynnyy</a>
- * @version $Id: ShowHideParticipantsHandler.java Feb 6, 2013 12:34:27 PM azatsarynnyy $
+ * Model object for a participant. This extends the
+ * {@link UserDetailsImpl} class used for data transfer.
  *
+ * @author <a href="mailto:evidolob@codenvy.com">Evgen Vidolob</a>
+ * @version $Id:
  */
-public interface ShowHideParticipantsHandler extends EventHandler
+public class Participant extends UserDetailsImpl
 {
-   /**
-    * @param event {@link ShowHideParticipantsEvent}
-    */
-   void onShowHideParticipants(ShowHideParticipantsEvent event);
+
+   private static final String COLOR_KEY = "__color";
+
+   protected Participant()
+   {
+   }
+
+   public final String getColor()
+   {
+      return getStringField(COLOR_KEY);
+   }
+
+   public final void setColor(String color)
+   {
+      addField(COLOR_KEY, color);
+   }
 }

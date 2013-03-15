@@ -7,6 +7,7 @@
   <inherits name="org.exoplatform.ide.dtogen.DtoGen"/>
   <inherits name="org.exoplatform.ide.json.Json"/>
   <inherits name="com.codenvy.ide.collaboration.dto.Dto"/>
+   <inherits name="com.google.collide.CollabEditor"/>
 
   <entry-point class='com.codenvy.ide.collaboration.chat.client.ChatExtension'/>
   <source path="client"/>

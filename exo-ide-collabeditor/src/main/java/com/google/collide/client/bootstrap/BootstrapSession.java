@@ -54,7 +54,7 @@ public final class BootstrapSession
     */
    public String getActiveClientId()
    {
-      return userId;
+      return activeClientId;
    }
 
    /**

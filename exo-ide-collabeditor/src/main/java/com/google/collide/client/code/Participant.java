@@ -31,7 +31,7 @@ public class Participant extends DtoClientImpls.ParticipantImpl {
 
   private static final String IS_SELF_KEY = "__isSelf";
 
-  static Participant create(
+  public static Participant create(
       com.google.collide.dto.Participant participantDto, String displayName,
       String displayEmail, String color, boolean isSelf) {
     DtoClientImpls.ParticipantImpl participantDtoImpl =

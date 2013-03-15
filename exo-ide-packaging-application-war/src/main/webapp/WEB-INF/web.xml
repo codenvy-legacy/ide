@@ -109,6 +109,8 @@
 	<filter-mapping>
 		<filter-name>StandaloneAuthenticationFilter</filter-name>
 		<url-pattern>/rest/private/*</url-pattern>
+      <url-pattern>/websocket</url-pattern>
+      <url-pattern>/collaboration</url-pattern>
 	</filter-mapping>
 
 	<filter-mapping>

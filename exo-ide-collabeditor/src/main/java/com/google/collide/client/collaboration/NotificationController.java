@@ -22,6 +22,7 @@ import com.codenvy.ide.notification.Notification;
 import com.codenvy.ide.notification.Notification.NotificationType;
 import com.codenvy.ide.notification.NotificationManager;
 import com.codenvy.ide.users.UsersModel;
+import com.google.collide.client.code.Participant;
 import com.google.collide.client.collaboration.CollaborationManager.ParticipantsListener;
 import com.google.collide.client.common.BaseResources.Css;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
@@ -239,7 +240,7 @@ public class NotificationController implements ParticipantsListener, ProjectOpen
 
    private void showFileOperationNotification(FileOperationNotification notification)
    {
-      UserDetails user = usersModel.getUserById(notification.getUserId());
+      Participant user = usersModel.getUserById(notification.getUserId());
       String targetPaht = notification.getTarget();
       targetPaht = targetPaht.substring(targetPaht.lastIndexOf('/') + 1, targetPaht.length());
       String fileName = notification.getFilePath();

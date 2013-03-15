@@ -20,6 +20,7 @@ package com.codenvy.ide.collaboration.chat.client;
 
 import com.codenvy.ide.collaboration.dto.GetChatParticipantsResponse;
 import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.GetChatParticipantsImpl;
+import com.google.collide.client.CollabEditorExtension;
 import com.google.gwt.core.client.GWT;
 
 import org.exoplatform.ide.client.framework.module.Extension;
@@ -45,7 +46,8 @@ import org.exoplatform.ide.vfs.client.model.ProjectModel;
 /**
  *
  */
-public class ChatExtension extends Extension implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler
+public class ChatExtension extends Extension
+   implements ConnectionOpenedHandler, ProjectOpenedHandler, ProjectClosedHandler, UserInfoReceivedHandler
 {
 
    public static final ChatResources resources = GWT.create(ChatResources.class);
@@ -54,16 +56,15 @@ public class ChatExtension extends Extension implements ConnectionOpenedHandler,
 
    private MessageFilter messageFilter = new MessageFilter();
 
-   private MessageHandler handler =
-  new MessageHandler()
-{
-   @Override
-   public void onMessage(String message)
+   private MessageHandler handler = new MessageHandler()
    {
-      ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
-      messageFilter.dispatchMessage(dto);
-   }
-};
+      @Override
+      public void onMessage(String message)
+      {
+         ServerToClientDto dto = (ServerToClientDto)Jso.deserialize(message).<RoutableDtoClientImpl>cast();
+         messageFilter.dispatchMessage(dto);
+      }
+   };
 
    private ChatApi chatApi;
 
@@ -91,12 +92,13 @@ public class ChatExtension extends Extension implements ConnectionOpenedHandler,
 
    private void createPresenter()
    {
-      if(chatPresenter != null)
+      if (chatPresenter != null)
       {
          return;
       }
       chatApi = new ChatApi(IDE.messageBus());
-      chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl, userInfo.getName());
+      chatPresenter = new ProjectChatPresenter(chatApi, messageFilter, IDE.getInstance(), chatControl,
+         userInfo.getName(), CollabEditorExtension.get());
    }
 
    @Override
@@ -117,7 +119,7 @@ public class ChatExtension extends Extension implements ConnectionOpenedHandler,
       }
       else
       {
-        subscribeToChanel();
+         subscribeToChanel();
       }
    }
 
@@ -160,7 +162,7 @@ public class ChatExtension extends Extension implements ConnectionOpenedHandler,
    @Override
    public void onOpen()
    {
-      if(subscribeOnReady && currentProject != null)
+      if (subscribeOnReady && currentProject != null)
       {
          subscribeToChanel();
       }

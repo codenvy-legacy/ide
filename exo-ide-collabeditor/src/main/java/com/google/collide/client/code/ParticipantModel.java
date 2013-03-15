@@ -14,26 +14,20 @@
 
 package com.google.collide.client.code;
 
-import com.google.collide.client.bootstrap.BootstrapSession;
-import com.google.collide.client.communication.FrontendApi;
 import com.codenvy.ide.client.util.QueryCallbacks.SimpleCallback;
+import com.codenvy.ide.users.UsersModel;
+import com.google.collide.client.communication.FrontendApi;
 import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
-import com.google.collide.dto.GetWorkspaceParticipantsResponse;
 import com.google.collide.dto.ParticipantUserDetails;
-import com.google.collide.dto.RoutingTypes;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.client.DtoClientImpls;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
-import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.dtogen.shared.ServerError;
 import org.exoplatform.ide.json.client.JsoArray;
 import org.exoplatform.ide.json.client.JsoStringMap;
-import org.exoplatform.ide.json.client.JsoStringSet;
 import org.exoplatform.ide.json.shared.JsonArray;
-import org.exoplatform.ide.json.shared.JsonCollections;
-import org.exoplatform.ide.json.shared.JsonStringSet;
 
 /**
  * Model for the participants in the current workspace.
@@ -51,76 +45,9 @@ public class ParticipantModel {
     void participantRemoved(Participant participant);
   }
 
-  private static class ColorGenerator {
 
-    private static final String[] COLORS = new String[] {
-        "#465FE6", // Blue
-        "#FC9229", // Orange
-        "#51D13F", // Green
-        "#B744D1", // Purple
-        "#3BC9D1", // Cyan
-        "#D13B45", // Pinky Red
-        "#F41BDB", // Magenta
-        "#B7AC4A", // Mustard
-        "#723226", // Brown
-
-        "#7B68EE", //MediumSlateBlue
-        "#FF69B4", //HotPink
-        "#87CEFA", //LightSkyBlue
-        "#00FF00", //Lime
-        "#9400D3", //DarkViolet
-        "#90EE90", //LightGreen
-        "#00BFFF", //DeepSkyBlue
-        "#6495ED", //CornflowerBlue
-        "#C71585", //MediumVioletRed
-        "#FF7F50", //Coral
-        "#FF4500", //OrangeRed
-        "#FF8C00", //DarkOrange
-        "#FF00FF", //Magenta
-        "#FFA500", //Orange
-        "#9966CC", //Amethyst
-        "#7B68EE", //MediumSlateBlue
-        "#8A2BE2", //BlueViolet
-        "#9932CC", //DarkOrchid
-        "#8B008B", //DarkMagenta
-        "#BA55D3", //Magenta
-        "#9370DB", //MediumPurple
-        "#800080", //Purple
-        "#1E90FF", //DodgerBlue
-        "#6A5ACD", //SlateBlue
-        "#483D8B", //DarkSlateBlue
-        "#FF6347", //Tomato
-        "#8B0000", //DarkRed
-        "#ADFF2F", //
-        "#7FFF00", //Chartreuse
-        "#7CFC00", //LawnGreen
-        "#32CD32", //LimeGreen
-        "#B22222", //FireBrick
-        "#98FB98", //PaleGreen
-        "#4B0082", //Indigo
-        "#00FA9A", //MediumSpringGreen
-        "#00FF7F", //SpringGreen
-        "#FF1493", //DeepPink
-        "#3CB371", //
-        "#2E8B57", //SeaGreen
-        "#228B22", //ForestGreen
-        "#008000", //Green
-        "#4169E1", //RoyalBlue
-        "#DC143C", // Crimson
-        "#006400", //DarkGreen
-        "#87CEEB", //SkyBlue
-    };
-
-    private int previousColorIndex = -1;
-
-    private String nextColor() {
-      previousColorIndex = (previousColorIndex + 1) % COLORS.length;
-      return COLORS[previousColorIndex];
-    }
-  }
-
-  public static ParticipantModel create(FrontendApi frontendApi, MessageFilter messageFilter, String fileEditSessionKey) {
-    ParticipantModel model = new ParticipantModel(frontendApi, fileEditSessionKey);
+  public static ParticipantModel create(FrontendApi frontendApi, MessageFilter messageFilter, UsersModel usersModel, String fileEditSessionKey) {
+    ParticipantModel model = new ParticipantModel(frontendApi, usersModel, fileEditSessionKey);
     model.registerForInvalidations(messageFilter);
     model.requestAllParticipants();
     return model;
@@ -128,45 +55,29 @@ public class ParticipantModel {
 
   private final JsoArray<Listener> listeners;
 
-  /**
-   * The last callback created when requesting all participants. If this is null, then the last
-   * request was for specific participants.
-   */
-  private SimpleCallback<JsonArray<ParticipantUserDetails>> lastRequestAllCallback;
+   /**
+    * The last callback created when requesting all participants. If this is null, then the last
+    * request was for specific participants.
+    */
+   private SimpleCallback<JsonArray<ParticipantUserDetails>> lastRequestAllCallback;
 
-  /**
-   * The set of all active participant ids, including participants who have not been added to the
-   * participant list because we don't have user details yet.
-   */
-  private JsonStringSet presentParticipantsTracker = JsoStringSet.create();
-
-  private final JsoStringMap<Participant> participantsByUserId = JsoStringMap.create();
-
-  private final JsoStringMap<String> clientIdToUserId = JsoStringMap.create();
-
-  /**
-   * A map of user ID to the {@link UserDetails} for the participant. We cache participant info in
-   * case users connect and disconnect rapidly. We keep the cache here so we can discard it when the
-   * user leaves the workspace.
-   */
-  // TODO: Should we persist user details for the entire session?
-  private final JsoStringMap<UserDetails> participantUserDetails = JsoStringMap.create();
+  private final JsoStringMap<Participant> participantUserDetails = JsoStringMap.create();
 
   /**
    * Tracks the number of participants (optimization for otherwise having to iterate participants to
    * get its size).
    */
   private int count;
-  private final ColorGenerator colorGenerator;
-  private Participant self;
   private final FrontendApi frontendApi;
+
+   private UsersModel usersModel;
 
    private String fileEditSessionKey;
 
-   private ParticipantModel(FrontendApi frontendApi, String fileEditSessionKey) {
+   private ParticipantModel(FrontendApi frontendApi, UsersModel usersModel, String fileEditSessionKey) {
     this.frontendApi = frontendApi;
-      this.fileEditSessionKey = fileEditSessionKey;
-      colorGenerator = new ColorGenerator();
+    this.usersModel = usersModel;
+    this.fileEditSessionKey = fileEditSessionKey;
     listeners = JsoArray.create();
   }
 
@@ -179,11 +90,11 @@ public class ParticipantModel {
   }
 
   public String getUserId(final String clientId) {
-    return clientIdToUserId.get(clientId);
+    return usersModel.getUserIdByClientId(clientId);
   }
 
   public Participant getParticipantByUserId(final String id) {
-    return participantsByUserId.get(id);
+    return usersModel.getParticipant(id);
   }
 
   /**
@@ -191,43 +102,22 @@ public class ParticipantModel {
    * performance reasons).
    */
   public JsoStringMap<Participant> getParticipants() {
-    return participantsByUserId;
-  }
-
-  public Participant getSelf() {
-    return self;
+    return null;
   }
 
   private void registerForInvalidations(MessageFilter messageFilter) {
-    messageFilter.registerMessageRecipient(RoutingTypes.GETWORKSPACEPARTICIPANTSRESPONSE,
-        new MessageRecipient<GetWorkspaceParticipantsResponse>() {
-
-            @Override
-          public void onMessageReceived(GetWorkspaceParticipantsResponse message) {
-            handleParticipantUserDetails(message.getParticipants(), true);
-          }
-        });
+//    messageFilter.registerMessageRecipient(RoutingTypes.GETWORKSPACEPARTICIPANTSRESPONSE,
+//        new MessageRecipient<GetWorkspaceParticipantsResponse>() {
+//
+//            @Override
+//          public void onMessageReceived(GetWorkspaceParticipantsResponse message) {
+//            handleParticipantUserDetails(message.getParticipants(), true);
+//          }
+//        });
   }
 
   public void removeListener(Listener listener) {
     listeners.remove(listener);
-  }
-
-  private void createAndAddParticipant(
-      com.google.collide.dto.Participant participantDto, UserDetails userDetails) {
-    boolean isSelf =
-        participantDto.getUserId().equals(BootstrapSession.getBootstrapSession().getUserId());
-    String color = isSelf ? "black" : colorGenerator.nextColor();
-    Participant participant = Participant.create(
-        participantDto, userDetails.getDisplayName(), userDetails.getDisplayEmail(), color, isSelf);
-    participantsByUserId.put(participantDto.getUserId(), participant);
-    count++;
-
-    if (isSelf) {
-      self = participant;
-    }
-
-    dispatchParticipantAdded(participant);
   }
 
   private void dispatchParticipantAdded(Participant participant) {
@@ -290,112 +180,52 @@ public class ParticipantModel {
      });
   }
 
-  /**
-   * Updates the model with the participant user details.
-   *
-   * @param isAllParticipants true if the result contains the complete list of participants
-   */
-  private void handleParticipantUserDetails(
-      JsonArray<ParticipantUserDetails> result, boolean isAllParticipants) {
-    // Reset the tracker if the result is all inclusive.
-    if (isAllParticipants) {
-      presentParticipantsTracker = JsonCollections.createStringSet();
-    }
-
-    for (int i = 0; i < result.size(); i++) {
-      ParticipantUserDetails item = result.get(i);
-      UserDetails userDetails = item.getUserDetails();
-      String userId = userDetails.getUserId();
-
-      // Cache the participants' user details.
-      participantUserDetails.put(userId, userDetails);
-      clientIdToUserId.put(item.getParticipant().getId(), userId);
-
-      if (isAllParticipants) {
-        presentParticipantsTracker.add(userId);
-        if (!participantsByUserId.containsKey(userId)) {
-          createAndAddParticipant(item.getParticipant(), userDetails);
-        }
-      } else {
-        /*
-         * Add the participant to the list. If the user is not in presentParticipantsTracker set,
-         * then the participant has since disconnected. If the user is in the participants map, then
-         * the user was already added to the view.
-         */
-        if (presentParticipantsTracker.contains(userId)
-            && !participantsByUserId.containsKey(userId)) {
-          createAndAddParticipant(item.getParticipant(), userDetails);
-        }
+   private void handleParticipantUserDetails(JsonArray<ParticipantUserDetails> result, boolean replaceAll)
+   {
+      for(ParticipantUserDetails p : result.asIterable())
+      {
+         addParticipant(p);
       }
-    }
+   }
 
-    // Sweep through participants to find removed participants.
-    removeOldParticipants();
-  }
 
-  /**
-   * Removes users who have left the workspace from the participant list.
-   */
-  private void removeOldParticipants() {
-    // NOTE: Iterating collection that is not affected by removing.
-    for (String userId : participantsByUserId.getKeys().asIterable()) {
-      if (!presentParticipantsTracker.contains(userId)) {
-        Participant participant = participantsByUserId.remove(userId);
-        if (participant != null) {
-          count--;
-          dispatchParticipantRemoved(participant);
-        }
-
-        for (String clientId : clientIdToUserId.getKeys().asIterable()) {
-          if (clientIdToUserId.get(clientId).equals(userId)) {
-            clientIdToUserId.remove(clientId);
-          }
-        }
-      }
-    }
-  }
-
-   public void addParticipant(boolean isAllParticipants, ParticipantUserDetails item)
+   public void addParticipant(ParticipantUserDetails item)
    {
       UserDetails userDetails = item.getUserDetails();
       String userId = userDetails.getUserId();
 
       // Cache the participants' user details.
-      participantUserDetails.put(userId, userDetails);
-      clientIdToUserId.put(item.getParticipant().getId(), userId);
-
-      if (isAllParticipants) {
-         presentParticipantsTracker.add(userId);
-         if (!participantsByUserId.containsKey(userId)) {
-            createAndAddParticipant(item.getParticipant(), userDetails);
-         }
-      } else {
-     /*
-      * Add the participant to the list. If the user is not in presentParticipantsTracker set,
-      * then the participant has since disconnected. If the user is in the participants map, then
-      * the user was already added to the view.
-      */
-         if (presentParticipantsTracker.contains(userId)
-            && !participantsByUserId.containsKey(userId)) {
-            createAndAddParticipant(item.getParticipant(), userDetails);
-         }
-      }
+      Participant participant = usersModel.getParticipant(userId);
+      participantUserDetails.put(userId, participant);
+      dispatchParticipantAdded(participant);
+//      clientIdToUserId.put(item.getParticipant().getId(), userId);
+//
+//      if (isAllParticipants) {
+//         presentParticipantsTracker.add(userId);
+//         if (!participantsByUserId.containsKey(userId)) {
+//            createAndAddParticipant(item.getParticipant(), userDetails);
+//         }
+//      } else {
+//     /*
+//      * Add the participant to the list. If the user is not in presentParticipantsTracker set,
+//      * then the participant has since disconnected. If the user is in the participants map, then
+//      * the user was already added to the view.
+//      */
+//         if (presentParticipantsTracker.contains(userId)
+//            && !participantsByUserId.containsKey(userId)) {
+//            createAndAddParticipant(item.getParticipant(), userDetails);
+//         }
+//      }
    }
 
    public void removeParticipant(ParticipantUserDetails item)
    {
       String userId = item.getUserDetails().getUserId();
-      if (presentParticipantsTracker.contains(userId)) {
-         Participant participant = participantsByUserId.remove(userId);
+      if (participantUserDetails.containsKey(userId)) {
+         Participant participant = participantUserDetails.remove(userId);
          if (participant != null) {
             count--;
             dispatchParticipantRemoved(participant);
-         }
-
-         for (String clientId : clientIdToUserId.getKeys().asIterable()) {
-            if (clientIdToUserId.get(clientId).equals(userId)) {
-               clientIdToUserId.remove(clientId);
-            }
          }
       }
    }

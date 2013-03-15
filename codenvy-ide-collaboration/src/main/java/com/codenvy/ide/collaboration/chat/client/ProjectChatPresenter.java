@@ -31,6 +31,7 @@ import com.codenvy.ide.collaboration.dto.client.DtoClientImpls.UserDetailsImpl;
 import com.codenvy.ide.notification.Notification;
 import com.codenvy.ide.notification.Notification.NotificationType;
 import com.codenvy.ide.notification.NotificationManager;
+import com.google.collide.client.CollabEditorExtension;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.user.client.Timer;
@@ -45,9 +46,11 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter.MessageRecipient;
 import org.exoplatform.ide.client.framework.websocket.WebSocketException;
+import org.exoplatform.ide.json.client.Jso;
 import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
+import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
 import org.exoplatform.ide.shared.util.StringUtils;
 
 import java.util.Date;
@@ -71,11 +74,13 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
       void addListener(EventListener eventListener);
 
-      void setParticipants(JsonStringMap<UserDetails> chatParticipants);
-
       void messageNotDelivered(String messageId);
 
       void messageDelivered(String messageId);
+
+      void removeParticipant(String userId);
+
+      void addParticipant(Participant participant);
    }
 
    private class MessagesTimer extends Timer
@@ -130,6 +135,8 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
 
    private ShowChatControl control;
 
+   private CollabEditorExtension collabExtension;
+
    private Display display;
 
    private JsonStringMap<UserDetails> users = JsonCollections.createMap();
@@ -143,12 +150,13 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    private boolean viewClosed = true;
 
    public ProjectChatPresenter(ChatApi chatApi, MessageFilter messageFilter, IDE ide, ShowChatControl chatControl,
-      String userId)
+      final String userId, CollabEditorExtension collabExtension)
    {
       this.chatApi = chatApi;
       this.ide = ide;
       this.userId = userId;
       control = chatControl;
+      this.collabExtension = collabExtension;
       ide.eventBus().addHandler(ViewClosedEvent.TYPE, this);
       ide.eventBus().addHandler(ShowHideChatEvent.TYPE, this);
       messageFilter.registerMessageRecipient(RoutingTypes.CHAT_MESSAGE, new MessageRecipient<ChatMessage>()
@@ -176,6 +184,10 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
             @Override
             public void onMessageReceived(ChatParticipantRemove message)
             {
+               if(userId.equals(message.userId()))
+               {
+                  return;
+               }
                removeParticipant(message.userId());
             }
          });
@@ -184,7 +196,7 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
    private void removeParticipant(String userId)
    {
       users.remove(userId);
-      display.setParticipants(users);
+      display.removeParticipant(userId);
    }
 
    private void addParticipant(UserDetails user)
@@ -194,10 +206,20 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
          ((UserDetailsImpl)user).setIsCurrentUser(true);
       }
       users.put(user.getUserId(), user);
-      if (display != null)
+      if (display != null && !user.isCurrentUser())
       {
-         display.setParticipants(users);
+         Participant p = getParticipant(user);
+         display.addParticipant(p);
       }
+   }
+
+   private Participant getParticipant(UserDetails user)
+   {
+      com.google.collide.client.code.Participant participant = collabExtension.getUsersModel().getParticipant(
+         user.getUserId());
+      Participant p  = ((Jso)user).cast();
+      p.setColor(participant.getColor());
+      return p;
    }
 
 
@@ -326,7 +348,15 @@ public class ProjectChatPresenter implements ViewClosedHandler, ShowHideChatHand
       this.projectId = projectId;
       display = GWT.create(Display.class);
       display.addListener(enterListener);
-      display.setParticipants(users);
+      users.iterate(new IterationCallback<UserDetails>()
+      {
+         @Override
+         public void onIteration(String key, UserDetails value)
+         {
+            Participant p = getParticipant(value);
+            display.addParticipant(p);
+         }
+      });
       if (users.size() > 1)
       {
          openChat();
