@@ -241,4 +241,22 @@ public class CreateTest extends JcrFileSystemTest
       Node folder = (Node)session.getItem(expectedPath);
       assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));
    }
+
+   public void testCreateFolderHierarchy2() throws Exception
+   {
+      // create some items in path
+      String name = "testCreateFolderHierarchy/1/2/3";
+      String path = SERVICE_URI + "folder/" + createTestNodeID + '?' + "name=" + name;
+      ContainerResponse response = launcher.service("POST", path, BASE_URI, null, null, null, null);
+      assertEquals(200, response.getStatus());
+      // create the rest of path
+      name += "/4/5";
+      path = SERVICE_URI + "folder/" + createTestNodeID + '?' + "name=" + name;
+      response = launcher.service("POST", path, BASE_URI, null, null, null, null);
+      assertEquals(200, response.getStatus());
+      String expectedPath = createTestNodePath + '/' + name;
+      assertTrue("Folder was not created in expected location. ", session.itemExists(expectedPath));
+      Node folder = (Node)session.getItem(expectedPath);
+      assertTrue("nt:folder node type expected", folder.getPrimaryNodeType().isNodeType("nt:folder"));
+   }
 }

@@ -519,13 +519,12 @@ public class MountPoint
          // Name may be hierarchical, e.g. folder1/folder2/folder3.
          // Some folder in hierarchy may already exists but at least one folder must be created.
          // If no one folder created then ItemAlreadyExistException is thrown.
-         // Method returns first created folder.
          Path currentPath = parent.getInternalPath();
          Path createdPath = null;
          for (String element : Path.fromString(name).elements())
          {
             currentPath = currentPath.newPath(element);
-            if (new java.io.File(ioRoot, currentPath.toIoPath()).mkdir() && createdPath == null)
+            if (new java.io.File(ioRoot, currentPath.toIoPath()).mkdir())
             {
                createdPath = currentPath;
             }

@@ -225,11 +225,7 @@ public class MemoryFileSystem implements VirtualFileSystem
                node = new MemoryFolder(nodeName);
                current.addChild(node);
                current = (MemoryFolder)node;
-               if (memoryFolder == null)
-               {
-                  // Remember first not existed folder that need to add.
-                  memoryFolder = current;
-               }
+               memoryFolder = current;
             }
             else if (node.isFolder())
             {
@@ -240,12 +236,6 @@ public class MemoryFileSystem implements VirtualFileSystem
                throw new ItemAlreadyExistException("Unable create new folder. Item with the name '" +
                   node.getPath() + "' already exists and is not a Folder. ");
             }
-         }
-         if (memoryFolder == null)
-         {
-            // If have nothing to add then path already exists.
-            throw new ItemAlreadyExistException("Unable create new folder. Item with the path '" + name +
-               "' already exists. ");
          }
       }
       else
