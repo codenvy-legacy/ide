@@ -1036,8 +1036,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
       String url = Utils.getRestContext() + "/ide/jrebel/profile/send";
 
       JSONObject json = new JSONObject();
-      json.put("first_name", new JSONString(display.getJRebelFirstNameField().getValue()));
-      json.put("last_name", new JSONString(display.getJRebelLastNameField().getValue()));
+      json.put("firstName", new JSONString(display.getJRebelFirstNameField().getValue()));
+      json.put("lastName", new JSONString(display.getJRebelLastNameField().getValue()));
       json.put("phone", new JSONString(display.getJRebelPhoneNumberField().getValue()));
 
       try
@@ -1106,20 +1106,27 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                protected void onSuccess(StringBuilder result)
                {
                   JSONObject jsonObject = JSONParser.parseStrict(result.toString()).isObject();
-                  String firstName = jsonObject.get("first_name").isString().stringValue();
-                  String lastName = jsonObject.get("last_name").isString().stringValue();
-                  String phone = jsonObject.get("phone").isString().stringValue();
+                  String firstName = jsonObject.get("firstName") != null ? jsonObject.get("firstName").isString().stringValue() : "";
+                  String lastName = jsonObject.get("lastName") != null ? jsonObject.get("lastName").isString().stringValue() : "";
+                  String phone = jsonObject.get("phone") != null ? jsonObject.get("phone").isString().stringValue() : "";
 
-                  if (firstName != null && lastName != null && phone != null)
+                  display.getJRebelFirstNameField().setValue(firstName);
+                  display.getJRebelLastNameField().setValue(lastName);
+                  display.getJRebelPhoneNumberField().setValue(phone);
+
+                  if (!firstName.isEmpty() && !lastName.isEmpty() && !phone.isEmpty())
                   {
-                     display.getJRebelFirstNameField().setValue(firstName);
-                     display.getJRebelLastNameField().setValue(lastName);
-                     display.getJRebelPhoneNumberField().setValue(phone);
-
+                     //if all fields are filled then we hide form
                      display.setJRebelStoredFormVisible(false);
+                  }
+                  else if (!firstName.isEmpty() || !lastName.isEmpty() || !phone.isEmpty())
+                  {
+                     //if one or more fields are not filled then we show form
+                     display.setJRebelStoredFormVisible(true);
                   }
                   else
                   {
+                     //if all fields are empty then we also show form
                      display.setJRebelStoredFormVisible(true);
                   }
                   display.setJRebelFormVisible(display.getUseJRebelPlugin().getValue());

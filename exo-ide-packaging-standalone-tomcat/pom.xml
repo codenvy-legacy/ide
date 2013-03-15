@@ -64,6 +64,12 @@
          <type>war</type>
       </dependency>
       <dependency>
+         <groupId>com.exoplatform.cloud-ide</groupId>
+         <artifactId>cloud-ide-packaging-userdb-war</artifactId>
+         <type>war</type>
+         <version>${project.version}</version>
+      </dependency>
+      <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-codeassistant-asm</artifactId>
          <version>${project.version}</version>
@@ -917,6 +923,7 @@
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-maven-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/builder.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-codeassistant-storage-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/codeassistant-storage.war" overwrite="true" />
                         <copy file="${project.build.directory}/packager-conf/war/exo-ide-gadget-server-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/gadget-server.war" overwrite="true" />
+                        <copy file="${project.build.directory}/packager-conf/war/cloud-ide-packaging-userdb-war-${project.version}.war" tofile="${project.build.directory}/tomcat-ide/webapps/userdb.war" overwrite="true"/>
                         <unzip src="${project.build.directory}/ide-codeassistant-lucene-index.zip" dest="${project.build.directory}/tomcat-ide" />
                         <unzip src="${project.build.directory}/packager-conf/appengine/appengine-java-sdk.zip" dest="${project.build.directory}/tomcat-ide">
                            <patternset>

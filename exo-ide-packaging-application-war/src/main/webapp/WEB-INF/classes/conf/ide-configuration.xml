@@ -612,4 +612,17 @@
       <type>org.exoplatform.ide.security.oauth.ExoGitHubOAuthAuthenticator</type>
    </component>
 
+   <!--
+    ***************************************************************************************
+    ************************ Create dummy user at tomcat start ****************************
+    ***************************************************************************************
+   -->
+   <component>
+      <type>org.exoplatform.ide.user.LdapDummyUser</type>
+   </component>
+
+   <component>
+      <type>com.exoplatform.cloudide.userdb.client.UserDBServiceClient</type>
+   </component>
+
 </configuration>

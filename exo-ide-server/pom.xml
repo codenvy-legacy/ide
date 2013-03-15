@@ -318,6 +318,11 @@
 			<artifactId>gdata-contacts-3.0</artifactId>
 			<version>1.47.1</version>
 		</dependency>
+      <dependency>
+         <groupId>com.exoplatform.cloud-ide</groupId>
+         <artifactId>cloud-ide-user-db-client</artifactId>
+         <version>${project.version}</version>
+      </dependency>
 	</dependencies>
 	<build>
 		<plugins>
