@@ -868,15 +868,10 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       display.asView().setTitle(openedProject.getName());
       
       display.setProjectExplorerTreeVisible(true);
-      
-//      display.getBrowserTree().setValue(null);
-//      display.getBrowserTree().setValue(openedProject);
       display.setProject(openedProject);
       
-      //display.selectItem(openedProject);
-      //selectedItems = display.getSelectedItems();
       selectedItems = new ArrayList<Item>();
-
+      
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
    }
@@ -890,7 +885,8 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
          
          if (event.getItemToSelect() != null)
          {
-            display.selectItem(event.getItemToSelect());
+            display.navigateToItem(event.getItemToSelect());
+            //display.selectItem(event.getItemToSelect());
          }
          
          Scheduler.get().scheduleDeferred(new ScheduledCommand()
@@ -918,7 +914,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
          return;
       }
 
-//      display.getBrowserTree().setValue(null);
       display.setProject(null);
       
       display.asView().setTitle(DEFAULT_TITLE);
