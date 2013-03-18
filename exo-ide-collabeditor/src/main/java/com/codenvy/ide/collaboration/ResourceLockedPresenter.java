@@ -130,7 +130,7 @@ public class ResourceLockedPresenter implements ActionDelegate, ParticipantsList
       notification.setFilePath(path);
       notification.setOperation(operation);
       notification.setTarget(targetPaht);
-      notification.setUserId(BootstrapSession.getBootstrapSession().getUserId());
+      notification.setUserId(BootstrapSession.getBootstrapSession().getActiveClientId());
       notification.setEditSessionId(manager.getEditSessionId(path));
       CollabEditorExtension.get().getContext().getFrontendApi().FILE_OPERATION_NOTIFY.send(notification);
       view.setNotifyButtonEnabled(false);

@@ -21,6 +21,7 @@ import com.google.collide.dto.GetEditSessionCollaboratorsResponse;
 import com.google.collide.dto.ParticipantUserDetails;
 import com.google.collide.dto.UserDetails;
 import com.google.collide.dto.client.DtoClientImpls;
+import com.google.gwt.user.client.Window;
 
 import org.exoplatform.ide.client.framework.websocket.FrontendApi.ApiCallback;
 import org.exoplatform.ide.client.framework.websocket.MessageFilter;
@@ -102,7 +103,7 @@ public class ParticipantModel {
    * performance reasons).
    */
   public JsoStringMap<Participant> getParticipants() {
-    return null;
+    return participantUserDetails;
   }
 
   private void registerForInvalidations(MessageFilter messageFilter) {
@@ -193,7 +194,6 @@ public class ParticipantModel {
    {
       UserDetails userDetails = item.getUserDetails();
       String userId = userDetails.getUserId();
-
       // Cache the participants' user details.
       Participant participant = usersModel.getParticipant(userId);
       participantUserDetails.put(userId, participant);

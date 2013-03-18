@@ -89,8 +89,8 @@ public class Participants
          {
             final String username = user.getName();
             ParticipantUserDetailsImpl participantDetails = ParticipantUserDetailsImpl.make();
-            ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(userId);
-            UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(userId).setDisplayEmail(
+            ParticipantImpl participant = ParticipantImpl.make().setId(userId).setUserId(username);
+            UserDetailsImpl userDetails = UserDetailsImpl.make().setUserId(username).setDisplayEmail(
                username).setDisplayName(username).setGivenName(username);
 
             participantDetails.setParticipant(participant);

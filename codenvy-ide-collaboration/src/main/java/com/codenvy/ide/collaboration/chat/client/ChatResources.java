@@ -53,6 +53,10 @@ public interface ChatResources extends ClientBundle
       String notificationMessage();
 
       String messageNotDelivered();
+
+      String chatHeaderText();
+
+      String chatHeader();
    }
 
    @Source("Chat.css")

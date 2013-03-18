@@ -220,7 +220,7 @@ public class CollaborationManager
       removerManager.remove();
    }
 
-   DocumentCollaborationController getDocumentCollaborationController(int documentId)
+   public DocumentCollaborationController getDocumentCollaborationController(int documentId)
    {
       return docCollabControllersByDocumentId.get(documentId);
    }

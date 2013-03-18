@@ -19,6 +19,8 @@
 package com.codenvy.ide.collaboration.chat.client;
 
 import com.codenvy.ide.client.util.AnimationController;
+import com.codenvy.ide.client.util.AnimationController.AnimationStateListener;
+import com.codenvy.ide.client.util.AnimationController.State;
 import com.codenvy.ide.client.util.Elements;
 import com.codenvy.ide.collaboration.chat.client.ChatResources.ChatCss;
 import com.codenvy.ide.collaboration.chat.client.ProjectChatPresenter.Display;
@@ -28,7 +30,6 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.DateTimeFormat.PredefinedFormat;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.SplitLayoutPanel;
@@ -38,10 +39,15 @@ import elemental.html.DivElement;
 import elemental.html.Element;
 import elemental.html.ImageElement;
 import elemental.html.SpanElement;
+import elemental.html.TableCellElement;
+import elemental.html.TableElement;
+import elemental.html.TableRowElement;
 import elemental.html.TextAreaElement;
 
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;
 import org.exoplatform.ide.client.framework.ui.impl.ViewType;
+import org.exoplatform.ide.json.client.JsoArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 import org.exoplatform.ide.json.shared.JsonCollections;
 import org.exoplatform.ide.json.shared.JsonStringMap;
 import org.exoplatform.ide.json.shared.JsonStringMap.IterationCallback;
@@ -81,13 +87,23 @@ public class ProjectChatView extends ViewImpl implements Display
 
    private JsonStringMap<Element> participants = JsonCollections.createMap();
 
+   private JsonStringMap<Element> editParticipants = JsonCollections.createMap();
+
    AnimationController animationController = AnimationController.FADE_ANIMATION_CONTROLLER;
+
+   private com.google.gwt.user.client.Element editHeader;
+
+   private com.google.gwt.user.client.Element editFooter;
 
    public ProjectChatView()
    {
       super(ID, ViewType.OPERATION, "Project Chat", new Image(ChatExtension.resources.chat()));
       add(ourUiBinder.createAndBindUi(this));
       css = ChatExtension.resources.chatCss();
+      editHeader = createEditHeader("Current file Collaborators", 145);
+      participantsPanel.getElement().appendChild((Node)editHeader);
+      editFooter = createEditHeader("Current project Collaborators", 167);
+      participantsPanel.getElement().appendChild(editFooter);
    }
 
    /**
@@ -120,7 +136,7 @@ public class ProjectChatView extends ViewImpl implements Display
          lastUserId = userDetails.getUserId();
          lastMessageElement = messageElement;
       }
-      if(userDetails.isCurrentUser())
+      if (userDetails.isCurrentUser())
       {
          currentUserMessages.put(String.valueOf(d.getTime()), messageElement);
       }
@@ -160,7 +176,7 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void messageNotDelivered(String messageId)
    {
-      if(currentUserMessages.containsKey(messageId))
+      if (currentUserMessages.containsKey(messageId))
       {
          Element messageElement = currentUserMessages.get(messageId);
 
@@ -176,7 +192,7 @@ public class ProjectChatView extends ViewImpl implements Display
    @Override
    public void messageDelivered(String messageId)
    {
-      if(currentUserMessages.containsKey(messageId))
+      if (currentUserMessages.containsKey(messageId))
       {
          Element messageElement = currentUserMessages.get(messageId);
 
@@ -184,21 +200,100 @@ public class ProjectChatView extends ViewImpl implements Display
       }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void removeParticipant(String userId)
    {
-      Element element = participants.remove(userId);
-      element.removeFromParent();
-      animationController.hide(element);
+      if (participants.containsKey(userId))
+      {
+         Element element = participants.remove(userId);
+         element.removeFromParent();
+      }
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void addParticipant(Participant participant)
    {
       Element element = getParticipantElement(participant);
       participants.put(participant.getUserId(), element);
-      participantsPanel.getElement().appendChild((Node)element);
+      participantsPanel.getElement().insertAfter((Node)element, editFooter);
       animationController.show(element);
+   }
+
+   private com.google.gwt.user.client.Element createEditHeader(String message, int width)
+   {
+      DivElement divElement = Elements.createDivElement(css.chatHeader());
+      TableElement element = Elements.createTableElement();
+      element.setCellPadding("0");
+      element.setCellSpacing("0");
+      element.setWidth("100%");
+      element.setBorder("0");
+      TableRowElement trElement = Elements.createTRElement();
+      element.appendChild(trElement);
+
+      TableCellElement tdElementLeft = Elements.createTDElement();
+      tdElementLeft.appendChild(Elements.createHrElement());
+      trElement.appendChild(tdElementLeft);
+
+      TableCellElement tdElementMiddle = Elements.createTDElement(css.chatHeaderText());
+      tdElementMiddle.setWidth(width + "px");
+      tdElementMiddle.setInnerHTML(message);
+      trElement.appendChild(tdElementMiddle);
+
+      TableCellElement tdElementRight = Elements.createTDElement();
+      tdElementRight.appendChild(Elements.createHrElement());
+      trElement.appendChild(tdElementRight);
+      divElement.appendChild(element);
+      return (com.google.gwt.user.client.Element)divElement;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void removeEditParticipant(String userId)
+   {
+      if (editParticipants.containsKey(userId))
+      {
+         Element element = editParticipants.remove(userId);
+         element.removeFromParent();
+         participantsPanel.getElement().appendChild((com.google.gwt.user.client.Element)element);
+         animationController.show(element);
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void addEditParticipant(String userId)
+   {
+      if (participants.containsKey(userId))
+      {
+         Element element = participants.get(userId);
+         element.removeFromParent();
+         participantsPanel.getElement().insertBefore((Node)element, editFooter);
+         animationController.show(element);
+         editParticipants.put(userId, element);
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void clearEditParticipants()
+   {
+      JsonArray<String> keys = editParticipants.getKeys();
+      for (String key : keys.asIterable())
+      {
+         removeEditParticipant(key);
+      }
    }
 
    private Element getParticipantElement(Participant userDetails)

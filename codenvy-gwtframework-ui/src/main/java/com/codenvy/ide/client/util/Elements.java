@@ -29,6 +29,7 @@ import elemental.html.DivElement;
 import elemental.html.Document;
 import elemental.html.Element;
 import elemental.html.FormElement;
+import elemental.html.HRElement;
 import elemental.html.HeadElement;
 import elemental.html.IFrameElement;
 import elemental.html.ImageElement;
@@ -210,6 +211,13 @@ public class Elements
    public static Text createTextNode(String data)
    {
       return getDocument().createTextNode(data);
+   }
+
+   public static HRElement createHrElement(String... classNames)
+   {
+      HRElement elem = getDocument().createHRElement();
+      addClassesToElement(elem, classNames);
+      return elem;
    }
 
    public static Element getActiveElement()

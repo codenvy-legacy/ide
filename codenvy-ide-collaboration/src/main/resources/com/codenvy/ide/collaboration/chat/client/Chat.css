@@ -42,7 +42,7 @@
 .chatParticipantEmail {
    left: 8px;
    position: relative;
-   top: 12px;
+   top: 14px;
    color: #52ade0;
 }
 
@@ -68,4 +68,24 @@
 @sprite .messageNotDelivered{
    gwt-image: 'notDelivered';
    float: left;
+}
+
+.chatHeader{
+   margin: 3px;
+   border-radius: 4px 4px 4px 4px;
+   padding: 5px;
+   /*background-color: #53ade0;*/
+   background-color: #7a8891;
+   color: #FFFFFF;
+   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
+}
+
+.chatHeader table tr td hr{
+   padding: 0;
+   margin: 0;
+}
+
+.chatHeaderText{
+   color: #FFFFFF;
+   font-family: Myriad Pro, arial, Verdana, Verdana, sans-serif;
 }
