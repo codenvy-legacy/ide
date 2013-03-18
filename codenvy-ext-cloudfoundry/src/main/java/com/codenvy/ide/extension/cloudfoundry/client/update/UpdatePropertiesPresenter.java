@@ -26,12 +26,12 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -43,7 +43,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateInstancesHandler
+public class UpdatePropertiesPresenter
 {
    private int memory;
 
@@ -59,6 +59,8 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private AsyncCallback<String> updatePropertiesCallback;
+
    @Inject
    protected UpdatePropertiesPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
@@ -68,17 +70,11 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      this.eventBus.addHandler(UpdateMemoryEvent.TYPE, this);
-      this.eventBus.addHandler(UpdateInstancesEvent.TYPE, this);
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onUpdateMemory(UpdateMemoryEvent event)
+   public void showUpdateMemoryDialog(AsyncCallback<String> callback)
    {
+      this.updatePropertiesCallback = callback;
       getOldMemoryValue();
    }
 
@@ -173,7 +169,7 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
                {
                   String msg = constant.updateMemorySuccess(String.valueOf(memory));
                   console.print(msg);
-                  eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
+                  updatePropertiesCallback.onSuccess(projectId);
                }
             });
       }
@@ -185,11 +181,11 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
    }
 
    /**
-    * {@inheritDoc}
+    *
     */
-   @Override
-   public void onUpdateInstances(UpdateInstancesEvent event)
+   public void showUpdateInstancesDialog(AsyncCallback<String> callback)
    {
+      this.updatePropertiesCallback = callback;
       getOldInstancesValue();
    }
 
@@ -311,7 +307,7 @@ public class UpdatePropertiesPresenter implements UpdateMemoryHandler, UpdateIns
                            {
                               String msg = constant.updateInstancesSuccess(String.valueOf(result.getInstances()));
                               console.print(msg);
-                              eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
+                              updatePropertiesCallback.onSuccess(projectId);
                            }
                         });
                   }

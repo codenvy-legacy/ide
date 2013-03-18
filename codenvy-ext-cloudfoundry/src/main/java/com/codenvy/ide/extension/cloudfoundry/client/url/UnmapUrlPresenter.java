@@ -26,11 +26,11 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -66,6 +66,8 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private AsyncCallback<String> unmapUrlCallback;
+
    @Inject
    protected UnmapUrlPresenter(UnmapUrlView view, ResourceProvider resourceProvider, EventBus eventBus,
       Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
@@ -88,7 +90,7 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
       if (isBindingChanged)
       {
          String projectId = resourceProvider.getActiveProject().getId();
-         eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
+         unmapUrlCallback.onSuccess(projectId);
       }
 
       view.close();
@@ -137,8 +139,9 @@ public class UnmapUrlPresenter implements UnmapUrlView.ActionDelegate
    /**
     * Show dialog
     */
-   public void showDialog()
+   public void showDialog(AsyncCallback<String> callback)
    {
+      this.unmapUrlCallback = callback;
       getAppRegisteredUrls();
    }
 

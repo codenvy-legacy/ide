@@ -25,22 +25,15 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryExtension;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.ApplicationListUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.TargetsUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
@@ -56,8 +49,7 @@ import java.util.List;
  * @version $Id: Aug 18, 2011 evgen $
  */
 @Singleton
-public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, ApplicationInfoChangedHandler,
-   ApplicationDeletedHandler
+public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
 {
    private ApplicationsView view;
 
@@ -72,6 +64,25 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
    private CloudFoundryLocalizationConstant constant;
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
+
+   private StartApplicationPresenter startAppPresenter;
+
+   private DeleteApplicationPresenter deleteAppPresenter;
+   
+   private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>()
+            {
+      @Override
+      public void onSuccess(String result)
+      {
+         getApplicationList();
+      }
+
+      @Override
+      public void onFailure(Throwable caught)
+      {
+         // do nothing
+      }
+   };
 
    /**
     * Create presenter.
@@ -96,8 +107,8 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
+      this.startAppPresenter = startAppPresenter;
+      this.deleteAppPresenter = deleteAppPresenter;
    }
 
    /**
@@ -260,9 +271,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
    @Override
    public void onStartClicked(CloudFoundryApplication app)
    {
-      // TODO Auto-generated method stub
-      //      IDE.fireEvent(new StartApplicationEvent(event.getSelectedItem().getName()));
-      eventBus.fireEvent(new StartApplicationEvent(app.getName()));
+      startAppPresenter.startApp(app.getName(), appInfoChangedCallback);
    }
 
    /**
@@ -271,9 +280,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
    @Override
    public void onStopClicked(CloudFoundryApplication app)
    {
-      // TODO Auto-generated method stub
-      //      IDE.fireEvent(new StopApplicationEvent(event.getSelectedItem().getName()));
-      eventBus.fireEvent(new StopApplicationEvent(app.getName()));
+      startAppPresenter.stopApp(app.getName(), appInfoChangedCallback);
    }
 
    /**
@@ -282,9 +289,7 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
    @Override
    public void onRestartClicked(CloudFoundryApplication app)
    {
-      // TODO Auto-generated method stub
-      //      IDE.fireEvent(new RestartApplicationEvent(event.getSelectedItem().getName()));
-      eventBus.fireEvent(new RestartApplicationEvent(app.getName()));
+      startAppPresenter.restartApp(app.getName(), appInfoChangedCallback);
    }
 
    /**
@@ -293,26 +298,6 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate, A
    @Override
    public void onDeleteClicked(CloudFoundryApplication app)
    {
-      // TODO Auto-generated method stub
-      //      IDE.fireEvent(new DeleteApplicationEvent(event.getSelectedItem().getName(), currentServer));
-      eventBus.fireEvent(new DeleteApplicationEvent(app.getName(), currentServer));
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
-   {
-      getApplicationList();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onApplicationDeleted(ApplicationDeletedEvent event)
-   {
-      getApplicationList();
+      deleteAppPresenter.deleteApp(currentServer, app.getName(), appInfoChangedCallback);
    }
 }

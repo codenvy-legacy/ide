@@ -26,22 +26,16 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAsyncRequestCal
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.ApplicationDeletedHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
-import com.codenvy.ide.extension.cloudfoundry.client.start.RestartApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationEvent;
+import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateInstancesEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateMemoryEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
@@ -49,6 +43,7 @@ import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -60,8 +55,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate,
-   ApplicationInfoChangedHandler, ManageServicesHandler, ApplicationDeletedHandler
+public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate, ManageServicesHandler
 // ProjectOpenedHandler, ProjectClosedHandler,  ManageCloudFoundryProjectHandler,  ActiveProjectChangedHandler
 {
    private CloudFoundryProjectView view;
@@ -88,12 +82,36 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private StartApplicationPresenter startAppPresenter;
+
+   private DeleteApplicationPresenter deleteAppPresenter;
+
+   private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>()
+   {
+      @Override
+      public void onSuccess(String result)
+      {
+         Project openedProject = resourceProvider.getActiveProject();
+         if (result != null && openedProject != null && openedProject.getId().equals(result))
+         {
+            getApplicationInfo(openedProject);
+         }
+      }
+
+      @Override
+      public void onFailure(Throwable caught)
+      {
+         // do nothing
+      }
+   };
+
    @Inject
    protected CloudFoundryProjectPresenter(CloudFoundryProjectView view,
       ApplicationInfoPresenter applicationInfoPresenter, UnmapUrlPresenter unmapUrlPresenter,
       UpdatePropertiesPresenter updateProperyPresenter, ManageServicesPresenter manageServicesPresenter,
       UpdateApplicationPresenter updateApplicationPresenter, EventBus eventBus, ResourceProvider resourceProvider,
-      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
+      Console console, CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory,
+      StartApplicationPresenter startAppPresenter, DeleteApplicationPresenter deleteAppPresenter)
    {
       this.view = view;
       this.view.setDelegate(this);
@@ -107,8 +125,9 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.updateApplicationPresenter = updateApplicationPresenter;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
+      this.startAppPresenter = startAppPresenter;
+      this.deleteAppPresenter = deleteAppPresenter;
 
-      this.eventBus.addHandler(ApplicationInfoChangedEvent.TYPE, this);
       this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
    }
 
@@ -268,9 +287,25 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onDeleteClicked()
    {
-      // TODO
-      //      IDE.eventBus().fireEvent(new DeleteApplicationEvent());
-      eventBus.fireEvent(new DeleteApplicationEvent());
+      deleteAppPresenter.deleteApp(null, null, new AsyncCallback<String>()
+      {
+         @Override
+         public void onSuccess(String result)
+         {
+            Project openedProject = resourceProvider.getActiveProject();
+            if (result != null && openedProject != null
+               && result.equals(openedProject.getPropertyValue("cloudfoundry-application")))
+            {
+               eventBus.fireEvent(new RefreshBrowserEvent(openedProject));
+            }
+         }
+
+         @Override
+         public void onFailure(Throwable caught)
+         {
+            // do nothing
+         }
+      });
    }
 
    /**
@@ -279,8 +314,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onInfoClicked()
    {
-      // TODO
-      //      IDE.eventBus().fireEvent(new ApplicationInfoEvent());
       applicationInfoPresenter.showDialog();
    }
 
@@ -290,9 +323,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onStartClicked()
    {
-      // TODO
-      //      IDE.eventBus().fireEvent(new StartApplicationEvent());
-      eventBus.fireEvent(new StartApplicationEvent());
+      startAppPresenter.startApp(null, appInfoChangedCallback);
    }
 
    /**
@@ -301,9 +332,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onStopClicked()
    {
-      // TODO Auto-generated method stub
-      //      IDE.eventBus().fireEvent(new StopApplicationEvent());
-      eventBus.fireEvent(new StopApplicationEvent());
+      startAppPresenter.stopApp(null, appInfoChangedCallback);
    }
 
    /**
@@ -312,9 +341,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onRestartClicked()
    {
-      // TODO Auto-generated method stub
-      //      IDE.eventBus().fireEvent(new RestartApplicationEvent());
-      eventBus.fireEvent(new RestartApplicationEvent());
+      startAppPresenter.restartApp(null, appInfoChangedCallback);
    }
 
    /**
@@ -323,9 +350,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onEditMemoryClicked()
    {
-      // TODO Auto-generated method stub
-      //      IDE.eventBus().fireEvent(new UpdateMemoryEvent());
-      eventBus.fireEvent(new UpdateMemoryEvent());
+      updateProperyPresenter.showUpdateMemoryDialog(appInfoChangedCallback);
    }
 
    /**
@@ -334,9 +359,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onEditUrlClicked()
    {
-      // TODO
-      //      IDE.eventBus().fireEvent(new UnmapUrlEvent());
-      unmapUrlPresenter.showDialog();
+      unmapUrlPresenter.showDialog(appInfoChangedCallback);
    }
 
    /**
@@ -345,23 +368,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onEditInstancesClicked()
    {
-      // TODO Auto-generated method stub
-      //      IDE.eventBus().fireEvent(new UpdateInstancesEvent());
-      eventBus.fireEvent(new UpdateInstancesEvent());
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onApplicationInfoChanged(ApplicationInfoChangedEvent event)
-   {
-      Project openedProject = resourceProvider.getActiveProject();
-      if (event.getProjectId() != null && resourceProvider.getVfsId().equals(event.getVfsId()) && openedProject != null
-         && openedProject.getId().equals(event.getProjectId()))
-      {
-         getApplicationInfo(openedProject);
-      }
+      updateProperyPresenter.showUpdateInstancesDialog(appInfoChangedCallback);
    }
 
    /**
@@ -371,19 +378,5 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    public void onManageServices(ManageServicesEvent event)
    {
       getApplicationInfo(resourceProvider.getActiveProject());
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onApplicationDeleted(ApplicationDeletedEvent event)
-   {
-      Project openedProject = resourceProvider.getActiveProject();
-      if (event.getApplicationName() != null && openedProject != null
-         && event.getApplicationName().equals(openedProject.getPropertyValue("cloudfoundry-application")))
-      {
-         eventBus.fireEvent(new RefreshBrowserEvent(openedProject));
-      }
    }
 }

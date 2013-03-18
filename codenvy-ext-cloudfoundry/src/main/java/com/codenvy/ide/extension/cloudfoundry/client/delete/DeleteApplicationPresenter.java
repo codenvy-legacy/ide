@@ -30,6 +30,7 @@ import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -41,7 +42,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class DeleteApplicationPresenter implements DeleteApplicationView.ActionDelegate, DeleteApplicationHandler
+public class DeleteApplicationPresenter implements DeleteApplicationView.ActionDelegate
 {
    private DeleteApplicationView view;
 
@@ -65,6 +66,8 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private AsyncCallback<String> appDeleteCallback;
+
    @Inject
    protected DeleteApplicationPresenter(DeleteApplicationView view, ResourceProvider resourceProvider,
       EventBus eventBus, Console console, CloudFoundryLocalizationConstant constant,
@@ -77,8 +80,6 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      this.eventBus.addHandler(DeleteApplicationEvent.TYPE, this);
    }
 
    /**
@@ -96,25 +97,25 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
    @Override
    public void onDeleteClicked()
    {
-      deleteApplication();
+      deleteApplication(appDeleteCallback);
 
       view.close();
    }
 
    /**
-    * {@inheritDoc}
+    *
     */
-   @Override
-   public void onDeleteApplication(DeleteApplicationEvent event)
+   public void deleteApp(String serverName, String appName, AsyncCallback<String> callback)
    {
-      serverName = event.getServer();
-      if (event.getApplicationName() == null)
+      this.serverName = serverName;
+      this.appDeleteCallback = callback;
+      if (appName == null)
       {
          getApplicationInfo();
       }
       else
       {
-         appName = event.getApplicationName();
+         this.appName = appName;
          showDialog(appName);
       }
    }
@@ -166,11 +167,11 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
       @Override
       public void onLoggedIn()
       {
-         deleteApplication();
+         deleteApplication(appDeleteCallback);
       }
    };
 
-   private void deleteApplication()
+   private void deleteApplication(AsyncCallback<String> callback)
    {
       boolean isDeleteServices = view.isDeleteServices();
       String projectId = null;
@@ -194,9 +195,7 @@ public class DeleteApplicationPresenter implements DeleteApplicationView.ActionD
                {
                   view.close();
                   console.print(constant.applicationDeletedMsg(appName));
-                  // TODO
-                  //                  IDE.fireEvent(new ApplicationDeletedEvent(appName));
-                  eventBus.fireEvent(new ApplicationDeletedEvent(appName));
+                  appDeleteCallback.onSuccess(appName);
                }
             });
       }

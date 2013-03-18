@@ -26,12 +26,12 @@ import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryAutoBeanFactory
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryClientService;
 import com.codenvy.ide.extension.cloudfoundry.client.CloudFoundryLocalizationConstant;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
-import com.codenvy.ide.extension.cloudfoundry.client.project.ApplicationInfoChangedEvent;
 import com.codenvy.ide.extension.cloudfoundry.shared.CloudFoundryApplication;
 import com.codenvy.ide.extension.cloudfoundry.shared.Framework;
 import com.codenvy.ide.resources.model.Project;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -44,11 +44,9 @@ import java.util.List;
  * 
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: StartApplicationPresenter.java Jul 12, 2011 3:58:22 PM vereshchaka $
- * 
  */
 @Singleton
-public class StartApplicationPresenter implements StartApplicationHandler, StopApplicationHandler,
-   RestartApplicationHandler
+public class StartApplicationPresenter
 {
    private EventBus eventBus;
 
@@ -60,8 +58,19 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
+   private AsyncCallback<String> appInfoChangedCallback;
+
+   /**
+    * Create presenter.
+    * 
+    * @param eventBus
+    * @param resourceProvider
+    * @param console
+    * @param constant
+    * @param autoBeanFactory
+    */
    @Inject
-   public StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
+   protected StartApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.eventBus = eventBus;
@@ -69,30 +78,10 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      this.eventBus.addHandler(StartApplicationEvent.TYPE, this);
-      this.eventBus.addHandler(StopApplicationEvent.TYPE, this);
-      this.eventBus.addHandler(RestartApplicationEvent.TYPE, this);
    }
 
    public void bindDisplay(List<Framework> frameworks)
    {
-   }
-
-   /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationHandler#onStopApplication(com.codenvy.ide.extension.cloudfoundry.client.start.StopApplicationEvent)
-    */
-   @Override
-   public void onStopApplication(StopApplicationEvent event)
-   {
-      if (event.getApplicationName() == null)
-      {
-         checkIsStopped();
-      }
-      else
-      {
-         stopApplication(event.getApplicationName());
-      }
    }
 
    /**
@@ -103,7 +92,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       @Override
       public void onLoggedIn()
       {
-         startApplication(null);
+         startApplication(null, appInfoChangedCallback);
       }
    };
 
@@ -115,7 +104,19 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       @Override
       public void onLoggedIn()
       {
-         stopApplication(null);
+         stopApplication(null, appInfoChangedCallback);
+      }
+   };
+
+   /**
+    * If user is not logged in to CloudFoundry, this handler will be called, after user logged in.
+    */
+   private LoggedInHandler restartLoggedInHandler = new LoggedInHandler()
+   {
+      @Override
+      public void onLoggedIn()
+      {
+         restartApplication(null, appInfoChangedCallback);
       }
    };
 
@@ -144,21 +145,27 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    };
 
    /**
-    * @see com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationHandler#onStartApplication(com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationEvent)
+    * Starts CloudFounry application.
+    *  
+    * @param appName
+    * @param callback
     */
-   @Override
-   public void onStartApplication(StartApplicationEvent event)
+   public void startApp(String appName, AsyncCallback<String> callback)
    {
-      if (event.getApplicationName() == null)
+      this.appInfoChangedCallback = callback;
+      if (appName == null)
       {
          checkIsStarted();
       }
       else
       {
-         startApplication(event.getApplicationName());
+         startApplication(appName, callback);
       }
    }
 
+   /**
+    * Gets information about active project and check its state.
+    */
    private void checkIsStarted()
    {
       Project project = resourceProvider.getActiveProject();
@@ -186,7 +193,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                   }
                   else
                   {
-                     startApplication(null);
+                     startApplication(null, appInfoChangedCallback);
                   }
                }
             });
@@ -198,47 +205,13 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       }
    }
 
-   private void checkIsStopped()
-   {
-      Project project = resourceProvider.getActiveProject();
-
-      try
-      {
-         AutoBean<CloudFoundryApplication> CloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
-         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
-            new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
-
-         CloudFoundryClientService.getInstance().getApplicationInfo(
-            resourceProvider.getVfsId(),
-            project.getId(),
-            null,
-            null,
-            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
-               null, eventBus, console, constant)
-            {
-               @Override
-               protected void onSuccess(CloudFoundryApplication result)
-               {
-                  if ("STOPPED".equals(result.getState()))
-                  {
-                     String msg = constant.applicationAlreadyStopped(result.getName());
-                     console.print(msg);
-                  }
-                  else
-                  {
-                     stopApplication(null);
-                  }
-               }
-            });
-      }
-      catch (RequestException e)
-      {
-         eventBus.fireEvent(new ExceptionThrownEvent(e));
-         console.print(e.getMessage());
-      }
-   }
-
-   private void startApplication(String name)
+   /**
+    * Starts application.
+    * 
+    * @param name
+    * @param callback
+    */
+   private void startApplication(String name, final AsyncCallback<String> callback)
    {
       final String projectId =
          resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
@@ -273,7 +246,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                      }
 
                      console.print(msg);
-                     eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
+                     callback.onSuccess(projectId);
                   }
                   else
                   {
@@ -290,6 +263,12 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       }
    }
 
+   /**
+    * Creates application's url in HTML format. 
+    * 
+    * @param application
+    * @return
+    */
    private String getAppUrisAsString(CloudFoundryApplication application)
    {
       String appUris = "";
@@ -309,7 +288,74 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
       return appUris;
    }
 
-   private void stopApplication(final String name)
+   /**
+    * Stops CloudFounry application.
+    * 
+    * @param appName
+    * @param callback
+    */
+   public void stopApp(String appName, AsyncCallback<String> callback)
+   {
+      if (appName == null)
+      {
+         checkIsStopped();
+      }
+      else
+      {
+         stopApplication(appName, callback);
+      }
+   }
+
+   /**
+    * Gets information about active project and check its state.
+    */
+   private void checkIsStopped()
+   {
+      Project project = resourceProvider.getActiveProject();
+
+      try
+      {
+         AutoBean<CloudFoundryApplication> CloudFoundryApplication = autoBeanFactory.cloudFoundryApplication();
+         AutoBeanUnmarshaller<CloudFoundryApplication> unmarshaller =
+            new AutoBeanUnmarshaller<CloudFoundryApplication>(CloudFoundryApplication);
+
+         CloudFoundryClientService.getInstance().getApplicationInfo(
+            resourceProvider.getVfsId(),
+            project.getId(),
+            null,
+            null,
+            new CloudFoundryAsyncRequestCallback<CloudFoundryApplication>(unmarshaller, checkIsStoppedLoggedInHandler,
+               null, eventBus, console, constant)
+            {
+               @Override
+               protected void onSuccess(CloudFoundryApplication result)
+               {
+                  if ("STOPPED".equals(result.getState()))
+                  {
+                     String msg = constant.applicationAlreadyStopped(result.getName());
+                     console.print(msg);
+                  }
+                  else
+                  {
+                     stopApplication(null, appInfoChangedCallback);
+                  }
+               }
+            });
+      }
+      catch (RequestException e)
+      {
+         eventBus.fireEvent(new ExceptionThrownEvent(e));
+         console.print(e.getMessage());
+      }
+   }
+
+   /**
+    * Stops application.
+    * 
+    * @param name
+    * @param callback
+    */
+   private void stopApplication(final String name, final AsyncCallback<String> callback)
    {
       final String projectId =
          resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
@@ -342,7 +388,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                            {
                               final String msg = constant.applicationStopped(result.getName());
                               console.print(msg);
-                              eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
+                              callback.onSuccess(projectId);
                            }
                         });
                   }
@@ -362,24 +408,24 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
    }
 
    /**
-    * {@inheritDoc}
+    * Restarts CloudFoundry application.
+    * 
+    * @param appName
+    * @param callback
     */
-   @Override
-   public void onRestartApplication(RestartApplicationEvent event)
+   public void restartApp(String appName, AsyncCallback<String> callback)
    {
-      restartApplication(event.getApplicationName());
+      this.appInfoChangedCallback = callback;
+      restartApplication(appName, callback);
    }
 
-   private LoggedInHandler restartLoggedInHandler = new LoggedInHandler()
-   {
-      @Override
-      public void onLoggedIn()
-      {
-         restartApplication(null);
-      }
-   };
-
-   private void restartApplication(String name)
+   /**
+    * Restart application.
+    * 
+    * @param name
+    * @param callback
+    */
+   private void restartApplication(String name, final AsyncCallback<String> callback)
    {
       final String projectId =
          resourceProvider.getActiveProject() != null ? resourceProvider.getActiveProject().getId() : null;
@@ -415,7 +461,7 @@ public class StartApplicationPresenter implements StartApplicationHandler, StopA
                      }
 
                      console.print(msg);
-                     eventBus.fireEvent(new ApplicationInfoChangedEvent(resourceProvider.getVfsId(), projectId));
+                     callback.onSuccess(projectId);
                   }
                   else
                   {
