@@ -48,7 +48,7 @@ import com.google.web.bindery.event.shared.HandlerRegistration;
  * @version $Id: OperationsApplicationPresenter.java Jul 14, 2011 11:51:13 AM vereshchaka $
  */
 @Singleton
-public class UpdateApplicationPresenter implements UpdateApplicationHandler, ProjectBuiltHandler
+public class UpdateApplicationPresenter implements ProjectBuiltHandler
 {
    /**
     * Location of war file (Java only).
@@ -68,7 +68,7 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
    private HandlerRegistration projectBuildHandler;
 
    @Inject
-   public UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
+   protected UpdateApplicationPresenter(EventBus eventBus, ResourceProvider resourceProvider, Console console,
       CloudFoundryLocalizationConstant constant, CloudFoundryAutoBeanFactory autoBeanFactory)
    {
       this.eventBus = eventBus;
@@ -76,8 +76,6 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      this.eventBus.addHandler(UpdateApplicationEvent.TYPE, this);
    }
 
    LoggedInHandler loggedInHandler = new LoggedInHandler()
@@ -90,10 +88,9 @@ public class UpdateApplicationPresenter implements UpdateApplicationHandler, Pro
    };
 
    /**
-    * {@inheritDoc}
+    *
     */
-   @Override
-   public void onUpdateApplication(UpdateApplicationEvent event)
+   public void updateApp()
    {
       validateData();
    }

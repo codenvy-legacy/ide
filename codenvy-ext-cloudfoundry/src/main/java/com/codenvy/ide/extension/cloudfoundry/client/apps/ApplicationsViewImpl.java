@@ -140,6 +140,8 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
 
    private ActionDelegate delegate;
 
+   private boolean isDisplayed;
+
    /**
     * Create view.
     * 
@@ -404,6 +406,7 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
    @Override
    public void close()
    {
+      this.isDisplayed = false;
       this.hide();
    }
 
@@ -413,7 +416,17 @@ public class ApplicationsViewImpl extends DialogBox implements ApplicationsView
    @Override
    public void showDialog()
    {
+      this.isDisplayed = true;
       this.center();
       this.show();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isDisplayed()
+   {
+      return isDisplayed;
    }
 }

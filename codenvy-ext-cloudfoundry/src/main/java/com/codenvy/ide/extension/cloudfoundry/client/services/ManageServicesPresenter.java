@@ -32,6 +32,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -45,8 +46,7 @@ import java.util.Arrays;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class ManageServicesPresenter implements ManageServicesView.ActionDelegate, ManageServicesHandler,
-   ProvisionedServiceCreatedHandler
+public class ManageServicesPresenter implements ManageServicesView.ActionDelegate
 {
    private ManageServicesView view;
 
@@ -123,8 +123,6 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       this.createServicePresenter = createServicePresenter;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
    }
 
    /**
@@ -133,7 +131,20 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
    @Override
    public void onAddClicked()
    {
-      eventBus.fireEvent(new CreateServiceEvent(this));
+      createServicePresenter.showDialog(new AsyncCallback<ProvisionedService>()
+      {
+         @Override
+         public void onSuccess(ProvisionedService result)
+         {
+            getServices();
+         }
+         
+         @Override
+         public void onFailure(Throwable caught)
+         {
+            // do nothing   
+         }
+      });
    }
 
    /**
@@ -340,22 +351,9 @@ public class ManageServicesPresenter implements ManageServicesView.ActionDelegat
       }
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onProvisionedServiceCreated(ProvisionedService service)
+   public void showDialog(CloudFoundryApplication application)
    {
-      getServices();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onManageServices(ManageServicesEvent event)
-   {
-      this.application = event.getApplication();
+      this.application = application;
 
       view.enableDeleteButton(false);
       getApplicationInfo();

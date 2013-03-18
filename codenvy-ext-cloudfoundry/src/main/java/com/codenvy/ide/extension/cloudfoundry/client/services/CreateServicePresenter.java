@@ -32,6 +32,7 @@ import com.codenvy.ide.rest.AsyncRequestCallback;
 import com.codenvy.ide.rest.AutoBeanUnmarshaller;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.web.bindery.autobean.shared.AutoBean;
@@ -45,7 +46,7 @@ import java.util.LinkedHashMap;
  * @author <a href="mailto:aplotnikov@codenvy.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CreateServicePresenter implements CreateServiceView.ActionDelegate, CreateServiceHandler
+public class CreateServicePresenter implements CreateServiceView.ActionDelegate
 {
    private CreateServiceView view;
 
@@ -57,14 +58,10 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
 
    private CloudFoundryAutoBeanFactory autoBeanFactory;
 
-   /**
-    * Handler for successful service creation.
-    */
-   private ProvisionedServiceCreatedHandler serviceCreatedHandler;
+   private AsyncCallback<ProvisionedService> createServiceCallback;
 
    private LoggedInHandler createServiceLoggedInHandler = new LoggedInHandler()
    {
-
       @Override
       public void onLoggedIn()
       {
@@ -82,8 +79,6 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
       this.console = console;
       this.constant = constant;
       this.autoBeanFactory = autoBeanFactory;
-
-      this.eventBus.addHandler(CreateServiceEvent.TYPE, this);
    }
 
    /**
@@ -121,7 +116,7 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
                @Override
                protected void onSuccess(ProvisionedService result)
                {
-                  serviceCreatedHandler.onProvisionedServiceCreated(result);
+                  createServiceCallback.onSuccess(result);
                   view.close();
                }
             });
@@ -143,19 +138,14 @@ public class CreateServicePresenter implements CreateServiceView.ActionDelegate,
    }
 
    /**
-    * {@inheritDoc}
+    * 
     */
-   @Override
-   public void onCreateService(CreateServiceEvent event)
+   public void showDialog(AsyncCallback<ProvisionedService> callback)
    {
-      this.serviceCreatedHandler = event.getProvisionedServiceCreatedHandler();
+      this.createServiceCallback = callback;
+
       getServices();
 
-      showDialog();
-   }
-
-   public void showDialog()
-   {
       view.setName("");
 
       view.showDialog();

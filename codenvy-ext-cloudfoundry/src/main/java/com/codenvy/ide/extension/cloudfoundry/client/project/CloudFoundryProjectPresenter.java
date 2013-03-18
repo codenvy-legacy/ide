@@ -30,11 +30,8 @@ import com.codenvy.ide.extension.cloudfoundry.client.delete.DeleteApplicationPre
 import com.codenvy.ide.extension.cloudfoundry.client.info.ApplicationInfoPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.login.LoggedInHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.marshaller.StringUnmarshaller;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesEvent;
-import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesHandler;
 import com.codenvy.ide.extension.cloudfoundry.client.services.ManageServicesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.start.StartApplicationPresenter;
-import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationEvent;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdateApplicationPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.update.UpdatePropertiesPresenter;
 import com.codenvy.ide.extension.cloudfoundry.client.url.UnmapUrlPresenter;
@@ -55,7 +52,7 @@ import com.google.web.bindery.event.shared.EventBus;
  * @author <a href="mailto:aplotnikov@exoplatform.com">Andrey Plotnikov</a>
  */
 @Singleton
-public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate, ManageServicesHandler
+public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.ActionDelegate
 // ProjectOpenedHandler, ProjectClosedHandler,  ManageCloudFoundryProjectHandler,  ActiveProjectChangedHandler
 {
    private CloudFoundryProjectView view;
@@ -127,8 +124,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
       this.autoBeanFactory = autoBeanFactory;
       this.startAppPresenter = startAppPresenter;
       this.deleteAppPresenter = deleteAppPresenter;
-
-      this.eventBus.addHandler(ManageServicesEvent.TYPE, this);
    }
 
    /**
@@ -137,8 +132,6 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    public void showDialog()
    {
       getApplicationInfo(resourceProvider.getActiveProject());
-
-      view.showDialog();
    }
 
    /**
@@ -156,9 +149,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onUpdateClicked()
    {
-      // TODO
-      //      IDE.eventBus().fireEvent(new UpdateApplicationEvent());
-      eventBus.fireEvent(new UpdateApplicationEvent());
+      updateApplicationPresenter.updateApp();
    }
 
    /**
@@ -207,9 +198,7 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    @Override
    public void onServicesClicked()
    {
-      // TODO
-      //      IDE.fireEvent(new ManageServicesEvent(application));
-      eventBus.fireEvent(new ManageServicesEvent(application));
+      manageServicesPresenter.showDialog(application);
    }
 
    /**
@@ -238,13 +227,11 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
                @Override
                protected void onSuccess(CloudFoundryApplication result)
                {
-                  // TODO
-                  //                  if (display == null)
-                  //                  {
-                  //                     display = GWT.create(Display.class);
-                  //                     bindDisplay();
-                  //                     IDE.getInstance().openView(display.asView());
-                  //                  }
+                  if (!view.isDisplayed())
+                  {
+                     view.showDialog();
+                  }
+
                   application = result;
                   displayApplicationProperties(result);
                }
@@ -369,14 +356,5 @@ public class CloudFoundryProjectPresenter implements CloudFoundryProjectView.Act
    public void onEditInstancesClicked()
    {
       updateProperyPresenter.showUpdateInstancesDialog(appInfoChangedCallback);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void onManageServices(ManageServicesEvent event)
-   {
-      getApplicationInfo(resourceProvider.getActiveProject());
    }
 }

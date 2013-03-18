@@ -68,9 +68,9 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
    private StartApplicationPresenter startAppPresenter;
 
    private DeleteApplicationPresenter deleteAppPresenter;
-   
+
    private AsyncCallback<String> appInfoChangedCallback = new AsyncCallback<String>()
-            {
+   {
       @Override
       public void onSuccess(String result)
       {
@@ -262,7 +262,10 @@ public class ApplicationsPresenter implements ApplicationsView.ActionDelegate
       currentServer = servers.get(0);
       getApplicationList();
 
-      view.showDialog();
+      if (!view.isDisplayed())
+      {
+         view.showDialog();
+      }
    }
 
    /**

@@ -108,6 +108,8 @@ public interface ApplicationsView extends View<ApplicationsView.ActionDelegate>
     */
    public void setServers(List<String> servers);
 
+   public boolean isDisplayed();
+
    /**
     * Close dialog.
     */

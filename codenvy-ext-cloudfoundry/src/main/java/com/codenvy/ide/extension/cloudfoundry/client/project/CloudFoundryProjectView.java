@@ -20,8 +20,6 @@ package com.codenvy.ide.extension.cloudfoundry.client.project;
 
 import com.codenvy.ide.view.View;
 
-import com.codenvy.ide.extension.cloudfoundry.client.project.CloudFoundryProjectView;
-
 /**
  * 
  * 
@@ -90,6 +88,8 @@ public interface CloudFoundryProjectView extends View<CloudFoundryProjectView.Ac
 
    public void setRestartButtonEnabled(boolean enabled);
    
+   public boolean isDisplayed();
+
    /**
     * Show dialog.
     */
