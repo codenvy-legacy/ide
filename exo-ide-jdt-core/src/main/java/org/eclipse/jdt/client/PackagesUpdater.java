@@ -31,6 +31,7 @@ import com.google.gwt.user.client.Timer;
 import org.eclipse.jdt.client.create.CreateJavaClassPresenter;
 import org.eclipse.jdt.client.event.PackageCreatedEvent;
 import org.eclipse.jdt.client.event.PackageCreatedHandler;
+import org.eclipse.jdt.client.packaging.model.next.JavaProject;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.ide.client.framework.event.FileSavedEvent;
@@ -128,9 +129,13 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       ProjectModel project = event.getProject();
       requestCount = 0;
       ids = new ArrayList<String>();
-      if (project.getProjectType().equals(ProjectType.MultiModule.value()))
+      
+      if (project instanceof JavaProject &&
+          project.getProjectType().equals(ProjectType.MultiModule.value()))
       {
-         List<ProjectModel> children = project.getModules();
+         JavaProject javaProject = (JavaProject)project;
+         
+         List<ProjectModel> children = javaProject.getModules();
          for (ProjectModel item : children)
          {
             if (projectResolver.isProjectSupported(item.getProjectType()))
@@ -143,6 +148,7 @@ public class PackagesUpdater implements ProjectOpenedHandler, FileSavedHandler, 
       {
          ids.add(project.getId());
       }
+      
       updatePackages(ids);
    }
 

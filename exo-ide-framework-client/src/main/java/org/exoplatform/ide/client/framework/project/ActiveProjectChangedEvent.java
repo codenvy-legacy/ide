@@ -29,6 +29,7 @@ import com.google.gwt.event.shared.GwtEvent;
  * @author <a href="mailto:vparfonov@exoplatform.com">Vitaly Parfonov</a>
  * @version $Id: CurrnetProjectEvent.java Nov 7, 2012 vetal $
  *
+ * @deprecated handle ItemsSelectedEvent and  use ItemsSelectedEvent.getItem().getProject() instead
  */
 public class ActiveProjectChangedEvent extends GwtEvent<ActiveProjectChangedHandler>
 {

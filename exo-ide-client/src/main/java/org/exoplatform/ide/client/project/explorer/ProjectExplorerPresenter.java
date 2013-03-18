@@ -35,7 +35,6 @@ import com.google.gwt.event.logical.shared.OpenHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.Window;
 
 import org.exoplatform.gwtframework.commons.exception.ExceptionThrownEvent;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
@@ -48,28 +47,21 @@ import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileClosedHandler;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedEvent;
 import org.exoplatform.ide.client.framework.editor.event.EditorFileOpenedHandler;
-import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
-import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
-import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
-import org.exoplatform.ide.client.framework.event.CursorPosition;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteEvent;
 import org.exoplatform.ide.client.framework.event.IDELoadCompleteHandler;
 import org.exoplatform.ide.client.framework.event.OpenFileEvent;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.AddItemTreeIconHandler;
-import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.GoToItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.GoToItemHandler;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
-import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconEvent;
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
-import org.exoplatform.ide.client.framework.project.ActiveProjectChangedEvent;
-import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
-import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -92,8 +84,6 @@ import org.exoplatform.ide.client.framework.ui.api.event.ViewClosedHandler;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedEvent;
 import org.exoplatform.ide.client.framework.ui.api.event.ViewVisibilityChangedHandler;
 import org.exoplatform.ide.client.model.SettingsService;
-import org.exoplatform.ide.client.navigation.event.ShowHideHiddenFilesEvent;
-import org.exoplatform.ide.client.navigation.handler.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.operation.cutcopy.CopyItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.CutItemsEvent;
 import org.exoplatform.ide.client.operation.cutcopy.PasteItemsEvent;
@@ -106,15 +96,12 @@ import org.exoplatform.ide.vfs.client.event.ItemLockedHandler;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedEvent;
 import org.exoplatform.ide.vfs.client.event.ItemUnlockedHandler;
 import org.exoplatform.ide.vfs.client.marshal.ChildrenUnmarshaller;
-import org.exoplatform.ide.vfs.client.marshal.ItemUnmarshaller;
 import org.exoplatform.ide.vfs.client.model.FileModel;
 import org.exoplatform.ide.vfs.client.model.FolderModel;
-import org.exoplatform.ide.vfs.client.model.ItemWrapper;
 import org.exoplatform.ide.vfs.client.model.ProjectModel;
 import org.exoplatform.ide.vfs.shared.File;
 import org.exoplatform.ide.vfs.shared.Folder;
 import org.exoplatform.ide.vfs.shared.Item;
-import org.exoplatform.ide.vfs.shared.ItemList;
 import org.exoplatform.ide.vfs.shared.ItemNode;
 import org.exoplatform.ide.vfs.shared.ItemType;
 import org.exoplatform.ide.vfs.shared.Lock;
@@ -138,16 +125,13 @@ import java.util.Map;
 public class ProjectExplorerPresenter implements SelectItemHandler,
    ViewVisibilityChangedHandler, ItemUnlockedHandler, ItemLockedHandler, ApplicationSettingsReceivedHandler,
    ViewClosedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowProjectExplorerHandler,
-   ItemsSelectedHandler, ViewActivatedHandler, VfsChangedHandler, 
+   ViewActivatedHandler, VfsChangedHandler, 
    GoToItemHandler, EditorActiveFileChangedHandler, IDELoadCompleteHandler,
    EditorFileOpenedHandler, EditorFileClosedHandler, ShowHideHiddenFilesHandler, ItemDeletedHandler,
    ProjectOpenedHandler, ProjectClosedHandler, TreeRefreshedHandler
 {
 
    private static final String DEFAULT_TITLE = "Project Explorer";
-
-   private static final String RECEIVE_CHILDREN_ERROR_MSG = org.exoplatform.ide.client.IDE.ERRORS_CONSTANT
-      .workspaceReceiveChildrenError();
 
    /**
     * Comparator for ordering projects by name.
@@ -161,8 +145,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
    private List<Item> selectedItems = new ArrayList<Item>();
 
    private ProjectModel openedProject;
-
-   private ProjectModel currentProject;
 
    private FileModel editorActiveFile;
 
@@ -178,7 +160,6 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
 
       IDE.addHandler(ViewClosedEvent.TYPE, this);
       IDE.addHandler(ViewVisibilityChangedEvent.TYPE, this);
-      IDE.addHandler(ItemsSelectedEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
       IDE.addHandler(ItemLockedEvent.TYPE, this);
       IDE.addHandler(ItemUnlockedEvent.TYPE, this);
@@ -350,13 +331,28 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
     * Select chosen item in browser.
     *
     */
-   public void onSelectItem(SelectItemEvent event)
+   public void onSelectItem(final SelectItemEvent event)
    {
       if (display == null)
       {
          return;
       }
-      display.selectItem(event.getItemId());
+      
+      display.selectItem(event.getItem());
+      
+      if (display.asView().isViewVisible())
+      {
+//         display.selectItem(event.getItem());
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
+            }
+         });         
+      }      
    }
 
    public void onItemUnlocked(ItemUnlockedEvent event)
@@ -489,30 +485,30 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       }
    }
 
-   @Override
-   public void onItemsSelected(ItemsSelectedEvent event)
-   {
-      if (event.getSelectedItems().size() == 1)
-      {
-         Item item = event.getSelectedItems().get(0);
-         if (item.getItemType().equals(ItemType.PROJECT))
-         {
-            currentProject = (ProjectModel)item;
-         }
-         else
-         {
-            currentProject = map.get(item.getId());
-         }
-         if (currentProject != null)
-         {
-            IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
-         }
-         else
-         {
-            IDE.fireEvent(new ActiveProjectChangedEvent(openedProject));
-         }
-      }
-   }
+//   @Override
+//   public void onItemsSelected(ItemsSelectedEvent event)
+//   {
+//      if (event.getSelectedItems().size() == 1)
+//      {
+//         Item item = event.getSelectedItems().get(0);
+//         if (item.getItemType().equals(ItemType.PROJECT))
+//         {
+//            currentProject = (ProjectModel)item;
+//         }
+//         else
+//         {
+//            currentProject = map.get(item.getId());
+//         }
+//         if (currentProject != null)
+//         {
+//            IDE.fireEvent(new ActiveProjectChangedEvent(currentProject));
+//         }
+//         else
+//         {
+//            IDE.fireEvent(new ActiveProjectChangedEvent(openedProject));
+//         }
+//      }
+//   }
 
    private String lastNavigatorId = null;
 
@@ -577,13 +573,12 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
          return;
       }
 
-      display.selectItem(editorActiveFile.getId());
-//       if (display.selectItem(editorActiveFile.getId()))
-//       {
-//          return;
-//       }
-//            
-//      display.navigateToItem(editorActiveFile);
+      if (display.selectItem(editorActiveFile))
+      {
+         return;
+      }
+
+      display.navigateToItem(editorActiveFile);
    }
 
    /*
@@ -713,10 +708,19 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
    @Override
    public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
    {
-//      if (display != null && openedProject != null)
-//      {
-//         Window.alert("ON SHOW HIDDEN FILES");
-//      }
+      if (display == null)
+      {
+         return;
+      }
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            display.refreshTree();
+         }
+      });      
    }
 
    /**
@@ -859,33 +863,42 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
       }
    }
    
-   
-   
    private void showProjectTree()
    {
       display.asView().setTitle(openedProject.getName());
       
       display.setProjectExplorerTreeVisible(true);
-      display.getBrowserTree().setValue(null);
-      display.getBrowserTree().setValue(openedProject);
+      display.setProject(openedProject);
       
-      display.selectItem(openedProject.getId());
-      selectedItems = display.getSelectedItems();      
+      selectedItems = new ArrayList<Item>();
       
       display.setLinkWithEditorButtonEnabled(true);
       display.setLinkWithEditorButtonSelected(linkingWithEditor);
    }
 
-
    @Override
-   public void onTreeRefreshed(TreeRefreshedEvent event)
+   public void onTreeRefreshed(final TreeRefreshedEvent event)
    {
-      if (display == null)
+      if (display != null)
       {
-         return;
-      }
-      
-      display.getBrowserTree().setValue(event.getFolder());
+         display.refreshTree();
+         
+         if (event.getItemToSelect() != null)
+         {
+            display.navigateToItem(event.getItemToSelect());
+            //display.selectItem(event.getItemToSelect());
+         }
+         
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               List<Item> visibleItems = display.getVisibleItems();
+               IDE.fireEvent(new FolderOpenedEvent(event.getFolder(), visibleItems));
+            }
+         });
+      }      
    }
 
    /**
@@ -901,7 +914,8 @@ public class ProjectExplorerPresenter implements SelectItemHandler,
          return;
       }
 
-      display.getBrowserTree().setValue(null);
+      display.setProject(null);
+      
       display.asView().setTitle(DEFAULT_TITLE);
       display.setProjectExplorerTreeVisible(false);
       refreshProjectsList();

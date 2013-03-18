@@ -37,7 +37,7 @@ import org.exoplatform.ide.vfs.shared.VirtualFileSystemInfo;
 /**
  * Control to show welcome page.
  * <p/>
- * 
+ *
  * @author <a href="oksana.vereshchaka@gmail.com">Oksana Vereshchaka</a>
  * @version $Id: ImportFromGithubControl.java Nov 18, 2011 5:06:02 PM vereshchaka $
  */
@@ -62,6 +62,7 @@ public class WelcomeControl extends SimpleControl implements IDEControl, VfsChan
    public WelcomeControl()
    {
       super(ID);
+      setGroupName(ID);
       setTitle(TITLE);
       setPrompt(PROMPT);
       setImages(SamplesClientBundle.INSTANCE.welcome(), SamplesClientBundle.INSTANCE.welcomeDisabled());

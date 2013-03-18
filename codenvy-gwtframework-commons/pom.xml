@@ -18,7 +18,7 @@
    <groupId>org.exoplatform.gwt</groupId>
    <artifactId>codenvy-gwtframework-commons</artifactId>
    <packaging>jar</packaging>
-   <name>eXo GWT Framework :: Commons</name>
+   <name>Codenvy IDE :: GWT Framework :: Commons</name>
    
     <properties>
       <!-- Repositories URLs -->

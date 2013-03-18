@@ -23,6 +23,7 @@ import org.exoplatform.gwtframework.ui.client.command.SimpleControl;
 import org.exoplatform.gwtframework.ui.client.command.ui.MenuItemControl;
 import org.exoplatform.gwtframework.ui.client.menu.MenuBar;
 import org.exoplatform.gwtframework.ui.client.menu.MenuItem;
+import org.exoplatform.gwtframework.ui.client.menu.PopupMenuItem;
 import org.exoplatform.ide.client.framework.module.IDE;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import java.util.Map;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -41,7 +42,7 @@ import java.util.Map;
 public class MenuImpl extends MenuBar implements Menu
 {
 
-   public static String[] items = {"File", "Project", "Edit", "View", "Run", "Git", "PaaS", "Window", "Help"};
+   public static String[] items = {"File", "Project", "Edit", "View", "Run", "Git", "PaaS", "Window", "Share", "Help"};
 
    private HashMap<String, List<SimpleControl>> controlsMap = new LinkedHashMap<String, List<SimpleControl>>();
 
@@ -164,7 +165,7 @@ public class MenuImpl extends MenuBar implements Menu
    private MenuItem add(MenuItem parent, SimpleControl control, int depth, boolean delimiter)
    {
       String[] path = control.getId().split("/");
-      
+
       if (depth == path.length - 1 && delimiter && parent != null)
       {
          return parent.addItem(null);
@@ -178,11 +179,12 @@ public class MenuImpl extends MenuBar implements Menu
          {
             item = addItem(path[0]);
          }
-         else {
+         else
+         {
             if (!delimiter)
             {
                item = parent.addItem(path[depth]);
-            }            
+            }
          }
       }
 
@@ -192,6 +194,13 @@ public class MenuImpl extends MenuBar implements Menu
       }
       else
       {
+         if (item instanceof PopupMenuItem)
+         {
+            if (control.getAttributes().size() > 0)
+            {
+               ((PopupMenuItem)item).setAttributes(control.getAttributes());
+            }
+         }
          return item;
       }
    }

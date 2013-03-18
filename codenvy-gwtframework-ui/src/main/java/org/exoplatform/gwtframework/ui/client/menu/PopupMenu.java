@@ -22,6 +22,7 @@ package org.exoplatform.gwtframework.ui.client.menu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
@@ -40,11 +41,11 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.SimplePanel;
 
 /**
- * 
+ *
  * Created by The eXo Platform SAS .
- * 
+ *
  * PopupMenu is visual component represents all known Popup Menu. 
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -93,11 +94,11 @@ public class PopupMenu extends Composite
 
          switch (DOM.eventGetType(event))
          {
-            case Event.ONMOUSEOVER :
+            case Event.ONMOUSEOVER:
                onRowHovered(tr);
                break;
 
-            case Event.ONCLICK :
+            case Event.ONCLICK:
                onRowClicked(tr);
                break;
          }
@@ -180,7 +181,7 @@ public class PopupMenu extends Composite
     * This is debug feature.
     */
    private String itemIdPrefix;
-   
+
    public PopupMenu(List<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback)
    {
       this(menuItems, lockLayer, itemSelectedCallback, null);
@@ -188,13 +189,13 @@ public class PopupMenu extends Composite
 
    /**
     * Create PopupMenu
-    * 
+    *
     * @param menuItems - list of menu items.
     * @param lockLayer - lock layer, uses as rot for attaching this popup menu.
     * @param itemSelectedCallback - callback, uses for notifying parent menu when menu item is selected.
     */
    public PopupMenu(List<MenuItem> menuItems, MenuLockLayer lockLayer, ItemSelectedHandler itemSelectedCallback,
-      String itemIdPrefix)
+                    String itemIdPrefix)
    {
       this.menuItems = new ArrayList<MenuItem>();
       this.itemIdPrefix = itemIdPrefix;
@@ -314,7 +315,7 @@ public class PopupMenu extends Composite
       {
          idPrefix += "/";
       }
-      
+
       table = new PopupMenuTable();
       table.setStyleName(PopupMenuStyle.MENU_TABLE);
       table.setCellPadding(0);
@@ -404,6 +405,11 @@ public class PopupMenu extends Composite
             DOM.setElementAttribute(table.getRowFormatter().getElement(i), "item-enabled", "" + menuItem.isEnabled());
          }
 
+         Element row = table.getRowFormatter().getElement(i);
+         for (Map.Entry<String, String> attrEntry : menuItem.getAttributes().entrySet())
+         {
+            row.setAttribute(attrEntry.getKey(), attrEntry.getValue());
+         }
       }
 
       popupMenuPanel.add(table);
@@ -428,7 +434,7 @@ public class PopupMenu extends Composite
 
    /**
     * Handling MouseOut event.
-    * 
+    *
     * @param tr - element to be processed.
     */
    protected void setStyleNormal(Element row)
@@ -498,7 +504,7 @@ public class PopupMenu extends Composite
 
    /**
     * Handling MouseOver event.
-    * 
+    *
     * @param tr - element to be processed.
     */
    protected void onRowHovered(Element tr)
@@ -534,7 +540,7 @@ public class PopupMenu extends Composite
 
    /**
     * Handle Mouse Click
-    * 
+    *
     * @param tr
     */
    protected void onRowClicked(Element tr)
@@ -592,15 +598,15 @@ public class PopupMenu extends Composite
       if (idPrefix != null)
       {
          idPrefix += "/" + menuItem.getTitle();
-      }      
+      }
       openedSubPopup = new PopupMenu(menuItem.getItems(), lockLayer, itemSelectedCallback, idPrefix);
 
       final int HORIZONTAL_OFFSET = 3;
       final int VERTIVAL_OFFSET = 1;
-      
+
 //      final int left = getAbsoluteLeft() + getOffsetWidth() - HORIZONTAL_OFFSET;
 //      final int top = tableRowElement.getAbsoluteTop() - lockLayer.getTopOffset() - VERTIVAL_OFFSET;
-      
+
       openedSubPopup.getElement().getStyle().setVisibility(Visibility.HIDDEN);
 //      lockLayer.add(openedSubPopup, left, top);
       lockLayer.add(openedSubPopup, 0, 0);
@@ -612,12 +618,12 @@ public class PopupMenu extends Composite
          {
             int left = getAbsoluteLeft() + getOffsetWidth() - HORIZONTAL_OFFSET;
             int top = tableRowElement.getAbsoluteTop() - lockLayer.getTopOffset() - VERTIVAL_OFFSET;
-            
+
             if (left + openedSubPopup.getOffsetWidth() > Window.getClientWidth())
             {
                if (left > openedSubPopup.getOffsetWidth())
                {
-                  left = getAbsoluteLeft() - openedSubPopup.getOffsetWidth() + HORIZONTAL_OFFSET;                  
+                  left = getAbsoluteLeft() - openedSubPopup.getOffsetWidth() + HORIZONTAL_OFFSET;
                }
                else
                {
@@ -625,7 +631,7 @@ public class PopupMenu extends Composite
                   left -= diff;
                }
             }
-            
+
             if (top + openedSubPopup.getOffsetHeight() > Window.getClientHeight())
             {
                if (top > openedSubPopup.getOffsetHeight())
@@ -638,7 +644,7 @@ public class PopupMenu extends Composite
                   top -= diff;
                }
             }
-            
+
             openedSubPopup.getElement().getStyle().setLeft(left, Unit.PX);
             openedSubPopup.getElement().getStyle().setTop(top, Unit.PX);
             openedSubPopup.getElement().getStyle().setVisibility(Visibility.VISIBLE);

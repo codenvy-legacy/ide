@@ -47,8 +47,7 @@
       <appengine.version>1.7.2</appengine.version>
       <ch.qos.logback.version>1.0.0</ch.qos.logback.version>
       <crash.version>1.0.0-beta21</crash.version>
-
-
+      <com.codenvy.commons.version>0.2-SNAPSHOT</com.codenvy.commons.version>
 
 
       <tomcat.version>7.0.32</tomcat.version>
@@ -63,6 +62,11 @@
 
    <dependencyManagement>
       <dependencies>
+         <dependency>
+           <groupId>com.codenvy.commons</groupId>
+           <artifactId>codenvy-commons-env</artifactId>
+           <version>${com.codenvy.commons.version}</version>
+         </dependency>
          <dependency>
             <groupId>org.exoplatform.kernel</groupId>
             <artifactId>exo.kernel.commons</artifactId>
@@ -502,6 +506,8 @@
             <version>1.0-M5</version>
          </dependency>
          
+         
+         
          <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
@@ -730,6 +736,18 @@
             <artifactId>eclipse-jdt-core</artifactId>
             <version>${project.version}</version>
          </dependency>
+         
+         <dependency>
+          <groupId>org.codehaus.jackson</groupId>
+          <artifactId>jackson-core-asl</artifactId>
+          <version>1.9.4</version>
+        </dependency>
+        <dependency>
+         <groupId>org.codehaus.jackson</groupId>
+         <artifactId>jackson-mapper-asl</artifactId>
+         <version>1.9.4</version>
+      </dependency>
+        
       </dependencies>
    </dependencyManagement>
 
@@ -739,7 +757,7 @@
       <module>exo-ide-dev-resources</module>
       <module>exo-ide-commons</module>
       <module>exo-ide-vfs</module>
-      <module>exo-ide-vfs-fs</module>
+      <!--module>exo-ide-vfs-fs</module-->
       <module>exo-ide-vfs-jcr</module>
 
       <module>exo-ide-security</module>
@@ -796,8 +814,6 @@
       <module>exo-ide-extension-samples</module>
       <module>exo-ide-extension-logreader</module>
       <module>exo-ide-extension-googleappengine</module>
-
-      <module>exo-ide-docs</module>
 
       <module>exo-ide-client</module>
       <module>exo-ide-shell</module>

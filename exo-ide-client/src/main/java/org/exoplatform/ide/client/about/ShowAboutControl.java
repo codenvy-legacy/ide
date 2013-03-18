@@ -26,7 +26,7 @@ import org.exoplatform.ide.client.framework.control.IDEControl;
 
 /**
  * Created by The eXo Platform SAS .
- * 
+ *
  * @author <a href="mailto:gavrikvetal@gmail.com">Vitaliy Gulyy</a>
  * @version $
  */
@@ -39,7 +39,7 @@ public class ShowAboutControl extends SimpleControl implements IDEControl
    public static final String TITLE = IDE.IDE_LOCALIZATION_CONSTANT.aboutControl();
 
    /**
-    * 
+    *
     */
    public ShowAboutControl()
    {
@@ -48,6 +48,7 @@ public class ShowAboutControl extends SimpleControl implements IDEControl
       setPrompt(TITLE);
       setEnabled(true);
       setVisible(true);
+      setGroupName(TITLE);
       setImages(IDEImageBundle.INSTANCE.about(), IDEImageBundle.INSTANCE.aboutDisabled());
       setEvent(new ShowAboutDialogEvent());
       setHotKey("F1");

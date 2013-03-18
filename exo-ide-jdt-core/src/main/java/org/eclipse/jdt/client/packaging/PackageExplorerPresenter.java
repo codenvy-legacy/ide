@@ -53,6 +53,8 @@ import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconE
 import org.exoplatform.ide.client.framework.navigation.event.RemoveItemTreeIconHandler;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.navigation.event.SelectItemHandler;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesEvent;
+import org.exoplatform.ide.client.framework.navigation.event.ShowHideHiddenFilesHandler;
 import org.exoplatform.ide.client.framework.project.PackageExplorerDisplay;
 import org.exoplatform.ide.client.framework.project.ProjectClosedEvent;
 import org.exoplatform.ide.client.framework.project.ProjectClosedHandler;
@@ -98,7 +100,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    ProjectOpenedHandler, ProjectClosedHandler, SelectItemHandler,
    EditorActiveFileChangedHandler, EditorFileOpenedHandler, EditorFileClosedHandler,
    ApplicationSettingsReceivedHandler, ItemsSelectedHandler, TreeRefreshedHandler,
-   ItemLockedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler
+   ItemLockedHandler, AddItemTreeIconHandler, RemoveItemTreeIconHandler, ShowHideHiddenFilesHandler
 {
 
    private static final String PACKAGE_EXPLORER_LINK_WITH_EDITOR_CONFIG = "package-explorer-linked-with-editor";
@@ -162,6 +164,7 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       IDE.addHandler(ItemLockedEvent.TYPE, this);
       IDE.addHandler(AddItemTreeIconEvent.TYPE, this);
       IDE.addHandler(RemoveItemTreeIconEvent.TYPE, this);
+      IDE.addHandler(ShowHideHiddenFilesEvent.TYPE, this);
       
       for (String type : ProjectTypes.getList())
       {
@@ -328,13 +331,26 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       });
    }
 
-
    @Override
-   public void onSelectItem(SelectItemEvent event)
+   public void onSelectItem(final SelectItemEvent event)
    {
       if (display == null)
       {
          return;
+      }
+      
+      if (display.asView().isViewVisible())
+      {
+         display.selectItem(event.getItem());
+
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               IDE.fireEvent(new ItemsSelectedEvent(event.getItem(), display.asView()));
+            }
+         });         
       }
    }
 
@@ -452,16 +468,35 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       {
           if (ProjectTypes.contains(openedProject))
           {
-             new Timer()
-             {
-                @Override
-                public void run()
-                {
-                   display = GWT.create(PackageExplorerDisplay.class);
-                   bindDisplay();
-                   IDE.getInstance().openView(display.asView());
-                }
-             }.schedule(500);
+             display = GWT.create(PackageExplorerDisplay.class);
+             bindDisplay();
+             IDE.getInstance().openView(display.asView());                  
+             
+             
+//             new Timer()
+//             {
+//                @Override
+//                public void run()
+//                {
+//                   display = GWT.create(PackageExplorerDisplay.class);
+//                   bindDisplay();
+//                   IDE.getInstance().openView(display.asView());
+//                }
+//             }.schedule(500);
+             
+             
+//            Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//            {
+//               @Override
+//               public void execute()
+//               {
+//                  display = GWT.create(PackageExplorerDisplay.class);
+//                  bindDisplay();
+//                  IDE.getInstance().openView(display.asView());                  
+//               }
+//            });
+             
+             
           }
    
           return;         
@@ -474,11 +509,9 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
       }
 
       display.setPackageExplorerTreeVisible(true);
-      
       display.getBrowserTree().setValue(openedProject);
       //display.setProject(openedProject);
    }
-   
    
    @Override
    public void onProjectClosed(ProjectClosedEvent event)
@@ -500,15 +533,18 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    {
       if (event.getView() instanceof PackageExplorerDisplay && openedProject != null)
       {
-         Scheduler.get().scheduleDeferred(new ScheduledCommand()
-         {
-            @Override
-            public void execute()
-            {
-               display.setPackageExplorerTreeVisible(true);
-               display.getBrowserTree().setValue(openedProject);
-            }
-         });
+         display.setPackageExplorerTreeVisible(true);
+         display.getBrowserTree().setValue(openedProject);
+         
+//         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+//         {
+//            @Override
+//            public void execute()
+//            {
+//               display.setPackageExplorerTreeVisible(true);
+//               display.getBrowserTree().setValue(openedProject);
+//            }
+//         });
       }
    }
    
@@ -562,6 +598,11 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onItemLocked(ItemLockedEvent event)
    {
+      if (display == null)
+      {
+         return;
+      }
+      
       Item item = event.getItem();
       if (item instanceof FileModel)
       {
@@ -593,8 +634,28 @@ public class PackageExplorerPresenter implements ShowPackageExplorerHandler, Vie
    @Override
    public void onRemoveItemTreeIcon(RemoveItemTreeIconEvent event)
    {
-      display.removeItemIcons(event.getIconsToRemove());
+      if (display != null)
+      {
+         display.removeItemIcons(event.getIconsToRemove());         
+      }
    }
-   
+
+   @Override
+   public void onShowHideHiddenFiles(ShowHideHiddenFilesEvent event)
+   {
+      if (display == null)
+      {
+         return;
+      }
+      
+      Scheduler.get().scheduleDeferred(new ScheduledCommand()
+      {
+         @Override
+         public void execute()
+         {
+            display.refreshTree();
+         }
+      });      
+   }
    
 }

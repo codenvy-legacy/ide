@@ -18,8 +18,6 @@
  */
 package org.exoplatform.ide.client.project.create;
 
-import com.google.gwt.user.client.Window;
-
 import com.google.gwt.json.client.JSONParser;
 
 import com.google.gwt.core.client.GWT;
@@ -213,7 +211,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
    private boolean createModule = false;
 
 //   private ProjectModel parentProject;
-   
+
    private Item selectedItem;
 
    private class NoneTarget extends PaaS
@@ -752,7 +750,8 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
          {
             values.add(paas);
          }
-      };
+      }
+      ;
       return values;
    }
 
@@ -790,8 +789,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
                @Override
                protected void onSuccess(final ProjectModel result)
                {
-                  if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING)
-                     && display.getUseJRebelPlugin().getValue() == true)
+                  if ((selectedProjectType == ProjectType.JSP || selectedProjectType == ProjectType.SPRING))
                   {
                      writeUseJRebelProperty(result);
                   }
@@ -831,7 +829,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
     */
    private void writeUseJRebelProperty(ProjectModel project)
    {
-      project.getProperties().add(new PropertyImpl(JREBEL, "true"));
+      project.getProperties().add(new PropertyImpl(JREBEL, display.getUseJRebelPlugin().getValue().toString()));
       try
       {
          VirtualFileSystem.getInstance().updateItem(project, null, new AsyncRequestCallback<ItemWrapper>()
@@ -965,7 +963,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
       {
          return null;
       }
-      
+
       ProjectModel project = ((ItemContext)selectedItem).getProject();
       if (project == null && selectedItem instanceof ProjectModel)
       {
@@ -973,7 +971,7 @@ public class CreateProjectPresenter implements CreateProjectHandler, CreateModul
       }
       return project;
    }
-   
+
    /**
     * Validates project name for existence.
     *

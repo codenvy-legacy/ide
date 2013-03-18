@@ -257,7 +257,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       {
          return;
       }
-      
+
       deleteNextItem();
    }
 
@@ -414,7 +414,8 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
                         IDE.fireEvent(new EditorCloseFileEvent(file, true));
                      }
                   }
-                  if (item instanceof ProjectModel)
+                  
+                  if (item instanceof ProjectModel && openedProject != null)
                      IDE.fireEvent(new CloseProjectEvent());
                }
                lastDeletedItem = item;
@@ -471,7 +472,7 @@ public class DeleteItemsPresenter implements ApplicationSettingsReceivedHandler,
       if (folder != null)
       {
          IDE.fireEvent(new RefreshBrowserEvent(folder));
-         IDE.fireEvent(new SelectItemEvent(folder.getId()));
+         IDE.fireEvent(new SelectItemEvent(folder));
       }
    }
 

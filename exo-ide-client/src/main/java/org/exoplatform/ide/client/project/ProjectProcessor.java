@@ -18,6 +18,10 @@
  */
 package org.exoplatform.ide.client.project;
 
+import com.google.gwt.user.client.Timer;
+
+import com.google.gwt.user.client.Timer;
+
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,12 +31,15 @@ import org.exoplatform.ide.client.framework.application.IDELoader;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedEvent;
 import org.exoplatform.ide.client.framework.event.AllFilesClosedHandler;
 import org.exoplatform.ide.client.framework.event.CloseAllFilesEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedEvent;
+import org.exoplatform.ide.client.framework.event.FileSavedHandler;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserEvent;
 import org.exoplatform.ide.client.framework.event.RefreshBrowserHandler;
 import org.exoplatform.ide.client.framework.module.IDE;
 import org.exoplatform.ide.client.framework.navigation.event.FolderRefreshedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedEvent;
 import org.exoplatform.ide.client.framework.navigation.event.ItemsSelectedHandler;
+import org.exoplatform.ide.client.framework.navigation.event.SelectItemEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectEvent;
 import org.exoplatform.ide.client.framework.project.CloseProjectHandler;
 import org.exoplatform.ide.client.framework.project.OpenProjectEvent;
@@ -57,7 +64,7 @@ import java.util.List;
  * 
  */
 public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler, AllFilesClosedHandler,
-   RefreshBrowserHandler, ItemsSelectedHandler, FolderChangedHandler
+   RefreshBrowserHandler, ItemsSelectedHandler, FolderChangedHandler, FileSavedHandler
 {
 
    private IDEProject openedProject;
@@ -70,6 +77,7 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
       IDE.addHandler(CloseProjectEvent.TYPE, this);
       IDE.addHandler(RefreshBrowserEvent.TYPE, this);
       IDE.addHandler(ItemsSelectedEvent.TYPE, this);
+      IDE.addHandler(FileSavedEvent.TYPE, this);
    }
 
    @Override
@@ -100,6 +108,15 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          {
             IDELoader.hide();
             IDE.fireEvent(new ProjectOpenedEvent(openedProject));
+            
+            new Timer()
+            {
+               @Override
+               public void run()
+               {
+                  IDE.fireEvent(new SelectItemEvent(openedProject));
+               }
+            }.schedule(200);       
          }
       });
 
@@ -280,6 +297,11 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          @Override
          public void execute()
          {
+            if (openedProject == null)
+            {
+               return;
+            }
+            
             final IDEProject closedProject = openedProject;
             closedProject.setFolderChangedHandler(null);
             openedProject = null;
@@ -301,5 +323,21 @@ public class ProjectProcessor implements OpenProjectHandler, CloseProjectHandler
          }
       });      
    }
+
+   @Override
+   public void onFileSaved(final FileSavedEvent event)
+   {
+      if (openedProject != null)
+      {
+         Scheduler.get().scheduleDeferred(new ScheduledCommand()
+         {
+            @Override
+            public void execute()
+            {
+               openedProject.resourceChanged(event.getFile());
+            }
+         });
+      }
+   }   
 
 }

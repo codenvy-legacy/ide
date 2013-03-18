@@ -51,6 +51,8 @@ public interface ProjectExplorerDisplay extends IsView
     */
    TreeGridItem<Item> getBrowserTree();
    
+   void setProject(ProjectModel project);
+   
    void navigateToItem(Item item);
 
    /**
@@ -59,14 +61,16 @@ public interface ProjectExplorerDisplay extends IsView
     * @return {@link List} selected items
     */
    List<Item> getSelectedItems();
-
+   
+   List<Item> getVisibleItems();
+   
    /**
-    * Select Item by id.
+    * Select item.
     * 
-    * @param id item ID
-    * @return <b>true</b> if item was found and selected, <b>false</b> otherwise
+    * @param item item
+    * @return <b>true</b> is item was found and selected, <b>false</b> otherwise
     */
-   boolean selectItem(String id);
+   boolean selectItem(Item item);
 
    /**
     * Deselect item in browser tree by path.
@@ -151,5 +155,7 @@ public interface ProjectExplorerDisplay extends IsView
     * @return {@link List} of selected projects
     */
    List<ProjectModel> getSelectedProjects();
+   
+   void refreshTree();
 
 }
