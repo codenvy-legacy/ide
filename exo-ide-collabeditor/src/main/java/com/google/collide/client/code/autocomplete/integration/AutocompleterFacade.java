@@ -24,11 +24,11 @@ import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.Buffer;
 import com.google.collide.client.editor.Editor;
 import com.google.collide.shared.document.TextChange;
-import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
 
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistProcessor;
 import org.exoplatform.ide.editor.client.api.contentassist.ContentAssistant;
-import org.waveprotocol.wave.client.common.util.SignalEvent;
+import com.codenvy.ide.client.util.SignalEvent;
 
 /**
  * This class isolates {@link Autocompleter} from the UI.

@@ -16,8 +16,8 @@ package com.google.collide.client.editor.search;
 
 import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.search.SearchModel.SearchProgressListener;
-import com.google.collide.client.util.IncrementalScheduler;
-import com.google.collide.client.util.IncrementalScheduler.Task;
+import com.codenvy.ide.client.util.IncrementalScheduler;
+import com.codenvy.ide.client.util.IncrementalScheduler.Task;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;

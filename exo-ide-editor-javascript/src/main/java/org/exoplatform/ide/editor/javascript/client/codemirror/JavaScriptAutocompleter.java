@@ -18,13 +18,12 @@
  */
 package org.exoplatform.ide.editor.javascript.client.codemirror;
 
-import com.google.collide.client.documentparser.DocumentParser;
-
 import com.google.collide.client.code.autocomplete.AutocompleteProposals;
 import com.google.collide.client.code.autocomplete.AutocompleteProposals.ProposalWithContext;
 import com.google.collide.client.code.autocomplete.AutocompleteResult;
 import com.google.collide.client.code.autocomplete.LanguageSpecificAutocompleter;
 import com.google.collide.client.code.autocomplete.SignalEventEssence;
+import com.google.collide.client.documentparser.DocumentParser;
 import com.google.collide.client.editor.selection.SelectionModel;
 import com.google.collide.codemirror2.SyntaxType;
 

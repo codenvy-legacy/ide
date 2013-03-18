@@ -20,26 +20,24 @@ import com.google.collide.client.editor.ViewportModel;
 import com.google.collide.client.editor.ViewportModel.Edge;
 import com.google.collide.client.editor.renderer.Renderer.LineLifecycleListener;
 import com.google.collide.client.testing.DebugAttributeSetter;
-import com.google.collide.client.util.Elements;
-import com.google.collide.json.shared.JsonArray;
+import com.codenvy.ide.client.util.Elements;
 import com.google.collide.shared.document.Document;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.Anchor;
+import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.anchor.AnchorManager;
 import com.google.collide.shared.document.anchor.AnchorType;
-import com.google.collide.shared.document.anchor.Anchor.RemovalStrategy;
 import com.google.collide.shared.document.util.LineUtils;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
 import com.google.gwt.user.client.Timer;
-
 import elemental.css.CSSStyleDeclaration;
 import elemental.html.Element;
 
-import java.util.Comparator;
+import org.exoplatform.ide.json.shared.JsonArray;
+
 import java.util.EnumSet;
-import java.util.TreeSet;
 
 /*
  * TODO: I need to do another pass at the rendering paths after

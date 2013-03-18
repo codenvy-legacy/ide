@@ -26,7 +26,9 @@ import org.exoplatform.gwtframework.commons.rest.AsyncRequest;
 import org.exoplatform.gwtframework.commons.rest.AsyncRequestCallback;
 import org.exoplatform.gwtframework.commons.rest.HTTPHeader;
 import org.exoplatform.ide.extension.samples.client.inviting.manage.Invite;
+
 import java.util.List;
+
 import javax.ws.rs.core.MediaType;
 
 /**

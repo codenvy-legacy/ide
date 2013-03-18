@@ -20,29 +20,27 @@ import com.google.collide.client.common.Constants;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator;
 import com.google.collide.client.document.linedimensions.LineDimensionsCalculator.RoundingStrategy;
 import com.google.collide.client.editor.renderer.Renderer;
-import com.google.collide.client.util.CssUtils;
-import com.google.collide.client.util.Elements;
-import com.google.collide.client.util.Executor;
+import com.codenvy.ide.client.util.CssUtils;
+import com.codenvy.ide.client.util.Elements;
+import com.codenvy.ide.client.util.Executor;
 import com.google.collide.client.util.dom.DomUtils;
-import com.google.collide.client.util.dom.MouseGestureListener;
 import com.google.collide.client.util.dom.DomUtils.Offset;
 import com.google.collide.client.util.dom.FontDimensionsCalculator.FontDimensions;
-import com.google.collide.json.shared.JsonArray;
+import com.google.collide.client.util.dom.MouseGestureListener;
 import com.google.collide.mvp.CompositeView;
 import com.google.collide.mvp.UiComponent;
 import com.google.collide.shared.document.Document;
-import com.google.collide.shared.document.Line;
-import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.Document.LineCountListener;
 import com.google.collide.shared.document.Document.LineListener;
+import com.google.collide.shared.document.Line;
+import com.google.collide.shared.document.LineInfo;
 import com.google.collide.shared.document.anchor.ReadOnlyAnchor;
 import com.google.collide.shared.document.util.LineUtils;
-import com.google.collide.shared.util.ListenerManager;
-import com.google.collide.shared.util.ListenerRegistrar;
-import com.google.collide.shared.util.TextUtils;
-import com.google.collide.shared.util.ListenerManager.Dispatcher;
-import com.google.collide.shared.util.ListenerRegistrar.RemoverManager;
-
+import org.exoplatform.ide.shared.util.ListenerManager;
+import org.exoplatform.ide.shared.util.ListenerManager.Dispatcher;
+import org.exoplatform.ide.shared.util.ListenerRegistrar;
+import org.exoplatform.ide.shared.util.ListenerRegistrar.RemoverManager;
+import org.exoplatform.ide.shared.util.TextUtils;
 import elemental.client.Browser;
 import elemental.css.CSSStyleDeclaration;
 import elemental.events.Event;
@@ -52,6 +50,8 @@ import elemental.events.MouseEvent;
 import elemental.html.ClientRect;
 import elemental.html.DivElement;
 import elemental.html.Element;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /*
  * TODO: Buffer has turned into an EditorSurface, but is still

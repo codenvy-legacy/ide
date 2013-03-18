@@ -14,7 +14,7 @@
 
 package com.google.collide.codemirror2;
 
-import com.google.collide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Interface that represents CodeMirror parser.

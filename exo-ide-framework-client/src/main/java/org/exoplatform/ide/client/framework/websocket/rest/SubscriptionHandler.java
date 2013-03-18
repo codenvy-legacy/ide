@@ -68,13 +68,12 @@ public abstract class SubscriptionHandler<T> implements MessageHandler
 
    /**
     * Perform actions when {@link ResponseMessage} was received.
-    * 
-    * @param response received {@link ResponseMessage}
-    * @see org.exoplatform.ide.client.framework.websocket.events.MessageHandler#onMessage(org.exoplatform.ide.client.framework.websocket.Message)
+    *
+    * @param message received {@link ResponseMessage}
     */
-   @Override
    public void onMessage(Message message)
    {
+
       if (!(message instanceof ResponseMessage))
          throw new IllegalArgumentException("Invalid input message.");
 
@@ -99,6 +98,12 @@ public abstract class SubscriptionHandler<T> implements MessageHandler
       {
          onFailure(new ServerException(response));
       }
+   }
+
+
+   @Override
+   public void onMessage(String message)
+   {
    }
 
    /**

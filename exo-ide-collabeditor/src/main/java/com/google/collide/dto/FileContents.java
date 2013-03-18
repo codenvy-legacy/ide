@@ -15,7 +15,8 @@
 package com.google.collide.dto;
 
 import com.google.collide.dto.NodeConflictDto.ConflictHandle;
-import com.google.collide.json.shared.JsonArray;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * DTO sent from the server to the client containing the contents of a File in

@@ -13,7 +13,7 @@
 // limitations under the License.
 package com.google.collide.dto;
 
-import com.google.collide.json.shared.JsonArray;
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /**
  * Collection of references for a single file.

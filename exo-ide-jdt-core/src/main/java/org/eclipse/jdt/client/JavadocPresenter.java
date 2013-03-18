@@ -22,7 +22,7 @@ import com.google.collide.client.code.popup.EditorPopupController.Remover;
 
 import com.google.collide.client.CollabEditor;
 
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 
 import com.google.gwt.dom.client.Style.Float;
 import com.google.gwt.http.client.RequestBuilder;

@@ -42,7 +42,6 @@ import org.exoplatform.gwtframework.ui.client.component.ImageButton;
 import org.exoplatform.gwtframework.ui.client.component.Label;
 import org.exoplatform.gwtframework.ui.client.dialog.BooleanValueReceivedHandler;
 import org.exoplatform.gwtframework.ui.client.dialog.Dialog;
-import org.exoplatform.gwtframework.ui.client.dialog.Dialogs;
 import org.exoplatform.gwtframework.ui.client.tablayout.TabPanel;
 import org.exoplatform.gwtframework.ui.client.window.Window;
 import org.exoplatform.ide.client.framework.ui.impl.ViewImpl;

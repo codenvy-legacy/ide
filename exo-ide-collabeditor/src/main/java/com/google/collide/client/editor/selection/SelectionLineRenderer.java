@@ -18,7 +18,7 @@ import com.google.collide.client.editor.FocusManager;
 import com.google.collide.client.editor.renderer.LineRenderer;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
-import com.google.collide.shared.util.MathUtils;
+import org.exoplatform.ide.shared.util.MathUtils;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 

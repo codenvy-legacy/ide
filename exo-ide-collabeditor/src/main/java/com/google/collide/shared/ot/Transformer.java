@@ -17,8 +17,9 @@ package com.google.collide.shared.ot;
 import com.google.collide.dto.DocOp;
 import com.google.collide.dto.DocOpComponent;
 import com.google.collide.dto.shared.DocOpFactory;
-import com.google.collide.json.shared.JsonArray;
 import com.google.common.base.Preconditions;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 /*
  * Influenced by Wave's Transformer and Composer classes. Generally, we can't
@@ -390,6 +391,8 @@ public class Transformer {
 
     @Override
     void handleOtherFinished(Processor other, ProcessorResult result) {
+       System.out.println("### " + other);
+
       Preconditions.checkState(
           lineCount == 1, "Cannot retain more than one line if other side is finished");
 

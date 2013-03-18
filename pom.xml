@@ -471,13 +471,19 @@
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
+            <artifactId>codenvy-ide-collaboration</artifactId>
+            <version>${project.version}</version>
+         </dependency>
+
+         <dependency>
+            <groupId>org.exoplatform.ide</groupId>
             <artifactId>exo-ide-websocket</artifactId>
             <version>${project.version}</version>
         </dependency>
 
          <dependency>
             <groupId>org.exoplatform.ide</groupId>
-            <artifactId>exo-ide-client-framework</artifactId>
+            <artifactId>exo-ide-framework-client</artifactId>
             <version>${project.version}</version>
          </dependency>
          <dependency>
@@ -759,7 +765,7 @@
       <module>exo-ide-vfs</module>
       <!--module>exo-ide-vfs-fs</module-->
       <module>exo-ide-vfs-jcr</module>
-
+      <module>codenvy-ide-collaboration</module>
       <module>exo-ide-security</module>
 
       <module>exo-ide-server</module>

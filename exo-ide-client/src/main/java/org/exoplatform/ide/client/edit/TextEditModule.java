@@ -80,8 +80,8 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
 
       new GoToLinePresenter();
 
-      IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
-      new LockUnlockFileHandler();
+//      IDE.getInstance().addControl(new LockUnlockFileControl(), Docking.TOOLBAR);
+//      new LockUnlockFileHandler();
 
       IDE.addHandler(ShowLineNumbersEvent.TYPE, this);
       IDE.addHandler(ApplicationSettingsReceivedEvent.TYPE, this);
@@ -94,8 +94,9 @@ public class TextEditModule implements ShowLineNumbersHandler, ApplicationSettin
       new CloseEditorController();
    }
 
+
    /**
-    * @see org.exoplatform.ide.client.event.edit.ShowLineNumbersHandler#onShowLineNumbers(org.exoplatform.ide.client.event.edit.ShowLineNumbersEvent)
+    * {@inheritDoc}
     */
    public void onShowLineNumbers(ShowLineNumbersEvent event)
    {

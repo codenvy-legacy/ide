@@ -43,6 +43,10 @@
          		<artifactId>httpclient</artifactId>
          		<groupId>org.apache.httpcomponents</groupId>
          	</exclusion>
+            <exclusion>
+               <artifactId>servlet-api</artifactId>
+               <groupId>javax.servlet</groupId>
+            </exclusion>
          </exclusions>
       </dependency>
       <dependency>
@@ -434,30 +438,6 @@
                <artifactId>codenvy-gwtframework-commons</artifactId>
             </exclusion>
             <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
-               <groupId>org.exoplatform.gwt</groupId>
-               <artifactId>codenvy-gwtframework-ui</artifactId>
-            </exclusion>
-            <exclusion>
                <artifactId>gwt-user</artifactId>
                <groupId>com.google.gwt</groupId>
             </exclusion>
@@ -475,6 +455,14 @@
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>
                <artifactId>codenvy-gwtframework-commons</artifactId>
+            </exclusion>
+            <exclusion>
+                <artifactId>gwt-user</artifactId>
+                <groupId>com.google.gwt</groupId>
+            </exclusion>
+            <exclusion>
+               <artifactId>gwt-elemental</artifactId>
+               <groupId>com.google.gwt</groupId>
             </exclusion>
             <exclusion>
             	<artifactId>slf4j-log4j12</artifactId>
@@ -578,6 +566,24 @@
       <dependency>
          <groupId>org.exoplatform.ide</groupId>
          <artifactId>exo-ide-vfs</artifactId>
+         <exclusions>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>codenvy-gwtframework-ui</artifactId>
+            </exclusion>
+            <exclusion>
+               <groupId>org.exoplatform.gwt</groupId>
+               <artifactId>codenvy-gwtframework-commons</artifactId>
+            </exclusion>
+            <exclusion>
+               <artifactId>gwt-user</artifactId>
+               <groupId>com.google.gwt</groupId>
+            </exclusion>
+         </exclusions>
+      </dependency>
+      <dependency>
+         <groupId>org.exoplatform.ide</groupId>
+         <artifactId>codenvy-ide-collaboration</artifactId>
          <exclusions>
             <exclusion>
                <groupId>org.exoplatform.gwt</groupId>

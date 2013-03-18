@@ -102,11 +102,9 @@ public abstract class RequestCallback<T> implements ReplyHandler
 
    /**
     * Perform actions when response message was received.
-    * 
-    * @param response message
-    * @see org.exoplatform.ide.client.framework.websocket.events.ReplyHandler#onReply(org.exoplatform.ide.client.framework.websocket.Message)
+    *
+    * @param message message
     */
-   @Override
    public void onReply(Message message)
    {
       if (loader != null)
@@ -162,6 +160,15 @@ public abstract class RequestCallback<T> implements ReplyHandler
          }
          onFailure(exception);
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void onReply(String message)
+   {
+
    }
 
    /**

@@ -14,20 +14,21 @@
 
 package com.google.collide.client.documentparser;
 
-import com.google.collide.client.util.logging.Log;
+import com.codenvy.ide.client.util.logging.Log;
 import com.google.collide.codemirror2.Parser;
 import com.google.collide.codemirror2.State;
 import com.google.collide.codemirror2.Stream;
 import com.google.collide.codemirror2.Token;
 import com.google.collide.codemirror2.TokenType;
-import com.google.collide.json.shared.JsonArray;
 import com.google.collide.shared.TaggableLine;
 import com.google.collide.shared.document.Line;
 import com.google.collide.shared.document.Position;
 import com.google.collide.shared.document.anchor.Anchor;
 import com.google.collide.shared.document.anchor.AnchorManager;
-import com.google.collide.shared.util.JsonCollections;
-import com.google.collide.shared.util.StringUtils;
+import org.exoplatform.ide.json.shared.JsonCollections;
+import org.exoplatform.ide.shared.util.StringUtils;
+
+import org.exoplatform.ide.json.shared.JsonArray;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
