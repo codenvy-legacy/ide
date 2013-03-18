@@ -33,18 +33,14 @@ import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException;
 import org.eclipse.jgit.api.errors.CheckoutConflictException;
 import org.eclipse.jgit.api.errors.ConcurrentRefUpdateException;
 import org.eclipse.jgit.api.errors.DetachedHeadException;
-import org.eclipse.jgit.api.errors.InvalidMergeHeadsException;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.InvalidRefNameException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
 import org.eclipse.jgit.api.errors.InvalidTagNameException;
-import org.eclipse.jgit.api.errors.JGitInternalException;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.NoMessageException;
 import org.eclipse.jgit.api.errors.NotMergedException;
 import org.eclipse.jgit.api.errors.RefAlreadyExistsException;
 import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.dircache.DirCache;
 import org.eclipse.jgit.dircache.DirCacheBuildIterator;
 import org.eclipse.jgit.dircache.DirCacheBuilder;
@@ -53,9 +49,6 @@ import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
-import org.eclipse.jgit.errors.NotSupportedException;
-import org.eclipse.jgit.errors.TransportException;
-import org.eclipse.jgit.errors.UnmergedPathException;
 import org.eclipse.jgit.lib.ConfigConstants;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.NullProgressMonitor;
@@ -181,13 +174,16 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
+      catch (GitAPIException e)
+      {
+         throw new GitException(e);
+      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#branchCheckout(org.exoplatform.ide.git.shared.BranchCheckoutRequest) */
    @Override
    public void branchCheckout(BranchCheckoutRequest request) throws GitException
    {
-      //CheckoutCommand checkoutCommand = new Git(repository).checkout().setName(request.getName());
       CheckoutCommand_Copy checkoutCommand = new CheckoutCommand_Copy(repository).setName(request.getName());
       String startPoint = request.getStartPoint();
       if (startPoint != null)
@@ -199,15 +195,6 @@ public class JGitConnection implements GitConnection
       try
       {
          checkoutCommand.call();
-      }
-      catch (JGitInternalException e)
-      {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
-         throw new GitException(e.getMessage(), e);
       }
       catch (RefAlreadyExistsException e)
       {
@@ -240,15 +227,6 @@ public class JGitConnection implements GitConnection
 
          return new Branch(refName, false, Repository.shortenRefName(refName));
       }
-      catch (JGitInternalException e)
-      {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
-         throw new GitException(e.getMessage(), e);
-      }
       catch (RefAlreadyExistsException e)
       {
          throw new IllegalArgumentException(e.getMessage());
@@ -261,6 +239,10 @@ public class JGitConnection implements GitConnection
       {
          throw new IllegalArgumentException(e.getMessage());
       }
+      catch (GitAPIException e)
+      {
+         throw new GitException(e);
+      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#branchDelete(org.exoplatform.ide.git.shared.BranchDeleteRequest) */
@@ -271,15 +253,6 @@ public class JGitConnection implements GitConnection
       {
          new Git(repository).branchDelete().setBranchNames(request.getName()).setForce(request.isForce()).call();
       }
-      catch (JGitInternalException e)
-      {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
-         throw new GitException(e.getMessage(), e);
-      }
       catch (NotMergedException e)
       {
          throw new IllegalArgumentException(e.getMessage());
@@ -287,6 +260,10 @@ public class JGitConnection implements GitConnection
       catch (CannotDeleteCurrentBranchException e)
       {
          throw new IllegalArgumentException(e.getMessage());
+      }
+      catch (GitAPIException e)
+      {
+         throw new GitException(e);
       }
    }
 
@@ -313,7 +290,15 @@ public class JGitConnection implements GitConnection
             listBranchCommand.setListMode(ListMode.REMOTE);
          }
       }
-      List<Ref> refs = listBranchCommand.call();
+      List<Ref> refs;
+      try
+      {
+         refs = listBranchCommand.call();
+      }
+      catch (GitAPIException err)
+      {
+         throw new GitException(err);
+      }
       String current = null;
       try
       {
@@ -451,7 +436,6 @@ public class JGitConnection implements GitConnection
          try
          {
             dirCache = repository.lockDirCache();
-            //            DirCacheCheckout dirCacheCheckout = new DirCacheCheckout(repository, dirCache, commit.getTree());
             DirCacheCheckout_Copy dirCacheCheckout = new DirCacheCheckout_Copy(repository, dirCache, commit.getTree());
             dirCacheCheckout.setFailOnConflict(true);
             dirCacheCheckout.checkout();
@@ -465,22 +449,6 @@ public class JGitConnection implements GitConnection
          }
 
          return this;
-      }
-      catch (TransportException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (MissingObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (IncorrectObjectTypeException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (NotSupportedException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
       catch (IOException e)
       {
@@ -529,38 +497,13 @@ public class JGitConnection implements GitConnection
             (long)commit.getCommitTime() * 1000, new GitUser(committerIdentity.getName(),
                committerIdentity.getEmailAddress()));
       }
-      catch (NoHeadException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (NoMessageException e)
-      {
-         throw new IllegalArgumentException(e.getMessage());
-      }
-      catch (UnmergedPathException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (ConcurrentRefUpdateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (JGitInternalException e)
-      {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (WrongRepositoryStateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
       catch (IOException e)
       {
          throw new GitException(e.getMessage(), e);
+      }
+      catch (GitAPIException e)
+      {
+         throw new GitException(e);
       }
    }
 
@@ -611,18 +554,9 @@ public class JGitConnection implements GitConnection
 
          fetchCommand.call();
       }
-      catch (JGitInternalException e)
+      catch (GitAPIException e)
       {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (InvalidRemoteException e)
-      {
-         throw new IllegalArgumentException(e.getMessage());
+         throw new GitException(e);
       }
    }
 
@@ -650,36 +584,9 @@ public class JGitConnection implements GitConnection
                git.add().addFilepattern(".").call();
                git.commit().setMessage("init").call();
             }
-            catch (NoFilepatternException e)
+            catch (GitAPIException e)
             {
-               // Never happen since filepattern is set.
-               throw new GitException(e.getMessage(), e);
-            }
-            catch (WrongRepositoryStateException e)
-            {
-               throw new GitException(e.getMessage(), e);
-            }
-            catch (NoHeadException e)
-            {
-               throw new GitException(e.getMessage(), e);
-            }
-            catch (NoMessageException e)
-            {
-               // Never happen since message is set.
-               throw new GitException(e.getMessage(), e);
-            }
-            catch (ConcurrentRefUpdateException e)
-            {
-               throw new GitException(e.getMessage(), e);
-            }
-            catch (JGitInternalException e)
-            {
-               Throwable cause = e.getCause();
-               if (cause != null)
-               {
-                  throw new GitException(cause.getMessage(), cause);
-               }
-               throw new GitException(e.getMessage(), e);
+               throw new GitException(e);
             }
          }
          GitUser gitUser = getUser();
@@ -717,18 +624,9 @@ public class JGitConnection implements GitConnection
          }
          return new LogPage(commits);
       }
-      catch (NoHeadException e)
+      catch (GitAPIException e)
       {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (JGitInternalException e)
-      {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
-         throw new GitException(e.getMessage(), e);
+         throw new GitException(e);
       }
    }
 
@@ -752,9 +650,9 @@ public class JGitConnection implements GitConnection
             }
          }
       }
-      catch (NoHeadException e)
+      catch (GitAPIException e)
       {
-         throw new GitException(e.getMessage(), e);
+         throw new GitException(e);
       }
 
       return gitUsers;
@@ -774,31 +672,11 @@ public class JGitConnection implements GitConnection
          org.eclipse.jgit.api.MergeResult jgitMergeResult = new Git(repository).merge().include(ref).call();
          return new JGitMergeResult(jgitMergeResult);
       }
-      catch (NoHeadException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (ConcurrentRefUpdateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (CheckoutConflictException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (InvalidMergeHeadsException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (WrongRepositoryStateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (NoMessageException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
       catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (GitAPIException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -900,27 +778,6 @@ public class JGitConnection implements GitConnection
             throw new GitException(message.toString());
          }
       }
-      catch (WrongRepositoryStateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (InvalidRemoteException e)
-      {
-         throw new IllegalArgumentException(e.getMessage());
-      }
-      catch (NoMessageException e)
-      {
-         // Looks like never happen.
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (InvalidMergeHeadsException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (DetachedHeadException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
       catch (CheckoutConflictException e)
       {
          StringBuilder message =
@@ -932,15 +789,11 @@ public class JGitConnection implements GitConnection
          message.append("Please, commit your changes before you can merge. Aborting.");
          throw new GitException(message.toString());
       }
-      catch (ConcurrentRefUpdateException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (NoHeadException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
       catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (GitAPIException e)
       {
          throw new GitException(e.getMessage(), e);
       }
@@ -992,18 +845,9 @@ public class JGitConnection implements GitConnection
             }
          }
       }
-      catch (JGitInternalException e)
+      catch (GitAPIException e)
       {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
          throw new GitException(e.getMessage(), e);
-      }
-      catch (InvalidRemoteException e)
-      {
-         throw new IllegalArgumentException(e.getMessage());
       }
    }
 
@@ -1415,8 +1259,7 @@ public class JGitConnection implements GitConnection
       String[] files = request.getFiles();
       RmCommand rmCommand = new Git(repository).rm();
 
-      //TODO Must be uncommented with JGit version >= 2.2.x
-      //rmCommand.setCached(false);
+      rmCommand.setCached(false);
 
       if (files != null)
       {
@@ -1432,6 +1275,10 @@ public class JGitConnection implements GitConnection
       catch (NoFilepatternException e)
       {
          throw new IllegalArgumentException("File pattern may not be null or empty. ");
+      }
+      catch (GitAPIException e)
+      {
+         throw new GitException(e);
       }
    }
 
@@ -1485,6 +1332,14 @@ public class JGitConnection implements GitConnection
       {
          throw new GitException(e.getMessage(), e);
       }
+      catch (NoWorkTreeException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (GitAPIException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
    }
 
    /** @see org.exoplatform.ide.git.server.GitConnection#tagCreate(org.exoplatform.ide.git.shared.TagCreateRequest) */
@@ -1520,40 +1375,31 @@ public class JGitConnection implements GitConnection
             tagCommand.setTagger(new PersonIdent(tagger.getName(), tagger.getEmail()));
          }
 
-         RevTag revTag = tagCommand.call();
-
+         Ref revTagRef = tagCommand.call();
+         RevTag revTag = revWalk.parseTag(revTagRef.getLeaf().getObjectId());
          return new Tag(revTag.getTagName());
-      }
-      catch (JGitInternalException e)
-      {
-         Throwable cause = e.getCause();
-         if (cause != null)
-         {
-            throw new GitException(cause.getMessage(), cause);
-         }
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (ConcurrentRefUpdateException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
       catch (InvalidTagNameException e)
       {
          throw new IllegalArgumentException(e.getMessage(), e);
-      }
-      catch (NoHeadException e)
-      {
-         throw new GitException(e.getMessage(), e);
-      }
-      catch (MissingObjectException e)
-      {
-         throw new GitException(e.getMessage(), e);
       }
       catch (AmbiguousObjectException e)
       {
          throw new GitException(e.getMessage(), e);
       }
       catch (IOException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (ConcurrentRefUpdateException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (NoHeadException e)
+      {
+         throw new GitException(e.getMessage(), e);
+      }
+      catch (GitAPIException e)
       {
          throw new GitException(e.getMessage(), e);
       }
