@@ -18,6 +18,8 @@
  */
 package org.exoplatform.ide.extension.cloudfoundry.server;
 
+import com.codenvy.commons.env.EnvironmentContext;
+
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.ide.vfs.server.VirtualFileSystem;
 import org.exoplatform.ide.vfs.server.VirtualFileSystemRegistry;
@@ -56,7 +58,6 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
    private static final String defaultTarget = "http://api.cloudfoundry.com";
    
    private final VirtualFileSystemRegistry vfsRegistry;
-   private final String workspace;
    private String config = "/ide-home/users/";
 
    public CloudfoundryAuthenticator(VirtualFileSystemRegistry vfsRegistry, InitParams initParams)
@@ -67,7 +68,6 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
    protected CloudfoundryAuthenticator(VirtualFileSystemRegistry vfsRegistry, String workspace, String config)
    {
       this.vfsRegistry = vfsRegistry;
-      this.workspace = workspace;
       if (config != null)
       {
          if (!(config.startsWith("/")))
@@ -85,7 +85,7 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
    @Override
    public String getTarget() throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider((String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String path = config + user + "/cloud_foundry/vmc_target";
       String target = Utils.readFile(vfs, path);
@@ -99,7 +99,7 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
    @Override
    public CloudfoundryCredentials readCredentials() throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider((String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)).newInstance(null, null);
       String user = ConversationState.getCurrent().getIdentity().getUserId();
       String path = config + user + "/cloud_foundry/vmc_token";
       String str = Utils.readFile(vfs, path);
@@ -127,14 +127,14 @@ public class CloudfoundryAuthenticator extends BaseCloudfoundryAuthenticator
    @Override
    public void writeTarget(String target) throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider((String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)).newInstance(null, null);
       writeFile(vfs, getConfigParent(vfs), "vmc_target", target);
    }
 
    @Override
    public void writeCredentials(CloudfoundryCredentials credentials) throws VirtualFileSystemException, IOException
    {
-      VirtualFileSystem vfs = vfsRegistry.getProvider(workspace).newInstance(null, null);
+      VirtualFileSystem vfs = vfsRegistry.getProvider((String)EnvironmentContext.getCurrent().getVariable(EnvironmentContext.WORKSPACE_ID)).newInstance(null, null);
       Writer w = new StringWriter();
       credentials.writeTo(w);
       writeFile(vfs, getConfigParent(vfs), "vmc_token", w.toString());
