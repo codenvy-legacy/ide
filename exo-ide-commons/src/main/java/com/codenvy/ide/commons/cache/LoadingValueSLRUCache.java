@@ -16,11 +16,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.impl.fs;
-
-import org.exoplatform.ide.vfs.server.cache.SLRUCache;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
-import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
+package com.codenvy.ide.commons.cache;
 
 /**
  * SLRUCache that loads value for key if it is not cached yet.
@@ -50,17 +46,19 @@ public abstract class LoadingValueSLRUCache<K, V> extends SLRUCache<K, V>
       {
          return value;
       }
-      try
-      {
-         value = loadValue(key);
-      }
-      catch (VirtualFileSystemException e)
-      {
-         throw new VirtualFileSystemRuntimeException(e.getMessage(), e); // re-throw as RuntimeException
-      }
+      value = loadValue(key);
       put(key, value);
       return value;
    }
 
-   protected abstract V loadValue(K key) throws VirtualFileSystemException;
+   /**
+    * Load value in implementation specific way.
+    *
+    * @param key
+    *    key
+    * @return value
+    * @throws RuntimeException
+    *    if failed to load value
+    */
+   protected abstract V loadValue(K key) throws RuntimeException;
 }

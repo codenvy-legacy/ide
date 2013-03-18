@@ -26,14 +26,16 @@ import org.everrest.core.impl.provider.json.ObjectBuilder;
 import org.exoplatform.ide.commons.FileUtils;
 import org.exoplatform.ide.commons.NameGenerator;
 import org.exoplatform.ide.vfs.server.ContentStream;
-import org.exoplatform.ide.vfs.server.cache.Cache;
-import org.exoplatform.ide.vfs.server.cache.SynchronizedCache;
+import com.codenvy.ide.commons.cache.Cache;
+import com.codenvy.ide.commons.cache.LoadingValueSLRUCache;
+import com.codenvy.ide.commons.cache.SynchronizedCache;
 import org.exoplatform.ide.vfs.server.exceptions.InvalidArgumentException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemAlreadyExistException;
 import org.exoplatform.ide.vfs.server.exceptions.ItemNotFoundException;
 import org.exoplatform.ide.vfs.server.exceptions.LockException;
 import org.exoplatform.ide.vfs.server.exceptions.PermissionDeniedException;
 import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemException;
+import org.exoplatform.ide.vfs.server.exceptions.VirtualFileSystemRuntimeException;
 import org.exoplatform.ide.vfs.server.util.DeleteOnCloseFileInputStream;
 import org.exoplatform.ide.vfs.server.util.NotClosableInputStream;
 import org.exoplatform.ide.vfs.server.util.ZipContent;
@@ -160,7 +162,7 @@ public class MountPoint
       }
 
       @Override
-      protected String loadValue(Path key) throws VirtualFileSystemException
+      protected String loadValue(Path key)
       {
          DataInputStream dis = null;
 
@@ -178,7 +180,7 @@ public class MountPoint
          {
             String msg = String.format("Unable read lock for '%s'. ", key);
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
+            throw new VirtualFileSystemRuntimeException(msg);
          }
          finally
          {
@@ -196,7 +198,7 @@ public class MountPoint
       }
 
       @Override
-      protected Map<String, String[]> loadValue(Path key) throws VirtualFileSystemException
+      protected Map<String, String[]> loadValue(Path key)
       {
          DataInputStream dis = null;
          try
@@ -213,7 +215,7 @@ public class MountPoint
          {
             String msg = String.format("Unable read properties for '%s'. ", key);
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
+            throw new VirtualFileSystemRuntimeException(msg);
          }
          finally
          {
@@ -231,7 +233,7 @@ public class MountPoint
       }
 
       @Override
-      protected AccessControlList loadValue(Path key) throws VirtualFileSystemException
+      protected AccessControlList loadValue(Path key)
       {
          DataInputStream dis = null;
          try
@@ -249,7 +251,7 @@ public class MountPoint
          {
             String msg = String.format("Unable read ACL for '%s'. ", key);
             LOG.error(msg + e.getMessage(), e); // More details in log but do not show internal error to caller.
-            throw new VirtualFileSystemException(msg);
+            throw new VirtualFileSystemRuntimeException(msg);
          }
          finally
          {

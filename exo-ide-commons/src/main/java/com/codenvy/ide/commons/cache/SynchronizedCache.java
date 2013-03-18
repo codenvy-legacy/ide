@@ -16,25 +16,57 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.exoplatform.ide.vfs.server.cache;
+package com.codenvy.ide.commons.cache;
 
 /**
- * Cache abstraction.
+ * Synchronized cache.
  *
  * @author <a href="mailto:andrew00x@gmail.com">Andrey Parfonov</a>
  * @version $Id: $
+ * @see Cache
  */
-public interface Cache<K, V>
+public final class SynchronizedCache<K, V> implements Cache<K, V>
 {
-   V get(K key);
+   private final Cache<K, V> delegate;
 
-   V put(K key, V value);
+   public SynchronizedCache(Cache<K,V> cache)
+   {
+      delegate = cache;
+   }
 
-   V remove(K key);
+   @Override
+   public synchronized V get(K key)
+   {
+      return delegate.get(key);
+   }
 
-   boolean contains(K key);
+   @Override
+   public synchronized V put(K key, V value)
+   {
+      return delegate.put(key, value);
+   }
 
-   void clear();
+   @Override
+   public synchronized V remove(K key)
+   {
+      return delegate.remove(key);
+   }
 
-   int size();
+   @Override
+   public synchronized boolean contains(K key)
+   {
+      return delegate.contains(key);
+   }
+
+   @Override
+   public synchronized void clear()
+   {
+      delegate.clear();
+   }
+
+   @Override
+   public int size()
+   {
+      return delegate.size();
+   }
 }
